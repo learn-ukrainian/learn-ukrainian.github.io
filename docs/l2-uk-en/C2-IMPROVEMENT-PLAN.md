@@ -218,10 +218,11 @@ Concern: 10,000-word research paper may need more support.
 
 **Priority:** P1 (High)
 **Effort:** Low
+**Status:** ✅ Implemented
 
 At 98% immersion, only ~40 words of English per 2,000-word module.
 
-**Appropriate uses of 2% English:**
+**Strict 2% English Rule (Updated Dec 2025):**
 | Use | Example |
 |-----|---------|
 | Translation discussion | "The English equivalent..." |
@@ -236,9 +237,9 @@ At 98% immersion, only ~40 words of English per 2,000-word module.
 - Cultural context
 
 **Action:**
-- [ ] Document strategic English use guidelines
-- [ ] Apply to all C2 module creation
-- [ ] Ensure explanations are in Ukrainian with Ukrainian examples
+- [x] Document strategic English use guidelines
+- [x] Apply to all C2 module creation
+- [x] Ensure explanations are in Ukrainian with Ukrainian examples
 
 ---
 

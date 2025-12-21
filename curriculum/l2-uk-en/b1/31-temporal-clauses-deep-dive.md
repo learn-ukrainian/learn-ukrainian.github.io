@@ -257,7 +257,7 @@ Use **у той час як** (at the time when / while) for formal background s
 
 ---
 
-## Summary
+# Підсумок
 
 ## Temporal Connector Reference
 
@@ -298,7 +298,7 @@ Understanding which connector creates which relationship is crucial for clear co
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: Часовий сполучник
 > Заповніть пропуски правильним часовим сполучником.
@@ -967,27 +967,27 @@ Understanding which connector creates which relationship is crucial for clear co
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| коли | when | universal temporal connector |
-| після того як | after | sequence marker |
-| перед тим як | before | preceding event |
-| до того як | before | same as перед тим як |
-| поки | while | simultaneous action |
-| поки не | until | boundary marker |
-| доки | while/until | variant of поки |
-| доки не | until | boundary marker |
-| як тільки | as soon as | immediate succession |
-| щойно | the moment | immediate succession |
-| ледве | hardly, barely | near-miss |
-| мало не | nearly, almost | near-miss |
-| у той час як | while, whereas | contrast |
-| в міру того як | as, gradually | gradual change |
-| відтоді як | since | starting point |
-| з тих пір як | since then | same as відтоді як |
-| до тих пір поки | until | emphatic boundary |
-| щоразу коли | every time when | repetition |
-| кожного разу коли | each time when | repetition |
-| перш ніж | before | formal variant |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| коли | /.../ | when | - | universal temporal connector |
+| після того як | /.../ | after | - | sequence marker |
+| перед тим як | /.../ | before | - | preceding event |
+| до того як | /.../ | before | - | same as перед тим як |
+| поки | /.../ | while | - | simultaneous action |
+| поки не | /.../ | until | - | boundary marker |
+| доки | /.../ | while/until | - | variant of поки |
+| доки не | /.../ | until | - | boundary marker |
+| як тільки | /.../ | as soon as | - | immediate succession |
+| щойно | /.../ | the moment | - | immediate succession |
+| ледве | /.../ | hardly, barely | - | near-miss |
+| мало не | /.../ | nearly, almost | - | near-miss |
+| у той час як | /.../ | while, whereas | - | contrast |
+| в міру того як | /.../ | as, gradually | - | gradual change |
+| відтоді як | /.../ | since | - | starting point |
+| з тих пір як | /.../ | since then | - | same as відтоді як |
+| до тих пір поки | /.../ | until | - | emphatic boundary |
+| щоразу коли | /.../ | every time when | - | repetition |
+| кожного разу коли | /.../ | each time when | - | repetition |
+| перш ніж | /.../ | before | - | formal variant |

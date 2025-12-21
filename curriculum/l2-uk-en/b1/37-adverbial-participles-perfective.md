@@ -430,7 +430,7 @@ One of the most powerful features of perfective participles is their ambiguity. 
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -451,7 +451,7 @@ One of the most powerful features of perfective participles is their ambiguity. 
 
 ---
 
-## Вправи
+# Вправи
 
 ## group-sort: Одночасно чи послідовно?
 > Sort the participles by whether they express simultaneous or sequential actions.
@@ -1066,7 +1066,7 @@ One of the most powerful features of perfective participles is their ambiguity. 
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви опанували **доконані дієприслівники** — граматичний інструмент для вираження послідовності завершених дій. Ці форми дозволяють описати те, що сталося ДО головної дії, створюючи елегантні, лаконічні речення.
 
@@ -1084,27 +1084,27 @@ In the next module, you'll learn about **active participles** — forms like "ч
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| прочитавши | having read | прочитати → прочитавши |
-| написавши | having written | написати → написавши |
-| сказавши | having said | сказати → сказавши |
-| зробивши | having done | зробити → зробивши |
-| взявши | having taken | взяти → взявши |
-| давши | having given | дати → давши |
-| відкривши | having opened | відкрити → відкривши |
-| закривши | having closed | закрити → закривши |
-| почавши | having begun | почати → почавши |
-| закінчивши | having finished | закінчити → закінчивши |
-| прийшовши | having arrived (on foot) | прийти → прийшовши |
-| пішовши | having left (on foot) | піти → пішовши |
-| приїхавши | having arrived (by vehicle) | приїхати → приїхавши |
-| поїхавши | having left (by vehicle) | поїхати → поїхавши |
-| побачивши | having seen | побачити → побачивши |
-| почувши | having heard | почути → почувши |
-| дізнавшись | having found out | дізнатися → дізнавшись (зворотний) |
-| повернувшись | having returned | повернутися → повернувшись |
-| одягнувшись | having dressed | одягнутися → одягнувшись |
-| приготувавши | having prepared | приготувати → приготувавши |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| прочитавши | /.../ | having read | - | прочитати → прочитавши |
+| написавши | /.../ | having written | - | написати → написавши |
+| сказавши | /.../ | having said | - | сказати → сказавши |
+| зробивши | /.../ | having done | - | зробити → зробивши |
+| взявши | /.../ | having taken | - | взяти → взявши |
+| давши | /.../ | having given | - | дати → давши |
+| відкривши | /.../ | having opened | - | відкрити → відкривши |
+| закривши | /.../ | having closed | - | закрити → закривши |
+| почавши | /.../ | having begun | - | почати → почавши |
+| закінчивши | /.../ | having finished | - | закінчити → закінчивши |
+| прийшовши | /.../ | having arrived (on foot) | - | прийти → прийшовши |
+| пішовши | /.../ | having left (on foot) | - | піти → пішовши |
+| приїхавши | /.../ | having arrived (by vehicle) | - | приїхати → приїхавши |
+| поїхавши | /.../ | having left (by vehicle) | - | поїхати → поїхавши |
+| побачивши | /.../ | having seen | - | побачити → побачивши |
+| почувши | /.../ | having heard | - | почути → почувши |
+| дізнавшись | /.../ | having found out | - | дізнатися → дізнавшись (зворотний) |
+| повернувшись | /.../ | having returned | - | повернутися → повернувшись |
+| одягнувшись | /.../ | having dressed | - | одягнутися → одягнувшись |
+| приготувавши | /.../ | having prepared | - | приготувати → приготувавши |

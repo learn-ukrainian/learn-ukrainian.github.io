@@ -258,7 +258,7 @@ The second "книгу" becomes "яку" because it's the object of "реком�
 
 ---
 
-## Summary
+# Підсумок
 
 ## який Declension Reference
 
@@ -300,7 +300,7 @@ This precision allows Ukrainian to express relationships that English can only h
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: Правильна форма який
 > Заповніть пропуски правильною формою який.
@@ -917,27 +917,27 @@ This precision allows Ukrainian to express relationships that English can only h
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | ЧМ | Примітка |
-|-------|----------|-----|----------|
-| який | which, that, who | займ. | relative pronoun |
-| яка | which, that, who (f.) | займ. | feminine nominative |
-| яке | which, that (n.) | займ. | neuter nominative |
-| які | which, that, who (pl.) | займ. | plural nominative |
-| якого | whose, whom (m./n. gen.) | займ. | genitive/accusative animate |
-| якої | whose (f. gen.) | займ. | feminine genitive |
-| яких | whose, whom (pl. gen.) | займ. | plural genitive |
-| якому | to whom (m./n. dat.) | займ. | masculine/neuter dative |
-| якій | to whom (f. dat.) | займ. | feminine dative |
-| яким | with whom (m./n. inst.) | займ. | masculine/neuter instrumental |
-| якою | with whom (f. inst.) | займ. | feminine instrumental |
-| якими | with whom (pl. inst.) | займ. | plural instrumental |
-| антецедент | antecedent | ім. | grammatical term |
-| відносне речення | relative clause | ім. | grammar term |
-| підрядне речення | subordinate clause | ім. | grammar term |
-| узгодження | agreement | ім. | grammatical concept |
-| підмет | subject | ім. | grammar term |
-| додаток | object | ім. | grammar term |
-| прийменник | preposition | ім. | part of speech |
-| означення | attribute, modifier | ім. | grammatical term |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| який | /.../ | which, that, who | займ. | relative pronoun |
+| яка | /.../ | which, that, who (f.) | займ. | feminine nominative |
+| яке | /.../ | which, that (n.) | займ. | neuter nominative |
+| які | /.../ | which, that, who (pl.) | займ. | plural nominative |
+| якого | /.../ | whose, whom (m./n. gen.) | займ. | genitive/accusative animate |
+| якої | /.../ | whose (f. gen.) | займ. | feminine genitive |
+| яких | /.../ | whose, whom (pl. gen.) | займ. | plural genitive |
+| якому | /.../ | to whom (m./n. dat.) | займ. | masculine/neuter dative |
+| якій | /.../ | to whom (f. dat.) | займ. | feminine dative |
+| яким | /.../ | with whom (m./n. inst.) | займ. | masculine/neuter instrumental |
+| якою | /.../ | with whom (f. inst.) | займ. | feminine instrumental |
+| якими | /.../ | with whom (pl. inst.) | займ. | plural instrumental |
+| антецедент | /.../ | antecedent | ім. | grammatical term |
+| відносне речення | /.../ | relative clause | ім. | grammar term |
+| підрядне речення | /.../ | subordinate clause | ім. | grammar term |
+| узгодження | /.../ | agreement | ім. | grammatical concept |
+| підмет | /.../ | subject | ім. | grammar term |
+| додаток | /.../ | object | ім. | grammar term |
+| прийменник | /.../ | preposition | ім. | part of speech |
+| означення | /.../ | attribute, modifier | ім. | grammatical term |

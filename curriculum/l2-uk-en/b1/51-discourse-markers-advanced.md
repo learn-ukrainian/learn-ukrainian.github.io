@@ -352,7 +352,7 @@ Advanced speakers combine discourse markers for nuanced expression. Here are com
 
 ---
 
-## Summary: Key Takeaways
+# Підсумок: Key Takeaways
 
 This module covered advanced discourse markers for organizing complex texts. Here are the essential points to remember:
 
@@ -380,7 +380,7 @@ This module covered advanced discourse markers for organizing complex texts. Her
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Категорії маркерів
 > Визначте категорію дискурсивного маркера.
@@ -1059,37 +1059,37 @@ This module covered advanced discourse markers for organizing complex texts. Her
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| по-перше | firstly | перший пункт |
-| по-друге | secondly | другий пункт |
-| по-третє | thirdly | третій пункт |
-| по-четверте | fourthly | четвертий пункт |
-| по-п'яте | fifthly | п'ятий пункт |
-| насамперед | first of all | пріоритет |
-| передусім | above all | пріоритет |
-| крім того | in addition | додавання |
-| додатково | additionally | формальне |
-| більше того | moreover | підсилення |
-| не кажучи вже про | not to mention | очевидне |
-| тим паче | especially | підсилення |
-| тим більше | even more so | сильне підсилення |
-| з іншого боку | on the other hand | протиставлення |
-| натомість | instead | заміна |
-| водночас | at the same time | одночасність |
-| попри це | despite this | поступка |
-| незважаючи на | despite | формальна поступка |
-| внаслідок | as a result of | наcлідок |
-| у результаті | as a result | наслідок |
-| підсумовуючи | to summarize | підсумок |
-| загалом кажучи | generally speaking | узагальнення |
-| у підсумку | in summary | підсумок |
-| нарешті | finally | завершення |
-| насамкінець | in conclusion | формальне завершення |
-| на завершення | to conclude | формальне завершення |
-| врешті-решт | ultimately | після процесу |
-| загалом | generally | розмовне |
-| а ще | and also | розмовне |
-| та все одно | but still | розмовне |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| по-перше | /.../ | firstly | - | перший пункт |
+| по-друге | /.../ | secondly | - | другий пункт |
+| по-третє | /.../ | thirdly | - | третій пункт |
+| по-четверте | /.../ | fourthly | - | четвертий пункт |
+| по-п'яте | /.../ | fifthly | - | п'ятий пункт |
+| насамперед | /.../ | first of all | - | пріоритет |
+| передусім | /.../ | above all | - | пріоритет |
+| крім того | /.../ | in addition | - | додавання |
+| додатково | /.../ | additionally | - | формальне |
+| більше того | /.../ | moreover | - | підсилення |
+| не кажучи вже про | /.../ | not to mention | - | очевидне |
+| тим паче | /.../ | especially | - | підсилення |
+| тим більше | /.../ | even more so | - | сильне підсилення |
+| з іншого боку | /.../ | on the other hand | - | протиставлення |
+| натомість | /.../ | instead | - | заміна |
+| водночас | /.../ | at the same time | - | одночасність |
+| попри це | /.../ | despite this | - | поступка |
+| незважаючи на | /.../ | despite | - | формальна поступка |
+| внаслідок | /.../ | as a result of | - | наcлідок |
+| у результаті | /.../ | as a result | - | наслідок |
+| підсумовуючи | /.../ | to summarize | - | підсумок |
+| загалом кажучи | /.../ | generally speaking | - | узагальнення |
+| у підсумку | /.../ | in summary | - | підсумок |
+| нарешті | /.../ | finally | - | завершення |
+| насамкінець | /.../ | in conclusion | - | формальне завершення |
+| на завершення | /.../ | to conclude | - | формальне завершення |
+| врешті-решт | /.../ | ultimately | - | після процесу |
+| загалом | /.../ | generally | - | розмовне |
+| а ще | /.../ | and also | - | розмовне |
+| та все одно | /.../ | but still | - | розмовне |

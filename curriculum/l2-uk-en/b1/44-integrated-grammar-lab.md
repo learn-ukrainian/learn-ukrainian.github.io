@@ -293,7 +293,7 @@ To truly master register, try rewriting a famous text in the wrong style. Let's 
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -324,7 +324,7 @@ To truly master register, try rewriting a famous text in the wrong style. Let's 
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Identify the Register
 
@@ -977,27 +977,27 @@ To truly master register, try rewriting a famous text in the wrong style. Let's 
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| звіт | report | офіційний документ |
-| статистика | statistics | формальний термін |
-| дані | data | множина, формальний |
-| огляд | review, overview | офіційний контекст |
-| аналіз | analysis | формальний термін |
-| зауваження | remark, comment | нейтральний термін |
-| доповнення | addition, supplement | офіційний стиль |
-| уточнення | clarification | офіційний термін |
-| коригування | correction, adjustment | офіційний стиль |
-| підсумок | summary, conclusion | завершення звіту |
-| загалом | in general, overall | дискурсивний маркер |
-| в цілому | on the whole | синонім «загалом» |
-| зокрема | in particular | дискурсивний маркер |
-| власне кажучи | actually, strictly speaking | уточнення |
-| чесно кажучи | honestly speaking | відвертість |
-| регістр | register, style level | лінгвістичний термін |
-| стилістика | stylistics | наука про стилі |
-| тон | tone | характер висловлювання |
-| контекст | context | середовище вживання |
-| відповідність | appropriateness | стилістична якість |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| звіт | /.../ | report | - | офіційний документ |
+| статистика | /.../ | statistics | - | формальний термін |
+| дані | /.../ | data | - | множина, формальний |
+| огляд | /.../ | review, overview | - | офіційний контекст |
+| аналіз | /.../ | analysis | - | формальний термін |
+| зауваження | /.../ | remark, comment | - | нейтральний термін |
+| доповнення | /.../ | addition, supplement | - | офіційний стиль |
+| уточнення | /.../ | clarification | - | офіційний термін |
+| коригування | /.../ | correction, adjustment | - | офіційний стиль |
+| підсумок | /.../ | summary, conclusion | - | завершення звіту |
+| загалом | /.../ | in general, overall | - | дискурсивний маркер |
+| в цілому | /.../ | on the whole | - | синонім «загалом» |
+| зокрема | /.../ | in particular | - | дискурсивний маркер |
+| власне кажучи | /.../ | actually, strictly speaking | - | уточнення |
+| чесно кажучи | /.../ | honestly speaking | - | відвертість |
+| регістр | /.../ | register, style level | - | лінгвістичний термін |
+| стилістика | /.../ | stylistics | - | наука про стилі |
+| тон | /.../ | tone | - | характер висловлювання |
+| контекст | /.../ | context | - | середовище вживання |
+| відповідність | /.../ | appropriateness | - | стилістична якість |

@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 385 | Skipped |
 | **Підсумок** | ✅ | 60 | Included in Core |
 | **Need More Practice?** | ⚪️ | 54 | Skipped |
-| **Activities** | ➖ | 237 | Excluded Type |
+| **Вправи** | ⚪️ | 237 | Skipped |
 | **match-up: Стосунки — Relationships** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Опис стосунків** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Позитивні vs Негативні** | 🎮 | 15 | Activity (15 items, min 8) |
@@ -38,4 +38,4 @@
 | **mark-the-words: Знайдіть слова про стосунки** | 🎮 | 8 | Activity (8 items, min 6) |
 | **select: Якості здорових стосунків** | 🎮 | 10 | Activity (10 items, min 6) |
 | **quiz: Перевірка знань** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Словник** | ⚪️ | 0 | Skipped |

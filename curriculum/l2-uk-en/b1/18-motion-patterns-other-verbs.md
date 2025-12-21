@@ -319,7 +319,7 @@ Native speakers constantly use motion verbs in idioms. Here are the most common 
 
 ---
 
-## Summary
+# Підсумок
 
 ## Motion Prefix Transfer Patterns
 
@@ -367,7 +367,7 @@ Native speakers constantly use motion verbs in idioms. Here are the most common 
 > - 📖 [Ukrainian Verb Prefixes with Motion Verbs](https://www.ukrainianlessons.com/prefixes/) — Deep dive into prefixes
 > - 📺 [Їздити VS Їхати/ Йти VS Ходити](https://www.youtube.com/watch?v=T6YwFExsRVc) — Ukrainian grammar
 
-## Activities
+# Вправи
 
 ## fill-in: Префіксні дієслова
 > Заповніть пропуски правильними формами.
@@ -1000,7 +1000,7 @@ Native speakers constantly use motion verbs in idioms. Here are the most common 
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

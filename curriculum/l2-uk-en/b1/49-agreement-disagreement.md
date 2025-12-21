@@ -394,7 +394,7 @@ vocabulary_count: 25
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -417,7 +417,7 @@ vocabulary_count: 25
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М48)
 > Quick review from the previous module.
@@ -1002,7 +1002,7 @@ vocabulary_count: 25
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you learned to **agree and disagree** with varying levels of directness and politeness.
 
@@ -1017,9 +1017,9 @@ In the next module, you'll learn **discourse markers** — connectors that organ
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
 | згоден | /ˈzɦodɛn/ | (I) agree (m) | Short form |
 | згодна | /ˈzɦodnɑ/ | (I) agree (f) | Short form |

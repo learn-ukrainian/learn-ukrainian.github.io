@@ -304,7 +304,7 @@ Ukrainian folklore preserves ancient uses of numerals. These fixed phrases often
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -337,7 +337,7 @@ Ukrainian folklore preserves ancient uses of numerals. These fixed phrases often
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Cardinal or Collective?
 
@@ -954,32 +954,32 @@ Ukrainian folklore preserves ancient uses of numerals. These fixed phrases often
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| двоє | two (collective) | для груп людей, pluralia tantum |
-| троє | three (collective) | для груп людей, pluralia tantum |
-| четверо | four (collective) | для груп людей, pluralia tantum |
-| п'ятеро | five (collective) | для груп людей, pluralia tantum |
-| шестеро | six (collective) | для груп людей, pluralia tantum |
-| семеро | seven (collective) | для груп людей, pluralia tantum |
-| восьмеро | eight (collective) | для груп людей, pluralia tantum |
-| дев'ятеро | nine (collective) | для груп людей, pluralia tantum |
-| десятеро | ten (collective) | для груп людей, pluralia tantum |
-| обидва | both (m.) | чоловічий рід |
-| обидві | both (f.) | жіночий рід |
-| обоє | both (mixed/n.) | змішаний або середній |
-| половина | half | 1/2 |
-| третина | one third | 1/3 |
-| чверть | quarter | 1/4 |
-| одна п'ята | one fifth | 1/5 |
-| дві третіх | two thirds | 2/3 |
-| три четвертих | three fourths | 3/4 |
-| відсоток | percent | український термін |
-| процент | percent | запозичення |
-| частка | share, portion | абстрактна частина |
-| частина | part | конкретна частина |
-| долька | segment | для фруктів (апельсин) |
-| дріб | fraction | математичний термін |
-| пропорція | proportion | співвідношення |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| двоє | /.../ | two (collective) | - | для груп людей, pluralia tantum |
+| троє | /.../ | three (collective) | - | для груп людей, pluralia tantum |
+| четверо | /.../ | four (collective) | - | для груп людей, pluralia tantum |
+| п'ятеро | /.../ | five (collective) | - | для груп людей, pluralia tantum |
+| шестеро | /.../ | six (collective) | - | для груп людей, pluralia tantum |
+| семеро | /.../ | seven (collective) | - | для груп людей, pluralia tantum |
+| восьмеро | /.../ | eight (collective) | - | для груп людей, pluralia tantum |
+| дев'ятеро | /.../ | nine (collective) | - | для груп людей, pluralia tantum |
+| десятеро | /.../ | ten (collective) | - | для груп людей, pluralia tantum |
+| обидва | /.../ | both (m.) | - | чоловічий рід |
+| обидві | /.../ | both (f.) | - | жіночий рід |
+| обоє | /.../ | both (mixed/n.) | - | змішаний або середній |
+| половина | /.../ | half | - | 1/2 |
+| третина | /.../ | one third | - | 1/3 |
+| чверть | /.../ | quarter | - | 1/4 |
+| одна п'ята | /.../ | one fifth | - | 1/5 |
+| дві третіх | /.../ | two thirds | - | 2/3 |
+| три четвертих | /.../ | three fourths | - | 3/4 |
+| відсоток | /.../ | percent | - | український термін |
+| процент | /.../ | percent | - | запозичення |
+| частка | /.../ | share, portion | - | абстрактна частина |
+| частина | /.../ | part | - | конкретна частина |
+| долька | /.../ | segment | - | для фруктів (апельсин) |
+| дріб | /.../ | fraction | - | математичний термін |
+| пропорція | /.../ | proportion | - | співвідношення |

@@ -1,16 +1,9 @@
 # Audit Report: 64-collocations-expressions.md
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
-**Overall Status:** ❌ FAIL
-
-## LINT ERRORS
-- ❌ Line 1180: Transliteration Column detected in M64 (Policy M21+: None). Remove column.
-- ❌ Line 1181: Transliteration Column detected in M64 (Policy M21+: None). Remove column.
-
-## Recommendation
-**📝 UPDATE** (severity 5/100)
+**Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 4229/1500 (>2500 may be too long)
+- **Words:** ✅ 1569/1500
 - **Activities:** ✅ 14/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -19,7 +12,7 @@
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 69/30
 - **Structure:** ✅ Valid Structure
-- **Lint:** ❌ 2 Format Errors
+- **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 64.2% (target 60-65% (B1.5-6 Vocab))
 
@@ -32,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 272 | Skipped |
 | **Need More Practice?** | ⚪️ | 140 | Skipped |
 | **Practice** | ⚪️ | 115 | Skipped |
-| **Exercises** | ⚪️ | 0 | Skipped |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М63)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Правильні колокації** | 🎮 | 10 | Activity (10 items, min 8) |
 | **match-up: Дієслово + іменник** | 🎮 | 10 | Activity (10 items, min 8) |
@@ -47,5 +40,5 @@
 | **dialogue-reorder: Ділова зустріч** | 🎮 | 5 | Activity (5 items, min 5) |
 | **select: Вибір правильних колокацій** | 🎮 | 6 | Activity (6 items, min 6) |
 | **true-false: Факти про колокації** | 🎮 | 14 | Activity (14 items, min 8) |
-| **Summary** | ✅ | 152 | Included in Core |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Підсумок** | ✅ | 152 | Included in Core |
+| **Словник** | ⚪️ | 0 | Skipped |

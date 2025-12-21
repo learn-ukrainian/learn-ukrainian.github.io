@@ -26,7 +26,7 @@
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 363 | Skipped |
 | **Stylistic Register: The Art of Distance** | ⚪️ | 139 | Skipped |
-| **Summary** | ✅ | 131 | Included in Core |
+| **Підсумок** | ✅ | 131 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Passive Type Recognition** | 🎮 | 15 | Activity (15 items, min 8) |
 | **match-up: Active to Passive Pairs** | 🎮 | 14 | Activity (14 items, min 8) |

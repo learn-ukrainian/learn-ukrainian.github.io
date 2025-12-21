@@ -30,7 +30,7 @@
 | **Complex Constructions** | ⚪️ | 69 | Skipped |
 | **Діалог: Спогади** | ✅ | 119 | Included in Core |
 | **Діалог 2: Філософська розмова** | ✅ | 234 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **коли vs що Summary** | ✅ | 0 | Included in Core |
 | **Key Patterns** | ✅ | 263 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |

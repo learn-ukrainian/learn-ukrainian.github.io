@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 709 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 183 | Skipped |
-| **Summary** | ✅ | 70 | Included in Core |
+| **Підсумок** | ✅ | 95 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М35)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Утворення дієприслівників** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -40,5 +40,4 @@
 | **dialogue-reorder: Ранкова розмова** | 🎮 | 6 | Activity (6 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 14 | Activity (14 items, min 6) |
 | **mark-the-words: Знайдіть дієприслівники** | 🎮 | 6 | Activity (6 items, min 6) |
-| **Підсумок** | ✅ | 95 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

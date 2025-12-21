@@ -321,7 +321,7 @@ LEVEL_CONFIG = {
         'min_vocab': 20,
         'min_engagement': 5,
         'min_immersion': 50,
-        'max_immersion': 55,
+        'max_immersion': 65,  # Graduated: Starts at 50%, goes up to 60%+
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
@@ -332,8 +332,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 30,
         'min_engagement': 5,
-        'min_immersion': 65,
-        'max_immersion': 70,
+        'min_immersion': 60,  # Starts at 60%
+        'max_immersion': 80,  # Max 80% for earlier B1 phases
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
@@ -355,8 +355,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 55,
-        'max_immersion': 60,
+        'min_immersion': 70,  # Aligns with B1.7-8
+        'max_immersion': 85,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
     },
@@ -378,8 +378,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
-        'min_immersion': 50,
-        'max_immersion': 70,
+        'min_immersion': 70,
+        'max_immersion': 85,
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
@@ -390,8 +390,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,
         'min_engagement': 6,
-        'min_immersion': 65,
-        'max_immersion': 70,
+        'min_immersion': 60,
+        'max_immersion': 75,
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
@@ -402,8 +402,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 30,
         'min_engagement': 6,
-        'min_immersion': 80,
-        'max_immersion': 85,
+        'min_immersion': 75,
+        'max_immersion': 90,
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
@@ -414,7 +414,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 65,
+        'min_immersion': 75,
         'max_immersion': 85,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
@@ -426,8 +426,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,
         'min_engagement': 5,
-        'min_immersion': 80,
-        'max_immersion': 85,
+        'min_immersion': 85,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
     },
@@ -438,10 +438,22 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 20,
         'min_engagement': 5,
-        'min_immersion': 80,
-        'max_immersion': 85,
+        'min_immersion': 85,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'cloze', 'fill-in', 'true-false', 'quiz'}
+    },
+    'B2-capstone': {
+        'target_words': 1000,
+        'min_activities': 12,
+        'min_items_per_activity': 14,
+        'min_types_unique': 4,
+        'min_vocab': 20,
+        'min_engagement': 5,
+        'min_immersion': 90,
+        'max_immersion': 100,
+        'transliteration_allowed': False,
+        'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'B2-checkpoint': {
         'target_words': 1000,
@@ -473,8 +485,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 7,
-        'min_immersion': 85,
-        'max_immersion': 95,
+        'min_immersion': 90,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
@@ -485,8 +497,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 85,
-        'max_immersion': 90,
+        'min_immersion': 90,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
     },
@@ -497,8 +509,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 90,
-        'max_immersion': 95,
+        'min_immersion': 95,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'translate'}
     },
@@ -509,8 +521,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 24,
         'min_engagement': 6,
-        'min_immersion': 90,
-        'max_immersion': 95,
+        'min_immersion': 95,
+        'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'error-correction', 'cloze'}
     },
@@ -568,7 +580,7 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 95,
+        'min_immersion': 98,
         'max_immersion': 100,
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'error-correction'}
@@ -819,10 +831,8 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     """
     if module_num <= 45:
         return (40, 68)  # B1.1-4: Grammar-heavy (Aspect, Motion, Complex, Participles) - widened for extensive English explanations
-    elif module_num <= 65:
-        return (60, 65)  # B1.5-6: Vocabulary expansion
     else:
-        return (65, 70)  # B1.7-8: Cultural content, pre-B2 runway
+        return (80, 100)  # B1.5-8 (46-80): "Reading to Learn" - deep immersion, minimize English scaffolding
 
 
 def get_level_config(level_code: str, module_focus: str = None) -> dict:

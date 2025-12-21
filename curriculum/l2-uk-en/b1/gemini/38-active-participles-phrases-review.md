@@ -29,7 +29,7 @@
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 199 | Skipped |
 | **Deeper Look: Imperial vs. Native Thought** | ⚪️ | 230 | Skipped |
-| **Summary** | ✅ | 88 | Included in Core |
+| **Підсумок** | ✅ | 75 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М37)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Виберіть правильну заміну** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -43,5 +43,4 @@
 | **translate: Переклад з англійської** | 🎮 | 14 | Activity (14 items, min 6) |
 | **dialogue-reorder: Редакторська правка** | 🎮 | 8 | Activity (8 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 16 | Activity (16 items, min 6) |
-| **Підсумок** | ✅ | 75 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

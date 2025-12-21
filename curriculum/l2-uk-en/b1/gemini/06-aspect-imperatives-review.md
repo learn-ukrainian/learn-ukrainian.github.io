@@ -33,9 +33,9 @@
 | **Контрольована практика: Вибір виду** | ⚪️ | 239 | Skipped |
 | **Вправа на трансформацію** | ⚪️ | 112 | Skipped |
 | **Розширена практика: Діалоги** | ✅ | 366 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Підсумок: Вид у наказовому способі** | ✅ | 123 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Imperative Aspect Selection** | 🎮 | 14 | Activity (14 items, min 6) |
 | **match-up: Situation and Command** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Imperative Aspect Theory** | 🎮 | 14 | Activity (14 items, min 8) |

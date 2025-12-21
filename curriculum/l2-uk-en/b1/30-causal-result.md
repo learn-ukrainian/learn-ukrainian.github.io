@@ -195,7 +195,7 @@ Result conjunctions follow the cause:
 
 ---
 
-## Summary
+# Підсумок
 
 ## Causal and Result Patterns
 
@@ -294,7 +294,7 @@ Advanced speakers use causal chains to link multiple events into a cohesive stor
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## fill-in: Причинові та результативні конструкції
 > Заповніть пропуски правильними сполучниками.
@@ -866,10 +866,10 @@ Advanced speakers use causal chains to link multiple events into a cohesive stor
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
-|-------|-----|----------|-----|----------|
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
 | тому що | /tɔˈmu ʃtʃɔ/ | because | спол. | |
 | бо | /bɔ/ | because | спол. | розмовний |
 | оскільки | /ɔˈskilʲkɪ/ | since, as | спол. | офіційний |

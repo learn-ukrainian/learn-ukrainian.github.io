@@ -863,10 +863,10 @@ def mark_the_words_to_jsx(items: list[MarkTheWordsItem], title: str) -> str:
 
 def process_activities(body: str) -> str:
     """Convert activities section to JSX in-place, preserving document order."""
-    # Find Activities section - matches ## Activities, ## Вправи, ## Вправи (Activities)
+    # Find Activities section - matches # or ## Activities, Вправи, etc.
     match = re.search(
-        r'(## (?:Activities|Вправи(?:\s*\(Activities\))?))\n([\s\S]*?)(?=\n## (?:Vocabulary|Словник|Summary|Підсумок|Self-Assessment|Самооцінка|External|Зовнішні)|\Z)',
-        body
+        r'(^#{1,2}\s+(?:Activities|Вправи(?:\s*\(Activities\))?))\n([\s\S]*?)(?=\n#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок|Self-Assessment|Самооцінка|External|Зовнішні)|\Z)',
+        body, re.MULTILINE
     )
 
     if not match:
@@ -875,8 +875,8 @@ def process_activities(body: str) -> str:
     activities_header = match.group(1)
     activities_section = match.group(2)
 
-    # Parse individual activities
-    activity_blocks = re.split(r'\n## ', activities_section)
+    # Parse individual activities - these should remain H2
+    activity_blocks = re.split(r'\n## ', '\n' + activities_section)
     activities_jsx_parts = []
 
     for block in activity_blocks:
@@ -884,13 +884,13 @@ def process_activities(body: str) -> str:
             continue
 
         # Parse activity type and title
-        type_match = re.match(r'^([\w-]+):\s*(.+?)(?:\n|$)', block)
+        type_match = re.match(r'^([\w-]+):\s*(.+?)(?:\n|$)', block.strip())
         if not type_match:
             continue
 
         activity_type = type_match.group(1).lower()
         title = type_match.group(2).strip()
-        raw_content = block[type_match.end():]
+        raw_content = block.strip()[type_match.end():]
 
         # Extract instruction
         instruction, content = extract_instruction(raw_content)
@@ -939,7 +939,7 @@ def process_activities(body: str) -> str:
         if jsx:
             activities_jsx_parts.append(jsx)
 
-    # Build activities replacement with header
+    # Build activities replacement with header (Standardize to H2 for Docusaurus TOC)
     if activities_jsx_parts:
         activities_jsx = '## 🎯 Activities\n\n' + '\n\n'.join(activities_jsx_parts)
     else:
@@ -1201,11 +1201,11 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
     # Remove duplicate H1 title
     processed = re.sub(r'^#\s+[^\n]+\n', '', processed, count=1)
 
-    # Add emojis to H2 section headings for TOC
-    processed = re.sub(r'^## (Summary|Підсумок)', r'## 📋 \1', processed, flags=re.MULTILINE)
-    processed = re.sub(r'^## (Vocabulary|Словник)', r'## 📚 \1', processed, flags=re.MULTILINE)
-    processed = re.sub(r'^## (Self-Assessment|Самооцінка)', r'## ✅ \1', processed, flags=re.MULTILINE)
-    processed = re.sub(r'^## (External Resources?|Зовнішні ресурси)', r'## 🔗 \1', processed, flags=re.MULTILINE)
+    # Add emojis to H2 section headings for TOC (Standardize to H2 for Docusaurus)
+    processed = re.sub(r'^#{1,2} (Summary|Підсумок)', r'## 📋 \1', processed, flags=re.MULTILINE)
+    processed = re.sub(r'^#{1,2} (Vocabulary|Словник)', r'## 📚 \1', processed, flags=re.MULTILINE)
+    processed = re.sub(r'^#{1,2} (Self-Assessment|Самооцінка)', r'## ✅ \1', processed, flags=re.MULTILINE)
+    processed = re.sub(r'^#{1,2} (External Resources?|Зовнішні ресурси)', r'## 🔗 \1', processed, flags=re.MULTILINE)
 
     # Build MDX
     parts = [frontmatter, imports, '', processed]

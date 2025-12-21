@@ -30,7 +30,7 @@
 | **Stylistic Nuance: Formal vs. Personal** | ⚪️ | 71 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 147 | Skipped |
-| **Summary** | ✅ | 77 | Included in Core |
+| **Підсумок** | ✅ | 71 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М38)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Утворення пасивних дієприкметників** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -44,5 +44,4 @@
 | **translate: Пасивні конструкції** | 🎮 | 14 | Activity (14 items, min 6) |
 | **dialogue-reorder: У музеї** | 🎮 | 8 | Activity (8 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 16 | Activity (16 items, min 6) |
-| **Підсумок** | ✅ | 71 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

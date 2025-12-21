@@ -28,7 +28,7 @@
 | **Part 3: Integrating One-Member Sentences in Complex Structures** | ⚪️ | 139 | Skipped |
 | **Діалог: На роботі** | ✅ | 60 | Included in Core |
 | **Діалог 2: Планування вихідних** | ✅ | 60 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Multi-Clause Sentence Patterns** | ✅ | 0 | Included in Core |
 | **One-Member Sentence Types** | ⚪️ | 0 | Skipped |
 | **Key Impersonal Modal Words** | ⚪️ | 72 | Skipped |

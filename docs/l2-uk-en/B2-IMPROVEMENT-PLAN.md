@@ -1,8 +1,8 @@
 # B2 Improvement Plan
 
 **Status:** In Progress
-**Created:** 2024-12-14
-**Updated:** 2024-12-14
+**Created:** 2025-12-14
+**Updated:** 2025-12-14
 **Based on:** Claude + Gemini pedagogical assessments
 
 ---
@@ -229,17 +229,18 @@ Current visible checkpoints: M110 (B2.4), M125 (Final)
 
 **Priority:** P1 (High)
 **Effort:** Low
+**Status:** ✅ IMPLEMENTED (2025-12-21)
 
 Current plan jumps from B1 (50-70%) to B2 (80%). This may be too aggressive.
 
-**Proposed graduated immersion:**
+**Implemented graduated immersion:**
 | Phase | Content Type | Immersion |
 |-------|-------------|-----------|
-| B2.1a-b (M01-40) | Grammar (metalinguistic) | 70-75% |
-| B2.2 (M41-70) | Phraseology | 75-80% |
-| B2.3 (M71-85/95) | History (narrative) | 80-85% |
-| B2.4 (M86-110/96-120) | Biographies (narrative) | 80-85% |
-| B2.5 (M111-125/121-135) | Capstone (pre-C1) | 85-90% |
+| B2.1a-b (M01-40) | Grammar (metalinguistic) | 75-80% |
+| B2.2 (M41-70) | Phraseology | 80-100% |
+| B2.3 (M71-95) | History (narrative) | 85-100% |
+| B2.4 (M96-120) | Biographies (narrative) | 85-100% |
+| B2.5 (M121-135) | Capstone (pre-C1) | 90-100% |
 
 **Rationale:** Grammar requires more metalinguistic explanation (English). Narrative content (history, biographies) can sustain higher immersion.
 

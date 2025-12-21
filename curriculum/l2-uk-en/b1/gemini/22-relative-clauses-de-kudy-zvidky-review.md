@@ -29,7 +29,7 @@
 | **Related Adverbs** | ⚪️ | 40 | Skipped |
 | **Діалог: Планування подорожі** | ✅ | 127 | Included in Core |
 | **Діалог 2: На вокзалі** | ✅ | 328 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Quick Decision Guide** | ⚪️ | 242 | Skipped |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |

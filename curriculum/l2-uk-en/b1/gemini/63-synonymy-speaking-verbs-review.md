@@ -40,5 +40,5 @@
 | **dialogue-reorder: Ділова розмова** | 🎮 | 5 | Activity (5 items, min 5) |
 | **select: Вибір правильного дієслова** | 🎮 | 6 | Activity (6 items, min 6) |
 | **true-false: Факти про дієслова мовлення** | 🎮 | 14 | Activity (14 items, min 8) |
-| **Summary** | ✅ | 78 | Included in Core |
+| **Підсумок** | ✅ | 78 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

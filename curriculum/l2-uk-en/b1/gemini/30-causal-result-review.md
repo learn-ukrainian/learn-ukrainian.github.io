@@ -28,11 +28,11 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Діалог: Пояснення ситуації** | ✅ | 61 | Included in Core |
 | **Текст для аналізу: Успішний проєкт** | ✅ | 164 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Causal and Result Patterns** | ✅ | 343 | Included in Core |
 | **Narrative Chains: The Domino Effect** | ✅ | 137 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Причинові та результативні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Причина і результат** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія причинових речень** | 🎮 | 14 | Activity (14 items, min 8) |

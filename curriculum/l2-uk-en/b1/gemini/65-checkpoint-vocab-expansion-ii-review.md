@@ -43,5 +43,5 @@
 | **group-sort: Categorization** | 🎮 | 32 | Activity (32 items, min 8) |
 | **select: Multiple Correct Options** | 🎮 | 6 | Activity (6 items, min 6) |
 | **true-false: Knowledge Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

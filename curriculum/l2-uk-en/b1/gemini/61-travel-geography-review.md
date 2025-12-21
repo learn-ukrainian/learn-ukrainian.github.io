@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 625 | Skipped |
 | **Need More Practice?** | ⚪️ | 70 | Skipped |
 | **Практика** | ⚪️ | 147 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М60)** | 🎮 | 9 | Activity (9 items, min 8) |
 | **quiz: Типи подорожей** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Слова та визначення** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -480,7 +480,7 @@ Then Taras "їв повільно" and "читав" — both imperfective becaus
 
 ---
 
-## Summary
+# Підсумок
 
 **What You've Learned: A Mental Model for Aspect**
 
@@ -567,7 +567,7 @@ Ukrainian just makes these distinctions obligatory and consistent across all con
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## quiz: Визначення виду
 > Оберіть правильну відповідь про вид дієслова.
@@ -1425,7 +1425,7 @@ Ukrainian just makes these distinctions obligatory and consistent across all con
     > [!answer] вчив
     > [!options] вчив | вивчив | вчить | вивчить
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

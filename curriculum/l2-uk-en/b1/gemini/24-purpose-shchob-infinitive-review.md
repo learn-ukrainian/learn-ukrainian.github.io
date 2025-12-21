@@ -29,7 +29,7 @@
 | **Purpose vs Other Constructions** | ⚪️ | 70 | Skipped |
 | **Діалог: На роботі** | ✅ | 119 | Included in Core |
 | **Діалог 2: Планування** | ✅ | 195 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Same-Subject Purpose Pattern** | ✅ | 0 | Included in Core |
 | **Key Rule** | ⚪️ | 9 | Skipped |
 | **Extended Forms** | ⚪️ | 249 | Skipped |

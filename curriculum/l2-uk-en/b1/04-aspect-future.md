@@ -388,7 +388,7 @@ Choose the most appropriate form based on context:
 
 ---
 
-## Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 
@@ -444,7 +444,7 @@ Choose the most appropriate form based on context:
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## quiz: Three Future Forms
 > Choose the correct answer about Ukrainian future tense.
@@ -1374,7 +1374,7 @@ Choose the most appropriate form based on context:
     > [!answer] зроблю
     > [!options] буду робити | робитиму | зроблю | роблю
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

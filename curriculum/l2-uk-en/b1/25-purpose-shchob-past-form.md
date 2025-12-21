@@ -267,7 +267,7 @@ Using **щоб** constructions allows you to soften commands significantly. Comp
 
 ---
 
-## Summary
+# Підсумок
 
 ## Different-Subject Purpose Pattern
 
@@ -304,7 +304,7 @@ Using **щоб** constructions allows you to soften commands significantly. Comp
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: Правильна минула форма
 > Заповніть пропуски правильною формою.
@@ -934,27 +934,27 @@ Using **щоб** constructions allows you to soften commands significantly. Comp
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | ЧМ | Примітка |
-|-------|----------|-----|----------|
-| хотіти щоб | to want (sb) to | дієсл. | triggers past form |
-| просити щоб | to ask (sb) to | дієсл. | triggers past form |
-| наказати щоб | to order (sb) to | дієсл. | triggers past form |
-| вимагати щоб | to demand that | дієсл. | triggers past form |
-| дозволити щоб | to allow (sb) to | дієсл. | triggers past form |
-| заборонити щоб | to forbid (sb) to | дієсл. | triggers past form |
-| порадити щоб | to advise (sb) to | дієсл. | triggers past form |
-| запропонувати щоб | to suggest that | дієсл. | triggers past form |
-| домогтися щоб | to achieve that | дієсл. | triggers past form |
-| добитися щоб | to get (sb) to | дієсл. | triggers past form |
-| переконати щоб | to convince (sb) to | дієсл. | triggers past form |
-| наполягати щоб | to insist that | дієсл. | triggers past form |
-| рекомендувати щоб | to recommend that | дієсл. | triggers past form |
-| попросити щоб | to ask (sb) to | дієсл. | perfective of просити |
-| побажати щоб | to wish that | дієсл. | triggers past form |
-| очікувати щоб | to expect (sb) to | дієсл. | triggers past form |
-| сподіватися щоб | to hope that | дієсл. | triggers past form |
-| мріяти щоб | to dream that | дієсл. | triggers past form |
-| планувати щоб | to plan for (sb) to | дієсл. | triggers past form |
-| намагатися щоб | to try to get (sb) to | дієсл. | triggers past form |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| хотіти щоб | /.../ | to want (sb) to | дієсл. | triggers past form |
+| просити щоб | /.../ | to ask (sb) to | дієсл. | triggers past form |
+| наказати щоб | /.../ | to order (sb) to | дієсл. | triggers past form |
+| вимагати щоб | /.../ | to demand that | дієсл. | triggers past form |
+| дозволити щоб | /.../ | to allow (sb) to | дієсл. | triggers past form |
+| заборонити щоб | /.../ | to forbid (sb) to | дієсл. | triggers past form |
+| порадити щоб | /.../ | to advise (sb) to | дієсл. | triggers past form |
+| запропонувати щоб | /.../ | to suggest that | дієсл. | triggers past form |
+| домогтися щоб | /.../ | to achieve that | дієсл. | triggers past form |
+| добитися щоб | /.../ | to get (sb) to | дієсл. | triggers past form |
+| переконати щоб | /.../ | to convince (sb) to | дієсл. | triggers past form |
+| наполягати щоб | /.../ | to insist that | дієсл. | triggers past form |
+| рекомендувати щоб | /.../ | to recommend that | дієсл. | triggers past form |
+| попросити щоб | /.../ | to ask (sb) to | дієсл. | perfective of просити |
+| побажати щоб | /.../ | to wish that | дієсл. | triggers past form |
+| очікувати щоб | /.../ | to expect (sb) to | дієсл. | triggers past form |
+| сподіватися щоб | /.../ | to hope that | дієсл. | triggers past form |
+| мріяти щоб | /.../ | to dream that | дієсл. | triggers past form |
+| планувати щоб | /.../ | to plan for (sb) to | дієсл. | triggers past form |
+| намагатися щоб | /.../ | to try to get (sb) to | дієсл. | triggers past form |

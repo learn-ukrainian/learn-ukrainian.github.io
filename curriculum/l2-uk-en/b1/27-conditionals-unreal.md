@@ -230,7 +230,7 @@ Ukrainian uses the same verb forms for both present and past unreal conditions. 
 
 ---
 
-## Summary
+# Підсумок
 
 ## Unreal Conditional Patterns
 
@@ -285,7 +285,7 @@ The conditional mood in Ukrainian is remarkably versatile. Beyond hypothetical c
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## fill-in: Нереальні умови
 > Заповніть пропуски правильними формами.
@@ -853,10 +853,10 @@ The conditional mood in Ukrainian is remarkably versatile. Beyond hypothetical c
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
-|-------|-----|----------|-----|----------|
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
 | якби | /jakˈbɪ/ | if (unreal) | спол. | |
 | б | /b/ | would (particle) | частка | після голосного |
 | би | /bɪ/ | would (particle) | частка | після приголосного |

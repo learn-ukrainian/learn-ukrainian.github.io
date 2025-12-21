@@ -412,32 +412,28 @@ def check_frontmatter_spacing(content: str) -> list[dict]:
 
 def check_heading_levels(content: str) -> list[dict]:
     """
-    Check that section headings use H2 (##) not H1 (#).
-
-    Docusaurus TOC shows H2-H3 by default. H1 should only be used for
-    the page title (ONCE). Any additional H1 headings break the sidebar TOC.
-
-    Three checks:
-    1. Any H1 after the first one is an error (multiple H1s)
-    2. Known section names (warm-up, activities, etc.) must be H2
-    3. Heading hierarchy violations (going UP from H2/H3 to H1)
+    Check that section headings follow the hierarchy from docs/MARKDOWN-FORMAT.md.
+    
+    1. Page Title must be H1 (#)
+    2. Main Sections (Activities, Summary, Vocabulary) must be H1 (#)
+    3. Subsection headers (warm-up, exercises, etc.) must be H2 (##)
     """
     violations = []
 
-    # Reserved section words that should NOT be H1
-    reserved_sections = [
-        'warm-up', 'presentation', 'practice', 'cultural',
-        'summary', 'activities', 'production', 'vocabulary',
-        'reading', 'grammar', 'dialogue', 'підсумок', 'introduction'
+    # Main Sections that MUST be H1 (#)
+    h1_required_sections = [
+        'summary', 'activities', 'vocabulary',  # English
+        'підсумок', 'вправи', 'словник'          # Ukrainian
+    ]
+    
+    # Content sub-sections that SHOULD be H2 (##)
+    h2_preferred_sections = [
+        'warm-up', 'presentation', 'practice', 'production', 
+        'cultural', 'reading', 'grammar', 'діагностика', 'аналіз'
     ]
 
     lines = content.split('\n')
     h1_count = 0
-    first_h1_line = None
-
-    # Track heading hierarchy
-    prev_heading_level = 0
-    prev_heading_line = 0
     in_frontmatter = False
     frontmatter_count = 0
 
@@ -465,43 +461,56 @@ def check_heading_levels(content: str) -> list[dict]:
         heading_lower = heading.lower()
         clean_heading = heading[:50] + ('...' if len(heading) > 50 else '')
 
-        # Check for H1 specifically
+        # Check for H1 compliance
         if current_level == 1:
             h1_count += 1
-
-            if h1_count == 1:
-                first_h1_line = line_num
-                # Still check if first H1 is a reserved section (shouldn't be)
-                for reserved in reserved_sections:
-                    if reserved in heading_lower:
-                        violations.append({
-                            'type': 'HEADING_LEVEL',
-                            'line': line_num,
-                            'issue': f"'{clean_heading}' is a section heading but uses H1 (#)",
-                            'fix': f"Change '# {heading}' to '## {heading}' - reserved for page title only"
-                        })
-                        break
-            else:
-                # Any H1 after the first is definitely wrong
+            # H1 is valid for title (first H1) or specific main sections
+            is_main_section = any(s in heading_lower for s in h1_required_sections)
+            
+            if h1_count > 1 and not is_main_section:
+                # This is a random H1 that shouldn't be one
                 violations.append({
                     'type': 'HEADING_LEVEL',
                     'line': line_num,
-                    'issue': f"Multiple H1 headings: '{clean_heading}' should be H2 (##)",
-                    'fix': f"Only one H1 allowed (page title). Change '# {heading}' to '## {heading}'"
+                    'issue': f"Non-standard H1 heading: '{clean_heading}' should be H2 (##)",
+                    'fix': f"Only Title and Main Sections (Activities/Summary/Vocabulary) should be H1. Change '# {heading}' to '## {heading}'"
                 })
+        
+        # Check for H2 compliance (Sections that should NOT be H1)
+        # Only check if it's NOT the first H1 (which is the module title)
+        if current_level == 1 and h1_count > 1:
+             for h2_sect in h2_preferred_sections:
+                 if h2_sect in heading_lower:
+                    violations.append({
+                        'type': 'HEADING_LEVEL',
+                        'line': line_num,
+                        'issue': f"'{clean_heading}' is a subsection but uses H1 (#)",
+                        'fix': f"Change '# {heading}' to '## {heading}'"
+                    })
+                    break
 
-        # Check heading hierarchy - going from H2/H3 back UP to H1 is wrong
-        # (except for the very first H1 which is the title)
-        if prev_heading_level >= 2 and current_level == 1:
-            violations.append({
-                'type': 'HEADING_HIERARCHY',
+        # Check for sections that MUST be H1 but are H2
+        if current_level == 2:
+            for h1_sect in h1_required_sections:
+                # Use exact word boundaries or start of string match to avoid false positives
+                # e.g. "Exercises" is H2, "Activities" is H1
+                if h1_sect == heading_lower:
+                    violations.append({
+                        'type': 'HEADING_LEVEL',
+                        'line': line_num,
+                        'issue': f"Main section '{clean_heading}' uses H2 (##) but spec requires H1 (#)",
+                        'fix': f"Change '## {heading}' to '# {heading}' for top-level TOC compliance"
+                    })
+                    break
+        
+        # Special case: 'Exercises' as H2 is often a placeholder for '# Activities'
+        if current_level == 2 and heading_lower == 'exercises':
+             violations.append({
+                'type': 'HEADING_LEVEL',
                 'line': line_num,
-                'issue': f"Heading hierarchy broken: H{prev_heading_level} → H1 at '{clean_heading}'",
-                'fix': f"Don't go from ## back to #. Change '# {heading}' to '## {heading}' to maintain proper hierarchy"
+                'issue': f"Placeholder '{clean_heading}' uses H2 (##). Should be '# Activities'",
+                'fix': "Change '## Exercises' to '# Activities' (or '# Вправи')"
             })
-
-        prev_heading_level = current_level
-        prev_heading_line = line_num
 
     return violations
 

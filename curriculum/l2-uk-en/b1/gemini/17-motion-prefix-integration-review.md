@@ -31,9 +31,9 @@
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Exercise 1: Prefix Prediction** | ⚪️ | 65 | Skipped |
 | **Exercise 2: Complete the Journey** | ⚪️ | 223 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **The Complete Motion Prefix System** | ⚪️ | 40 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Префікси руху** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Префікс і напрямок** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія префіксів** | 🎮 | 14 | Activity (14 items, min 8) |

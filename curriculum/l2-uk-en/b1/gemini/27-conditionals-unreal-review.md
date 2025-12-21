@@ -29,10 +29,10 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Діалог: Мрії про майбутнє** | ✅ | 290 | Included in Core |
 | **Текст для аналізу: Життєві роздуми** | ✅ | 185 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Unreal Conditional Patterns** | ✅ | 190 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Нереальні умови** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Умова і наслідок** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія нереальних умов** | 🎮 | 14 | Activity (14 items, min 8) |

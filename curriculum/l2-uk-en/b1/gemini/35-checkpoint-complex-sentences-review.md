@@ -24,7 +24,7 @@
 | **Skill 2: Conditionals** | ⚪️ | 128 | Skipped |
 | **Skill 3: Temporal & Concessive Clauses** | ⚪️ | 76 | Skipped |
 | **Skill 4: Reported Speech** | ⚪️ | 93 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Master Summary: Complex Sentence Structures** | ✅ | 283 | Included in Core |
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Your Learning Journey: Modules 21-34 Recap** | ⚪️ | 352 | Skipped |

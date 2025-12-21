@@ -29,10 +29,10 @@
 | **Extended Practice: Multiple Contexts** | ✅ | 208 | Included in Core |
 | **Dialogue Practice: Complex Scenarios** | ✅ | 150 | Included in Core |
 | **Historical Journey: The Chumaks** | ⚪️ | 132 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Motion Integration Checklist** | ➖ | 166 | Excluded Type |
 | **Need More Practice?** | ⚪️ | 78 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Подорожі** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Англійська і українська** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Подорожні ситуації** | 🎮 | 14 | Activity (14 items, min 8) |

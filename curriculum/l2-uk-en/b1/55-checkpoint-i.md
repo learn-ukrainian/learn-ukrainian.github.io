@@ -204,7 +204,7 @@ This checkpoint reviews **four core skills** from Modules 51-54:
 
 ---
 
-## Summary
+# Підсумок
 
 ### Огляд дискурсивних маркерів (M51)
 
@@ -470,7 +470,7 @@ This dialogue combines vocabulary from all four modules:
 
 ---
 
-## Підсумок
+# Підсумок
 
 Цей модуль перевірив ваше засвоєння лексики з модулів 51-54:
 
@@ -498,7 +498,7 @@ This dialogue combines vocabulary from all four modules:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Загальний тест
 > Визначте правильне значення.
@@ -1147,37 +1147,37 @@ This dialogue combines vocabulary from all four modules:
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Модуль |
-|-------|----------|--------|
-| водночас | at the same time | M51 |
-| проте | however | M51 |
-| зокрема | in particular | M51 |
-| нарешті | finally | M51 |
-| по-перше | firstly | M51 |
-| тим не менше | nevertheless | M51 |
-| зростати | to increase | M52 |
-| знижуватися | to decrease | M52 |
-| стабілізуватися | to stabilize | M52 |
-| покращуватися | to improve | M52 |
-| погіршуватися | to worsen | M52 |
-| коливатися | to fluctuate | M52 |
-| достовірний | reliable | M53 |
-| фейк | fake | M53 |
-| джерело | source | M53 |
-| журналіст | journalist | M53 |
-| дезінформація | disinformation | M53 |
-| пропаганда | propaganda | M53 |
-| уряд | government | M54 |
-| Верховна Рада | Parliament | M54 |
-| вибори | elections | M54 |
-| закон | law | M54 |
-| громадянин | citizen | M54 |
-| реформа | reform | M54 |
-| волонтер | volunteer | M54 |
-| президент | president | M54 |
-| депутат | deputy | M54 |
-| голосування | voting | M54 |
-| корупція | corruption | M54 |
-| демократія | democracy | M54 |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| водночас | /.../ | at the same time | - | M51 |
+| проте | /.../ | however | - | M51 |
+| зокрема | /.../ | in particular | - | M51 |
+| нарешті | /.../ | finally | - | M51 |
+| по-перше | /.../ | firstly | - | M51 |
+| тим не менше | /.../ | nevertheless | - | M51 |
+| зростати | /.../ | to increase | - | M52 |
+| знижуватися | /.../ | to decrease | - | M52 |
+| стабілізуватися | /.../ | to stabilize | - | M52 |
+| покращуватися | /.../ | to improve | - | M52 |
+| погіршуватися | /.../ | to worsen | - | M52 |
+| коливатися | /.../ | to fluctuate | - | M52 |
+| достовірний | /.../ | reliable | - | M53 |
+| фейк | /.../ | fake | - | M53 |
+| джерело | /.../ | source | - | M53 |
+| журналіст | /.../ | journalist | - | M53 |
+| дезінформація | /.../ | disinformation | - | M53 |
+| пропаганда | /.../ | propaganda | - | M53 |
+| уряд | /.../ | government | - | M54 |
+| Верховна Рада | /.../ | Parliament | - | M54 |
+| вибори | /.../ | elections | - | M54 |
+| закон | /.../ | law | - | M54 |
+| громадянин | /.../ | citizen | - | M54 |
+| реформа | /.../ | reform | - | M54 |
+| волонтер | /.../ | volunteer | - | M54 |
+| президент | /.../ | president | - | M54 |
+| депутат | /.../ | deputy | - | M54 |
+| голосування | /.../ | voting | - | M54 |
+| корупція | /.../ | corruption | - | M54 |
+| демократія | /.../ | democracy | - | M54 |

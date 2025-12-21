@@ -420,7 +420,7 @@ Study these examples of correct collocation use:
 
 ---
 
-## Exercises
+# Вправи
 
 ## quiz: Повторення (М63)
 > Quick review from the previous module.
@@ -1116,7 +1116,7 @@ Study these examples of correct collocation use:
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Collocation Groups
 
@@ -1154,77 +1154,77 @@ Study these examples of correct collocation use:
 
 ---
 
-## Vocabulary
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| рішення | the decision | Noun |
-| висновок | the conclusion | Noun |
-| висновки | the conclusions | Noun (pl) |
-| питання | the question | Noun |
-| проблема | the problem | Noun |
-| проблеми | the problems | Noun (pl) |
-| увага | the attention | Noun |
-| перевага | the preference | Noun |
-| значення | the importance | Noun |
-| роль | the acting role | Noun |
-| участь | the participation | Noun |
-| відповідальність | the responsibility | Noun |
-| обов'язок | the duty | Noun |
-| обов'язки | the duties | Noun (pl) |
-| переговори | the negotiations | Noun (pl) |
-| освіта | the education | Noun |
-| досвід | the experience | Noun |
-| успіх | the success | Noun |
-| невдача | the failure | Noun |
-| вимога | a strict requirement | Noun |
-| вимоги | multiple requirements | Noun (pl) |
-| захід | a step or measure | Noun |
-| заходи | actions or measures | Noun (pl) |
-| враження | a mental impression | Noun |
-| закон | a legal statute (law) | Noun |
-| правило | a particular rule | Noun |
-| правила | a set of rules | Noun (pl) |
-| вплив | influence | Noun |
-| опір | resistance | Noun |
-| зв'язки | connections | Noun (pl) |
-| ставити | to raise/put | Verb |
-| порушувати | to break/raise | Verb |
-| нести | to bear/carry | Verb |
-| брати | to take | Verb |
-| робити | to do/make | Verb |
-| вирішувати | to solve | Verb |
-| впливати | to influence | Verb |
-| досягати | to achieve | Verb |
-| набувати | to gain | Verb |
-| здобувати | to obtain | Verb |
-| грати | to play | Verb |
-| вдаватися | to resort/succeed | Verb |
-| справляти | to make (impression) | Verb |
-| вести | to lead/conduct | Verb |
-| звертати | to turn | Verb |
-| надавати | to give/grant | Verb |
-| чинити | to do/commit | Verb |
-| приймати рішення | to make a decision | NOT "робити рішення" |
-| брати участь | to take part | NOT "мати участь" |
-| мати значення | to have significance | Importance |
-| ставити питання | to ask a question | Inquiry |
-| грати роль | to perform a role | Metaphorical |
-| вести переговори | to conduct negotiations | Business |
-| нести відповідальність | to bear responsibility | Duty |
-| здобувати освіту | to obtain education | Career |
-| набувати досвіду | to gain experience | Growth |
-| висувати вимоги | to put forward demands | Formal |
-| порушувати проблему | to raise a problem | Social/Legal |
-| досягати успіху | to achieve success | Personal |
-| зазнавати невдачі | to suffer failure | Setback |
-| вдаватися до заходів | to resort to measures | Action |
-| відігравати роль | to play a role | Equivalent to грати |
-| справляти враження | to make an impression | Social effect |
-| мати вплив | to have influence | Power |
-| чинити опір | to resist | Forceful |
-| виконувати обов'язки | to fulfill duties | Job/Duty |
-| порушувати закон | to break the law | Legal |
-| дотримуватися правил | to follow rules | Compliance |
-| нехтувати обов'язками | to neglect duties | Negligence |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| рішення | /.../ | the decision | ім. |  |
+| висновок | /.../ | the conclusion | ім. |  |
+| висновки | /.../ | the conclusions | ім. | (pl) |
+| питання | /.../ | the question | ім. |  |
+| проблема | /.../ | the problem | ім. |  |
+| проблеми | /.../ | the problems | ім. | (pl) |
+| увага | /.../ | the attention | ім. |  |
+| перевага | /.../ | the preference | ім. |  |
+| значення | /.../ | the importance | ім. |  |
+| роль | /.../ | the acting role | ім. |  |
+| участь | /.../ | the participation | ім. |  |
+| відповідальність | /.../ | the responsibility | ім. |  |
+| обов'язок | /.../ | the duty | ім. |  |
+| обов'язки | /.../ | the duties | ім. | (pl) |
+| переговори | /.../ | the negotiations | ім. | (pl) |
+| освіта | /.../ | the education | ім. |  |
+| досвід | /.../ | the experience | ім. |  |
+| успіх | /.../ | the success | ім. |  |
+| невдача | /.../ | the failure | ім. |  |
+| вимога | /.../ | a strict requirement | ім. |  |
+| вимоги | /.../ | multiple requirements | ім. | (pl) |
+| захід | /.../ | a step or measure | ім. |  |
+| заходи | /.../ | actions or measures | ім. | (pl) |
+| враження | /.../ | a mental impression | ім. |  |
+| закон | /.../ | a legal statute (law) | ім. |  |
+| правило | /.../ | a particular rule | ім. |  |
+| правила | /.../ | a set of rules | ім. | (pl) |
+| вплив | /.../ | influence | ім. |  |
+| опір | /.../ | resistance | ім. |  |
+| зв'язки | /.../ | connections | ім. | (pl) |
+| ставити | /.../ | to raise/put | дієсл. |  |
+| порушувати | /.../ | to break/raise | дієсл. |  |
+| нести | /.../ | to bear/carry | дієсл. |  |
+| брати | /.../ | to take | дієсл. |  |
+| робити | /.../ | to do/make | дієсл. |  |
+| вирішувати | /.../ | to solve | дієсл. |  |
+| впливати | /.../ | to influence | дієсл. |  |
+| досягати | /.../ | to achieve | дієсл. |  |
+| набувати | /.../ | to gain | дієсл. |  |
+| здобувати | /.../ | to obtain | дієсл. |  |
+| грати | /.../ | to play | дієсл. |  |
+| вдаватися | /.../ | to resort/succeed | дієсл. |  |
+| справляти | /.../ | to make (impression) | дієсл. |  |
+| вести | /.../ | to lead/conduct | дієсл. |  |
+| звертати | /.../ | to turn | дієсл. |  |
+| надавати | /.../ | to give/grant | дієсл. |  |
+| чинити | /.../ | to do/commit | дієсл. |  |
+| приймати рішення | /.../ | to make a decision | - | NOT "робити рішення" |
+| брати участь | /.../ | to take part | - | NOT "мати участь" |
+| мати значення | /.../ | to have significance | - | Importance |
+| ставити питання | /.../ | to ask a question | - | Inquiry |
+| грати роль | /.../ | to perform a role | - | Metaphorical |
+| вести переговори | /.../ | to conduct negotiations | - | Business |
+| нести відповідальність | /.../ | to bear responsibility | - | Duty |
+| здобувати освіту | /.../ | to obtain education | - | Career |
+| набувати досвіду | /.../ | to gain experience | - | Growth |
+| висувати вимоги | /.../ | to put forward demands | - | Formal |
+| порушувати проблему | /.../ | to raise a problem | - | Social/Legal |
+| досягати успіху | /.../ | to achieve success | - | Personal |
+| зазнавати невдачі | /.../ | to suffer failure | - | Setback |
+| вдаватися до заходів | /.../ | to resort to measures | - | Action |
+| відігравати роль | /.../ | to play a role | - | Equivalent to грати |
+| справляти враження | /.../ | to make an impression | - | Social effect |
+| мати вплив | /.../ | to have influence | - | Power |
+| чинити опір | /.../ | to resist | - | Forceful |
+| виконувати обов'язки | /.../ | to fulfill duties | - | Job/Duty |
+| порушувати закон | /.../ | to break the law | - | Legal |
+| дотримуватися правил | /.../ | to follow rules | - | Compliance |
+| нехтувати обов'язками | /.../ | to neglect duties | - | Negligence |
 

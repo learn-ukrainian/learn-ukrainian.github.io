@@ -417,7 +417,7 @@ Change each sentence from process-focused to result-focused (or vice versa):
 
 ---
 
-## Summary
+# Підсумок
 
 ## What You've Learned: A Framework for Process vs Result
 
@@ -479,7 +479,7 @@ The process/result distinction is perhaps the most practical aspect of Ukrainian
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## quiz: Процес чи результат
 > Оберіть правильну відповідь про процес і результат.
@@ -1335,7 +1335,7 @@ The process/result distinction is perhaps the most practical aspect of Ukrainian
     > [!answer] приготувала
     > [!options] приготувала | готувала | готує | приготує
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

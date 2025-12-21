@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 310 | Skipped |
 | **Need More Practice?** | ⚪️ | 72 | Skipped |
 | **Практика** | ⚪️ | 520 | Skipped |
-| **Summary: Key Takeaways** | ✅ | 275 | Included in Core |
+| **Підсумок: Key Takeaways** | ✅ | 275 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Категорії маркерів** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Переклад маркерів** | 🎮 | 14 | Activity (14 items, min 8) |

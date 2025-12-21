@@ -192,7 +192,7 @@ The **Chumaks** (Ukrainian salt traders of the 17th-19th centuries) are legendar
 
 ---
 
-## Summary
+# Підсумок
 
 ## Motion Integration Checklist
 
@@ -236,7 +236,7 @@ When describing motion, learners often confuse similar prefixes. Remember these 
 > - 📖 [Ukrainian Verb Prefixes with Motion Verbs](https://www.ukrainianlessons.com/prefixes/) — Deep dive into prefixes
 > - 📺 [Їздити VS Їхати/ Йти VS Ходити](https://www.youtube.com/watch?v=T6YwFExsRVc) — Ukrainian grammar
 
-## Activities
+# Вправи
 
 ## fill-in: Подорожі
 > Заповніть пропуски правильними формами.
@@ -867,7 +867,7 @@ When describing motion, learners often confuse similar prefixes. Remember these 
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

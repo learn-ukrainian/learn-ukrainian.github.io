@@ -434,7 +434,7 @@ Use passive forms when you want to sound **objective, professional, or poetic**.
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -454,7 +454,7 @@ Use passive forms when you want to sound **objective, professional, or poetic**.
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М38)
 > Quick review from the active participles module.
@@ -1108,7 +1108,7 @@ Use passive forms when you want to sound **objective, professional, or poetic**.
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you mastered **full passive participles** (-ний/-тий) — the essential tool for describing states resulting from completed actions. These forms are everywhere in Ukrainian!
 
@@ -1121,27 +1121,27 @@ In the next module, you'll learn the **short forms** (-но/-то) — impersona
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| написаний | written | написати → написаний |
-| зроблений | done, made | зробити → зроблений (б→бл) |
-| прочитаний | read | прочитати → прочитаний |
-| сказаний | said | сказати → сказаний |
-| відкритий | open(ed) | відкрити → відкритий |
-| закритий | closed | закрити → закритий |
-| взятий | taken | взяти → взятий |
-| даний | given | дати → даний |
-| куплений | bought | купити → куплений (п→пл) |
-| проданий | sold | продати → проданий |
-| отриманий | received | отримати → отриманий |
-| надісланий | sent | надіслати → надісланий |
-| виконаний | completed | виконати → виконаний |
-| закінчений | finished | закінчити → закінчений |
-| побудований | built | побудувати → побудований |
-| знищений | destroyed | знищити → знищений |
-| створений | created | створити → створений |
-| відомий | known, famous | lexicalized as adjective |
-| улюблений | beloved, favorite | lexicalized as adjective |
-| забутий | forgotten | забути → забутий |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| написаний | /.../ | written | - | написати → написаний |
+| зроблений | /.../ | done, made | - | зробити → зроблений (б→бл) |
+| прочитаний | /.../ | read | - | прочитати → прочитаний |
+| сказаний | /.../ | said | - | сказати → сказаний |
+| відкритий | /.../ | open(ed) | - | відкрити → відкритий |
+| закритий | /.../ | closed | - | закрити → закритий |
+| взятий | /.../ | taken | - | взяти → взятий |
+| даний | /.../ | given | - | дати → даний |
+| куплений | /.../ | bought | - | купити → куплений (п→пл) |
+| проданий | /.../ | sold | - | продати → проданий |
+| отриманий | /.../ | received | - | отримати → отриманий |
+| надісланий | /.../ | sent | - | надіслати → надісланий |
+| виконаний | /.../ | completed | - | виконати → виконаний |
+| закінчений | /.../ | finished | - | закінчити → закінчений |
+| побудований | /.../ | built | - | побудувати → побудований |
+| знищений | /.../ | destroyed | - | знищити → знищений |
+| створений | /.../ | created | - | створити → створений |
+| відомий | /.../ | known, famous | прикм. | lexicalized as ective |
+| улюблений | /.../ | beloved, favorite | прикм. | lexicalized as ective |
+| забутий | /.../ | forgotten | - | забути → забутий |

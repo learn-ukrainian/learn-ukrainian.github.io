@@ -347,7 +347,7 @@ Complete with the correct prefixed verb:
 
 ---
 
-## Підсумок
+# Підсумок
 
 ## Key Takeaways
 
@@ -380,7 +380,7 @@ Complete with the correct prefixed verb:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Prefix Meanings
 
@@ -1373,7 +1373,7 @@ Put this conversation about a delivery in order:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

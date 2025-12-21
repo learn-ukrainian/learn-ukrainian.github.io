@@ -31,7 +31,7 @@
 | **Deeper Look: The Executed Renaissance** | ⚪️ | 84 | Skipped |
 | **Detailed Analysis: Common Mistakes** | ⚪️ | 69 | Skipped |
 | **Dialogue Analysis: "The Cancellation"** | ✅ | 388 | Included in Core |
-| **Summary** | ✅ | 70 | Included in Core |
+| **Підсумок** | ✅ | 72 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М39)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Утворення коротких форм** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -45,5 +45,4 @@
 | **translate: Безособові конструкції** | 🎮 | 14 | Activity (14 items, min 6) |
 | **dialogue-reorder: В офісі** | 🎮 | 8 | Activity (8 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 16 | Activity (16 items, min 6) |
-| **Підсумок** | ✅ | 72 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

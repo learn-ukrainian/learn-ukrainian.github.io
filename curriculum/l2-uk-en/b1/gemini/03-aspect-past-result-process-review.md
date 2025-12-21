@@ -25,10 +25,10 @@
 | **Analysis** | ⚪️ | 688 | Skipped |
 | **Deep Dive** | ✅ | 1066 | Included in Core |
 | **Practice** | ⚪️ | 254 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **What You've Learned: A Framework for Process vs Result** | ⚪️ | 269 | Skipped |
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Процес чи результат** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Маркери та види** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Вибір виду — процес чи результат** | 🎮 | 14 | Activity (14 items, min 8) |

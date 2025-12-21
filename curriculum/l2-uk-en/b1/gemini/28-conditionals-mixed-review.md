@@ -30,10 +30,10 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Діалог: Планування поїздки** | ✅ | 158 | Included in Core |
 | **Текст для аналізу: Ділові рішення** | ✅ | 158 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Complex Conditional Patterns** | ✅ | 366 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Змішані та складні умови** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Типи умов** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія складних умов** | 🎮 | 14 | Activity (14 items, min 8) |

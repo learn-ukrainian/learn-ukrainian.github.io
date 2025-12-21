@@ -439,7 +439,7 @@ As you read, try to identify which verbs describe habitual past actions and whic
 
 ---
 
-## Summary
+# Підсумок
 
 **What You've Learned: The Single vs Repeated Framework**
 
@@ -496,7 +496,7 @@ This is simpler than English, where "I read books" and "I read a book" use the s
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## quiz: Маркери часу та вид
 > Оберіть правильну відповідь про маркери часу.
@@ -1357,7 +1357,7 @@ This is simpler than English, where "I read books" and "I read a book" use the s
     > [!answer] ходила
     > [!options] ходила | пішла | ходить | піде
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

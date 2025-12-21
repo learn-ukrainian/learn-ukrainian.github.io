@@ -341,7 +341,7 @@ Read this dialogue that uses all four skills, then answer the questions:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Travel & Geography Review (М61)
 > Review travel and geography vocabulary.
@@ -1001,7 +1001,7 @@ Read this dialogue that uses all four skills, then answer the questions:
 
 ---
 
-## Summary
+# Підсумок
 
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
@@ -1014,22 +1014,22 @@ Read this dialogue that uses all four skills, then answer the questions:
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| турагентство | travel agency | M61 |
-| пам'ятка | landmark | M61 |
-| митниця | customs | M61 |
-| забронювати | to book | M61 |
-| думати | to think | M62 |
-| гадати | to suppose | M62 |
-| вважати | to consider | M62 |
-| міркувати | to ponder | M62 |
-| казати | to say | M63 |
-| розповідати | to narrate | M63 |
-| повідомляти | to inform | M63 |
-| наголошувати | to emphasize | M63 |
-| приймати рішення | make decision | M64 |
-| брати участь | participate | M64 |
-| нести відповідальність | bear responsibility | M64 |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| турагентство | /.../ | travel agency | - | M61 |
+| пам'ятка | /.../ | landmark | - | M61 |
+| митниця | /.../ | customs | - | M61 |
+| забронювати | /.../ | to book | - | M61 |
+| думати | /.../ | to think | - | M62 |
+| гадати | /.../ | to suppose | - | M62 |
+| вважати | /.../ | to consider | - | M62 |
+| міркувати | /.../ | to ponder | - | M62 |
+| казати | /.../ | to say | - | M63 |
+| розповідати | /.../ | to narrate | - | M63 |
+| повідомляти | /.../ | to inform | - | M63 |
+| наголошувати | /.../ | to emphasize | - | M63 |
+| приймати рішення | /.../ | make decision | - | M64 |
+| брати участь | /.../ | participate | - | M64 |
+| нести відповідальність | /.../ | bear responsibility | - | M64 |

@@ -30,7 +30,7 @@
 | **Діалог: Сімейна розмова** | ✅ | 116 | Included in Core |
 | **Діалог 2: На роботі** | ✅ | 194 | Included in Core |
 | **Politeness Levels: Order vs Request vs Wish** | ⚪️ | 150 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Different-Subject Purpose Pattern** | ✅ | 0 | Included in Core |
 | **Key Rules** | ⚪️ | 32 | Skipped |
 | **Comparison** | ⚪️ | 0 | Skipped |

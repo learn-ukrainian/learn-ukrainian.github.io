@@ -31,7 +31,7 @@
 | **Semantic Deep Dive: Cause, Condition, or Time?** | ✅ | 144 | Included in Core |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 192 | Skipped |
-| **Summary** | ✅ | 71 | Included in Core |
+| **Підсумок** | ✅ | 102 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **group-sort: Одночасно чи послідовно?** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Повторення (М36)** | 🎮 | 8 | Activity (8 items, min 8) |
@@ -45,5 +45,4 @@
 | **translate: Послідовні дії** | 🎮 | 14 | Activity (14 items, min 6) |
 | **dialogue-reorder: Після зустрічі** | 🎮 | 6 | Activity (6 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 14 | Activity (14 items, min 6) |
-| **Підсумок** | ✅ | 102 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

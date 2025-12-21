@@ -404,7 +404,7 @@ Study these contextual examples:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М62)
 > Quick review from the previous module.
@@ -1144,7 +1144,7 @@ Study these contextual examples:
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Speaking Verb Groups
 
@@ -1184,37 +1184,37 @@ Study these contextual examples:
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| казати | to say (недок.) | General saying |
-| говорити | to speak, talk | Extended speaking |
-| розповідати | to tell, narrate | Stories, news |
-| повідомляти | to inform, report | Official info |
-| пояснювати | to explain | Clarifying |
-| описувати | to describe | Detailing |
-| стверджувати | to assert, claim | Strong claim |
-| заявляти | to declare | Formal |
-| оголошувати | to announce | Public |
-| констатувати | to state, establish | Facts |
-| зауважувати | to remark, note | Observation |
-| згадувати | to mention | Casual |
-| нагадувати | to remind | Memory prompt |
-| додавати | to add | Additional info |
-| уточнювати | to clarify, specify | Precision |
-| наголошувати | to emphasize | Stress importance |
-| підкреслювати | to stress, underline | Highlighting |
-| наполягати | to insist | Persistence |
-| переконувати | to convince | Persuasion |
-| погоджуватися | to agree | Agreement |
-| нагадувати | to remind | Memory prompt |
-| додавати | to add | Additional info |
-| заперечувати | to deny | Opposing |
-| спростовувати | to refute | Disproving |
-| вимагати | to demand | Strong request |
-| радити | to advise | Guidance |
-| цитувати | to quote | Repeating exact words |
-| коментувати | to comment | Giving opinion |
-| вітатися | to greet | Hello |
-| прощатися | to say goodbye | Bye |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| казати | /.../ | to say (недок.) | - | General saying |
+| говорити | /.../ | to speak, talk | - | Extended speaking |
+| розповідати | /.../ | to tell, narrate | - | Stories, news |
+| повідомляти | /.../ | to inform, report | - | Official info |
+| пояснювати | /.../ | to explain | - | Clarifying |
+| описувати | /.../ | to describe | - | Detailing |
+| стверджувати | /.../ | to assert, claim | - | Strong claim |
+| заявляти | /.../ | to declare | - | Formal |
+| оголошувати | /.../ | to announce | - | Public |
+| констатувати | /.../ | to state, establish | - | Facts |
+| зауважувати | /.../ | to remark, note | - | Observation |
+| згадувати | /.../ | to mention | - | Casual |
+| нагадувати | /.../ | to remind | - | Memory prompt |
+| додавати | /.../ | to add | - | Additional info |
+| уточнювати | /.../ | to clarify, specify | - | Precision |
+| наголошувати | /.../ | to emphasize | - | Stress importance |
+| підкреслювати | /.../ | to stress, underline | - | Highlighting |
+| наполягати | /.../ | to insist | - | Persistence |
+| переконувати | /.../ | to convince | - | Persuasion |
+| погоджуватися | /.../ | to agree | - | Agreement |
+| нагадувати | /.../ | to remind | - | Memory prompt |
+| додавати | /.../ | to add | - | Additional info |
+| заперечувати | /.../ | to deny | - | Opposing |
+| спростовувати | /.../ | to refute | - | Disproving |
+| вимагати | /.../ | to demand | - | Strong request |
+| радити | /.../ | to advise | - | Guidance |
+| цитувати | /.../ | to quote | - | Repeating exact words |
+| коментувати | /.../ | to comment | - | Giving opinion |
+| вітатися | /.../ | to greet | - | Hello |
+| прощатися | /.../ | to say goodbye | - | Bye |

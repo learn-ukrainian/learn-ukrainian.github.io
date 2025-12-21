@@ -193,7 +193,7 @@ Ukrainian uses concessive logic in many fixed expressions:
 
 ---
 
-## Summary
+# Підсумок
 
 ## Concessive Construction Patterns
 
@@ -284,7 +284,7 @@ These alternative constructions add variety and nuance to your Ukrainian. «Вс
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## fill-in: Допустові конструкції
 > Заповніть пропуски правильними сполучниками.
@@ -856,10 +856,10 @@ These alternative constructions add variety and nuance to your Ukrainian. «Вс
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
-|-------|-----|----------|-----|----------|
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
 | хоча | /xɔˈtʃa/ | although, though | спол. | |
 | хоч | /xɔtʃ/ | although | спол. | коротша форма |
 | попри | /pɔˈprɪ/ | despite, in spite of | прийм. | |

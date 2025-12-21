@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 445 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 481 | Skipped |
-| **Summary** | ✅ | 113 | Included in Core |
+| **Підсумок** | ✅ | 113 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Cardinal or Collective?** | 🎮 | 15 | Activity (15 items, min 8) |
 | **match-up: Cardinal to Collective** | 🎮 | 14 | Activity (14 items, min 8) |

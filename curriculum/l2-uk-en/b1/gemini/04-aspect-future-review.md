@@ -24,9 +24,9 @@
 | **Analysis** | ⚪️ | 485 | Skipped |
 | **Deep Dive** | ✅ | 749 | Included in Core |
 | **Practice** | ⚪️ | 268 | Skipped |
-| **Summary** | ✅ | 236 | Included in Core |
+| **Підсумок** | ✅ | 236 | Included in Core |
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Three Future Forms** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Future Time Markers** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Compound Future — буду + infinitive** | 🎮 | 14 | Activity (14 items, min 8) |

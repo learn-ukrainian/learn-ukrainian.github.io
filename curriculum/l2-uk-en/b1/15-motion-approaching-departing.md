@@ -316,7 +316,7 @@ The final drink before leaving. historically, the guest was already on the horse
 
 ---
 
-## Підсумок
+# Підсумок
 
 ## Головне
 
@@ -355,7 +355,7 @@ The final drink before leaving. historically, the guest was already on the horse
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Prefix Selection
 
@@ -1234,7 +1234,7 @@ Translate using the correct prefixed verb:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

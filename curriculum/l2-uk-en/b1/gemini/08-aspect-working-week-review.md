@@ -33,9 +33,9 @@
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Practice Exercise 1: Status Report Simulation** | ⚪️ | 85 | Skipped |
 | **Practice Exercise 2: Aspect Transformation** | ✅ | 45 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Key Takeaways: Aspect in the Workplace** | ⚪️ | 123 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Робочий контекст** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Робочі фрази** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Аспект на роботі** | 🎮 | 14 | Activity (14 items, min 8) |

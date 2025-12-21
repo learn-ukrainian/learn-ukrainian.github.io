@@ -27,10 +27,10 @@
 | **Поглиблення** | ⚪️ | 0 | Skipped |
 | **Діалог: На роботі** | ✅ | 195 | Included in Core |
 | **Текст для аналізу: Історія успіху** | ✅ | 202 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Concessive Construction Patterns** | ✅ | 491 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Допустові конструкції** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Конструкція і тип** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія допустових речень** | 🎮 | 14 | Activity (14 items, min 8) |

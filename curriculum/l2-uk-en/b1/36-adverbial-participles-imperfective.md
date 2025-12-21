@@ -401,7 +401,7 @@ Study these extended examples showing participles in natural contexts:
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -420,7 +420,7 @@ Study these extended examples showing participles in natural contexts:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М35)
 > Quick review from the Complex Sentences checkpoint.
@@ -1101,7 +1101,7 @@ Study these extended examples showing participles in natural contexts:
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you learned to form and use **imperfective adverbial participles** — one of the elegant structures that make Ukrainian expressive and sophisticated. These forms allow you to express simultaneous actions efficiently, moving beyond simple compound sentences.
 
@@ -1115,27 +1115,27 @@ In the next module, you'll learn **perfective adverbial participles** — used f
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| читаючи | while reading | 1st conj., читати → читаючи |
-| пишучи | while writing | писати → пишучи (stem change) |
-| говорячи | while speaking | 2nd conj., говорити → говорячи |
-| слухаючи | while listening | слухати → слухаючи |
-| дивлячись | while watching | дивитися → дивлячись (зворотний) |
-| думаючи | while thinking | думати → думаючи |
-| працюючи | while working | працювати → працюючи |
-| йдучи | while going (on foot) | йти → йдучи |
-| біжачи | while running | бігти → біжачи (stem change) |
-| стоячи | while standing | стояти → стоячи |
-| сидячи | while sitting | 2nd conj., сидіти → сидячи |
-| лежачи | while lying | лежати → лежачи |
-| їдучи | while going (by vehicle) | їхати → їдучи |
-| летячи | while flying | летіти → летячи |
-| несучи | while carrying | нести → несучи |
-| ведучи | while leading | вести → ведучи |
-| повертаючись | while returning | повертатися → повертаючись |
-| одягаючись | while getting dressed | одягатися → одягаючись |
-| вмиваючись | while washing oneself | вмиватися → вмиваючись |
-| готуючись | while preparing | готуватися → готуючись |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| читаючи | /.../ | while reading | - | 1st conj., читати → читаючи |
+| пишучи | /.../ | while writing | - | писати → пишучи (stem change) |
+| говорячи | /.../ | while speaking | - | 2nd conj., говорити → говорячи |
+| слухаючи | /.../ | while listening | - | слухати → слухаючи |
+| дивлячись | /.../ | while watching | - | дивитися → дивлячись (зворотний) |
+| думаючи | /.../ | while thinking | - | думати → думаючи |
+| працюючи | /.../ | while working | - | працювати → працюючи |
+| йдучи | /.../ | while going (on foot) | - | йти → йдучи |
+| біжачи | /.../ | while running | - | бігти → біжачи (stem change) |
+| стоячи | /.../ | while standing | - | стояти → стоячи |
+| сидячи | /.../ | while sitting | - | 2nd conj., сидіти → сидячи |
+| лежачи | /.../ | while lying | - | лежати → лежачи |
+| їдучи | /.../ | while going (by vehicle) | - | їхати → їдучи |
+| летячи | /.../ | while flying | - | летіти → летячи |
+| несучи | /.../ | while carrying | - | нести → несучи |
+| ведучи | /.../ | while leading | - | вести → ведучи |
+| повертаючись | /.../ | while returning | - | повертатися → повертаючись |
+| одягаючись | /.../ | while getting dressed | - | одягатися → одягаючись |
+| вмиваючись | /.../ | while washing oneself | - | вмиватися → вмиваючись |
+| готуючись | /.../ | while preparing | - | готуватися → готуючись |

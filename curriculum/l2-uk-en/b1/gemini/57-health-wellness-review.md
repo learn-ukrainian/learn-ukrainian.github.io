@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 139 | Skipped |
 | **Підсумок** | ✅ | 83 | Included in Core |
 | **Need More Practice?** | ⚪️ | 52 | Skipped |
-| **Activities** | ➖ | 216 | Excluded Type |
+| **Вправи** | ⚪️ | 216 | Skipped |
 | **match-up: Здоров'я — Health Terms** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Симптоми та лікування** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Корисне vs Шкідливе** | 🎮 | 12 | Activity (12 items, min 8) |
@@ -38,4 +38,4 @@
 | **mark-the-words: Знайдіть слова про здоров'я** | 🎮 | 11 | Activity (11 items, min 6) |
 | **select: Що потрібно для здоров'я?** | 🎮 | 10 | Activity (10 items, min 6) |
 | **quiz: Перевірка знань** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Словник** | ⚪️ | 0 | Skipped |

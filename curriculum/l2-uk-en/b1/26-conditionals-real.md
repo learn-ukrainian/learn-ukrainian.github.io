@@ -244,7 +244,7 @@ Real conditionals are the language of Ukrainian superstition (**народні �
 
 ---
 
-## Summary
+# Підсумок
 
 ## Real Conditional Patterns
 
@@ -305,7 +305,7 @@ When practicing real conditionals, focus on selecting the correct tense combinat
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## fill-in: Реальні умови
 > Заповніть пропуски правильними формами.
@@ -879,10 +879,10 @@ When practicing real conditionals, focus on selecting the correct tense combinat
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
-|-------|-----|----------|-----|----------|
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
 | якщо | /jakˈʃtʃɔ/ | if | спол. | |
 | умова | /uˈmɔva/ | condition | ім. | |
 | наслідок | /naˈslidɔk/ | consequence | ім. | |

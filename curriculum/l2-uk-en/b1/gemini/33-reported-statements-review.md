@@ -32,7 +32,7 @@
 | **Поглиблене вивчення** | ⚪️ | 0 | Skipped |
 | **Common Patterns and Pitfalls** | ✅ | 231 | Included in Core |
 | **Formal vs Informal Reporting** | ⚪️ | 124 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Reported Speech Structure** | ⚪️ | 0 | Skipped |
 | **Reporting Verb Categories** | ⚪️ | 0 | Skipped |
 | **Key Differences from English** | ⚪️ | 0 | Skipped |

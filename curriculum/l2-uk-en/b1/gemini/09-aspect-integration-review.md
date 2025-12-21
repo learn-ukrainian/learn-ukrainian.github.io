@@ -31,9 +31,9 @@
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
 | **Практика** | ⚪️ | 0 | Skipped |
 | **Вправа: Наратив** | ⚪️ | 70 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Integration Complete: You're Ready for Automatic Aspect Selection** | 🎮 | 6 | Activity (6 items, min 6) |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Вибір виду в контексті** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Ситуація і вид** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Комплексна теорія** | 🎮 | 14 | Activity (14 items, min 8) |

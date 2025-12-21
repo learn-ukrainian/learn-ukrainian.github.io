@@ -26,7 +26,7 @@
 | **Поглиблення** | ⚪️ | 453 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 484 | Skipped |
-| **Summary** | ✅ | 107 | Included in Core |
+| **Підсумок** | ✅ | 107 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Identify the Function** | 🎮 | 15 | Activity (15 items, min 8) |
 | **match-up: Base Form to Diminutive** | 🎮 | 14 | Activity (14 items, min 8) |

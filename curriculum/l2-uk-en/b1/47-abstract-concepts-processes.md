@@ -427,7 +427,7 @@ Process vocabulary describes HOW things change over time. Ukrainian uses many ab
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -446,7 +446,7 @@ Process vocabulary describes HOW things change over time. Ukrainian uses many ab
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М46)
 > Quick review from the previous module.
@@ -1030,7 +1030,7 @@ Process vocabulary describes HOW things change over time. Ukrainian uses many ab
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you learned essential vocabulary for describing **processes and changes** — the language of economic news, development reports, and transformation narratives.
 
@@ -1044,9 +1044,9 @@ In the next module, you'll learn vocabulary for **expressing opinions** — how 
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
 | процес | /proˈtsɛs/ | process | Тривалий процес |
 | розвиток | /ˈrozvɪtok/ | development | Економічний розвиток |

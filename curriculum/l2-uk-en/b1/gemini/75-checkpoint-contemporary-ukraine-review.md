@@ -38,5 +38,5 @@
 | **cloze: Україна сьогодні** | 🎮 | 8 | Activity (8 items, min 6) |
 | **select: Правильні твердження** | 🎮 | 6 | Activity (6 items, min 6) |
 | **group-sort: Категоризація** | 🎮 | 32 | Activity (32 items, min 8) |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

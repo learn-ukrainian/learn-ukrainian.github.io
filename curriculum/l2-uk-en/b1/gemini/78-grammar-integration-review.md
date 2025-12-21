@@ -2,14 +2,9 @@
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** 'B1 Grammar Integration' is a section heading but uses H1 (#)
-  - FIX: Change '# B1 Grammar Integration' to '## B1 Grammar Integration' - reserved for page title only
-
 ## Recommendation
-**🔄 REWRITE** (severity 70/100)
+**🔄 REWRITE** (severity 60/100)
 
-- 1 pedagogical violations (minor)
 - Immersion 11% off target
 - Activity count below minimum
 - Activity density below minimum
@@ -26,7 +21,7 @@
 - **Vocab:** ❌ 15 < 30
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** ❌ 53.6% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities

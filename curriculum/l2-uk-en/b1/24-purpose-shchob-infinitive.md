@@ -244,7 +244,7 @@ The grammatical principle is straightforward: when the person who performs the m
 
 ---
 
-## Summary
+# Підсумок
 
 ## Same-Subject Purpose Pattern
 
@@ -293,7 +293,7 @@ Negative purpose works identically: "I speak quietly so as not to wake the baby"
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: Правильний інфінітив
 > Заповніть пропуски правильним інфінітивом.
@@ -928,27 +928,27 @@ Negative purpose works identically: "I speak quietly so as not to wake the baby"
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | ЧМ | Примітка |
-|-------|----------|-----|----------|
-| щоб | in order to, so that | спол. | purpose conjunction |
-| для того щоб | in order to | сполука | formal purpose |
-| задля того щоб | for the sake of | сполука | very formal |
-| з метою | with the purpose of | сполука | official style |
-| з ціллю | with the aim of | сполука | = з метою |
-| заради | for the sake of | прийм. | emotional purpose |
-| на те щоб | for (purpose) | сполука | colloquial |
-| мета | goal, purpose | ім. | f. |
-| ціль | aim, target | ім. | f. |
-| намір | intention | ім. | m. |
-| призначення | purpose, designation | ім. | n. |
-| задум | plan, design | ім. | m. |
-| план | plan | ім. | m. |
-| бажання | desire, wish | ім. | n. |
-| прагнення | aspiration | ім. | n. |
-| устремління | striving | ім. | n. |
-| завдання | task, assignment | ім. | n. |
-| причина | reason, cause | ім. | f. |
-| підстава | ground, basis | ім. | f. |
-| мотивація | motivation | ім. | f. |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| щоб | /.../ | in order to, so that | спол. | purpose conjunction |
+| для того щоб | /.../ | in order to | сполука | formal purpose |
+| задля того щоб | /.../ | for the sake of | сполука | very formal |
+| з метою | /.../ | with the purpose of | сполука | official style |
+| з ціллю | /.../ | with the aim of | сполука | = з метою |
+| заради | /.../ | for the sake of | прийм. | emotional purpose |
+| на те щоб | /.../ | for (purpose) | сполука | colloquial |
+| мета | /.../ | goal, purpose | ім. | f. |
+| ціль | /.../ | aim, target | ім. | f. |
+| намір | /.../ | intention | ім. | m. |
+| призначення | /.../ | purpose, designation | ім. | n. |
+| задум | /.../ | plan, design | ім. | m. |
+| план | /.../ | plan | ім. | m. |
+| бажання | /.../ | desire, wish | ім. | n. |
+| прагнення | /.../ | aspiration | ім. | n. |
+| устремління | /.../ | striving | ім. | n. |
+| завдання | /.../ | task, assignment | ім. | n. |
+| причина | /.../ | reason, cause | ім. | f. |
+| підстава | /.../ | ground, basis | ім. | f. |
+| мотивація | /.../ | motivation | ім. | f. |

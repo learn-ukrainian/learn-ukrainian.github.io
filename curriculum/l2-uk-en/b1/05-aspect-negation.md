@@ -390,7 +390,7 @@ Convert each positive command to a negative one with appropriate aspect:
 
 ---
 
-## Summary
+# Підсумок
 
 У цьому модулі ви вивчили:
 
@@ -441,7 +441,7 @@ Convert each positive command to a negative one with appropriate aspect:
 > - 🎧 [Season 2, Episode 51: Perfective & Imperfective](https://www.ukrainianlessons.com/the-podcast/) — Audio lesson on aspect
 > - 📺 [Learn 50 important Ukrainian Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## quiz: Aspect in Negation
 > Choose the correct answer about negation and aspect in Ukrainian.
@@ -1375,7 +1375,7 @@ Convert each positive command to a negative one with appropriate aspect:
     > [!answer] повернулися
     > [!options] поверталися | повернулися | повертаються | повернуться
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

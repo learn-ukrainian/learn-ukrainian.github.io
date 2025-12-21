@@ -29,7 +29,7 @@
 | **Part 4: Mixed Reported Speech** | ⚪️ | 369 | Skipped |
 | **Діалог: У лікаря** | ✅ | 74 | Included in Core |
 | **Діалог 2: Співбесіда** | ✅ | 81 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Reported Speech Connectors** | ⚪️ | 0 | Skipped |
 | **Reporting Verbs Summary** | ✅ | 0 | Included in Core |
 | **Key Rules** | ⚪️ | 38 | Skipped |

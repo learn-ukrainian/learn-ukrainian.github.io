@@ -414,7 +414,7 @@ Abstract nouns refer to things we cannot see, touch, or measure directly — con
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -434,7 +434,7 @@ Abstract nouns refer to things we cannot see, touch, or measure directly — con
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М45)
 > Quick review from the previous module.
@@ -1064,7 +1064,7 @@ Abstract nouns refer to things we cannot see, touch, or measure directly — con
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you learned essential **abstract vocabulary** for intellectual discourse in Ukrainian. These words are the building blocks of discussions, debates, and professional communication.
 
@@ -1078,9 +1078,9 @@ In the next module, you'll learn vocabulary for **processes and changes** — ho
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
 | ідея | /iˈdɛjɑ/ | idea | У мене є ідея. |
 | думка | /ˈdumkɑ/ | thought, opinion | На мою думку... |

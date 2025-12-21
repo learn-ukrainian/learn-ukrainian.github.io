@@ -279,7 +279,7 @@ Transform these sentences by changing the focus from process to result or vice v
 
 ---
 
-## Summary
+# Підсумок
 
 ## Key Takeaways: Aspect in the Workplace
 
@@ -313,7 +313,7 @@ Understanding aspect in professional contexts is one of the most practical appli
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Робочий контекст
 > Заповніть пропуски правильною формою.
@@ -935,7 +935,7 @@ Understanding aspect in professional contexts is one of the most practical appli
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

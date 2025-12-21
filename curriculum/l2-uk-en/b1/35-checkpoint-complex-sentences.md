@@ -199,7 +199,7 @@ This checkpoint reviews **four core skills** from Phase B1.3 (Modules 21-34):
 
 ---
 
-## Summary
+# Підсумок
 
 ## Master Summary: Complex Sentence Structures
 
@@ -457,7 +457,7 @@ Combine these simple sentences using appropriate connectors:
 
 ---
 
-## Summary
+# Підсумок
 
 ## Key Patterns to Remember
 
@@ -525,7 +525,7 @@ Native speakers naturally combine multiple clause types. Here are common pattern
 
 ---
 
-## Вправи
+# Вправи
 
 ## fill-in: Комплексний тест сполучників
 > Заповніть пропуски правильним сполучником.
@@ -1143,27 +1143,27 @@ Native speakers naturally combine multiple clause types. Here are common pattern
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| складне речення | complex sentence | речення з підрядною частиною |
-| сполучник | conjunction | слово, що з'єднує |
-| підрядне речення | subordinate clause | залежна частина речення |
-| головне речення | main clause | незалежна частина |
-| відносне речення | relative clause | з який, де, коли |
-| умовне речення | conditional sentence | якщо/якби |
-| причинове речення | causal clause | бо/тому що |
-| допустове речення | concessive clause | хоча/попри |
-| часове речення | temporal clause | коли/після того як |
-| речення мети | purpose clause | щоб |
-| непряма мова | reported speech | indirect speech |
-| пряма мова | direct speech | quoted speech |
-| твердження | statement | речення-факт |
-| питання | question | запит інформації |
-| наказ | command | imperative |
-| прохання | request | ввічливий наказ |
-| реальна умова | real condition | можлива ситуація |
-| нереальна умова | unreal condition | гіпотетична ситуація |
-| послідовність | sequence | порядок подій |
-| одночасність | simultaneity | події в один час |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| складне речення | /.../ | complex sentence | - | речення з підрядною частиною |
+| сполучник | /.../ | conjunction | - | слово, що з'єднує |
+| підрядне речення | /.../ | subordinate clause | - | залежна частина речення |
+| головне речення | /.../ | main clause | - | незалежна частина |
+| відносне речення | /.../ | relative clause | - | з який, де, коли |
+| умовне речення | /.../ | conditional sentence | - | якщо/якби |
+| причинове речення | /.../ | causal clause | - | бо/тому що |
+| допустове речення | /.../ | concessive clause | - | хоча/попри |
+| часове речення | /.../ | temporal clause | - | коли/після того як |
+| речення мети | /.../ | purpose clause | - | щоб |
+| непряма мова | /.../ | reported speech | - | indirect speech |
+| пряма мова | /.../ | direct speech | - | quoted speech |
+| твердження | /.../ | statement | - | речення-факт |
+| питання | /.../ | question | - | запит інформації |
+| наказ | /.../ | command | - | imperative |
+| прохання | /.../ | request | - | ввічливий наказ |
+| реальна умова | /.../ | real condition | - | можлива ситуація |
+| нереальна умова | /.../ | unreal condition | - | гіпотетична ситуація |
+| послідовність | /.../ | sequence | - | порядок подій |
+| одночасність | /.../ | simultaneity | - | події в один час |

@@ -2,15 +2,10 @@
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ❌ FAIL
 
-## PEDAGOGICAL VIOLATIONS
-- **[HEADING_LEVEL]** 'B1 Vocabulary Integration' is a section heading but uses H1 (#)
-  - FIX: Change '# B1 Vocabulary Integration' to '## B1 Vocabulary Integration' - reserved for page title only
-
 ## Recommendation
-**📝 UPDATE** (severity 55/100)
+**📝 UPDATE** (severity 45/100)
 
-- Borderline case (severity 55/100)
-- 1 pedagogical violations (minor)
+- Borderline case (severity 45/100)
 - Activity count below minimum
 - Activity density below minimum
 - Vocabulary count below minimum
@@ -26,7 +21,7 @@
 - **Vocab:** ❌ 15 < 30
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ❌ 1 violations
+- **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** ❌ 61.6% LOW (target 65-70% (B1.7-8 Ukraine))
 
 ## Low Density Activities

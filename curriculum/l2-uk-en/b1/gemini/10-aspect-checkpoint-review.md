@@ -27,9 +27,9 @@
 | **Skill 4: Imperative Patterns** | ✅ | 195 | Included in Core |
 | **Skill 5: Aspect in Narratives** | ✅ | 144 | Included in Core |
 | **Integration Challenge** | ⚪️ | 142 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Need More Practice?** | ⚪️ | 126 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Комплексний тест** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Видові пари — повний список** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Фінальний теоретичний тест** | 🎮 | 14 | Activity (14 items, min 8) |

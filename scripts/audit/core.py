@@ -38,9 +38,11 @@ from .checks import (
 )
 from .checks.vocabulary import (
     count_vocab_rows,
+    extract_vocab_items,
     extract_vocab_from_section,
     check_vocab_matches_plan,
     check_metalanguage_scaffolding,
+    check_vocab_table_format,
 )
 from .gates import (
     GateResult,
@@ -278,8 +280,8 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
         if module_num >= 21:
             if '|' in stripped:
                 lower_stripped = stripped.lower()
-                # Check for transliteration columns but NOT translation columns
-                if ('| translit' in lower_stripped or '| вимо' in lower_stripped):
+                # Check for transliteration columns but NOT translation or pronunciation (Вимова) columns
+                if '| translit' in lower_stripped:
                     lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
 
     return lint_errors
@@ -701,6 +703,10 @@ def audit_module(file_path: str) -> bool:
     # Run markdown format checks
     markdown_violations = check_markdown_format(content)
     pedagogical_violations.extend(markdown_violations)
+
+    # Run vocabulary table format checks
+    vocab_format_violations = check_vocab_table_format(content, level_code)
+    pedagogical_violations.extend(vocab_format_violations)
 
     # Run section order checks
     section_order_violations = check_section_order(content)

@@ -301,7 +301,7 @@ The following dialogues demonstrate how aspects combine naturally in everyday Uk
 
 ---
 
-## Summary
+# Підсумок
 
 ## Integration Complete: You're Ready for Automatic Aspect Selection
 
@@ -345,7 +345,7 @@ From this point on, focus on exposure and production. Read Ukrainian texts, list
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Вибір виду в контексті
 > Заповніть пропуски правильною формою.
@@ -968,7 +968,7 @@ From this point on, focus on exposure and production. Read Ukrainian texts, list
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

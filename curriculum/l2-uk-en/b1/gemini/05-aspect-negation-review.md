@@ -24,9 +24,9 @@
 | **Analysis** | ⚪️ | 498 | Skipped |
 | **Deep Dive** | ✅ | 847 | Included in Core |
 | **Practice** | ⚪️ | 413 | Skipped |
-| **Summary** | ✅ | 255 | Included in Core |
+| **Підсумок** | ✅ | 255 | Included in Core |
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Aspect in Negation** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Негативні вирази** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: General Negation — Imperfective** | 🎮 | 14 | Activity (14 items, min 8) |

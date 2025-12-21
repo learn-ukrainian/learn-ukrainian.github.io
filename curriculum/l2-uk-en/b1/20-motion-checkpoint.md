@@ -265,7 +265,7 @@ Read this story, then answer the questions:
 
 ---
 
-## Summary
+# Підсумок
 
 | Skill | Key Pattern | Quick Test |
 |-------|-------------|------------|
@@ -297,7 +297,7 @@ Read this story, then answer the questions:
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Motion Verb Selection
 
@@ -640,27 +640,27 @@ Read this story, then answer the questions:
 
 ---
 
-## Vocabulary
+# Словник
 
-| Word | IPA | Translation | POS | Gender | Note |
-|------|-----|-------------|-----|--------|------|
-| іти | /iˈtɪ/ | to go (on foot, det.) | verb | — | determinate |
-| ходити | /xoˈdɪtɪ/ | to go (on foot, indet.) | verb | — | indeterminate |
-| їхати | /ˈjiˈxɑtɪ/ | to go (by vehicle, det.) | verb | — | determinate |
-| їздити | /ˈjizdɪtɪ/ | to go (by vehicle, indet.) | verb | — | indeterminate |
-| бігти | /ˈbiɦtɪ/ | to run (det.) | verb | — | determinate |
-| бігати | /biˈɦɑtɪ/ | to run (indet.) | verb | — | indeterminate |
-| летіти | /lɛˈtitɪ/ | to fly (det.) | verb | — | determinate |
-| літати | /liˈtɑtɪ/ | to fly (indet.) | verb | — | indeterminate |
-| вийти | /ˈʋɪjtɪ/ | to exit | verb | — | ви- + іти (pf.) |
-| увійти | /uˈʋijtɪ/ | to enter | verb | — | у- + війти (pf.) |
-| прийти | /ˈprɪjtɪ/ | to arrive (on foot) | verb | — | при- + іти (pf.) |
-| приїхати | /prɪˈjixɑtɪ/ | to arrive (by vehicle) | verb | — | при- + їхати (pf.) |
-| перейти | /pɛrɛjˈtɪ/ | to cross | verb | — | пере- + іти (pf.) |
-| пройти | /proˈjtɪ/ | to pass, go through | verb | — | про- + іти (pf.) |
-| дійти | /dijˈtɪ/ | to reach (on foot) | verb | — | до- + іти (pf.) |
-| зайти | /zɑjˈtɪ/ | to stop by | verb | — | за- + іти (pf.) |
-| підійти | /pidijˈtɪ/ | to approach | verb | — | під- + іти (pf.) |
-| обійти | /obijˈtɪ/ | to go around | verb | — | об- + іти (pf.) |
-| виробляти | /ʋɪrɔbˈlʲɑtɪ/ | to produce | verb | — | ви- + figurative |
-| переробляти | /pɛrɛrɔbˈlʲɑtɪ/ | to redo | verb | — | пере- + figurative |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| іти | /iˈtɪ/ | to go (on foot, det.) | дієсл. | — | determinate |
+| ходити | /xoˈdɪtɪ/ | to go (on foot, indet.) | дієсл. | — | indeterminate |
+| їхати | /ˈjiˈxɑtɪ/ | to go (by vehicle, det.) | дієсл. | — | determinate |
+| їздити | /ˈjizdɪtɪ/ | to go (by vehicle, indet.) | дієсл. | — | indeterminate |
+| бігти | /ˈbiɦtɪ/ | to run (det.) | дієсл. | — | determinate |
+| бігати | /biˈɦɑtɪ/ | to run (indet.) | дієсл. | — | indeterminate |
+| летіти | /lɛˈtitɪ/ | to fly (det.) | дієсл. | — | determinate |
+| літати | /liˈtɑtɪ/ | to fly (indet.) | дієсл. | — | indeterminate |
+| вийти | /ˈʋɪjtɪ/ | to exit | дієсл. | — | ви- + іти (pf.) |
+| увійти | /uˈʋijtɪ/ | to enter | дієсл. | — | у- + війти (pf.) |
+| прийти | /ˈprɪjtɪ/ | to arrive (on foot) | дієсл. | — | при- + іти (pf.) |
+| приїхати | /prɪˈjixɑtɪ/ | to arrive (by vehicle) | дієсл. | — | при- + їхати (pf.) |
+| перейти | /pɛrɛjˈtɪ/ | to cross | дієсл. | — | пере- + іти (pf.) |
+| пройти | /proˈjtɪ/ | to pass, go through | дієсл. | — | про- + іти (pf.) |
+| дійти | /dijˈtɪ/ | to reach (on foot) | дієсл. | — | до- + іти (pf.) |
+| зайти | /zɑjˈtɪ/ | to stop by | дієсл. | — | за- + іти (pf.) |
+| підійти | /pidijˈtɪ/ | to approach | дієсл. | — | під- + іти (pf.) |
+| обійти | /obijˈtɪ/ | to go around | дієсл. | — | об- + іти (pf.) |
+| виробляти | /ʋɪrɔbˈlʲɑtɪ/ | to produce | дієсл. | — | ви- + figurative |
+| переробляти | /pɛrɛrɔbˈlʲɑtɪ/ | to redo | дієсл. | — | пере- + figurative |

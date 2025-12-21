@@ -256,7 +256,7 @@ Ukrainian allows elegant layering of these relatives:
 
 ---
 
-## Summary
+# Підсумок
 
 ## коли vs що Summary
 
@@ -303,7 +303,7 @@ Note that що in relative clauses differs from що meaning "that" in content c
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: коли або що
 > Заповніть пропуски правильним словом.
@@ -936,27 +936,27 @@ Note that що in relative clauses differs from що meaning "that" in content c
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | ЧМ | Примітка |
-|-------|----------|-----|----------|
-| коли | when | присл./спол. | time relative/conjunction |
-| тоді коли | at the time when | сполука | extended time phrase |
-| у той час коли | at that time when | сполука | formal time phrase |
-| щоразу коли | every time when | сполука | repeated time |
-| кожного разу коли | each time when | сполука | = щоразу коли |
-| те що | that which, what | сполука | relative construction |
-| все що | everything that | сполука | relative construction |
-| щось що | something that | сполука | relative construction |
-| нічого що | nothing that | сполука | relative construction |
-| багато чого що | much of what | сполука | quantity + relative |
-| мало що | little that | сполука | quantity + relative |
-| факт що | the fact that | сполука | abstract + що |
-| правда що | the truth that | сполука | abstract + що |
-| думка що | the thought that | сполука | abstract + що |
-| ідея що | the idea that | сполука | abstract + що |
-| питання що | the question of what | сполука | abstract + що |
-| момент | moment | ім. | time noun |
-| мить | instant, moment | ім. | f., time noun |
-| період | period | ім. | time noun |
-| епоха | era, epoch | ім. | f., time noun |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| коли | /.../ | when | присл./спол. | time relative/conjunction |
+| тоді коли | /.../ | at the time when | сполука | extended time phrase |
+| у той час коли | /.../ | at that time when | сполука | formal time phrase |
+| щоразу коли | /.../ | every time when | сполука | repeated time |
+| кожного разу коли | /.../ | each time when | сполука | = щоразу коли |
+| те що | /.../ | that which, what | сполука | relative construction |
+| все що | /.../ | everything that | сполука | relative construction |
+| щось що | /.../ | something that | сполука | relative construction |
+| нічого що | /.../ | nothing that | сполука | relative construction |
+| багато чого що | /.../ | much of what | сполука | quantity + relative |
+| мало що | /.../ | little that | сполука | quantity + relative |
+| факт що | /.../ | the fact that | сполука | abstract + що |
+| правда що | /.../ | the truth that | сполука | abstract + що |
+| думка що | /.../ | the thought that | сполука | abstract + що |
+| ідея що | /.../ | the idea that | сполука | abstract + що |
+| питання що | /.../ | the question of what | сполука | abstract + що |
+| момент | /.../ | moment | ім. | time noun |
+| мить | /.../ | instant, moment | ім. | f., time noun |
+| період | /.../ | period | ім. | time noun |
+| епоха | /.../ | era, epoch | ім. | f., time noun |

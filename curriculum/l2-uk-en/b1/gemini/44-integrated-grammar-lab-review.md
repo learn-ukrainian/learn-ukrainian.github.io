@@ -26,7 +26,7 @@
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 529 | Skipped |
 | **Genre Lab: The Kolobok Experiment** | ⚪️ | 202 | Skipped |
-| **Summary** | ✅ | 106 | Included in Core |
+| **Підсумок** | ✅ | 106 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Identify the Register** | 🎮 | 15 | Activity (15 items, min 8) |
 | **match-up: Grammar Feature to Example** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -376,7 +376,7 @@ Using discourse markers correctly makes you sound more professional. In formal w
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -394,7 +394,7 @@ Using discourse markers correctly makes you sound more professional. In formal w
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М49)
 > Quick review from the previous module.
@@ -982,7 +982,7 @@ Using discourse markers correctly makes you sound more professional. In formal w
 
 
 
-## Підсумок
+# Підсумок
 
 In this module, you learned **discourse markers** — the words that organize your speech and writing, making it clearer and more cohesive.
 
@@ -998,9 +998,9 @@ These "signpost" words make your Ukrainian sound more natural and professional!
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
 | і | /i/ | and | Basic addition |
 | та | /tɑ/ | and | Slightly formal |

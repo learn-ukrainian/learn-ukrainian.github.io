@@ -24,9 +24,9 @@
 | **Analysis** | ⚪️ | 896 | Skipped |
 | **Deep Dive** | ✅ | 1291 | Included in Core |
 | **Practice** | ⚪️ | 526 | Skipped |
-| **Summary** | ✅ | 337 | Included in Core |
+| **Підсумок** | ✅ | 337 | Included in Core |
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Маркери часу та вид** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Маркери та види** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Вибір виду за маркером** | 🎮 | 14 | Activity (14 items, min 8) |

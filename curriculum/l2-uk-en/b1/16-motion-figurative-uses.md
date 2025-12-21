@@ -408,7 +408,7 @@ This conversation uses 12 figurative motion expressions naturally — proof that
 
 ---
 
-## Summary
+# Підсумок
 
 ## Key Figurative Motion Patterns
 
@@ -446,7 +446,7 @@ When you encounter a Ukrainian motion verb:
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Фігуративні вирази
 > Заповніть пропуски правильними дієсловами руху.
@@ -1072,7 +1072,7 @@ When you encounter a Ukrainian motion verb:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

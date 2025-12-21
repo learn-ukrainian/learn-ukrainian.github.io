@@ -43,7 +43,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Module Range** | M01-34 | M01-50 | **M01-80** | **M01-135** | M01-115 | M01-80 |
 | **Core Word Count** | **Graduated*** | **1000+** | **1500+** | **1750+** | **2000+** | **2000+** |
-| **Immersion (% Ukr)** | **10-40%*** | **40-55%*** | **45-70%*** | **65-90%*** | 95% | 100% |
+| **Immersion (% Ukr)** | **10-40%*** | **40-55%*** | **50-80%*** | **60-90%*** | **90-100%** | **98-100%** |
 | **Min Vocab Words** | 20+ | 25+ | 20+/30+ | 20+/30+ | 25+ | 25+ |
 | **Example Sentences** | 12+ | 18+ | 24+ | 24+ | 30+ | 32+ |
 | **Engagement Boxes** | 3+ | 4+ | 5+ | 6+ | 7+ | 8+ |
@@ -73,11 +73,11 @@
 > *   **A2.3 (M41-50):** **50-55%** — Pre-B1 runway. Narrative density increases, complex sentences introduced.
 
 > **Graduated Immersion (B1 Detail) — Phase-Based Progression:**
-> *   **B1.1 (M01-10 Aspect):** **45-50%** — Aspect mastery phase. Transition from A2, heavy grammar theory in English.
-> *   **B1.2 (M11-20 Motion):** **50-55%** — Motion verbs with prefixes. Grammar theory still in English.
-> *   **B1.3-4 (M21-45 Complex/Advanced):** **55-60%** — Complex sentences, participles, advanced grammar. More Ukrainian in explanations.
-> *   **B1.5-6 (M46-65 Vocab I/II):** **60-65%** — Vocabulary expansion. Thematic content mostly in Ukrainian.
-> *   **B1.7-8 (M66-80 Ukraine/Skills):** **65-70%** — Cultural content, skills integration. Pre-B2 runway.
+> - **B1.1 (M01-10 Aspect):** **50-60%** — Aspect mastery. Transition from A2.
+> - **B1.2 (M11-20 Motion):** **55-65%** — Motion verbs. Theory in simple English.
+> - **B1.3-4 (M21-45 Complex):** **60-70%** — Complex sentences. More Ukrainian explanations.
+> - **B1.5-6 (M46-65 Vocab):** **65-75%** — Vocabulary expansion. Mostly Ukrainian.
+> - **B1.7-8 (M66-80 Skills):** **70-80%** — Cultural content. Pre-B2 runway.
 
 > **Immersion Implementation Guide (A2-C2):**
 >
@@ -86,14 +86,14 @@
 > | **A2.1** (M01-20) | **40-45%** | Dialogues, examples, simple instructions | Grammar theory (cases), complex explanations |
 > | **A2.2** (M21-40) | **45-50%** | Dialogues, examples, short narratives | Grammar theory (aspect), complex explanations |
 > | **A2.3** (M41-50) | **50-55%** | Dialogues, narratives, simple explanations | Complex grammar only |
-> | **B1.1-2** (M01-20) | **45-55%** | Narratives, dialogues, examples, cultural notes | Grammar theory (aspect, motion verbs) |
-> | **B1.3-4** (M21-45) | **55-60%** | Narratives, dialogues, examples, simple grammar rules | Complex grammar theory only |
-> | **B1.5-6** (M46-65) | **60-65%** | Narratives, dialogues, all content | Abstract concept definitions only |
-> | **B1.7-8** (M66-80) | **65-70%** | Everything except complex theory | Limited English, pre-B2 transition |
-> | **B2-grammar** (M01-40) | **65-70%** | Narratives, dialogues, examples, simple grammar rules | Complex grammar theory (passive voice, participles, register rules) |
-> | **B2-vocab** (M41-125) | **80-85%** | Narratives, dialogues, all explanations in Ukrainian | Only historical/cultural context requiring English clarification |
-> | **C1** (M01-115) | **95%** | Everything except Language Link boxes | Only `🔗 Language Link` boxes for English-Ukrainian comparison |
-> | **C2** (M01-80) | **95-100%** | EVERYTHING including all explanations | Up to 5% Latin/Greek scholarly terms allowed |
+> | **B1.1-2** (M01-20) | **50-60%** | Narratives, dialogues, examples, strict rules | Complex conceptual theory (aspect logic) |
+> | **B1.3-4** (M21-45) | **60-70%** | Narratives, dialogues, simple theory | Complex syntax theory only |
+> | **B1.5-8** (M46-80) | **70-80%** | Narratives, dialogues, all content | Abstract concept definitions only |
+> | **B2.1-2** (M01-40) | **60-75%** | Narratives, dialogues, most grammar | Very complex theory (passive voice, register) |
+> | **B2.3-5** (M41-125) | **80-90%** | All content | Only historical/cultural nuances requiring English |
+> | **C1.1** (M01-20) | **90-100%** | All content except meta-analysis | Limited contrastive linguistics |
+> | **C1.2-6** (M21-115) | **95-100%** | Everything | `🔗 Language Link` boxes only |
+> | **C2** (M01-80) | **98-100%** | EVERYTHING | Strict <2% allowence for contrastive analysis |
 >
 > **B1-grammar (50-55%) Concrete Examples:**
 > *   ✅ UKRAINIAN: "Читав (impf) — тривала дія. Прочитав (pf) — завершена дія." (Examples)

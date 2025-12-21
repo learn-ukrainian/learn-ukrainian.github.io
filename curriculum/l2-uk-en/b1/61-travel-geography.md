@@ -357,7 +357,7 @@ Study these example sentences showing travel vocabulary in natural use:
 
 ---
 
-## Activities
+# Вправи
 
 ## quiz: Повторення (М60)
 > Quick review from the previous module.
@@ -1107,7 +1107,7 @@ Study these example sentences showing travel vocabulary in natural use:
 
 ---
 
-## Підсумок
+# Підсумок
 
 ### Key Vocabulary Categories
 
@@ -1138,37 +1138,37 @@ Study these example sentences showing travel vocabulary in natural use:
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| подорож | journey, trip | Significant travel experience |
-| мандрівка | adventure, wandering | Implies exploration |
-| поїздка | trip, ride | Short practical trip |
-| турист | tourist | Person traveling for pleasure |
-| турагентство | travel agency | Books trips, hotels |
-| бронювання | booking, reservation | The act of reserving |
-| резервація | reservation | Often = бронювання |
-| готель | hotel | Standard accommodation |
-| хостел | hostel | Budget accommodation |
-| віза | visa | Entry permit |
-| паспорт | passport | Travel document |
-| митниця | customs | Border luggage check |
-| кордон | border | State boundary |
-| авіаквиток | plane ticket | авіа + квиток |
-| посадковий талон | boarding pass | For flights |
-| багаж | luggage | General term |
-| валіза | suitcase | Hard-sided |
-| рюкзак | backpack | For hiking |
-| пам'ятка | landmark, sight | Tourist attraction |
-| екскурсія | excursion, tour | Guided visit |
-| гід | guide | Tour leader |
-| маршрут | route, itinerary | Travel plan |
-| карта | map | For navigation |
-| напрямок | direction | Which way |
-| північ | north | Cardinal direction |
-| південь | south | Cardinal direction |
-| схід | east | Cardinal direction |
-| захід | west | Cardinal direction |
-| континент | continent | Large land mass |
-| острів | island | Land in water |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| подорож | /.../ | journey, trip | - | Significant travel experience |
+| мандрівка | /.../ | adventure, wandering | - | Implies exploration |
+| поїздка | /.../ | trip, ride | - | Short practical trip |
+| турист | /.../ | tourist | - | Person traveling for pleasure |
+| турагентство | /.../ | travel agency | - | Books trips, hotels |
+| бронювання | /.../ | booking, reservation | - | The act of reserving |
+| резервація | /.../ | reservation | - | Often = бронювання |
+| готель | /.../ | hotel | - | Standard accommodation |
+| хостел | /.../ | hostel | - | Budget accommodation |
+| віза | /.../ | visa | - | Entry permit |
+| паспорт | /.../ | passport | - | Travel document |
+| митниця | /.../ | customs | - | Border luggage check |
+| кордон | /.../ | border | - | State boundary |
+| авіаквиток | /.../ | plane ticket | - | авіа + квиток |
+| посадковий талон | /.../ | boarding pass | - | For flights |
+| багаж | /.../ | luggage | - | General term |
+| валіза | /.../ | suitcase | - | Hard-sided |
+| рюкзак | /.../ | backpack | - | For hiking |
+| пам'ятка | /.../ | landmark, sight | - | Tourist attraction |
+| екскурсія | /.../ | excursion, tour | - | Guided visit |
+| гід | /.../ | guide | - | Tour leader |
+| маршрут | /.../ | route, itinerary | - | Travel plan |
+| карта | /.../ | map | - | For navigation |
+| напрямок | /.../ | direction | - | Which way |
+| північ | /.../ | north | - | Cardinal direction |
+| південь | /.../ | south | - | Cardinal direction |
+| схід | /.../ | east | - | Cardinal direction |
+| захід | /.../ | west | - | Cardinal direction |
+| континент | /.../ | continent | - | Large land mass |
+| острів | /.../ | island | - | Land in water |

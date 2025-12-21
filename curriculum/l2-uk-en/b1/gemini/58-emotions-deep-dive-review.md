@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 228 | Skipped |
 | **Підсумок** | ✅ | 58 | Included in Core |
 | **Need More Practice?** | ⚪️ | 53 | Skipped |
-| **Activities** | ➖ | 227 | Excluded Type |
+| **Вправи** | ⚪️ | 227 | Skipped |
 | **match-up: Емоції — Emotions** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Опис емоцій** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Позитивні vs Негативні** | 🎮 | 15 | Activity (15 items, min 8) |
@@ -38,4 +38,4 @@
 | **mark-the-words: Знайдіть емоції** | 🎮 | 7 | Activity (7 items, min 6) |
 | **select: Які емоції відчуває ця людина?** | 🎮 | 10 | Activity (10 items, min 6) |
 | **quiz: Перевірка знань** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Словник** | ⚪️ | 0 | Skipped |

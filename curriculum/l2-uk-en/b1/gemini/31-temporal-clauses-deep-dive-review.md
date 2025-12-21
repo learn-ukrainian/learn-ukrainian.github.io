@@ -30,7 +30,7 @@
 | **Part 5: Advanced Connectors** | ⚪️ | 50 | Skipped |
 | **Діалог: Планування зустрічі** | ✅ | 45 | Included in Core |
 | **Діалог 2: Спогади** | ✅ | 272 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Temporal Connector Reference** | ⚪️ | 0 | Skipped |
 | **Key Rules** | ⚪️ | 86 | Skipped |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |

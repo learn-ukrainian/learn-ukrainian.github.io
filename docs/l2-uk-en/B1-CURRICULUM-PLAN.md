@@ -19,8 +19,8 @@
 | **B1.1** | M01-10 | **45-50%** | Aspect mastery — heavy grammar theory in English |
 | **B1.2** | M11-20 | **50-55%** | Motion verbs with prefixes — grammar theory in English |
 | **B1.3-4** | M21-45 | **55-60%** | Complex sentences, participles — more Ukrainian in explanations |
-| **B1.5-6** | M46-65 | **60-65%** | Vocabulary expansion — thematic content mostly in Ukrainian |
-| **B1.7-8** | M66-80 | **65-70%** | Cultural content, skills — pre-B2 runway |
+| **B1.5-6** | M46-65 | **65-75%** | Vocabulary expansion — thematic content mostly in Ukrainian |
+| **B1.7-8** | M66-80 | **70-75%** | Cultural content, skills — pre-B2 runway |
 
 **Transition continuity:**
 - A2.3 ends at 50-55% → B1.1 starts at 45-50% (overlap allows adjustment)
@@ -1773,7 +1773,9 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Master travel and geography expressions
 - Build emotional and relational vocabulary
 
-**PEDAGOGICAL REQUIREMENT:** All Vocabulary (V) modules in this phase must use **Narrative-Driven Vocabulary**. Embed words in cohesive stories or realistic scenarios.
+**PEDAGOGICAL REQUIREMENT:** 
+- **Deep Immersion (80-100%):** From Phase B1.5 onwards, shift to "Reading to Learn". Remove full English translations from narratives and dialogues. Use English ONLY for vocabulary definitions, complex linguistic nuance (e.g., synonyms), and brief instructions.
+- **Narrative-Driven Vocabulary:** All Vocabulary (V) modules in this phase must use cohesive stories or realistic scenarios.
 
 ### Module Content Specifications B1.6
 
@@ -1960,6 +1962,9 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - Learn about contemporary Ukrainian culture
 - Develop skills for authentic text comprehension
 - Build cultural competence
+
+**PEDAGOGICAL REQUIREMENT:**
+- **Deep Immersion (80-100%):** Continue "Reading to Learn" strategy. Content should be fully Ukrainian with minimal English scaffolding (vocab/instructions only).
 
 ### Module Content Specifications B1.7
 

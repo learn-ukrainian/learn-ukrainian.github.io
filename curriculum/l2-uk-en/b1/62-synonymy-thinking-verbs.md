@@ -374,7 +374,7 @@ Notice how different verbs describe different phases of scientific thinking:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М61)
 > Quick review from the previous module.
@@ -1114,7 +1114,7 @@ Notice how different verbs describe different phases of scientific thinking:
 
 ---
 
-## Підсумок
+# Підсумок
 
 ### Key Thinking Verb Groups
 
@@ -1153,41 +1153,41 @@ Notice how different verbs describe different phases of scientific thinking:
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| думати | to think | General thinking |
-| гадати | to suppose, believe | Tentative opinion |
-| вважати | to consider, hold | Firm opinion |
-| припускати | to assume, suppose | Making assumptions |
-| міркувати | to ponder, reason | Deep reflection |
-| роздумувати | to reflect, deliberate | Over time |
-| розмірковувати | to reflect, contemplate | Philosophical |
-| обмірковувати | to think over, consider | All angles |
-| аналізувати | to analyze | Breaking down |
-| оцінювати | to evaluate, assess | Judging value |
-| судити | to judge | Making judgment |
-| рахувати | to count, consider | Regarding as |
-| сприймати | to perceive | Taking in info |
-| розуміти | to understand | Grasping meaning |
-| усвідомлювати | to realize, be aware | Conscious recognition |
-| осмислювати | to comprehend, make sense | Deep processing |
-| уявляти | to imagine | Mental images |
-| передбачати | to foresee, predict | Anticipating |
-| планувати | to plan | Future actions |
-| сумніватися | to doubt | Being unsure |
-| вагатися | to hesitate | Cannot decide |
-| вирішувати | to decide | Making a choice |
-| запам'ятовувати | to memorize | Committing to memory |
-| згадувати | to recall, mention | Remembering |
-| забувати | to forget | Losing from memory |
-| зосереджуватися | to focus, concentrate | Attention |
-| ігнорувати | to ignore | Not paying attention |
-| помилятися | to make a mistake | Error in thinking |
-| мріяти | to dream | Imagining future |
-| сподіватися | to hope | Expecting good |
-| вивчати | to study, learn | Acquiring knowledge |
-| досліджувати | to research | Investigating |
-| порівнювати | to compare | Finding differences |
-| замислюватися | to ponder, wonder | Starting to think |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| думати | /.../ | to think | - | General thinking |
+| гадати | /.../ | to suppose, believe | - | Tentative opinion |
+| вважати | /.../ | to consider, hold | - | Firm opinion |
+| припускати | /.../ | to assume, suppose | - | Making assumptions |
+| міркувати | /.../ | to ponder, reason | - | Deep reflection |
+| роздумувати | /.../ | to reflect, deliberate | - | Over time |
+| розмірковувати | /.../ | to reflect, contemplate | - | Philosophical |
+| обмірковувати | /.../ | to think over, consider | - | All angles |
+| аналізувати | /.../ | to analyze | - | Breaking down |
+| оцінювати | /.../ | to evaluate, assess | - | Judging value |
+| судити | /.../ | to judge | - | Making judgment |
+| рахувати | /.../ | to count, consider | - | Regarding as |
+| сприймати | /.../ | to perceive | - | Taking in info |
+| розуміти | /.../ | to understand | - | Grasping meaning |
+| усвідомлювати | /.../ | to realize, be aware | - | Conscious recognition |
+| осмислювати | /.../ | to comprehend, make sense | - | Deep processing |
+| уявляти | /.../ | to imagine | - | Mental images |
+| передбачати | /.../ | to foresee, predict | - | Anticipating |
+| планувати | /.../ | to plan | - | Future actions |
+| сумніватися | /.../ | to doubt | - | Being unsure |
+| вагатися | /.../ | to hesitate | - | Cannot decide |
+| вирішувати | /.../ | to decide | - | Making a choice |
+| запам'ятовувати | /.../ | to memorize | - | Committing to memory |
+| згадувати | /.../ | to recall, mention | - | Remembering |
+| забувати | /.../ | to forget | - | Losing from memory |
+| зосереджуватися | /.../ | to focus, concentrate | - | Attention |
+| ігнорувати | /.../ | to ignore | - | Not paying attention |
+| помилятися | /.../ | to make a mistake | - | Error in thinking |
+| мріяти | /.../ | to dream | - | Imagining future |
+| сподіватися | /.../ | to hope | - | Expecting good |
+| вивчати | /.../ | to study, learn | - | Acquiring knowledge |
+| досліджувати | /.../ | to research | - | Investigating |
+| порівнювати | /.../ | to compare | - | Finding differences |
+| замислюватися | /.../ | to ponder, wonder | - | Starting to think |

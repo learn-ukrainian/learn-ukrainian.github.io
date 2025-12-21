@@ -24,12 +24,11 @@
 | **Skill 2: Passive Constructions** | ⚪️ | 128 | Skipped |
 | **Skill 3: Diminutives (Зменшувальні форми)** | ⚪️ | 162 | Skipped |
 | **Skill 4: Numerals - Collective & Fractions** | ⚪️ | 92 | Skipped |
-| **Summary** | ✅ | 102 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Аналіз** | ✅ | 540 | Included in Core |
 | **Поглиблення** | ⚪️ | 576 | Skipped |
 | **Need More Practice?** | ⚪️ | 56 | Skipped |
 | **Практика** | ⚪️ | 454 | Skipped |
-| **Підсумок** | ✅ | 0 | Included in Core |
 | **Remediation Guidance** | ⚪️ | 70 | Skipped |
 | **What's Next: Phase B1.5** | ⚪️ | 50 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |

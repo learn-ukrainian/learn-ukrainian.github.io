@@ -25,7 +25,7 @@
 | **Поглиблення** | ⚪️ | 194 | Skipped |
 | **Підсумок** | ✅ | 30 | Included in Core |
 | **Need More Practice?** | ⚪️ | 630 | Skipped |
-| **Activities** | ➖ | 241 | Excluded Type |
+| **Вправи** | ⚪️ | 241 | Skipped |
 | **match-up: Бізнес — Business** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Бізнес-терміни** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Категорії бізнесу** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -38,4 +38,4 @@
 | **mark-the-words: Знайдіть бізнес-терміни** | 🎮 | 6 | Activity (6 items, min 6) |
 | **select: Позитивні бізнес-показники** | 🎮 | 10 | Activity (10 items, min 6) |
 | **quiz: Перевірка знань** | 🎮 | 8 | Activity (8 items, min 8) |
-| **Vocabulary** | ➖ | 0 | Excluded Type |
+| **Словник** | ⚪️ | 0 | Skipped |

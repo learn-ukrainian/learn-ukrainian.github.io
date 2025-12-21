@@ -456,7 +456,7 @@ Notice the progression. The discussion is active (*We heard, we spoke*), but the
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -478,7 +478,7 @@ Notice the progression. The discussion is active (*We heard, we spoke*), but the
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М39)
 > Quick review from the full passive participles module.
@@ -1141,7 +1141,7 @@ Notice the progression. The discussion is active (*We heard, we spoke*), but the
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви опанували **короткі пасивні форми** (-но/-то) — інструмент офіційного та безособового мовлення, що домінує в українському діловодстві.
 
@@ -1156,27 +1156,27 @@ Together with full forms (M39), you now have the complete passive participle sys
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| написано | (it was) written | написаний → написано |
-| зроблено | (it was) done | зроблений → зроблено |
-| сказано | (it was) said | сказаний → сказано |
-| вирішено | (it was) decided | вирішений → вирішено |
-| доведено | (it was) proven | NOT "доказано" (Russianism) |
-| погоджено | (it was) agreed | погоджений → погоджено |
-| встановлено | (it was) established | встановлений → встановлено |
-| визначено | (it was) defined | визначений → визначено |
-| забезпечено | (it was) ensured | забезпечений → забезпечено |
-| організовано | (it was) organized | організований → організовано |
-| виконано | (it was) completed | виконаний → виконано |
-| завершено | (it was) finished | завершений → завершено |
-| заплановано | (it is) planned | запланований → заплановано |
-| передбачено | (it is) foreseen/provided | передбачений → передбачено |
-| дозволено | (it is) allowed | Common on signs |
-| заборонено | (it is) forbidden | Common on signs |
-| рекомендовано | (it is) recommended | рекомендований → рекомендовано |
-| необхідно | (it is) necessary | Common impersonal expression |
-| потрібно | (it is) needed | Common impersonal expression |
-| важливо | (it is) important | Common impersonal expression |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| написано | /.../ | (it was) written | - | написаний → написано |
+| зроблено | /.../ | (it was) done | - | зроблений → зроблено |
+| сказано | /.../ | (it was) said | - | сказаний → сказано |
+| вирішено | /.../ | (it was) decided | - | вирішений → вирішено |
+| доведено | /.../ | (it was) proven | - | NOT "доказано" (Russianism) |
+| погоджено | /.../ | (it was) agreed | - | погоджений → погоджено |
+| встановлено | /.../ | (it was) established | - | встановлений → встановлено |
+| визначено | /.../ | (it was) defined | - | визначений → визначено |
+| забезпечено | /.../ | (it was) ensured | - | забезпечений → забезпечено |
+| організовано | /.../ | (it was) organized | - | організований → організовано |
+| виконано | /.../ | (it was) completed | - | виконаний → виконано |
+| завершено | /.../ | (it was) finished | - | завершений → завершено |
+| заплановано | /.../ | (it is) planned | - | запланований → заплановано |
+| передбачено | /.../ | (it is) foreseen/provided | - | передбачений → передбачено |
+| дозволено | /.../ | (it is) allowed | - | Common on signs |
+| заборонено | /.../ | (it is) forbidden | - | Common on signs |
+| рекомендовано | /.../ | (it is) recommended | - | рекомендований → рекомендовано |
+| необхідно | /.../ | (it is) necessary | - | Common impersonal expression |
+| потрібно | /.../ | (it is) needed | - | Common impersonal expression |
+| важливо | /.../ | (it is) important | - | Common impersonal expression |

@@ -272,7 +272,7 @@ Prefix **роз-** indicates **dispersal** — scattering in different direction
 
 ---
 
-## Підсумок
+# Підсумок
 
 ## Головне
 
@@ -311,7 +311,7 @@ Prefix **роз-** indicates **dispersal** — scattering in different direction
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Prefix Selection
 
@@ -1191,7 +1191,7 @@ Translate using the correct prefixed verb:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

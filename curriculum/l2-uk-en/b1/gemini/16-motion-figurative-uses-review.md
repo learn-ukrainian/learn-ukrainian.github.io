@@ -33,9 +33,9 @@
 | **Exercise 1: Identify the Meaning** | ⚪️ | 55 | Skipped |
 | **Exercise 2: Complete the Expression** | ⚪️ | 10 | Skipped |
 | **Dialogue 3: Сімейна розмова** | ✅ | 124 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Key Figurative Motion Patterns** | ✅ | 100 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Фігуративні вирази** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Вираз і значення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Буквальне чи переносне?** | 🎮 | 14 | Activity (14 items, min 8) |

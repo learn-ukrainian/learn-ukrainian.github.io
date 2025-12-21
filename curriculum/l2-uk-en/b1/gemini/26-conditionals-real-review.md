@@ -31,10 +31,10 @@
 | **Діалог: Планування вихідних** | ✅ | 131 | Included in Core |
 | **Текст для аналізу: Робочий день менеджера** | ✅ | 173 | Included in Core |
 | **Folk Logic: Superstitions and Omens** | ⚪️ | 150 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Real Conditional Patterns** | ✅ | 176 | Included in Core |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Реальні умови** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Умова і наслідок** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Теорія умовних речень** | 🎮 | 14 | Activity (14 items, min 8) |

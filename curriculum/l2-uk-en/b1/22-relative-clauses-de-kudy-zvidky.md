@@ -260,7 +260,7 @@ This systematic approach eliminates guesswork. With practice, the correct choice
 
 ---
 
-## Summary
+# Підсумок
 
 ## The Three-Way System
 
@@ -300,7 +300,7 @@ For English speakers, the key insight is that Ukrainian forces you to think abou
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Вправи
+# Вправи
 
 ## fill-in: де, куди, або звідки
 > Заповніть пропуски правильним словом.
@@ -935,27 +935,27 @@ For English speakers, the key insight is that Ukrainian forces you to think abou
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | ЧМ | Примітка |
-|-------|----------|-----|----------|
-| де | where (at) | присл. | static location |
-| куди | where (to) | присл. | direction |
-| звідки | where (from) | присл. | origin |
-| звідси | from here | присл. | = from this place |
-| туди | there (to) | присл. | direction |
-| сюди | here (to) | присл. | direction |
-| там | there (at) | присл. | static |
-| тут | here (at) | присл. | static |
-| всюди | everywhere | присл. | general location |
-| ніде | nowhere (at) | присл. | negation |
-| скрізь | everywhere | присл. | = всюди |
-| деінде | elsewhere | присл. | = in another place |
-| кудись | somewhere (to) | присл. | indefinite direction |
-| нікуди | nowhere (to) | присл. | negation |
-| звідкись | from somewhere | присл. | indefinite origin |
-| десь | somewhere (at) | присл. | indefinite location |
-| будь-де | anywhere (at) | присл. | = in any place |
-| де-небудь | anywhere | присл. | = будь-де |
-| куди-небудь | anywhere (to) | присл. | indefinite direction |
-| звідки-небудь | from anywhere | присл. | indefinite origin |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| де | /.../ | where (at) | присл. | static location |
+| куди | /.../ | where (to) | присл. | direction |
+| звідки | /.../ | where (from) | присл. | origin |
+| звідси | /.../ | from here | присл. | = from this place |
+| туди | /.../ | there (to) | присл. | direction |
+| сюди | /.../ | here (to) | присл. | direction |
+| там | /.../ | there (at) | присл. | static |
+| тут | /.../ | here (at) | присл. | static |
+| всюди | /.../ | everywhere | присл. | general location |
+| ніде | /.../ | nowhere (at) | присл. | negation |
+| скрізь | /.../ | everywhere | присл. | = всюди |
+| деінде | /.../ | elsewhere | присл. | = in another place |
+| кудись | /.../ | somewhere (to) | присл. | indefinite direction |
+| нікуди | /.../ | nowhere (to) | присл. | negation |
+| звідкись | /.../ | from somewhere | присл. | indefinite origin |
+| десь | /.../ | somewhere (at) | присл. | indefinite location |
+| будь-де | /.../ | anywhere (at) | присл. | = in any place |
+| де-небудь | /.../ | anywhere | присл. | = будь-де |
+| куди-небудь | /.../ | anywhere (to) | присл. | indefinite direction |
+| звідки-небудь | /.../ | from anywhere | присл. | indefinite origin |

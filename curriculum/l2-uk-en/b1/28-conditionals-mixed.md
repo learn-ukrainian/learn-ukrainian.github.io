@@ -226,7 +226,7 @@ This structure presents what happens if the condition is NOT met:
 
 ---
 
-## Summary
+# Підсумок
 
 ## Complex Conditional Patterns
 
@@ -298,7 +298,7 @@ When practicing mixed conditionals, always include time markers like «рані�
 > - 📺 [Conditionals - Learning Ukrainian with Odarka](https://www.youtube.com/watch?v=NwgNKVKHBIU) — Learning Ukrainian with Odarka
 > - 📺 [Ukrainian Conditionals: Якби](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
 
-## Activities
+# Вправи
 
 ## fill-in: Змішані та складні умови
 > Заповніть пропуски правильними формами.
@@ -874,10 +874,10 @@ When practicing mixed conditionals, always include time markers like «рані�
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
-|-------|-----|----------|-----|----------|
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
 | інакше | /iˈnakʃɛ/ | otherwise | присл. | |
 | в іншому випадку | /v ˈinʃɔmu ˈvɪpadku/ | otherwise | фраза | офіційний |
 | а то | /a ˈtɔ/ | or else | спол. | розмовний |

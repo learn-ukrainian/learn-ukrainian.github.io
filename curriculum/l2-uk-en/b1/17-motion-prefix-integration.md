@@ -325,7 +325,7 @@ Fill in the correct prefixed verb in each blank:
 
 ---
 
-## Summary
+# Підсумок
 
 ## The Complete Motion Prefix System
 
@@ -366,7 +366,7 @@ Fill in the correct prefixed verb in each blank:
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Префікси руху
 > Заповніть пропуски правильними формами з префіксами.
@@ -999,7 +999,7 @@ Fill in the correct prefixed verb in each blank:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

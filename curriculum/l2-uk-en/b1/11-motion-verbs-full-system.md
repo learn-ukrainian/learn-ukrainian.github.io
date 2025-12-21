@@ -316,7 +316,7 @@ Because you are back now!
 
 ---
 
-## Підсумок
+# Підсумок
 
 ## Головне
 
@@ -356,7 +356,7 @@ Because you are back now!
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Motion Verb Basics
 
@@ -1227,7 +1227,7 @@ Translate using the correct motion verb:
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

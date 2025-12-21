@@ -24,9 +24,9 @@
 | **Analysis** | ⚪️ | 994 | Skipped |
 | **Deep Dive** | ✅ | 1474 | Included in Core |
 | **Practice** | ⚪️ | 661 | Skipped |
-| **Summary** | ✅ | 464 | Included in Core |
+| **Підсумок** | ✅ | 464 | Included in Core |
 | **Need More Practice?** | ⚪️ | 80 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Визначення виду** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Аспектні пари** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Вибір виду в контексті** | 🎮 | 14 | Activity (14 items, min 8) |

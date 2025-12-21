@@ -399,7 +399,7 @@ Example Conversation:
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -427,7 +427,7 @@ Example Conversation:
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М47)
 > Quick review from the previous module.
@@ -1009,7 +1009,7 @@ Example Conversation:
 
 ---
 
-## Підсумок
+# Підсумок
 
 In this module, you learned to **express opinions** with varying degrees of certainty — from strong conviction to tentative suggestion.
 
@@ -1023,9 +1023,9 @@ In the next module, you'll learn vocabulary for **agreement and disagreement** �
 
 ---
 
-## Словник
+# Словник
 
-| Слово | IPA | Переклад | ЧМ | Примітка |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|
 | вважати | /vvɑˈʒɑtɪ/ | to believe, consider | Я вважаю, що... |
 | думати | /ˈdumɑtɪ/ | to think | Я думаю, що... |

@@ -395,9 +395,9 @@ Before we explain the rules, try these. **Choose the imperative that sounds more
 
 ---
 
-## Summary
+# Підсумок
 
-## Підсумок: Вид у наказовому способі
+# Підсумок: Вид у наказовому способі
 
 ### Головна відмінність / The Core Distinction
 
@@ -435,7 +435,7 @@ Before we explain the rules, try these. **Choose the imperative that sounds more
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Imperative Aspect Selection
 > Fill in the correct imperative form based on context.
@@ -1083,7 +1083,7 @@ Before we explain the rules, try these. **Choose the imperative that sounds more
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

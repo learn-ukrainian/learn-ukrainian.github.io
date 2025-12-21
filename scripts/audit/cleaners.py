@@ -70,8 +70,10 @@ def extract_core_content(body: str) -> str:
     Extract content before the Activities section.
     This is the 'instructional core' for word count (not immersion).
     """
-    # Match both H1 and H2, English-only and bilingual headers
-    activities_pattern = re.compile(r'^#{1,2} (?:Activities|Вправи)', re.MULTILINE | re.IGNORECASE)
+    # Match both H1 and H2 (# and ##)
+    # Match English: Activities, Exercises
+    # Match Ukrainian: Вправи
+    activities_pattern = re.compile(r'^#{1,2}\s+(?:Activities|Вправи|Exercises)', re.MULTILINE | re.IGNORECASE)
     activities_match = activities_pattern.search(body)
 
     if activities_match:

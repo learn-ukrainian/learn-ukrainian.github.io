@@ -29,10 +29,10 @@
 | **Діалог: На роботі** | ✅ | 59 | Included in Core |
 | **Діалог 2: У видавництві** | ✅ | 152 | Included in Core |
 | **Figurative Motion Idioms** | ⚪️ | 173 | Skipped |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **Motion Prefix Transfer Patterns** | ✅ | 73 | Included in Core |
 | **Need More Practice?** | ⚪️ | 78 | Skipped |
-| **Activities** | ➖ | 0 | Excluded Type |
+| **Вправи** | ⚪️ | 0 | Skipped |
 | **fill-in: Префіксні дієслова** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Префікс і значення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Патерни префіксів** | 🎮 | 14 | Activity (14 items, min 8) |

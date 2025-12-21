@@ -27,7 +27,7 @@
 | **Debate Club Simulations (Симуляції дебатів)** | ⚪️ | 335 | Skipped |
 | **Need More Practice?** | ⚪️ | 72 | Skipped |
 | **Практика** | ⚪️ | 208 | Skipped |
-| **Summary** | ✅ | 76 | Included in Core |
+| **Підсумок** | ✅ | 69 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Повторення (М47)** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Виберіть правильний вираз** | 🎮 | 14 | Activity (14 items, min 8) |
@@ -42,5 +42,4 @@
 | **dialogue-reorder: Дебати** | 🎮 | 8 | Activity (8 items, min 5) |
 | **select: Множинний вибір** | 🎮 | 11 | Activity (11 items, min 6) |
 | **mark-the-words: Знайдіть вирази думок** | 🎮 | 8 | Activity (8 items, min 6) |
-| **Підсумок** | ✅ | 69 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

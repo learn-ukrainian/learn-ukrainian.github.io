@@ -266,6 +266,9 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Produce publication-ready texts
 - Develop individual writing voice
 
+**PEDAGOGICAL REQUIREMENT:**
+- **Native Immersion (98-100%):** Stylistic analysis must be conducted directly in Ukrainian. English is restricted to specific metalinguistic contrasts (e.g., comparing "subject" vs. "підмет").
+
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
@@ -793,6 +796,9 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Engage with literary criticism
 - Write publishable literary essays
 
+**PEDAGOGICAL REQUIREMENT:**
+- **Native Immersion (98-100%):** Literary analysis must use Ukrainian critical terminology. No English summaries, translations, or explanations of texts are permitted.
+
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
@@ -837,6 +843,9 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Learn to produce professional documents across domains
 - Build framework for self-directed professional language learning
 - Prepare foundation for optional specialization tracks (added separately)
+
+**PEDAGOGICAL REQUIREMENT:**
+- **Professional Immersion (98-100%):** Professional scenarios must be fully immersive. English is allowed only for translating specific professional terminology where no direct equivalent exists (contrastive analysis).
 
 ### Rationale
 
@@ -958,6 +967,9 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 - Prepare for professional use
 - Achieve certification
 - Plan continued growth
+
+**PEDAGOGICAL REQUIREMENT:**
+- **Capstone Immersion (98-100%):** Capstone projects must be researched, written, and defended entirely in Ukrainian. Use of English is disallowed except as a subject of analysis (e.g., in a translation project).
 
 ### Grammar Progression
 

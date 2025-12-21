@@ -76,10 +76,10 @@ def extract_vocabulary(content: str) -> set[str]:
     """
     vocab = set()
 
-    # Find vocabulary section (must be ## level, not ### activity titles)
+    # Find vocabulary section (H1 or H2 level)
     # May have emoji prefix like "📚 Vocabulary" but no other words before it
     # This prevents matching "## match-up: Café Vocabulary" etc.
-    match = re.search(r'^##\s+[^\w]*(?:Vocabulary|Словник)\s*$[\s\S]*?(?=^##\s|\Z)', content, re.MULTILINE)
+    match = re.search(r'^#+\s+[^\w]*(?:Vocabulary|Словник)\s*$[\s\S]*?(?=^#+\s|\Z)', content, re.MULTILINE)
     if not match:
         return vocab
 
@@ -110,8 +110,8 @@ def extract_activity_content(content: str) -> dict[str, set[str]]:
     """Extract content from activities."""
     activities = {}
 
-    # Find activity sections
-    matches = re.findall(r'##\s+([\w-]+):\s*([^\n]+)\n([\s\S]*?)(?=##\s+[\w-]+:|$)', content)
+    # Find activity sections (H2 level)
+    matches = re.findall(r'^##\s+([\w-]+):\s*([^\n]+)\n([\s\S]*?)(?=^#+|$)', content, re.MULTILINE)
 
     for activity_type, title, body in matches:
         key = f"{activity_type}:{title}"

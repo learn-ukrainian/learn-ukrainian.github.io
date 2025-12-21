@@ -26,17 +26,11 @@ Write ONLY the instructional content sections. Do NOT write activities.
 
 ## Immersion Targets
 
-| Level | Ukrainian % |
-|-------|-------------|
-| A1 M01-15 | 15% |
-| A1 M16-34 | 30% |
-| A2 | 40% |
-| B1 grammar (M01-45) | 50% |
-| B1 vocab (M46-80) | 70% |
-| B2 grammar (M01-40) | 70% |
-| B2 vocab (M41-125) | 85% |
-| C1 | 95% |
-| C2 | 95-100% |
+> **Constraint:** Check specific ranges in `MODULE-RICHNESS-GUIDELINES-v2.md`.
+
+*   **A1-A2:** Heavily scaffolded (English explanations, Ukrainian examples).
+*   **B1-B2:** Graduated immersion (increasing Ukrainian use for theory).
+*   **C1-C2:** Full immersion (Ukrainian metalanguage, minimal English).
 
 ## Required Elements
 

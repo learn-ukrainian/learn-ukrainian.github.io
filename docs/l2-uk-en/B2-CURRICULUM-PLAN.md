@@ -29,7 +29,7 @@ B2 modules use a **reduced bilingual approach** compared to B1:
 
 **Why less English than B1?** At B2, learners have internalized aspect and basic grammar. The cognitive load for new concepts (passive, participles, register) is lower because learners can build on existing Ukrainian knowledge.
 
-**Audit threshold:** Immersion must stay ≥60% for lesson content (before `# Activities`).
+**Audit threshold:** Immersion must stay ≥70% for lesson content (before `# Activities`).
 
 ---
 
@@ -1526,6 +1526,9 @@ Participles agree with noun in gender, number, case:
 - Distinguish synonym nuances
 - Apply advanced conjunctions
 
+**PEDAGOGICAL REQUIREMENT:**
+- **Deep Immersion (80-100%):** Shift to full "Reading to Learn". English is allowed ONLY for translation equivalents of specific idioms where meaning cannot be inferred. All narratives, instructions, and context must be in Ukrainian.
+
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
@@ -2356,6 +2359,9 @@ Participles agree with noun in gender, number, case:
 - Build historical vocabulary
 - Engage with historical texts and narratives
 
+**PEDAGOGICAL REQUIREMENT:**
+- **Narrative Immersion (85-100%):** History modules must be reading-centric. No English explanations of history are permitted. English is allowed only for defining complex obscure archaic terms in vocabulary lists.
+
 ### Module Specifications
 
 | # | Title | Type | Focus | Key Vocabulary |
@@ -2408,6 +2414,9 @@ Participles agree with noun in gender, number, case:
 - Build biographical vocabulary
 - Appreciate diverse contributions
 
+**PEDAGOGICAL REQUIREMENT:**
+- **Advanced Immersion (85-100%):** Biographical narratives must be native-level complexity (adapted B2). No English scaffolding for content. Students must "read to survive".
+
 ### Module Specifications
 
 **Women (Modules 96-108):**
@@ -2457,6 +2466,9 @@ Participles agree with noun in gender, number, case:
 - Develop academic writing skills
 - Complete capstone project
 - Prepare for B2 certification
+
+**PEDAGOGICAL REQUIREMENT:**
+- **Full Immersion (90-100%):** Capstone phase operates as a native environment. No English allowed except for meta-discussion of translation challenges in academic writing.
 
 ### Module Specifications
 
@@ -2633,7 +2645,7 @@ Before generating any B2 module:
 - [ ] Register awareness is integrated
 - [ ] Cultural content is decolonized
 - [ ] Activities match module type
-- [ ] Immersion level is 85% Ukrainian
+- [ ] Immersion level is 80% Ukrainian
 - [ ] No forward references to unlearned content
 - [ ] Review modules cover all preceding content
 

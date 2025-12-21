@@ -304,7 +304,7 @@ Fill in the table with the corresponding forms. Remember which pattern each pair
 
 ---
 
-## Summary
+# Підсумок
 
 ## Key Takeaways / Головні висновки
 
@@ -342,7 +342,7 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 
 ---
 
-## Activities
+# Вправи
 
 ## fill-in: Доповніть пари
 > Заповніть пропуски правильною формою дієслова.
@@ -988,7 +988,7 @@ Understanding how aspect pairs are formed helps you predict forms for new verbs 
 
 ---
 
-## Словник
+# Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |
 |-------|--------|----------|-----|----------|

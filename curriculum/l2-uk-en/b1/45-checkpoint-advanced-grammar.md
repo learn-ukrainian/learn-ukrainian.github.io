@@ -209,7 +209,7 @@ Ukrainian has **three** types of passive constructions:
 
 ---
 
-## Summary
+# Підсумок
 
 **Scoring (from diagnostic):**
 - 20-25 correct: Excellent! Ready for Phase B1.5
@@ -434,7 +434,7 @@ By completing B1.4, you should be able to:
 
 ---
 
-## Підсумок
+# Підсумок
 
 ### Self-Assessment Rubric
 
@@ -477,7 +477,7 @@ The grammar you've learned will support more sophisticated expression of these n
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Diagnostic Assessment (25 items)
 
@@ -1143,27 +1143,27 @@ The grammar you've learned will support more sophisticated expression of these n
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| дієприслівник | adverbial participle | граматичний термін |
-| пасив | passive voice | граматичний термін |
-| здрібнілий | diminutive | граматичний термін |
-| збірний | collective | числівники |
-| дробовий | fractional | числівники |
-| відсоток | percent | статистика |
-| третина | one third | дріб |
-| чверть | quarter | дріб |
-| половина | half | дріб |
-| реєстр | register (style) | стилістика |
-| формальний | formal | стиль мовлення |
-| неформальний | informal | стиль мовлення |
-| контекст | context | для розуміння нюансів |
-| оцінювання | assessment | педагогічний термін |
-| прогрес | progress | самооцінка |
-| діагностика | diagnostics | для виявлення рівня |
-| підсумок | summary | висновок |
-| підрядне речення | subordinate clause | замість активних дієприкметників |
-| нюанс | nuance | тонкощі вживання |
-| узгодження | agreement | граматичний термін |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| дієприслівник | /.../ | adverbial participle | - | граматичний термін |
+| пасив | /.../ | passive voice | - | граматичний термін |
+| здрібнілий | /.../ | diminutive | - | граматичний термін |
+| збірний | /.../ | collective | - | числівники |
+| дробовий | /.../ | fractional | - | числівники |
+| відсоток | /.../ | percent | - | статистика |
+| третина | /.../ | one third | - | дріб |
+| чверть | /.../ | quarter | - | дріб |
+| половина | /.../ | half | - | дріб |
+| реєстр | /.../ | register (style) | - | стилістика |
+| формальний | /.../ | formal | - | стиль мовлення |
+| неформальний | /.../ | informal | - | стиль мовлення |
+| контекст | /.../ | context | - | для розуміння нюансів |
+| оцінювання | /.../ | assessment | - | педагогічний термін |
+| прогрес | /.../ | progress | - | самооцінка |
+| діагностика | /.../ | diagnostics | - | для виявлення рівня |
+| підсумок | /.../ | summary | - | висновок |
+| підрядне речення | /.../ | subordinate clause | прикм. | замість активних дієприкметників |
+| нюанс | /.../ | nuance | - | тонкощі вживання |
+| узгодження | /.../ | agreement | - | граматичний термін |

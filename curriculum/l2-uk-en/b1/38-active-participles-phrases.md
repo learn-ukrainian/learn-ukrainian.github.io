@@ -354,7 +354,7 @@ This is the essence of Ukrainian style: **Be active with verbs, not with partici
 
 ---
 
-## Summary
+# Підсумок
 
 ### Key Takeaways
 
@@ -377,7 +377,7 @@ This is the essence of Ukrainian style: **Be active with verbs, not with partici
 
 ---
 
-## Вправи
+# Вправи
 
 ## quiz: Повторення (М37)
 > Quick review from the perfective adverbial participles module.
@@ -1011,7 +1011,7 @@ Use these to sound wise and native!
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися **розпізнавати** активні дієприкметники в офіційних текстах та **уникати** неприродних форм у власній українській мові. Основні висновки:
 
@@ -1033,27 +1033,27 @@ In the next module, you'll learn **passive participles** — the other major par
 
 ---
 
-## Словник
+# Словник
 
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| існуючий | existing (avoid!) | ❌ Use чинний, наявний |
-| слідуючий | following (avoid!) | ❌ Use наступний |
-| оточуючий | surrounding (avoid!) | ❌ Use навколишній |
-| бувший | former (avoid!) | ❌ Use колишній |
-| бажаючий | wishing (avoid!) | ❌ Use охочий, той хто бажає |
-| посивілий | grey-haired | ✅ Natural past participle |
-| зів'ялий | wilted | ✅ Natural past participle |
-| загорілий | tanned | ✅ Natural past participle |
-| змоклий | soaked | ✅ Natural past participle |
-| замерзлий | frozen | ✅ Natural past participle |
-| пожовклий | yellowed | ✅ Natural past participle |
-| опалий | fallen (leaves) | ✅ Natural past participle |
-| дорослий | adult | ✅ Lexicalized, natural |
-| колишній | former | ✅ Natural replacement for бувший |
-| наступний | next | ✅ Natural replacement for слідуючий |
-| чинний | current, valid | ✅ Natural replacement for існуючий |
-| навколишній | surrounding | ✅ Natural replacement for оточуючий |
-| майбутній | future | ✅ Natural (not будучий) |
-| теперішній | present, current | ✅ Natural |
-| охочий | willing, eager | ✅ Natural replacement for бажаючий |
+| Слово | Вимова | Переклад | ЧМ | Примітка |
+|-------|--------|----------|-----|----------|
+| існуючий | /.../ | existing (avoid!) | - | ❌ Use чинний, наявний |
+| слідуючий | /.../ | following (avoid!) | - | ❌ Use наступний |
+| оточуючий | /.../ | surrounding (avoid!) | - | ❌ Use навколишній |
+| бувший | /.../ | former (avoid!) | - | ❌ Use колишній |
+| бажаючий | /.../ | wishing (avoid!) | - | ❌ Use охочий, той хто бажає |
+| посивілий | /.../ | grey-haired | - | ✅ Natural past participle |
+| зів'ялий | /.../ | wilted | - | ✅ Natural past participle |
+| загорілий | /.../ | tanned | - | ✅ Natural past participle |
+| змоклий | /.../ | soaked | - | ✅ Natural past participle |
+| замерзлий | /.../ | frozen | - | ✅ Natural past participle |
+| пожовклий | /.../ | yellowed | - | ✅ Natural past participle |
+| опалий | /.../ | fallen (leaves) | - | ✅ Natural past participle |
+| дорослий | /.../ | adult | - | ✅ Lexicalized, natural |
+| колишній | /.../ | former | - | ✅ Natural replacement for бувший |
+| наступний | /.../ | next | - | ✅ Natural replacement for слідуючий |
+| чинний | /.../ | current, valid | - | ✅ Natural replacement for існуючий |
+| навколишній | /.../ | surrounding | - | ✅ Natural replacement for оточуючий |
+| майбутній | /.../ | future | - | ✅ Natural (not будучий) |
+| теперішній | /.../ | present, current | - | ✅ Natural |
+| охочий | /.../ | willing, eager | - | ✅ Natural replacement for бажаючий |

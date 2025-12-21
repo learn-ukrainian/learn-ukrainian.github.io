@@ -215,8 +215,10 @@ def extract_vocab_items(content: str) -> list[dict]:
     Returns list of dicts with keys: uk, ipa, en, note
     """
     items = []
+    # Match both # Vocabulary and ## Vocabulary (plus Ukrainian variants)
+    # Stop at next H1 or H2 section
     vocab_match = re.search(
-        r'^## (?:Vocabulary|Словник).*?(?=\n##\s|\Z)',
+        r'^#{1,2}\s+(?:Vocabulary|Словник).*?(?=\n#{1,2}\s|\Z)',
         content, re.DOTALL | re.IGNORECASE | re.MULTILINE
     )
     if vocab_match:
@@ -230,11 +232,11 @@ def extract_vocab_items(content: str) -> list[dict]:
                 if len(parts) >= 3:
                     first_col = parts[0]
                     # Skip header row
-                    if first_col.lower() in ('word', 'слово'):
+                    if first_col.lower() in ('word', 'слово', 'дíєслово', 'слово / вираз'):
                         continue
 
                     # Extract Ukrainian word (first column may have formatting)
-                    uk_match = re.search(r'[\u0400-\u04ff][\u0400-\u04ff\s\'\-]*', first_col)
+                    uk_match = re.search(r'[\u0400-\u04ff][\u0400-\u04ff\s\'\-\!]*', first_col)
                     if not uk_match:
                         continue
 
@@ -254,10 +256,19 @@ def extract_vocab_items(content: str) -> list[dict]:
                         ipa = parts[1] if '/' in parts[1] else ''
                         en = parts[2]
                         note = parts[5] if len(parts) > 5 else ''
-                    elif len(parts) >= 3:  # Short format
+                    elif len(parts) == 5:  # Tier 3 / B1 format
                         ipa = parts[1] if '/' in parts[1] else ''
-                        en = parts[2] if '/' not in parts[1] else parts[1]
-                        note = parts[-1] if len(parts) > 3 else ''
+                        en = parts[2]
+                        note = parts[4]
+                    elif len(parts) >= 3:  # Generic/Short format
+                        # If 2nd col has slashes, it's likely IPA
+                        if '/' in parts[1]:
+                            ipa = parts[1]
+                            en = parts[2]
+                            note = parts[3] if len(parts) > 3 else ''
+                        else:
+                            en = parts[1]
+                            note = parts[2] if len(parts) > 2 else ''
 
                     items.append({
                         'uk': uk,
@@ -331,10 +342,10 @@ def check_vocab_violations(
 def count_vocab_rows(content: str) -> int:
     """Count vocabulary table rows.
 
-    Note: Must match level-2 headings (## Vocabulary) not subsections (### Vocabulary Groups).
+    Matches both H1 and H2 headers in English and Ukrainian.
     """
     vocab_section_match = re.search(
-        r'(^## (Vocabulary|Словник).*?)(?=\n## |\Z)',
+        r'(^#{1,2}\s+(Vocabulary|Словник).*?)(?=\n#{1,2}\s|\Z)',
         content, re.DOTALL | re.IGNORECASE | re.MULTILINE
     )
     if vocab_section_match:
@@ -558,5 +569,94 @@ def check_metalanguage_scaffolding(
             'issue': f"Metalanguage terms used but not in vocabulary: {', '.join(used_but_not_taught[:5])}",
             'fix': "Add these grammar terms to vocabulary with translations, or use English equivalents."
         })
+
+    return violations
+
+
+def check_vocab_table_format(content: str, level: str) -> list[dict]:
+    """
+    Check if the vocabulary table format (headers and columns) matches level requirements.
+
+    A1/A2 (Tier 1/2):
+    - Header: # Vocabulary
+    - Columns: | Word | IPA | English | POS | Gender | Note | (6 columns)
+
+    B1 (Tier 3):
+    - Header: # Словник
+    - Columns: | Слово | Вимова | Переклад | ЧМ | Примітка | (5 columns)
+    """
+    violations = []
+    level_upper = level.upper()
+
+    # 1. Check Header Match
+    if level_upper in ('A1', 'A2'):
+        # Should be '# Vocabulary'
+        if re.search(r'^#{1,2}\s+Словник', content, re.MULTILINE | re.IGNORECASE):
+            violations.append({
+                'type': 'VOCAB_HEADER',
+                'issue': f"Level {level_upper} should use '# Vocabulary' header, but '# Словник' found.",
+                'fix': "Change '# Словник' to '# Vocabulary'."
+            })
+    elif level_upper == 'B1':
+        # Should be '# Словник'
+        if re.search(r'^#{1,2}\s+Vocabulary', content, re.MULTILINE | re.IGNORECASE):
+            violations.append({
+                'type': 'VOCAB_HEADER',
+                'issue': f"Level {level_upper} should use '# Словник' header, but '# Vocabulary' found.",
+                'fix': "Change '# Vocabulary' to '# Словник'."
+            })
+
+    # 2. Check Column Format
+    vocab_match = re.search(
+        r'^#{1,2}\s+(?:Vocabulary|Словник).*?(?=\n#{1,2}\s|\Z)',
+        content, re.DOTALL | re.IGNORECASE | re.MULTILINE
+    )
+
+    if vocab_match:
+        vocab_text = vocab_match.group(0)
+        lines = vocab_text.split('\n')
+        header_row = ""
+        for line in lines:
+            if line.strip().startswith('|') and '---' not in line:
+                header_row = line
+                break
+
+        if header_row:
+            parts = [p.strip() for p in header_row.split('|') if p.strip()]
+            num_cols = len(parts)
+
+            if level_upper in ('A1', 'A2', 'A2.1', 'A2.2', 'A2.3'):
+                if num_cols != 6:
+                    violations.append({
+                        'type': 'VOCAB_FORMAT',
+                        'issue': f"A1/A2 vocabulary requires 6 columns, found {num_cols}: {header_row}",
+                        'fix': "Format: | Word | IPA | English | POS | Gender | Note |"
+                    })
+            elif level_upper == 'B1':
+                if num_cols != 5:
+                    violations.append({
+                        'type': 'VOCAB_FORMAT',
+                        'issue': f"B1 vocabulary requires 5 columns, found {num_cols}: {header_row}",
+                        'fix': "Format: | Слово | Вимова | Переклад | ЧМ | Примітка |"
+                    })
+                else:
+                    # Check column names for B1
+                    expected_b1 = ['слово', 'вимова', 'переклад', 'чм', 'примітка']
+                    actual_b1 = [p.lower() for p in parts]
+                    
+                    # Accept "Слово / Вираз" or similar for first column
+                    # Accept "Примітки" for last column
+                    if 'слово' not in actual_b1[0] and 'термін' not in actual_b1[0]:
+                         violations.append({
+                            'type': 'VOCAB_FORMAT',
+                            'issue': f"B1 vocabulary headers mismatch. Expected 'Слово' in first column, found '{parts[0]}'",
+                            'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |"
+                        })
+                    if 'приміт' not in actual_b1[4]:
+                         violations.append({
+                            'type': 'VOCAB_FORMAT',
+                            'issue': f"B1 vocabulary headers mismatch. Expected 'Примітка' in fifth column, found '{parts[4]}'",
+                            'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |"
+                        })
 
     return violations

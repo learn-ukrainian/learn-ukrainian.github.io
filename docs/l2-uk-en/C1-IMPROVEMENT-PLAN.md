@@ -94,25 +94,26 @@ The C1-CURRICULUM-PLAN.md has comprehensive State Standard mapping. Verify cover
 
 **Priority:** P1 (High)
 **Effort:** Low
+**Status:** ✅ Implemented
 
 Current plan jumps from B2 (80%) to C1 (95%). This 15-point jump is the largest in the curriculum.
 
-**Proposed graduated immersion:**
+**Implemented Graded Immersion (Updated Dec 2025):**
 | Phase | Content Type | Immersion |
 |-------|-------------|-----------|
-| C1.1 (M01-20) | Academic (metalinguistic) | 85% |
-| C1.2 (M21-35) | Professional/Social | 90% |
-| C1.3 (M36-55) | Stylistics/Rhetoric | 90% |
-| C1.4 (M56-80) | Folk Culture | 95% |
-| C1.5 (M81-95) | Literature Classics | 95% |
-| C1.6 (M96-115) | Literature Modern + Capstone | 95% |
+| C1.1 (M01-20) | Academic (metalinguistic) | 90-100% |
+| C1.2 (M21-35) | Professional/Social | 95-100% |
+| C1.3 (M36-55) | Stylistics/Rhetoric | 95-100% |
+| C1.4 (M56-80) | Folk Culture | 95-100% |
+| C1.5 (M81-95) | Literature Classics | 95-100% |
+| C1.6 (M96-115) | Literature Modern + Capstone | 95-100% |
 
 **Rationale:** Academic content requires more metalinguistic explanation. Cultural/literary content can sustain higher immersion.
 
 **Action:**
-- [ ] Update immersion targets in curriculum plan
-- [ ] Document graduated progression
-- [ ] Apply to module creation guidelines
+- [x] Update immersion targets in curriculum plan
+- [x] Document graduated progression
+- [x] Apply to module creation guidelines
 
 ---
 

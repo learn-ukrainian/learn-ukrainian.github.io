@@ -28,7 +28,7 @@
 | **Combining Sentences** | ⚪️ | 112 | Skipped |
 | **Діалог: У бібліотеці** | ✅ | 119 | Included in Core |
 | **Діалог 2: Обговорення фільму** | ✅ | 249 | Included in Core |
-| **Summary** | ✅ | 0 | Included in Core |
+| **Підсумок** | ✅ | 0 | Included in Core |
 | **який Declension Reference** | ⚪️ | 0 | Skipped |
 | **The Two-Step Process** | ⚪️ | 235 | Skipped |
 | **Need More Practice?** | ⚪️ | 93 | Skipped |

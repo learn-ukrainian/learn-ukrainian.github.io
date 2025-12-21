@@ -24,11 +24,10 @@
 | **Skill 2: Describing Changes (Дієслова зміни)** | ⚪️ | 148 | Skipped |
 | **Skill 3: Media & News (Медіа-лексика)** | ⚪️ | 135 | Skipped |
 | **Skill 4: Society & Politics (Політична лексика)** | ⚪️ | 95 | Skipped |
-| **Summary** | ✅ | 705 | Included in Core |
+| **Підсумок** | ✅ | 111 | Included in Core |
 | **Поглиблення** | ⚪️ | 293 | Skipped |
 | **Need More Practice?** | ⚪️ | 72 | Skipped |
 | **Практика** | ⚪️ | 55 | Skipped |
-| **Підсумок** | ✅ | 111 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Загальний тест** | 🎮 | 14 | Activity (14 items, min 8) |
 | **match-up: Переклад** | 🎮 | 14 | Activity (14 items, min 8) |
