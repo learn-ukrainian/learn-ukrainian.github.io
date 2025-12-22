@@ -20,7 +20,10 @@ objectives:
   - "Learner can understand standard grammar explanation patterns"
   - "Learner can follow Ukrainian grammar instructions"
   - "Learner can identify word formation components"
-vocabulary_count: 20
+  - "Learner can recognize activity instruction verbs"
+  - "Learner can understand analytical terminology"
+  - "Learner can distinguish language styles and registers"
+vocabulary_count: 39
 ---
 
 # Читаємо граматичні правила
@@ -126,6 +129,82 @@ To understand how words are built, you need these terms:
 > 💡 **Did You Know?**
 >
 > The word **корінь** literally means "root" — like a plant's root. The root is the deepest, most basic part of the word, and everything else grows from it. This botanical metaphor exists in English too!
+
+---
+
+## Activity Instruction Verbs: Інструкції для вправ
+
+When you work with grammar exercises, you'll see these specific instruction verbs:
+
+| Verb | English | Used in |
+|------|---------|---------|
+| **виберіть / оберіть** | choose, select | Multiple choice questions |
+| **знайдіть** | find | Finding errors, locating elements |
+| **з'єднайте** | match, connect | Matching exercises |
+| **розташуйте** | arrange, put in order | Sequencing tasks |
+| **доповніть** | complete, fill in | Gap-fill exercises |
+| **натисніть** | click | Interactive exercises |
+| **перекладіть** | translate | Translation tasks |
+| **складіть** | compose, create | Writing tasks |
+
+**Examples in exercises:**
+- "**Виберіть** правильну форму дієслова." (Choose the correct verb form.)
+- "**Знайдіть** помилку в реченні." (Find the error in the sentence.)
+- "**З'єднайте** українські слова з англійськими." (Match Ukrainian words with English.)
+- "**Розташуйте** слова в правильному порядку." (Arrange words in correct order.)
+- "**Доповніть** речення правильним закінченням." (Complete the sentence with the correct ending.)
+
+> 🎮 **Gamer's Corner**
+>
+> Interactive language apps use these exact verbs! When you see "**Натисніть** на правильну відповідь" (Click the correct answer) in a Ukrainian learning game, you know exactly what to do.
+
+---
+
+## Analytical Terms: Аналітична лексика
+
+Grammar discussions use these analytical terms to describe linguistic concepts:
+
+| Term | English | Meaning |
+|------|---------|---------|
+| **контекст** | context | The surrounding words/situation that determine meaning |
+| **маркер** | marker | A word/element that signals grammar category |
+| **частота** | frequency | How often something occurs |
+| **аспектуальна пара** | aspectual pair | Pair of imperfective/perfective verbs |
+
+**Examples in grammar texts:**
+- "У цьому **контексті** використовується доконаний вид." (In this context, perfective is used.)
+- "Слово 'вже' є **маркером** результату." ('Вже' is a marker of result.)
+- "**Частота** вживання цієї форми висока." (The frequency of this form's use is high.)
+- "Знайдіть **аспектуальну пару** дієслова 'писати'." (Find the aspectual pair of the verb 'писати'.)
+
+> 🌍 **Real World: Linguistics**
+>
+> If you read Ukrainian linguistics articles or advanced grammar books, these terms appear constantly. **Контекст** and **маркер** are core concepts in aspect theory!
+
+---
+
+## Style and Register: Стиль і регістр
+
+Grammar books discuss different language styles:
+
+| Term | English | Used for |
+|------|---------|----------|
+| **стиль** | style | General way of speaking/writing |
+| **регістр** | register | Formality level |
+| **розмовна мова** | colloquial language | Everyday informal speech |
+| **літературна мова** | literary language | Standard written Ukrainian |
+| **формальна мова** | formal language | Official, academic contexts |
+| **нейтральна мова** | neutral language | Neither formal nor informal |
+
+**Examples:**
+- "Це слово належить до **розмовної мови**." (This word belongs to colloquial language.)
+- "У **літературній мові** вживають 'так', а не 'да'." (In literary language, use 'так', not 'да'.)
+- "Цей **регістр** підходить для офіційних документів." (This register suits official documents.)
+- "**Формальна мова** вимагає повних форм дієслів." (Formal language requires full verb forms.)
+
+> 💡 **Did You Know?**
+>
+> Ukrainian linguists distinguish strictly between **літературна мова** (standard) and **розмовна мова** (colloquial). When grammar books say a form is "літературна," they mean it's correct in writing. "Розмовна" means it's OK in speech but avoid in essays!
 
 ---
 
@@ -310,7 +389,31 @@ In this module, you learned the patterns used in Ukrainian grammar explanations.
 - суфікс — suffix (after root)
 - префікс — prefix (before root)
 
-With these terms, you can now read grammar explanations in Ukrainian textbooks and online resources. This is your key to independent learning.
+**Activity Instruction Verbs:**
+- виберіть/оберіть — choose, select
+- знайдіть — find
+- з'єднайте — match, connect
+- розташуйте — arrange
+- доповніть — complete, fill in
+- натисніть — click
+- перекладіть — translate
+- складіть — compose
+
+**Analytical Terms:**
+- контекст — context
+- маркер — marker
+- частота — frequency
+- аспектуальна пара — aspectual pair
+
+**Style and Register:**
+- стиль — style
+- регістр — register
+- розмовна мова — colloquial language
+- літературна мова — literary language
+- формальна мова — formal language
+- нейтральна мова — neutral language
+
+With these terms, you can now read grammar explanations in Ukrainian textbooks and online resources, follow exercise instructions, and understand linguistic discussions. This is your key to independent learning.
 
 > ✅ **Self-Check**
 >
@@ -318,6 +421,9 @@ With these terms, you can now read grammar explanations in Ukrainian textbooks a
 > - [ ] Understand "X використовується, коли..." patterns?
 > - [ ] Follow Ukrainian grammar instructions?
 > - [ ] Identify parts of a word (корінь, суфікс, префікс)?
+> - [ ] Recognize activity instruction verbs (виберіть, знайдіть, з'єднайте)?
+> - [ ] Understand analytical terms (контекст, маркер)?
+> - [ ] Distinguish language styles (розмовна vs літературна)?
 >
 > If you checked all boxes, proceed to Module 04.
 
@@ -1211,5 +1317,24 @@ With these terms, you can now read grammar explanations in Ukrainian textbooks a
 | корінь | /ˈkɔrʲinʲ/ | root | ім. | ч.р. |
 | суфікс | /ˈsufʲiks/ | suffix | ім. | ч.р. |
 | префікс | /ˈprɛfʲiks/ | prefix | ім. | ч.р. |
+| виберіть | /ˈwɪbɛrʲitʲ/ | choose | дієсл. | інструкція вправи |
+| оберіть | /ɔˈbɛrʲitʲ/ | select | дієсл. | інструкція вправи |
+| знайдіть | /znɑjˈdʲitʲ/ | find | дієсл. | інструкція вправи |
+| з'єднайте | /zʲjɛdˈnɑjtɛ/ | match, connect | дієсл. | інструкція вправи |
+| розташуйте | /rɔztɑʃˈujtɛ/ | arrange | дієсл. | інструкція вправи |
+| доповніть | /dɔˈpɔwnʲitʲ/ | complete | дієсл. | інструкція вправи |
+| натисніть | /nɑtɪsˈnʲitʲ/ | click | дієсл. | інструкція вправи |
+| перекладіть | /pɛrɛklɑˈdʲitʲ/ | translate | дієсл. | інструкція вправи |
+| складіть | /sklɑˈdʲitʲ/ | compose | дієсл. | інструкція вправи |
+| контекст | /kɔnˈtɛkst/ | context | ім. | ч.р., аналітичний термін |
+| маркер | /ˈmɑrkɛr/ | marker | ім. | ч.р., аналітичний термін |
+| частота | /t͡ʃɑsˈtɔtɑ/ | frequency | ім. | ж.р., аналітичний термін |
+| аспектуальна пара | /ɑspɛktuˈɑlʲnɑ ˈpɑrɑ/ | aspectual pair | ім. | аналітичний термін |
+| стиль | /stilʲ/ | style | ім. | ч.р. |
+| регістр | /rɛˈɦʲistr/ | register | ім. | ч.р. |
+| розмовна мова | /rɔzˈmɔwnɑ ˈmɔwɑ/ | colloquial language | ім. | стиль мовлення |
+| літературна мова | /lʲitɛrɑˈturnɑ ˈmɔwɑ/ | literary language | ім. | стиль мовлення |
+| формальна мова | /fɔrˈmɑlʲnɑ ˈmɔwɑ/ | formal language | ім. | стиль мовлення |
+| нейтральна мова | /nɛjtrɑlʲˈnɑ ˈmɔwɑ/ | neutral language | ім. | стиль мовлення |
 
 ---

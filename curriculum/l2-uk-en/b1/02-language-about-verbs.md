@@ -21,7 +21,9 @@ objectives:
   - "Learner can name perfective and imperfective aspect in Ukrainian"
   - "Learner can identify tense names in grammar explanations"
   - "Learner can describe verb properties using Ukrainian terminology"
-vocabulary_count: 25
+  - "Learner can use negation terminology correctly"
+  - "Learner can identify different verb forms (compound, synthetic, imperative)"
+vocabulary_count: 34
 ---
 
 # Мова про дієслова
@@ -120,6 +122,53 @@ Grammarians use these terms when discussing verb forms:
 | **спосіб** | mood | Category: indicative, imperative, conditional |
 | **стан** | voice | Active vs passive |
 | **активний стан** | active voice | Subject does action |
+
+---
+
+## Negation Terminology
+
+When discussing aspect with negation, Ukrainian grammar uses specific terms:
+
+| Термін | English | Used for |
+|--------|---------|----------|
+| **заперечення** | negation | The concept of "not" in grammar |
+| **загальне заперечення** | general negation | Denying something ever happened (НДВ) |
+| **очікувана дія** | expected action | Action expected but didn't happen (ДВ) |
+| **попередження** | warning | Warning against doing something |
+| **заборона** | prohibition | Forbidding an action |
+
+**Examples in context:**
+- Загальне заперечення: "Я ніколи не **читав** цю книгу." (I never read this book. — general denial, imperfective)
+- Очікувана дія: "Я ще не **прочитав** цю книгу." (I haven't read this book yet. — expected completion, perfective)
+- Попередження: "Не **прочитай** випадково!" (Don't read it by accident! — warning)
+- Заборона: "Не **читай** цю книгу!" (Don't read this book! — general prohibition)
+
+> 💡 **Did You Know?**
+>
+> Negation affects aspect choice! General negation ("I never...") uses imperfective. But "not yet" (ще не) uses perfective because it implies an expected completion that hasn't happened.
+
+---
+
+## Verb Forms
+
+Ukrainian textbooks use these terms to describe different verb forms:
+
+| Термін | English | Meaning |
+|--------|---------|---------|
+| **складна форма** | compound form | Form with auxiliary verb (буду читати) |
+| **синтетична форма** | synthetic form | Single-word form (читатиму) |
+| **наказова форма** | imperative form | Command form (читай!, прочитай!) |
+| **парадигма** | paradigm | Complete set of forms for a verb |
+
+**Examples:**
+- Складна форма майбутнього часу: **буду** читати, **буду** писати (auxiliary + infinitive)
+- Синтетична форма майбутнього часу: читати**му**, писати**му** (single word with ending)
+- Наказова форма: читай, пиши, говори
+- Парадигма дієслова "читати": я читаю, ти читаєш, він читає... (full conjugation pattern)
+
+> 🌍 **Real World**
+>
+> When grammar books say "утворіть складну форму майбутнього часу," they want you to form the compound future (буду + infinitive). When they say "синтетична форма," they mean the single-word future (читатиму). Knowing these terms helps you follow instructions in any Ukrainian textbook.
 
 ---
 
@@ -261,6 +310,13 @@ In this module, you learned the core terminology for discussing Ukrainian verbs:
 
 **Tense (Час):**
 - час, теперішній час, минулий час, майбутній час
+
+**Negation (Заперечення):**
+- заперечення, загальне заперечення, очікувана дія
+- попередження, заборона
+
+**Verb Forms:**
+- складна форма, синтетична форма, наказова форма, парадигма
 
 **Additional Terms:**
 - дія, дієвідміна, особові закінчення, інфінітив
@@ -1172,5 +1228,14 @@ In this module, you learned the core terminology for discussing Ukrainian verbs:
 | спосіб | /ˈspɔsib/ | mood | ім. | ч.р. |
 | стан | /stɑn/ | voice | ім. | ч.р. |
 | активний стан | /ɑkˈtɪwnɪj stɑn/ | active voice | ім. | граматичний термін |
+| заперечення | /zɑpɛˈrɛt͡ʃɛnʲːɑ/ | negation | ім. | с.р. |
+| загальне заперечення | /zɑˈɦɑlʲnɛ zɑpɛˈrɛt͡ʃɛnʲːɑ/ | general negation | ім. | граматичний термін |
+| очікувана дія | /ɔt͡ʃiˈkuwɑnɑ ˈdʲijɑ/ | expected action | ім. | граматичний термін |
+| попередження | /pɔpɛˈrɛdʒɛnʲːɑ/ | warning | ім. | с.р. |
+| заборона | /zɑbɔˈrɔnɑ/ | prohibition | ім. | ж.р. |
+| складна форма | /ˈsklɑdnɑ ˈfɔrmɑ/ | compound form | ім. | граматичний термін |
+| синтетична форма | /sɪntɛˈtɪt͡ʃnɑ ˈfɔrmɑ/ | synthetic form | ім. | граматичний термін |
+| наказова форма | /nɑˈkɑzɔwɑ ˈfɔrmɑ/ | imperative form | ім. | граматичний термін |
+| парадигма | /pɑrɑˈdɪɦmɑ/ | paradigm | ім. | ж.р. |
 
 ---
