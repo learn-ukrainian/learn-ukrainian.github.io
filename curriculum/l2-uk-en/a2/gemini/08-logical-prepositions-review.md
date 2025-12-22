@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.5% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 44.2% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 111 | Included in Core |
+| **Warm-up** | ✅ | 68 | Included in Core |
 | **Part 1: Benefit & Absence** | ⚪️ | 0 | Skipped |
 | **Understanding Logical Prepositions** | ⚪️ | 61 | Skipped |
 | **Для + Genitive (For)** | ⚪️ | 91 | Skipped |
@@ -50,6 +47,7 @@
 | **Dialogue: Planning a Trip** | ✅ | 57 | Included in Core |
 | **Dialogue: About a Book** | ✅ | 89 | Included in Core |
 | **Summary** | ✅ | 31 | Included in Core |
+| **Need More Practice?** | ⚪️ | 43 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Preposition Meaning** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Case Requirements** | 🎮 | 10 | Activity (10 items, min 8) |

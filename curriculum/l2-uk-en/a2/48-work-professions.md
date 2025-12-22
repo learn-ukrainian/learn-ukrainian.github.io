@@ -185,8 +185,6 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Top 5 Best Jobs in Ukraine in 2025 ...](https://www.youtube.com/watch?v=orgFRG0VW4Y) — Where the Big Money Is!
->
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

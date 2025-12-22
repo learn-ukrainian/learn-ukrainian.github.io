@@ -40,19 +40,6 @@ vocabulary_count: 36
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [20 COMMON UKRAINIAN ADJECTIVES Every Beginner Must Know](https://www.youtube.com/watch?v=OixU7XdhNq4) — Speak Ukrainian
->
->
-> **Grammar Guide:** [Common Ukrainian Adjectives](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Useful table with opposites
->
-> **Video:** [Introduction to Ukrainian Adjectives](https://www.ukrainianlessons.com/video-adjectives/) — Grammar video on adjective forms
->
-> **Comparison:** [Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) — Compare adjectives and adverbs
-
 ## Why Adjective Agreement Matters
 
 In English, adjectives don't change: "a big house," "a big table," "big houses." In Ukrainian, adjectives MUST agree with their nouns in gender (masculine, feminine, neuter) and number (singular, plural).
@@ -156,6 +143,14 @@ Learning adjectives in pairs helps you remember them better:
 > - Ця книга **цікава**. (This book is interesting.)
 > - Мій телефон **старий**. (My phone is old.)
 
+> [!myth] **Мова чи діалект? (Language or Dialect?)**
+>
+> **Міф (Myth):** Українська мова — це діалект.  
+> **Факт (Fact):** Це неправда. Українська — це дуже давня мова. Вона має свою граматику. Багато людей кажуть: українська мова солов'їна. Це означає: вона дуже мелодійна. Вона дуже красива!
+> - Вони — **добрі** люди. (They are good people.)
+> - Ця книга **цікава**. (This book is interesting.)
+> - Мій телефон **старий**. (My phone is old.)
+
 > [!example] Опис людей (Describing People)
 >
 > - Він **високий** і **сильний**. (He is tall and strong.)
@@ -249,23 +244,29 @@ Learning adjectives in pairs helps you remember them better:
 
 ---
 
-## Підсумок (Summary)
+# Summary
 
-Ви навчилися описувати речі прикметниками! (You've learned to describe things with adjectives!)
-
-**Що ви вивчили (What you learned):**
-
-- **Узгодження (Agreement):** Прикметники мають різні форми для роду і числа
-- **Тверда основа (Hard stem):** -ий (ч), -а (ж), -е (с), -і (мн)
-- **М'яка основа (Soft stem):** -ій (ч), -я (ж), -є (с), -і (мн)
-- **Розмір (Size):** великий, малий, високий, низький, довгий, короткий
-- **Якість (Quality):** добрий, поганий, гарний, розумний, цікавий
+Ви вивчили прикметники! Тепер ви знаєте, як описувати речі в українській мові. (You learned adjectives! Now you know how to describe things in Ukrainian.) Ви знаєте закінчення роду: -ий, -а, -е. Ви знаєте багато нових слів: великий, малий, гарний. Це був дуже цікавий урок (This was a very interesting lesson)! Українська мова солов'їна! Дякую!
 
 ---
 
 **Наступний урок:** Кольори та одяг!
 
-## Вправи (Activities)
+---
+
+
+> [!resources] External Resources
+>
+> **Vocabulary:**
+> - [Common Adjectives](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Essential descriptive words
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
+>
+> **Grammar:**
+> - [Adjective Agreement](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Gender agreement
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
+
+# Activities
+
 
 ## match-up: Антоніми (Antonym Pairs)
 
@@ -385,51 +386,51 @@ Learning adjectives in pairs helps you remember them better:
 
 ## quiz: Узгодження прикметників
 
-Виберіть правильний переклад.
+> Select the correct grammatical description for these Ukrainian adjective phrases.
 
-1. Велика машина
+1. Which category correctly describes the phrase "Велика машина" here?
    - [x] Big car (feminine)
    - [ ] Big house (masculine)
    - [ ] Big cars (plural)
    - [ ] Big city (neuter)
 
-2. Старе фото
+2. How do you accurately describe the phrase "Старе фото" now?
    - [x] Old photo (neuter)
    - [ ] Old book (feminine)
    - [ ] Old man (masculine)
    - [ ] Old friends (plural)
 
-3. Добрі люди
+3. What is the correct description for "Добрі люди" today?
    - [x] Good people (plural)
    - [ ] Good person (masculine)
    - [ ] Good woman (feminine)
    - [ ] Good word (neuter)
 
-4. Цікавий фільм
+4. Which category fits the phrase "Цікавий фільм" most accurately?
    - [x] Interesting movie (masculine)
    - [ ] Interesting book (feminine)
    - [ ] Interesting city (neuter)
    - [ ] Interesting people (plural)
 
-5. Нова книга
+5. How is the phrase "Нова книга" correctly categorized here?
    - [x] New book (feminine)
    - [ ] New house (masculine)
    - [ ] New city (neuter)
    - [ ] New books (plural)
 
-6. Високий чоловік
+6. What is correctly the description for "Високий чоловік" now?
    - [x] Tall man (masculine)
    - [ ] Tall woman (feminine)
    - [ ] Tall building (neuter)
    - [ ] Tall people (plural)
 
-7. Красиве місто
+7. Which category correctly represents the phrase "Красиве місто" today?
    - [x] Beautiful city (neuter)
    - [ ] Beautiful woman (feminine)
    - [ ] Beautiful man (masculine)
    - [ ] Beautiful cities (plural)
 
-8. Швидкі машини
+8. How do you accurately describe "Швидкі машини" in English?
    - [x] Fast cars (plural)
    - [ ] Fast car (masculine)
    - [ ] Fast car (feminine)
@@ -439,51 +440,51 @@ Learning adjectives in pairs helps you remember them better:
 
 ## quiz: Значення прикметників
 
-Що означають ці речення?
+> Test your knowledge of Ukrainian adjective meanings in these sentences.
 
-1. Він швидкий.
+1. What accurately is the meaning of "Він швидкий" here?
    - [x] He is fast.
    - [ ] He is slow.
    - [ ] He is strong.
    - [ ] He is weak.
 
-2. Книга нудна.
+2. Which English sentence represents "Книга нудна" accurately today?
    - [x] The book is boring.
    - [ ] The book is interesting.
    - [ ] The book is new.
    - [ ] The book is old.
 
-3. Це важливе питання.
+3. How do you correctly translate "Це важливе питання" now?
    - [x] This is an important question.
    - [ ] This is a simple question.
    - [ ] This is a boring question.
    - [ ] This is a bad question.
 
-4. Вони сильні.
+4. What does the sentence "Вони сильні" accurately mean?
    - [x] They are strong.
    - [ ] They are weak.
    - [ ] They are fast.
    - [ ] They are slow.
 
-5. Це дорогий телефон.
+5. Which English phrase correctly represents "Це дорогий телефон"?
    - [x] This is an expensive phone.
    - [ ] This is a cheap phone.
    - [ ] This is a new phone.
    - [ ] This is an old phone.
 
-6. Вона розумна.
+6. How is "Вона розумна" correctly translated into English?
    - [x] She is smart.
    - [ ] She is slow.
    - [ ] She is weak.
    - [ ] She is boring.
 
-7. Це просте завдання.
+7. What accurately is the translation of "Це просте завдання"?
    - [x] This is an easy task.
    - [ ] This is a difficult task.
    - [ ] This is a long task.
    - [ ] This is an interesting task.
 
-8. Вулиця вузька.
+8. Which English sentence represents "Вулиця вузька" most accurately?
    - [x] The street is narrow.
    - [ ] The street is wide.
    - [ ] The street is long.
@@ -547,7 +548,7 @@ Learning adjectives in pairs helps you remember them better:
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

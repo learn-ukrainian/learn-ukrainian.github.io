@@ -44,19 +44,6 @@ vocabulary_count: 35
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Nature & Weather in Ukrainian](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
->
->
-> **Weather Vocabulary:** [Яка погода?](https://www.ukrainianlessons.com/weather-vocabulary/) — Complete weather vocabulary with audio
->
-> **Months & Nature:** [Ukrainian Month Names](https://www.ukrainianlessons.com/months/) — Nature-based month origins
->
-> **Winter:** [Winter Vocabulary](https://www.ukrainianlessons.com/winter-vocabulary/) — Seasonal vocabulary
-
 ## Impersonal Weather Expressions
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -223,24 +210,22 @@ For rain and snow, Ukrainian uses "йде" (goes):
 
 ---
 
-## Підсумок (Summary)
 
-Ви навчилися говорити про погоду та природу! (You've learned about weather and nature!)
+# Summary
 
-**Що ви вивчили (What you learned):**
-
-- **Погода (Weather):** тепло, холодно, жарко, сонячно, хмарно, вітряно, йде дощ, йде сніг
-- **Іменники погоди (Weather nouns):** погода, температура, сонце, хмара, вітер
-- **Природа (Nature):** дерево, квітка, ліс, парк, річка, море, гора, озеро
-- **Тварини (Animals):** пес, кіт, птах, риба
-- **Пори року (Seasons):** весна, літо, осінь, зима
-- **Безособові речення (Impersonal):** Тепло. Холодно. Йде дощ.
+Ви вивчили погоду та природу! Тепер ви знаєте, як описати сонце або дощ. (You learned weather and nature! Now you know how to describe the sun or rain.) Ви знаєте пори року: весна, літо, осінь та зима. Ви можете говорити про тварин та рослини. Це була дуже цікава подорож! (This was a very interesting journey!)
 
 ---
 
-**Наступний урок:** Прийменники напрямку та місця!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Weather Vocabulary](https://www.ukrainianlessons.com/weather-vocabulary/) — Яка погода?
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/weather
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Вправи (Activities)
+# Activities
+
 
 ## match-up: Weather Expressions
 
@@ -282,27 +267,23 @@ Match the Ukrainian word with its English meaning.
 
 ## group-sort: Seasons
 
-> Sort weather descriptions by season.
+> Sort these weather and nature descriptions into two main seasonal groups.
 
-### Весна (Spring)
-- тепло
-- йде дощ
-- квітки
-
-### Літо (Summer)
-- жарко
+### Warm / Growing (Весна/Літо)
 - сонячно
+- жарко
 - море
+- квітки
+- тепло
+- трава
+- зелено
 
-### Осінь (Autumn)
+### Cold / Changing (Осінь/Зима)
 - холодно
-- хмарно
-- вітряно
-
-### Зима (Winter)
 - мороз
 - йде сніг
-- холодно взимку
+- хмарно
+- вітряно
 
 ---
 
@@ -438,51 +419,51 @@ Match the Ukrainian word with its English meaning.
 
 ## quiz: What Season?
 
-Choose the correct season.
+> Choose the correct season based on these Ukrainian weather descriptions.
 
-1. Йде сніг, холодно
+1. Which season correctly matches "Йде сніг, холодно" here?
    - [x] Зима
    - [ ] Літо
    - [ ] Весна
    - [ ] Осінь
 
-2. Жарко, сонячно, море
+2. How is the phrase "Жарко, сонячно, море" accurately categorized today?
    - [x] Літо
    - [ ] Зима
    - [ ] Весна
    - [ ] Осінь
 
-3. Тепло, квіти, йде дощ
+3. What season accurately describes "Тепло, квіти, йде дощ"?
    - [x] Весна
    - [ ] Літо
    - [ ] Зима
    - [ ] Осінь
 
-4. Холодно, хмарно, вітряно
+4. Which category summarizes "Холодно, хмарно, вітряно" most correctly?
    - [x] Осінь
    - [ ] Літо
    - [ ] Весна
    - [ ] Зима
 
-5. Діти грають у сніг
+5. What is the correct season when "Діти грають у сніг"?
    - [x] Зима
    - [ ] Літо
    - [ ] Весна
    - [ ] Осінь
 
-6. Люди на пляжі
+6. Which season do "Люди на пляжі" accurately represent today?
    - [x] Літо
    - [ ] Зима
    - [ ] Осінь
    - [ ] Весна
 
-7. Листя падає з дерев
+7. How is "Листя падає з дерев" correctly translated into a season?
    - [x] Осінь
    - [ ] Літо
    - [ ] Весна
    - [ ] Зима
 
-8. Птахи повертаються з півдня
+8. What is the season when "Птахи повертаються з півдня" correctly?
    - [x] Весна
    - [ ] Осінь
    - [ ] Зима
@@ -492,39 +473,55 @@ Choose the correct season.
 
 ## quiz: Animal or Plant?
 
-Choose the correct category.
+> Sort these Ukrainian nature words into their correct logical groups.
 
-1. Собака
+1. Which category does accurately the word "Собака" belong to?
    - [x] Тварина
    - [ ] Рослина
+   - [ ] Погода
+   - [ ] Сезон
 
-2. Дерево
+2. What is exactly the correct category for "Дерево" here?
    - [x] Рослина
    - [ ] Тварина
+   - [ ] Місто
+   - [ ] Одяг
 
-3. Кіт
+3. Which classification fits "Кіт" most accurately in Ukrainian?
    - [x] Тварина
    - [ ] Рослина
+   - [ ] Транспорт
+   - [ ] Гроші
 
-4. Квітка
+4. What is accurately the group for the word "Квітка"?
    - [x] Рослина
    - [ ] Тварина
+   - [ ] Колір
+   - [ ] Прислівник
 
-5. Птах
+5. Which category represents the word "Птах" most correctly today?
    - [x] Тварина
    - [ ] Рослина
+   - [ ] Будинок
+   - [ ] Сім'я
 
-6. Ліс
+6. How is the word "Ліс" correctly categorized in English?
    - [x] Рослина
    - [ ] Тварина
+   - [ ] Посуд
+   - [ ] Робота
 
-7. Риба
+7. Which category matches the word "Риба" accurately in Ukrainian?
    - [x] Тварина
    - [ ] Рослина
+   - [ ] Овоч
+   - [ ] Фрукт
 
-8. Трава
+8. What accurately is the group for the word "Трава"?
    - [x] Рослина
    - [ ] Тварина
+   - [ ] Напій
+   - [ ] Транспорт
 
 ---
 
@@ -600,7 +597,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -47,15 +47,6 @@ The past tense is where aspect differences are most visible and most important. 
 >
 > Доконаний вид у минулому часі = закінчена дія з чітким результатом. Якщо можна вказати на результат — використовуйте доконаний вид!
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Past Perfective tense in Ukrainian # 43...](https://www.youtube.com/watch?v=WfGlonPphFQ) — Ukrainian Language
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -199,7 +190,7 @@ Before moving to the activities, make sure you can answer these questions:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -229,9 +220,20 @@ In the following modules, you'll learn how perfective verbs work in future tense
 
 Тепер ви можете говорити про завершені дії! ✅
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
+> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
+> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Past Tense Forms
+> З'єднайте форми минулого часу. | Match the past tense forms.
 
 - зробив :: did/finished
 - написав :: wrote/finished
@@ -299,6 +301,7 @@ In the following modules, you'll learn how perfective verbs work in future tense
     > [!options] писали | написали
 
 ## quiz: Aspect in Past Tense
+> Виберіть правильний вид у минулому часі. | Choose the correct aspect in past tense.
 
 1. "Я прочитав книгу" focuses on:
 
@@ -427,6 +430,7 @@ In the following modules, you'll learn how perfective verbs work in future tense
   > "Сказав" is perfective. "Говорив" is imperfective.
 
 ## group-sort: Verb Aspect
+> Розсортуйте ці форми минулого часу за видом. | Sort these past tense forms by aspect.
 
 > Sort these past tense forms by aspect.
 
@@ -706,7 +710,7 @@ Did you finish? (asking about completion)
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

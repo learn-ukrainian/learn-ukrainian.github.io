@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1104/1000
+- **Words:** ✅ 1098/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.4% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 39.8% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 317 | Included in Core |
+| **Warm-up** | ✅ | 281 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Understanding the Case System** | ⚪️ | 181 | Skipped |
 | **Огляд відмінків** | ⚪️ | 306 | Skipped |
@@ -36,6 +33,7 @@
 | **Практичні вправи** | ⚪️ | 81 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **Підсумок** | ✅ | 94 | Included in Core |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Case Questions** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Choose the Correct Case Form** | 🎮 | 12 | Activity (12 items, min 8) |

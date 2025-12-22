@@ -284,7 +284,7 @@ Fill in the customer's responses:
 
 ---
 
-## Summary
+# Summary
 
 | Skill | Key Pattern | Quick Test |
 |-------|-------------|------------|
@@ -300,99 +300,99 @@ Fill in the customer's responses:
 
 ## Need More Practice?
 
+---
+
 > [!resources] External Resources
 >
 > **Alphabet Review:**
-> - 🎧 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
-> - 🔊 [Forvo Ukrainian](https://forvo.com/languages/uk/) — Native speaker pronunciation dictionary
+> - 📖 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
+> - 🎙️ [FMU 1-01: The Ukrainian Alphabet](https://www.ukrainianlessons.com/fmu01/) — Podcast lesson
 >
-> **Podcast Episodes:**
-> - 🎙️ [Top 10 Episodes for Beginners](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/) — Start here!
-> - 🎙️ [ULP 1-22: First Conjugation](https://www.ukrainianlessons.com/episode22/) — Class I verb deep dive
-> - 🎙️ [ULP 1-24: Second Conjugation](https://www.ukrainianlessons.com/episode24/) — Class II verbs explained
+> **Grammar Basics:**
+> - 📖 [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Gender rules
+> - 📖 [Present Tense Verbs](https://www.ukrainianlessons.com/present-tense-verbs/) — Conjugation guide
 >
 > **Struggling with a skill?** Go back to:
 > - Cyrillic → Modules 1-2
 > - Gender → Module 3
-> - Verbs → Modules 6, 8
+> - Pronouns → Module 4
+> - Verbs → Modules 6-8
 > - Questions → Module 7
 > - Food → Module 9
 
----
-
-## Activities
+# Activities
 
 ## quiz: Cyrillic Reading
 
 > Read each word and choose the correct English meaning.
 
-1. хліб
+1. What is the English translation of "хліб"?
    - [x] bread
    - [ ] tea
    - [ ] water
    - [ ] coffee
 
-2. вареники
+2. How do you translate "вареники" to English?
    - [ ] soup
    - [x] dumplings
    - [ ] meat
    - [ ] milk
 
-3. дякую
+3. What does the word "дякую" mean?
    - [ ] hello
    - [ ] goodbye
    - [x] thank you
    - [ ] please
 
-4. добрий день
+4. What is the meaning of "добрий день"?
    - [x] good day
    - [ ] good night
    - [ ] good evening
    - [ ] goodbye
 
-5. вікно
+5. How do you translate "вікно" to English?
    - [ ] table
    - [ ] chair
    - [x] window
    - [ ] door
 
-6. молоко
+6. What is the English translation of "молоко"?
    - [ ] water
    - [x] milk
    - [ ] juice
    - [ ] coffee
 
-7. книга
+7. What does the word "книга" mean?
    - [ ] newspaper
    - [x] book
    - [ ] magazine
    - [ ] letter
 
-8. будь ласка
+8. What is the meaning of "будь ласка"?
    - [ ] thank you
    - [x] please
    - [ ] hello
    - [ ] goodbye
 
-9. кава
+9. How do you translate "кава" to English?
    - [ ] tea
    - [ ] water
    - [x] coffee
    - [ ] juice
 
-10. місто
+10. What is the English translation of "місто"?
     - [ ] country
     - [x] city
     - [ ] village
     - [ ] street
 
-11. студент
+11. What does the word "студент" mean?
     - [x] student
     - [ ] teacher
     - [ ] doctor
     - [ ] worker
 
-12. українська
+12. How do you translate "українська" to English?
     - [ ] English
     - [x] Ukrainian
     - [ ] Polish
@@ -412,10 +412,6 @@ Fill in the customer's responses:
 | місто | neuter |
 | вода | feminine |
 | чай | masculine |
-| море | neuter |
-| їжа | feminine |
-| борщ | masculine |
-| молоко | neuter |
 
 ## fill-in: Demonstrative Agreement
 
@@ -618,7 +614,6 @@ Fill in the customer's responses:
 - писати
 - знати
 - працювати
-- гуляти
 - снідати
 
 ### Class II (-ити)
@@ -626,8 +621,6 @@ Fill in the customer's responses:
 - робити
 - любити
 - ходити
-- вчити
-- бачити
 
 ### Irregular
 - їсти
@@ -764,10 +757,6 @@ Fill in the customer's responses:
 | вода | water |
 | молоко | milk |
 | сік | juice |
-| їжа | food |
-| сніданок | breakfast |
-| обід | lunch |
-| вечеря | dinner |
 
 ## anagram: Cyrillic Practice
 
@@ -875,7 +864,7 @@ Fill in the customer's responses:
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

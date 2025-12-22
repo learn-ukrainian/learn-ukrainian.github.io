@@ -40,19 +40,6 @@ vocabulary_count: 20
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian prepositions У, В and НА and the difference between them](https://www.youtube.com/watch?v=Jov8xPqq7cM) — Speak Ukrainian
->
->
-> **Location vs Destination:** [В Україні vs В Україну](https://www.ukrainianlessons.com/location-destination-prepositions/) — How to express "where" vs "where to"
->
-> **Prepositions Guide:** [Difference between У (В) and На](https://www.ukrainianlessons.com/prepositions-u-na/) — When to use which preposition
->
-> **Directions:** [Напрямки — Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Audio vocabulary for navigation
-
 ## The Three Key Questions
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -242,24 +229,22 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ---
 
-## Підсумок (Summary)
 
-Ви навчилися говорити про напрямок і місце! (You've learned direction and location!)
+# Summary
 
-**Що ви вивчили (What you learned):**
-
-- **Три питання (Three questions):** Де? Куди? Звідки?
-- **Прислівники місця (Location):** тут, там, вдома, близько, далеко, навпроти
-- **Прислівники напрямку (Direction):** сюди, туди, додому, прямо, назад
-- **Прийменники (Prepositions):** з/із (from place), від (from person), до (to person)
-- **Пари (Pairs):** вдома/додому, тут/сюди, там/туди
-- **Правило (Rule):** Питання визначає відмінок!
+Ви вивчили прийменники місця та напрямку! Тепер ви знаєте, як запитати "Де?" або "Куди?". (You learned prepositions of location and direction! Now you know how to ask "Where?" or "Where to?") Ви знаєте різницю між "вдома" та "додому". Ви також знаєте, як сказати "звідки" ви приїхали. Також ви вивчили прийменники: з, від, до. Це була чудова робота! Ви великі молодці! Гуляйте в парку та говоріть українською! Супер! (This was great work! You are great! Walk in the park and speak Ukrainian! Super!)
 
 ---
 
-**Наступний урок:** Частини тіла та здоров'я!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Location vs Destination](https://www.ukrainianlessons.com/location-destination-prepositions/) — Preposition guide
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/prepositions
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Вправи (Activities)
+# Activities
+
 
 ## match-up: Question Words
 
@@ -436,51 +421,51 @@ Match the question with its meaning.
 
 ## quiz: Location or Direction?
 
-Choose the correct answer.
+> Determine if these Ukrainian sentences express a static location or a specific direction.
 
-1. "Я в парку" means:
+1. Which category correctly describes the sentence "Я в парку" here?
    - [x] I am in the park (location)
    - [ ] I'm going to the park (direction)
    - [ ] I'm from the park (origin)
    - [ ] I was in the park (past)
 
-2. "Я йду в парк" means:
+2. How do you accurately categorize "Я йду в парк" in English?
    - [x] I'm going to the park (direction)
    - [ ] I am in the park (location)
    - [ ] I'm from the park (origin)
    - [ ] I was in the park (past)
 
-3. "Вдома" means:
+3. What accurately is the meaning of "Вдома" in this lesson?
    - [x] At home (location)
    - [ ] To home (direction)
    - [ ] From home (origin)
    - [ ] About home
 
-4. "Додому" means:
+4. Which category summarizes the term "Додому" correctly for you today?
    - [x] Home (direction - going home)
    - [ ] At home (location)
    - [ ] From home (origin)
    - [ ] About home
 
-5. "Я з України" means:
+5. How is the phrase "Я з України" correctly described in Ukrainian?
    - [x] I'm from Ukraine
    - [ ] I'm in Ukraine
    - [ ] I'm going to Ukraine
    - [ ] I was in Ukraine
 
-6. "До лікаря" means:
+6. What is correctly the description for "До лікаря" in English now?
    - [x] To the doctor
    - [ ] At the doctor's
    - [ ] From the doctor
    - [ ] About the doctor
 
-7. "Тут" means:
+7. Which category correctly represents "Тут" in this context?
    - [x] Here (location)
    - [ ] To here (direction)
    - [ ] From here (origin)
    - [ ] About here
 
-8. "Сюди" means:
+8. How would you accurately describe "Сюди" in Ukrainian today?
    - [x] To here (direction)
    - [ ] Here (location)
    - [ ] From here (origin)
@@ -490,51 +475,51 @@ Choose the correct answer.
 
 ## quiz: Which Preposition?
 
-Choose the correct preposition.
+> Select the correct Ukrainian preposition or phrase for these English descriptions.
 
-1. I'm FROM Kyiv:
+1. What accurately is the translation for "I'm FROM Kyiv" here?
    - [x] з Києва
    - [ ] в Києві
    - [ ] до Києва
    - [ ] від Києва
 
-2. A gift FROM mom:
+2. Which Ukrainian phrase correctly translates "A gift FROM mom" into English?
    - [x] від мами
    - [ ] з мами
    - [ ] до мами
    - [ ] в мами
 
-3. Going TO the doctor:
+3. How do you accurately say "Going TO the doctor" in Ukrainian?
    - [x] до лікаря
    - [ ] в лікаря
    - [ ] з лікаря
    - [ ] від лікаря
 
-4. Going TO the store:
+4. What is the correct phrase for "Going TO the store" today?
    - [x] в магазин
    - [ ] до магазин
    - [ ] з магазину
    - [ ] від магазину
 
-5. I'm IN the park:
+5. Which phrase accurately represents "I'm IN the park" in Ukrainian?
    - [x] в парку
    - [ ] в парк
    - [ ] з парку
    - [ ] до парку
 
-6. Coming FROM school:
+6. How is the phrase "Coming FROM school" correctly translated for you?
    - [x] з школи
    - [ ] в школі
    - [ ] до школи
    - [ ] від школи
 
-7. Going TO work:
+7. What accurately is the Ukrainian term for "Going TO work" now?
    - [x] на роботу
    - [ ] в роботу
    - [ ] до роботи
    - [ ] з роботи
 
-8. Letter FROM dad:
+8. How should you accurately translate "Letter FROM dad" into Ukrainian?
    - [x] від татка
    - [ ] з татка
    - [ ] до татка
@@ -576,8 +561,8 @@ Put the words in the correct order.
 10. аптека / навпроти / банку
    > [!answer] Аптека навпроти банку
 
-11. далеко / аеропорт
-   > [!answer] Аеропорт далеко
+11. цей / аеропорт / дуже / далеко
+   > [!answer] Цей аеропорт дуже далеко
 
 12. ти / звідки / родом
    > [!answer] Звідки ти родом
@@ -612,7 +597,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

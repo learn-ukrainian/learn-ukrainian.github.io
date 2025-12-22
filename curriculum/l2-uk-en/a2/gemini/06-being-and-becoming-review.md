@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1838/1000
+- **Words:** ✅ 1824/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.9% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 43.1% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 180 | Included in Core |
+| **Warm-up** | ✅ | 137 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Бути + Instrumental: Being Something** | ⚪️ | 230 | Skipped |
 | **Стати + Instrumental: Becoming Something** | ⚪️ | 159 | Skipped |
@@ -39,6 +36,7 @@
 | **Mini-Dialogues** | ✅ | 187 | Included in Core |
 | **Reading Practice: Моя родина і професії** | ✅ | 175 | Included in Core |
 | **Summary** | ✅ | 212 | Included in Core |
+| **Need More Practice?** | ⚪️ | 29 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Professions Masculine and Feminine** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Бути/Стати + Instrumental** | 🎮 | 12 | Activity (12 items, min 8) |

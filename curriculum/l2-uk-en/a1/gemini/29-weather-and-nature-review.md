@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 982/750
+- **Words:** ✅ 936/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,31 +14,24 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 47.5% (target 35-55% (M29))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
+- **Immersion:** 🇺🇦 42.3% (target 35-55% (M29))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Weather & Nature** | ⚪️ | 0 | Skipped |
 | **Warm-up** | ✅ | 65 | Included in Core |
-| **Grammar** | ⚪️ | 49 | Skipped |
-| **Impersonal Weather Expressions** | ⚪️ | 51 | Skipped |
+| **Grammar** | ⚪️ | 51 | Skipped |
 | **Asking About Weather** | ⚪️ | 0 | Skipped |
 | **Seasons** | ⚪️ | 0 | Skipped |
 | **Examples in Context** | ✅ | 239 | Included in Core |
 | **Dialogues** | ✅ | 496 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 82 | Included in Core |
-| **Вправи (Activities)** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 85 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Weather Expressions** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Nature Vocabulary** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Seasons** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Animals vs Plants** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Seasons** | 🎮 | 12 | Activity (12 items, min 12) |
+| **group-sort: Animals vs Plants** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Яка погода? (What's the Weather?)** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Природа і тварини (Nature and Animals)** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: What Season?** | 🎮 | 8 | Activity (8 items, min 8) |

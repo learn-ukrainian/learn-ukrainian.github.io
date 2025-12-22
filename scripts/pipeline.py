@@ -159,7 +159,7 @@ def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optiona
     # Check if dev server is running
     import urllib.request
     try:
-        urllib.request.urlopen("http://localhost:3000/curricula-opus", timeout=5)
+        urllib.request.urlopen("http://localhost:3000/", timeout=5)
     except:
         print("  ⚠️ Docusaurus dev server not running")
         print("  Start with: cd docusaurus && npm start")

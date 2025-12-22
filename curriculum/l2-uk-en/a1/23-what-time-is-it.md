@@ -42,16 +42,7 @@ vocabulary_count: 40
 ## Grammar
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Telling the time in Ukrainian](https://www.youtube.com/watch?v=0Dkug4_mrDA) — Speak Ukrainian
->
->
-> **Time Vocabulary:** [Котра година?](https://www.ukrainianlessons.com/grammar-time/) — Infographic on telling time
->
-> **Days of the Week:** [Дні тижня](https://www.ukrainianlessons.com/vocabulary-days/) — Days with audio
->
-> **Months:** [Ukrainian Months and Their Origin](https://www.ukrainianlessons.com/months/) — Learn months through their nature-based meanings
+
 
 ## Telling Time
 
@@ -284,7 +275,7 @@ Or in conversation:
 
 ---
 
-## Підсумок (Summary)
+# Summary
 
 Ви навчилися говорити про час українською! (You've learned to tell time in Ukrainian!)
 
@@ -301,7 +292,17 @@ Or in conversation:
 
 **Наступний урок:** Модальні дієслова — можна, треба, хочу!
 
-## Вправи (Activities)
+
+> [!resources] External Resources
+>
+> **YouTube:** [Telling Time in Ukrainian](https://www.youtube.com/watch?v=FieIdat4u_0) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Calendar & Time](https://www.ukrainianlessons.com/telling-time/) — Ukrainian Lessons
+>
+> **Flashcards:** [Days and Months](https://www.ukrainianlessons.com/vocabulary/days-months/) — Vocabulary builder with audio
+
+# Activities
+
 
 ## match-up: Days of the Week
 
@@ -440,51 +441,51 @@ Match the Ukrainian month with its English equivalent.
 
 ## quiz: Time Expressions
 
-Choose the correct translation.
+> Select the correct English translation for these common time-related phrases.
 
-1. Котра година?
+1. Which English phrase represents "Котра година?" correctly?
    - [x] What time is it?
    - [ ] Which day is it?
    - [ ] What date is it?
    - [ ] How long is it?
 
-2. Зустріч о третій.
+2. How do you accurately translate "Зустріч о третій" into English?
    - [x] The meeting is at three.
    - [ ] The meeting is at third.
    - [ ] The meeting lasts three hours.
    - [ ] Three meetings today.
 
-3. Він приходить рано.
+3. What does accurately the phrase "Він приходить рано" mean?
    - [x] He comes early.
    - [ ] He comes late.
    - [ ] He comes on time.
    - [ ] He comes now.
 
-4. Магазин працює з дев'ятої до шостої.
+4. How do you correctly translate "Магазин працює з дев'ятої до шостої"?
    - [x] The store works from nine to six.
    - [ ] The store works until nine.
    - [ ] The store works at six.
    - [ ] The store is closed from nine to six.
 
-5. Зараз половина на другу.
+5. Which English sentence represents "Зараз половина на другу"?
    - [x] It's half past one now.
    - [ ] It's two o'clock now.
    - [ ] It's one o'clock now.
    - [ ] It's half past two now.
 
-6. Я приїхав вчасно.
+6. How do you accurately say "Я приїхав вчасно" in English?
    - [x] I arrived on time.
    - [ ] I arrived early.
    - [ ] I arrived late.
    - [ ] I will arrive.
 
-7. Після обіду я відпочиваю.
+7. What is accurately the English translation of "Після обіду я відпочиваю"?
    - [x] After lunch I rest.
    - [ ] Before lunch I rest.
    - [ ] During lunch I rest.
    - [ ] At lunch I rest.
 
-8. Урок триває годину.
+8. Which translation is correct for "Урок триває годину" now?
    - [x] The lesson lasts an hour.
    - [ ] The lesson starts in an hour.
    - [ ] The lesson ends in an hour.
@@ -494,51 +495,51 @@ Choose the correct translation.
 
 ## quiz: Months and Seasons
 
-Select the correct answer.
+> Test your knowledge of the Ukrainian calendar and seasons here.
 
-1. Які місяці — зима?
+1. Which set of months accurately represents "зима" (winter)?
    - [x] Грудень, січень, лютий
    - [ ] Березень, квітень, травень
    - [ ] Червень, липень, серпень
    - [ ] Вересень, жовтень, листопад
 
-2. Коли листя падає?
+2. When exactly do the leaves usually fall from trees?
    - [x] У листопаді
    - [ ] У травні
    - [ ] У січні
    - [ ] У липні
 
-3. Який місяць названий на честь берези?
+3. Which Ukrainian month is named accurately after the birch tree?
    - [x] Березень
    - [ ] Квітень
    - [ ] Травень
    - [ ] Липень
 
-4. Який день після четверга?
+4. Which day of the week comes immediately after Thursday?
    - [x] П'ятниця
    - [ ] Середа
    - [ ] Субота
    - [ ] Вівторок
 
-5. Які місяці — весна?
+5. Which months accurately represent the "весна" (spring) season?
    - [x] Березень, квітень, травень
    - [ ] Грудень, січень, лютий
    - [ ] Червень, липень, серпень
    - [ ] Вересень, жовтень, листопад
 
-6. Який місяць названий на честь липи (дерева)?
+6. Which month is named accurately after the linden tree?
    - [x] Липень
    - [ ] Березень
    - [ ] Вересень
    - [ ] Травень
 
-7. Який перший день тижня в Україні?
+7. Which is accurately the first day of the week?
    - [x] Понеділок
    - [ ] Неділя
    - [ ] Субота
    - [ ] Вівторок
 
-8. Які дні — вихідні?
+8. Which days accurately represent the "вихідні" (weekend) in Ukraine?
    - [x] Субота і неділя
    - [ ] Понеділок і вівторок
    - [ ] П'ятниця і субота
@@ -612,7 +613,7 @@ Decide if each statement is true or false.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

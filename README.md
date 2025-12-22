@@ -24,7 +24,7 @@ A complete Ukrainian language curriculum for English speakers:
 |-------|-------------|--------|
 | [**A1 Beginner**](https://learn-ukrainian.github.io/docs/a1/) | Cyrillic alphabet, basic phrases, simple grammar | ✅ Complete (34 lessons) |
 | [**A2 Elementary**](https://learn-ukrainian.github.io/docs/a2/) | All 7 cases, verb aspects, comparisons | ✅ Complete (57 lessons) |
-| [**B1 Intermediate**](https://learn-ukrainian.github.io/docs/b1/) | Complex sentences, motion verbs, participles | 🔍 In QA (80 lessons) |
+| [**B1 Intermediate**](https://learn-ukrainian.github.io/docs/b1/) | Complex sentences, motion verbs, participles | 🔍 In QA (85 lessons) |
 | [**B2 Upper-Intermediate**](https://learn-ukrainian.github.io/docs/b2/) | Literature, academic writing, professional topics | 📋 Planned (135 lessons) |
 | [**C1 Advanced**](https://learn-ukrainian.github.io/docs/c1/) | Stylistics, registers, nuanced expression | 📋 Planned (115 lessons) |
 | [**C2 Mastery**](https://learn-ukrainian.github.io/docs/c2/) | Native-level proficiency, literary analysis | 📋 Planned (80 lessons) |
@@ -73,7 +73,7 @@ learn-ukrainian/
 ├── curriculum/l2-uk-en/     # Source lessons (Markdown)
 │   ├── a1/                  # A1: 34 modules
 │   ├── a2/                  # A2: 57 modules
-│   ├── b1/                  # B1: 80 modules (in progress)
+│   ├── b1/                  # B1: 85 modules (in progress)
 │   └── ...                  # B2, C1, C2
 ├── docusaurus/              # Web platform
 │   ├── docs/                # Generated lesson pages

@@ -44,17 +44,6 @@ Think about your typical day. You wake up. You eat breakfast. You read. You work
 ---
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Present Tense. The First Conjugation Group.](https://www.youtube.com/watch?v=gSmbSuSs-Ps) — Speak Ukrainian
->
->
-> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
->
-> **Podcast:** [ULP 1-22 | First Verb Conjugation](https://www.ukrainianlessons.com/episode22/) — Learn conjugation in context
->
-> **Quick Lesson:** [FMU 1-57 | Verb Conjugations](https://www.ukrainianlessons.com/fmu57/) — 5-minute grammar review
-
 ## Presentation
 
 ### The Pattern: -ати → -аю, -аєш, -ає...
@@ -211,8 +200,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. I listen to music. I think.
 
 ---
-
-## Summary
+# Summary
 
 You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 
@@ -226,26 +214,31 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 **Next up:** Module 07 — Questions & Negation. You learn questions and negation!
 
 ---
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Present Tense. The First Conjugation Group.](https://www.youtube.com/watch?v=gSmbSuSs-Ps) — Speak Ukrainian
+>
+>
+> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
+>
+> **Podcast:** [ULP 1-22 | First Verb Conjugation](https://www.ukrainianlessons.com/episode22/) — Learn conjugation in context
+>
+> **Quick Lesson:** [FMU 1-57 | Verb Conjugations](https://www.ukrainianlessons.com/fmu57/) — 5-minute grammar review
 
-## Activities
+# Activities
 
 ## match-up: Infinitive to English
-> Match the Ukrainian infinitive with its English meaning.
 
-| Ukrainian | English |
-|-----------|---------|
+| Infinitive | English |
+|------------|---------|
 | читати | to read |
-| писати | to write |
 | знати | to know |
-| розуміти | to understand |
 | слухати | to listen |
-| чекати | to wait |
-| працювати | to work |
-| відпочивати | to rest |
-| снідати | to have breakfast |
-| обідати | to have lunch |
-| вечеряти | to have dinner |
-| гуляти | to walk, stroll |
+| писати | to write |
+| питати | to ask |
+| відповідати | to answer |
+| думати | to think |
+| грати | to play |
 
 ## quiz: Conjugation Recognition
 > Select the correct answer.
@@ -264,7 +257,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    - [ ] they write
    > ти пишеш = you write (informal singular)
 
-3. Which ending means "we"?
+3. Which verb ending implies the pronouns "we"?
    - [ ] -ю
    - [ ] -єш
    - [ ] -є
@@ -285,7 +278,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    - [ ] чекати
    > відпочивати = to rest
 
-6. "Вони читають" means:
+6. What does the phrase "Вони читають" mean?
    - [ ] I read
    - [ ] you read
    - [ ] we read
@@ -313,7 +306,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    - [ ] малювати
    > співати = to sing
 
-10. "Ви знаєте" means:
+10. What is the meaning of "Ви знаєте"?
     - [ ] I know
     - [ ] you know (informal)
     - [x] you know (formal/plural)
@@ -335,43 +328,24 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
     > писати → пиш- (due to consonant alternation)
 
 ## group-sort: Person and Form
-> Sort these conjugated forms by person (я, ти, він/вона, ми, ви, вони).
 
-### я (I)
-- читаю
-- працюю
-- гуляю
-- думаю
+### 1st Person (I/We)
+- я читаю
+- ми читаємо
+- я знаю
+- ми знаємо
 
-### ти (you, informal)
-- читаєш
-- працюєш
-- гуляєш
-- думаєш
+### 2nd Person (You)
+- ти читаєш
+- ви читаєте
+- ти знаєш
+- ви знаєте
 
-### він/вона (he/she)
-- читає
-- працює
-- гуляє
-- думає
-
-### ми (we)
-- читаємо
-- працюємо
-- гуляємо
-- думаємо
-
-### ви (you, formal/plural)
-- читаєте
-- працюєте
-- гуляєте
-- думаєте
-
-### вони (they)
-- читають
-- працюють
-- гуляють
-- думають
+### 3rd Person (He/She)
+- він читає
+- вона читає
+- він знає
+- вона знає
 
 ## fill-in: Complete the Sentence
 > Choose the correct verb form.
@@ -396,7 +370,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > [!answer] розумієте
    > [!options] розумію | розумієш | розуміє | розумієте
 
-6. Вони ___ про Україну.
+6. Скажіть, що вони роблять? Вони ___ про Україну.
    > [!answer] думають
    > [!options] думаю | думаєш | думає | думають
 
@@ -412,7 +386,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > [!answer] малює
    > [!options] малюю | малюєш | малює | малюють
 
-10. Ми ___ о дванадцятій.
+10. Скажіть, що ми робимо? Ми ___ о дванадцятій.
     > [!answer] обідаємо
     > [!options] обідаю | обідаєш | обідає | обідаємо
 
@@ -602,8 +576,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > (She sings a song.)
 
 ---
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

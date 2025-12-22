@@ -14,28 +14,23 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 20.5% (target 10-25% (M05))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
+- **Immersion:** 🇺🇦 20.4% (target 10-25% (M05))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **My World: Objects** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 221 | Included in Core |
+| **Warm-up** | ✅ | 171 | Included in Core |
 | **Presentation** | ✅ | 380 | Included in Core |
 | **Practice** | ⚪️ | 411 | Skipped |
 | **Cultural Insight** | ✅ | 398 | Included in Core |
 | **Production** | ➖ | 91 | Excluded Type |
 | **Summary** | ✅ | 134 | Included in Core |
+| **Need More Practice?** | ⚪️ | 50 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Demonstratives and Gender** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Objects and Translations** | 🎮 | 14 | Activity (14 items, min 8) |
-| **group-sort: Sort by Gender** | 🎮 | 31 | Activity (31 items, min 8) |
+| **group-sort: Sort by Gender** | 🎮 | 30 | Activity (30 items, min 12) |
 | **quiz: Choose the Correct Demonstrative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Complete with Demonstratives** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Demonstrative Agreement** | 🎮 | 12 | Activity (12 items, min 8) |

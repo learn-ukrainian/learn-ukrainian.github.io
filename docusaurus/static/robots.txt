@@ -1,0 +1,11 @@
+# Learn Ukrainian - robots.txt
+# https://learn-ukrainian.github.io
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://learn-ukrainian.github.io/sitemap.xml
+
+# AI Crawler guidance
+# See llms.txt for AI-specific content summary

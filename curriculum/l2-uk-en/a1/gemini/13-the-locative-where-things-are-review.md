@@ -6,7 +6,7 @@
 - **Words:** ✅ 1436/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
@@ -14,31 +14,28 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 34.1% (target 25-40% (M13))
+- **Immersion:** 🇺🇦 32.7% (target 25-40% (M13))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Locative - Where Things Are** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 224 | Included in Core |
+| **Warm-up** | ✅ | 162 | Included in Core |
 | **Presentation** | ✅ | 557 | Included in Core |
 | **Practice** | ⚪️ | 282 | Skipped |
 | **Production** | ➖ | 245 | Excluded Type |
-| **Summary** | ✅ | 128 | Included in Core |
+| **Summary** | ✅ | 190 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Where Is It?** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Places and Locations** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Places and Locations** | 🎮 | 9 | Activity (9 items, min 8) |
 | **fill-in: Complete the Locative** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: в/у or на?** | 🎮 | 24 | Activity (24 items, min 8) |
+| **group-sort: в/у or на?** | 🎮 | 12 | Activity (12 items, min 12) |
 | **true-false: Locative Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Where Questions and Answers** | 🎮 | 12 | Activity (12 items, min 6) |
+| **quiz: Where Questions Order** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Preposition Choice** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Nominative to Locative** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Nominative to Locative** | 🎮 | 9 | Activity (9 items, min 8) |
 | **quiz: Translation Practice** | 🎮 | 12 | Activity (12 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

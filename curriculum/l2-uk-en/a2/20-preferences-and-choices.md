@@ -34,15 +34,6 @@ Now that you can form comparatives and superlatives, let's use them to express p
 - Making and explaining choices
 - Useful expressions for everyday decisions
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [100 USEFUL Basic Phrases in Ukrainian ...](https://www.youtube.com/watch?v=zHrJXg2c5Uo) — #Ukrainian Vocabulary
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -222,7 +213,7 @@ Try to answer using different structures:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -240,9 +231,20 @@ This module covered expressing preferences and making choices.
 
 Тепер ви можете висловлювати свої вподобання! 💭
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Numbers with Nouns](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - 📖 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
+> - 📝 [Numbers Guide](https://www.ukrainianlessons.com/numbers/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Preference Expressions
+> З'єднайте вирази вподобання. | Match the preference expressions.
 
 - Мені більше подобається :: I like more
 - Я віддаю перевагу :: I prefer
@@ -310,6 +312,7 @@ This module covered expressing preferences and making choices.
     > [!options] вибрав | вибираєш | виберешся | вибір
 
 ## quiz: Preferences
+> Перевірте своє розуміння виразів вподобання. | Check your understanding of preference expressions.
 
 1. "Мені більше подобається" means:
 
@@ -446,6 +449,7 @@ This module covered expressing preferences and making choices.
   > "Важче" means "harder."
 
 ## group-sort: Preference Expressions
+> Розсортуйте за рівнем формальності. | Sort by formality level.
 
 > Sort by formality level.
 
@@ -740,7 +744,7 @@ It's worse to do nothing.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

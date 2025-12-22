@@ -17,7 +17,7 @@ from .config import (
     VALID_ACTIVITY_TYPES,
     AI_CONTAMINATION_PATTERNS,
     REQUIRED_METADATA,
-    ACTIVITY_MIN_ITEMS,
+    ACTIVITY_COMPLEXITY,
     get_a1_immersion_range,
     get_a2_immersion_range,
     get_b1_immersion_range,
@@ -35,6 +35,9 @@ from .checks import (
     count_items,
     check_markdown_format,
     check_section_order,
+    check_activity_ukrainian_content,
+    check_resources_placement,
+    check_resources_required,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -195,7 +198,7 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
         stripped = line.strip()
 
         # Track Activities Section
-        if stripped.lower().startswith('# activities'):
+        if re.match(r'^#{1,2}\s+(Activities|Вправи)', stripped, re.IGNORECASE):
             in_activities = True
 
         # Track Activity Type
@@ -283,6 +286,11 @@ def run_lint_checks(content: str, section_map: dict, module_num: int) -> list[st
                 # Check for transliteration columns but NOT translation or pronunciation (Вимова) columns
                 if '| translit' in lower_stripped:
                     lint_errors.append(f"Line {line_num}: Transliteration Column detected in M{module_num} (Policy M21+: None). Remove column.")
+
+        # 13. Hint Detection (only in Activities)
+        if in_activities:
+            if re.search(r'\[Hint:.*?\]', stripped, re.IGNORECASE) or re.search(r'\(Hint:.*?\)', stripped, re.IGNORECASE) or re.search(r'\bHint:', stripped, re.IGNORECASE):
+                lint_errors.append(f"Line {line_num}: Activity Hint detected. Policy: Remove all hints (e.g. [Hint: ...]) from activities.")
 
     return lint_errors
 
@@ -587,11 +595,12 @@ def audit_module(file_path: str) -> bool:
             total_activities += 1
 
             items = count_items(text)
-            # Use activity-specific minimum if available, else fall back to level default
-            density_target = ACTIVITY_MIN_ITEMS.get(
-                matched_act_type,
-                config['min_items_per_activity']
-            )
+            # Use activity-specific minimum from complexity config if available
+            density_target = config['min_items_per_activity']
+            if matched_act_type in ACTIVITY_COMPLEXITY:
+                 complexity_rules = ACTIVITY_COMPLEXITY[matched_act_type].get(level_code, {})
+                 if 'min_items' in complexity_rules:
+                     density_target = complexity_rules['min_items']
 
             if items >= density_target:
                 valid_density_count += 1
@@ -717,6 +726,37 @@ def audit_module(file_path: str) -> bool:
             'issue': v['message'],
             'fix': f"Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary",
             'line': v.get('line', 0)
+        })
+
+    # Run activity content checks (Issue #235)
+    # 1. Check if activities contain Ukrainian content (not just English)
+    ukrainian_content_violations = check_activity_ukrainian_content(content, level_code)
+    for v in ukrainian_content_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'error',
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+    
+    # 2. Check if [!resources] callout appears before Activities section
+    resources_violations = check_resources_placement(content)
+    for v in resources_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'warning',
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+    
+    # 3. Check if [!resources] callout exists at all
+    missing_resources_violations = check_resources_required(content)
+    for v in missing_resources_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'warning',
+            'issue': v['issue'],
+            'fix': v['fix']
         })
 
     results['pedagogy'] = evaluate_pedagogy(len(pedagogical_violations))

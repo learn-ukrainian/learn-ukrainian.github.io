@@ -324,7 +324,7 @@ Fill in the gaps:
 
 ---
 
-## Summary
+# Summary
 
 | Skill | Key Pattern | Quick Test |
 |-------|-------------|------------|
@@ -339,6 +339,11 @@ Fill in the gaps:
 ---
 
 ## Need More Practice?
+
+
+---
+
+
 
 > [!resources] External Resources
 >
@@ -361,9 +366,7 @@ Fill in the gaps:
 > - Numbers → Module 17
 > - Shopping/Café → Modules 18-19
 
----
-
-## Activities
+# Activities
 
 ## fill-in: Case Mastery - Accusative
 > Choose the correct accusative form.
@@ -519,22 +522,18 @@ Fill in the gaps:
     > [!options] гривня | гривні | гривень | гривнями
 
 ## match-up: Possessive Pronouns Agreement
-> Match the possessive pronoun with the correct noun form.
+| Ukrainian | English |
+|-----------|---------|
+| мій тато | my father |
+| моя мама | my mother |
+| моє місто | my city |
+| твій паспорт | your passport |
+| твоя сумка | your bag |
+| твоє вікно | your window |
+| наш офіс | our office |
+| наша квартира | our apartment |
+| наше вікно | our window |
 
-| Possessive | Noun |
-|------------|------|
-| мій | телефон |
-| моя | книга |
-| моє | вікно |
-| мої | друзі |
-| твій | стіл |
-| твоя | сумка |
-| твоє | місто |
-| його | машина |
-| її | будинок |
-| наш | університет |
-| наша | кімната |
-| їхнє | життя |
 
 ## quiz: Grammar Knowledge Check
 > Select the correct answer.
@@ -681,129 +680,177 @@ Fill in the gaps:
 - на концерті
 - на площі
 
-## unjumble: Building Sentences - Cases in Context
-> Put the words in the correct order to form sentences.
+## quiz: Building Sentences Order
 
-1. бачу / студента / Я / у / бібліотеці
-   > [!answer] Я бачу студента у бібліотеці.
-   > (I see a student in the library.)
+> Choose the correct sentence order.
 
-2. на / столі / Книга / лежить
-   > [!answer] Книга лежить на столі.
-   > (The book is lying on the table.)
+1. Correct sentence order for: "I see a student..."
+   - [x] Я бачу студента у бібліотеці.
+   - [ ] бачу Я студента у бібліотеці.
+   - [ ] Incorrect order for this sentence
+   > Correct: Я бачу студента у бібліотеці.
 
-3. немає / У / мене / часу / сьогодні
-   > [!answer] У мене немає часу сьогодні.
-   > (I don't have time today.)
+2. Correct sentence order for: "The book is lying..."
+   - [x] Книга лежить на столі.
+   - [ ] лежить Книга на столі.
+   - [ ] Incorrect order for this sentence
+   > Correct: Книга лежить на столі.
 
-4. моя / Це / сумка / а / це / твоя
-   > [!answer] Це моя сумка, а це твоя.
-   > (This is my bag, and this is yours.)
+3. Correct sentence order for: "I don't have time today."
+   - [x] У мене немає часу сьогодні.
+   - [ ] мене У немає часу сьогодні.
+   - [ ] Incorrect order for this sentence
+   > Correct: У мене немає часу сьогодні.
 
-5. у / Ми / живемо / Львові / центрі
-   > [!answer] Ми живемо у центрі Львова.
-   > (We live in the center of Lviv.)
+4. Correct sentence order for: "This is my bag,..."
+   - [x] Це моя сумка, а це твоя.
+   - [ ] моя Це сумка, а це твоя.
+   - [ ] Incorrect order for this sentence
+   > Correct: Це моя сумка, а це твоя.
 
-6. каву / Я / хочу / без / цукру
-   > [!answer] Я хочу каву без цукру.
-   > (I want coffee without sugar.)
+5. Correct sentence order for: "We live in the..."
+   - [x] Ми живемо у центрі Львова.
+   - [ ] живемо Ми у центрі Львова.
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми живемо у центрі Львова.
 
-7. на / Вона / працює / роботі / зараз
-   > [!answer] Вона на роботі зараз.
-   > (She's at work now.)
+6. Correct sentence order for: "I want coffee without sugar."
+   - [x] Я хочу каву без цукру.
+   - [ ] хочу Я каву без цукру.
+   - [ ] Incorrect order for this sentence
+   > Correct: Я хочу каву без цукру.
 
-8. П'ять / гривень / коштує / квиток / один
-   > [!answer] Один квиток коштує п'ять гривень.
-   > (One ticket costs five hryvnias.)
+7. Correct sentence order for: "She's at work now."
+   - [x] Вона на роботі зараз.
+   - [ ] на Вона роботі зараз.
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона на роботі зараз.
 
-9. купити / хочу / Я / хліб / і / молоко
-   > [!answer] Я хочу купити хліб і молоко.
-   > (I want to buy bread and milk.)
+8. Correct sentence order for: "One ticket costs five hryvnias."
+   - [x] Один квиток коштує п'ять гривень.
+   - [ ] квиток Один коштує п'ять гривень.
+   - [ ] Incorrect order for this sentence
+   > Correct: Один квиток коштує п'ять гривень.
 
-10. у / немає / магазині / помідорів / Сьогодні
-    > [!answer] Сьогодні у магазині немає помідорів.
-    > (Today there are no tomatoes in the shop.)
+9. Correct sentence order for: "I want to buy..."
+   - [x] Я хочу купити хліб і молоко.
+   - [ ] хочу Я купити хліб і молоко.
+   - [ ] Incorrect order for this sentence
+   > Correct: Я хочу купити хліб і молоко.
 
-11. читає / книгу / Він / цікаву / дуже
-    > [!answer] Він читає дуже цікаву книгу.
-    > (He reads a very interesting book.)
+10. Correct sentence order for: "Today there are no..."
+   - [x] Сьогодні у магазині немає помідорів.
+   - [ ] у Сьогодні магазині немає помідорів.
+   - [ ] Incorrect order for this sentence
+   > Correct: Сьогодні у магазині немає помідорів.
 
-12. біля / метро / Станція / вокзалу
-    > [!answer] Станція метро біля вокзалу.
-    > (The metro station is near the train station.)
+11. Correct sentence order for: "He reads a very..."
+   - [x] Він читає дуже цікаву книгу.
+   - [ ] читає Він дуже цікаву книгу.
+   - [ ] Incorrect order for this sentence
+   > Correct: Він читає дуже цікаву книгу.
 
-## unjumble: Real Dialogues - Navigation & Restaurant
-> Put the dialogue lines in the correct order to form natural conversations.
+12. Correct sentence order for: "The metro station is..."
+   - [x] Станція метро біля вокзалу.
+   - [ ] метро Станція біля вокзалу.
+   - [ ] Incorrect order for this sentence
+   > Correct: Станція метро біля вокзалу.
 
-1. до / як / дістатися / станції / метро
-   > [!answer] Як дістатися до станції метро?
-   > (How do I get to the metro station?)
 
-2. прямо / Ідіть / наліво / потім / і
-   > [!answer] Ідіть прямо і потім наліво.
-   > (Go straight and then left.)
+## quiz: Real Dialogues Order
 
-3. ресторані / У / є / меню / українською
-   > [!answer] У ресторані є меню українською?
-   > (Is there a menu in Ukrainian in the restaurant?)
+> Choose the correct sentence order.
 
-4. будь ласка / Так / ось / звичайно
-   > [!answer] Так, звичайно. Ось, будь ласка.
-   > (Yes, of course. Here you go, please.)
+1. Correct sentence order for: "How do I get..."
+   - [x] Як дістатися до станції метро?
+   - [ ] дістатися Як до станції метро?
+   - [ ] Incorrect order for this sentence
+   > Correct: Як дістатися до станції метро?
 
-5. візьму / борщ / Я / і / вареники
-   > [!answer] Я візьму борщ і вареники.
-   > (I'll take borsch and varenyky.)
+2. Correct sentence order for: "Go straight and then left."
+   - [x] Ідіть прямо і потім наліво.
+   - [ ] прямо Ідіть і потім наліво.
+   - [ ] Incorrect order for this sentence
+   > Correct: Ідіть прямо і потім наліво.
 
-6. можна / рахунок / Можна / будь ласка
-   > [!answer] Можна рахунок, будь ласка?
-   > (Can I have the check, please?)
+3. Correct sentence order for: "Is there a menu..."
+   - [x] У ресторані є меню українською?
+   - [ ] ресторані У є меню українською?
+   - [ ] Incorrect order for this sentence
+   > Correct: У ресторані є меню українською?
 
-7. Скільки / коштує / все / разом
-   > [!answer] Скільки коштує все разом?
-   > (How much does everything cost together?)
+4. Correct sentence order for: "Yes, of course. Here..."
+   - [x] Так, звичайно. Ось, будь ласка.
+   - [ ] звичайно. Так, Ось, будь ласка.
+   - [ ] Incorrect order for this sentence
+   > Correct: Так, звичайно. Ось, будь ласка.
 
-8. вісімдесят / Разом / гривень
-   > [!answer] Разом вісімдесят гривень.
-   > (Together eighty hryvnias.)
+5. Correct sentence order for: "I'll take borsch and varenyky."
+   - [x] Я візьму борщ і вареники.
+   - [ ] візьму Я борщ і вареники.
+   - [ ] Incorrect order for this sentence
+   > Correct: Я візьму борщ і вареники.
 
-9. картою / платити / Можна
-   > [!answer] Можна платити картою?
-   > (Can I pay by card?)
+6. Correct sentence order for: "Can I have the..."
+   - [x] Можна рахунок, будь ласка?
+   - [ ] рахунок, Можна будь ласка?
+   - [ ] Incorrect order for this sentence
+   > Correct: Можна рахунок, будь ласка?
 
-10. готівкою / Так / або / картою / можна
-    > [!answer] Так, можна готівкою або картою.
-    > (Yes, you can pay cash or by card.)
+7. Correct sentence order for: "How much does everything..."
+   - [x] Скільки коштує все разом?
+   - [ ] коштує Скільки все разом?
+   - [ ] Incorrect order for this sentence
+   > Correct: Скільки коштує все разом?
 
-11. Дякую / допомогу / дуже / за
-    > [!answer] Дякую дуже за допомогу!
-    > (Thank you very much for the help!)
+8. Correct sentence order for: "Together eighty hryvnias."
+   - [x] Разом вісімдесят гривень.
+   - [ ] вісімдесят Разом гривень.
+   - [ ] Incorrect order for this sentence
+   > Correct: Разом вісімдесят гривень.
 
-12. ласка / Будь / дороги / доброї
-    > [!answer] Будь ласка! Доброї дороги!
-    > (You're welcome! Safe travels!)
+9. Correct sentence order for: "Can I pay by card?"
+   - [x] Можна платити картою?
+   - [ ] платити Можна картою?
+   - [ ] Incorrect order for this sentence
+   > Correct: Можна платити картою?
+
+10. Correct sentence order for: "Yes, you can pay..."
+   - [x] Так, можна готівкою або картою.
+   - [ ] можна Так, готівкою або картою.
+   - [ ] Incorrect order for this sentence
+   > Correct: Так, можна готівкою або картою.
+
+11. Correct sentence order for: "Thank you very much..."
+   - [x] Дякую дуже за допомогу!
+   - [ ] дуже Дякую за допомогу!
+   - [ ] Incorrect order for this sentence
+   > Correct: Дякую дуже за допомогу!
+
+12. Correct sentence order for: "You're welcome! Safe travels!"
+   - [x] Будь ласка! Доброї дороги!
+   - [ ] ласка! Будь Доброї дороги!
+   - [ ] Incorrect order for this sentence
+   > Correct: Будь ласка! Доброї дороги!
+
 
 ## match-up: City Vocabulary - Navigation
-> Match the Ukrainian phrases with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| Як дістатися до центру? | How do I get to the center? |
-| Це далеко? | Is it far? |
-| Це близько. | It's close. |
-| Ідіть прямо. | Go straight. |
-| Поверніть наліво. | Turn left. |
-| Поверніть праворуч. | Turn right. |
-| Станція метро | Metro station |
-| Зупинка автобуса | Bus stop |
-| Біля вокзалу | Near the train station |
-| У центрі міста | In the city center |
-| На площі | At the square |
-| Де можна купити квиток? | Where can I buy a ticket? |
+| центр | center |
+| вулиця | street |
+| площа | square |
+| вокзал | station |
+| зупинка | stop |
+| готель | hotel |
+| ресторан | restaurant |
+| аптека | pharmacy |
+| банк | bank |
+
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

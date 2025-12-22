@@ -41,16 +41,6 @@ vocabulary_count: 20
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Possessive Pronouns + Family Vocabulary ](https://www.youtube.com/watch?v=LARvKb7D38M) —  Ukrainian lesson 12|VERBA SCHOOL
->
->
-> **Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
->
-> **Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
->
-> **ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
 
 ## Presentation
 
@@ -301,7 +291,7 @@ Remember from Module 04 that Ukrainian has **ти** (informal you) and **ви** 
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned how to show possession in Ukrainian using two types of possessive pronouns:
 
@@ -318,60 +308,51 @@ You now know:
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Possessive Pronouns + Family Vocabulary ](https://www.youtube.com/watch?v=LARvKb7D38M) —  Ukrainian lesson 12|VERBA SCHOOL
+>
+>
+> **Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
+>
+> **Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
+>
+> **ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
+
+# Activities
 
 ## match-up: Possessive Forms
-> Match each noun with the correct form of "мій" (my).
-
 | Ukrainian | English |
 |-----------|---------|
-| мій телефон | my phone |
-| моя книга | my book |
-| моє вікно | my window |
-| мої друзі | my friends |
-| мій брат | my brother |
-| моя сестра | my sister |
-| моє місто | my city |
-| мої батьки | my parents |
-| мій стіл | my table |
-| моя сумка | my bag |
-| моє життя | my life |
-| мої речі | my things |
+| мій / моя / моє | my |
+| твій / твоя / твоє | your (informal) |
+| його | his / its |
+| її | her |
+| наш / наша / наше | our |
+| ваш / ваша / ваше | your (formal/plural) |
+| їхній / їхня / їхнє | their |
+| чий / чия / чиє | whose |
+
 
 ## group-sort: Gender Agreement
-> Sort these phrases by the gender of the noun.
+### Masculine (Мій/Твій)
+- мій паспорт
+- твій квиток
+- наш стіл
+- ваш офіс
 
-### Masculine
-- мій телефон
-- твій брат
-- наш будинок
-- ваш стіл
-- їхній друг
-- його батько
-
-### Feminine
+### Feminine (Моя/Твоя)
 - моя книга
-- твоя сестра
-- наша мама
-- ваша сумка
-- їхня кімната
-- її робота
+- твоя сумка
+- наша валіза
+- ваша кава
 
-### Neuter
+### Neuter (Моє/Твоє)
 - моє вікно
-- твоє місто
-- наше життя
-- ваше слово
-- їхнє село
-- його ім'я
+- твоє море
+- наше місто
+- ваше ім'я
 
-### Plural
-- мої друзі
-- твої речі
-- наші батьки
-- ваші книги
-- їхні діти
-- її слова
 
 ## quiz: Choose the Correct Possessive
 > Select the correct possessive pronoun.
@@ -562,179 +543,208 @@ You now know:
     > [!answer] ваше
     > [!options] ваш | ваша | ваше | ваші
 
-## unjumble: Build Sentences
-> Put the words in the correct order.
+## quiz: Possessive Sentence Order
 
-1. книга / Це / моя
-   > [!answer] Це моя книга
-   > (This is my book.) [3 words]
+> Choose the correct sentence order.
 
-2. телефон / твій / Де
-   > [!answer] Де твій телефон
-   > (Where is your phone?) [3 words]
+1. Correct sentence order for: "This is my book."
+   - [x] Це моя книга
+   - [ ] моя Це книга
+   - [ ] Incorrect order for this sentence
+   > Correct: Це моя книга
 
-3. вікно / Наше / велике
-   > [!answer] Наше вікно велике
-   > (Our window is big.) [3 words]
+2. Correct sentence order for: "Where is your phone?"
+   - [x] Де твій телефон
+   - [ ] твій Де телефон
+   - [ ] Incorrect order for this sentence
+   > Correct: Де твій телефон
 
-4. машина / Це / його
-   > [!answer] Це його машина
-   > (This is his car.) [3 words]
+3. Correct sentence order for: "Our window is big."
+   - [x] Наше вікно велике
+   - [ ] вікно Наше велике
+   - [ ] Incorrect order for this sentence
+   > Correct: Наше вікно велике
 
-5. студентка / сестра / Її
-   > [!answer] Її сестра студентка
-   > (Her sister is a student.) [3 words]
+4. Correct sentence order for: "This is his car."
+   - [x] Це його машина
+   - [ ] його Це машина
+   - [ ] Incorrect order for this sentence
+   > Correct: Це його машина
 
-6. друзі / Їхні / тут
-   > [!answer] Їхні друзі тут
-   > (Their friends are here.) [3 words]
+5. Correct sentence order for: "Her sister is a student."
+   - [x] Її сестра студентка
+   - [ ] сестра Її студентка
+   - [ ] Incorrect order for this sentence
+   > Correct: Її сестра студентка
 
-7. батьки / ваші / Де
-   > [!answer] Де ваші батьки
-   > (Where are your parents?) [3 words]
+6. Correct sentence order for: "Their friends are here."
+   - [x] Їхні друзі тут
+   - [ ] друзі Їхні тут
+   - [ ] Incorrect order for this sentence
+   > Correct: Їхні друзі тут
 
-8. дім / наш / Чий / це
-   > [!answer] Чий це наш дім
-   > (Wait — this is a trick! Correct: Це наш дім.)
-   > Actually: Це наш дім. [3 words]
+7. Correct sentence order for: "Where are your parents?"
+   - [x] Де ваші батьки
+   - [ ] ваші Де батьки
+   - [ ] Incorrect order for this sentence
+   > Correct: Де ваші батьки
 
-9. цікава / Моя / робота
-   > [!answer] Моя робота цікава
-   > (My work is interesting.) [3 words]
+8. Correct sentence order for: "Wait — this is..."
+   - [x] Чий це наш дім
+   - [ ] це Чий наш дім
+   - [ ] Incorrect order for this sentence
+   > Correct: Чий це наш дім
 
-10. життя / його / Це
-    > [!answer] Це його життя
-    > (This is his life.) [3 words]
+9. Correct sentence order for: "My work is interesting."
+   - [x] Моя робота цікава
+   - [ ] робота Моя цікава
+   - [ ] Incorrect order for this sentence
+   > Correct: Моя робота цікава
 
-11. гарне / Твоє / місто
-    > [!answer] Твоє місто гарне
-    > (Your city is beautiful.) [3 words]
+10. Correct sentence order for: "This is his life."
+   - [x] Це його життя
+   - [ ] його Це життя
+   - [ ] Incorrect order for this sentence
+   > Correct: Це його життя
 
-12. речі / це / Чиї / їхні
-    > [!answer] Чиї це їхні речі
-    > (Wait — another trick! Correct: Це їхні речі.)
-    > Actually: Це їхні речі. [3 words]
+11. Correct sentence order for: "Your city is beautiful."
+   - [x] Твоє місто гарне
+   - [ ] місто Твоє гарне
+   - [ ] Incorrect order for this sentence
+   > Correct: Твоє місто гарне
 
-13. там / стіл / Мій
-    > [!answer] Мій стіл там
-    > (My table is there.) [3 words]
+12. Correct sentence order for: "Wait — another trick!..."
+   - [x] Чиї це їхні речі
+   - [ ] це Чиї їхні речі
+   - [ ] Incorrect order for this sentence
+   > Correct: Чиї це їхні речі
 
-14. чиста / Наша / кімната
-    > [!answer] Наша кімната чиста
-    > (Our room is clean.) [3 words]
+13. Correct sentence order for: "My table is there."
+   - [x] Мій стіл там
+   - [ ] стіл Мій там
+   - [ ] Incorrect order for this sentence
+   > Correct: Мій стіл там
 
-15. слово / ваше / Це
-    > [!answer] Це ваше слово
-    > (This is your word.) [3 words]
+14. Correct sentence order for: "Our room is clean."
+   - [x] Наша кімната чиста
+   - [ ] кімната Наша чиста
+   - [ ] Incorrect order for this sentence
+   > Correct: Наша кімната чиста
+
+15. Correct sentence order for: "This is your word."
+   - [x] Це ваше слово
+   - [ ] ваше Це слово
+   - [ ] Incorrect order for this sentence
+   > Correct: Це ваше слово
+
 
 ## group-sort: Інваріантні vs Змінні
-> Sort these possessives into two categories: those that CHANGE (змінні) and those that NEVER change (інваріантні).
-
-### Змінні (Change)
-- мій
-- твій
-- наш
-- ваш
-- їхній
-- моя
-- твоє
-- наші
-- їхня
+### Змінні (Change by Gender)
+- мій / моя / моє
+- твій / твоя / твоє
+- наш / наша / наше
+- ваш / ваша / ваше
+- їхній / їхня / їхнє
+- чий / чия / чиє
+- цей / ця / це
 
 ### Інваріантні (Never Change)
-- його
-- її
+- його (his)
+- її (her)
+- їх (their)
+- Марка (Mark's)
+- Анни (Anna's)
+
 
 ## quiz: Cultural Context
-> Answer these questions about Ukrainian possessive usage.
+1. What is the traditional word for "family"?
+   - [x] родина
+   - [ ] сім’я
+   - [ ] група
+   - [ ] люди
+   > "Родина" is a very common Ukrainian word for family.
 
-1. Which possessive is used for informal "your" with friends?
+2. Which pronoun refers to "our house"?
+   - [x] наш
    - [ ] ваш
-   - [x] твій
-   - [ ] його
-   - [ ] наш
-   > твій = informal "your" (singular)
-
-2. Which possessive is frozen and never changes?
+   - [ ] твій
    - [ ] мій
+   > Наш means "our".
+
+3. How do you say "his book"?
+   - [x] його книга
+   - [ ] її книга
+   - [ ] їхня книга
+   - [ ] твоя книга
+   > Його means "his".
+
+4. How do you say "her phone"?
+   - [x] її телефон
+   - [ ] його телефон
+   - [ ] наш телефон
+   - [ ] твій телефон
+   > Її means "her".
+
+5. Which word is used for "whose"?
+   - [x] чий
+   - [ ] який
+   - [ ] де
+   - [ ] хто
+   > Чий means "whose".
+
+6. What is the meaning of "родина"?
+   - [x] family
+   - [ ] city
+   - [ ] house
+   - [ ] car
+   > "Родина" means family in Ukrainian.
+
+7. Which possessive never changes gender?
    - [x] його
    - [ ] наш
-   - [ ] їхній
-   > його (his) and її (her) are invariant
-
-3. How do you say "our Ukraine" in Ukrainian?
-   - [x] наша Україна
-   - [ ] наш Україна
-   - [ ] наше Україна
-   - [ ] наші Україна
-   > Україна is feminine, so наша
-
-4. Which form of "my" goes with neuter nouns?
    - [ ] мій
-   - [ ] моя
-   - [x] моє
-   - [ ] мої
-   > моє = neuter (вікно, місто, життя)
-
-5. In a formal setting, which "your" should you use?
    - [ ] твій
-   - [x] ваш
-   - [ ] його
-   - [ ] їхній
-   > ваш = formal/plural "your"
+   > Його (his) is invariant.
 
-6. Which possessive means "their"?
-   - [ ] його
-   - [ ] її
-   - [ ] наш
-   - [x] їхній
-   > їхній/їхня/їхнє/їхні = their
+8. Is "тато" masculine or feminine?
+   - [x] masculine
+   - [ ] feminine
+   - [ ] neuter
+   - [ ] both
+   > Тато is masculine (biological gender).
 
-7. Which is correct: "Це **його** сестра" or "Це **його** сестри"?
-   - [x] Це його сестра
-   - [ ] Це його сестри
-   - [ ] Both are correct
-   - [ ] Neither is correct
-   > його never changes, so "його сестра" (his sister)
+9. How do you say "their luggage"?
+   - [x] їхня валіза
+   - [ ] наша валіза
+   - [ ] ваша валіза
+   - [ ] твій валіза
+   > Їхня means "their" (feminine agreement).
 
-8. How do you ask "Whose phone is this?" in Ukrainian?
-   - [ ] Що це телефон?
-   - [ ] Хто це телефон?
-   - [x] Чий це телефон?
-   - [ ] Який це телефон?
-   > чий = whose (masculine)
+10. What's the formal "your"?
+    - [x] ваш
+    - [ ] твій
+    - [ ] свій
+    - [ ] наш
+    > Ваш is formal or plural "your".
 
-9. Which is the feminine form of "their"?
-   - [ ] їхній
-   - [x] їхня
-   - [ ] їхнє
-   - [ ] їхні
-   > їхня = their (feminine)
+11. What is accurately the meaning of "Моя мама"?
+    - [x] my mother
+    - [ ] your mother
+    - [ ] her mother
+    - [ ] his mother
+    > Моя means "my" (feminine).
 
-10. In Ukrainian folk songs, "наша Україна" expresses:
-    - [ ] Personal ownership
-    - [ ] Foreign possession
-    - [x] Collective national identity
-    - [ ] Individual property
-    > "Our Ukraine" = national pride and shared identity
+12. What is accurately the meaning of "Наше місто"?
+    - [x] our city
+    - [ ] your city
+    - [ ] their city
+    - [ ] my city
+    > Наше means "our" (neuter).
 
-11. Which possessive changes to agree with the noun?
-    - [x] мій
-    - [ ] його
-    - [ ] її
-    - [ ] All of the above
-    > мій changes (мій/моя/моє/мої), but його/її don't
-
-12. What's the plural form of "ваш"?
-    - [ ] ваші
-    - [x] ваші
-    - [ ] ваше
-    - [ ] Both A and B
-    > Trick question! ваші is the plural form.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

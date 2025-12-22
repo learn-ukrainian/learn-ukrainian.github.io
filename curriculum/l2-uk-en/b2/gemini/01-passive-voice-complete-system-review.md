@@ -1,6 +1,15 @@
 # Audit Report: 01-passive-voice-complete-system.md
 **Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1500
-**Overall Status:** ✅ PASS
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[MISSING_RESOURCES]** Module is missing [!resources] callout with external learning resources
+  - FIX: Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
 - **Words:** ✅ 1518/1500
@@ -8,13 +17,13 @@
 - **Density:** ✅ All > 16
 - **Unique_types:** ✅ 12/4 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 7/6
+- **Engagement:** ✅ 8/6
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 65.8% (target 65-70% (grammar))
+- **Pedagogy:** ❌ 1 violations
+- **Immersion:** 🇺🇦 65.8% (target 60-75% (grammar))
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -3,10 +3,10 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1047/750
+- **Words:** ✅ 1089/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 3/3
 - **Audio:** ℹ️ No audio
@@ -14,32 +14,29 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 32.3% (target 25-40% (M11))
+- **Immersion:** 🇺🇦 34.6% (target 25-40% (M11))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Accusative I - Things** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 120 | Included in Core |
-| **Presentation** | ✅ | 552 | Included in Core |
+| **Warm-up** | ✅ | 57 | Included in Core |
+| **Presentation** | ✅ | 594 | Included in Core |
 | **Practice** | ⚪️ | 145 | Skipped |
 | **Production** | ➖ | 75 | Excluded Type |
 | **Cultural Insight** | ✅ | 76 | Included in Core |
-| **Summary** | ✅ | 79 | Included in Core |
+| **Summary** | ✅ | 142 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Accusative Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Vocabulary Practice** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Vocabulary Practice** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Transform to Accusative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Grammar Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Gender and Accusative Changes** | 🎮 | 14 | Activity (14 items, min 8) |
+| **group-sort: Gender and Accusative Changes** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Complete the Sentences** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Word Order Practice** | 🎮 | 12 | Activity (12 items, min 6) |
-| **match-up: Verb + Object Pairs** | 🎮 | 10 | Activity (10 items, min 8) |
-| **unjumble: Longer Sentences** | 🎮 | 10 | Activity (10 items, min 6) |
+| **quiz: Word Order Practice** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Verb + Object Pairs** | 🎮 | 8 | Activity (8 items, min 8) |
+| **quiz: Longer Sentence Order** | 🎮 | 10 | Activity (10 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

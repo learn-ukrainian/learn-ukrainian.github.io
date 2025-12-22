@@ -35,7 +35,7 @@ Everyone has opinions! In any conversation, you need to express what you think, 
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [U.S. peace plan for Russia-Ukraine war is "very pro-Russia," former am...](https://www.youtube.com/watch?v=JFDMCN-ps3I) — CBS News
+> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
 >
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >

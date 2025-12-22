@@ -35,21 +35,6 @@ You're at a market in Kyiv. The vendor says "Двадцять гривень." D
 > 💡 **Did You Know?**
 >
 > The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant "neck ring" - a silver ornament worn by wealthy citizens.
-
-
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [COUNTING UKRAINIAN CARDINAL NUMBERS - 0 - 100](https://www.youtube.com/watch?v=7XrQddM5llE) — Speak Ukrainian
->
->
-> **Numbers:** [Numbers in Ukrainian](https://www.ukrainianlessons.com/numbers/) — Full list with audio and illustrations
->
-> **Nouns After Numbers:** [How to Use Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — 1, 2-4, 5+ agreement rules
->
-> **Podcast:** [ULP 1-19 | Phone Numbers](https://www.ukrainianlessons.com/episode19/) — Practice numbers 100-1000
-
 ## Presentation
 
 ### Numbers 0-20
@@ -286,7 +271,7 @@ But don't expect it - Ukrainians respect fair pricing!
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 
@@ -301,26 +286,39 @@ You can now count, ask prices, and shop confidently in Ukraine!
 
 ---
 
-## Activities
+## Need More Practice?
+
+
+---
+
+
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [COUNTING UKRAINIAN CARDINAL NUMBERS - 0 - 100](https://www.youtube.com/watch?v=7XrQddM5llE) — Speak Ukrainian
+>
+>
+> **Numbers:** [Numbers in Ukrainian](https://www.ukrainianlessons.com/numbers/) — Full list with audio and illustrations
+>
+> **Nouns After Numbers:** [How to Use Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — 1, 2-4, 5+ agreement rules
+>
+> **Podcast:** [ULP 1-19 | Phone Numbers](https://www.ukrainianlessons.com/episode19/) — Practice numbers 100-1000
+
+# Activities
 
 ## match-up: Numbers and Words
-
-> Match the Ukrainian numbers with their Arabic numerals.
-
 | Ukrainian | Numeral |
 |-----------|---------|
 | п'ять | 5 |
 | десять | 10 |
-| п'ятнадцять | 15 |
 | двадцять | 20 |
 | тридцять | 30 |
 | сорок | 40 |
-| п'ятдесят | 50 |
 | шістдесят | 60 |
-| сімдесят | 70 |
 | вісімдесят | 80 |
 | дев'яносто | 90 |
 | сто | 100 |
+
 
 ## fill-in: Complete with Numbers
 
@@ -375,10 +373,7 @@ You can now count, ask prices, and shop confidently in Ukraine!
     > [!options] двадцять | два | дванадцять | сто
 
 ## quiz: Number Grammar
-
-> Select the correct answer.
-
-1. How do you say "one hryvnia"?
+1. How do you accurately say exactly "one hryvnia"?
    - [x] одна гривня
    - [ ] один гривень
    - [ ] одне гривня
@@ -399,68 +394,69 @@ You can now count, ask prices, and shop confidently in Ukraine!
    - [ ] п'яти гривень
    > 5+ use genitive plural: гривень
 
-4. What does "Скільки коштує?" mean?
+4. What does "Скільки коштує?" accurately mean in English?
    - [ ] How many do you have?
    - [x] How much does it cost?
    - [ ] Where is it?
    - [ ] What is this?
    > Key shopping phrase!
 
-5. Which number has a gender distinction?
+5. Which number has accurately a gender distinction?
    - [ ] один (only)
    - [x] два/дві
    - [ ] три
    - [ ] всі вище (all above)
    > Both 1 and 2 have gender: один/одна/одне and два/дві
 
-6. What is the genitive plural of "студент"?
+6. What is the genitive plural of the word "студент"?
    - [ ] студенти
    - [ ] студента
    - [x] студентів
    - [ ] студентам
    > Used with 5+: п'ять студентів
 
-7. How do you say "expensive" in Ukrainian?
+7. How do you say exactly "expensive" in Ukrainian?
    - [ ] дешево
    - [x] дорого
    - [ ] знижка
    - [ ] ціна
    > дорого = expensive
 
-8. What does "готівка" mean?
+8. What does exactly the Ukrainian word "готівка" mean?
    - [ ] card
    - [x] cash
    - [ ] discount
    - [ ] receipt
    > готівка = cash, картка = card
 
-9. Which is the correct pattern: п'ятдесят?
+9. Which is the correct pattern for the number: п'ятдесят?
    - [x] 50
    - [ ] 15
    - [ ] 5
    - [ ] 500
    > п'ять + десят = fifty
 
-10. What case do numbers 5+ require?
+10. What case do numbers five and above require exactly?
     - [ ] nominative
     - [ ] accusative
     - [x] genitive plural
     - [ ] locative
     > 5+ always use genitive plural
 
-11. How do you say "twenty-three"?
+11. How do you accurately say exactly "twenty-three"?
     - [ ] двадцять і три
     - [x] двадцять три
     - [ ] тридцять два
     - [ ] три двадцять
     > No connector "and" in Ukrainian numbers
 
-12. What is the Ukrainian currency called?
+12. What is the Ukrainian currency accurately called?
     - [ ] карбованець
     - [x] гривня
     - [ ] рубль
     - [ ] копійка
     > гривня (hryvnia) is the current currency
+
 
 ## true-false: Money Facts
 
@@ -503,76 +499,101 @@ You can now count, ask prices, and shop confidently in Ukraine!
   > Correct! Each denomination honors Ukrainian leaders and cultural icons.
 
 ## group-sort: Number Categories
-
-> Sort these numbers into the correct categories by their case requirements.
-
 ### Nominative Singular (1)
-- один студент
 - одна гривня
+- один студент
 - одне вікно
+- сорок одна гривня
 
 ### Nominative Plural (2-4)
-- два студенти
-- три гривні
+- дві гривні
+- три студенти
 - чотири вікна
+- двадцять дві гривні
 
 ### Genitive Plural (5+)
-- п'ять студентів
-- десять гривень
+- п'ять гривень
+- десять студентів
 - двадцять вікон
 - сто книг
 
-## unjumble: Build Shopping Sentences
 
-> Put the words in the correct order to form sentences.
+## quiz: Shopping Sentences Order
 
-1. коштує / Скільки / хліб / ?
-   > [!answer] Скільки коштує хліб
-   > (How much does bread cost?)
+> Choose the correct sentence order.
 
-2. гривень / Це / десять / коштує / .
-   > [!answer] Це коштує десять гривень
-   > (This costs ten hryvnias.)
+1. Correct sentence order for: "How much does bread cost?"
+   - [x] Скільки коштує хліб
+   - [ ] коштує Скільки хліб
+   - [ ] Incorrect order for this sentence
+   > Correct: Скільки коштує хліб
 
-3. У / є / гроші / мене / .
-   > [!answer] У мене є гроші
-   > (I have money.)
+2. Correct sentence order for: "This costs ten hryvnias."
+   - [x] Це коштує десять гривень
+   - [ ] коштує Це десять гривень
+   - [ ] Incorrect order for this sentence
+   > Correct: Це коштує десять гривень
 
-4. дорого / Це / !
-   > [!answer] Це дорого
-   > (That's expensive!)
+3. Correct sentence order for: "I have money."
+   - [x] У мене є гроші
+   - [ ] мене У є гроші
+   - [ ] Incorrect order for this sentence
+   > Correct: У мене є гроші
 
-5. дешево / дуже / Це / .
-   > [!answer] Це дуже дешево
-   > (This is very cheap.)
+4. Correct sentence order for: "That's expensive!"
+   - [x] Це дорого
+   - [ ] дорого Це
+   - [ ] Incorrect order for this sentence
+   > Correct: Це дорого
 
-6. каса / Де / ?
-   > [!answer] Де каса
-   > (Where is the cashier?)
+5. Correct sentence order for: "This is very cheap."
+   - [x] Це дуже дешево
+   - [ ] дуже Це дешево
+   - [ ] Incorrect order for this sentence
+   > Correct: Це дуже дешево
 
-7. платити / Можна / карткою / ?
-   > [!answer] Можна платити карткою
-   > (Can I pay by card?)
+6. Correct sentence order for: "Where is the cashier?"
+   - [x] Де каса
+   - [ ] каса Де
+   - [ ] Incorrect order for this sentence
+   > Correct: Де каса
 
-8. гривень / двадцять / П'ять / коштує / .
-   > [!answer] П'ять коштує двадцять гривень
-   > (Five costs twenty hryvnias.) [Note: implied subject]
+7. Correct sentence order for: "Can I pay by card?"
+   - [x] Можна платити карткою
+   - [ ] платити Можна карткою
+   - [ ] Incorrect order for this sentence
+   > Correct: Можна платити карткою
 
-9. Одна / будь / кава / ласка / , / .
-   > [!answer] Одна кава, будь ласка
-   > (One coffee, please.)
+8. Correct sentence order for: "Five costs twenty hryvnias."
+   - [x] П'ять коштує двадцять гривень
+   - [ ] коштує П'ять двадцять гривень
+   - [ ] Incorrect order for this sentence
+   > Correct: П'ять коштує двадцять гривень
 
-10. студентів / П'ятнадцять / класі / у / .
-    > [!answer] П'ятнадцять студентів у класі
-    > (Fifteen students in the class.)
+9. Correct sentence order for: "One coffee, please."
+   - [x] Одна кава, будь ласка
+   - [ ] кава, Одна будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Одна кава, будь ласка
 
-11. гривні / Дві / решта / - / .
-    > [!answer] Дві гривні - решта
-    > (Two hryvnias - change.)
+10. Correct sentence order for: "Fifteen students in the class."
+   - [x] П'ятнадцять студентів у класі
+   - [ ] студентів П'ятнадцять у класі
+   - [ ] Incorrect order for this sentence
+   > Correct: П'ятнадцять студентів у класі
 
-12. сто / Всього / гривень / .
-    > [!answer] Всього сто гривень
-    > (Total one hundred hryvnias.)
+11. Correct sentence order for: "Two hryvnias - change."
+   - [x] Дві гривні - решта
+   - [ ] гривні Дві - решта
+   - [ ] Incorrect order for this sentence
+   > Correct: Дві гривні - решта
+
+12. Correct sentence order for: "Total one hundred hryvnias."
+   - [x] Всього сто гривень
+   - [ ] сто Всього гривень
+   - [ ] Incorrect order for this sentence
+   > Correct: Всього сто гривень
+
 
 ## fill-in: Shopping Dialogue
 
@@ -611,115 +632,108 @@ You can now count, ask prices, and shop confidently in Ukraine!
    > [!options] гроші | решта | знижка | картка
 
 ## match-up: Shopping Vocabulary
-
-> Match the Ukrainian shopping terms with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
+| гроші | money |
 | ціна | price |
-| знижка | discount |
-| решта | change (money back) |
-| рахунок | bill/check |
-| готівка | cash |
+| решта | change |
+| чек | receipt |
 | картка | card |
-| дорого | expensive |
-| дешево | cheap |
-| платити | to pay |
-| купувати | to buy |
-| продавати | to sell |
-| каса | cashier |
+| готівка | cash |
+| пакет | bag |
+| знижка | discount |
+| каса | checkout |
+
 
 ## quiz: Currency and Numbers
+1. How do you accurately say "Twenty hryvnias"?
+   - [x] двадцять гривень
+   - [ ] двадцять гривні
+   - [ ] двадцять гривня
+   - [ ] гривень двадцять
+   > Plural genitive for 5+.
 
-> Test your knowledge of Ukrainian money and counting.
+2. Which number is accurately "сорок"?
+   - [x] 40
+   - [ ] 50
+   - [ ] 60
+   - [ ] 30
+   > Сорок means forty.
 
-1. How much is п'ятдесят гривень?
-   - [ ] 5 hryvnias
-   - [ ] 15 hryvnias
-   - [x] 50 hryvnias
-   - [ ] 500 hryvnias
-   > п'ятдесят = fifty
+3. How do you say "Forty-five hryvnias"?
+   - [x] сорок п’ять гривень
+   - [ ] сорок п’ять гривні
+   - [ ] сорок п’ять гривня
+   - [ ] п'ятдесят гривень
+   > Plural genitive for 5+.
 
-2. Which coin is NOT used in Ukraine?
-   - [ ] 1 копійка
-   - [x] 5 рублів
-   - [ ] 50 копійок
-   - [ ] 1 гривня
-   > Ukraine uses hryvnias and kopecks, not rubles
+4. How do you accurately say "one hryvnia"?
+   - [x] одна гривня
+   - [ ] один гривня
+   - [ ] одно гривня
+   - [ ] одне гривня
+   > "Гривня" is feminine.
 
-3. Complete: одна гривня, дві ___, п'ять ___.
-   - [ ] гривня, гривня
-   - [x] гривні, гривень
-   - [ ] гривні, гривні
-   - [ ] гривень, гривень
-   > Pattern: 1 sg, 2-4 nom.pl, 5+ gen.pl
+5. How do you accurately say "Two hryvnias"?
+   - [x] дві гривні
+   - [ ] два гривні
+   - [ ] дві гривень
+   - [ ] два гривня
+   > Feminine form of "two".
 
-4. What does "знижка" mean?
-   - [ ] price
-   - [x] discount
-   - [ ] receipt
-   - [ ] change
-   > знижка = discount
+6. Which word means accurately "receipt"?
+   - [x] чек
+   - [ ] ціна
+   - [ ] гроші
+   - [ ] решта
+   > Чек is a receipt.
 
-5. Which is the correct form: "три ___"?
-   - [ ] студент
-   - [ ] студента
-   - [x] студенти
-   - [ ] студентів
-   > 2-4 use nominative plural
-
-6. How do you say "ninety" in Ukrainian?
-   - [ ] дев'ять
-   - [ ] дев'ятнадцять
-   - [x] дев'яносто
+7. How do you say "Ninety" in Ukrainian?
+   - [x] дев’яносто
+   - [ ] вісімдесят
+   - [ ] сімдесят
    - [ ] сто
-   > дев'яносто = 90
+   > Дев'яносто means ninety.
 
-7. What is the smaller unit of Ukrainian currency?
-   - [ ] цент
-   - [x] копійка
-   - [ ] долар
-   - [ ] рубль
-   > 1 hryvnia = 100 kopecks
+8. Which phrase means accurately "By card"?
+   - [x] карткою
+   - [ ] готівкою
+   - [ ] грошима
+   - [ ] чеком
+   > Карткою is instrumental case.
 
-8. How do you ask "How much does it cost?" in Ukrainian?
-   - [x] Скільки коштує?
-   - [ ] Що це?
-   - [ ] Де каса?
-   - [ ] Можна платити?
-   > Скільки коштує? is the standard phrase
+9. How do you say "Cash" in Ukrainian?
+   - [x] готівка
+   - [ ] картка
+   - [ ] чек
+   - [ ] решта
+   > Готівка is cash.
 
-9. Which number requires genitive plural?
-   - [ ] два
-   - [ ] чотири
-   - [x] п'ять
-   - [ ] один
-   > 5+ use genitive plural
+10. How do you accurately say "sixty" in Ukrainian?
+    - [x] шістдесят
+    - [ ] п’ятдесят
+    - [ ] сімдесят
+    - [ ] сорок
+    > Шістдесят means sixty.
 
-10. What does "решта" mean?
+11. What is the meaning of accurately "решта"?
+    - [x] change
+    - [ ] price
     - [ ] receipt
-    - [ ] total
-    - [x] change (money returned)
-    - [ ] discount
-    > решта = change you get back
+    - [ ] money
+    > Решта is change (money back).
 
-11. How do you say "forty" in Ukrainian?
-    - [ ] чотири
-    - [ ] чотирнадцять
-    - [x] сорок
-    - [ ] чотирдесят
-    > сорок is the unique form for 40
+12. How do you say "Fifty" in Ukrainian?
+    - [x] п’ятдесят
+    - [ ] шістдесят
+    - [ ] сорок
+    - [ ] тридцять
+    > П'ятдесят is fifty.
 
-12. Complete the phrase: "Можна платити ___?" (Can I pay by card?)
-    - [ ] картка
-    - [x] карткою
-    - [ ] картки
-    - [ ] карток
-    > Instrumental case after "платити": карткою
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

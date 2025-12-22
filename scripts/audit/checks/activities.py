@@ -6,7 +6,215 @@ Validates activity sequencing, structure, variety, and level restrictions.
 
 import re
 from collections import Counter
-from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS
+from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY
+
+def check_activity_complexity(content: str, level_code: str, module_num: int = 1) -> list[dict]:
+    """
+    Check if activities meet complexity requirements (word count, item count, structure).
+    Strictly enforces rules from MODULE-RICHNESS-GUIDELINES-v2.md.
+    
+    A1 M01-M05 Exception: Less strict rules for very early modules (alphabet phase).
+    """
+    violations = []
+    
+    # Relax rules for A1 M01-M05
+    is_a1_early = (level_code == 'A1' and module_num <= 5)
+    
+    # 1. Parse all activities
+    activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
+    activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
+    
+    for act_type, title, body in activities:
+        act_type = act_type.lower()
+        
+        # Skip checking unknown activity types
+        if act_type not in ACTIVITY_COMPLEXITY:
+            continue
+            
+        rules = ACTIVITY_COMPLEXITY[act_type].get(level_code).copy() if ACTIVITY_COMPLEXITY[act_type].get(level_code) else None
+        
+        # If no specific rules for this level (e.g. anagram in A2), restrictions check handles it
+        if not rules:
+            continue
+            
+        # Apply A1 Early Relaxations
+        if is_a1_early:
+            if act_type == 'quiz':
+                rules['min_len'] = 2  # Very simple prompts
+            elif act_type == 'match-up':
+                rules['pairs_max'] = 15  # Allow more pairs for alphabet matching
+            elif act_type == 'group-sort':
+                rules['items_min'] = 6
+                rules['items_max'] = 30
+                rules['groups_min'] = 2
+            elif act_type == 'fill-in':
+                rules['min_items'] = 6
+        
+        # --- Check Item Count ---
+        
+        items_count = count_items(body)
+        min_items = rules.get('min_items', 6)  # Default min 6 if not specified
+
+        
+        # Activity-specific item count checks
+        if act_type == 'group-sort':
+            items_count = len(re.findall(r'^\s*-\s+[^\[]', body, re.MULTILINE))  # Count bullets only
+            
+            # Check group counts - look for H3 headers that are category names
+            # Exclude common non-category H3s like "### Notes" or "### Explanation"
+            group_headers = re.findall(r'^\s*###\s+([^\n]+)', body, re.MULTILINE)
+            group_count = len([h for h in group_headers if not any(
+                skip in h.lower() for skip in ['note', 'explanation', 'hint', 'tip']
+            )])
+            min_groups = rules.get('groups_min', 2)
+            max_groups = rules.get('groups_max', 4)
+            
+            if not (min_groups <= group_count <= max_groups):
+                violations.append({
+                    'type': 'COMPLEXITY',
+                    'issue': f"group-sort '{title.strip()}' has {group_count} groups (target: {min_groups}-{max_groups})",
+                    'fix': f"Adjust number of sorting categories to {min_groups}-{max_groups}."
+                })
+            
+            min_sort_items = rules.get('items_min', 8)
+            max_sort_items = rules.get('items_max', 20)
+            if not (min_sort_items <= items_count <= max_sort_items):
+                violations.append({
+                    'type': 'COMPLEXITY',
+                    'issue': f"group-sort '{title.strip()}' has {items_count} items (target: {min_sort_items}-{max_sort_items})",
+                    'fix': f"Adjust number of items to sort to {min_sort_items}-{max_sort_items}."
+                })
+        
+        elif act_type == 'match-up':
+            # Count pairs (lines with | ... |)
+            table_rows = re.findall(r'^\s*\|\s*[^|]+\s*\|\s*[^|]+\s*\|', body, re.MULTILINE)
+            # Subtract 1 for header, but ensure we don't go negative
+            pair_count = max(0, len(table_rows) - 1) if table_rows else 0
+            min_pairs = rules.get('pairs_min', 8)
+            max_pairs = rules.get('pairs_max', 18)
+            
+            # If standard markdown table format
+            if pair_count > 0:
+                if not (min_pairs <= pair_count <= max_pairs):
+                    violations.append({
+                        'type': 'COMPLEXITY',
+                        'issue': f"match-up '{title.strip()}' has {pair_count} pairs (target: {min_pairs}-{max_pairs})",
+                        'fix': f"Adjust number of pairs to {min_pairs}-{max_pairs}."
+                    })
+            # Check for simple list format 1. A -> B
+            else:
+                pair_count = len(re.findall(r'->', body))
+                if pair_count > 0 and not (min_pairs <= pair_count <= max_pairs):
+                    violations.append({
+                        'type': 'COMPLEXITY',
+                        'issue': f"match-up '{title.strip()}' has {pair_count} pairs (target: {min_pairs}-{max_pairs})",
+                        'fix': f"Adjust number of pairs to {min_pairs}-{max_pairs}."
+                    })
+
+        elif items_count < min_items:
+            violations.append({
+                'type': 'COMPLEXITY',
+                'issue': f"{act_type} '{title.strip()}' has {items_count} items (minimum: {min_items})",
+                'fix': f"Add more items. {level_code} {act_type} requires at least {min_items} items."
+            })
+
+        # --- Check Content Complexity (Word Counts / Options) ---
+        
+        # Unjumble / Anagram Structure
+        if act_type == 'unjumble':
+            # Check separator: Must use slash /
+            slash_usage = len(re.findall(r'/', body))
+            if slash_usage < items_count:
+                 violations.append({
+                    'type': 'FORMAT_ERROR',
+                    'issue': f"unjumble '{title.strip()}' items must use slash '/' separator",
+                    'fix': "Split words with slashes, e.g. 'Я / люблю / каву'."
+                })
+            
+            # Check word counts
+            items = re.findall(r'\d+\.\s*([^\n>]+)', body)
+            for i, item in enumerate(items, 1):
+                words = len(re.findall(r'[\w\u0400-\u04FF]+', item))
+                min_w = rules.get('words_min', 4)
+                max_w = rules.get('words_max', 20)
+                
+                # Allow slight variance (+-1) but flag extreme outliers
+                if words < min_w - 1 or words > max_w + 2:
+                     violations.append({
+                        'type': 'COMPLEXITY_WORD_COUNT',
+                        'issue': f"unjumble '{title.strip()}' item {i} has {words} words (target: {min_w}-{max_w})",
+                        'fix': f"Adjust sentence length to {min_w}-{max_w} words to match {level_code} complexity."
+                    })
+
+        # Anagram Structure
+        elif act_type == 'anagram':
+            # Check separator: Must use spaces, NO slashes (only in item lines)
+            items = re.findall(r'\d+\.\s*([^\n>]+)', body)
+            for item in items:
+                if '/' in item:
+                    violations.append({
+                        'type': 'FORMAT_ERROR',
+                        'issue': f"anagram '{title.strip()}' item '{item.strip()}' must use SPACES separator, not slashes",
+                        'fix': "Use spaces between letters: 'л і т е р а'."
+                    })
+                    break
+        
+        # Fill-in Structure
+        elif act_type == 'fill-in':
+            # Check placeholder: Must use ___
+            if '___' not in body:
+                 violations.append({
+                    'type': 'FORMAT_ERROR',
+                    'issue': f"fill-in '{title.strip()}' missing '___' placeholders",
+                    'fix': "Use exactly '___' (three underscores) for blanks."
+                })
+            
+            # Check missing options block
+            if 'fill-in' in body and '[!options]' not in body:
+                 violations.append({
+                    'type': 'FORMAT_ERROR',
+                    'issue': f"fill-in '{title.strip()}' missing mandatory [!options] block",
+                    'fix': "All fill-in activities must provide [!options] for the user."
+                })
+        
+        # Quiz Options Check
+        elif act_type == 'quiz':
+            # Check number of options per question (standard markdown list or [!options])
+            questions = re.split(r'\n\d+\.', body)[1:] # Split by numbered list
+            min_len = rules.get('min_len', 5)
+            max_len = rules.get('max_len', 30)
+            
+            for i, q in enumerate(questions, 1):
+                # Count prompt words
+                prompt_line = q.split('\n')[0]
+                prompt_words = len(re.findall(r'[\w\u0400-\u04FF]+', prompt_line))
+                if prompt_words < min_len or prompt_words > max_len + 5: # Allow generous buffer
+                     violations.append({
+                        'type': 'COMPLEXITY_WORD_COUNT',
+                        'issue': f"quiz '{title.strip()}' Q{i} prompt length {prompt_words} (target: {min_len}-{max_len})",
+                        'fix': f"Adjust prompt length to {min_len}-{max_len} words."
+                    })
+                
+                # Count options
+                options_count = len(re.findall(r'-\s*\[', q))
+                # Also check for [!options] block style
+                if options_count == 0 and '[!options]' in q:
+                    options_block = re.search(r'\[!options\](.*?)(?=\n>|\n\d|\Z)', q, re.DOTALL)
+                    if options_block:
+                        options_count = len(re.findall(r'\|', options_block.group(1))) + 1
+                
+                target_opts = rules.get('options', [4])
+                if isinstance(target_opts, int): target_opts = [target_opts]
+                
+                # Skip check if no options found (might be parsing error)
+                if options_count > 0 and options_count not in target_opts and options_count < min(target_opts):
+                     violations.append({
+                        'type': 'COMPLEXITY_OPTIONS',
+                        'issue': f"quiz '{title.strip()}' Q{i} has {options_count} options (target: {target_opts})",
+                        'fix': f"Provide {target_opts} options for {level_code} quizzes."
+                    })
+
+    return violations
 
 
 def check_activity_sequencing(content: str, pedagogy: str) -> list[dict]:
@@ -362,3 +570,136 @@ def check_anagram_min_letters(content: str) -> list[dict]:
                 })
 
     return violations
+
+
+def check_activity_ukrainian_content(content: str, level_code: str = 'A1', module_num: int = 1) -> list[dict]:
+    """
+    Check if activities contain Ukrainian content (not just English).
+    
+    Activities that are 100% English (like quizzes asking about English sentences)
+    are pedagogically useless for a Ukrainian language course.
+    
+    Thresholds:
+    - A1 M01-M02: EXEMPT (alphabet learning - letters themselves are the content)
+    - A1 M03-M10: Allow up to 80% English (Cyrillic learning phase)
+    - A1 M11+, A2: Require at least 20% Cyrillic
+    - B1+: Require at least 30% Cyrillic
+    """
+    violations = []
+    
+    # EXEMPT A1 M01-M02 (alphabet modules - letters themselves are the content)
+    if level_code == 'A1' and module_num <= 2:
+        return violations
+    
+    
+    # Find all activity sections
+    activity_pattern = r'##\s*(quiz|match-up|fill-in|true-false|group-sort|unjumble|error-correction|anagram|cloze|select|translate|dialogue-reorder|mark-the-words):\s*([^\n]+)\n(.*?)(?=\n##|\n#\s|\Z)'
+    activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
+    
+    # Determine threshold based on level
+    min_cyrillic_ratio = 0.10  # Default: 10% Cyrillic minimum
+    if level_code in ['B1', 'B2', 'C1', 'C2']:
+        min_cyrillic_ratio = 0.20  # Higher levels need more Ukrainian
+    
+    for act_type, title, body in activities:
+        # Skip anagram activities (they're supposed to be letters only)
+        if act_type.lower() == 'anagram':
+            continue
+            
+        # Count Cyrillic vs total characters (excluding markdown/punctuation)
+        text = title + ' ' + body
+        
+        # Extract just text content (remove markdown syntax)
+        clean_text = re.sub(r'\[[ xX]?\]', '', text)  # Remove checkboxes
+        clean_text = re.sub(r'\|', '', clean_text)     # Remove table pipes
+        clean_text = re.sub(r'[#*_>`~\-]', '', clean_text)  # Remove markdown
+        clean_text = re.sub(r'\{[^}]+\}', '', clean_text)  # Remove cloze placeholders
+        
+        # Count characters
+        cyrillic_chars = len(re.findall(r'[а-яіїєґА-ЯІЇЄҐ]', clean_text))
+        latin_chars = len(re.findall(r'[a-zA-Z]', clean_text))
+        total_text_chars = cyrillic_chars + latin_chars
+        
+        if total_text_chars < 20:
+            # Too short to evaluate
+            continue
+            
+        cyrillic_ratio = cyrillic_chars / total_text_chars if total_text_chars > 0 else 0
+        
+        if cyrillic_ratio < min_cyrillic_ratio:
+            violations.append({
+                'type': 'NO_UKRAINIAN_CONTENT',
+                'issue': f"Activity '{act_type}: {title.strip()}' has only {cyrillic_ratio:.0%} Ukrainian content ({cyrillic_chars}/{total_text_chars} chars)",
+                'fix': "Activities must contain Ukrainian examples/sentences/words. Rewrite with Ukrainian content."
+            })
+    
+    return violations
+
+
+def check_resources_placement(content: str) -> list[dict]:
+    """
+    Check if [!resources] callout is correctly placed right before Activities section.
+    
+    The resources section should appear immediately before ## Activities / # Activities
+    (within 1000 chars) so students can optionally read supplementary material before practicing.
+    
+    Resources buried in earlier sections (Warm-up, Presentation) are misplaced.
+    """
+    violations = []
+    
+    # Find position of Activities header (both H1 and H2, English and Ukrainian)
+    activities_match = re.search(r'^#{1,2}\s*(?:Activities|Вправи)', content, re.MULTILINE)
+    if not activities_match:
+        return violations  # No activities section, nothing to check
+    
+    activities_pos = activities_match.start()
+    
+    # Find all [!resources] callouts
+    resources_matches = list(re.finditer(r'>\s*\[!resources\]', content, re.IGNORECASE))
+    
+    if not resources_matches:
+        return violations  # No resources to check placement for
+    
+    for match in resources_matches:
+        resource_pos = match.start()
+        
+        # Check if resources appear AFTER activities (wrong)
+        if resource_pos > activities_pos:
+            violations.append({
+                'type': 'MISPLACED_RESOURCES',
+                'issue': "External resources callout [!resources] appears AFTER Activities section",
+                'fix': "Move [!resources] section to appear immediately BEFORE ## Activities (within ~500 chars)."
+            })
+            break
+        
+        # Check if resources are too far before Activities (wrong - buried in earlier sections)
+        distance_to_activities = activities_pos - resource_pos
+        if distance_to_activities > 1000:
+            violations.append({
+                'type': 'MISPLACED_RESOURCES',
+                'issue': f"External resources callout [!resources] is {distance_to_activities} chars before Activities (should be <1000)",
+                'fix': "Move [!resources] section to appear immediately BEFORE ## Activities, not buried in earlier sections like Warm-up."
+            })
+            break
+    
+    return violations
+
+
+def check_resources_required(content: str) -> list[dict]:
+    """
+    Check if [!resources] callout exists in the module.
+    
+    All modules should have external resources for further learning.
+    """
+    violations = []
+    
+    # Check if any [!resources] callout exists
+    if not re.search(r'>\s*\[!resources\]', content, re.IGNORECASE):
+        violations.append({
+            'type': 'MISSING_RESOURCES',
+            'issue': "Module is missing [!resources] callout with external learning resources",
+            'fix': "Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources."
+        })
+    
+    return violations
+

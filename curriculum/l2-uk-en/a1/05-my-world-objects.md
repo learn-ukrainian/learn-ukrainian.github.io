@@ -40,17 +40,6 @@ By the end of this module, you'll be able to navigate your entire living space i
 > You already learned about noun gender in Module 03. Now you'll use that knowledge every time you point to something! Ukrainian demonstratives change based on gender: one form for masculine, another for feminine, another for neuter, and a special plural form for all genders.
 
 
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN](https://www.youtube.com/watch?v=2IlH4OxyFJ8) — Ukrainian grammar 
->
->
-> **Grammar:** [ЦЕЙ and ТОЙ Declension](https://www.ukrainianlessons.com/pronouns-this-that/) — Full table with examples
->
-> **Vocabulary:** [100 Most Common Words](https://www.ukrainianlessons.com/100words/) — PDF flashcards of essential vocabulary
-
 ## Presentation
 
 ### The Near Demonstratives: цей, ця, це, ці (this/these)
@@ -238,7 +227,7 @@ Try building full sentences: "Це моя чашка. Та чашка не мо�
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 
@@ -266,7 +255,20 @@ In this module, you learned:
 
 ---
 
-## Activities
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN](https://www.youtube.com/watch?v=2IlH4OxyFJ8) — Ukrainian grammar 
+>
+>
+> **Grammar:** [ЦЕЙ and ТОЙ Declension](https://www.ukrainianlessons.com/pronouns-this-that/) — Full table with examples
+>
+> **Vocabulary:** [100 Most Common Words](https://www.ukrainianlessons.com/100words/) — PDF flashcards of essential vocabulary
+
+---
+
+# Activities
 
 ## match-up: Demonstratives and Gender
 > Match each demonstrative with the correct gender.
@@ -334,7 +336,6 @@ In this module, you learned:
 - картина
 - шафа
 - плита
-- мікрохвильовка
 - праска
 - стіна
 - підлога
@@ -628,7 +629,7 @@ In this module, you learned:
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

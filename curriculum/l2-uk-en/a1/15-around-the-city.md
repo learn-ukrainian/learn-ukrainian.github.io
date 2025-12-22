@@ -42,16 +42,6 @@ Today you'll master the language of navigation — giving directions, describing
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) — Let's Learn Ukrainian
->
->
-> **Vocabulary:** [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) — City map with vocabulary
->
-> **Directions:** [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Navigation vocabulary with audio
->
-> **Podcast:** [ULP 1-18 | Directions](https://www.ukrainianlessons.com/episode18/) — Ask for and understand directions
 
 ## Presentation
 
@@ -329,7 +319,7 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 
 ---
 
-## Summary
+# Summary
 
 You now have the vocabulary to:
 - **Give and follow directions** using прямо, наліво, направо, назад
@@ -349,112 +339,118 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) — Let's Learn Ukrainian
+>
+>
+> **Vocabulary:** [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) — City map with vocabulary
+>
+> **Directions:** [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Navigation vocabulary with audio
+>
+> **Podcast:** [ULP 1-18 | Directions](https://www.ukrainianlessons.com/episode18/) — Ask for and understand directions
+
+# Activities
 
 ## quiz: Navigation Basics
-> Test your understanding of directional vocabulary.
+1. How do you simply ask "Where is the center"?
+   - [x] Де центр?
+   - [ ] Що центр?
+   - [ ] Де центрі?
+   - [ ] Куди центр?
+   > Question for location: Де?
 
-1. You're at an intersection and need to turn left. Which word do you use?
-   - [ ] прямо
-   - [x] наліво
-   - [ ] направо
-   - [ ] назад
-   > наліво = to the left
+2. How do you say "Go to the center"?
+   - [x] Йдіть у центр.
+   - [ ] Йдіть на центр.
+   - [ ] Ви в центрі.
+   - [ ] Де центр?
+   > Direction to an enclosed area uses у/в.
 
-2. What does "Це далеко?" mean?
-   - [ ] Is it nearby?
-   - [x] Is it far?
-   - [ ] Where is it?
-   - [ ] How do I get there?
-   > далеко = far
+3. How do you ask accurately "Where am I"?
+   - [x] Де я?
+   - [ ] Куди я?
+   - [ ] Що я?
+   - [ ] Як я?
+   > Location question for oneself.
 
-3. Which preposition means "opposite"?
-   - [ ] біля
-   - [ ] за
-   - [x] навпроти
-   - [ ] перед
-   > навпроти = opposite, across from
+4. The bus is at the stop.
+   - [x] Автобус на зупинці.
+   - [ ] Автобус у зупинці.
+   - [ ] Автобус в зупинці.
+   - [ ] Автобус на зупинка.
+   > Stop is a surface/point: на.
 
-4. How do you say "by bus" in Ukrainian?
-   - [ ] автобус
-   - [ ] автобуса
-   - [x] на автобусі
-   - [ ] в автобусі
-   > на автобусі (on the bus) = by bus
+5. Which phrase means "Go straight"?
+   - [x] Йдіть прямо.
+   - [ ] Йдіть ліворуч.
+   - [ ] Йдіть праворуч.
+   - [ ] Йдіть назад.
+   > Прямо means straight.
 
-5. What is a "провулок"?
-   - [ ] A square
-   - [x] A lane or alley
-   - [ ] A bridge
-   - [ ] A traffic light
-   > провулок = narrow side street, alley
+6. The station is on the left.
+   - [x] Вокзал ліворуч.
+   - [ ] Вокзал праворуч.
+   - [ ] Вокзал прямо.
+   - [ ] Вокзал там.
+   > Ліворуч means on the left.
 
-6. If someone says "Прямо, потім направо," what should you do?
-   - [ ] Turn left, then go straight
-   - [ ] Go back, then turn right
-   - [x] Go straight, then turn right
-   - [ ] Turn right, then turn left
-   > прямо = straight, направо = to the right
+7. Which of these phrases simply means "Turn left"?
+   - [x] Поверніть ліворуч.
+   - [ ] Поверніть праворуч.
+   - [ ] Йдіть прямо.
+   - [ ] Стійте тут.
+   > Turning direction: ліворуч.
 
-7. What does "пішки" mean?
-   - [ ] by bicycle
-   - [x] on foot
-   - [ ] by car
-   - [ ] by metro
-   > пішки = walking, on foot
+8. The airport is on the right.
+   - [x] Аеропорт праворуч.
+   - [ ] Аеропорт ліворуч.
+   - [ ] Аеропорт прямо.
+   - [ ] Аеропорт тут.
+   > Праворуч means on the right.
 
-8. Which is NOT a type of urban street in Ukrainian?
-   - [ ] вулиця
-   - [ ] проспект
-   - [ ] бульвар
-   - [x] хмарочос
-   > хмарочос = skyscraper (building, not a street type)
+9. I am at the airport.
+   - [x] Я в аеропорту.
+   - [ ] Я на аеропорту.
+   - [ ] Я у аеропорт.
+   - [ ] Я в аеропорте.
+   > Airport locative ends in -у.
 
-9. Where would you find a "зупинка"?
-   - [ ] In a restaurant
-   - [x] At a bus or tram stop
-   - [ ] At the post office
-   - [ ] In a park
-   > зупинка = stop (for public transport)
+10. We are in the taxi.
+    - [x] Ми в таксі.
+    - [ ] Ми на таксі.
+    - [ ] Ми у таксі.
+    - [ ] Ми таксі.
+    > Enclosed vehicle uses в.
 
-10. What does "станція метро" mean?
-    - [ ] bus station
-    - [ ] train platform
-    - [x] metro station
-    - [ ] taxi stand
-    > станція метро = metro/subway station
+11. How do you ask "Where are you going"?
+    - [x] Куди ви йдете?
+    - [ ] Де ви йдете?
+    - [ ] Що ви йдете?
+    - [ ] Як ви йдете?
+    > Direction question: Куди?
 
-11. If something is "поруч," it is:
-    - [ ] far away
-    - [ ] behind you
-    - [x] nearby
-    - [ ] in front
-    > поруч = nearby, next to
+12. I'm going to the hotel.
+    - [x] Я йду в готель.
+    - [ ] Я йду на готель.
+    - [ ] Я у готелі.
+    - [ ] Я готель.
+    > Direction to building: в.
 
-12. Which city has Ukraine's oldest metro system?
-    - [ ] Lviv
-    - [x] Kyiv
-    - [ ] Kharkiv
-    - [ ] Odesa
-    > Kyiv metro opened in 1960, making it the oldest
 
 ## match-up: City Vocabulary
-> Match the Ukrainian words with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| міст | bridge |
+| центр | center |
+| вулиця | street |
 | площа | square |
-| вхід | entrance |
-| вихід | exit |
-| перехрестя | intersection |
-| світлофор | traffic light |
-| набережна | embankment |
-| зупинка | stop |
-| станція | station |
-| проспект | avenue |
-| провулок | lane |
-| бульвар | boulevard |
+| парк | park |
+| вокзал | station |
+| аеропорт | airport |
+| готель | hotel |
+| ресторан | restaurant |
+| метро | metro |
+
 
 ## fill-in: Complete the Directions
 > Fill in the blanks with the correct directional words.
@@ -582,102 +578,117 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
   > Incorrect. Метро is indeclinable (doesn't change form).
 
 ## group-sort: Directional vs. Locational
-> Sort these words by whether they indicate direction (motion) or location (static position).
+### Where? (Locational)
+- Я в центрі.
+- Телефон на столі.
+- Ми в метро.
+- Вона у Львові.
+- Книга в сумці.
+- Ви в банку.
 
-### Direction (Motion)
-- прямо
-- наліво
-- направо
-- назад
-- туди
-- сюди
-- звідти
-- куди
-- до
-- від
+### Where to? (Directional)
+- Я йду в центр.
+- Ми їдемо на вокзал.
+- Він іде в парк.
+- Вони їдуть у Київ.
+- Я йду на площу.
+- Ти йдеш у школу.
 
-### Location (Static)
-- тут
-- там
-- біля
-- навпроти
-- за
-- перед
-- між
-- поруч
 
 ## group-sort: Types of Urban Spaces
-> Sort these urban features into the correct categories.
+### Functional (Services)
+- банк
+- аптека
+- пошта
+- вокзал
+- аеропорт
+- готель
 
-### Roads and Streets
-- вулиця
-- провулок
-- проспект
-- бульвар
-- набережна
+### Leisure (Fun)
+- парк
+- ресторан
+- кафе
+- кінотеатр
+- музей
+- театр
 
-### Reference Points
-- міст
-- перехрестя
-- світлофор
-- площа
 
-### Transport Infrastructure
-- зупинка
-- станція
-- вхід
-- вихід
+## quiz: Directional Sentence Order
 
-## unjumble: Giving Directions
-> Put the words in the correct order to form natural Ukrainian sentences.
+> Choose the correct sentence order.
 
-1. прямо / Іди / наліво / потім / поверни
-   > [!answer] Іди прямо, потім поверни наліво
-   > (Go straight, then turn left.) [5 words]
+1. Correct sentence order for: "Go straight, then turn left."
+   - [x] Іди прямо, потім поверни наліво
+   - [ ] прямо, Іди потім поверни наліво
+   - [ ] Incorrect order for this sentence
+   > Correct: Іди прямо, потім поверни наліво
 
-2. Де / станція / метро
-   > [!answer] Де станція метро
-   > (Where is the metro station?) [3 words]
+2. Correct sentence order for: "Where is the metro station?"
+   - [x] Де станція метро
+   - [ ] станція Де метро
+   - [ ] Incorrect order for this sentence
+   > Correct: Де станція метро
 
-3. навпроти / Аптека / банку
-   > [!answer] Аптека навпроти банку
-   > (The pharmacy is opposite the bank.) [3 words]
+3. Correct sentence order for: "The pharmacy is opposite..."
+   - [x] Аптека навпроти банку
+   - [ ] навпроти Аптека банку
+   - [ ] Incorrect order for this sentence
+   > Correct: Аптека навпроти банку
 
-4. дістатися / Як / центру / до
-   > [!answer] Як дістатися до центру
-   > (How to get to the center?) [4 words]
+4. Correct sentence order for: "How to get to..."
+   - [x] Як дістатися до центру
+   - [ ] дістатися Як до центру
+   - [ ] Incorrect order for this sentence
+   > Correct: Як дістатися до центру
 
-5. автобусі / Я / на / їду / роботу / на
-   > [!answer] Я їду на роботу на автобусі
-   > (I go to work by bus.) [6 words]
+5. Correct sentence order for: "I go to work..."
+   - [x] Я їду на роботу на автобусі
+   - [ ] їду Я на роботу на автобусі
+   - [ ] Incorrect order for this sentence
+   > Correct: Я їду на роботу на автобусі
 
-6. біля / Зупинка / світлофора
-   > [!answer] Зупинка біля світлофора
-   > (The stop is near the traffic light.) [3 words]
+6. Correct sentence order for: "The stop is near..."
+   - [x] Зупинка біля світлофора
+   - [ ] біля Зупинка світлофора
+   - [ ] Incorrect order for this sentence
+   > Correct: Зупинка біля світлофора
 
-7. вулиці / вздовж / Іди / Шевченка
-   > [!answer] Іди вздовж вулиці Шевченка
-   > (Go along Shevchenko Street.) [4 words]
+7. Correct sentence order for: "Go along Shevchenko Street."
+   - [x] Іди вздовж вулиці Шевченка
+   - [ ] вздовж Іди вулиці Шевченка
+   - [ ] Incorrect order for this sentence
+   > Correct: Іди вздовж вулиці Шевченка
 
-8. Це / далеко / дуже
-   > [!answer] Це дуже далеко
-   > (It's very far.) [3 words]
+8. Correct sentence order for: "It's very far."
+   - [x] Це дуже далеко
+   - [ ] дуже Це далеко
+   - [ ] Incorrect order for this sentence
+   > Correct: Це дуже далеко
 
-9. перехресті / направо / На / поверніть
-   > [!answer] На перехресті поверніть направо
-   > (Turn right at the intersection.) [4 words]
+9. Correct sentence order for: "Turn right at the intersection."
+   - [x] На перехресті поверніть направо
+   - [ ] перехресті На поверніть направо
+   - [ ] Incorrect order for this sentence
+   > Correct: На перехресті поверніть направо
 
-10. пішки / Я / університет / до / ходжу
-    > [!answer] Я ходжу до університету пішки
-    > (I walk to the university.) [5 words]
+10. Correct sentence order for: "I walk to the university."
+   - [x] Я ходжу до університету пішки
+   - [ ] ходжу Я до університету пішки
+   - [ ] Incorrect order for this sentence
+   > Correct: Я ходжу до університету пішки
 
-11. між / Музей / театром / парком / і
-    > [!answer] Музей між театром і парком
-    > (The museum is between the theatre and the park.) [5 words]
+11. Correct sentence order for: "The museum is between..."
+   - [x] Музей між театром і парком
+   - [ ] між Музей театром і парком
+   - [ ] Incorrect order for this sentence
+   > Correct: Музей між театром і парком
 
-12. близько / Ні / це
-    > [!answer] Ні, це близько
-    > (No, it's close.) [3 words]
+12. Correct sentence order for: "No, it's close."
+   - [x] Ні, це близько
+   - [ ] це Ні, близько
+   - [ ] Incorrect order for this sentence
+   > Correct: Ні, це близько
+
 
 ## match-up: Question and Answer Pairs
 > Match common navigation questions with appropriate responses.
@@ -720,58 +731,84 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 - [ ] You can say "їду в автобусі" to mean "I go by bus."
   > Incorrect. Use "їду на автобусі" (на, not в) for transportation.
 
-## unjumble: Transportation Phrases
-> Put the words in order to form correct sentences about transportation.
+## quiz: Transportation Phrases Order
 
-1. їду / Я / автобусі / на / щодня
-   > [!answer] Я їду на автобусі щодня
-   > (I go by bus every day.) [5 words]
+> Choose the correct sentence order.
 
-2. трамваї / вона / на / дістається / роботу / На
-   > [!answer] Вона дістається на роботу на трамваї
-   > (She gets to work by tram.) [6 words]
+1. Correct sentence order for: "I go by bus..."
+   - [x] Я їду на автобусі щодня
+   - [ ] їду Я на автобусі щодня
+   - [ ] Incorrect order for this sentence
+   > Correct: Я їду на автобусі щодня
 
-3. метро / Ми / їдемо / центру / до
-   > [!answer] Ми їдемо метро до центру
-   > (We go by metro to the center.) [5 words]
+2. Correct sentence order for: "She gets to work..."
+   - [x] Вона дістається на роботу на трамваї
+   - [ ] дістається Вона на роботу на трамваї
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона дістається на роботу на трамваї
 
-4. велосипеді / він / на / щодня / Їздить
-   > [!answer] Він їздить на велосипеді щодня
-   > (He rides a bicycle every day.) [5 words]
+3. Correct sentence order for: "We go by metro..."
+   - [x] Ми їдемо метро до центру
+   - [ ] їдемо Ми метро до центру
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми їдемо метро до центру
 
-5. машині / Вони / на / приїхали
-   > [!answer] Вони приїхали на машині
-   > (They arrived by car.) [4 words]
+4. Correct sentence order for: "He rides a bicycle..."
+   - [x] Він їздить на велосипеді щодня
+   - [ ] їздить Він на велосипеді щодня
+   - [ ] Incorrect order for this sentence
+   > Correct: Він їздить на велосипеді щодня
 
-6. університету / до / пішки / Я / ходжу
-   > [!answer] Я ходжу до університету пішки
-   > (I walk to the university.) [5 words]
+5. Correct sentence order for: "They arrived by car."
+   - [x] Вони приїхали на машині
+   - [ ] приїхали Вони на машині
+   - [ ] Incorrect order for this sentence
+   > Correct: Вони приїхали на машині
 
-7. таксі / на / додому / Він / їде
-   > [!answer] Він їде додому на таксі
-   > (He's going home by taxi.) [5 words]
+6. Correct sentence order for: "I walk to the university."
+   - [x] Я ходжу до університету пішки
+   - [ ] ходжу Я до університету пішки
+   - [ ] Incorrect order for this sentence
+   > Correct: Я ходжу до університету пішки
 
-8. зупинка / Де / автобуса
-   > [!answer] Де зупинка автобуса
-   > (Where is the bus stop?) [3 words]
+7. Correct sentence order for: "He's going home by taxi."
+   - [x] Він їде додому на таксі
+   - [ ] їде Він додому на таксі
+   - [ ] Incorrect order for this sentence
+   > Correct: Він їде додому на таксі
 
-9. станція / там / Метро / прямо
-   > [!answer] Метро станція там, прямо
-   > (The metro station is there, straight ahead.) [4 words]
+8. Correct sentence order for: "Where is the bus stop?"
+   - [x] Де зупинка автобуса
+   - [ ] зупинка Де автобуса
+   - [ ] Incorrect order for this sentence
+   > Correct: Де зупинка автобуса
 
-10. трамваї / їду / Зазвичай / на / я
-    > [!answer] Зазвичай я їду на трамваї
-    > (Usually I go by tram.) [5 words]
+9. Correct sentence order for: "The metro station is..."
+   - [x] Метро станція там, прямо
+   - [ ] станція Метро там, прямо
+   - [ ] Incorrect order for this sentence
+   > Correct: Метро станція там, прямо
 
-11. світлофора / Поверніть / направо / біля
-    > [!answer] Поверніть направо біля світлофора
-    > (Turn right at the traffic light.) [4 words]
+10. Correct sentence order for: "Usually I go by tram."
+   - [x] Зазвичай я їду на трамваї
+   - [ ] я Зазвичай їду на трамваї
+   - [ ] Incorrect order for this sentence
+   > Correct: Зазвичай я їду на трамваї
 
-12. перехресті / На / наліво / ідіть
-    > [!answer] На перехресті ідіть наліво
-    > (At the intersection go left.) [4 words]
+11. Correct sentence order for: "Turn right at the..."
+   - [x] Поверніть направо біля світлофора
+   - [ ] направо Поверніть біля світлофора
+   - [ ] Incorrect order for this sentence
+   > Correct: Поверніть направо біля світлофора
 
-## Vocabulary
+12. Correct sentence order for: "At the intersection go left."
+   - [x] На перехресті ідіть наліво
+   - [ ] перехресті На ідіть наліво
+   - [ ] Incorrect order for this sentence
+   > Correct: На перехресті ідіть наліво
+
+
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

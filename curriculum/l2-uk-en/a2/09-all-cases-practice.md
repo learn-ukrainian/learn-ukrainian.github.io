@@ -50,15 +50,6 @@ Unlike English, which relies heavily on word order and prepositions to show rela
 >
 > The key to mastering cases is to always ask yourself the right question. For example, when you see a noun after a verb, ask: "Who or what is receiving the action?" (accusative) or "To whom is something being given?" (dative). The question you ask determines the case you need.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [All Ukrainian Cases in 5 min...](https://www.youtube.com/watch?v=2Q66U7GlxBg) — Taste Ukrainian
->
-> **Grammar Guide:** [Intro Cases](https://www.ukrainianlessons.com/intro-cases/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -238,9 +229,9 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 ---
 
-## Summary
+# Summary
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ми повторили всі сім відмінків української мови:
 
@@ -258,7 +249,17 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 Продовжуйте практикувати відмінки. Вони — ключ до вільного володіння українською мовою!
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
+> - 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Case Questions
 
@@ -424,6 +425,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 - [ ] Instrumental
 
 ## true-false: Case Rules
+> Визначте, чи правильне твердження про відмінки. | Decide if the statement about cases is true or false.
 
 > Decide if each statement is true or false.
 
@@ -464,6 +466,7 @@ Before we dive into reviewing each case, let's understand why cases matter and h
   > Yes! Я думаю про тебе.
 
 ## group-sort: Case Functions
+> З'єднайте функцію з правильним відмінком. | Match the function to the correct case.
 
 > Sort these functions into the correct case category.
 
@@ -801,7 +804,7 @@ Mom cooks dinner.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

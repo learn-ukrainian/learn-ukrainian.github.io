@@ -29,6 +29,7 @@ from .activities import (
     check_activity_level_restrictions,
     check_activity_focus_alignment,
     check_anagram_min_letters,
+    check_activity_complexity,
 )
 from .content_quality import (
     check_content_quality,
@@ -216,5 +217,8 @@ def run_pedagogical_checks(
 
     # 16. Content quality (LLM-based evaluation - optional, enabled via env var)
     all_violations.extend(check_content_quality(content, level_code, module_num))
+    
+    # 17. Activity Complexity (Strict)
+    all_violations.extend(check_activity_complexity(content, level_code, module_num))
 
     return all_violations

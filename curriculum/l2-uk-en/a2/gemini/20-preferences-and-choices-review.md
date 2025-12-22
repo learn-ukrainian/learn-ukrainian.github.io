@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1159/1000
+- **Words:** ✅ 1155/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 46.9% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 47.2% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 103 | Included in Core |
+| **Warm-up** | ✅ | 68 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Expressing Preferences** | ⚪️ | 343 | Skipped |
 | **Comparing Actions** | ⚪️ | 57 | Skipped |
@@ -38,6 +35,7 @@
 | **What is your choice?** | ⚪️ | 42 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 79 | Skipped |
+| **Need More Practice?** | ⚪️ | 31 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Preference Expressions** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Express Preferences** | 🎮 | 12 | Activity (12 items, min 8) |

@@ -36,15 +36,7 @@ Think of learning Cyrillic like learning to read again. But this time, it only t
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) — Speak Ukrainian
->
->
->
-> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio
->
-> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises
+
 
 ## Presentation
 
@@ -98,7 +90,7 @@ These letters are completely new to English speakers. But don't worry. They repr
 |--------|-------|---------|---------|
 | **Б б** | /b/ like "ball" | **б**анан | banana |
 | **Д д** | /d/ like "dog" | **д**октор | doctor |
-| **З з** | /z/ like "zoo" | пі**ц**а | pizza |
+| **З з** | /z/ like "zoo" | ва**з**а | vase |
 | **Л л** | /l/ like "love" | **л**имон | lemon |
 | **П п** | /p/ like "pet" | **п**арк | park |
 | **Ф ф** | /f/ like "fun" | **ф**ото | photo |
@@ -172,7 +164,7 @@ Every single one of these is an international word that you already know. Just w
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 
@@ -188,7 +180,19 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 
 ---
 
-## Activities
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How to read the Ukrainian Alphabet. Cyrillic Letters. Part I](https://www.youtube.com/watch?v=Gt7O4FLGxjI) — Speak Ukrainian
+>
+> **Interactive:** [Talk Ukrainian - Alphabet with Audio](https://talkukrainian.com/ukrainian-alphabet/) — All 33 letters with IPA and native audio
+>
+> **Practice:** [Ukrainian Course - Lesson 1](https://www.ukrainiancourse.com/free-ukrainian-courses/lesson-1-the-ukrainian-alphabet/) — Interactive alphabet exercises
+
+---
+
+# Activities
 
 ## match-up: True Friends
 > Match the Ukrainian letter with its English equivalent.
@@ -209,7 +213,7 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 | к | k |
 
 ## match-up: False Friends Sound
-> Match the Ukrainian letter with the sound it makes.
+> Match the Ukrainian letter with the sound it makes. These letters look familiar but sound different!
 
 | Ukrainian Letter | Sound |
 |------------------|-------|
@@ -227,7 +231,7 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 | х | /x/ |
 
 ## group-sort: Letter Types
-> Sort these letters into True Friends, False Friends, or New Letters.
+> Sort these Ukrainian letters into True Friends, False Friends, or New Letters.
 
 ### True Friends
 - А
@@ -341,7 +345,7 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
     > телефон = telephone
 
 ## true-false: Letter Recognition
-> Decide if each statement is true or false.
+> Decide if each statement about Ukrainian letters is true or false.
 
 - [x] The letter А sounds like "a" in "father".
   > Correct! А is a True Friend.
@@ -364,8 +368,8 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 - [x] Cyrillic was created in Bulgaria, not Russia.
   > Correct! It was created in the 9th century in Bulgaria.
 
-- [x] Ukrainian has unique letters that Russian doesn't have.
-  > Correct! Like Ї, Є, and Ґ.
+- [x] Ukrainian has unique letters (Ї, Є, Ґ) that Russian doesn't have.
+  > Correct! These letters make Ukrainian distinct.
 
 - [ ] The word "метро" uses only False Friends.
   > Incorrect! It uses True Friends (М, Е, Т, О) and one False Friend (Р).
@@ -430,7 +434,7 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
     > [!answer] р
     > [!options] р | п | н | в
 
-## anagram: Build the Word
+## anagram:Build the Word
 > Arrange the letters to form the correct Ukrainian word.
 
 1. к а в а
@@ -481,7 +485,8 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
     > [!answer] музика
     > (music)
 
-## anagram: International Words
+
+## anagram:International Words
 > Unscramble these international words.
 
 1. о п е р а
@@ -534,7 +539,8 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 
 ---
 
-## Vocabulary
+
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

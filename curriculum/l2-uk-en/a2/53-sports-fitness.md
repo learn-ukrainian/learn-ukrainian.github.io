@@ -209,8 +209,6 @@ It is a celebration of willpower.
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [#workout #sport #fitness #gym #ukraine  #motivation #strong #спорт #sw...](https://www.youtube.com/watch?v=95WpaPWxLe4) — Uchiha Vladislav
->
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1265/1000
+- **Words:** ✅ 1261/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 40.0% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 139 | Included in Core |
+| **Warm-up** | ✅ | 106 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **The Preposition-Case Connection** | ⚪️ | 87 | Skipped |
 | **Motion vs. Location: The Core Distinction** | ✅ | 77 | Included in Core |
@@ -41,6 +38,7 @@
 | **Summary** | ✅ | 0 | Included in Core |
 | **Що ви вивчили** | ⚪️ | 71 | Skipped |
 | **Key Takeaways** | ⚪️ | 79 | Skipped |
+| **Need More Practice?** | ⚪️ | 29 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Preposition Meanings** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Choose the Correct Preposition** | 🎮 | 12 | Activity (12 items, min 8) |

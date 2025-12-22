@@ -56,13 +56,6 @@ Understanding these patterns will help you form correct sentences automatically 
 > [!important] Key Concept
 > Most service verbs (відправити, зняти, обміняти, відкрити) take accusative for the direct object. Learn this pattern once and apply it everywhere!
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -221,7 +214,7 @@ Read these dialogues aloud and identify the cases used in each sentence. This ex
 
 ---
 
-## Summary
+# Summary
 
 In this module you learned essential vocabulary for two key service locations in Ukraine. You practiced applying grammatical cases in real-world contexts.
 
@@ -247,7 +240,17 @@ In this module you learned essential vocabulary for two key service locations in
 
 Тепер ви готові до реальних ситуацій! 📬🏦
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
+> - 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Post Office Vocabulary
 
@@ -453,6 +456,7 @@ In this module you learned essential vocabulary for two key service locations in
   > Correct!
 
 ## group-sort: Post Office vs Bank
+> Розсортуйте фрази за місцем. | Sort phrases by location.
 
 > Sort these words by location.
 
@@ -791,7 +795,7 @@ I want to exchange dollars.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

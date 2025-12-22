@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ⚠️ 2044/1000 (>2000 may be too long)
+- **Words:** ⚠️ 2046/1000 (>2000 may be too long)
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,19 +14,16 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.3% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 43.4% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Introduction** | ✅ | 175 | Included in Core |
-| **Warm-up** | ✅ | 106 | Included in Core |
+| **Warm-up** | ✅ | 79 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **The Bare Instrumental: No Preposition Needed** | ⚪️ | 84 | Skipped |
 | **Means of Transport** | ⚪️ | 273 | Skipped |
@@ -41,6 +38,7 @@
 | **Mini-Dialogues** | ✅ | 145 | Included in Core |
 | **Reading Practice: Один день у Києві** | ✅ | 195 | Included in Core |
 | **Підсумок** | ✅ | 112 | Included in Core |
+| **Need More Practice?** | ⚪️ | 29 | Skipped |
 | **Activities** | ➖ | 55 | Excluded Type |
 | **match-up: Transport and Tools** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Instrumental Without Preposition** | 🎮 | 12 | Activity (12 items, min 8) |

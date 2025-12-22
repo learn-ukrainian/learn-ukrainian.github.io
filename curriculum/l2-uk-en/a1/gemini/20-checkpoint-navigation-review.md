@@ -6,7 +6,7 @@
 - **Words:** ✅ 1508/750
 - **Activities:** ✅ 10/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 6/4 types
+- **Unique_types:** ✅ 5/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/3
 - **Audio:** ℹ️ No audio
@@ -14,13 +14,10 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 39.7% (checkpoint - no gate)
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -38,11 +35,11 @@
 | **fill-in: Case Mastery - Accusative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Case Mastery - Locative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Case Mastery - Genitive** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Possessive Pronouns Agreement** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Possessive Pronouns Agreement** | 🎮 | 9 | Activity (9 items, min 8) |
 | **quiz: Grammar Knowledge Check** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Grammar Rules Review** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Preposition Usage** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Building Sentences - Cases in Context** | 🎮 | 12 | Activity (12 items, min 6) |
-| **unjumble: Real Dialogues - Navigation & Restaurant** | 🎮 | 12 | Activity (12 items, min 6) |
-| **match-up: City Vocabulary - Navigation** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Preposition Usage** | 🎮 | 12 | Activity (12 items, min 12) |
+| **quiz: Building Sentences Order** | 🎮 | 12 | Activity (12 items, min 8) |
+| **quiz: Real Dialogues Order** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: City Vocabulary - Navigation** | 🎮 | 9 | Activity (9 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

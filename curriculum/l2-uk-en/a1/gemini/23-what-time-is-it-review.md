@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1114/750
+- **Words:** ✅ 1095/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,31 +14,25 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.8% (target 35-55% (M23))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (9 interactive elements)
+- **Immersion:** 🇺🇦 39.6% (target 35-55% (M23))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **What Time Is It?** | ⚪️ | 0 | Skipped |
 | **Warm-up** | ✅ | 37 | Included in Core |
-| **Grammar** | ⚪️ | 55 | Skipped |
+| **Grammar** | ⚪️ | 0 | Skipped |
 | **Telling Time** | ⚪️ | 149 | Skipped |
 | **Days of the Week** | ⚪️ | 45 | Skipped |
 | **Months of the Year** | ⚪️ | 24 | Skipped |
 | **Time Prepositions** | ⚪️ | 68 | Skipped |
 | **Examples in Context** | ✅ | 345 | Included in Core |
 | **Dialogues** | ✅ | 308 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 83 | Included in Core |
-| **Вправи (Activities)** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 119 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Days of the Week** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Months of the Year** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Time Units** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Time Units** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Telling Time** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Days and Months** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Time Expressions** | 🎮 | 8 | Activity (8 items, min 8) |

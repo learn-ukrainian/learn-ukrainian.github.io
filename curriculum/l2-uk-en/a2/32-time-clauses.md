@@ -42,8 +42,6 @@ In Ukrainian, these structures control the flow of your story.
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [🔴 СРОЧНО Переговоры Уиткофф-Зеленский начались в Берлине...](https://www.youtube.com/watch?v=_8dnhN2D59k) — One Day
->
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

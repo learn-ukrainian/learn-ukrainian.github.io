@@ -38,19 +38,6 @@ Why? Because Ukrainian belongs to the "pro-drop" language family. The verb "to b
 > Russian and Ukrainian both drop the verb "to be" in the present tense, but this feature actually comes from ancient Proto-Slavic. It's not copying—it's inheritance! English used to do this too in Old English, but lost the pattern over time.
 
 
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Basic Ukrainian grammar: Personal pronouns](https://www.youtube.com/watch?v=WtpQU-oQ8A0) — Speak Ukrainian
->
->
-> **Pronouns:** [Personal Pronouns in Ukrainian](https://www.ukrainianlessons.com/personal-pronouns/) — Full declension table with audio
->
-> **Podcast:** [ULP 1-03 | How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Real conversations about identity
->
-> **Basic Phrases:** [14 Basic Ukrainian Phrases](https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/) — Essential phrases for introductions
-
 ## Presentation
 
 ### Personal Pronouns
@@ -291,7 +278,7 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 
 ---
 
-## Summary
+# Summary
 
 **What You Learned:**
 - ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони
@@ -312,7 +299,22 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 
 ---
 
-## Activities
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Basic Ukrainian grammar: Personal pronouns](https://www.youtube.com/watch?v=WtpQU-oQ8A0) — Speak Ukrainian
+>
+>
+> **Pronouns:** [Personal Pronouns in Ukrainian](https://www.ukrainianlessons.com/personal-pronouns/) — Full declension table with audio
+>
+> **Podcast:** [ULP 1-03 | How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Real conversations about identity
+>
+> **Basic Phrases:** [14 Basic Ukrainian Phrases](https://www.ukrainianlessons.com/14-basic-ukrainian-phrases/) — Essential phrases for introductions
+
+---
+
+# Activities
 
 ## quiz: Personal Pronouns
 > Choose the correct pronoun.
@@ -505,12 +507,16 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 - Talking to your classmate
 - Talking to your pet dog
 - Talking to a child
+- Talking to God (in prayer)
+- Talking to yourself in a mirror
 
 ### Use Ви (Formal)
 - Talking to your professor
 - Talking to a stranger on the street
 - Talking to your friend's grandmother
 - Talking to a doctor you just met
+- Talking to the President
+- Talking to a cashier in a shop
 
 ## quiz: Gender Forms
 > Choose the correct feminine form.
@@ -703,7 +709,7 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -42,19 +42,6 @@ vocabulary_count: 30
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Adverbs. Adverbs of Frequency ](https://www.youtube.com/watch?v=NQh1XsP59z0) —  Ukrainian lesson 11|VERBA SCHOOL
->
->
-> **Grammar:** [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comparison with illustrations and audio
->
-> **Chart:** [Adjectives and Adverbs Chart](https://www.ukrainianlessons.com/adjectives-adverbs-chart/) — Full comparison table
->
-> **Location Adverbs:** [Adverbs of Location](https://www.ukrainianlessons.com/adverbs-location/) — Тут, сюди, звідси patterns
-
 ## How to Form Adverbs
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -219,24 +206,23 @@ Some adverbs are special:
 
 ---
 
-## Summary
+# Summary
 
-In this module, you learned:
 
-- **Adverbs of manner (10 words)**: гарно, погано, добре, швидко, повільно, голосно, тихо, весело, сумно, легко, важко
-- **Adverbs of frequency (6 words)**: завжди, часто, зазвичай, іноді, рідко, ніколи
-- **Degree adverbs (4 words)**: дуже, занадто, трохи, зовсім
-- **Other manner adverbs (10 words)**: цікаво, нудно, смачно, дорого, дешево, серйозно, жартома, ввічливо, чесно
-- **Formation pattern**: Adjective stem + -о = Adverb (гарний → гарно)
-- **Irregular**: хороший → добре, поганий → погано
-- **Double negative rule**: ніколи + не (Я ніколи не курю)
-- **Frequency scale**: завжди > часто > зазвичай > іноді > рідко > ніколи
+# Summary
+
+Ви вивчили українські прислівники! Тепер ви можете описати, як ви щось робите. (You learned Ukrainian adverbs! Now you can describe how you do something.) Ви знаєте слова: швидко, повільно, добре. Ви також знаєте, як часто ви це робите: завжди або часто. Це був чудовий урок! (This was a great lesson!)
 
 ---
 
-**Coming up:** Module 29 will teach you about weather and nature!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Adjectives and Adverbs](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Comprehensive guide
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/adverbs
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Activities
+# Activities
 
 ## match-up: Adjective → Adverb
 
@@ -259,43 +245,43 @@ Match the adjective with its adverb form.
 
 ## group-sort: Frequency Scale
 
-> Sort adverbs by frequency (from most often to least often).
+> Sort these frequency adverbs from most often to least often in Ukrainian.
 
 ### Always / Often (75-100%)
 - завжди
 - часто
+- постійно
 - дуже часто
 
 ### Usually / Sometimes (25-60%)
 - зазвичай
 - іноді
+- деколи
 - час від часу
 
 ### Rarely / Never (0-10%)
 - рідко
+- майже ніколи
+- зовсім не часто
 - ніколи
 
 ---
 
 ## group-sort: Type of Adverb
 
-> Sort adverbs by their type.
+> Sort these adverbs according to the question they answer.
 
 ### Manner (How?)
 - гарно
 - погано
 - швидко
 - повільно
-- голосно
-- тихо
-- весело
 
 ### Frequency (How often?)
 - завжди
 - часто
 - іноді
 - рідко
-- ніколи
 
 ### Degree (How much?)
 - дуже
@@ -415,53 +401,53 @@ Match the adjective with its adverb form.
 
 ## quiz: Adverb or Adjective?
 
-Choose the correct form.
+> Choose whether to use an adjective (describing things) or an adverb (describing actions).
 
-1. Він ___ хлопець. (good)
-   - [x] добрий
-   - [ ] добре
+1. Does the sentence "Він ___ хлопець" require an adjective or adverb?
+   - [x] добрий (adjective)
+   - [ ] добре (adverb)
    - [ ] добро
    - [ ] добра
 
-2. Він говорить ___. (well)
-   - [x] добре
-   - [ ] добрий
+2. Which form is correct for "Він говорить ___" in English?
+   - [x] добре (adverb)
+   - [ ] добрий (adjective)
    - [ ] добра
    - [ ] добро
 
-3. Це ___ машина. (fast)
-   - [x] швидка
-   - [ ] швидко
+3. How should you describe "Це ___ машина" using masculine/feminine forms?
+   - [x] швидка (adjective)
+   - [ ] швидко (adverb)
    - [ ] швидкий
    - [ ] швидке
 
-4. Вона біжить ___. (fast)
-   - [x] швидко
-   - [ ] швидка
+4. What is the correct form for "Вона біжить ___" here?
+   - [x] швидко (adverb)
+   - [ ] швидка (adjective)
    - [ ] швидкий
    - [ ] швидке
 
-5. У неї ___ голос. (quiet)
-   - [x] тихий
-   - [ ] тихо
+5. Which word correctly completes "У неї ___ голос" in Ukrainian?
+   - [x] тихий (adjective)
+   - [ ] тихо (adverb)
    - [ ] тиха
    - [ ] тихе
 
-6. Він говорить ___. (quietly)
-   - [x] тихо
-   - [ ] тихий
+6. How should you accurately translate "He speaks quietly" into Ukrainian?
+   - [x] тихо (adverb)
+   - [ ] тихий (adjective)
    - [ ] тиха
    - [ ] тихе
 
-7. Вона ___ людина. (happy, cheerful)
-   - [x] весела
-   - [ ] весело
+7. What is the right adjective for "Вона ___ людина" here?
+   - [x] весела (adjective)
+   - [ ] весело (adverb)
    - [ ] веселий
    - [ ] веселе
 
-8. Діти співають ___. (loudly)
-   - [x] голосно
-   - [ ] голосний
+8. Which form correctly represents "The children sing loudly" today?
+   - [x] голосно (adverb)
+   - [ ] голосний (adjective)
    - [ ] голосна
    - [ ] голосне
 
@@ -469,51 +455,51 @@ Choose the correct form.
 
 ## quiz: Frequency Meaning
 
-What does each adverb mean?
+> Select the correct English meaning for these Ukrainian frequency adverbs.
 
-1. Завжди
+1. What is exactly the English translation of "Завжди" today?
    - [x] Always
    - [ ] Sometimes
    - [ ] Never
    - [ ] Rarely
 
-2. Часто
+2. Which English word represents the adverb "Часто" most accurately?
    - [x] Often
    - [ ] Never
    - [ ] Rarely
    - [ ] Always
 
-3. Іноді
+3. How do you accurately translate "Іноді" into English now?
    - [x] Sometimes
    - [ ] Always
    - [ ] Never
    - [ ] Often
 
-4. Рідко
+4. What accurately is the meaning of "Рідко" in English?
    - [x] Rarely
    - [ ] Always
    - [ ] Often
    - [ ] Never
 
-5. Ніколи
+5. Which English term correctly matches "Ніколи" in this context?
    - [x] Never
    - [ ] Sometimes
    - [ ] Often
    - [ ] Always
 
-6. Зазвичай
+6. How is "Зазвичай" correctly translated into English for you?
    - [x] Usually
    - [ ] Never
    - [ ] Rarely
    - [ ] Sometimes
 
-7. Дуже
+7. What is precisely the English meaning of "Дуже" here?
    - [x] Very
    - [ ] Sometimes
    - [ ] Never
    - [ ] Rarely
 
-8. Трохи
+8. Which phrase correctly translates the word "Трохи" into English?
    - [x] A little
    - [ ] Very much
    - [ ] Never
@@ -593,7 +579,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

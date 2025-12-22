@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1820/1000
+- **Words:** ✅ 1819/1000
 - **Activities:** ✅ 10/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 10/4 types
@@ -19,21 +19,19 @@
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Давальний відмінок I — Займенники** | ⚪️ | 0 | Skipped |
 | **Introduction** | ✅ | 160 | Included in Core |
-| **Вступ** | ⚪️ | 143 | Skipped |
+| **Вступ** | ⚪️ | 99 | Skipped |
 | **Presentation** | ✅ | 462 | Included in Core |
 | **Cultural Insight** | ✅ | 452 | Included in Core |
 | **Reading Practice: Листівка з Одеси** | ✅ | 244 | Included in Core |
 | **Practice** | ⚪️ | 137 | Skipped |
 | **Production** | ➖ | 152 | Excluded Type |
 | **Підсумок** | ✅ | 70 | Included in Core |
+| **Need More Practice?** | ⚪️ | 43 | Skipped |
 | **Activities** | ➖ | 84 | Excluded Type |
 | **match-up: Nominative to Dative** | 🎮 | 8 | Activity (8 items, min 8) |
 | **group-sort: Pronoun Cases [stage: recognition]** | 🎮 | 21 | Activity (21 items, min 8) |

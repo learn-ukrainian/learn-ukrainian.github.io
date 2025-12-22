@@ -45,15 +45,6 @@ Some verbs in Ukrainian are "dative-hungry" — they always need a dative object
 
 Think about English: "I help my mother" uses a direct object. But Ukrainian says "I help *to* my mother" — Я допомагаю мамі.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [10 Ukrainian Verbs that take Dative Case...](https://www.youtube.com/watch?v=pZvCMMjtAo0) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -327,7 +318,7 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -345,7 +336,17 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 Тепер ви можете допомагати, дякувати, довіряти і вибачати — все з правильним давальним відмінком!
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Dative Case Usage](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+> - 📖 [Ukrainian Verbs](https://www.ukrainianlessons.com/verbs/)
+> - 📝 [Dative with Verbs](https://www.ukrainianlessons.com/intro-cases/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 The following activities will help you master Dative verb patterns. Progress through matching (recognition), fill-in (controlled production), and translation (free production) to build your skills.
 
@@ -557,7 +558,7 @@ The following activities will help you master Dative verb patterns. Progress thr
   > Word order is flexible! Case endings show grammatical roles.
 
 ## group-sort: Verb Categories
-> Sort these verbs into the correct category.
+> Розсортуйте ці дієслова за відмінком, якого вони вимагають. | Sort these verbs by their case requirement.
 
 ### Dative Only
 - допомагати
@@ -820,7 +821,7 @@ Grandma tells the grandchildren a story.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

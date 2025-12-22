@@ -29,6 +29,9 @@ from .activities import (
     check_activity_level_restrictions,
     check_activity_focus_alignment,
     check_anagram_min_letters,
+    check_activity_ukrainian_content,
+    check_resources_placement,
+    check_resources_required,
     count_items,
 )
 from .pedagogy import (
@@ -81,6 +84,9 @@ __all__ = [
     'check_activity_level_restrictions',
     'check_activity_focus_alignment',
     'check_anagram_min_letters',
+    'check_activity_ukrainian_content',
+    'check_resources_placement',
+    'check_resources_required',
     'count_items',
     # Pedagogy
     'run_pedagogical_checks',

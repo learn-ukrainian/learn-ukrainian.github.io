@@ -37,15 +37,6 @@ Today we unlock:
 - **Від** (From - Source)
 - **З** (With - Accompaniment)
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian prepositions У, В and НА and the differe...]( https://www.youtube.com/watch?v=aqKdvKXPCMo) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Part 1: Benefit & Absence
 
@@ -321,7 +312,7 @@ All logical prepositions require a specific case:
 
 ---
 
-## Summary
+# Summary
 
 Today you learned 10 logical prepositions:
 
@@ -345,7 +336,23 @@ Key distinctions:
 
 ---
 
-## Activities
+
+
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian prepositions У, В and НА and the differe...]( https://www.youtube.com/watch?v=aqKdvKXPCMo) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
+---
+
+---
+
+# Activities
 
 ## match-up: Preposition Meaning
 
@@ -362,7 +369,7 @@ Key distinctions:
 
 ## group-sort: Case Requirements
 
-> Group prepositions by their required case.
+> Згрупуйте прийменники за відмінками. | Group prepositions by their required case.
 
 ### Genitive (Кого? Чого?)
 - для
@@ -386,35 +393,35 @@ Key distinctions:
 
 > Add the correct preposition.
 
-1. Кава [___] цукру, будь ласка. [Hint: without]
+1. Кава [___] цукру, будь ласка.
    > [!answer] без
    > [!options] без | для | з
 
-2. Це подарунок [___] тебе. [Hint: for you]
+2. Це подарунок [___] тебе.
    > [!answer] для
    > [!options] для | від | про
 
-3. Ми говорили [___] тебе. [Hint: about you]
+3. Ми говорили [___] тебе.
    > [!answer] про
    > [!options] про | через | для
 
-4. [___] дощ я залишився вдома. [Hint: because of]
+4. [___] дощ я залишився вдома.
    > [!answer] Через
    > [!options] Через | Від | Про
 
-5. Лист [___] мами. [Hint: from mom]
+5. Лист [___] мами.
    > [!answer] від
    > [!options] від | для | про
 
-6. Кава [___] молоком. [Hint: with milk]
+6. Кава [___] молоком.
    > [!answer] з
    > [!options] з | без | для
 
-7. Зустрінемось [___] третій. [Hint: at 3 o'clock]
+7. Зустрінемось [___] третій.
    > [!answer] о
    > [!options] о | після | для
 
-8. Всі прийшли, [___] Олега. [Hint: except]
+8. Всі прийшли, [___] Олега.
    > [!answer] крім
    > [!options] крім | для | про
 
@@ -747,37 +754,37 @@ I can't live without you.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
-| Word | IPA | English | POS | Case |
-|------|-----|---------|-----|------|
-| для | /dlʲɑ/ | for | prep | Gen |
-| без | /bɛz/ | without | prep | Gen |
-| від | /ʋid/ | from | prep | Gen |
-| після | /pˈislʲɑ/ | after | prep | Gen |
-| крім | /krim/ | except | prep | Gen |
-| замість | /zˈɑmistʲ/ | instead of | prep | Gen |
-| через | /t͡ʃˈɛrɛz/ | because of | through | prep | Acc |
-| про | /prɔ/ | about | prep | Acc |
-| о | /ɔ/ | at (time) | prep | Loc |
-| об | /ɔb/ | at (before vowel) | prep | Loc |
-| з | /z/ | with | prep | Instr |
-| із | /iz/ | with (variant) | prep | Instr |
-| зі | /zi/ | with (before cluster) | prep | Instr |
-| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - |
-| лист | /lɪst/ | letter | noun | - |
-| ліки | /lˈikɪ/ | medicine | noun | - |
-| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - |
-| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - |
-| цукор | /t͡sˈukɔr/ | sugar | noun | - |
-| молоко | /mɔlɔkˈɔ/ | milk | noun | - |
-| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - |
-| робота | /rɔbˈɔtɑ/ | work | noun | - |
-| обід | /ɔbˈid/ | lunch | noun | - |
-| сніданок | /snˈidɑnɔk/ | breakfast | noun | - |
-| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - |
-| посилка | /pɔsˈɪlkɑ/ | package | noun | - |
-| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - |
-| мета | /mˈɛtɑ/ | goal | noun | - |
-| користь | /kˈɔrɪstʲ/ | benefit | noun | - |
-| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - |
+| Word | IPA | English | POS | Gender | Case |
+|------|-----|---------|-----|--------|------|
+| для | /dlʲɑ/ | for | prep | - | Gen |
+| без | /bɛz/ | without | prep | - | Gen |
+| від | /ʋid/ | from | prep | - | Gen |
+| після | /pˈislʲɑ/ | after | prep | - | Gen |
+| крім | /krim/ | except | prep | - | Gen |
+| замість | /zˈɑmistʲ/ | instead of | prep | - | Gen |
+| через | /t͡ʃˈɛrɛz/ | because of | through | prep | - | Acc |
+| про | /prɔ/ | about | prep | - | Acc |
+| о | /ɔ/ | at (time) | prep | - | Loc |
+| об | /ɔb/ | at (before vowel) | prep | - | Loc |
+| з | /z/ | with | prep | - | Instr |
+| із | /iz/ | with (variant) | prep | - | Instr |
+| зі | /zi/ | with (before cluster) | prep | - | Instr |
+| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - | - |
+| лист | /lɪst/ | letter | noun | - | - |
+| ліки | /lˈikɪ/ | medicine | noun | - | - |
+| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - | - |
+| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - | - |
+| цукор | /t͡sˈukɔr/ | sugar | noun | - | - |
+| молоко | /mɔlɔkˈɔ/ | milk | noun | - | - |
+| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - | - |
+| робота | /rɔbˈɔtɑ/ | work | noun | - | - |
+| обід | /ɔbˈid/ | lunch | noun | - | - |
+| сніданок | /snˈidɑnɔk/ | breakfast | noun | - | - |
+| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - | - |
+| посилка | /pɔsˈɪlkɑ/ | package | noun | - | - |
+| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - | - |
+| мета | /mˈɛtɑ/ | goal | noun | - | - |
+| користь | /kˈɔrɪstʲ/ | benefit | noun | - | - |
+| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - | - |

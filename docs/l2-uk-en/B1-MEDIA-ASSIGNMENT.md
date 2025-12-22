@@ -2,8 +2,8 @@
 
 **Status:** Needs External Resources Added
 **Created:** 2024-12-14
-**Updated:** 2025-12-16
-**Modules:** 80 (5 created, 75 planned)
+**Updated:** 2025-12-21
+**Modules:** 85 (including 5 metalanguage bridge modules)
 
 ---
 
@@ -39,7 +39,7 @@
 
 ## ⚠️ IMPORTANT: External Resources Not Yet Added
 
-**Current state:** 0/80 B1 modules have `> [!resources]` sections.
+**Current state:** 0/85 B1 modules have `> [!resources]` sections.
 
 See **Issue #170** for the standardization task.
 
@@ -163,31 +163,55 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 ### Immersion Level
 
-| Phase | Immersion Target | Media Approach |
-|-------|------------------|----------------|
-| B1.1-2 | 45-55% | English explanations, Ukrainian examples/media |
-| B1.3-4 | 55-60% | Mixed explanations, more Ukrainian media |
-| B1.5-6 | 60-65% | Ukrainian media dominant, English support |
-| B1.7-8 | 65-70% | Full Ukrainian immersion in media |
+| Phase | Modules | Immersion Target | Media Approach |
+|-------|---------|------------------|----------------|
+| B1.0 | M01-05 | No limit | Metalanguage bridge — teach grammar terminology |
+| B1.1-2 | M06-25 | 90-95% | Full Ukrainian immersion |
+| B1.3-4 | M26-50 | 90-95% | Full Ukrainian immersion |
+| B1.5-6 | M51-70 | 90-95% | Full Ukrainian immersion |
+| B1.7-8 | M71-85 | 90-95% | Full Ukrainian immersion |
 
 ---
 
-## Phase B1.1: Aspect Mastery (M01-10)
+## Phase B1.0: Metalanguage Bridge (M01-05)
+
+### Purpose
+Teach grammar terminology in Ukrainian so students can understand grammar explanations from M06 onwards. These modules have NO immersion limit.
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 01 | Aspect: The Complete System | Aspect choice flowchart | 🎨 Self-created | Planned |
-| 02 | Aspect in Past: Single vs Repeated | Time marker infographic | 🎨 Self-created | Planned |
-| 03 | Aspect in Past: Result vs Process | Result/process comparison | 🎨 Self-created | Planned |
-| 04 | Aspect in Future | Three future forms chart | 🎨 Self-created | Planned |
-| 05 | Aspect in Negation | Negation rules diagram | 🎨 Self-created | Planned |
-| 06 | Aspect in Imperatives | Imperative aspect guide | 🎨 Self-created | Planned |
-| 07 | Aspect Pairs: Essential 40 | Aspect pair flashcard deck | 🎨 Self-created | Planned |
-| 08 | Робочий тиждень: Aspect in Action | Work scenario illustrations | 🎨 Self-created | Planned |
-| 09 | Aspect Integration Practice | Mixed practice materials | 🎨 Self-created | Planned |
-| 10 | Checkpoint: Aspect Mastery | Diagnostic quiz materials | 🎨 Self-created | Planned |
+| 01 | Як говорити про граматику | Parts of speech flashcards | 🎨 Self-created | Planned |
+| 02 | Мова про дієслова | Aspect terminology chart | 🎨 Self-created | Planned |
+| 03 | Читаємо граматичні правила | Grammar instruction patterns | 🎨 Self-created | Planned |
+| 04 | Структура речення | Sentence structure diagram | 🎨 Self-created | Planned |
+| 05 | Готові до занурення | Metalanguage quiz materials | 🎨 Self-created | Planned |
+
+### External Resources (B1.0)
+
+| Module | Resource | Type | Status |
+|--------|----------|------|--------|
+| M01-05 | Grammar terminology reference | 📖 Guide | Planned |
+
+---
+
+## Phase B1.1: Aspect Mastery (M06-15)
+
+### Media Requirements
+
+| # | Title | Required Media | Source | Status |
+|---|-------|----------------|--------|--------|
+| 06 | Aspect: The Complete System | Aspect choice flowchart | 🎨 Self-created | Planned |
+| 07 | Aspect in Past: Single vs Repeated | Time marker infographic | 🎨 Self-created | Planned |
+| 08 | Aspect in Past: Result vs Process | Result/process comparison | 🎨 Self-created | Planned |
+| 09 | Aspect in Future | Three future forms chart | 🎨 Self-created | Planned |
+| 10 | Aspect in Negation | Negation rules diagram | 🎨 Self-created | Planned |
+| 11 | Aspect in Imperatives | Imperative aspect guide | 🎨 Self-created | Planned |
+| 12 | Aspect Pairs: Essential 40 | Aspect pair flashcard deck | 🎨 Self-created | Planned |
+| 13 | Робочий тиждень: Aspect in Action | Work scenario illustrations | 🎨 Self-created | Planned |
+| 14 | Aspect Integration Practice | Mixed practice materials | 🎨 Self-created | Planned |
+| 15 | Checkpoint: Aspect Mastery | Diagnostic quiz materials | 🎨 Self-created | Planned |
 
 ### External Resources (B1.1)
 
@@ -195,43 +219,43 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Video Title | URL | Channel | Status |
 |--------|-------------|-----|---------|--------|
-| M01 | Perfective and Imperfective: Verb Aspects in Ukrainian | https://www.youtube.com/watch?v=YnWlncQJg8o | Let's Learn Ukrainian | ✅ Found |
-| M01 | PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1 | https://www.youtube.com/watch?v=v-SuEb_0WYM | Ukrainian grammar | ✅ Found |
-| M02 | The Past Imperfective tense in Ukrainian # 39 | https://www.youtube.com/watch?v=PK-108GsZF4 | Ukrainian Language | ✅ Found |
-| M02 | The Past Perfective tense in Ukrainian # 43 | https://www.youtube.com/watch?v=WfGlonPphFQ | Ukrainian Language | ✅ Found |
-| M03 | Learn 50 important Ukrainian Verb Pairs | https://www.youtube.com/watch?v=iK4uNlozmFE | Let's Learn Ukrainian | ✅ Found |
-| M04 | FUTURE TENSE IN UKRAINIAN LANGUAGE | https://www.youtube.com/watch?v=VJmihxvTLww | Speak Ukrainian | ✅ Found |
-| M04 | Verb Conjugation: Future Tense #Ukrainian | https://www.youtube.com/watch?v=7oBqLYAYnw4 | Let's Learn Ukrainian | ✅ Found |
-| M04 | The Future tense # 107 | https://www.youtube.com/watch?v=oXM7CrIta2E | Ukrainian Language | ✅ Found |
-| M05 | Рекомендації – Asking for advice + aspect | https://www.youtube.com/watch?v=POUzGxu9OxU | Ukrainian Lessons | ✅ Found |
-| M01-05 | 🇺🇦 Most Useful Ukrainian Verbs for Beginners | https://www.youtube.com/watch?v=xa-_fedNU6U | Ukrainian Language | ✅ Found |
+| M06 | Perfective and Imperfective: Verb Aspects in Ukrainian | https://www.youtube.com/watch?v=YnWlncQJg8o | Let's Learn Ukrainian | ✅ Found |
+| M06 | PERFECTIVE VERBS vs IMPERFECTIVE VERBS - PART 1 | https://www.youtube.com/watch?v=v-SuEb_0WYM | Ukrainian grammar | ✅ Found |
+| M07 | The Past Imperfective tense in Ukrainian # 39 | https://www.youtube.com/watch?v=PK-108GsZF4 | Ukrainian Language | ✅ Found |
+| M07 | The Past Perfective tense in Ukrainian # 43 | https://www.youtube.com/watch?v=WfGlonPphFQ | Ukrainian Language | ✅ Found |
+| M08 | Learn 50 important Ukrainian Verb Pairs | https://www.youtube.com/watch?v=iK4uNlozmFE | Let's Learn Ukrainian | ✅ Found |
+| M09 | FUTURE TENSE IN UKRAINIAN LANGUAGE | https://www.youtube.com/watch?v=VJmihxvTLww | Speak Ukrainian | ✅ Found |
+| M09 | Verb Conjugation: Future Tense #Ukrainian | https://www.youtube.com/watch?v=7oBqLYAYnw4 | Let's Learn Ukrainian | ✅ Found |
+| M09 | The Future tense # 107 | https://www.youtube.com/watch?v=oXM7CrIta2E | Ukrainian Language | ✅ Found |
+| M10 | Рекомендації – Asking for advice + aspect | https://www.youtube.com/watch?v=POUzGxu9OxU | Ukrainian Lessons | ✅ Found |
+| M06-10 | 🇺🇦 Most Useful Ukrainian Verbs for Beginners | https://www.youtube.com/watch?v=xa-_fedNU6U | Ukrainian Language | ✅ Found |
 
 #### Grammar Guides
 
 | Module | Resource | URL | Status |
 |--------|----------|-----|-----------|
-| M01-06 | Ukrainian Lessons: Aspect | https://ukrainianlessons.com/aspect/ | ✅ Linked |
-| M04 | Ukrainian Lessons: Future Tense | https://ukrainianlessons.com/grammar-future/ | ✅ Linked |
-| M01-05 | Ukrainian Lessons: Verb Pairs | https://ukrainianlessons.com/verbs/ | ✅ Linked |
+| M06-11 | Ukrainian Lessons: Aspect | https://ukrainianlessons.com/aspect/ | ✅ Linked |
+| M09 | Ukrainian Lessons: Future Tense | https://ukrainianlessons.com/grammar-future/ | ✅ Linked |
+| M06-10 | Ukrainian Lessons: Verb Pairs | https://ukrainianlessons.com/verbs/ | ✅ Linked |
 
 ---
 
-## Phase B1.2: Motion Verbs with Prefixes (M11-20)
+## Phase B1.2: Motion Verbs with Prefixes (M16-25)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 11 | Motion Verbs: The Full System | 14 motion pairs table | 🎨 Self-created | Planned |
-| 12 | Motion: Coming & Going | при-/ви-/в- prefix diagram | 🎨 Self-created | Planned |
-| 13 | Motion: Passing & Crossing | пере-/про-/об- diagram | 🎨 Self-created | Planned |
-| 14 | Motion: Starting & Returning | по-/за-/роз- diagram | 🎨 Self-created | Planned |
-| 15 | Motion: Approaching & Departing | під-/від-/до- diagram | 🎨 Self-created | Planned |
-| 16 | Motion: Figurative Uses | Idiom illustrations | 🎨 Self-created | Planned |
-| 17 | Motion: Full Prefix Integration | Complete prefix chart | 🎨 Self-created | Planned |
-| 18 | Motion Patterns in Other Verbs | Prefix transfer examples | 🎨 Self-created | Planned |
-| 19 | Motion: Practice & Integration | City map navigation | 🎨 Self-created | Planned |
-| 20 | Checkpoint: Motion Verbs | Motion verb assessment | 🎨 Self-created | Planned |
+| 16 | Motion Verbs: The Full System | 14 motion pairs table | 🎨 Self-created | Planned |
+| 17 | Motion: Coming & Going | при-/ви-/в- prefix diagram | 🎨 Self-created | Planned |
+| 18 | Motion: Passing & Crossing | пере-/про-/об- diagram | 🎨 Self-created | Planned |
+| 19 | Motion: Starting & Returning | по-/за-/роз- diagram | 🎨 Self-created | Planned |
+| 20 | Motion: Approaching & Departing | під-/від-/до- diagram | 🎨 Self-created | Planned |
+| 21 | Motion: Figurative Uses | Idiom illustrations | 🎨 Self-created | Planned |
+| 22 | Motion: Full Prefix Integration | Complete prefix chart | 🎨 Self-created | Planned |
+| 23 | Motion Patterns in Other Verbs | Prefix transfer examples | 🎨 Self-created | Planned |
+| 24 | Motion: Practice & Integration | City map navigation | 🎨 Self-created | Planned |
+| 25 | Checkpoint: Motion Verbs | Motion verb assessment | 🎨 Self-created | Planned |
 
 ### External Resources (B1.2)
 
@@ -251,40 +275,43 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Recommended Videos | Rationale |
 |--------|-------------------|-----------|
-| **M11: Motion Verbs - The Full System** | • [Verbs of Motion: Unidirectional, Multidirectional](https://www.youtube.com/watch?v=Bs7EJFMsAJY)<br>• [Verbs of motion: ЙТИ, ХОДИТИ vs ЇХАТИ ЇЗДИТИ](https://www.youtube.com/watch?v=BHURRyliZHo) | Comprehensive overview of the motion verb system |
-| **M12-15: Motion with Prefixes** | • [Їздити VS Їхати/ Йти VS Ходити](https://www.youtube.com/watch?v=T6YwFExsRVc) | Reinforces base pairs before adding prefixes |
-| **M16-18: Practice & Integration** | • [Let's practise the verbs of motion with me](https://www.youtube.com/watch?v=yS3MwBod5nM)<br>• [Practise with me the main verbs of motion](https://www.youtube.com/watch?v=iFvvfEayiLE) | Practice-focused videos for integration modules |
+| **M16: Motion Verbs - The Full System** | • [Verbs of Motion: Unidirectional, Multidirectional](https://www.youtube.com/watch?v=Bs7EJFMsAJY)<br>• [Verbs of motion: ЙТИ, ХОДИТИ vs ЇХАТИ ЇЗДИТИ](https://www.youtube.com/watch?v=BHURRyliZHo) | Comprehensive overview of the motion verb system |
+| **M17-20: Motion with Prefixes** | • [Їздити VS Їхати/ Йти VS Ходити](https://www.youtube.com/watch?v=T6YwFExsRVc) | Reinforces base pairs before adding prefixes |
+| **M21-23: Practice & Integration** | • [Let's practise the verbs of motion with me](https://www.youtube.com/watch?v=yS3MwBod5nM)<br>• [Practise with me the main verbs of motion](https://www.youtube.com/watch?v=iFvvfEayiLE) | Practice-focused videos for integration modules |
 
 #### Grammar Guides
 
 | Module | Resource | URL | Status |
-|--------|----------|-----|--------|\n| M11 | Ukrainian Lessons: Motion Verbs | ukrainianlessons.com/motion-verbs/ | ✅ Linked |
-| M12-15 | Ukrainian Lessons: Prefixes | ukrainianlessons.com/prefixes/ | ✅ Linked |
-| M19 | Kyiv Metro Map | kyivmetro.ua | 🌐 Reference |
+|--------|----------|-----|--------|
+| M16 | Ukrainian Lessons: Motion Verbs | ukrainianlessons.com/motion-verbs/ | ✅ Linked |
+| M17-20 | Ukrainian Lessons: Prefixes | ukrainianlessons.com/prefixes/ | ✅ Linked |
+| M24 | Kyiv Metro Map | kyivmetro.ua | 🌐 Reference |
+
+**Note:** B1 modules already have verified YouTube videos and Ukrainian Lessons URLs listed in the "External Resources" sections above (B1.1-B1.8). Each phase includes 3-4 verified resources per module including YouTube videos from Let's Learn Ukrainian, Speak Ukrainian, Ukrainian grammar channels, and Ukraїner for regional content.
 
 ---
 
-## Phase B1.3: Complex Sentences (M21-35)
+## Phase B1.3: Complex Sentences (M26-40)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 21 | Relative Clauses: який Review | який declension table | 🎨 Self-created | Planned |
-| 22 | Relative Clauses: де, куди, звідки | Place relative diagram | 🎨 Self-created | Planned |
-| 23 | Relative Clauses: коли, що | Time/fact relative examples | 🎨 Self-created | Planned |
-| 24 | Purpose: щоб + Infinitive | Purpose clause diagram | 🎨 Self-created | Planned |
-| 25 | Purpose: щоб + Past Form | Subject switch diagram | 🎨 Self-created | Planned |
-| 26 | Conditionals: Real (якщо) | Real conditional flowchart | 🎨 Self-created | Planned |
-| 27 | Conditionals: Unreal (якби) | Unreal conditional chart | 🎨 Self-created | Planned |
-| 28 | Conditionals: Mixed & Complex | Complex conditional examples | 🎨 Self-created | Planned |
-| 29 | Concessive Clauses | хоча/незважаючи examples | 🎨 Self-created | Planned |
-| 30 | Causal & Result Clauses | Cause/effect diagram | 🎨 Self-created | Planned |
-| 31 | Temporal Clauses Deep Dive | Temporal connector chart | 🎨 Self-created | Planned |
-| 32 | Complex Sentence Integration & One-Member Sentences | Sentence analysis examples | 🎨 Self-created | Planned |
-| 33 | Reported Statements | Direct → indirect diagram | 🎨 Self-created | Planned |
-| 34 | Reported Questions & Commands | Reporting structure chart | 🎨 Self-created | Planned |
-| 35 | Checkpoint: Complex Sentences | Complex sentence assessment | 🎨 Self-created | Planned |
+| 26 | Relative Clauses: який Review | який declension table | 🎨 Self-created | Planned |
+| 27 | Relative Clauses: де, куди, звідки | Place relative diagram | 🎨 Self-created | Planned |
+| 28 | Relative Clauses: коли, що | Time/fact relative examples | 🎨 Self-created | Planned |
+| 29 | Purpose: щоб + Infinitive | Purpose clause diagram | 🎨 Self-created | Planned |
+| 30 | Purpose: щоб + Past Form | Subject switch diagram | 🎨 Self-created | Planned |
+| 31 | Conditionals: Real (якщо) | Real conditional flowchart | 🎨 Self-created | Planned |
+| 32 | Conditionals: Unreal (якби) | Unreal conditional chart | 🎨 Self-created | Planned |
+| 33 | Conditionals: Mixed & Complex | Complex conditional examples | 🎨 Self-created | Planned |
+| 34 | Concessive Clauses | хоча/незважаючи examples | 🎨 Self-created | Planned |
+| 35 | Causal & Result Clauses | Cause/effect diagram | 🎨 Self-created | Planned |
+| 36 | Temporal Clauses Deep Dive | Temporal connector chart | 🎨 Self-created | Planned |
+| 37 | Complex Sentence Integration & One-Member Sentences | Sentence analysis examples | 🎨 Self-created | Planned |
+| 38 | Reported Statements | Direct → indirect diagram | 🎨 Self-created | Planned |
+| 39 | Reported Questions & Commands | Reporting structure chart | 🎨 Self-created | Planned |
+| 40 | Checkpoint: Complex Sentences | Complex sentence assessment | 🎨 Self-created | Planned |
 
 ### External Resources (B1.3)
 
@@ -302,36 +329,36 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Recommended Videos | Rationale |
 |--------|-------------------|-----------|
-| **M26-27: Conditionals (якщо/якби)** | • [Якби я мала крила орлині - Українська народна пісня](https://www.youtube.com/watch?v=4HOw1znM7Sc) | Folk song with multiple якби (if I had) examples for authentic conditional usage |
+| **M31-32: Conditionals (якщо/якби)** | • [Якби я мала крила орлині - Українська народна пісня](https://www.youtube.com/watch?v=4HOw1znM7Sc) | Folk song with multiple якби (if I had) examples for authentic conditional usage |
 
-*Note: For M21-25 and M28-35, rely on Ukrainian Lessons grammar guides below, as no Ukrainian-language instructional videos were found.*
+*Note: For M26-30 and M33-40, rely on Ukrainian Lessons grammar guides below, as no Ukrainian-language instructional videos were found.*
 
 #### Grammar Guides
 
 | Module | Resource | URL | Status |
 |--------|----------|-----|--------|
-| M21-23 | Ukrainian Lessons: Relative Clauses | ukrainianlessons.com/relative-clauses/ | ✅ Linked |
-| M26-27 | Ukrainian Lessons: Conditionals | ukrainianlessons.com/conditionals/ | ✅ Linked |
-| M33-34 | Ukrainian Lessons: Reported Speech | ukrainianlessons.com/reported-speech/ | ✅ Linked |
+| M26-28 | Ukrainian Lessons: Relative Clauses | ukrainianlessons.com/relative-clauses/ | ✅ Linked |
+| M31-32 | Ukrainian Lessons: Conditionals | ukrainianlessons.com/conditionals/ | ✅ Linked |
+| M38-39 | Ukrainian Lessons: Reported Speech | ukrainianlessons.com/reported-speech/ | ✅ Linked |
 
 ---
 
-## Phase B1.4: Advanced Grammar (M36-45)
+## Phase B1.4: Advanced Grammar (M41-50)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 36 | Adverbial Participles: Imperfective | -ючи/-ачи formation chart | 🎨 Self-created | Planned |
-| 37 | Adverbial Participles: Perfective | -вши/-ши formation chart | 🎨 Self-created | Planned |
-| 38 | Active Participles & Phrases | Literary excerpt with participles | 🌐 PD Literature | Planned |
-| 39 | Past Passive Participles I | -ний/-тий formation table | 🎨 Self-created | Planned |
-| 40 | Past Passive Participles II | -но/-то usage examples | 🎨 Self-created | Planned |
-| 41 | Passive Constructions | Passive voice comparison | 🎨 Self-created | Planned |
-| 42 | Diminutives: Master Class | Diminutive suffix chart | 🎨 Self-created | Planned |
-| 43 | Numerals: Collectives & Fractions | Numeral forms table | 🎨 Self-created | Planned |
-| 44 | Integrated Grammar Lab | Grammar integration practice | 🎨 Self-created | Planned |
-| 45 | Checkpoint: Advanced Grammar | Advanced grammar assessment | 🎨 Self-created | Planned |
+| 41 | Adverbial Participles: Imperfective | -ючи/-ачи formation chart | 🎨 Self-created | Planned |
+| 42 | Adverbial Participles: Perfective | -вши/-ши formation chart | 🎨 Self-created | Planned |
+| 43 | Active Participles & Phrases | Literary excerpt with participles | 🌐 PD Literature | Planned |
+| 44 | Past Passive Participles I | -ний/-тий formation table | 🎨 Self-created | Planned |
+| 45 | Past Passive Participles II | -но/-то usage examples | 🎨 Self-created | Planned |
+| 46 | Passive Constructions | Passive voice comparison | 🎨 Self-created | Planned |
+| 47 | Diminutives: Master Class | Diminutive suffix chart | 🎨 Self-created | Planned |
+| 48 | Numerals: Collectives & Fractions | Numeral forms table | 🎨 Self-created | Planned |
+| 49 | Integrated Grammar Lab | Grammar integration practice | 🎨 Self-created | Planned |
+| 50 | Checkpoint: Advanced Grammar | Advanced grammar assessment | 🎨 Self-created | Planned |
 
 ### External Resources (B1.4)
 
@@ -351,34 +378,34 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Recommended Videos | Rationale |
 |--------|-------------------|-----------|
-| **M36-37: Adverbial Participles** | • [ULP 3-107 У барі + Дієприслівник](https://www.youtube.com/watch?v=S3GgY9Fa8uk)<br>• [Learning Ukrainian with Odarka. Lesson 57. Adverbial Participle](https://www.youtube.com/watch?v=SRKqRpPzXnE) | Comprehensive coverage of дієприслівник formation and usage |
-| **M39-41: Passive Participles & Constructions** | • [How to form and use passive voice in Ukrainian](https://www.youtube.com/watch?v=txDI2JzODFo)<br>• [Practice with me the passive voice](https://www.youtube.com/watch?v=zsSqBE-iaNM)<br>• [Мене попросили, запитали, запросили - Passive Voice practice](https://www.youtube.com/watch?v=khJ6GLWoYZ4) | Theory + practice for passive constructions with -но/-то |
+| **M41-42: Adverbial Participles** | • [ULP 3-107 У барі + Дієприслівник](https://www.youtube.com/watch?v=S3GgY9Fa8uk)<br>• [Learning Ukrainian with Odarka. Lesson 57. Adverbial Participle](https://www.youtube.com/watch?v=SRKqRpPzXnE) | Comprehensive coverage of дієприслівник formation and usage |
+| **M44-46: Passive Participles & Constructions** | • [How to form and use passive voice in Ukrainian](https://www.youtube.com/watch?v=txDI2JzODFo)<br>• [Practice with me the passive voice](https://www.youtube.com/watch?v=zsSqBE-iaNM)<br>• [Мене попросили, запитали, запросили - Passive Voice practice](https://www.youtube.com/watch?v=khJ6GLWoYZ4) | Theory + practice for passive constructions with -но/-то |
 
 ### Literary Excerpts (B1.4)
 
 | Module | Text | Author | Purpose | Status |
 |--------|------|--------|---------|--------|
-| M38 | Short story excerpt | Коцюбинський | Participle examples | 🌐 PD |
-| M43 | Folk tale excerpt | Traditional | Diminutive examples | 🌐 PD |
+| M43 | Short story excerpt | Коцюбинський | Participle examples | 🌐 PD |
+| M47 | Folk tale excerpt | Traditional | Diminutive examples | 🌐 PD |
 
 ---
 
-## Phase B1.5: Vocabulary Expansion I (M46-55)
+## Phase B1.5: Vocabulary Expansion I (M51-60)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 46 | Abstract Concepts I: Ideas | Concept map visual | 🎨 Self-created | Planned |
-| 47 | Abstract Concepts II: Processes | Process vocabulary infographic | 🎨 Self-created | Planned |
-| 48 | Expressing Opinions | Opinion expression scale | 🎨 Self-created | Planned |
-| 49 | Agreement & Disagreement | Discussion phrases chart | 🎨 Self-created | Planned |
-| 50 | Discourse Markers I | Basic connectors table | 🎨 Self-created | Planned |
-| 51 | Discourse Markers II | Advanced connectors chart | 🎨 Self-created | Planned |
-| 52 | Describing Changes | Trend vocabulary with graphs | 🎨 Self-created | Planned |
-| 53 | Media & News | News article example | Hromadske | ❓ TBD |
-| 54 | Society & Politics | Political vocabulary infographic | 🎨 Self-created | Planned |
-| 55 | Checkpoint: Vocabulary I | Vocabulary assessment | 🎨 Self-created | Planned |
+| 51 | Abstract Concepts I: Ideas | Concept map visual | 🎨 Self-created | Planned |
+| 52 | Abstract Concepts II: Processes | Process vocabulary infographic | 🎨 Self-created | Planned |
+| 53 | Expressing Opinions | Opinion expression scale | 🎨 Self-created | Planned |
+| 54 | Agreement & Disagreement | Discussion phrases chart | 🎨 Self-created | Planned |
+| 55 | Discourse Markers I | Basic connectors table | 🎨 Self-created | Planned |
+| 56 | Discourse Markers II | Advanced connectors chart | 🎨 Self-created | Planned |
+| 57 | Describing Changes | Trend vocabulary with graphs | 🎨 Self-created | Planned |
+| 58 | Media & News | News article example | Hromadske | ❓ TBD |
+| 59 | Society & Politics | Political vocabulary infographic | 🎨 Self-created | Planned |
+| 60 | Checkpoint: Vocabulary I | Vocabulary assessment | 🎨 Self-created | Planned |
 
 ### External Resources (B1.5)
 
@@ -390,68 +417,68 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Resource | URL | Status |
 |--------|----------|-----|--------|
-| M53 | Hromadske News | youtube.com/@hromadske_ua | ❓ TBD |
-| M53 | Liga.net | youtube.com/@liga_net | ❓ TBD |
-| M54 | Верховна Рада official | rada.gov.ua | 🌐 Reference |
+| M58 | Hromadske News | youtube.com/@hromadske_ua | ❓ TBD |
+| M58 | Liga.net | youtube.com/@liga_net | ❓ TBD |
+| M59 | Верховна Рада official | rada.gov.ua | 🌐 Reference |
 
 ---
 
-## Phase B1.6: Vocabulary Expansion II (M56-65)
+## Phase B1.6: Vocabulary Expansion II (M61-70)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 56 | Environment & Ecology | Environmental infographic | 🎨 Self-created | Planned |
-| 57 | Health & Wellness | Health vocabulary visual | 🎨 Self-created | Planned |
-| 58 | Emotions: Deep Dive | Emotion wheel in Ukrainian | 🎨 Self-created | Planned |
-| 59 | Relationships | Relationship vocabulary map | 🎨 Self-created | Planned |
-| 60 | Business Basics | Business scenario illustrations | 🎨 Self-created | Planned |
-| 61 | Travel & Geography | Ukraine travel map | 🎨 Self-created | Planned |
-| 62 | Synonymy I: Thinking Verbs | Thinking verb distinctions | 🎨 Self-created | Planned |
-| 63 | Synonymy II: Speaking Verbs | Speaking verb chart | 🎨 Self-created | Planned |
-| 64 | Collocations & Expressions | Collocation practice cards | 🎨 Self-created | Planned |
-| 65 | Checkpoint: Vocabulary II | Vocabulary assessment | 🎨 Self-created | Planned |
+| 61 | Environment & Ecology | Environmental infographic | 🎨 Self-created | Planned |
+| 62 | Health & Wellness | Health vocabulary visual | 🎨 Self-created | Planned |
+| 63 | Emotions: Deep Dive | Emotion wheel in Ukrainian | 🎨 Self-created | Planned |
+| 64 | Relationships | Relationship vocabulary map | 🎨 Self-created | Planned |
+| 65 | Business Basics | Business scenario illustrations | 🎨 Self-created | Planned |
+| 66 | Travel & Geography | Ukraine travel map | 🎨 Self-created | Planned |
+| 67 | Synonymy I: Thinking Verbs | Thinking verb distinctions | 🎨 Self-created | Planned |
+| 68 | Synonymy II: Speaking Verbs | Speaking verb chart | 🎨 Self-created | Planned |
+| 69 | Collocations & Expressions | Collocation practice cards | 🎨 Self-created | Planned |
+| 70 | Checkpoint: Vocabulary II | Vocabulary assessment | 🎨 Self-created | Planned |
 
 ---
 
-## Phase B1.7: Contemporary Ukraine (M66-75)
+## Phase B1.7: Contemporary Ukraine (M71-80)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 66 | Українські регіони: Захід | Ukraїner Western Ukraine | Ukraїner | ❓ TBD |
-| 67 | Українські регіони: Схід | Ukraїner Eastern Ukraine | Ukraїner | ❓ TBD |
-| 68 | Українські регіони: Південь | Ukraїner Southern Ukraine | Ukraїner | ❓ TBD |
-| 69 | Українські регіони: Центр | Ukraїner Central Ukraine | Ukraїner | ❓ TBD |
-| 70 | Українська музика сьогодні | Contemporary music clips | Various | ❓ TBD |
-| 71 | Українське кіно та серіали | Film clips/trailers | Various | ❓ TBD |
-| 72 | Технології та стартапи | Tech industry content | Various | ❓ TBD |
-| 73 | Спорт в Україні | Sports highlights | Various | ❓ TBD |
-| 74 | Українська кухня | Klopotenko recipe videos | Klopotenko | ❓ TBD |
-| 75 | Checkpoint: Contemporary Ukraine | Cultural assessment | 🎨 Self-created | Planned |
+| 71 | Українські регіони: Захід | Ukraїner Western Ukraine | Ukraїner | ❓ TBD |
+| 72 | Українські регіони: Схід | Ukraїner Eastern Ukraine | Ukraїner | ❓ TBD |
+| 73 | Українські регіони: Південь | Ukraїner Southern Ukraine | Ukraїner | ❓ TBD |
+| 74 | Українські регіони: Центр | Ukraїner Central Ukraine | Ukraїner | ❓ TBD |
+| 75 | Українська музика сьогодні | Contemporary music clips | Various | ❓ TBD |
+| 76 | Українське кіно та серіали | Film clips/trailers | Various | ❓ TBD |
+| 77 | Технології та стартапи | Tech industry content | Various | ❓ TBD |
+| 78 | Спорт в Україні | Sports highlights | Various | ❓ TBD |
+| 79 | Українська кухня | Klopotenko recipe videos | Klopotenko | ❓ TBD |
+| 80 | Checkpoint: Contemporary Ukraine | Cultural assessment | 🎨 Self-created | Planned |
 
 ### YouTube Channel Integration (B1.7)
 
 | Module | Channel | Content Type | Status |
 |--------|---------|--------------|--------|
-| M66-69 | Ukraїner | Regional documentaries | ❓ TBD |
-| M66-69 | Комікс Історик | Regional history | ❓ TBD |
-| M66-69 | Реальна історія | Historical context | ❓ TBD |
-| M70 | Various artists | Music videos | ❓ TBD |
-| M71 | Film studios | Trailers, clips | ❓ TBD |
-| M72 | Tech channels | IT industry content | ❓ TBD |
-| M74 | Klopotenko | Cooking tutorials | ❓ TBD |
+| M71-74 | Ukraїner | Regional documentaries | ❓ TBD |
+| M71-74 | Комікс Історик | Regional history | ❓ TBD |
+| M71-74 | Реальна історія | Historical context | ❓ TBD |
+| M75 | Various artists | Music videos | ❓ TBD |
+| M76 | Film studios | Trailers, clips | ❓ TBD |
+| M77 | Tech channels | IT industry content | ❓ TBD |
+| M79 | Klopotenko | Cooking tutorials | ❓ TBD |
 
 ### Ukraїner Content Mapping
 
 | Module | Region | Potential Videos | Notes |
 |--------|--------|------------------|-------|
-| M66 | Western | Lviv, Закарпаття, Буковина | Habsburg heritage, multicultural |
-| M67 | Eastern | Харків, Слобожанщина | Industrial, academic heritage |
-| M68 | Southern | Одеса, Херсон, Чорне море | Port cities, agriculture |
-| M69 | Central | Київ, Полтава, Черкаси | Historical heart, Cossack heritage |
+| M71 | Western | Lviv, Закарпаття, Буковина | Habsburg heritage, multicultural |
+| M72 | Eastern | Харків, Слобожанщина | Industrial, academic heritage |
+| M73 | Southern | Одеса, Херсон, Чорне море | Port cities, agriculture |
+| M74 | Central | Київ, Полтава, Черкаси | Historical heart, Cossack heritage |
 
 ### External Resources (B1.7)
 
@@ -475,42 +502,42 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Recommended Videos | Rationale |
 |--------|-------------------|-----------|
-| **M66: Українські регіони - Захід** | • [Волинь. Україна з неба](https://www.youtube.com/watch?v=yE61lOcmuHs)<br>• [Німці України. Хто вони?](https://www.youtube.com/watch?v=OarTBeBi1DI) | Western Ukraine regional content, multicultural heritage |
-| **M67: Українські регіони - Схід** | • [Сіверськодонецьк — це Україна. Хоробрі міста](https://www.youtube.com/watch?v=exyLdpF8JZA) | Eastern Ukraine, resilience during war |
-| **M68: Українські регіони - Південь** | • [Болгари України. Хто вони?](https://www.youtube.com/watch?v=Oi-t55SYdq8) | Southern Ukraine, ethnic diversity |
-| **M69: Українські регіони - Центр** | • [Полтавщина. Україна з неба](https://www.youtube.com/watch?v=sX1xttuglKE) | Central Ukraine, Cossack heritage |
-| **M70-71: Сучасна Україна** | • [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg)<br>• [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4)<br>• [Віталій Портников: «Розвивати українське»](https://www.youtube.com/watch?v=cslHRvAe3oA) | Contemporary Ukrainian identity, language, culture |
-| **M72-74: Культура і суспільство** | • [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) | Overview of Ukraine's diversity and beauty |
+| **M71: Українські регіони - Захід** | • [Волинь. Україна з неба](https://www.youtube.com/watch?v=yE61lOcmuHs)<br>• [Німці України. Хто вони?](https://www.youtube.com/watch?v=OarTBeBi1DI) | Western Ukraine regional content, multicultural heritage |
+| **M72: Українські регіони - Схід** | • [Сіверськодонецьк — це Україна. Хоробрі міста](https://www.youtube.com/watch?v=exyLdpF8JZA) | Eastern Ukraine, resilience during war |
+| **M73: Українські регіони - Південь** | • [Болгари України. Хто вони?](https://www.youtube.com/watch?v=Oi-t55SYdq8) | Southern Ukraine, ethnic diversity |
+| **M74: Українські регіони - Центр** | • [Полтавщина. Україна з неба](https://www.youtube.com/watch?v=sX1xttuglKE) | Central Ukraine, Cossack heritage |
+| **M75-76: Сучасна Україна** | • [Що таке українська мова?](https://www.youtube.com/watch?v=nqReOxAjuWg)<br>• [Чим для вас є Україна?](https://www.youtube.com/watch?v=x75Me7dLRj4)<br>• [Віталій Портников: «Розвивати українське»](https://www.youtube.com/watch?v=cslHRvAe3oA) | Contemporary Ukrainian identity, language, culture |
+| **M77-79: Культура і суспільство** | • [Україна з неба](https://www.youtube.com/watch?v=vb0ZWc70gOk) | Overview of Ukraine's diversity and beauty |
 
 ---
 
-## Phase B1.8: Skills & Integration (M76-80)
+## Phase B1.8: Skills & Integration (M81-85)
 
 ### Media Requirements
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 76 | Новини: як читати | Authentic news articles | Various | ❓ TBD |
-| 77 | Інтерв'ю та подкасти | Podcast excerpts | Various | ❓ TBD |
-| 78 | B1 Grammar Integration | Grammar review materials | 🎨 Self-created | Planned |
-| 79 | B1 Vocabulary Integration | Vocabulary review materials | 🎨 Self-created | Planned |
-| 80 | B1 Capstone | Final assessment materials | 🎨 Self-created | Planned |
+| 81 | Новини: як читати | Authentic news articles | Various | ❓ TBD |
+| 82 | Інтерв'ю та подкасти | Podcast excerpts | Various | ❓ TBD |
+| 83 | B1 Grammar Integration | Grammar review materials | 🎨 Self-created | Planned |
+| 84 | B1 Vocabulary Integration | Vocabulary review materials | 🎨 Self-created | Planned |
+| 85 | B1 Capstone | Final assessment materials | 🎨 Self-created | Planned |
 
 ### Podcast Integration (B1.8)
 
 | Module | Podcast | Content Type | Status |
 |--------|---------|--------------|--------|
-| M77 | Ukrainian Lessons Podcast | Learning content | ✅ Linked |
-| M77 | Радіо Хартія (Zhadan) | Cultural/literary | ❓ TBD |
-| M76-77 | Hromadske interviews | News/current affairs | ❓ TBD |
+| M82 | Ukrainian Lessons Podcast | Learning content | ✅ Linked |
+| M82 | Радіо Хартія (Zhadan) | Cultural/literary | ❓ TBD |
+| M81-82 | Hromadske interviews | News/current affairs | ❓ TBD |
 
 ### News Sources (B1.8)
 
 | Module | Source | Type | Status |
 |--------|--------|------|--------|
-| M76 | Hromadske | Video news | ❓ TBD |
-| M76 | Liga.net | Political news | ❓ TBD |
-| M76 | Ukraїner | Documentary | ❓ TBD |
+| M81 | Hromadske | Video news | ❓ TBD |
+| M81 | Liga.net | Political news | ❓ TBD |
+| M81 | Ukraїner | Documentary | ❓ TBD |
 
 ---
 
@@ -520,26 +547,26 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Film/Series | Context | Status |
 |--------|-------------|---------|--------|
-| M71 | Тіні забутих предків (1965) | Classic Ukrainian cinema | 🌐 PD |
-| M71 | Кіборги (2017) | Contemporary war drama | ❓ TBD |
-| M71 | Слуга народу | Political comedy series | ❓ TBD |
+| M76 | Тіні забутих предків (1965) | Classic Ukrainian cinema | 🌐 PD |
+| M76 | Кіборги (2017) | Contemporary war drama | ❓ TBD |
+| M76 | Слуга народу | Political comedy series | ❓ TBD |
 
 ### Music References
 
 | Module | Artist/Song | Context | Status |
 |--------|-------------|---------|--------|
-| M70 | Eurovision winners | Contemporary pop | 🌐 Reference |
-| M70 | Океан Ельзи | Rock music culture | 🌐 Reference |
-| M70 | DakhaBrakha | Folk/world music | 🌐 Reference |
-| M70 | Kalush Orchestra | Eurovision 2022 | 🌐 Reference |
+| M75 | Eurovision winners | Contemporary pop | 🌐 Reference |
+| M75 | Океан Ельзи | Rock music culture | 🌐 Reference |
+| M75 | DakhaBrakha | Folk/world music | 🌐 Reference |
+| M75 | Kalush Orchestra | Eurovision 2022 | 🌐 Reference |
 
 ### Literature References
 
 | Module | Work | Author | Status |
 |--------|------|--------|--------|
-| M38 | Short stories | Коцюбинський | 🌐 PD |
-| M43 | Folk tales | Traditional | 🌐 PD |
-| M69 | Poetry excerpts | Шевченко | 🌐 PD |
+| M43 | Short stories | Коцюбинський | 🌐 PD |
+| M47 | Folk tales | Traditional | 🌐 PD |
+| M74 | Poetry excerpts | Шевченко | 🌐 PD |
 
 ---
 
@@ -549,9 +576,9 @@ yt-dlp "ytsearch5:Ukrainian complex sentences складні речення" --p
 
 | Module | Topic | Potential Video | Status |
 |--------|-------|-----------------|--------|
-| M66 | Western dialects | Галицьке наріччя | ❓ TBD |
-| M67 | Eastern dialects | Слобожанське наріччя | ❓ TBD |
-| M69 | Language standardization | Історія літературної мови | ❓ TBD |
+| M71 | Western dialects | Галицьке наріччя | ❓ TBD |
+| M72 | Eastern dialects | Слобожанське наріччя | ❓ TBD |
+| M74 | Language standardization | Історія літературної мови | ❓ TBD |
 
 **Note:** Історія мови (youtube.com/@Istoria-Movy) is marked as "PURE GOLD" for B1-C1 content on Ukrainian language development and dialectology.
 

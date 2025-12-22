@@ -42,19 +42,6 @@ vocabulary_count: 30
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN VOCABULARY: body parts and organs](https://www.youtube.com/watch?v=JZGl3Qo25Yc) — Red Purple Ukrainian 
->
->
-> **Body Parts:** [Body Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/) — Body parts with illustrations and audio
->
-> **Podcast:** [FMU 1-52 | Body Parts](https://www.ukrainianlessons.com/fmu52/) — Vocabulary booster for body parts
->
-> **Health Phrases:** [Ukrainian Phrasebook](https://www.ukrainianlessons.com/phrasebook/) — Essential health phrases
-
 ## Expressing Pain: Болить...
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -216,23 +203,25 @@ vocabulary_count: 30
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 
-- **Head parts (5)**: голова, око/очі, вухо/вуха, ніс, рот, зуб/зуби
-- **Body parts (5)**: тіло, горло, живіт, спина, рука, нога
-- **Health vocabulary (10)**: здоров'я, лікар, лікарня, аптека, ліки, таблетка, температура, кашель, нежить, застуда
-- **Health states**: хворий/хвора (sick), здоровий/здорова (healthy)
-- **Pain structure**: У мене болить + singular / болять + plural
-- **Feeling expressions**: Я хворий/хвора (I'm sick), Я здоровий/здорова (I'm healthy)
-- **Emergency**: швидка допомога (ambulance), call 103
+
+# Summary
+
+Ви вивчили частини тіла та здоров'я! Тепер ви можете описати свій біль. (You learned body parts and health! Now you can describe your pain.) Ви знаєте, як купити ліки в аптеці або викликати швидку допомогу. Ви також знаєте, як почувається хворий або здоровий. Це чудовий результат! (This is a great result!)
 
 ---
 
-**Coming up:** Module 32 will teach you about family members!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Body Parts Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/) — Complete body vocabulary
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/health
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Activities
+# Activities
 
 ## match-up: Body Parts
 
@@ -287,13 +276,12 @@ Match the Ukrainian word with its English meaning.
 - живіт
 - спина
 - горло
-- серце
 
 ### Кінцівки (Limbs)
 - руки
 - ноги
-- пальці
-- долоні
+- палець
+- коліно
 
 ---
 
@@ -429,39 +417,55 @@ Match the Ukrainian word with its English meaning.
 
 ## quiz: Болить or Болять?
 
-> Choose the correct verb form.
+> Select the correct verb form (singular or plural) for these specific body parts.
 
-1. Голова
-   - [x] болить
-   - [ ] болять
+1. Which verb form is correct for "Голова" in a sentence?
+   - [x] болить (singular)
+   - [ ] болять (plural)
+   - [ ] болю
+   - [ ] болі
 
-2. Зуби
-   - [x] болять
-   - [ ] болить
+2. How should you correctly describe if your "Зуби" are currently hurting?
+   - [x] болять (plural)
+   - [ ] болить (singular)
+   - [ ] болі
+   - [ ] болю
 
-3. Горло
-   - [x] болить
-   - [ ] болять
+3. What is the correct form to use for the word "Горло"?
+   - [x] болить (singular)
+   - [ ] болять (plural)
+   - [ ] болі
+   - [ ] болить-не
 
-4. Очі
-   - [x] болять
-   - [ ] болить
+4. Which word correctly matches the plural noun "Очі" in Ukrainian?
+   - [x] болять (plural)
+   - [ ] болить (singular)
+   - [ ] болі
+   - [ ] болю
 
-5. Живіт
-   - [x] болить
-   - [ ] болять
+5. How do you accurately say that your "Живіт" hurts today?
+   - [x] болить (singular)
+   - [ ] болять (plural)
+   - [ ] болю
+   - [ ] болі
 
-6. Ноги
-   - [x] болять
-   - [ ] болить
+6. What is the right form for describing if "Ноги" hurt?
+   - [x] болять (plural)
+   - [ ] болить (singular)
+   - [ ] болі
+   - [ ] болю
 
-7. Спина
-   - [x] болить
-   - [ ] болять
+7. Which verb should you choose for the singular noun "Спина"?
+   - [x] болить (singular)
+   - [ ] болять (plural)
+   - [ ] болю
+   - [ ] болі
 
-8. Руки
-   - [x] болять
-   - [ ] болить
+8. How would you correctly say that your "Руки" are hurting?
+   - [x] болять (plural)
+   - [ ] болить (singular)
+   - [ ] болю
+   - [ ] болі
 
 ---
 
@@ -526,8 +530,8 @@ Match the Ukrainian word with its English meaning.
 1. болить / у мене / голова
    > [!answer] У мене болить голова
 
-2. хворий / я
-   > [!answer] Я хворий
+2. дуже / сьогодні / я / хворий
+   > [!answer] Сьогодні я дуже хворий
 
 3. є / у вас / ліки
    > [!answer] У вас є ліки
@@ -544,8 +548,8 @@ Match the Ukrainian word with its English meaning.
 7. допомогу / швидку / викличте
    > [!answer] Викличте швидку допомогу
 
-8. лікар / потрібен
-   > [!answer] Потрібен лікар
+8. лікар / дуже / потрібен / мені
+   > [!answer] Мені дуже потрібен лікар
 
 9. аптеку / йду / я / в
    > [!answer] Я йду в аптеку
@@ -600,7 +604,7 @@ Match the Ukrainian word with its English meaning.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

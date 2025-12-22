@@ -6,7 +6,7 @@
 - **Words:** ✅ 1082/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
-- **Unique_types:** ✅ 7/4 types
+- **Unique_types:** ✅ 6/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
@@ -14,31 +14,28 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 16.5% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 18.5% (target 10-25% (M03))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Gender Code** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 160 | Included in Core |
+| **Warm-up** | ✅ | 101 | Included in Core |
 | **Presentation** | ✅ | 295 | Included in Core |
 | **Practice** | ⚪️ | 280 | Skipped |
 | **Production** | ➖ | 102 | Excluded Type |
 | **Cultural Insight** | ✅ | 149 | Included in Core |
-| **Summary** | ✅ | 96 | Included in Core |
+| **Summary** | ✅ | 155 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Gender Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Gender Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Sort by Gender** | 🎮 | 29 | Activity (29 items, min 8) |
+| **group-sort: Sort by Gender** | 🎮 | 29 | Activity (29 items, min 12) |
 | **fill-in: Complete with Gender** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Gender Rules** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: Build the Word** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: More Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **unjumble: Build Gender Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
+| **quiz: Gender Sentence Structure** | 🎮 | 8 | Activity (8 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

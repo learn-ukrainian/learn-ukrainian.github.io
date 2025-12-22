@@ -14,28 +14,25 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 26.3% (target 15-35% (M06))
+- **Immersion:** 🇺🇦 26.0% (target 15-35% (M06))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **The Living Verb I** | ⚪️ | 187 | Skipped |
-| **Warm-up** | ✅ | 102 | Included in Core |
+| **Warm-up** | ✅ | 45 | Included in Core |
 | **Presentation** | ✅ | 449 | Included in Core |
 | **Practice** | ⚪️ | 215 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
-| **Summary** | ✅ | 82 | Included in Core |
+| **Summary** | ✅ | 139 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
-| **match-up: Infinitive to English** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Infinitive to English** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Conjugation Recognition** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Person and Form** | 🎮 | 24 | Activity (24 items, min 8) |
+| **group-sort: Person and Form** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Complete the Sentence** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Verb Rules** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: Build the Verb** | 🎮 | 12 | Activity (12 items, min 8) |

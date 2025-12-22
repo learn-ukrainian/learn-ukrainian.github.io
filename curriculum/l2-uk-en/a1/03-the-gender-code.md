@@ -32,17 +32,6 @@ Think of it like a secret code: the last letter reveals the gender. And once you
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Gender of Ukrainian Nouns ](https://www.youtube.com/watch?v=Vl5MAW3AYoU) —  Basic Ukrainian Grammar|Learn Ukrainian with Vakulenko
->
->
-> **Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
->
-> **Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
->
-> **Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms
-
 ## Presentation
 
 ### The Three Genders
@@ -198,8 +187,7 @@ This pattern consistency makes Ukrainian **easier to learn** than languages with
 > Gender isn't just grammar — it shapes how Ukrainians see the world!
 
 ---
-
-## Summary
+# Summary
 
 **You've unlocked the Ukrainian Gender Code!**
 
@@ -220,8 +208,18 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 **Next Module:** You'll learn how to say "This is..." and use pronouns — building on the gender foundation you just mastered.
 
 ---
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Gender of Ukrainian Nouns ](https://www.youtube.com/watch?v=Vl5MAW3AYoU) —  Basic Ukrainian Grammar|Learn Ukrainian with Vakulenko
+>
+>
+> **Grammar Guide:** [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Infographic with rules and exceptions
+>
+> **Video:** [How to Know Noun Gender](https://www.ukrainianlessons.com/video-noun-gender/) — 8-minute grammar guide
+>
+> **Plurals:** [Plural of Nouns](https://www.ukrainianlessons.com/grammar-plural-nouns/) — How gender affects plural forms
 
-## Activities
+# Activities
 
 ## quiz: Gender Recognition
 
@@ -551,45 +549,61 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
     > [!answer] ліжко
     > (bed)
 
-## unjumble: Build Gender Sentences
+## quiz: Gender Sentence Structure
 
-> Put the words in order to make correct sentences about gender.
+> Choose the correct sentence order.
 
-1. це / Що / ?
-   > [!answer] Що це
-   > (What is this?)
+1. Identify the correct word order for the sentence: "What is this?"
+   - [x] Що це
+   - [ ] це Що
+   - [ ] це Що
+   > Correct order: Що це
 
-2. книга / Це
-   > [!answer] Це книга
-   > (This is a book.)
+2. Identify the correct word order for the sentence: "This is a book."
+   - [x] Це книга
+   - [ ] книга Це
+   - [ ] книга Це
+   > Correct order: Це книга
 
-3. вікно / Це / велике
-   > [!answer] Це велике вікно
-   > (This is a big window.)
+3. Identify the correct word order for the sentence: "This is a big window."
+   - [x] Це велике вікно
+   - [ ] велике Це вікно
+   - [ ] вікно Це велике
+   > Correct order: Це велике вікно
 
-4. стіл / новий / Це
-   > [!answer] Це новий стіл
-   > (This is a new table.)
+4. Identify the correct word order for the sentence: "This is a new table."
+   - [x] Це новий стіл
+   - [ ] новий Це стіл
+   - [ ] стіл Це новий
+   > Correct order: Це новий стіл
 
-5. маленька / Це / кімната
-   > [!answer] Це маленька кімната
-   > (This is a small room.)
+5. Identify the correct word order for the sentence: "This is a small room."
+   - [x] Це маленька кімната
+   - [ ] маленька Це кімната
+   - [ ] кімната Це маленька
+   > Correct order: Це маленька кімната
 
-6. місто / красиве / Це
-   > [!answer] Це красиве місто
-   > (This is a beautiful city.)
+6. Identify the correct word order for the sentence: "This is a beautiful city."
+   - [x] Це красиве місто
+   - [ ] красиве Це місто
+   - [ ] місто Це красиве
+   > Correct order: Це красиве місто
 
-7. хліб / смачний / Це
-   > [!answer] Це смачний хліб
-   > (This is tasty bread.)
+7. Identify the correct word order for the sentence: "This is tasty bread."
+   - [x] Це смачний хліб
+   - [ ] смачний Це хліб
+   - [ ] хліб Це смачний
+   > Correct order: Це смачний хліб
 
-8. вода / холодна / Це
-   > [!answer] Це холодна вода
-   > (This is cold water.)
+8. Identify the correct word order for the sentence: "This is cold water."
+   - [x] Це холодна вода
+   - [ ] холодна Це вода
+   - [ ] вода Це холодна
+   > Correct order: Це холодна вода
+
 
 ---
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

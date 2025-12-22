@@ -37,21 +37,6 @@ Today, you'll learn how to navigate Ukrainian stores and cafés with confidence.
 > 💡 **Did You Know?**
 >
 > Ukrainians love their **ринки** (markets)! Fresh produce, homemade cheeses, and seasonal fruits are sold by vendors who've been selling at the same spot for decades. It's not just shopping—it's a social experience. You greet the vendors, they remember your preferences, and you bargain a little. Try saying "Скільки коштує?" (How much is it?) at Besarabsky Market in Kyiv!
-
-
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Basic shopping words #  89](https://www.youtube.com/watch?v=xdepcyiaKd4) — Ukrainian Language
->
->
-> **Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary
->
-> **Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive
->
-> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine
-
 ## Presentation
 
 ### Grammar Review: Accusative and Genitive Together
@@ -326,25 +311,39 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 
 ---
 
-## Activities
+## Need More Practice?
+
+
+---
+
+
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Basic shopping words #  89](https://www.youtube.com/watch?v=xdepcyiaKd4) — Ukrainian Language
+>
+>
+> **Shopping Vocabulary:** [FMU 1-18 | Shopping Vocabulary](https://www.ukrainianlessons.com/fmu18/) — Essential store vocabulary
+>
+> **Grocery Store:** [ULP 2-46 | At the Grocery Store](https://www.ukrainianlessons.com/episode46/) — Food shopping + genitive
+>
+> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Visual guide to Ukrainian cuisine
+
+# Activities
 
 ## match-up: Food & Drinks Vocabulary
-> Match the Ukrainian words with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| кава | coffee |
-| чай | tea |
-| вода | water |
-| сік | juice |
-| хліб | bread |
-| м'ясо | meat |
+| овочі | vegetables |
+| фрукти | fruits |
+| м’ясо | meat |
 | риба | fish |
+| яйця | eggs |
+| сік | juice |
+| вода | water |
+| хліб | bread |
 | сир | cheese |
-| яйце | egg |
-| салат | salad |
-| борщ | borscht |
-| десерт | dessert |
+
 
 ## fill-in: Shopping Phrases
 > Fill in the blank with the correct word.
@@ -398,114 +397,108 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
     > [!options] суп | супу | супом | супи
 
 ## group-sort: Food vs Non-Food Items
-> Sort these items into food and non-food categories.
-
-### Food Items
-- кава
+### Food (Їжа)
+- яблуко
+- картопля
+- морква
+- курка
+- рис
 - хліб
-- м'ясо
-- сир
-- овочі
-- борщ
-- риба
-- яйце
 
-### Non-Food Items
-- мило
-- шампунь
-- зубна паста
-- папір
-- ручка
-- олівець
-- зошит
+### Non-Food (Не їжа)
 - пакет
+- чек
+- каса
+- картка
+- гроші
+- сумка
+
 
 ## quiz: Shopping Situations
-> Choose the correct answer.
+1. Where do you pay for items?
+   - [x] на касі
+   - [ ] на полиці
+   - [ ] у кошику
+   - [ ] у візку
+   > Checkout (каса) is where you pay.
 
-1. You want to ask the price of cheese. What do you say?
-   - [ ] Скільки є сир?
-   - [x] Скільки коштує сир?
-   - [ ] Який сир?
-   - [ ] Чому сир?
-   > "Скільки коштує?" = "How much does it cost?"
-
-2. How do you order coffee in accusative case?
-   - [ ] Я хочу кава.
-   - [x] Я хочу каву.
-   - [ ] Я хочу кави.
-   - [ ] Я хочу кавою.
-   > Feminine -а becomes -у in accusative: кава → каву
-
-3. What does "офіціант" mean?
-   - [ ] office
-   - [x] waiter
-   - [ ] official
-   - [ ] restaurant
-   > офіціант = waiter (masculine)
-
-4. You want to ask for the bill. What do you say?
-   - [ ] Меню, будь ласка.
-   - [ ] Вода, будь ласка.
-   - [x] Рахунок, будь ласка.
-   - [ ] Гроші, будь ласка.
-   > Рахунок = bill/check
-
-5. Which word means "cheap"?
-   - [ ] дорого
-   - [x] дешево
-   - [ ] ціна
-   - [ ] знижка
-   > дешево = cheap (adverb)
-
-6. How do you say "a glass of water" using genitive?
-   - [ ] Склянка вода
-   - [ ] Склянку воду
-   - [x] Склянку води
-   - [ ] Склянка води
-   > Genitive for quantities: вода → води
-
-7. Where do you pay at a supermarket?
-   - [ ] магазин
+2. What do you use for small shopping?
+   - [x] кошик
+   - [ ] візок
    - [ ] пакет
-   - [x] каса
-   - [ ] супермаркет
-   > каса = checkout/cashier
+   - [ ] чек
+   > Basket (кошик) for few items.
 
-8. What does "відчинено" mean?
-   - [ ] closed
-   - [x] open
-   - [ ] expensive
-   - [ ] cheap
-   > відчинено = open (adverb)
+3. How do you accurately ask for a bag?
+   - [x] Мені потрібен пакет
+   - [ ] Мені потрібна пакет
+   - [ ] Я пакет хочу
+   - [ ] Де пакет?
+   > "Потрібен" for masculine "пакет".
 
-9. Which is NOT a beverage?
-   - [ ] кава
-   - [ ] чай
-   - [ ] сік
-   - [x] хліб
-   > хліб = bread (not a drink)
+4. How do you ask for the price?
+   - [x] Яка ціна?
+   - [ ] Де ціна?
+   - [ ] Що ціна?
+   - [ ] Як ціна?
+   > Asking for "which" price.
 
-10. You're buying groceries. What do you say?
-    - [ ] Я читаю хліб.
-    - [x] Я купую хліб.
-    - [ ] Я пишу хліб.
-    - [ ] Я бачу хліб.
-    > купувати = to buy
+5. How can you say accurately "I pay by card"?
+   - [x] Я плачу карткою
+   - [ ] Я плачу готівку
+   - [ ] Я плачу чек
+   - [ ] Картка я плачу
+   > Instrumental case "карткою".
 
-11. Which word means "tasty"?
-    - [ ] страва
-    - [x] смачний
-    - [ ] меню
-    - [ ] закуска
-    > смачний = tasty (adjective)
+6. Which phrase means accurately "The discount is 10%"?
+   - [x] Знижка десять відсотків
+   - [ ] Ціна десять гривень
+   - [ ] Каса відчинена
+   - [ ] Чек тут
+   > "Знижка" is a discount.
 
-12. How do you say "I'll take bread, please"?
-    - [ ] Я хочу хліб, будь ласка.
-    - [x] Я візьму хліб, будь ласка.
-    - [ ] Я читаю хліб, будь ласка.
-    - [ ] Скільки коштує хліб?
-    > "Я візьму..." = "I'll take..."
+7. What do you use for a big shopping?
+   - [x] візок
+   - [ ] кошик
+   - [ ] пакет
+   - [ ] сумка
+   > Trolley (візок) for many items.
+
+8. How do you accurately say "Show me the receipt"?
+   - [x] Покажіть мені чек
+   - [ ] Дайте мені чек
+   - [ ] Де мій чек?
+   - [ ] Чек покажіть
+   > Imperative "Покажіть".
+
+9. Where is the milk usually stored?
+   - [x] на полиці
+   - [ ] на касі
+   - [ ] у чеку
+   - [ ] у знижці
+   > Items are on the shelf (полиця).
+
+10. How do you say accurately "I have fresh vegetables"?
+    - [x] У мене є свіжі овочі
+    - [ ] У мене свіжий овоч
+    - [ ] Свіжі овочі у мене
+    - [ ] Я маю свіжі овоч
+    > Plural agreement "свіжі овочі".
+
+11. How do you accurately ask for cash payments?
+    - [x] Ви приймаєте готівку?
+    - [ ] Ви маєте готівку?
+    - [ ] Де готівка?
+    - [ ] Готівка є?
+    > Accusative "готівку" after verb.
+
+12. How do you say accurately "This is cheap"?
+    - [x] Це дешево
+    - [ ] Це дорого
+    - [ ] Це ціна
+    - [ ] Дешево це
+    > "Дешево" is the adverb for cheap.
+
 
 ## true-false: Shopping Culture
 > Decide if each statement is true or false.
@@ -546,74 +539,96 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 - [ ] It's rude to ask "Ще щось?" (Anything else?) in a store.
   > Incorrect! This is a standard polite question from salespeople.
 
-## unjumble: Shopping Sentences
-> Put the words in the correct order to form sentences.
+## quiz: Shopping Sentences Order
 
-1. хочу / Я / каву
-   > [!answer] Я хочу каву
-   > (I want coffee.) [3 words]
+> Choose the correct sentence order.
 
-2. коштує / Скільки / хліб
-   > [!answer] Скільки коштує хліб
-   > (How much is bread?) [3 words]
+1. Correct sentence order for: "I want coffee."
+   - [x] Я хочу каву
+   - [ ] хочу Я каву
+   - [ ] Incorrect order for this sentence
+   > Correct: Я хочу каву
 
-3. візьму / Я / будь ласка / сир
-   > [!answer] Я візьму сир, будь ласка
-   > (I'll take cheese, please.) [5 words]
+2. Correct sentence order for: "How much is bread?"
+   - [x] Скільки коштує хліб
+   - [ ] коштує Скільки хліб
+   - [ ] Incorrect order for this sentence
+   > Correct: Скільки коштує хліб
 
-4. води / Склянку / будь ласка
-   > [!answer] Склянку води, будь ласка
-   > (A glass of water, please.) [4 words]
+3. Correct sentence order for: "I'll take cheese, please."
+   - [x] Я візьму сир, будь ласка
+   - [ ] візьму Я сир, будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Я візьму сир, будь ласка
 
-5. купуємо / Ми / овочі / та / м'ясо
-   > [!answer] Ми купуємо овочі та м'ясо
-   > (We buy vegetables and meat.) [5 words]
+4. Correct sentence order for: "A glass of water, please."
+   - [x] Склянку води, будь ласка
+   - [ ] води, Склянку будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Склянку води, будь ласка
 
-6. є / меню / У / десерт
-   > [!answer] У меню є десерт
-   > (Is there dessert on the menu?) [4 words]
+5. Correct sentence order for: "We buy vegetables and meat."
+   - [x] Ми купуємо овочі та м'ясо
+   - [ ] купуємо Ми овочі та м'ясо
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми купуємо овочі та м'ясо
 
-7. Рахунок / будь ласка
-   > [!answer] Рахунок, будь ласка
-   > (The bill, please.) [3 words]
+6. Correct sentence order for: "Is there dessert on..."
+   - [x] У меню є десерт
+   - [ ] меню У є десерт
+   - [ ] Incorrect order for this sentence
+   > Correct: У меню є десерт
 
-8. дуже / Борщ / смачний
-   > [!answer] Борщ дуже смачний
-   > (Borscht is very tasty.) [3 words]
+7. Correct sentence order for: "The bill, please."
+   - [x] Рахунок, будь ласка
+   - [ ] будь Рахунок, ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Рахунок, будь ласка
 
-9. шукаю / Я / зубну / пасту
-   > [!answer] Я шукаю зубну пасту
-   > (I'm looking for toothpaste.) [4 words]
+8. Correct sentence order for: "Borscht is very tasty."
+   - [x] Борщ дуже смачний
+   - [ ] дуже Борщ смачний
+   - [ ] Incorrect order for this sentence
+   > Correct: Борщ дуже смачний
 
-10. магазин / де / Вибачте
-    > [!answer] Вибачте, де магазин
-    > (Excuse me, where is the store?) [4 words]
+9. Correct sentence order for: "I'm looking for toothpaste."
+   - [x] Я шукаю зубну пасту
+   - [ ] шукаю Я зубну пасту
+   - [ ] Incorrect order for this sentence
+   > Correct: Я шукаю зубну пасту
 
-11. візьму / Я / суп / та / салат
-    > [!answer] Я візьму суп та салат
-    > (I'll take soup and salad.) [5 words]
+10. Correct sentence order for: "Excuse me, where is..."
+   - [x] Вибачте, де магазин
+   - [ ] де Вибачте, магазин
+   - [ ] Incorrect order for this sentence
+   > Correct: Вибачте, де магазин
 
-12. відчинено / Магазин / о / восьмій
-    > [!answer] Магазин відчинено о восьмій
-    > (The store opens at 8.) [4 words]
+11. Correct sentence order for: "I'll take soup and salad."
+   - [x] Я візьму суп та салат
+   - [ ] візьму Я суп та салат
+   - [ ] Incorrect order for this sentence
+   > Correct: Я візьму суп та салат
+
+12. Correct sentence order for: "The store opens at 8."
+   - [x] Магазин відчинено о восьмій
+   - [ ] відчинено Магазин о восьмій
+   - [ ] Incorrect order for this sentence
+   > Correct: Магазин відчинено о восьмій
+
 
 ## match-up: Non-Food Items
-> Match items with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| мило | soap |
-| шампунь | shampoo |
-| зубна паста | toothpaste |
-| папір | paper |
-| ручка | pen |
-| олівець | pencil |
-| зошит | notebook |
-| пакет | bag |
-| каса | checkout |
-| продавець | salesperson |
-| супермаркет | supermarket |
-| магазин | store |
+| пакет | bag/package |
+| каса | checkout/till |
+| гроші | money |
+| чек | receipt |
+| картка | card |
+| знижка | discount |
+| полиця | shelf |
+| кошик | basket |
+| візок | trolley |
+
 
 ## fill-in: Café Dialogue
 > Complete the café conversation with the correct words.
@@ -667,37 +682,26 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
     > [!options] вина | вино | виною | вину
 
 ## group-sort: Beverages vs Food vs Items
-> Sort these words into three categories.
-
 ### Beverages (Напої)
-- кава
-- чай
-- сік
 - вода
-- вино
-- пиво
+- сік
+- чай
+- кава
 
 ### Food (Їжа)
-- хліб
-- сир
 - м'ясо
 - риба
-- овочі
-- яйце
-- борщ
-- салат
+- яйця
+- сир
 
-### Store Items (Товари)
-- мило
-- шампунь
-- зубна паста
-- папір
-- ручка
-- олівець
-- зошит
+### Items (Предмети)
+- чек
+- каса
 - пакет
+- картка
 
-## Vocabulary
+
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

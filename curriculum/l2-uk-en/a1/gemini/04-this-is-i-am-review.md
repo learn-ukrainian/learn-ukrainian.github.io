@@ -14,30 +14,25 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 19.0% (target 10-25% (M04))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
+- **Immersion:** 🇺🇦 18.8% (target 10-25% (M04))
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **This Is / I Am** | ⚪️ | 0 | Skipped |
-| **Warm-up** | ✅ | 193 | Included in Core |
+| **Warm-up** | ✅ | 135 | Included in Core |
 | **Presentation** | ✅ | 676 | Included in Core |
 | **Practice** | ⚪️ | 180 | Skipped |
 | **Production** | ➖ | 119 | Excluded Type |
 | **Cultural Insight** | ✅ | 166 | Included in Core |
 | **Summary** | ✅ | 127 | Included in Core |
+| **Need More Practice?** | ⚪️ | 58 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **quiz: Personal Pronouns** | 🎮 | 12 | Activity (12 items, min 8) |
 | **match-up: Pronouns and Meanings** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Complete the Sentences** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Grammar Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Formal vs Informal** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Formal vs Informal** | 🎮 | 12 | Activity (12 items, min 12) |
 | **quiz: Gender Forms** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: Build the Words** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Identity Statements** | 🎮 | 12 | Activity (12 items, min 8) |

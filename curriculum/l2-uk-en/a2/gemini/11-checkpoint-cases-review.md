@@ -14,24 +14,22 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.5% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 44.7% (checkpoint - no gate)
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Checkpoint - Cases** | ➖ | 126 | Excluded Type |
+| **Checkpoint - Cases** | ➖ | 83 | Excluded Type |
 | **Skill 1: Dative Case** | ⚪️ | 160 | Skipped |
 | **Skill 2: Instrumental Case** | ⚪️ | 253 | Skipped |
 | **Skill 3: Prepositions + Cases** | ⚪️ | 109 | Skipped |
 | **Skill 4: Service Vocabulary** | ➖ | 297 | Excluded Type |
 | **Integration Challenge** | ⚪️ | 147 | Skipped |
 | **Summary** | ✅ | 104 | Included in Core |
+| **Need More Practice?** | ⚪️ | 43 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Case Questions** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Case Selection** | 🎮 | 12 | Activity (12 items, min 6) |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1121/1000
+- **Words:** ✅ 1115/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.6% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 42.1% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 227 | Included in Core |
+| **Warm-up** | ✅ | 191 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Forming Comparative Adjectives** | ⚪️ | 132 | Skipped |
 | **Irregular Comparatives** | ⚪️ | 40 | Skipped |
@@ -37,6 +34,7 @@
 | **Practice Examples** | ⚪️ | 163 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 236 | Skipped |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Comparative Forms** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Form the Comparative** | 🎮 | 12 | Activity (12 items, min 8) |

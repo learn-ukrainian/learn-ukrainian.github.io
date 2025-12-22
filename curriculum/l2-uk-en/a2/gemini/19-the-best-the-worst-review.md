@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1080/1000
+- **Words:** ✅ 1075/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.3% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 42.8% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 91 | Included in Core |
+| **Warm-up** | ✅ | 56 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Forming Superlatives** | ⚪️ | 77 | Skipped |
 | **Using Superlatives** | ⚪️ | 94 | Skipped |
@@ -40,6 +37,7 @@
 | **Practice Examples** | ⚪️ | 146 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 143 | Skipped |
+| **Need More Practice?** | ⚪️ | 30 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Superlative Forms** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Form the Superlative** | 🎮 | 12 | Activity (12 items, min 8) |

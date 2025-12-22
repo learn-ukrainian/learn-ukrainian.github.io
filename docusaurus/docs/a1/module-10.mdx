@@ -329,27 +329,27 @@ Fill in the customer's responses:
 
 ## Need More Practice?
 
+---
+
 :::info[External Resources]
 
 **Alphabet Review:**
-- 🎧 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
-- 🔊 [Forvo Ukrainian](https://forvo.com/languages/uk/) — Native speaker pronunciation dictionary
+- 📖 [Ukrainian Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
+- 🎙️ [FMU 1-01: The Ukrainian Alphabet](https://www.ukrainianlessons.com/fmu01/) — Podcast lesson
 
-**Podcast Episodes:**
-- 🎙️ [Top 10 Episodes for Beginners](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/) — Start here!
-- 🎙️ [ULP 1-22: First Conjugation](https://www.ukrainianlessons.com/episode22/) — Class I verb deep dive
-- 🎙️ [ULP 1-24: Second Conjugation](https://www.ukrainianlessons.com/episode24/) — Class II verbs explained
+**Grammar Basics:**
+- 📖 [Noun Genders in Ukrainian](https://www.ukrainianlessons.com/noun-genders-in-ukrainian/) — Gender rules
+- 📖 [Present Tense Verbs](https://www.ukrainianlessons.com/present-tense-verbs/) — Conjugation guide
 
 **Struggling with a skill?** Go back to:
 - Cyrillic → Modules 1-2
 - Gender → Module 3
-- Verbs → Modules 6, 8
+- Pronouns → Module 4
+- Verbs → Modules 6-8
 - Questions → Module 7
 - Food → Module 9
 :::
 
-
----
 
 ## 🎯 Activities
 
@@ -357,7 +357,7 @@ Fill in the customer's responses:
 
 <Quiz questions={[
   {
-    question: `хліб`,
+    question: `What is the English translation of \"хліб\"?`,
     options: [
       { text: `bread`, correct: true },
       { text: `tea`, correct: false },
@@ -365,7 +365,7 @@ Fill in the customer's responses:
       { text: `coffee`, correct: false }
     ]
   },  {
-    question: `вареники`,
+    question: `How do you translate \"вареники\" to English?`,
     options: [
       { text: `soup`, correct: false },
       { text: `dumplings`, correct: true },
@@ -373,7 +373,7 @@ Fill in the customer's responses:
       { text: `milk`, correct: false }
     ]
   },  {
-    question: `дякую`,
+    question: `What does the word \"дякую\" mean?`,
     options: [
       { text: `hello`, correct: false },
       { text: `goodbye`, correct: false },
@@ -381,7 +381,7 @@ Fill in the customer's responses:
       { text: `please`, correct: false }
     ]
   },  {
-    question: `добрий день`,
+    question: `What is the meaning of \"добрий день\"?`,
     options: [
       { text: `good day`, correct: true },
       { text: `good night`, correct: false },
@@ -389,7 +389,7 @@ Fill in the customer's responses:
       { text: `goodbye`, correct: false }
     ]
   },  {
-    question: `вікно`,
+    question: `How do you translate \"вікно\" to English?`,
     options: [
       { text: `table`, correct: false },
       { text: `chair`, correct: false },
@@ -397,7 +397,7 @@ Fill in the customer's responses:
       { text: `door`, correct: false }
     ]
   },  {
-    question: `молоко`,
+    question: `What is the English translation of \"молоко\"?`,
     options: [
       { text: `water`, correct: false },
       { text: `milk`, correct: true },
@@ -405,7 +405,7 @@ Fill in the customer's responses:
       { text: `coffee`, correct: false }
     ]
   },  {
-    question: `книга`,
+    question: `What does the word \"книга\" mean?`,
     options: [
       { text: `newspaper`, correct: false },
       { text: `book`, correct: true },
@@ -413,7 +413,7 @@ Fill in the customer's responses:
       { text: `letter`, correct: false }
     ]
   },  {
-    question: `будь ласка`,
+    question: `What is the meaning of \"будь ласка\"?`,
     options: [
       { text: `thank you`, correct: false },
       { text: `please`, correct: true },
@@ -421,7 +421,7 @@ Fill in the customer's responses:
       { text: `goodbye`, correct: false }
     ]
   },  {
-    question: `кава`,
+    question: `How do you translate \"кава\" to English?`,
     options: [
       { text: `tea`, correct: false },
       { text: `water`, correct: false },
@@ -429,7 +429,7 @@ Fill in the customer's responses:
       { text: `juice`, correct: false }
     ]
   },  {
-    question: `місто`,
+    question: `What is the English translation of \"місто\"?`,
     options: [
       { text: `country`, correct: false },
       { text: `city`, correct: true },
@@ -437,7 +437,7 @@ Fill in the customer's responses:
       { text: `street`, correct: false }
     ]
   },  {
-    question: `студент`,
+    question: `What does the word \"студент\" mean?`,
     options: [
       { text: `student`, correct: true },
       { text: `teacher`, correct: false },
@@ -445,7 +445,7 @@ Fill in the customer's responses:
       { text: `worker`, correct: false }
     ]
   },  {
-    question: `українська`,
+    question: `How do you translate \"українська\" to English?`,
     options: [
       { text: `English`, correct: false },
       { text: `Ukrainian`, correct: true },
@@ -466,11 +466,7 @@ Fill in the customer's responses:
   { left: `хліб`, right: `masculine` },
   { left: `місто`, right: `neuter` },
   { left: `вода`, right: `feminine` },
-  { left: `чай`, right: `masculine` },
-  { left: `море`, right: `neuter` },
-  { left: `їжа`, right: `feminine` },
-  { left: `борщ`, right: `masculine` },
-  { left: `молоко`, right: `neuter` }
+  { left: `чай`, right: `masculine` }
 ]} />
 
 ### Demonstrative Agreement
@@ -638,8 +634,8 @@ Fill in the customer's responses:
 ### Verb Classes
 
 <GroupSort groups={{
-  "Class I (-ати)": ["читати", "писати", "знати", "працювати", "гуляти", "снідати"],
-  "Class II (-ити)": ["говорити", "робити", "любити", "ходити", "вчити", "бачити"],
+  "Class I (-ати)": ["читати", "писати", "знати", "працювати", "снідати"],
+  "Class II (-ити)": ["говорити", "робити", "любити", "ходити"],
   "Irregular": ["їсти", "пити", "бути"]
 }} />
 
@@ -810,11 +806,7 @@ Fill in the customer's responses:
   { left: `чай`, right: `tea` },
   { left: `вода`, right: `water` },
   { left: `молоко`, right: `milk` },
-  { left: `сік`, right: `juice` },
-  { left: `їжа`, right: `food` },
-  { left: `сніданок`, right: `breakfast` },
-  { left: `обід`, right: `lunch` },
-  { left: `вечеря`, right: `dinner` }
+  { left: `сік`, right: `juice` }
 ]} />
 
 ### Cyrillic Practice

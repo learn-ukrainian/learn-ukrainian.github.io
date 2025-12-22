@@ -32,15 +32,6 @@ Now that you can make comparisons (bigger, better), let's go to the extreme! Thi
 - Irregular superlatives
 - Intensifiers (very, extremely, incredibly)
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Comparative & Superlative Adjectives ...](https://www.youtube.com/watch?v=D0OqItrsAQM) — Practice with me!
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -231,7 +222,7 @@ Try to translate these common superlative phrases:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -262,9 +253,20 @@ Use these to add emotion without comparison:
 
 Тепер ви знаєте **найкращі** слова, щоб описати **найважливіші** речі у вашому житті! 🏆
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
+> - 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Superlative Forms
+> З'єднайте вищий ступінь з найвищим. | Match comparative to superlative.
 
 - кращий :: найкращий
 - гірший :: найгірший
@@ -332,6 +334,7 @@ Use these to add emotion without comparison:
     > [!options] талановитіша | найталановитіша | талановита | надталановита
 
 ## quiz: Superlatives
+> Дайте відповіді на питання про найвищий ступінь. | Answer questions about superlatives.
 
 1. How do you form superlatives in Ukrainian?
 
@@ -468,6 +471,7 @@ Use these to add emotion without comparison:
   > Always най-, no variation.
 
 ## group-sort: Comparative vs Superlative
+> Розсортуйте ці форми. | Sort these forms.
 
 > Sort these forms.
 
@@ -747,7 +751,7 @@ This is the cheapest option.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

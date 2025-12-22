@@ -50,14 +50,6 @@ In English, we say "I like music" — the person who likes is the subject. In Uk
 
 Почнемо з найлегшого: займенників. Коли ви опануєте займенники в давальному відмінку, уся система відмінків стане зрозумілішою.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) —  Nouns, Pronouns & How to Use Them
->
-> **Grammar Guide:** [Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Overview of all 7 cases
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
 ## Presentation
 
 ### Why the Dative Case Matters
@@ -300,7 +292,7 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -314,7 +306,19 @@ Try creating similar sentences about yourself before moving to the activities be
 
 ---
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+>
+> **YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) —  Nouns, Pronouns & How to Use Them
+>
+> **Grammar Guide:** [Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Overview of all 7 cases
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
+---
+
+# Activities
 
 The activities below progress from recognition (matching, sorting) to production (translation, sentence building). Complete them in order for the best learning experience. Each activity targets a specific skill:
 
@@ -813,7 +817,7 @@ The activities below progress from recognition (matching, sorting) to production
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

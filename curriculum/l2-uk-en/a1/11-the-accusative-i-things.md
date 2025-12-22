@@ -33,18 +33,10 @@ You've been using Ukrainian to talk about what things ARE (nominative case). Now
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Accusative case in the Ukrainian language](https://www.youtube.com/watch?v=D_-Y5kfanl0) — Speak Ukrainian
->
->
-> **Grammar Guide:** [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Complete guide with tables and examples
->
-> **Cases Overview:** [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick overview of all 7 cases
->
-> **Podcast:** [FMU 1-15 | Accusative Case](https://www.ukrainianlessons.com/fmu15/) — Learn accusative while ordering pizza!
 
 ## Presentation
+
+Understanding the accusative case is essential for basic communication in Ukraine. It allows you to move beyond simply identifying objects to actually interacting with them. In this specific lesson, we will focus exclusively on how typical inanimate objects behave as direct objects.
 
 ### The Grammar of Action
 
@@ -207,7 +199,7 @@ It's a birthday party in Odesa. Practice saying:
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 - ✅ How to form **accusative case** for inanimate objects
@@ -220,7 +212,18 @@ In this module, you learned:
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [The Accusative case in the Ukrainian language](https://www.youtube.com/watch?v=D_-Y5kfanl0) — Speak Ukrainian
+>
+>
+> **Grammar Guide:** [Accusative Case in Ukrainian](https://www.ukrainianlessons.com/accusativecase/) — Complete guide with tables and examples
+>
+> **Cases Overview:** [Introduction to Ukrainian Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick overview of all 7 cases
+>
+> **Podcast:** [FMU 1-15 | Accusative Case](https://www.ukrainianlessons.com/fmu15/) — Learn accusative while ordering pizza!
+
+# Activities
 
 ## quiz: Accusative Recognition
 
@@ -311,9 +314,6 @@ In this module, you learned:
     > Neuter stays the same
 
 ## match-up: Vocabulary Practice
-
-> Match the Ukrainian words with their English translations.
-
 | Ukrainian | English |
 |-----------|---------|
 | бачити | to see |
@@ -322,12 +322,9 @@ In this module, you learned:
 | давати | to give |
 | мати | to have |
 | нести | to carry |
-| класти | to put |
 | відкривати | to open |
 | закривати | to close |
-| вмикати | to turn on |
-| вимикати | to turn off |
-| показувати | to show |
+
 
 ## fill-in: Transform to Accusative
 
@@ -422,9 +419,6 @@ In this module, you learned:
   > Incorrect! Only feminine -а/-я change
 
 ## group-sort: Gender and Accusative Changes
-
-> Sort these nouns by whether they change in accusative or stay the same.
-
 ### Change in Accusative (Feminine -а/-я)
 - газета → газету
 - книга → книгу
@@ -438,10 +432,9 @@ In this module, you learned:
 - квиток → квиток
 - подарунок → подарунок
 - документ → документ
-- журнал → журнал
 - вікно → вікно
 - море → море
-- місто → місто
+
 
 ## fill-in: Complete the Sentences
 
@@ -495,62 +488,84 @@ In this module, you learned:
     > [!answer] беру
     > [!options] беру | береш | бере | беремо
 
-## unjumble: Word Order Practice
+## quiz: Word Order Practice
 
-> Put the words in the correct order to form sentences.
+> Choose the correct sentence order.
 
-1. бачу / Я / автобус
-   > [!answer] Я бачу автобус
-   > (I see the bus.) [3 words]
+1. Correct sentence order for: "I see the bus."
+   - [x] Я бачу автобус
+   - [ ] бачу Я автобус
+   - [ ] Incorrect order for this sentence
+   > Correct: Я бачу автобус
 
-2. газету / читає / Вона
-   > [!answer] Вона читає газету
-   > (She reads a newspaper.) [3 words]
+2. Correct sentence order for: "She reads a newspaper."
+   - [x] Вона читає газету
+   - [ ] читає Вона газету
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона читає газету
 
-3. маєш / паспорт / Ти / ?
-   > [!answer] Ти маєш паспорт
-   > (Do you have a passport?) [3 words]
+3. Correct sentence order for: "Do you have a passport?"
+   - [x] Ти маєш паспорт
+   - [ ] маєш Ти паспорт
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти маєш паспорт
 
-4. валізу / беремо / Ми
-   > [!answer] Ми беремо валізу
-   > (We take a suitcase.) [3 words]
+4. Correct sentence order for: "We take a suitcase."
+   - [x] Ми беремо валізу
+   - [ ] беремо Ми валізу
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми беремо валізу
 
-5. вікно / Він / відкриває
-   > [!answer] Він відкриває вікно
-   > (He opens the window.) [3 words]
+5. Correct sentence order for: "He opens the window."
+   - [x] Він відкриває вікно
+   - [ ] відкриває Він вікно
+   - [ ] Incorrect order for this sentence
+   > Correct: Він відкриває вікно
 
-6. дають / подарунок / Вони
-   > [!answer] Вони дають подарунок
-   > (They give a gift.) [3 words]
+6. Correct sentence order for: "They give a gift."
+   - [x] Вони дають подарунок
+   - [ ] дають Вони подарунок
+   - [ ] Incorrect order for this sentence
+   > Correct: Вони дають подарунок
 
-7. показую / квиток / Я
-   > [!answer] Я показую квиток
-   > (I show the ticket.) [3 words]
+7. Correct sentence order for: "I show the ticket."
+   - [x] Я показую квиток
+   - [ ] показую Я квиток
+   - [ ] Incorrect order for this sentence
+   > Correct: Я показую квиток
 
-8. музику / чуєш / Ти / ?
-   > [!answer] Ти чуєш музику
-   > (Do you hear music?) [3 words]
+8. Correct sentence order for: "Do you hear music?"
+   - [x] Ти чуєш музику
+   - [ ] чуєш Ти музику
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти чуєш музику
 
-9. закриває / двері / Вона
-   > [!answer] Вона закриває двері
-   > (She closes the door.) [3 words]
+9. Correct sentence order for: "She closes the door."
+   - [x] Вона закриває двері
+   - [ ] закриває Вона двері
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона закриває двері
 
-10. несемо / сумку / Ми
-    > [!answer] Ми несемо сумку
-    > (We carry a bag.) [3 words]
+10. Correct sentence order for: "We carry a bag."
+   - [x] Ми несемо сумку
+   - [ ] несемо Ми сумку
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми несемо сумку
 
-11. журнал / Я / цікавий / читаю
-    > [!answer] Я читаю цікавий журнал
-    > (I read an interesting magazine.) [4 words]
+11. Correct sentence order for: "I read an interesting magazine."
+   - [x] Я читаю цікавий журнал
+   - [ ] читаю Я цікавий журнал
+   - [ ] Incorrect order for this sentence
+   > Correct: Я читаю цікавий журнал
 
-12. посилку / відправляємо / Ми / сьогодні
-    > [!answer] Ми відправляємо посилку сьогодні
-    > (We send the parcel today.) [4 words]
+12. Correct sentence order for: "We send the parcel today."
+   - [x] Ми відправляємо посилку сьогодні
+   - [ ] відправляємо Ми посилку сьогодні
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми відправляємо посилку сьогодні
+
 
 ## match-up: Verb + Object Pairs
-
-> Match each verb with the most logical object in accusative.
-
 | Verb | Object |
 |------|--------|
 | читати | газету |
@@ -561,56 +576,76 @@ In this module, you learned:
 | мати | квиток |
 | давати | подарунок |
 | нести | сумку |
-| закривати | двері |
-| вмикати | світло |
 
-## unjumble: Longer Sentences
 
-> Put the words in the correct order.
+## quiz: Longer Sentence Order
 
-1. читаю / Я / цікаву / газету / щоранку
-   > [!answer] Я читаю цікаву газету щоранку
-   > (I read an interesting newspaper every morning.) [5 words]
+> Choose the correct sentence order.
 
-2. валізу / Вона / бере / велику / і / сумку
-   > [!answer] Вона бере велику валізу і сумку
-   > (She takes a big suitcase and a bag.) [6 words]
+1. Correct sentence order for: "I read an interesting..."
+   - [x] Я читаю цікаву газету щоранку
+   - [ ] читаю Я цікаву газету щоранку
+   - [ ] Incorrect order for this sentence
+   > Correct: Я читаю цікаву газету щоранку
 
-3. паспорт / маєш / Ти / український / ?
-   > [!answer] Ти маєш український паспорт
-   > (Do you have a Ukrainian passport?) [4 words]
+2. Correct sentence order for: "She takes a big..."
+   - [x] Вона бере велику валізу і сумку
+   - [ ] бере Вона велику валізу і сумку
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона бере велику валізу і сумку
 
-4. сумку / беру / Я / велику / чорну
-   > [!answer] Я беру велику чорну сумку
-   > (I take a big black bag.) [5 words]
+3. Correct sentence order for: "Do you have a..."
+   - [x] Ти маєш український паспорт
+   - [ ] маєш Ти український паспорт
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти маєш український паспорт
 
-5. вікно / Ми / відкриваємо / в / кімнаті
-   > [!answer] Ми відкриваємо вікно в кімнаті
-   > (We open the window in the room.) [5 words]
+4. Correct sentence order for: "I take a big..."
+   - [x] Я беру велику чорну сумку
+   - [ ] беру Я велику чорну сумку
+   - [ ] Incorrect order for this sentence
+   > Correct: Я беру велику чорну сумку
 
-6. валізу / Ми / несемо / важку / велику
-   > [!answer] Ми несемо велику важку валізу
-   > (We carry a big heavy suitcase.) [5 words]
+5. Correct sentence order for: "We open the window..."
+   - [x] Ми відкриваємо вікно в кімнаті
+   - [ ] відкриваємо Ми вікно в кімнаті
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми відкриваємо вікно в кімнаті
 
-7. газету / читає / українську / Вона / щодня
-   > [!answer] Вона щодня читає українську газету
-   > (She reads a Ukrainian newspaper every day.) [5 words]
+6. Correct sentence order for: "We carry a big..."
+   - [x] Ми несемо велику важку валізу
+   - [ ] несемо Ми велику важку валізу
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми несемо велику важку валізу
 
-8. посилку / Вона / відправляє / у / Київ
-   > [!answer] Вона відправляє посилку у Київ
-   > (She sends a parcel to Kyiv.) [5 words]
+7. Correct sentence order for: "She reads a Ukrainian..."
+   - [x] Вона щодня читає українську газету
+   - [ ] щодня Вона читає українську газету
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона щодня читає українську газету
 
-9. Я / маю / квиток / новий / український
-   > [!answer] Я маю новий український квиток
-   > (I have a new Ukrainian ticket.) [5 words]
+8. Correct sentence order for: "She sends a parcel..."
+   - [x] Вона відправляє посилку у Київ
+   - [ ] відправляє Вона посилку у Київ
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона відправляє посилку у Київ
 
-10. коробку / відкриває / велику / Він / обережно
-    > [!answer] Він обережно відкриває велику коробку
-    > (He carefully opens the big box.) [5 words]
+9. Correct sentence order for: "I have a new..."
+   - [x] Я маю новий український квиток
+   - [ ] маю Я новий український квиток
+   - [ ] Incorrect order for this sentence
+   > Correct: Я маю новий український квиток
+
+10. Correct sentence order for: "He carefully opens the..."
+   - [x] Він обережно відкриває велику коробку
+   - [ ] обережно Він відкриває велику коробку
+   - [ ] Incorrect order for this sentence
+   > Correct: Він обережно відкриває велику коробку
+
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

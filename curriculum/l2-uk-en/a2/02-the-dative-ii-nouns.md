@@ -63,15 +63,6 @@ When you want to say "I give the book **to my friend**" or "She writes **to her 
 
 Now let's see how nouns work: Кому ви пишете листа? (To whom do you write a letter?) The answer will always be in the dative case — and the noun's ending will change based on its gender.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Dative Case in Ukrainian ...](https://www.youtube.com/watch?v=ATeU7iwuyLU) — Nouns, Pronouns & How to Use Them
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -330,7 +321,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -356,7 +347,17 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 
 Тепер ви можете казати, кому ви допомагаєте, пишете, телефонуєте, і даруєте подарунки! 🎁
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+> - 📖 [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
+> - 📝 [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 The following activities will help you master Dative noun endings through various exercise types. Progress from matching (recognition) through translation (production) to build your skills systematically.
 
@@ -569,7 +570,7 @@ The following activities will help you master Dative noun endings through variou
   > These nouns are irregular: ім'я → імені.
 
 ## group-sort: Noun Genders in Dative
-> Sort these dative forms into the correct gender category.
+> Розсортуйте ці форми давального відмінка за родами. | Sort these dative forms into the correct gender category.
 
 ### Masculine
 - другові
@@ -836,7 +837,7 @@ He writes to the teacher.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

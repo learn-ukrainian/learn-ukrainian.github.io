@@ -39,21 +39,6 @@ Unlike English "I don't have X," Ukrainian says "By me there-isn't X-genitive" �
 > [!tip] **Did You Know?**
 >
 > The word немає (there isn't) literally comes from не (not) + має (has). So "немає часу" = "doesn't-have time-genitive". This is why you need genitive here — the noun is the object of "having" that got negated!
-
-
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Genitive case in the Ukrainian language](https://www.youtube.com/watch?v=FafVwRIxhpg) — Speak Ukrainian
->
->
-> **Grammar Guide:** [10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/) — All genitive functions explained
->
-> **Podcast:** [ULP 2-46 | Grocery Store + Genitive](https://www.ukrainianlessons.com/episode46/) — Practice genitive at the grocery store
->
-> **Podcast:** [ULP 2-49 | Syrnyky Recipe + Genitive](https://www.ukrainianlessons.com/episode49/) — Learn cooking vocabulary with genitive
-
 ## Presentation
 
 ### What is Genitive Case?
@@ -256,7 +241,7 @@ Translation:
 >
 > This spatial thinking is deeply embedded in Ukrainian grammar. Even abstract concepts like "time" and "opportunity" are treated as things that can be "present" or "absent" in a location.
 
-## Summary / Підсумок
+# Summary / Підсумок
 
 You've learned how to express absence in Ukrainian using the **genitive case**.
 
@@ -282,12 +267,27 @@ This case is very useful! Next module: genitive with numbers and quantities!
 
 ---
 
-## Activities
+## Need More Practice?
+
+
+---
+
+
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Genitive case in the Ukrainian language](https://www.youtube.com/watch?v=FafVwRIxhpg) — Speak Ukrainian
+>
+>
+> **Grammar Guide:** [10 Uses of Genitive Case](https://www.ukrainianlessons.com/genitive-case/) — All genitive functions explained
+>
+> **Podcast:** [ULP 2-46 | Grocery Store + Genitive](https://www.ukrainianlessons.com/episode46/) — Practice genitive at the grocery store
+>
+> **Podcast:** [ULP 2-49 | Syrnyky Recipe + Genitive](https://www.ukrainianlessons.com/episode49/) — Learn cooking vocabulary with genitive
+
+# Activities
 
 ## match-up: Absence Vocabulary
-
-> Match the Ukrainian words with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
 | немає | there isn't |
@@ -296,41 +296,30 @@ This case is very useful! Next module: genitive with numbers and quantities!
 | гроші | money |
 | ідея | idea |
 | проблема | problem |
-| можливість | opportunity |
-| причина | reason |
-| сенс | sense |
-| користь | benefit |
-| різниця | difference |
 | вибір | choice |
+| сенс | sense |
+| різниця | difference |
+
 
 ## group-sort: Genitive Endings
-
-> Sort these nouns by their genitive ending pattern.
-
 ### Masculine -у/а
-- час
-- стіл
-- друг
-- вибір
-- досвід
+- хліба
+- цукру
+- чаю
+- вибору
+- досвіду
 
 ### Feminine -и/і
-- ідея
-- проблема
-- можливість
-- причина
-- користь
-- різниця
-- допомога
-- підтримка
-- увага
-- сила
+- ідеї
+- проблеми
+- води
+- причини
 
 ### Neuter -а
-- вікно
+- вікна
 - знання
 - значення
-- терпіння
+
 
 ## fill-in: Complete with Genitive
 
@@ -385,9 +374,6 @@ This case is very useful! Next module: genitive with numbers and quantities!
     > [!options] Без | З | До | Від
 
 ## quiz: Understanding Genitive
-
-> Select the correct answer.
-
 1. What case do you use after "немає"?
    - [ ] Nominative
    - [x] Genitive
@@ -395,42 +381,42 @@ This case is very useful! Next module: genitive with numbers and quantities!
    - [ ] Locative
    > немає always requires genitive case
 
-2. How do you say "I don't have time"?
+2. How do you accurately say "I don't have time"?
    - [ ] Я не маю час
    - [x] У мене немає часу
    - [ ] Я немає час
    - [ ] У мене не час
    > The pattern is: У + person + немає + noun-genitive
 
-3. What is the genitive form of "книга" (book)?
+3. What is accurately the genitive form of "книга"?
    - [ ] книга
    - [x] книги
    - [ ] книзі
    - [ ] книгою
    > Feminine -а becomes -и in genitive
 
-4. Which word means "without"?
+4. Which word means accurately the English word "without"?
    - [ ] з
    - [x] без
    - [ ] до
    - [ ] від
    > без + genitive = without
 
-5. What is the genitive form of "стіл" (table)?
+5. What is the genitive form of "стіл"?
    - [ ] стіл
    - [x] столу
    - [ ] столі
    - [ ] столом
    > Masculine consonant + -у in genitive
 
-6. How do you say "No problem"?
+6. How do you accurately say "No problem"?
    - [ ] Не проблема
    - [x] Немає проблем
    - [ ] Без проблема
    - [ ] У проблеми немає
    > The idiomatic phrase is "Немає проблем!"
 
-7. What is the genitive form of "вікно" (window)?
+7. What is accurately the genitive form of "вікно"?
    - [ ] вікно
    - [x] вікна
    - [ ] вікні
@@ -444,33 +430,34 @@ This case is very useful! Next module: genitive with numbers and quantities!
    - [ ] У вона немає грошей
    > Pattern: У + neї + немає + genitive
 
-9. What does "У вас немає часу?" mean?
+9. What does "У вас немає часу?" accurately mean?
    - [ ] Do you have time?
    - [x] You don't have time?
    - [ ] I don't have time
    - [ ] Time doesn't have you
    > У вас = "by you" (formal/plural)
 
-10. Which preposition requires genitive case?
+10. Which preposition requires accurately the genitive case?
     - [ ] в
     - [ ] на
     - [x] без
     - [ ] з (with)
     > без (without) always takes genitive
 
-11. What is the genitive form of "ідея" (idea)?
+11. What is the genitive form of accurately the word "ідея"?
     - [ ] ідея
     - [x] ідеї
-    - [ ] ідеї
+    - [ ] ідеї (alt)
     - [ ] ідеєю
     > Feminine -я becomes -ї in genitive
 
-12. How do you say "coffee without sugar"?
+12. How do you say accurately "coffee without sugar"?
     - [ ] кава не цукор
     - [x] кава без цукру
     - [ ] кава з цукор
     - [ ] кава немає цукру
     > Pattern: noun + без + genitive
+
 
 ## true-false: Genitive Rules
 
@@ -512,57 +499,82 @@ This case is very useful! Next module: genitive with numbers and quantities!
 - [x] Both parts are required: немає AND genitive ending.
   > Correct! You can't skip either part.
 
-## unjumble: Form Sentences
+## quiz: Form Sentences Order
 
-> Put the words in the correct order.
+> Choose the correct sentence order.
 
-1. немає / У / часу / мене
-   > [!answer] У мене немає часу
-   > (I don't have time.) [4 words]
+1. Correct sentence order for: "I don't have time."
+   - [x] У мене немає часу
+   - [ ] мене У немає часу
+   - [ ] Incorrect order for this sentence
+   > Correct: У мене немає часу
 
-2. кави / Тут / немає
-   > [!answer] Тут немає кави
-   > (There's no coffee here.) [3 words]
+2. Correct sentence order for: "There's no coffee here."
+   - [x] Тут немає кави
+   - [ ] немає Тут кави
+   - [ ] Incorrect order for this sentence
+   > Correct: Тут немає кави
 
-3. немає / У / неї / грошей
-   > [!answer] У неї немає грошей
-   > (She doesn't have money.) [4 words]
+3. Correct sentence order for: "She doesn't have money."
+   - [x] У неї немає грошей
+   - [ ] неї У немає грошей
+   - [ ] Incorrect order for this sentence
+   > Correct: У неї немає грошей
 
-4. будь ласка / цукру / Без
-   > [!answer] Без цукру, будь ласка
-   > (Without sugar, please.) [3 words]
+4. Correct sentence order for: "Without sugar, please."
+   - [x] Без цукру, будь ласка
+   - [ ] цукру, Без будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Без цукру, будь ласка
 
-5. проблем / Немає
-   > [!answer] Némає проблем
-   > (No problem!) [2 words]
+5. Correct sentence order for: "No problem!"
+   - [x] Némає проблем
+   - [ ] проблем Némає
+   - [ ] Incorrect order for this sentence
+   > Correct: Némає проблем
 
-6. нас / вибору / У / немає
-   > [!answer] У нас немає вибору
-   > (We don't have a choice.) [4 words]
+6. Correct sentence order for: "We don't have a choice."
+   - [x] У нас немає вибору
+   - [ ] нас У немає вибору
+   - [ ] Incorrect order for this sentence
+   > Correct: У нас немає вибору
 
-7. можливості / немає / У / тебе
-   > [!answer] У тебе немає можливості
-   > (You don't have the opportunity?) [4 words]
+7. Correct sentence order for: "You don't have the opportunity?"
+   - [x] У тебе немає можливості
+   - [ ] тебе У немає можливості
+   - [ ] Incorrect order for this sentence
+   > Correct: У тебе немає можливості
 
-8. допомоги / важко / Без / це
-   > [!answer] Без допомоги це важко
-   > (Without help, it's difficult.) [4 words]
+8. Correct sentence order for: "Without help, it's difficult."
+   - [x] Без допомоги це важко
+   - [ ] допомоги Без це важко
+   - [ ] Incorrect order for this sentence
+   > Correct: Без допомоги це важко
 
-9. різниці / Тут / немає
-   > [!answer] Тут немає різниці
-   > (There's no difference here.) [3 words]
+9. Correct sentence order for: "There's no difference here."
+   - [x] Тут немає різниці
+   - [ ] немає Тут різниці
+   - [ ] Incorrect order for this sentence
+   > Correct: Тут немає різниці
 
-10. терпіння / немає / вас / У
-    > [!answer] У вас немає терпіння
-    > (You don't have patience?) [4 words]
+10. Correct sentence order for: "You don't have patience?"
+   - [x] У вас немає терпіння
+   - [ ] вас У немає терпіння
+   - [ ] Incorrect order for this sentence
+   > Correct: У вас немає терпіння
 
-11. знання / У / них / немає
-    > [!answer] У них немає знання
-    > (They don't have knowledge.) [4 words]
+11. Correct sentence order for: "They don't have knowledge."
+   - [x] У них немає знання
+   - [ ] них У немає знання
+   - [ ] Incorrect order for this sentence
+   > Correct: У них немає знання
 
-12. немає / мене / У / досвіду
-    > [!answer] У мене немає досвіду
-    > (I don't have experience.) [4 words]
+12. Correct sentence order for: "I don't have experience."
+   - [x] У мене немає досвіду
+   - [ ] мене У немає досвіду
+   - [ ] Incorrect order for this sentence
+   > Correct: У мене немає досвіду
+
 
 ## match-up: Prepositions and Genitive Nouns
 
@@ -633,7 +645,7 @@ This case is very useful! Next module: genitive with numbers and quantities!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -38,17 +38,6 @@ Food is at the heart of Ukrainian culture. From the world-famous **борщ** (b
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [20 Ukrainian Food Words You Need To Know ](https://www.youtube.com/watch?v=fN0BIF-iejo) —  QUICK and EASY food vocabulary|Mariya 💙💛 
->
->
-> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Complete guide with photos
->
-> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Where and how to order in Ukrainian
->
-> **Quick Lesson:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Essential restaurant phrases
-
 ## Presentation
 
 ### Meals of the Day
@@ -330,8 +319,7 @@ Today, Ukrainian food culture is experiencing a renaissance. Chefs are reviving 
 > The word **голод** (holod) means both "hunger" and "famine" in Ukrainian. The **Holodomor** (Голодомор) literally means "death by hunger" — a genocide where food was used as a weapon. This historical tragedy makes food and hospitality even more meaningful in Ukrainian culture. When a Ukrainian offers you food, they're sharing more than a meal — they're sharing survival, resilience, and hope.
 
 ---
-
-## Summary
+# Summary
 
 In this module, you learned:
 
@@ -352,96 +340,106 @@ In this module, you learned:
 In Module 10, you'll review everything you've learned in Modules 1-9. You're completing your first phase of Ukrainian — congratulations!
 
 ---
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [20 Ukrainian Food Words You Need To Know ](https://www.youtube.com/watch?v=fN0BIF-iejo) —  QUICK and EASY food vocabulary|Mariya 💙💛 
+>
+>
+> **Food Guide:** [40+ Ukrainian Dishes](https://www.ukrainianlessons.com/ukrainian-food/) — Complete guide with photos
+>
+> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Where and how to order in Ukrainian
+>
+> **Quick Lesson:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Essential restaurant phrases
 
-## Activities
+# Activities
 
 ## quiz: Ukrainian Cuisine Knowledge
 
-> Test your knowledge about Ukrainian food and meals.
+> How much do you know about Ukrainian food?
 
-1. What is борщ?
-   - [ ] A type of bread
+1. What exactly is the traditional dish борщ?
    - [x] A beet soup
-   - [ ] A dumpling
-   - [ ] A drink
-   > Борщ is the famous Ukrainian beet soup, recognized by UNESCO!
+   - [ ] A meat dumpling
+   - [ ] A type of bread
+   - [ ] A fruit dessert
+   > Борщ is the famous red beet soup.
 
-2. Which meal is the main meal of the day in Ukraine?
-   - [ ] Сніданок (breakfast)
-   - [x] Обід (lunch)
-   - [ ] Вечеря (dinner)
-   - [ ] All meals are equal
-   > Обід (lunch) is traditionally the main, largest meal, eaten 1-3 PM.
+2. Which ingredient is essential for борщ?
+   - [ ] Rice
+   - [x] Beets (буряк)
+   - [ ] Fish
+   - [ ] Cheese
+   > Beets give borshch its red color.
 
-3. What are вареники?
+3. What kind of food are traditional вареники?
    - [ ] Pancakes
    - [x] Dumplings
-   - [ ] Cookies
    - [ ] Sausages
-   > Вареники are Ukrainian dumplings, filled with potato, cheese, cabbage, or cherries!
+   - [ ] Cakes
+   > Varenyky are boiled dumplings with various fillings.
 
-4. What does "Смачного!" mean?
-   - [ ] Thank you
-   - [ ] Please
-   - [x] Enjoy your meal
-   - [ ] Good morning
-   > Смачного! is what Ukrainians say before someone eats — like "Bon appétit!"
+4. When do Ukrainians say the phrase "Смачного!"?
+   - [ ] When saying hello
+   - [x] Before eating (Bon appétit)
+   - [ ] When saying goodbye
+   - [ ] While drinking
+   > Смачного means "Have a tasty meal!"
 
-5. Which drink is most commonly consumed at Ukrainian breakfast?
-   - [x] Чай (tea)
-   - [ ] Сік (juice)
-   - [ ] Вода (water)
-   - [ ] Молоко (milk)
-   > Чай (tea) is the breakfast staple, often black tea with lemon or honey.
+5. Which drink is very popular in Ukraine?
+   - [ ] Milkshake
+   - [x] Uzvar (dried fruit drink)
+   - [ ] Coconut water
+   - [ ] Iced tea
+   > Uzvar is a traditional drink made from dried fruits.
 
-6. What does сир mean in Ukrainian?
-   - [ ] Salt
-   - [ ] Sugar
-   - [x] Cheese (or cottage cheese)
-   - [ ] Butter
-   > Сир can mean cheese or cottage cheese, a Ukrainian breakfast favorite!
+6. What do Ukrainians typically eat with борщ?
+   - [ ] Rice
+   - [x] Pampushky (garlic bread)
+   - [ ] Pasta
+   - [ ] Chips
+   > Pampushky with garlic sauce is the classic side for borshch.
 
-7. Which vegetable is essential for making борщ?
-   - [ ] Картопля (potato)
-   - [x] Буряк (beet)
-   - [ ] Помідор (tomato)
-   - [ ] Огірок (cucumber)
-   > Буряк (beet) gives borshch its signature red color!
+7. Which meat is traditionally common in Ukrainian cuisine?
+   - [x] Pork (свинина)
+   - [ ] Camel
+   - [ ] Kangaroo
+   - [ ] Shark
+   > Pork (and Salo!) is very common.
 
-8. What does "Я їм яблуко" mean?
-   - [ ] I drink an apple
-   - [x] I eat an apple
-   - [ ] I love apples
-   - [ ] I have an apple
-   > їсти = to eat, so "Я їм" = I eat/I'm eating
+8. What exactly is "сало" in Ukrainian cuisine?
+   - [ ] Cheese
+   - [x] Cured pork fat
+   - [ ] Bread
+   - [ ] Vegetable soup
+   > Salo is cured pork fat, a national symbol.
 
-9. Which verb means "to drink"?
-   - [ ] їсти
-   - [ ] любити
-   - [x] пити
-   - [ ] хотіти
-   > пити (to drink): я п'ю, ти п'єш, він/вона п'є
+9. Which meal is usually the largest in Ukraine?
+   - [ ] Breakfast
+   - [x] Lunch (обід)
+   - [ ] Dinner
+   - [ ] Midnight snack
+   > Valid tradition: Obid (lunch) is often the main meal.
 
-10. What is the Ukrainian word for "water"?
-    - [ ] воля
-    - [x] вода
-    - [ ] вино
-    - [ ] війна
-    > вода (voda) = water. Don't confuse with воля (freedom)!
-
-11. Which fruit did you learn in this module?
-    - [x] Яблуко (apple)
-    - [ ] Груша (pear)
-    - [ ] Диня (melon)
-    - [ ] Полуниця (strawberry)
-    > Яблуко (apple) and банан (banana) were the fruits in this module.
-
-12. What does "овочі" mean?
-    - [ ] Eggs
-    - [ ] Fruits
-    - [x] Vegetables
+10. What filling is popular for sweet вареники?
     - [ ] Meat
-    > Овочі (ovochi) = vegetables (collective noun)
+    - [x] Cherries (вишні)
+    - [ ] Potatoes
+    - [ ] Cabbage
+    > Sour cherries are a classic sweet filling.
+
+11. What kind of dish is the traditional "holubtsi"?
+    - [ ] Fried fish
+    - [x] Cabbage rolls
+    - [ ] Potato pancakes
+    - [ ] Meat pie
+    > Holubtsi are cabbage leaves stuffed with meat and rice.
+
+12. Which bread is essential in Ukrainian culture?
+    - [ ] Baguette
+    - [x] Rye or wheat bread (хліб)
+    - [ ] Tortilla
+    - [ ] Naan
+    > Bread (khlib) is sacred in Ukrainian culture.
 
 ## match-up: Food Categories
 
@@ -458,9 +456,6 @@ In Module 10, you'll review everything you've learned in Modules 1-9. You're com
 | помідор | Vegetable |
 | кава | Drink |
 | риба | Main dish |
-| огірок | Vegetable |
-| молоко | Drink |
-| сир | Dairy product |
 
 ## fill-in: Complete the Sentences
 
@@ -516,36 +511,23 @@ In Module 10, you'll review everything you've learned in Modules 1-9. You're com
 
 ## group-sort: Sort by Food Type
 
-> Sort these food items into their correct categories.
+> Sort these items into Food (to eat) or Drinks (to drink).
 
-### Main Dishes (Основні страви)
+### Food (Їжа)
 - борщ
 - суп
 - вареники
 - м'ясо
 - курка
 - риба
-
-### Vegetables (Овочі)
 - картопля
-- помідор
-- огірок
-- цибуля
-
-### Fruits (Фрукти)
 - яблуко
-- банан
 
 ### Drinks (Напої)
 - чай
 - кава
 - вода
 - сік
-- молоко
-
-### Dairy & Eggs (Молочні продукти)
-- сир
-- яйце
 
 ## true-false: Food Facts
 
@@ -654,51 +636,62 @@ In Module 10, you'll review everything you've learned in Modules 1-9. You're com
 | курка | chicken |
 | овочі | vegetables |
 | фрукти | fruits |
-| яблуко | apple |
-| сир | cheese |
-| яйце | egg |
-| вода | water |
-| смачний | tasty |
 
-## unjumble: Build Food Sentences
+## quiz: Food Sentence Order
 
-> Put the words in order to make correct sentences about food.
+> Choose the correct sentence order.
 
-1. люблю / Я / борщ
-   > [!answer] Я люблю борщ
-   > (I love borshch.)
+1. Identify the correct word order for the sentence: "I love borshch."
+   - [x] Я люблю борщ
+   - [ ] люблю Я борщ
+   - [ ] борщ Я люблю
+   > Correct order: Я люблю борщ
 
-2. смачний / Це / хліб
-   > [!answer] Це смачний хліб
-   > (This is tasty bread.)
+2. Identify the correct word order for the sentence: "This is tasty bread."
+   - [x] Це смачний хліб
+   - [ ] смачний Це хліб
+   - [ ] хліб Це смачний
+   > Correct order: Це смачний хліб
 
-3. п'є / Вона / каву
-   > [!answer] Вона п'є каву
-   > (She drinks coffee.)
+3. Identify the correct word order for the sentence: "She drinks coffee."
+   - [x] Вона п'є каву
+   - [ ] п'є Вона каву
+   - [ ] каву Вона п'є
+   > Correct order: Вона п'є каву
 
-4. їмо / Ми / вареники
-   > [!answer] Ми їмо вареники
-   > (We eat varenyky.)
+4. Identify the correct word order for the sentence: "We eat varenyky."
+   - [x] Ми їмо вареники
+   - [ ] їмо Ми вареники
+   - [ ] вареники Ми їмо
+   > Correct order: Ми їмо вареники
 
-5. снідаю / Я / щоранку
-   > [!answer] Я снідаю щоранку
-   > (I have breakfast every morning.)
+5. Identify the correct word order for the sentence: "I have breakfast every morning."
+   - [x] Я снідаю щоранку
+   - [ ] снідаю Я щоранку
+   - [ ] щоранку Я снідаю
+   > Correct order: Я снідаю щоранку
 
-6. їсть / Він / м'ясо
-   > [!answer] Він їсть м'ясо
-   > (He eats meat.)
+6. Identify the correct word order for the sentence: "He eats meat."
+   - [x] Він їсть м'ясо
+   - [ ] їсть Він м'ясо
+   - [ ] м'ясо Він їсть
+   > Correct order: Він їсть м'ясо
 
-7. любить / Вона / овочі
-   > [!answer] Вона любить овочі
-   > (She loves vegetables.)
+7. Identify the correct word order for the sentence: "She loves vegetables."
+   - [x] Вона любить овочі
+   - [ ] любить Вона овочі
+   - [ ] овочі Вона любить
+   > Correct order: Вона любить овочі
 
-8. п'ють / Вони / молоко
-   > [!answer] Вони п'ють молоко
-   > (They drink milk.)
+8. Identify the correct word order for the sentence: "They drink milk."
+   - [x] Вони п'ють молоко
+   - [ ] п'ють Вони молоко
+   - [ ] молоко Вони п'ють
+   > Correct order: Вони п'ють молоко
+
 
 ---
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

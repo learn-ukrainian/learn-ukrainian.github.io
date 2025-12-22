@@ -49,15 +49,6 @@ This is a crucial distinction that doesn't exist in English! By the end of this 
 >
 > Недоконаний майбутній час (буду + інфінітив) — це процес. Доконаний майбутній час (змінене дієслово) — це результат. Цей вибір змінює значення!
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [FUTURE TENSE IN UKRAINIAN LANGUAGE...](https://www.youtube.com/watch?v=VJmihxvTLww) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Tenses](https://www.ukrainianlessons.com/ukrainian-tenses/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -190,7 +181,7 @@ Choose the correct future form:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -239,9 +230,20 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 
 Тепер ви можете говорити про майбутнє українською! Плануйте, обіцяйте і мрійте! Пам'ятайте: «Я буду робити» — це план, а «Я зроблю» — це обіцянка. Вибирайте мудро! 🔮
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
+> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
+> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Future Forms
+> З'єднайте форми майбутнього часу. | Match the future forms.
 
 - буду читати :: will be reading
 - прочитаю :: will read/finish
@@ -321,6 +323,7 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
     > [!options] будемо вчити | вивчимо
 
 ## quiz: Future Tense
+> Дайте відповіді на питання про майбутній час. | Answer questions about the future tense.
 
 1. How is imperfective future formed?
 
@@ -452,6 +455,7 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
   > "Буду читати" = I will be reading.
 
 ## group-sort: Future Formation
+> Розсортуйте за типом творення майбутнього часу. | Sort by future formation type.
 
 > Sort by future formation type.
 
@@ -731,7 +735,7 @@ We will finish the project!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

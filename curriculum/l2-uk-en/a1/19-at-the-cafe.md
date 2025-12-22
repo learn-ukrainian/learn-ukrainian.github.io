@@ -33,21 +33,6 @@ vocabulary_count: 24
 ## Warm-up
 
 You've learned cases, possessives, and numbers. Now it's time to combine everything in a real Ukrainian scenario: **at the café**! Ukrainian café culture is vibrant—from traditional cafés serving борщ and вареники to modern coffee shops in Lviv and Kyiv. Let's learn how to order like a local.
-
-
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Menu in the coffee shop in the Ukrainian language](https://www.youtube.com/watch?v=wUH7sf5ccP8) — Speak Ukrainian
->
->
-> **Podcast:** [FMU 1-11 | Order Coffee](https://www.ukrainianlessons.com/fmu11/) — Essential café phrases
->
-> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Restaurant ordering + culture tips
->
-> **Podcast:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Full restaurant dialogue
-
 ## Presentation
 
 ### Key Café Phrases
@@ -268,86 +253,97 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 
 ---
 
-## Activities
+## Need More Practice?
+
+
+---
+
+
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Menu in the coffee shop in the Ukrainian language](https://www.youtube.com/watch?v=wUH7sf5ccP8) — Speak Ukrainian
+>
+>
+> **Podcast:** [FMU 1-11 | Order Coffee](https://www.ukrainianlessons.com/fmu11/) — Essential café phrases
+>
+> **Podcast:** [ULP 1-12 | Ordering Food](https://www.ukrainianlessons.com/episode12/) — Restaurant ordering + culture tips
+>
+> **Podcast:** [FMU 1-16 | Order at Restaurant](https://www.ukrainianlessons.com/fmu16/) — Full restaurant dialogue
+
+# Activities
 
 ## match-up: Café Vocabulary
-
-> Match the Ukrainian phrases with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| столик | table (small) |
-| рахунок | check, bill |
 | меню | menu |
-| візьму | I'll take |
-| принесіть | bring (imperative) |
-| порекомендуєте | you recommend |
-| спробувати | to try |
-| достатньо | enough |
-| разом | together |
-| окремо | separately |
-| ще | more, another |
-| все | everything |
+| офіціант | waiter |
+| рахунок | bill |
+| замовлення | order |
+| столик | table |
+| серветка | napkin |
+| виделка | fork |
+| ніж | knife |
+| ложка | spoon |
+
 
 ## quiz: Waiter Questions
+1. How does a waiter ask accurately "What would you like"?
+   - [x] Що ви бажаєте?
+   - [ ] Де ви бажаєте?
+   - [ ] Як ви бажаєте?
+   - [ ] Хто ви бажаєте?
+   > "Що" is used for the object of desire.
 
-> Choose the correct response to each waiter's question.
+2. How does a waiter ask accurately "Are you ready to order"?
+   - [x] Ви готові замовляти?
+   - [ ] Ви готові платити?
+   - [ ] Ви готові їсти?
+   - [ ] Ви готові йти?
+   > "Замовляти" means to order.
 
-1. Waiter: "Що бажаєте?" — What should you say?
-   - [x] Я візьму каву, будь ласка.
-   - [ ] Я хочу каву зараз!
-   - [ ] Каву мені!
-   - [ ] Дайте каву!
-   > "Я візьму" is the polite way to order.
+3. How do you accurately ask for the bill?
+   - [x] Рахунок, будь ласка.
+   - [ ] Меню, будь ласка.
+   - [ ] Сіль, будь ласка.
+   - [ ] Де офіціант?
+   > "Рахунок" is the bill.
 
-2. Waiter: "Цукор?" — What does this mean?
-   - [ ] Cream?
-   - [x] Sugar?
-   - [ ] Milk?
-   - [ ] Ice?
-   > "Цукор" = sugar
+4. How do you ask for a table for two people?
+   - [x] Столик на двох, будь ласка.
+   - [ ] Столик на одного, будь ласка.
+   - [ ] Де столик?
+   - [ ] Столик тут.
+   > "На двох" means for two.
 
-3. Waiter: "Ще щось?" — What is the waiter asking?
-   - [ ] Is this correct?
-   - [ ] Are you ready?
-   - [x] Anything else?
-   - [ ] Is this enough?
-   > "Ще щось" = anything else, something more
+5. How do you accurately ask "Can I have a menu"?
+   - [x] Можна меню, будь ласка?
+   - [ ] Де меню?
+   - [ ] Маєте меню?
+   - [ ] Я хочу меню.
+   > Polite "Можна".
 
-4. Waiter: "Разом чи окремо?" — What is the question about?
-   - [ ] Hot or cold?
-   - [ ] Here or to go?
-   - [x] Together or separately? (the bill)
-   - [ ] With or without?
-   > Asking about splitting the check
+6. How do you accurately ask for a napkin now?
+   - [x] Дайте серветку, будь ласка.
+   - [ ] Де серветка?
+   - [ ] Серветка тут.
+   - [ ] Що це серветка?
+   > Requesting "серветку".
 
-5. What does "візьму" mean?
-   - [ ] I want
-   - [x] I'll take
-   - [ ] I have
-   - [ ] I need
-   > Future form of взяти (to take)
+7. How does the waiter or customer say "Bon appetit" in Ukraine?
+   - [x] Смачного!
+   - [ ] Дякую!
+   - [ ] Будь ласка!
+   - [ ] Вибачте!
+   > "Смачного" is the standard phrase.
 
-6. What does "принесіть" mean?
-   - [ ] Take
-   - [x] Bring
-   - [ ] Show
-   - [ ] Give
-   > Imperative form of принести
+8. How can you say accurately the phrase "The bill, please"?
+   - [x] Можна рахунок, будь ласка?
+   - [ ] Дайте рахунок.
+   - [ ] Де рахунок?
+   - [ ] Рахунок тут.
+   > Polite request for the bill.
 
-7. What does "достатньо" mean?
-   - [ ] Everything
-   - [ ] More
-   - [x] Enough
-   - [ ] Together
-   > Достатньо = enough
-
-8. What does "окремо" mean?
-   - [ ] Together
-   - [x] Separately
-   - [ ] Everything
-   - [ ] More
-   > Окремо = separately
 
 ## fill-in: Complete the Café Dialogue
 
@@ -442,78 +438,95 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
   > Correct! It's a hazelnut meringue cake created in 1956.
 
 ## group-sort: Café Phrases by Function
+### Ordering (Замовлення)
+- Я буду каву.
+- Мені, будь ласка, сік.
+- Ви готові замовляти?
+- Принесіть меню.
 
-> Sort these phrases by when you would use them.
+### Paying (Оплата)
+- Рахунок, будь ласка.
+- Ви приймаєте картки?
+- Можна платити готівкою?
+- Де каса?
 
-### Entering & Seating
-- Столик на двох, будь ласка
-- Можна меню?
-- Де туалет?
+### Etiquette (Етикет)
+- Смачного!
+- Дякую.
+- Будь ласка.
+- Вибачте.
 
-### Ordering
-- Що порекомендуєте?
-- Я візьму каву
-- Принесіть, будь ласка, борщ
-- Ще один салат, будь ласка
 
-### Paying
-- Рахунок, будь ласка
-- Разом чи окремо?
-- Це все
-- Дякую, було дуже смачно
+## quiz: Order the Café Sentences Order
 
-## unjumble: Order the Café Sentences
+> Choose the correct sentence order.
 
-> Put the words in the correct order to form sentences.
+1. Correct sentence order for: "Table for two, please."
+   - [x] Столик на двох, будь ласка
+   - [ ] на Столик двох, будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Столик на двох, будь ласка
 
-1. будь / столик / ласка / двох / на
-   > [!answer] Столик на двох, будь ласка
-   > (Table for two, please.) [5 words]
+2. Correct sentence order for: "I'll take coffee with milk."
+   - [x] Я візьму каву з молоком
+   - [ ] візьму Я каву з молоком
+   - [ ] Incorrect order for this sentence
+   > Correct: Я візьму каву з молоком
 
-2. візьму / я / каву / молоком / з
-   > [!answer] Я візьму каву з молоком
-   > (I'll take coffee with milk.) [5 words]
+3. Correct sentence order for: "What do you recommend?"
+   - [x] Що порекомендуєте
+   - [ ] порекомендуєте Що
+   - [ ] Incorrect order for this sentence
+   > Correct: Що порекомендуєте
 
-3. що / порекомендуєте / ?
-   > [!answer] Що порекомендуєте
-   > (What do you recommend?) [2 words]
+4. Correct sentence order for: "Please bring more bread."
+   - [x] Принесіть, будь ласка, ще хліб
+   - [ ] будь Принесіть, ласка, ще хліб
+   - [ ] Incorrect order for this sentence
+   > Correct: Принесіть, будь ласка, ще хліб
 
-4. будь / ласка / принесіть / хліб / ще
-   > [!answer] Принесіть, будь ласка, ще хліб
-   > (Please bring more bread.) [5 words]
+5. Correct sentence order for: "Check separately, please."
+   - [x] Рахунок окремо, будь ласка
+   - [ ] окремо, Рахунок будь ласка
+   - [ ] Incorrect order for this sentence
+   > Correct: Рахунок окремо, будь ласка
 
-5. окремо / будь / рахунок / ласка
-   > [!answer] Рахунок окремо, будь ласка
-   > (Check separately, please.) [4 words]
+6. Correct sentence order for: "That's everything."
+   - [x] Це все
+   - [ ] все Це
+   - [ ] Incorrect order for this sentence
+   > Correct: Це все
 
-6. все / це
-   > [!answer] Це все
-   > (That's everything.) [2 words]
+7. Correct sentence order for: "Thank you, it was..."
+   - [x] Дякую, було дуже смачно
+   - [ ] було Дякую, дуже смачно
+   - [ ] Incorrect order for this sentence
+   > Correct: Дякую, було дуже смачно
 
-7. дуже / було / дякую / смачно
-   > [!answer] Дякую, було дуже смачно
-   > (Thank you, it was very delicious!) [4 words]
+8. Correct sentence order for: "That's enough."
+   - [x] Це достатньо
+   - [ ] достатньо Це
+   - [ ] Incorrect order for this sentence
+   > Correct: Це достатньо
 
-8. чи / разом / окремо / ?
-   > [!answer] Разом чи окремо
-   > [!answer-alt] Окремо чи разом?
-   > (Together or separately?) [3 words]
+9. Correct sentence order for: "Can I have a menu?"
+   - [x] Можна меню
+   - [ ] меню Можна
+   - [ ] Incorrect order for this sentence
+   > Correct: Можна меню
 
-9. достатньо / це
-   > [!answer] Це достатньо
-   > (That's enough.) [2 words]
+10. Correct sentence order for: "Anything else?"
+   - [x] Ще щось
+   - [ ] щось Ще
+   - [ ] Incorrect order for this sentence
+   > Correct: Ще щось
 
-10. можна / меню / ?
-    > [!answer] Можна меню
-    > (Can I have a menu?) [2 words]
+11. Correct sentence order for: "Please bring water."
+   - [x] Принесіть, будь ласка, воду
+   - [ ] будь Принесіть, ласка, воду
+   - [ ] Incorrect order for this sentence
+   > Correct: Принесіть, будь ласка, воду
 
-11. ще / щось / ?
-    > [!answer] Ще щось
-    > (Anything else?) [2 words]
-
-12. ласка / будь / воду / принесіть
-    > [!answer] Принесіть, будь ласка, воду
-    > (Please bring water.) [4 words]
 
 ## fill-in: Polite vs Direct
 
@@ -655,7 +668,7 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
     - [ ] Тірамісу
     > Київський торт (Kyiv cake) is the specialty!
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

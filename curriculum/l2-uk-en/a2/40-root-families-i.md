@@ -330,35 +330,35 @@ Logic wins!
 
 > Choose the correct movement word.
 
-1. Де [___] у метро? [Hint: Entrance]
+1. Де [___] у метро?
    > [!answer] вхід
    > [!options] вхід | вихід | похід
 
-2. Це небезпечний [___]. [Hint: Crossing]
+2. Це небезпечний [___].
    > [!answer] перехід
    > [!options] перехід | захід | прихід
 
-3. Я не можу знайти [___]. [Hint: Exit]
+3. Я не можу знайти [___].
    > [!answer] вихід
    > [!options] вихід | вхід | схід
 
-4. Це зона для [___]. [Hint: Pedestrians (Gen pl)]
+4. Це зона для [___].
    > [!answer] пішоходів
    > [!options] пішоходів | переходів | виходів
 
-5. Ми плануємо [___] в гори. [Hint: Hike]
+5. Ми плануємо [___] в гори.
    > [!answer] похід
    > [!options] похід | вихід | захід
 
-6. [___] потяга о 10:00. [Hint: Arrival]
+6. [___] потяга о 10:00.
    > [!answer] Прихід
    > [!options] Прихід | Відхід | Вихід
 
-7. Поїзд робить [___] зі станції. [Hint: Departure]
+7. Поїзд робить [___] зі станції.
    > [!answer] відхід
    > [!options] відхід | вхід | прихід
 
-8. Сонце сідає. Це [___]. [Hint: Sunset/West]
+8. Сонце сідає. Це [___].
    > [!answer] захід
    > [!options] захід | схід | вихід
 
@@ -423,35 +423,35 @@ Logic wins!
 
 > Complete the phrases using root logic. Hint provided.
 
-1. Ваш [___] на документі. [Hint: Signature]
+1. Ваш [___] на документі.
    > [!answer] підпис
    > [!options] підпис | напис | запис
 
-2. Лікар робить [___] пацієнта. [Hint: Inspection/Review]
+2. Лікар робить [___] пацієнта.
    > [!answer] огляд
    > [!options] огляд | вигляд | погляд
 
-3. Це [___] симптомів. [Hint: Description]
+3. Це [___] симптомів.
    > [!answer] опис
    > [!options] опис | напис | вхід
 
-4. У вас хворий [___]. [Hint: Look/Appearance]
+4. У вас хворий [___].
    > [!answer] вигляд
    > [!options] вигляд | огляд | перехід
 
-5. Зробіть [___] у карті. [Hint: Record/Entry]
+5. Зробіть [___] у карті.
    > [!answer] запис
    > [!options] запис | напис | підпис
 
-6. Читати [___] на дверях. [Hint: Inscription/Sign]
+6. Читати [___] на дверях.
    > [!answer] напис
    > [!options] напис | опис | вихід
 
-7. Це точне [___]. [Hint: Prediction]
+7. Це точне [___].
    > [!answer] передбачення
    > [!options] передбачення | бачення | читання
 
-8. Ваше [___] майбутнього. [Hint: Vision]
+8. Ваше [___] майбутнього.
    > [!answer] бачення
    > [!options] бачення | читання | письмо
 
@@ -547,35 +547,35 @@ Logic wins!
 
 > Add the correct prefix.
 
-1. [___]хід. [Hint: Entrance (In)]
+1. [___]хід.
    > [!answer] В
    > [!options] В | Ви | Пере
 
-2. [___]хід. [Hint: Exit (Out)]
+2. [___]хід.
    > [!answer] Ви
    > [!options] Ви | В | При
 
-3. [___]пис. [Hint: Signature (Under)]
+3. [___]пис.
    > [!answer] Під
    > [!options] Під | На | За
 
-4. [___]пис. [Hint: Description (About/Round)]
+4. [___]пис.
    > [!answer] О
    > [!options] О | В | Ви
 
-5. [___]хід. [Hint: Crossing (Across)]
+5. [___]хід.
    > [!answer] Пере
    > [!options] Пере | За | При
 
-6. [___]хід. [Hint: Sunset/West (Behind)]
+6. [___]хід.
    > [!answer] За
    > [!options] За | С | Ви
 
-7. [___]бачення. [Hint: Prediction (Fore)]
+7. [___]бачення.
    > [!answer] Перед
    > [!options] Перед | За | По
 
-8. [___]бачення. [Hint: Date (Po)]
+8. [___]бачення.
    > [!answer] По
    > [!options] По | За | На
 

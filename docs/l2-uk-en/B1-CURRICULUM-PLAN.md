@@ -1,7 +1,7 @@
 # B1 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
-**Modules:** 01-80 (80 modules)
+**Modules:** 01-85 (85 modules, including 5 metalanguage bridge modules)
 **Vocabulary Target:** ~1,500 words (level), ~3,300 cumulative
 
 ---
@@ -9,34 +9,37 @@
 ## Quality Standards & Pedagogical Strategy
 
 **Reference:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-**Philosophy:** `claude_extensions/quick-ref/philosophy.md` (Strict Linguistic Standards & Source Authority)
+**Philosophy:** `.agent/quick-ref/philosophy.md` (Strict Linguistic Standards & Source Authority)
 
-### Bilingual Content Strategy (B1 Specific)
+### Ukrainian-First Immersion Strategy (B1 Specific)
 
-**Graduated Immersion:** B1 uses phase-based immersion that increases as learners progress:
+**Philosophy:** At B1, students learn grammar **IN Ukrainian** — the way native speakers learn in school. This requires a 5-module bridge to teach grammar terminology first.
 
 | Phase | Modules | Immersion | Content Focus |
 |-------|---------|-----------|---------------|
-| **B1.1** | M01-10 | **45-50%** | Aspect mastery — heavy grammar theory in English |
-| **B1.2** | M11-20 | **50-55%** | Motion verbs with prefixes — grammar theory in English |
-| **B1.3-4** | M21-45 | **55-60%** | Complex sentences, participles — more Ukrainian in explanations |
-| **B1.5-6** | M46-65 | **65-75%** | Vocabulary expansion — thematic content mostly in Ukrainian |
-| **B1.7-8** | M66-80 | **70-75%** | Cultural content, skills — pre-B2 runway |
+| **B1.0** | M01-05 | **No limit** | Metalanguage bridge — teaches grammar terms in Ukrainian |
+| **B1.1** | M06-15 | **90-95%** | Aspect mastery — grammar IN Ukrainian |
+| **B1.2** | M16-25 | **90-95%** | Motion verbs with prefixes — grammar IN Ukrainian |
+| **B1.3-4** | M26-50 | **90-95%** | Complex sentences, participles — full immersion |
+| **B1.5-6** | M51-70 | **90-95%** | Vocabulary expansion — thematic content in Ukrainian |
+| **B1.7-8** | M71-85 | **90-95%** | Cultural content, skills — B2 runway |
 
 **Transition continuity:**
-- A2.3 ends at 50-55% → B1.1 starts at 45-50% (overlap allows adjustment)
-- B1.7-8 ends at 65-70% → B2-grammar starts at 65-70% (smooth handoff)
+- A2.3 ends at 50-55% → B1.0 bridge prepares students for the jump
+- B1.0 ends with integration checkpoint → B1.1+ at full 90-95% immersion
+- B1.7-8 ends at 90-95% → B2 continues at 95%
 
-B1 modules use a **bilingual approach** for complex grammar concepts:
-- **Ukrainian:** All examples, dialogues, narratives, cultural boxes, activity content
-- **English:** Conceptual explanations ("why does aspect exist?"), decision frameworks, Language Link boxes
+B1 modules use a **Ukrainian-first approach** for all grammar concepts:
+- **Ukrainian:** Grammar explanations, terminology, examples, dialogues, narratives, cultural boxes
+- **English:** Vocabulary table translations only
 
-**Pattern:** Ukrainian concept → English explanation (using `> 🔗 **Language Link**` boxes)
+**Pattern:** Teach metalanguage first (B1.0), then explain grammar using that vocabulary
 
 This approach is pedagogically sound because:
-1. **Cognitive load:** Aspect, motion verbs, participles don't exist in English. L1 explanations free cognitive resources for Ukrainian practice.
-2. **CEFR B1 definition:** Learners "understand main points of clear standard input" — complex metalinguistic explanations in L2 exceed this threshold.
-3. **Research evidence:** Explicit L1 grammar explanations + L2 examples outperforms immersion-only for complex rules.
+1. **Native-like learning:** Ukrainians learn grammar in Ukrainian. Students build the same mental models.
+2. **Real-world readiness:** Students can use Ukrainian grammar resources, textbooks, and discuss language with natives.
+3. **Engagement:** Full immersion is more engaging than constant code-switching.
+4. **Research evidence:** Metalanguage acquisition + immersion outperforms L1 explanations for long-term retention.
 
 ### Overcoming the Intermediate Plateau
 To help learners bridge the gap from "basic competence" to "independent fluency", this level shifts pedagogical focus:
@@ -266,7 +269,7 @@ Before starting B1, learners have completed:
 > Can understand the main points of clear standard input on familiar matters regularly encountered in work, school, leisure, etc. Can deal with most situations likely to arise whilst travelling in an area where the language is spoken. Can produce simple connected text on topics of personal interest. Can describe experiences, events, dreams, hopes, and ambitions and briefly give reasons and explanations for opinions and plans.
 
 ### Learning Outcomes
-By module 80, learners can:
+By module 85, learners can:
 
 **Understanding**
 - [ ] Understand main points of radio/TV programs on current affairs
@@ -288,7 +291,131 @@ By module 80, learners can:
 
 ---
 
-## Phase B1.1: Aspect Mastery (Modules 01-10)
+## Phase B1.0: Metalanguage Bridge (Modules 01-05)
+
+### Learning Goals
+- Acquire grammar terminology in Ukrainian (metalanguage)
+- Understand how to read and discuss grammar rules in Ukrainian
+- Build vocabulary for sentence structure analysis
+- Prepare for full Ukrainian immersion in grammar instruction
+
+### Immersion Note
+**No immersion limit for B1.0.** These modules can use as much English as needed to teach the Ukrainian grammar terminology. The goal is to build the vocabulary students need to understand grammar explanations in Ukrainian.
+
+### Grammar Progression
+
+| Module | Grammar Point | Builds On | Enables |
+|--------|--------------|-----------|---------|
+| 01 | Як говорити про граматику | A2 completion | Grammar discussion in UK |
+| 02 | Мова про дієслова | M01 | Verb terminology |
+| 03 | Читаємо граматичні правила | M01-02 | Reading grammar texts |
+| 04 | Структура речення | M01-03 | Sentence analysis |
+| 05 | Готові до занурення | M01-04 | Full immersion checkpoint |
+
+### Module Content Specifications B1.0
+
+---
+
+#### Module 01: Як говорити про граматику (How to Talk About Grammar)
+**Grammar:** Core grammatical terminology in Ukrainian
+
+**Key Concepts:**
+- Parts of speech names: дієслово, іменник, прикметник, прислівник, займенник
+- Case names: називний, родовий, давальний, знахідний, орудний, місцевий, кличний
+- Basic sentence terms: слово, речення, частина мови
+
+**Vocabulary (25 words):**
+граматика, дієслово, іменник, прикметник, прислівник, займенник, сполучник, прийменник, частка, вигук, частина мови, слово, речення, називний, родовий, давальний, знахідний, орудний, місцевий, кличний, відмінок, рід, число, особа, закінчення
+
+**Signature Activity Concepts:**
+1. Match-up: Ukrainian term → English equivalent
+2. Quiz: Identify part of speech by Ukrainian name
+3. Fill-in: Complete sentences about grammar using Ukrainian terms
+
+---
+
+#### Module 02: Мова про дієслова (Language About Verbs)
+**Grammar:** Verb-specific terminology for aspect and tense discussion
+
+**Key Concepts:**
+- Aspect terms: вид, доконаний вид, недоконаний вид
+- Tense terms: час, теперішній, минулий, майбутній
+- Action concepts: дія, процес, результат, тривалість, повторення
+
+**Vocabulary (25 words):**
+вид, доконаний вид, недоконаний вид, час, теперішній час, минулий час, майбутній час, дія, процес, результат, тривалість, повторення, завершення, початок, продовження, однократний, багаторазовий, дієвідміна, особові закінчення, інфінітив, наказовий спосіб, умовний спосіб, спосіб, стан, активний стан
+
+**Signature Activity Concepts:**
+1. Group-sort: Sort terms by category (aspect vs tense vs action)
+2. Match-up: Ukrainian term → definition in Ukrainian
+3. Fill-in: Describe verb properties using Ukrainian terms
+
+---
+
+#### Module 03: Читаємо граматичні правила (Reading Grammar Rules)
+**Grammar:** Patterns for understanding grammar explanations in Ukrainian
+
+**Key Patterns:**
+- "X використовується, коли..." (X is used when...)
+- "X показує..." (X shows...)
+- "X означає..." (X means...)
+- "Порівняйте:" (Compare:)
+- "Зверніть увагу:" (Note:)
+
+**Vocabulary (20 words):**
+використовується, означає, показує, виражає, вказує на, порівняйте, зверніть увагу, наприклад, тобто, отже, таким чином, на відміну від, подібно до, правило, виняток, форма, основа, корінь, суфікс, префікс
+
+**Signature Activity Concepts:**
+1. Mark-the-words: Find instruction patterns in grammar text
+2. True-false: Statements about grammar patterns
+3. Cloze: Complete grammar explanation passages
+
+---
+
+#### Module 04: Структура речення (Sentence Structure)
+**Grammar:** Sentence analysis terminology
+
+**Key Concepts:**
+- Sentence parts: підмет, присудок, додаток, означення, обставина
+- Clause types: головне речення, підрядне речення
+- Sentence types: просте, складне, складносурядне, складнопідрядне
+
+**Vocabulary (25 words):**
+підмет, присудок, додаток, означення, обставина, член речення, головний член, другорядний член, головне речення, підрядне речення, просте речення, складне речення, складносурядне, складнопідрядне, сполучник сурядності, сполучник підрядності, розділові знаки, кома, крапка, двокрапка, тире, лапки, синтаксис, пунктуація, інверсія
+
+**Signature Activity Concepts:**
+1. Mark-the-words: Identify sentence parts in Ukrainian sentences
+2. Match-up: Term → example sentence part
+3. Quiz: Sentence type identification
+
+---
+
+#### Module 05: Готові до занурення (Ready for Immersion)
+**Grammar:** Integration checkpoint — metalanguage mastery test
+
+**Key Concepts:**
+- Read and understand a grammar explanation written entirely in Ukrainian
+- Answer comprehension questions about grammar rules
+- Demonstrate ability to discuss grammar using Ukrainian terminology
+
+**Vocabulary (15 words — review):**
+граматичне поняття, мовознавство, морфологія, синтаксис, правопис, наголос, вимова, правило, закономірність, система, категорія, ознака, властивість, значення, функція
+
+**Signature Activity Concepts:**
+1. Cloze: Complete a full grammar explanation passage
+2. True-false: Statements about grammar rules (all in Ukrainian)
+3. Quiz: Comprehensive metalanguage review
+4. Reading comprehension: Real grammar text from Ukrainian textbook
+
+**Checkpoint Criteria:**
+Students must demonstrate they can:
+- Read Ukrainian grammar explanations without needing English translations
+- Use correct Ukrainian terms for parts of speech, cases, tenses, aspects
+- Understand instruction patterns like "використовується коли..."
+
+---
+
+## Phase B1.1: Aspect Mastery (Modules 06-15)
 
 ### Learning Goals
 - Master aspect selection in past tense contexts
@@ -300,22 +427,22 @@ By module 80, learners can:
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 01 | Aspect: Complete System Review | A2 aspect intro | Full aspect control |
-| 02 | Aspect: Past Single vs Repeated | M01 | Narrative past |
-| 03 | Aspect: Past Result vs Process | M02 | Completed actions |
-| 04 | Aspect: Future Forms | M01-03 | Plans, predictions |
-| 05 | Aspect: Negation Patterns | M01-04 | Correct negation |
-| 06 | Aspect: Imperative Forms | M05 | Commands, requests |
-| 07 | Aspect Pairs Expansion I | M01-06 | Verb vocabulary |
-| 08 | Aspect Pairs Expansion II | M07 | More verbs |
-| 09 | Aspect: Integration Practice | M01-08 | Consolidation |
-| 10 | Checkpoint: Aspect Mastery | M01-09 | Review |
+| 06 | Aspect: Complete System Review | B1.0 metalanguage | Full aspect control |
+| 07 | Aspect: Past Single vs Repeated | M06 | Narrative past |
+| 08 | Aspect: Past Result vs Process | M07 | Completed actions |
+| 09 | Aspect: Future Forms | M06-08 | Plans, predictions |
+| 10 | Aspect: Negation Patterns | M06-09 | Correct negation |
+| 11 | Aspect: Imperative Forms | M10 | Commands, requests |
+| 12 | Aspect Pairs Expansion I | M06-11 | Verb vocabulary |
+| 13 | Aspect Pairs Expansion II | M12 | More verbs |
+| 14 | Aspect: Integration Practice | M06-13 | Consolidation |
+| 15 | Checkpoint: Aspect Mastery | M06-14 | Review |
 
 ### Module Content Specifications B1.1
 
 ---
 
-#### Module 01: Aspect - The Complete System
+#### Module 06: Aspect - The Complete System
 **Grammar:** Perfective vs Imperfective - Full Overview
 
 **Key Concepts:**
@@ -333,7 +460,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 02: Aspect in Past - Single vs Repeated
+#### Module 07: Aspect in Past - Single vs Repeated
 **Grammar:** Одного разу vs щодня - Past tense aspect selection
 
 **Key Patterns:**
@@ -352,7 +479,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 03: Aspect in Past - Result vs Process
+#### Module 08: Aspect in Past - Result vs Process
 **Grammar:** Completed action vs ongoing process
 
 **Key Patterns:**
@@ -371,7 +498,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 04: Aspect in Future
+#### Module 09: Aspect in Future
 **Grammar:** Буду + infinitive vs synthetic forms
 
 **Future Forms:**
@@ -394,7 +521,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 05: Aspect in Negation
+#### Module 10: Aspect in Negation
 **Grammar:** Imperfective preference with не
 
 **Key Patterns:**
@@ -413,7 +540,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 06: Aspect in Imperatives
+#### Module 11: Aspect in Imperatives
 **Grammar:** Читай! vs Прочитай! - Command aspect selection
 
 **Key Patterns:**
@@ -432,7 +559,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 07: Aspect Pairs — Essential 40
+#### Module 12: Aspect Pairs — Essential 40
 **Grammar:** 40 essential aspect pairs (merged from original M07-08)
 **Type:** B1-grammar
 
@@ -492,7 +619,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 08: Робочий тиждень — Aspect in Action
+#### Module 13: Робочий тиждень — Aspect in Action
 **Grammar:** All aspect contexts applied to work/daily routine theme
 **Type:** B1-grammar (thematic application)
 
@@ -525,7 +652,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 09: Aspect Integration Practice
+#### Module 14: Aspect Integration Practice
 **Grammar:** All aspect contexts combined
 
 **Practice Scenarios:**
@@ -545,7 +672,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 10: Checkpoint - Aspect Mastery
+#### Module 15: Checkpoint - Aspect Mastery
 **Covers:** M01-09
 **Type:** B1-checkpoint
 
@@ -601,7 +728,7 @@ By module 80, learners can:
 
 ---
 
-## Phase B1.2: Motion Verbs with Prefixes (Modules 11-20)
+## Phase B1.2: Motion Verbs with Prefixes (Modules 16-25)
 
 ### Learning Goals
 - Master all 14 motion verb pairs
@@ -628,7 +755,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 11: Motion Verbs - The Full System
+#### Module 16: Motion Verbs - The Full System
 **Grammar:** All 14 motion verb pairs
 
 **Motion Verb Pairs:**
@@ -659,7 +786,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 12: Motion - Coming & Going
+#### Module 17: Motion - Coming & Going
 **Grammar:** Prefixes при-, ви-, в-/у-
 
 **Prefix Meanings:**
@@ -682,7 +809,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 13: Motion - Passing & Crossing
+#### Module 18: Motion - Passing & Crossing
 **Grammar:** Prefixes пере-, про-, об-
 
 **Prefix Meanings:**
@@ -705,7 +832,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 14: Motion - Starting & Returning
+#### Module 19: Motion - Starting & Returning
 **Grammar:** Prefixes по-, за-, роз-
 
 **Prefix Meanings:**
@@ -728,7 +855,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 15: Motion - Approaching & Departing
+#### Module 20: Motion - Approaching & Departing
 **Grammar:** Prefixes під-, від-, до-
 
 **Prefix Meanings:**
@@ -751,7 +878,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 16: Motion - Figurative Uses
+#### Module 21: Motion - Figurative Uses
 **Grammar:** Idiomatic expressions with motion verbs
 
 **Figurative Expressions:**
@@ -774,7 +901,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 17: Motion - Full Prefix Integration
+#### Module 22: Motion - Full Prefix Integration
 **Grammar:** All prefixes with all motion verbs
 
 **Prefix System Summary:**
@@ -805,7 +932,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 18: Motion Patterns in Other Verbs
+#### Module 23: Motion Patterns in Other Verbs
 **Grammar:** Prefix meanings transferred to non-motion verbs
 
 **Pattern Transfer:**
@@ -825,7 +952,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 19: Motion - Practice & Integration
+#### Module 24: Motion - Practice & Integration
 **Grammar:** All motion verbs and prefixes in context
 
 **Practice Scenarios:**
@@ -844,7 +971,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 20: Checkpoint - Motion Verbs
+#### Module 25: Checkpoint - Motion Verbs
 **Covers:** M11-19
 **Type:** B1-checkpoint
 
@@ -890,7 +1017,7 @@ By module 80, learners can:
 
 ---
 
-## Phase B1.3: Complex Sentences Deep Dive (Modules 21-35)
+## Phase B1.3: Complex Sentences Deep Dive (Modules 26-40)
 
 ### Learning Goals
 - Master relative clauses (який, де, коли, куди)
@@ -922,7 +1049,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 21: Relative Clauses - який Review
+#### Module 26: Relative Clauses - який Review
 **Grammar:** який/яка/яке/які in all cases
 
 **Agreement Pattern:**
@@ -944,7 +1071,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 22: Relative Clauses - де, куди, звідки
+#### Module 27: Relative Clauses - де, куди, звідки
 **Grammar:** Place relatives with де, куди, звідки
 
 **Key Patterns:**
@@ -962,7 +1089,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 23: Relative Clauses - коли, що
+#### Module 28: Relative Clauses - коли, що
 **Grammar:** Time relatives (коли) and fact relatives (що as relative pronoun)
 
 **Key Patterns:**
@@ -981,7 +1108,7 @@ By module 80, learners can:
 
 ---
 
-#### Module 24: Purpose - щоб + Infinitive
+#### Module 29: Purpose - щоб + Infinitive
 **Grammar:** Same-subject purpose clauses
 
 **Key Pattern:**
@@ -999,7 +1126,7 @@ When the subject of both clauses is the same, use щоб + infinitive:
 
 ---
 
-#### Module 25: Purpose - щоб + Past Form
+#### Module 30: Purpose - щоб + Past Form
 **Grammar:** Different-subject purpose clauses
 
 **Key Pattern:**
@@ -1018,7 +1145,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 26: Conditionals - Real (якщо) Review
+#### Module 31: Conditionals - Real (якщо) Review
 **Grammar:** Real conditional constructions
 
 **Key Patterns:**
@@ -1036,7 +1163,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 27: Conditionals - Unreal (якби) Review
+#### Module 32: Conditionals - Unreal (якби) Review
 **Grammar:** Unreal conditional constructions
 
 **Key Patterns:**
@@ -1054,7 +1181,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 28: Conditionals - Mixed & Complex
+#### Module 33: Conditionals - Mixed & Complex
 **Grammar:** Complex conditional constructions
 
 **Mixed Types:**
@@ -1076,7 +1203,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 29: Concessive Clauses
+#### Module 34: Concessive Clauses
 **Grammar:** Хоча, незважаючи на те що
 
 **Key Patterns:**
@@ -1094,7 +1221,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 30: Causal & Result Clauses
+#### Module 35: Causal & Result Clauses
 **Grammar:** тому що, через те що, завдяки, отже
 
 **Key Patterns:**
@@ -1113,7 +1240,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 31: Temporal Clauses Deep Dive
+#### Module 36: Temporal Clauses Deep Dive
 **Grammar:** коли, після того як, поки, перш ніж, як тільки
 
 **Key Patterns:**
@@ -1133,7 +1260,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 32: Complex Sentence Integration & One-Member Sentences
+#### Module 37: Complex Sentence Integration & One-Member Sentences
 **Grammar:** Multiple clause types together + односкладні речення
 
 **Practice combining:**
@@ -1168,7 +1295,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 33: Reported Statements
+#### Module 38: Reported Statements
 **Grammar:** Він сказав, що...
 
 **Key Patterns:**
@@ -1186,7 +1313,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 34: Reported Questions & Commands
+#### Module 39: Reported Questions & Commands
 **Grammar:** Він запитав, чи/що... Він попросив, щоб...
 
 **Key Patterns:**
@@ -1205,7 +1332,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 35: Checkpoint - Complex Sentences
+#### Module 40: Checkpoint - Complex Sentences
 **Covers:** M21-34
 **Type:** B1-checkpoint
 
@@ -1252,7 +1379,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-## Phase B1.4: Advanced Grammar (Modules 36-45)
+## Phase B1.4: Advanced Grammar (Modules 41-50)
 
 ### Learning Goals
 - Form and use passive participles
@@ -1279,7 +1406,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 36: Adverbial Participles - Imperfective
+#### Module 41: Adverbial Participles - Imperfective
 **Grammar:** -ючи/-ачи forms (simultaneous action)
 
 **Formation:**
@@ -1301,7 +1428,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 37: Adverbial Participles - Perfective
+#### Module 42: Adverbial Participles - Perfective
 **Grammar:** -вши/-ши forms (prior completed action)
 
 **Formation:**
@@ -1323,7 +1450,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 38: Active Participles & Phrases
+#### Module 43: Active Participles & Phrases
 **Grammar:** Active Participles (читаючий, посивілий)
 **Focus:** Recognition & Stylistics (Passive Competence)
 
@@ -1347,7 +1474,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 39: Past Passive Participles I
+#### Module 44: Past Passive Participles I
 **Grammar:** Full form (-ний/-тий)
 
 **Formation:**
@@ -1371,7 +1498,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 40: Past Passive Participles II
+#### Module 45: Past Passive Participles II
 **Grammar:** Short form (-но/-то)
 
 **Formation:**
@@ -1394,7 +1521,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 41: Passive Constructions
+#### Module 46: Passive Constructions
 **Grammar:** Complete passive system
 
 **Passive Types:**
@@ -1417,7 +1544,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 42: Diminutives: Master Class
+#### Module 47: Diminutives: Master Class
 **Grammar:** Forms, Usage, and Nuance (Merged)
 
 **Forms:** -ик, -ок, -очок, -еньк-, -оньк-, -ечк-
@@ -1440,7 +1567,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 43: Numerals: Collectives & Fractions
+#### Module 48: Numerals: Collectives & Fractions
 **Grammar:** Collective numerals and fractions (Shifted from M44)
 
 **Collective Numerals:**
@@ -1460,7 +1587,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 44: Integrated Grammar Lab
+#### Module 49: Integrated Grammar Lab
 **Grammar:** Synthesis of B1.4 concepts
 **Focus:** Participles + Passive + Numbers + Diminutives together.
 
@@ -1480,7 +1607,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 45: Checkpoint - Advanced Grammar
+#### Module 50: Checkpoint - Advanced Grammar
 **Covers:** M36-44
 **Type:** B1-checkpoint
 
@@ -1526,7 +1653,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-## Phase B1.5: Vocabulary Expansion I (Modules 46-55)
+## Phase B1.5: Vocabulary Expansion I (Modules 51-60)
 
 ### Learning Goals
 - Build abstract concept vocabulary
@@ -1555,7 +1682,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 46: Abstract Concepts I - Ideas
+#### Module 51: Abstract Concepts I - Ideas
 **Focus:** Ideas, thoughts, problems, solutions
 
 **Vocabulary (30 words):**
@@ -1574,7 +1701,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 47: Abstract Concepts II - Processes
+#### Module 52: Abstract Concepts II - Processes
 **Focus:** Processes, changes, development
 
 **Vocabulary (30 words):**
@@ -1592,7 +1719,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 48: Expressing Opinions
+#### Module 53: Expressing Opinions
 **Focus:** Opinion expression vocabulary
 
 **Vocabulary (25 words):**
@@ -1611,7 +1738,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 49: Agreement & Disagreement
+#### Module 54: Agreement & Disagreement
 **Focus:** Discussion and debate vocabulary
 
 **Vocabulary (25 words):**
@@ -1631,7 +1758,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 50: Discourse Markers I - Basic Connectors
+#### Module 55: Discourse Markers I - Basic Connectors
 **Focus:** Text cohesion connectors
 
 **Vocabulary (25 words):**
@@ -1650,7 +1777,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 51: Discourse Markers II - Advanced
+#### Module 56: Discourse Markers II - Advanced
 **Focus:** Complex text organization
 
 **Vocabulary (25 words):**
@@ -1668,7 +1795,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 52: Describing Changes
+#### Module 57: Describing Changes
 **Focus:** Verbs and expressions of change
 
 **Vocabulary (25 words):**
@@ -1686,7 +1813,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 53: Media & News
+#### Module 58: Media & News
 **Focus:** Media and journalism vocabulary
 
 **Vocabulary (30 words):**
@@ -1704,7 +1831,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 54: Society & Politics
+#### Module 59: Society & Politics
 **Focus:** Civic and political vocabulary
 
 **Vocabulary (30 words):**
@@ -1722,7 +1849,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 55: Checkpoint - Vocabulary Expansion I
+#### Module 60: Checkpoint - Vocabulary Expansion I
 **Covers:** M46-54
 **Type:** B1-checkpoint
 
@@ -1766,7 +1893,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-## Phase B1.6: Vocabulary Expansion II (Modules 56-65)
+## Phase B1.6: Vocabulary Expansion II (Modules 61-70)
 
 ### Learning Goals
 - Develop environment and health vocabulary
@@ -1782,7 +1909,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 56: Environment & Ecology
+#### Module 61: Environment & Ecology
 **Focus:** Environmental vocabulary
 
 **Vocabulary (30 words):**
@@ -1795,7 +1922,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 57: Health & Wellness
+#### Module 62: Health & Wellness
 **Focus:** Health and well-being vocabulary
 
 **Vocabulary (30 words):**
@@ -1808,7 +1935,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 58: Emotions - Deep Dive
+#### Module 63: Emotions - Deep Dive
 **Focus:** Advanced emotional vocabulary
 
 **Vocabulary (30 words):**
@@ -1821,7 +1948,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 59: Relationships
+#### Module 64: Relationships
 **Focus:** Social relationship vocabulary
 
 **Vocabulary (25 words):**
@@ -1834,7 +1961,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 60: Business Basics
+#### Module 65: Business Basics
 **Focus:** Professional and business vocabulary
 
 **Vocabulary (30 words):**
@@ -1847,7 +1974,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 61: Travel & Geography
+#### Module 66: Travel & Geography
 **Focus:** Travel and geographical vocabulary
 
 **Vocabulary (30 words):**
@@ -1860,7 +1987,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 62: Synonymy I - Thinking Verbs
+#### Module 67: Synonymy I - Thinking Verbs
 **Focus:** Thinking verb distinctions
 
 **Vocabulary (20 words):**
@@ -1879,7 +2006,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 63: Synonymy II - Speaking Verbs
+#### Module 68: Synonymy II - Speaking Verbs
 **Focus:** Speaking verb distinctions
 
 **Vocabulary (20 words):**
@@ -1898,7 +2025,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 64: Collocations & Expressions
+#### Module 69: Collocations & Expressions
 **Focus:** Common verb-noun and adj-noun patterns
 
 **Vocabulary (25 words):**
@@ -1911,7 +2038,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 65: Checkpoint - Vocabulary Expansion II
+#### Module 70: Checkpoint - Vocabulary Expansion II
 **Covers:** M56-64
 **Type:** B1-checkpoint
 
@@ -1956,7 +2083,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-## Phase B1.7: Contemporary Ukraine (Modules 66-75)
+## Phase B1.7: Contemporary Ukraine (Modules 71-80)
 
 ### Learning Goals
 - Explore Ukrainian regional diversity
@@ -1971,7 +2098,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 66: Українські регіони - Захід
+#### Module 71: Українські регіони - Захід
 **Focus:** Western Ukraine
 
 **Vocabulary (25 words):**
@@ -1989,7 +2116,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 67: Українські регіони - Схід
+#### Module 72: Українські регіони - Схід
 **Focus:** Eastern Ukraine
 
 **Vocabulary (25 words):**
@@ -2007,7 +2134,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 68: Українські регіони - Південь
+#### Module 73: Українські регіони - Південь
 **Focus:** Southern Ukraine
 
 **Vocabulary (25 words):**
@@ -2025,7 +2152,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 69: Українські регіони - Центр
+#### Module 74: Українські регіони - Центр
 **Focus:** Central Ukraine
 
 **Vocabulary (25 words):**
@@ -2043,7 +2170,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 70: Українська музика сьогодні
+#### Module 75: Українська музика сьогодні
 **Focus:** Contemporary Ukrainian music
 
 **Vocabulary (25 words):**
@@ -2062,7 +2189,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 71: Українське кіно та серіали
+#### Module 76: Українське кіно та серіали
 **Focus:** Ukrainian film and television
 
 **Vocabulary (25 words):**
@@ -2081,7 +2208,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 72: Технології та стартапи
+#### Module 77: Технології та стартапи
 **Focus:** Tech industry in Ukraine
 
 **Vocabulary (25 words):**
@@ -2100,7 +2227,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 73: Спорт в Україні
+#### Module 78: Спорт в Україні
 **Focus:** Sports culture
 
 **Vocabulary (25 words):**
@@ -2119,7 +2246,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 74: Українська кухня
+#### Module 79: Українська кухня
 **Focus:** Regional cuisines
 
 **Vocabulary (25 words):**
@@ -2138,7 +2265,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 75: Checkpoint - Contemporary Ukraine
+#### Module 80: Checkpoint - Contemporary Ukraine
 **Covers:** M66-74
 **Type:** B1-checkpoint
 
@@ -2182,7 +2309,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-## Phase B1.8: Skills & Integration (Modules 76-80)
+## Phase B1.8: Skills & Integration (Modules 81-85)
 
 ### Learning Goals
 - Develop authentic text comprehension skills
@@ -2194,7 +2321,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 76: Новини - як читати
+#### Module 81: Новини - як читати
 **Focus:** News literacy and reading skills
 
 **Vocabulary (20 words):**
@@ -2213,7 +2340,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 77: Інтерв'ю та подкасти
+#### Module 82: Інтерв'ю та подкасти
 **Focus:** Audio comprehension skills
 
 **Vocabulary (20 words):**
@@ -2232,7 +2359,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 78: B1 Grammar Integration
+#### Module 83: B1 Grammar Integration
 **Focus:** Comprehensive grammar review
 
 **Review Areas:**
@@ -2251,7 +2378,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 79: B1 Vocabulary Integration
+#### Module 84: B1 Vocabulary Integration
 **Focus:** Comprehensive vocabulary review
 
 **Review Domains:**
@@ -2270,7 +2397,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 80: B1 Capstone
+#### Module 85: B1 Capstone
 **Focus:** Comprehensive assessment
 
 **Can-Do Assessment:**

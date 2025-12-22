@@ -203,7 +203,7 @@ Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Ukraine: emergency services at shopping mall shelling site in Kyiv ...](https://www.youtube.com/watch?v=FCGTzRtV0nI) — AFP
+> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
 >
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >

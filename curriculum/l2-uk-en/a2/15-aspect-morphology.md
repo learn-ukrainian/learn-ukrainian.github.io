@@ -48,15 +48,6 @@ However, you need to understand the patterns to make these predictions accuratel
 >
 > Більшість українських дієслів утворюють доконаний вид за допомогою префіксів. Коли бачите дієслово з префіксом — швидше за все, це доконаний вид!
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Learn 50 important Ukrainian Verb Pairs: Imperfective + Perfective ...](https://www.youtube.com/watch?v=iK4uNlozmFE) — #Ukrainian
->
-> **Grammar Guide:** [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -216,7 +207,7 @@ When you encounter a new verb, follow this decision tree:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -276,9 +267,20 @@ Adding different prefixes to the same root creates different perfective verbs wi
 >
 > Ці префікси — ваші найкращі друзі в українській мові! Коли ви бачите префікс перед дієсловом, це майже завжди означає доконаний вид. Практикуйте щодня!
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
+> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
+> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Aspect Pairs
+> З'єднайте видові пари. | Match the aspect pairs.
 
 - читати :: прочитати
 - писати :: написати
@@ -358,6 +360,7 @@ Adding different prefixes to the same root creates different perfective verbs wi
     > [!options] про- prefix | на- prefix | по- prefix | suppletive
 
 ## quiz: Aspect Formation
+> Як утворився доконаний вид? | How was the perfective formed?
 
 1. Which prefix means "through/completion"?
 
@@ -492,6 +495,7 @@ Adding different prefixes to the same root creates different perfective verbs wi
   > Different prefixes add different meanings!
 
 ## group-sort: Formation Patterns
+> Розсортуйте пари за способом творення доконаного виду. | Sort these pairs by how the perfective is formed.
 
 > Sort these pairs by how the perfective is formed.
 
@@ -768,7 +772,7 @@ She drank the coffee.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

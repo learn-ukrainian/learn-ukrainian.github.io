@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1069/750
+- **Words:** ✅ 1106/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.5% (target 35-55% (M22))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
+- **Immersion:** 🇺🇦 35.7% (target 35-55% (M22))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,10 +27,10 @@
 | **Useful Adverbs** | ⚪️ | 82 | Skipped |
 | **Examples in Context** | ✅ | 240 | Included in Core |
 | **Dialogues** | ✅ | 338 | Included in Core |
-| **Підсумок (Summary)** | ✅ | 116 | Included in Core |
-| **Вправи (Activities)** | ➖ | 0 | Excluded Type |
+| **Summary** | ✅ | 153 | Included in Core |
+| **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Time Expressions** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Levels of Certainty** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Levels of Certainty** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Future Tense Forms** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Planning Expressions** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: буду Conjugation** | 🎮 | 8 | Activity (8 items, min 8) |

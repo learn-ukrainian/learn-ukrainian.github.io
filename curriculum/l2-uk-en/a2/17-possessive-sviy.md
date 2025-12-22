@@ -29,15 +29,6 @@ Now you'll learn a special pronoun that causes confusion for English speakers: *
 
 English has no equivalent to свій. This single word means "one's own" and refers back to the subject of the sentence. Understanding this concept is essential for natural Ukrainian. Once you master it, your sentences will sound much more authentic to native speakers.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian possessive pronoun СВІЙ ...](https://www.youtube.com/watch?v=u57A6YglFzk) — How to use it correctly?
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## The Problem: Ambiguity
 
@@ -283,7 +274,7 @@ This mental check will help you until the pattern becomes automatic through prac
 
 ---
 
-## Summary
+# Summary
 
 Today you learned the reflexive possessive pronoun **свій**.
 
@@ -299,9 +290,26 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ---
 
-## Activities
+
+
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian possessive pronoun СВІЙ ...](https://www.youtube.com/watch?v=u57A6YglFzk) — How to use it correctly?
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+---
+
+---
+
+# Activities
 
 ## match-up: Свій vs Його
+> З'єднайте займенник із ситуацією. | Match the pronoun to the situation.
 
 > Match the pronoun to the situation.
 
@@ -351,6 +359,7 @@ Today you learned the reflexive possessive pronoun **свій**.
    > [!options] свою | її
 
 ## quiz: Concept Check
+> Перевірте розуміння концепції. | Check your understanding of the concept.
 
 1. "Свій" refers back to:
    - [x] The subject of the sentence
@@ -479,6 +488,7 @@ Today you learned the reflexive possessive pronoun **свій**.
    > [!options] її | свою
 
 ## group-sort: Declension Forms
+> Згрупуйте форми за родом. | Group the forms by gender.
 
 > Group the forms by gender.
 
@@ -495,6 +505,7 @@ Today you learned the reflexive possessive pronoun **свій**.
 - свою книгу
 
 ## match-up: Case Selection
+> З'єднайте контекст із правильною формою. | Match the context to the correct form.
 
 > Match the context to the correct form.
 
@@ -574,32 +585,32 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
-| Word | IPA | English | POS | Forms |
-|------|-----|---------|-----|-------|
-| свій | /sʋij/ | one's own (m) | pron | свого, своєму, своїм |
-| своя | /sʋɔjˈɑ/ | one's own (f) | pron | своєї, своїй, свою |
-| своє | /sʋɔjˈɛ/ | one's own (n) | pron | свого, своєму |
-| свої | /sʋɔjˈi/ | one's own (pl) | pron | своїх, своїм, своїми |
-| його | /jɔɦˈɔ/ | his | pron | - |
-| її | /jijˈi/ | her | pron | - |
-| їхній | /jixnʲij/ | their | pron | їхнього, їхньому |
-| власний | /ʋlˈɑsnɪj/ | own (adj) | adj | - |
-| належати | /nɑlɛʒˈɑtɪ/ | to belong | verb | - |
-| мій | /mij/ | my | pron | мого, моєму |
-| твій | /tʋij/ | your (sg) | pron | твого, твоєму |
-| наш | /nɑʃ/ | our | pron | нашого, нашому |
-| ваш | /ʋɑʃ/ | your (pl/formal) | pron | вашого, вашому |
-| кімната | /kimnˈɑtɑ/ | room | noun | - |
-| квартира | /kʋɑrtˈɪrɑ/ | apartment | noun | - |
-| будинок | /budˈɪnɔk/ | building/house | noun | - |
-| сумка | /sˈumkɑ/ | bag | noun | - |
-| робота | /rɔbˈɔtɑ/ | work | noun | - |
-| життя | /ʒɪtʲˈɑ/ | life | noun | - |
-| майбутнє | /mɑjbˈutnʲɛ/ | future | noun | - |
-| батьки | /bɑtʲkˈɪ/ | parents | noun | батьків, батькам |
-| брат | /brɑt/ | brother | noun | брата, братові |
-| сестра | /sɛstrˈɑ/ | sister | noun | сестри, сестрі |
-| подруга | /pɔdrˈuɦɑ/ | female friend | noun | - |
-| гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | - |
+| Word | IPA | English | POS | Gender | Forms |
+|------|-----|---------|-----|--------|-------|
+| свій | /sʋij/ | one's own (m) | pron | m | свого, своєму, своїм |
+| своя | /sʋɔjˈɑ/ | one's own (f) | pron | f | своєї, своїй, свою |
+| своє | /sʋɔjˈɛ/ | one's own (n) | pron | n | свого, своєму |
+| свої | /sʋɔjˈi/ | one's own (pl) | pron | pl | своїх, своїм, своїми |
+| його | /jɔɦˈɔ/ | his | pron | — | - |
+| її | /jijˈi/ | her | pron | — | - |
+| їхній | /jixnʲij/ | their | pron | — | їхнього, їхньому |
+| власний | /ʋlˈɑsnɪj/ | own (adj) | adj | — | - |
+| належати | /nɑlɛʒˈɑtɪ/ | to belong | verb | — | - |
+| мій | /mij/ | my | pron | — | мого, моєму |
+| твій | /tʋij/ | your (sg) | pron | — | твого, твоєму |
+| наш | /nɑʃ/ | our | pron | — | нашого, нашому |
+| ваш | /ʋɑʃ/ | your (pl/formal) | pron | — | вашого, вашому |
+| кімната | /kimnˈɑtɑ/ | room | noun | f | - |
+| квартира | /kʋɑrtˈɪrɑ/ | apartment | noun | f | - |
+| будинок | /budˈɪnɔk/ | building/house | noun | m | - |
+| сумка | /sˈumkɑ/ | bag | noun | f | - |
+| робота | /rɔbˈɔtɑ/ | work | noun | f | - |
+| життя | /ʒɪtʲˈɑ/ | life | noun | f | - |
+| майбутнє | /mɑjbˈutnʲɛ/ | future | noun | m | - |
+| батьки | /bɑtʲkˈɪ/ | parents | noun | pl | батьків, батькам |
+| брат | /brɑt/ | brother | noun | m | брата, братові |
+| сестра | /sɛstrˈɑ/ | sister | noun | f | сестри, сестрі |
+| подруга | /pɔdrˈuɦɑ/ | female friend | noun | f | - |
+| гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | m | - |

@@ -42,17 +42,6 @@ In English, asking "Do you read?" requires changing word order or adding "do/doe
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Negative sentences/Double negative in Ukrainian language](https://www.youtube.com/watch?v=93NJlqXegFw) — Speak Ukrainian
->
->
-> **Question Words:** [Питальні слова](https://www.ukrainianlessons.com/question-words/) — All question words with examples
->
-> **Negation:** [Double Negation Rules](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Master Ukrainian negative sentences
->
-> **Useful Questions:** [Short Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Practical phrases for travelers
-
 ## Presentation
 
 ### Yes/No Questions with Чи
@@ -227,8 +216,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 > When Ukrainians ask "Як справи?" (How are things?), they actually want to know! Unlike the English "How are you?" (often just a greeting), Ukrainians expect a real answer. Feel free to say "Не дуже добре" (Not so great) - they'll ask why and genuinely care.
 
 ---
-
-## Summary
+# Summary
 
 **Questions with Чи:**
 - Чи + subject + verb? = Yes/no question
@@ -247,12 +235,22 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 - іноді (sometimes), рідко (rarely), ніколи (never)
 
 ---
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Negative sentences/Double negative in Ukrainian language](https://www.youtube.com/watch?v=93NJlqXegFw) — Speak Ukrainian
+>
+>
+> **Question Words:** [Питальні слова](https://www.ukrainianlessons.com/question-words/) — All question words with examples
+>
+> **Negation:** [Double Negation Rules](https://www.ukrainianlessons.com/negation-in-ukrainian/) — Master Ukrainian negative sentences
+>
+> **Useful Questions:** [Short Ukrainian Questions](https://www.ukrainianlessons.com/useful-ukrainian-questions/) — Practical phrases for travelers
 
-## Activities
+# Activities
 
 ## quiz: Question Word Meanings
 
-1. What does "де" mean?
+1. What is the meaning of the word "де"?
    - [ ] what
    - [ ] who
    - [x] where
@@ -273,7 +271,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
    - [ ] скільки
    > коли (koly) = when
 
-4. What does "хто" mean?
+4. What is the meaning of the word "хто"?
    - [ ] what
    - [x] who
    - [ ] how
@@ -294,14 +292,14 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
    - [ ] коли
    > скільки (skilky) = how much/many
 
-7. What does "звідки" mean?
+7. What is the meaning of the word "звідки"?
    - [ ] where
    - [ ] where to
    - [x] where from
    - [ ] when
    > звідки (zvidky) = where from
 
-8. Which word means "what"?
+8. Which Ukrainian word means "what"?
    - [x] що
    - [ ] хто
    - [ ] де
@@ -322,7 +320,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
     - [ ] чому
     > хто (khto) = who
 
-11. Which means "where" (location)?
+11. Which Ukrainian word corresponds to "where" (location)?
     - [x] де
     - [ ] куди
     - [ ] звідки
@@ -348,8 +346,6 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 | коли | asking about time |
 | чому | asking for reason |
 | як | asking about manner or state |
-| скільки | asking about quantity |
-| чи | asking yes/no questions |
 
 ## fill-in: Complete Questions
 
@@ -445,15 +441,19 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 - завжди
 - звичайно
 - часто
+- щодня
+- щоранку
 
 ### Sometimes/Rarely
 - іноді
 - рідко
 - не завжди
+- не часто
 
 ### Never (with double negation)
 - ніколи не читаю
 - ніколи не пишу
+- ніколи не сплю
 
 ## fill-in: Add Negation
 
@@ -593,61 +593,85 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
    > [!answer] правда
    > (truth)
 
-## unjumble: Negative Sentences
+## quiz: Negative Sentence Order
 
-> Put the words in order to make negative sentences.
+> Choose the correct sentence order.
 
-1. не / Я / читаю
-   > [!answer] Я не читаю
-   > (I don't read.)
+1. Identify the correct word order for the sentence: "I don't read."
+   - [x] Я не читаю
+   - [ ] не Я читаю
+   - [ ] читаю Я не
+   > Correct order: Я не читаю
 
-2. працює / не / Вона
-   > [!answer] Вона не працює
-   > (She doesn't work.)
+2. Identify the correct word order for the sentence: "She doesn't work."
+   - [x] Вона не працює
+   - [ ] не Вона працює
+   - [ ] працює Вона не
+   > Correct order: Вона не працює
 
-3. знаємо / Ми / не
-   > [!answer] Ми не знаємо
-   > (We don't know.)
+3. Identify the correct word order for the sentence: "We don't know."
+   - [x] Ми не знаємо
+   - [ ] не Ми знаємо
+   - [ ] знаємо Ми не
+   > Correct order: Ми не знаємо
 
-4. ніколи / п'ю / каву / Я / не
-   > [!answer] Я ніколи не п'ю каву
-   > (I never drink coffee.)
+4. Identify the correct word order for the sentence: "I never drink coffee."
+   - [x] Я ніколи не п'ю каву
+   - [ ] ніколи Я не п'ю каву
+   - [ ] каву Я ніколи не п'ю
+   > Correct order: Я ніколи не п'ю каву
 
-5. Він / не / говорить / українською
-   > [!answer] Він не говорить українською
-   > (He doesn't speak Ukrainian.)
+5. Identify the correct word order for the sentence: "He doesn't speak Ukrainian."
+   - [x] Він не говорить українською
+   - [ ] не Він говорить українською
+   - [ ] українською Він не говорить
+   > Correct order: Він не говорить українською
 
-6. розумію / Я / не
-   > [!answer] Я не розумію
-   > (I don't understand.)
+6. Identify the correct word order for the sentence: "I don't understand."
+   - [x] Я не розумію
+   - [ ] не Я розумію
+   - [ ] розумію Я не
+   > Correct order: Я не розумію
 
-7. не / Це / правда
-   > [!answer] Це не правда
-   > (That's not true.)
+7. Identify the correct word order for the sentence: "That's not true."
+   - [x] Це не правда
+   - [ ] не Це правда
+   - [ ] правда Це не
+   > Correct order: Це не правда
 
-8. не / Ти / пишеш
-   > [!answer] Ти не пишеш
-   > (You don't write.)
+8. Identify the correct word order for the sentence: "You don't write."
+   - [x] Ти не пишеш
+   - [ ] не Ти пишеш
+   - [ ] пишеш Ти не
+   > Correct order: Ти не пишеш
 
-9. їмо / ніколи / м'ясо / Ми / не
-   > [!answer] Ми ніколи не їмо м'ясо
-   > (We never eat meat.)
+9. Identify the correct word order for the sentence: "We never eat meat."
+   - [x] Ми ніколи не їмо м'ясо
+   - [ ] ніколи Ми не їмо м'ясо
+   - [ ] м'ясо Ми ніколи не їмо
+   > Correct order: Ми ніколи не їмо м'ясо
 
-10. не / Вони / слухають / музику
-    > [!answer] Вони не слухають музику
-    > (They don't listen to music.)
+10. Identify the correct word order for the sentence: "They don't listen to music."
+   - [x] Вони не слухають музику
+   - [ ] не Вони слухають музику
+   - [ ] музику Вони не слухають
+   > Correct order: Вони не слухають музику
 
-11. працюю / не / Я / сьогодні
-    > [!answer] Я не працюю сьогодні
-    > (I don't work today.)
+11. Identify the correct word order for the sentence: "I don't work today."
+   - [x] Я не працюю сьогодні
+   - [ ] не Я працюю сьогодні
+   - [ ] сьогодні Я не працюю
+   > Correct order: Я не працюю сьогодні
 
-12. не / хочу / Я / чаю
-    > [!answer] Я не хочу чаю
-    > (I don't want tea.)
+12. Identify the correct word order for the sentence: "I don't want tea."
+   - [x] Я не хочу чаю
+   - [ ] не Я хочу чаю
+   - [ ] чаю Я не хочу
+   > Correct order: Я не хочу чаю
+
 
 ---
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

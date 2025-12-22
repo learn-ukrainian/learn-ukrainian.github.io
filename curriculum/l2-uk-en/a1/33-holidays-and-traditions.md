@@ -43,19 +43,6 @@ vocabulary_count: 30
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian customs and traditions. Репетитор Англійської](https://www.youtube.com/watch?v=jOnBruhc15M) — Репетитор Англійської
->
->
-> **Greetings:** [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — All Ukrainian greetings with audio
->
-> **Christmas:** [When is Ukrainian Christmas](https://www.ukrainianlessons.com/ukrainian-christmas/) — Christmas traditions explained
->
-> **Easter:** [Easter Greetings](https://www.ukrainianlessons.com/easter-greetings/) — Authentic Easter phrases
-
 ## Holiday Greetings
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -207,25 +194,22 @@ vocabulary_count: 30
 
 ---
 
-## Підсумок (Summary)
 
-Ви навчилися говорити про свята та традиції! (You've learned about holidays and traditions!)
+# Summary
 
-**Що ви вивчили (What you learned):**
-
-- **Свята (Holidays):** Новий рік, Різдво, Великдень, день народження, весілля
-- **Привітання (Greetings):** З Новим роком! З Днем народження! Христос воскрес!
-- **Побажання (Wishes):** Бажаю щастя/здоров'я/успіху/любові! Хай щастить! Многая літа!
-- **Дієслова (Verbs):** святкувати, дарувати, отримувати
-- **Вечірка (Party):** гості, торт, свічка, квіти, музика, танці, подарунок
-- **Дата (Date):** Коли твій день народження? + родовий відмінок
-- **Різдво в Україні:** 25 грудня (з 2023 року)
+Ви вивчили українські свята та традиції! Тепер ви знаєте багато щирих привітань. (You learned Ukrainian holidays and traditions! Now you know many sincere greetings.) Ви знаєте слова: подарунок, торт, вечірка. Це був дуже веселий урок! (This was a very cheerful lesson!)
 
 ---
 
-**Наступний урок:** Підсумковий модуль A1!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — Holiday phrases
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/holidays
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Вправи (Activities)
+# Activities
+
 
 ## match-up: Holidays and Greetings
 
@@ -269,17 +253,20 @@ Match the Ukrainian word with its English meaning.
 
 > Sort holidays by when they occur.
 
-### Зима (Winter)
+### Зимові свята (Winter Holidays)
 - Новий рік
 - Різдво
 - Святий Миколай
 
-### Весна (Spring)
+### Весняні та літні свята (Spring & Summer)
 - Великдень
 - 8 березня
-- 1 травня
+- Трійця
+- День Незалежності
+- День Конституції
+- Івана Купала
 
-### Будь-коли (Any Time)
+### Особисті свята (Personal Holidays)
 - День народження
 - Весілля
 - Ювілей
@@ -296,6 +283,7 @@ Match the Ukrainian word with its English meaning.
 - бажати
 - танцювати
 - співати
+- отримувати
 
 ### Подарунки (Gifts)
 - подарунок
@@ -417,51 +405,51 @@ Match the Ukrainian word with its English meaning.
 
 ## quiz: Holiday Knowledge
 
-Choose the correct answer.
+> Identify the correct Ukrainian holidays and traditions based on these descriptions.
 
-1. When is Ukrainian Christmas (Різдво)?
+1. When do people officially celebrate Ukrainian Christmas (Різдво) now?
    - [ ] January 7
    - [x] December 25
    - [ ] January 1
    - [ ] December 31
 
-2. What is "Новий рік"?
+2. How do you accurately translate "Новий рік" into English?
    - [x] New Year
    - [ ] Christmas
    - [ ] Easter
    - [ ] Birthday
 
-3. What do you say for "Happy Birthday"?
+3. What do you say for "Happy Birthday" in Ukrainian?
    - [x] З Днем народження!
    - [ ] З Новим роком!
    - [ ] З Різдвом!
    - [ ] З Великоднем!
 
-4. What is "Великдень"?
+4. What accurately is the meaning of "Великдень" in English?
    - [x] Easter
    - [ ] Christmas
    - [ ] New Year
    - [ ] Birthday
 
-5. "Бажаю щастя!" means:
+5. What is correctly represented by "Бажаю щастя!" in English?
    - [x] I wish you happiness!
    - [ ] Happy birthday!
    - [ ] Merry Christmas!
    - [ ] Good morning!
 
-6. A traditional birthday song wish in Ukrainian:
+6. A traditional birthday song wish in Ukrainian is:
    - [x] Многая літа!
    - [ ] З Новим роком!
    - [ ] Хай щастить!
    - [ ] Вітаю!
 
-7. What do you say for "Merry Christmas"?
+7. What do you say for "Merry Christmas" in Ukrainian?
    - [x] З Різдвом!
    - [ ] З Новим роком!
    - [ ] З Днем народження!
    - [ ] З Великоднем!
 
-8. What is "подарунок"?
+8. What correctly is the meaning of "подарунок" here?
    - [x] Gift/present
    - [ ] Cake
    - [ ] Party
@@ -539,7 +527,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

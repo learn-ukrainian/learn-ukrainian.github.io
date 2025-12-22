@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1999/1000
+- **Words:** ✅ 1989/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,19 +14,16 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.3% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 44.7% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Introduction** | ✅ | 145 | Included in Core |
-| **Warm-up** | ✅ | 124 | Included in Core |
+| **Warm-up** | ✅ | 83 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **Dative-Only Verbs** | ⚪️ | 308 | Skipped |
 | **Verbs with Dative + Accusative** | ⚪️ | 223 | Skipped |
@@ -40,6 +37,7 @@
 | **Mini-Dialogues** | ✅ | 172 | Included in Core |
 | **Reading Practice: Щоденник вчительки** | ✅ | 217 | Included in Core |
 | **Підсумок** | ✅ | 82 | Included in Core |
+| **Need More Practice?** | ⚪️ | 31 | Skipped |
 | **Activities** | ➖ | 55 | Excluded Type |
 | **match-up: Verb + Dative Pattern** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Choose the Correct Form** | 🎮 | 12 | Activity (12 items, min 8) |

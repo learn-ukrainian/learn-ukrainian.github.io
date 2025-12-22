@@ -43,16 +43,6 @@ You've already learned how to say "This is X" (nominative) and "I see X" (accusa
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Locative Case in the Ukrainian language](https://www.youtube.com/watch?v=kQof_vYOdm8) — Speak Ukrainian
->
->
-> **Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
->
-> **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
->
-> **Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
 
 ## Presentation
 
@@ -271,7 +261,7 @@ Example: **У нашому місті є старий парк. Парк у це
 
 ---
 
-## Summary
+# Summary
 
 You've mastered the locative case! Here's what you learned:
 
@@ -293,11 +283,20 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [The Locative Case in the Ukrainian language](https://www.youtube.com/watch?v=kQof_vYOdm8) — Speak Ukrainian
+>
+>
+> **Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
+>
+> **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
+>
+> **Prepositions:** [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
+
+# Activities
 
 ## quiz: Where Is It?
-> Choose the correct locative form.
-
 1. Де ти? — Я ___ кафе.
    - [ ] на
    - [x] в
@@ -317,35 +316,33 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
    - [x] у
    - [ ] на
    - [ ] при
-   > Lviv (Київ) has consonant cluster, so у is used.
+   > Kyiv has consonant cluster, so у is used.
 
 4. Де твоя робота? — ___ центрі.
    - [x] У
    - [ ] В
    - [ ] На
    - [ ] Від
-   > Center (центр) starts with consonant cluster, so у.
+   > Center starts with consonant cluster, so у.
 
 5. Де діти? — Вони ___ школі.
    - [ ] на
    - [x] у
    - [ ] біля
    - [ ] коло
-   > Enclosed building (school) uses у/в.
+   > Enclosed building uses у/в.
 
-6. Де чашка? — ___ кухні.
-   - [ ] В
-   - [x] На
-   - [ ] У
-   - [ ] Під
-   > Kitchen is an enclosed space, uses на when referring to the room.
+6. How do you say accurately "I am in the city"?
+   - [x] Я у місті
+   - [ ] Я на місті
+   - [ ] Я в місті (alternative)
+   > City is an enclosed space, locative -і.
 
-7. Де концерт? — ___ стадіоні.
-   - [ ] в
-   - [x] на
-   - [ ] у
-   - [ ] при
-   > Events use на.
+7. How can you say "She is at the stop"?
+   - [x] Вона на зупинці
+   - [ ] Вона в зупинці
+   - [ ] Вона зупинка
+   > Stops are surface/open locations, use на.
 
 8. Де ваша квартира? — ___ третьому поверсі.
    - [x] На
@@ -382,23 +379,20 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
     - [ ] під
     > Open space (beach) uses на.
 
-## match-up: Places and Locations
-> Match each place with the correct locative form.
 
-| Nominative | Locative |
-|------------|----------|
-| кімната | у кімнаті |
-| стіл | на столі |
-| магазин | у магазині |
-| робота | на роботі |
-| Київ | у Києві |
-| пляж | на пляжі |
-| школа | у школі |
-| балкон | на балконі |
-| музей | у музеї |
-| центр | у центрі |
-| парк | у парку |
-| вулиця | на вулиці |
+## match-up: Places and Locations
+| Ukrainian | English |
+|-----------|---------|
+| школа | school |
+| аптека | pharmacy |
+| магазин | store |
+| офіс | office |
+| банк | bank |
+| університет | university |
+| пошта | post office |
+| вокзал | station |
+| зупинка | stop |
+
 
 ## fill-in: Complete the Locative
 > Fill in the blank with the correct locative form.
@@ -453,35 +447,22 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
     > Note: кафе is neuter and doesn't change in locative.
 
 ## group-sort: в/у or на?
-> Sort these locations by which preposition they take.
-
-### в/у (inside)
-- у кімнаті
-- в школі
+### Preposition в / у (Inside)
+- у школі
+- в аптеці
 - у магазині
-- в Києві
-- у парку
 - в офісі
-- у музеї
-- в ресторані
-- у готелі
-- в центрі
-- у лікарні
-- в театрі
+- у банку
+- в університеті
 
-### на (on/at)
-- на столі
+### Preposition на (Surface/Special)
 - на роботі
-- на пляжі
-- на балконі
+- на пошті
+- на вокзалі
+- на зупинці
 - на вулиці
-- на концерті
-- на стадіоні
 - на площі
-- на поверсі
-- на ринку
-- на уроці
-- на зустрічі
+
 
 ## true-false: Locative Rules
 > Decide if each statement is true or false.
@@ -522,56 +503,82 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 - [x] Some masculine nouns have -ові ending in locative for people.
   > Correct! на батькові, на дідові (though less common in modern Ukrainian).
 
-## unjumble: Where Questions and Answers
-> Put the words in the correct order.
+## quiz: Where Questions Order
 
-1. ти / Де / ?
-   > [!answer] Де ти
-   > (Where are you?) [2 words]
+> Choose the correct sentence order.
 
-2. кафе / Я / в
-   > [!answer] Я в кафе
-   > (I'm in a café.) [3 words]
+1. Correct sentence order for: "Where are you?"
+   - [x] Де ти
+   - [ ] ти Де
+   - [ ] Incorrect order for this sentence
+   > Correct: Де ти
 
-3. на / Книга / столі
-   > [!answer] Книга на столі
-   > (The book is on the table.) [3 words]
+2. Correct sentence order for: "I'm in a café."
+   - [x] Я в кафе
+   - [ ] в Я кафе
+   - [ ] Incorrect order for this sentence
+   > Correct: Я в кафе
 
-4. у / живу / Я / Києві
-   > [!answer] Я живу у Києві
-   > (I live in Kyiv.) [4 words]
+3. Correct sentence order for: "The book is on..."
+   - [x] Книга на столі
+   - [ ] на Книга столі
+   - [ ] Incorrect order for this sentence
+   > Correct: Книга на столі
 
-5. Діти / школі / в
-   > [!answer] Діти в школі
-   > (The children are at school.) [3 words]
+4. Correct sentence order for: "I live in Kyiv."
+   - [x] Я живу у Києві
+   - [ ] живу Я у Києві
+   - [ ] Incorrect order for this sentence
+   > Correct: Я живу у Києві
 
-6. роботі / на / Вона
-   > [!answer] Вона на роботі
-   > (She's at work.) [3 words]
+5. Correct sentence order for: "The children are at school."
+   - [x] Діти в школі
+   - [ ] в Діти школі
+   - [ ] Incorrect order for this sentence
+   > Correct: Діти в школі
 
-7. у / Ми / центрі / магазині / в
-   > [!answer] Ми в магазині у центрі
-   > (We're in a shop in the center.) [5 words]
+6. Correct sentence order for: "She's at work."
+   - [x] Вона на роботі
+   - [ ] на Вона роботі
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона на роботі
 
-8. Де / паспорт / твій / ?
-   > [!answer] Де твій паспорт
-   > (Where is your passport?) [3 words]
+7. Correct sentence order for: "We're in a shop..."
+   - [x] Ми в магазині у центрі
+   - [ ] в Ми магазині у центрі
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми в магазині у центрі
 
-9. У / він / сумці
-   > [!answer] Він у сумці
-   > (It's in the bag.) [3 words]
+8. Correct sentence order for: "Where is your passport?"
+   - [x] Де твій паспорт
+   - [ ] твій Де паспорт
+   - [ ] Incorrect order for this sentence
+   > Correct: Де твій паспорт
 
-10. на / Концерт / стадіоні
-    > [!answer] Концерт на стадіоні
-    > (The concert is at the stadium.) [3 words]
+9. Correct sentence order for: "It's in the bag."
+   - [x] Він у сумці
+   - [ ] у Він сумці
+   - [ ] Incorrect order for this sentence
+   > Correct: Він у сумці
 
-11. пляжі / на / зараз / Вони
-    > [!answer] Вони зараз на пляжі
-    > (They're at the beach now.) [4 words]
+10. Correct sentence order for: "The concert is at..."
+   - [x] Концерт на стадіоні
+   - [ ] на Концерт стадіоні
+   - [ ] Incorrect order for this sentence
+   > Correct: Концерт на стадіоні
 
-12. у / Студенти / бібліотеці
-    > [!answer] Студенти у бібліотеці
-    > (The students are in the library.) [3 words]
+11. Correct sentence order for: "They're at the beach now."
+   - [x] Вони зараз на пляжі
+   - [ ] зараз Вони на пляжі
+   - [ ] Incorrect order for this sentence
+   > Correct: Вони зараз на пляжі
+
+12. Correct sentence order for: "The students are in..."
+   - [x] Студенти у бібліотеці
+   - [ ] у Студенти бібліотеці
+   - [ ] Incorrect order for this sentence
+   > Correct: Студенти у бібліотеці
+
 
 ## fill-in: Preposition Choice
 > Choose в/у or на.
@@ -625,112 +632,94 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
     > [!options] в | на | у | при
 
 ## match-up: Nominative to Locative
-> Match the nominative form to its locative form.
-
-| Nominative | Locative (with preposition) |
-|------------|------------------------------|
-| кімната | в кімнаті |
-| банк | у банку |
-| місто | в місті |
-| робота | на роботі |
+| Nominative | Locative |
+|------------|----------|
 | стіл | на столі |
+| вікно | на вікні |
+| місто | у місті |
+| Київ | у Києві |
 | Львів | у Львові |
-| школа | в школі |
-| концерт | на концерті |
-| офіс | в офісі |
-| пляж | на пляжі |
-| центр | у центрі |
-| балкон | на балконі |
+| сумка | у сумці |
+| коробка | у коробці |
+| парк | у парку |
+| ліфт | у ліфті |
+
 
 ## quiz: Translation Practice
-> Choose the correct Ukrainian translation.
-
-1. I'm at work.
-   - [x] Я на роботі.
-   - [ ] Я в роботі.
-   - [ ] Я у роботі.
-   - [ ] Я робота.
-   > Fixed expression: на роботі.
+1. How do you ask "Where is the museum"?
+   - [x] Де музей?
+   - [ ] Де музея?
+   - [ ] Музеї де?
+   > Question word first: Де?
 
 2. The book is on the table.
    - [x] Книга на столі.
    - [ ] Книга в столі.
-   - [ ] Книга у столі.
    - [ ] Книга стіл.
    > Surface uses на.
 
-3. We live in Kyiv.
-   - [ ] Ми живемо в Київі.
-   - [x] Ми живемо у Києві.
-   - [ ] Ми живемо на Києві.
-   - [ ] Ми живемо Київ.
-   > Consonant cluster requires у.
+3. Which phrase means "The bank is here"?
+   - [x] Банк тут.
+   - [ ] Банк там.
+   - [ ] Банку вже тут.
+   > Тут means "here".
 
 4. She's in the shop.
    - [ ] Вона на магазині.
    - [x] Вона у магазині.
-   - [ ] Вона магазин.
-   - [ ] Вона в магазин.
+   - [ ] Вона магазину.
    > Enclosed space, consonant cluster → у магазині.
 
 5. The children are at school.
    - [x] Діти в школі.
    - [ ] Діти на школі.
-   - [ ] Діти школа.
-   - [ ] Діти у школу.
+   - [ ] Діти школа тут.
    > Enclosed building uses в/у.
 
-6. I'm in Ukraine.
-   - [x] Я в Україні.
-   - [ ] Я на Україні.
-   - [ ] Я у Україні.
-   - [ ] Я Україна.
-   > Countries use в/у (politically significant!).
+6. Which phrase means "The stop is there"?
+   - [x] Зупинка там.
+   - [ ] Зупинка тут.
+   - [ ] Там зупинка.
+   > Там means "there".
 
 7. The concert is at the stadium.
    - [ ] Концерт у стадіоні.
    - [x] Концерт на стадіоні.
-   - [ ] Концерт в стадіоні.
-   - [ ] Концерт стадіон.
+   - [ ] Концерт за стадіоном.
    > Events use на.
 
 8. Your passport is in the bag.
    - [ ] Твій паспорт на сумці.
    - [x] Твій паспорт у сумці.
-   - [ ] Твій паспорт в сумці.
-   - [ ] Твій паспорт сумка.
+   - [ ] Твій паспорт сумку.
    > Container, consonant cluster → у сумці.
 
 9. We're in the center.
    - [x] Ми у центрі.
    - [ ] Ми на центрі.
-   - [ ] Ми в центрі.
-   - [ ] Ми центр.
+   - [ ] Ми в центр.
    > Consonant cluster → у центрі.
 
 10. They're at the beach.
     - [x] Вони на пляжі.
     - [ ] Вони в пляжі.
-    - [ ] Вони у пляжі.
     - [ ] Вони пляж.
     > Open space uses на.
 
 11. The cup is in the kitchen.
     - [x] Чашка на кухні.
     - [ ] Чашка в кухні.
-    - [ ] Чашка у кухні.
     - [ ] Чашка кухня.
-    > Room name uses на (though в is also acceptable).
+    > Room name uses на.
 
 12. My apartment is on the third floor.
     - [x] Моя квартира на третьому поверсі.
     - [ ] Моя квартира в третьому поверсі.
-    - [ ] Моя квартира у третьому поверсі.
     - [ ] Моя квартира третій поверх.
     > Floor levels use на.
 
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

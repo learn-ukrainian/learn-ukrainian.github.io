@@ -188,8 +188,6 @@ Where do we go?
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Beekeeping as Pleasant Hobby and Healthy Leisure in Ukraine! (ENGLISH)...](https://www.youtube.com/watch?v=3SQ84KLtK-A) — Dr Victor Fursov Entomologist Beekeeper Teacher
->
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises

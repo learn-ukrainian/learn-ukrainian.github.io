@@ -49,15 +49,6 @@ When you want to say you're doing something **with someone**, Ukrainian uses the
 
 The instrumental case answers the questions: **З ким?** (With whom?) and **З чим?** (With what?) Learning this case opens up the ability to describe social situations and relationships in Ukrainian.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Instrumental case in the Ukrainian language...](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -356,7 +347,7 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -384,7 +375,17 @@ This story about a surprise party is full of Instrumental examples. Every time s
 
 Тепер ви можете розповідати, з ким ви гуляєте, живете, працюєте і п'єте каву! ☕
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Instrumental Case Explained](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+> - 📖 [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/)
+> - 📝 [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 The following activities will help you master Instrumental case endings through various exercise types. Progress from matching (recognition) through translation (production) to build your skills.
 
@@ -597,7 +598,7 @@ The following activities will help you master Instrumental case endings through 
   > Yes! Ім'я → ім'ям.
 
 ## group-sort: Gender by Instrumental Ending
-> Sort these instrumental forms into the correct gender category.
+> Розсортуйте ці іменники за закінченням орудного відмінка. | Sort these nouns by their instrumental ending.
 
 ### Masculine
 - другом
@@ -873,7 +874,7 @@ I meet with friends every week.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

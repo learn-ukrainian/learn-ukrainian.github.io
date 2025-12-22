@@ -228,7 +228,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 
 ---
 
-## Підсумок (Summary)
+# Summary
 
 Ви навчилися говорити про майбутнє! (You've learned to talk about the future!)
 
@@ -260,7 +260,17 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 
 **Наступний урок:** Котра година? Дні тижня та місяці!
 
-## Вправи (Activities)
+
+> [!resources] External Resources
+>
+> **YouTube:** [Future Tense in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
+>
+> **Grammar:** [Ukrainian Future Tense Guide](https://www.ukrainianlessons.com/future-tense/) — Ukrainian Lessons
+>
+> **Podcast:** [ULP Episode 27 | Future Tense](https://www.ukrainianlessons.com/episode27/) — Ukrainian Lessons Podcast
+
+# Activities
+
 
 ## match-up: Time Expressions
 
@@ -282,24 +292,20 @@ Match the Ukrainian time expression with its English meaning.
 ---
 
 ## group-sort: Levels of Certainty
-> Sort these expressions by how certain they are.
+> Sort these expressions by how certain the action is.
 
-### Definite (Точно)
+### Very Certain (Точно)
 - обов'язково
 - вирішив
 - обіцяю
-
-### Planning (Планування)
 - планую
 - збираюся
 - маю намір
 
-### Hoping (Надія)
+### Less Certain (Може бути)
 - сподіваюся
 - мрію
 - хочу
-
-### Trying (Спроба)
 - спробую
 - постараюся
 - думаю
@@ -382,51 +388,51 @@ Match the Ukrainian time expression with its English meaning.
 
 ## quiz: буду Conjugation
 
-Choose the correct translation.
+> Select the correct English translation for these future tense sentences.
 
-1. Ми будемо вечеряти о сьомій.
+1. What is the correct translation of "Ми будемо вечеряти о сьомій"?
    - [x] We will have dinner at seven.
    - [ ] We had dinner at seven.
    - [ ] We are having dinner at seven.
    - [ ] We have dinner at seven.
 
-2. Вони будуть працювати завтра?
+2. How do you accurately translate "Вони будуть працювати завтра?" into English?
    - [x] Will they work tomorrow?
    - [ ] Did they work tomorrow?
    - [ ] Are they working tomorrow?
    - [ ] Do they work tomorrow?
 
-3. Я обов'язково буду там.
+3. What does accurately the phrase "Я обов'язково буду там" mean?
    - [x] I will definitely be there.
    - [ ] I was definitely there.
    - [ ] I am definitely there.
    - [ ] I have definitely been there.
 
-4. Вона збирається купити квартиру.
+4. How do you correctly translate "Вона збирається купити квартиру" today?
    - [x] She is going to buy an apartment.
    - [ ] She bought an apartment.
    - [ ] She has an apartment.
    - [ ] She sells apartments.
 
-5. Ти будеш читати цю книгу?
+5. Which English sentence accurately represents "Ти будеш читати цю книгу?"?
    - [x] Will you read this book?
    - [ ] Did you read this book?
    - [ ] Are you reading this book?
    - [ ] Do you read this book?
 
-6. Він буде вчитися в університеті.
+6. How do you accurately say "Він буде вчитися в університеті"?
    - [x] He will study at the university.
    - [ ] He studied at the university.
    - [ ] He is studying at the university.
    - [ ] He studies at the university.
 
-7. Я буду готувати вечерю.
+7. Which translation is correct for "Я буду готувати вечерю" now?
    - [x] I will cook dinner.
    - [ ] I cooked dinner.
    - [ ] I am cooking dinner.
    - [ ] I cook dinner.
 
-8. Ви будете дивитися фільм?
+8. What is accurately the English translation of "Ви будете дивитися фільм?"?
    - [x] Will you watch the movie?
    - [ ] Did you watch the movie?
    - [ ] Are you watching the movie?
@@ -436,51 +442,51 @@ Choose the correct translation.
 
 ## quiz: Time Expressions
 
-Select the best translation.
+> Test your understanding of Ukrainian future time expressions here.
 
-1. Наступного року ми поїдемо до моря.
+1. Which English phrase correctly translates "Наступного року ми поїдемо до моря"?
    - [x] Next year we will go to the sea.
    - [ ] Last year we went to the sea.
    - [ ] This year we go to the sea.
    - [ ] Every year we go to the sea.
 
-2. Пізніше я подзвоню тобі.
+2. How do you accurately translate "Пізніше я подзвоню тобі" into English?
    - [x] Later I will call you.
    - [ ] Earlier I called you.
    - [ ] Now I am calling you.
    - [ ] Yesterday I called you.
 
-3. Скоро буде літо.
+3. What does accurately the phrase "Скоро буде літо" mean today?
    - [x] Soon it will be summer.
    - [ ] Soon it was summer.
    - [ ] It is already summer.
    - [ ] Summer has passed.
 
-4. Я ще не вирішив.
+4. Which English sentence accurately represents "Я ще не вирішив" now?
    - [x] I haven't decided yet.
    - [ ] I have already decided.
    - [ ] I never decide.
    - [ ] I always decide.
 
-5. Завтра я буду вдома.
+5. How do you accurately say "Завтра я буду вдома" in English?
    - [x] Tomorrow I will be at home.
    - [ ] Yesterday I was at home.
    - [ ] Today I am at home.
    - [ ] I am always at home.
 
-6. Післязавтра вона приїде.
+6. What is the correct English translation of "Післязавтра вона приїде"?
    - [x] The day after tomorrow she will arrive.
    - [ ] Yesterday she arrived.
    - [ ] Today she is arriving.
    - [ ] She always arrives.
 
-7. Наступного тижня ми почнемо курс.
+7. Which translation is correct for "Наступного тижня ми почнемо курс"?
    - [x] Next week we will start the course.
    - [ ] Last week we started the course.
    - [ ] This week we start the course.
    - [ ] Every week we start the course.
 
-8. Згодом він зрозуміє.
+8. What does exactly the word "Згодом він зрозуміє" mean today?
    - [x] Eventually he will understand.
    - [ ] He already understands.
    - [ ] He never understands.
@@ -554,7 +560,7 @@ Decide if each statement is true or false.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

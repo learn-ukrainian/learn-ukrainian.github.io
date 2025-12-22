@@ -34,17 +34,6 @@ You've already learned Class I verbs that end in **-ати** (читати, пи
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Practice : the verbs 'to go'  # 97](https://www.youtube.com/watch?v=mSw2i5NXOH4) — Ukrainian Language
->
->
-> **Podcast:** [ULP 1-24 | Second Conjugation](https://www.ukrainianlessons.com/episode24/) — Learn Class II verbs in context
->
-> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
->
-> **Podcast Episodes:** [Ukrainian Verbs in Context](https://www.ukrainianlessons.com/ukrainian-verbs-podcasts/) — Top episodes for verb practice
-
 ## Presentation
 
 ### Class II Conjugation Pattern
@@ -234,8 +223,7 @@ Ukrainians use these constantly:
 > Why do some verbs change their consonant? Notice: **робити** → **роблю** (not *робю*), **ходити** → **ходжу** (not *ходю*). This is called **consonant mutation** — the final consonant of the stem changes before **-ю** to make pronunciation smoother. Ukrainian inherited this elegant feature from Proto-Slavic!
 
 ---
-
-## Summary
+# Summary
 
 You've now mastered **Class II verbs (-ити)**! Here's what you can do:
 
@@ -250,71 +238,105 @@ You've now mastered **Class II verbs (-ити)**! Here's what you can do:
 With Class I and Class II verbs combined, you can now express hundreds of actions in Ukrainian. Вітаю! (Congratulations!)
 
 ---
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Practice : the verbs 'to go'  # 97](https://www.youtube.com/watch?v=mSw2i5NXOH4) — Ukrainian Language
+>
+>
+> **Podcast:** [ULP 1-24 | Second Conjugation](https://www.ukrainianlessons.com/episode24/) — Learn Class II verbs in context
+>
+> **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
+>
+> **Podcast Episodes:** [Ukrainian Verbs in Context](https://www.ukrainianlessons.com/ukrainian-verbs-podcasts/) — Top episodes for verb practice
 
-## Activities
+# Activities
 
 ## quiz: Class II or Class I?
-> Identify which conjugation class each verb belongs to.
+> Identify the correct conjugation class for each verb.
 
-1. говорити
+1. To which class does **говорити** belong?
    - [x] Class II (-ити)
    - [ ] Class I (-ати)
-   > говорити ends in -ити, so it's Class II
+   - [ ] Irregular
+   - [ ] Noun
+   > говорити ends in -ити, so it's Class II.
 
-2. читати
+2. To which class does **читати** belong?
    - [ ] Class II (-ити)
    - [x] Class I (-ати)
-   > читати ends in -ати, so it's Class I
+   - [ ] Irregular
+   - [ ] Noun
+   > читати ends in -ати, so it's Class I.
 
-3. любити
+3. To which class does **любити** belong?
    - [x] Class II (-ити)
    - [ ] Class I (-ати)
-   > любити ends in -ити, so it's Class II
+   - [ ] Irregular
+   - [ ] Adjective
+   > любити ends in -ити, so it's Class II.
 
-4. працювати
+4. To which class does **працювати** belong?
    - [ ] Class II (-ити)
    - [x] Class I (-ати)
-   > працювати ends in -ати (actually -ювати), so it's Class I
+   - [ ] Irregular
+   - [ ] Adverb
+   > майже всі дієслова на -ати — це I дієвідміна.
 
-5. бачити
+5. To which class does **бачити** belong?
    - [x] Class II (-ити)
    - [ ] Class I (-ати)
-   > бачити ends in -ити, so it's Class II
+   - [ ] Irregular
+   - [ ] Noun
+   > бачити ends in -ити, so it's Class II.
 
-6. знати
+6. To which class does **знати** belong?
    - [ ] Class II (-ити)
    - [x] Class I (-ати)
-   > знати ends in -ати, so it's Class I
+   - [ ] Irregular
+   - [ ] Pronoun
+   > знати to Class I.
 
-7. ходити
+7. To which class does **ходити** belong?
    - [x] Class II (-ити)
    - [ ] Class I (-ати)
-   > ходити ends in -ити, so it's Class II
+   - [ ] Irregular
+   - [ ] Noun
+   > ходити is a typical Class II verb.
 
-8. писати
+8. To which class does **писати** belong?
    - [ ] Class II (-ити)
    - [x] Class I (-ати)
-   > писати ends in -ати, so it's Class I
+   - [ ] Irregular
+   - [ ] Noun
+   > писати is Class I (change s -> sh).
 
-9. робити
+9. To which class does **робити** belong?
    - [x] Class II (-ити)
    - [ ] Class I (-ати)
-   > робити ends in -ити, so it's Class II
+   - [ ] Irregular
+   - [ ] Noun
+   > робити is Class II.
 
-10. дякувати
+10. To which class does **дякувати** belong?
     - [ ] Class II (-ити)
     - [x] Class I (-ати)
-    > дякувати ends in -ати (actually -увати), so it's Class I
+    - [ ] Irregular
+    - [ ] Adverb
+    > дякувати is Class I (-увати suffix).
 
-11. спати
+11. To which class does **спати** belong?
     - [x] Class II (-ити)
     - [ ] Class I (-ати)
-    > спати ends in -ати but behaves like Class II with palatalized stem
+    - [ ] Irregular
+    - [ ] Noun
+    > спати looks like Class I but conjugates as Class II (сплю, спиш).
 
-12. вчити
+12. To which class does **вчити** belong?
     - [x] Class II (-ити)
     - [ ] Class I (-ати)
-    > вчити ends in -ити, so it's Class II
+    - [ ] Irregular
+    - [ ] Noun
+    > вчити is clearly Class II.
 
 ## match-up: Verbs and Actions
 > Match each Ukrainian verb to its English meaning.
@@ -328,11 +350,8 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 | хотіти | to want |
 | їсти | to eat |
 | пити | to drink |
-| ходити | to walk, to go (on foot) |
+| ходити | to walk |
 | спати | to sleep |
-| стояти | to stand |
-| сидіти | to sit |
-| дивитися | to watch |
 
 ## fill-in: Conjugate the Verb
 > Choose the correct conjugated form for each sentence.
@@ -483,8 +502,6 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 - писати
 - працювати
 - знати
-- дякувати
-- телефонувати
 
 ### Class II (-ити)
 - говорити
@@ -492,7 +509,6 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 - бачити
 - любити
 - ходити
-- вчити
 
 ### Irregular
 - їсти
@@ -555,93 +571,93 @@ With Class I and Class II verbs combined, you can now express hundreds of action
     > [!options] дивлюся | дивишся | дивиться | дивляться
 
 ## quiz: Choose the Right Verb
-> Select the verb that best completes each sentence.
+> Complete the sentences with the correct verb.
 
-1. Я ___ українською кожен день.
-   - [x] говорю
-   - [ ] читаю
-   - [ ] п'ю
-   - [ ] сплю
-   > You "speak" Ukrainian (говорю).
+1. Я впевнено ___ українською мовою.
+   - [x] розмовляю
+   - [ ] розмовляєш
+   - [ ] розмовляє
+   - [ ] розмовляють
+   > я розмовляю = I speak
 
-2. Вона ___ студента біля університету.
-   - [ ] говорить
-   - [x] бачить
-   - [ ] п'є
-   - [ ] спить
-   > You "see" a student (бачить).
+2. Скажіть, чи ти часто ___ музику?
+   - [ ] слухаю
+   - [x] слухаєш
+   - [ ] слухає
+   - [ ] слухають
+   > ти слухаєш = you listen
 
-3. Ми ___ вдома ввечері.
-   - [ ] говоримо
+3. Ми зазвичай ___ вдома ввечері.
+   - [ ] вечеряю
+   - [ ] вечеряєш
+   - [ ] вечеряє
+   - [x] вечеряємо
+   > ми вечеряємо = we have dinner
+
+4. Вона зараз швидко ___ листа.
+   - [ ] пишеш
+   - [x] пише
+   - [ ] пишуть
+   - [ ] писати
+   > вона пише = she writes
+
+5. Ви добре ___ це слово?
+   - [ ] знати
+   - [ ] знаємо
+   - [x] знаєте
+   - [ ] знають
+   > ви знаєте = you know
+
+6. Я дуже ___ свою роботу.
+   - [x] люблю
+   - [ ] любиш
+   - [ ] любить
+   - [ ] люблять
+   > я люблю = I love
+
+7. Чи ти часто ідеш ___ в університет?
+   - [x] ходиш
+   - [ ] ходжу
    - [ ] ходимо
-   - [x] сидимо
-   - [ ] їмо
-   > You "sit" at home (сидимо).
+   - [ ] ходять
+   > ти ходиш = you walk/go (habitually)
 
-4. Ти ___ каву чи чай?
-   - [ ] їси
-   - [x] п'єш
+8. Він зараз не ___ спати.
+   - [ ] хотіти
+   - [ ] хочеш
+   - [x] хоче
+   - [ ] хочуть
+   > він хоче = he wants
+
+9. Чи ти зараз виконуєш ___ вправу вдома?
    - [ ] робиш
-   - [ ] ходиш
-   > You "drink" coffee or tea (п'єш).
+   - [x] робиш
+   - [ ] робить
+   - [ ] роблять
+   > ти робиш = you do
 
-5. Вони ___ фільм у кінотеатрі.
-   - [ ] п'ють
-   - [ ] їдять
-   - [x] дивляться
-   - [ ] сплять
-   > You "watch" a movie (дивляться).
+10. Що вона зараз робить? Вона ___ біля вікна.
+    - [ ] стояти
+    - [ ] стоїш
+    - [x] стоїть
+    - [ ] стоять
+    > вона стоїть = she stands
 
-6. Він ___ в університет щодня.
-   - [x] ходить
-   - [ ] п'є
-   - [ ] спить
-   - [ ] їсть
-   > You "go" to university on foot (ходить).
+11. Що ці люди роблять? Вони ___ обід.
+    - [ ] готувати
+    - [ ] готуєш
+    - [ ] готує
+    - [x] готують
+    > вони готують = they cook
 
-7. Я ___ українську мову.
-   - [x] вчу
-   - [ ] п'ю
-   - [ ] роблю
-   - [ ] спишу
-   > You "study" Ukrainian (вчу).
+12. Що вони роблять? Вони ___.
+    - [ ] бачити
+    - [ ] бачиш
+    - [ ] бачить
+    - [x] бачать
+    > вони бачать = they see
 
-8. Вона ___ Україну дуже сильно.
-   - [ ] бачить
-   - [x] любить
-   - [ ] п'є
-   - [ ] спить
-   > You "love" Ukraine (любить).
-
-9. Ми ___ вивчати українську.
-   - [x] хочемо
-   - [ ] п'ємо
-   - [ ] їмо
-   - [ ] сплять
-   > You "want" to study Ukrainian (хочемо).
-
-10. Ти ___ біля дверей?
-    - [ ] сидиш
-    - [x] стоїш
-    - [ ] лежиш
-    - [ ] спиш
-    > You "stand" by the door (стоїш).
-
-11. Вони ___ вночі.
-    - [ ] ходять
-    - [ ] п'ють
-    - [ ] їдять
-    - [x] сплять
-    > You "sleep" at night (сплять).
-
-12. Я ___ вправу зараз.
-    - [x] роблю
-    - [ ] п'ю
-    - [ ] бачу
-    - [ ] сплю
-    > You "do" an exercise (роблю).
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

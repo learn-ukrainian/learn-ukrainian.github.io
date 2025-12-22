@@ -32,16 +32,6 @@ Why? Because Ukrainian wants to clearly mark **who** you're seeing, not just **w
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
->
->
-> **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
->
-> **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
->
-> **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns
 
 ## Presentation
 
@@ -233,7 +223,7 @@ These verbs typically take **people** as objects (accusative case):
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned the **animate accusative** — how Ukrainian marks people and animals as direct objects.
 
@@ -255,133 +245,135 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
+>
+>
+> **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
+>
+> **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
+>
+> **Podcast:** [ULP 1-33 | Books + Accusative of People](https://www.ukrainianlessons.com/episode33/) — Practice accusative with animate nouns
+
+# Activities
 
 ## match-up: People in Your Life
-> Match the Ukrainian words with their English meanings.
-
 | Ukrainian | English |
 |-----------|---------|
-| друг | friend (male) |
-| подруга | friend (female) |
-| колега | colleague |
-| сусід | neighbor (male) |
-| лікар | doctor |
-| вчитель | teacher (male) |
-| студент | student (male) |
-| водій | driver |
-| гість | guest |
-| директор | director |
-| офіціант | waiter |
-| пасажир | passenger |
+| мама | mother |
+| тато | father |
+| брат | brother |
+| сестра | sister |
+| син | son |
+| донька | daughter |
+| дідусь | grandfather |
+| бабуся | grandmother |
+
 
 ## group-sort: Animate vs Inanimate
-> Sort these nouns by whether they are animate (people/animals) or inanimate (objects).
-
-### Animate Nouns
-- друг
+### Animate (Who? - Хто?)
+- хлопчик
+- дівчинка
 - студент
-- лікар
-- водій
-- колега
-- офіціант
-- гість
-- сусід
+- вчитель
+- батько
+- мати
 
-### Inanimate Nouns
+### Inanimate (What? - Що?)
 - стіл
 - книга
 - вікно
-- машина
-- телефон
-- магазин
+- паспорт
+- квиток
+- поїзд
+
 
 ## quiz: Accusative Endings
-> Choose the correct accusative form for each sentence.
-
-1. Я бачу ___ у парку.
-   - [ ] студент
-   - [x] студента
-   - [ ] студенту
-   - [ ] студенті
-   > Animate masculine accusative = genitive (-а ending)
-
-2. Вона знає мою ___.
-   - [ ] подруга
+1. Which form is correct for "I see a female friend"?
    - [x] подругу
+   - [ ] подруга
    - [ ] подруги
    - [ ] подрузі
-   > Feminine accusative: -а → -у
+   > Feminine -а → -у
 
-3. Ми чекаємо ___.
-   - [ ] лікар
-   - [x] лікаря
-   - [ ] лікару
-   - [ ] лікарі
-   > Animate masculine accusative = genitive (-я ending)
+2. Which form is correct for "I see a brother"?
+   - [ ] брат
+   - [x] брата
+   - [ ] брату
+   - [ ] братом
+   > Animate masculine consonant → -а
 
-4. Ти знаєш цього ___?
-   - [ ] чоловік
-   - [x] чоловіка
-   - [ ] чоловіку
-   - [ ] чоловікові
-   > Animate masculine accusative (-а ending)
+3. Which form is correct for "I see a mother"?
+   - [ ] мама
+   - [x] маму
+   - [ ] мами
+   - [ ] мамі
+   > Feminine -а → -у
 
-5. Вони бачать ___.
-   - [ ] офіціант
-   - [x] офіціанта
-   - [ ] офіціанту
-   - [ ] офіціанті
-   > Animate masculine accusative (-а ending)
+4. Which form is correct for "I see a father"?
+   - [ ] тато
+   - [x] тата
+   - [ ] тату
+   - [ ] тата (again)
+   > Animate masculine -о → -а
 
-6. Він любить свою ___.
-   - [ ] вчителька
-   - [x] вчительку
-   - [ ] вчительки
-   - [ ] вчительці
-   > Feminine accusative: -а → -у
+5. Which form is correct for "I see an uncle"?
+   - [ ] дядько
+   - [x] дядька
+   - [ ] дядьку
+   - [ ] дядьком
+   > Animate masculine -о → -а
 
-7. Я шукаю ___.
-   - [ ] водій
-   - [x] водія
-   - [ ] водію
-   - [ ] водієві
-   > Animate masculine accusative (-я ending)
+6. Which form is correct for "I see a teacher"?
+   - [ ] вчитель
+   - [x] вчителя
+   - [ ] вчителю
+   - [ ] вчителем
+   > Animate masculine soft sign → -я
 
-8. Вона бачить ___.
-   - [ ] гість
-   - [x] гостя
-   - [ ] гостю
-   - [ ] гості
-   > Animate masculine accusative (-я ending)
+7. Which form is correct for "I see a sister"?
+   - [ ] сестра
+   - [x] сестру
+   - [ ] сестри
+   - [ ] сестрі
+   > Feminine -а → -у
 
-9. Ти чекаєш ___?
-   - [ ] директор
-   - [x] директора
-   - [ ] директору
-   - [ ] директорі
-   > Animate masculine accusative (-а ending)
+8. Which form is correct for "I see a son"?
+   - [ ] син
+   - [x] сина
+   - [ ] сину
+   - [ ] сином
+   > Animate masculine consonant → -а
 
-10. Ми знаємо цю ___.
-    - [ ] студентка
-    - [x] студентку
-    - [ ] студентки
-    - [ ] студентці
-    > Feminine accusative: -а → -у
+9. Which form is correct for "I see a daughter"?
+   - [ ] донька
+   - [x] доньку
+   - [ ] доньки
+   - [ ] доньці
+   > Feminine -а → -у
 
-11. Він бачить нашого ___.
-    - [ ] сусід
-    - [x] сусіда
-    - [ ] сусіду
-    - [ ] сусідові
-    > Animate masculine accusative (-а ending)
+10. Which form is correct for "I see a grandfather"?
+    - [ ] дідусь
+    - [x] дідуся
+    - [ ] дідусю
+    - [ ] дідусем
+    > Animate masculine soft sign → -я
 
-12. Я люблю свого ___.
+11. Which form is correct for "I see a grandmother"?
+    - [ ] бабуся
+    - [x] бабусю
+    - [ ] бабусі
+    - [ ] бабусьою
+    > Feminine -я → -ю
+
+12. Which form is correct for "I see a friend" (male)?
     - [ ] друг
     - [x] друга
     - [ ] другу
-    - [ ] другові
-    > Animate masculine accusative (-а ending)
+    - [ ] другом
+    > Animate masculine consonant → -а
+
 
 ## true-false: Animate Accusative Rules
 > Decide if each statement is true or false.
@@ -532,93 +524,137 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
     > [!answer] гостя
     > [!options] гість | гостя | гостю | гості
 
-## unjumble: Sentences with Animate Objects
-> Put the words in the correct order to form sentences.
+## quiz: Sentences with Animate Objects
 
-1. бачу / Я / студента / у / бібліотеці
-   > [!answer] Я бачу студента у бібліотеці
-   > (I see the student in the library.) [5 words]
+> Choose the correct sentence order.
 
-2. знає / Вона / мого / друга / добре
-   > [!answer] Вона добре знає мого друга
-   > (She knows my friend well.) [5 words]
+1. Correct sentence order for: "I see the student..."
+   - [x] Я бачу студента у бібліотеці
+   - [ ] бачу Я студента у бібліотеці
+   - [ ] Incorrect order for this sentence
+   > Correct: Я бачу студента у бібліотеці
 
-3. чекаємо / Ми / лікаря / у / лікарні
-   > [!answer] Ми чекаємо лікаря у лікарні
-   > (We're waiting for the doctor at the hospital.) [5 words]
+2. Correct sentence order for: "She knows my friend well."
+   - [x] Вона добре знає мого друга
+   - [ ] добре Вона знає мого друга
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона добре знає мого друга
 
-4. бачиш / Ти / офіціанта / там
-   > [!answer] Ти бачиш офіціанта там
-   > (Do you see the waiter there?) [4 words]
+3. Correct sentence order for: "We're waiting for the..."
+   - [x] Ми чекаємо лікаря у лікарні
+   - [ ] чекаємо Ми лікаря у лікарні
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми чекаємо лікаря у лікарні
 
-5. любить / Він / свою / вчительку
-   > [!answer] Він любить свою вчительку
-   > (He loves his teacher.) [4 words]
+4. Correct sentence order for: "Do you see the..."
+   - [x] Ти бачиш офіціанта там
+   - [ ] бачиш Ти офіціанта там
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти бачиш офіціанта там
 
-6. шукаю / Я / водія / нашого
-   > [!answer] Я шукаю нашого водія
-   > (I'm looking for our driver.) [4 words]
+5. Correct sentence order for: "He loves his teacher."
+   - [x] Він любить свою вчительку
+   - [ ] любить Він свою вчительку
+   - [ ] Incorrect order for this sentence
+   > Correct: Він любить свою вчительку
 
-7. знаємо / Ми / цього / директора
-   > [!answer] Ми знаємо цього директора
-   > (We know this director.) [4 words]
+6. Correct sentence order for: "I'm looking for our driver."
+   - [x] Я шукаю нашого водія
+   - [ ] шукаю Я нашого водія
+   - [ ] Incorrect order for this sentence
+   > Correct: Я шукаю нашого водія
 
-8. бачить / Вона / сусіда / кожного / ранку
-   > [!answer] Вона бачить сусіда кожного ранку
-   > (She sees the neighbor every morning.) [5 words]
+7. Correct sentence order for: "We know this director."
+   - [x] Ми знаємо цього директора
+   - [ ] знаємо Ми цього директора
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми знаємо цього директора
 
-9. чекаєш / Ти / подругу / свою
-   > [!answer] Ти чекаєш свою подругу
-   > (Are you waiting for your friend?) [4 words]
+8. Correct sentence order for: "She sees the neighbor..."
+   - [x] Вона бачить сусіда кожного ранку
+   - [ ] бачить Вона сусіда кожного ранку
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона бачить сусіда кожного ранку
 
-10. люблю / Я / колегу / мого
-    > [!answer] Я люблю мого колегу
-    > (I love my colleague.) [4 words]
+9. Correct sentence order for: "Are you waiting for..."
+   - [x] Ти чекаєш свою подругу
+   - [ ] чекаєш Ти свою подругу
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти чекаєш свою подругу
 
-11. бачимо / Ми / пасажира / біля / метро
-    > [!answer] Ми бачимо пасажира біля метро
-    > (We see the passenger near the metro.) [5 words]
+10. Correct sentence order for: "I love my colleague."
+   - [x] Я люблю мого колегу
+   - [ ] люблю Я мого колегу
+   - [ ] Incorrect order for this sentence
+   > Correct: Я люблю мого колегу
 
-12. знає / Він / студентку / цю / з / школи
-    > [!answer] Він знає цю студентку з школи
-    > (He knows this student from school.) [6 words]
+11. Correct sentence order for: "We see the passenger..."
+   - [x] Ми бачимо пасажира біля метро
+   - [ ] бачимо Ми пасажира біля метро
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми бачимо пасажира біля метро
 
-## unjumble: More Complex Sentences
-> Put the words in the correct order.
+12. Correct sentence order for: "He knows this student..."
+   - [x] Він знає цю студентку з школи
+   - [ ] знає Він цю студентку з школи
+   - [ ] Incorrect order for this sentence
+   > Correct: Він знає цю студентку з школи
 
-1. бачу / Я / мого / друга / та / його / подругу
-   > [!answer] Я бачу мого друга та його подругу
-   > (I see my friend and his girlfriend.) [7 words]
 
-2. чекаємо / Ми / нашого / вчителя / біля / університету
-   > [!answer] Ми чекаємо нашого вчителя біля університету
-   > (We're waiting for our teacher near the university.) [6 words]
+## quiz: More Complex Sentence Order
 
-3. знає / Вона / всіх / студентів / у / групі
-   > [!answer] Вона знає всіх студентів у групі
-   > (She knows all the students in the group.) [6 words]
+> Choose the correct sentence order.
 
-4. бачиш / Ти / того / лікаря / там
-   > [!answer] Ти бачиш того лікаря там
-   > (Do you see that doctor there?) [5 words]
+1. Correct sentence order for: "I see my friend..."
+   - [x] Я бачу мого друга та його подругу
+   - [ ] бачу Я мого друга та його подругу
+   - [ ] Incorrect order for this sentence
+   > Correct: Я бачу мого друга та його подругу
 
-5. любить / Він / свою / сусідку / дуже
-   > [!answer] Він дуже любить свою сусідку
-   > (He really loves his neighbor.) [5 words]
+2. Correct sentence order for: "We're waiting for our..."
+   - [x] Ми чекаємо нашого вчителя біля університету
+   - [ ] чекаємо Ми нашого вчителя біля університету
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми чекаємо нашого вчителя біля університету
 
-6. шукаю / Я / нашого / директора / і / менеджера
-   > [!answer] Я шукаю нашого директора і менеджера
-   > (I'm looking for our director and manager.) [6 words]
+3. Correct sentence order for: "She knows all the..."
+   - [x] Вона знає всіх студентів у групі
+   - [ ] знає Вона всіх студентів у групі
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона знає всіх студентів у групі
 
-7. знаємо / Ми / цього / водія / добре
-   > [!answer] Ми добре знаємо цього водія
-   > (We know this driver well.) [5 words]
+4. Correct sentence order for: "Do you see that..."
+   - [x] Ти бачиш того лікаря там
+   - [ ] бачиш Ти того лікаря там
+   - [ ] Incorrect order for this sentence
+   > Correct: Ти бачиш того лікаря там
 
-8. бачить / Вона / офіціанта / та / офіціантку
-   > [!answer] Вона бачить офіціанта та офіціантку
-   > (She sees the waiter and waitress.) [5 words]
+5. Correct sentence order for: "He really loves his neighbor."
+   - [x] Він дуже любить свою сусідку
+   - [ ] дуже Він любить свою сусідку
+   - [ ] Incorrect order for this sentence
+   > Correct: Він дуже любить свою сусідку
 
-## Vocabulary
+6. Correct sentence order for: "I'm looking for our..."
+   - [x] Я шукаю нашого директора і менеджера
+   - [ ] шукаю Я нашого директора і менеджера
+   - [ ] Incorrect order for this sentence
+   > Correct: Я шукаю нашого директора і менеджера
+
+7. Correct sentence order for: "We know this driver well."
+   - [x] Ми добре знаємо цього водія
+   - [ ] добре Ми знаємо цього водія
+   - [ ] Incorrect order for this sentence
+   > Correct: Ми добре знаємо цього водія
+
+8. Correct sentence order for: "She sees the waiter..."
+   - [x] Вона бачить офіціанта та офіціантку
+   - [ ] бачить Вона офіціанта та офіціантку
+   - [ ] Incorrect order for this sentence
+   > Correct: Вона бачить офіціанта та офіціантку
+
+
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

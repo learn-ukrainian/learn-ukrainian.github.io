@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1750/1000
+- **Words:** ✅ 1739/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,19 +14,16 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.1% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 44.5% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Introduction** | ✅ | 165 | Included in Core |
-| **Warm-up** | ✅ | 150 | Included in Core |
+| **Warm-up** | ✅ | 106 | Included in Core |
 | **Presentation** | ✅ | 85 | Included in Core |
 | **Masculine Noun Endings** | ⚪️ | 178 | Skipped |
 | **Feminine Noun Endings** | ⚪️ | 148 | Skipped |
@@ -41,6 +38,7 @@
 | **Mini-Dialogues** | ✅ | 183 | Included in Core |
 | **Reading Practice: Лист із Канади** | ✅ | 226 | Included in Core |
 | **Підсумок** | ✅ | 105 | Included in Core |
+| **Need More Practice?** | ⚪️ | 33 | Skipped |
 | **Activities** | ➖ | 65 | Excluded Type |
 | **match-up: Nominative to Dative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Dative Noun Forms** | 🎮 | 12 | Activity (12 items, min 8) |

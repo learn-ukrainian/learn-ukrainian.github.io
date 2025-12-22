@@ -331,27 +331,27 @@ Today you learned numeral-noun agreement:
 
 > Add the correct noun form.
 
-1. один [___] [Hint: student, m]
+1. один [___]
    > [!answer] студент
    > [!options] студент | студенти | студентів
 
-2. два [___] [Hint: student, m]
+2. два [___]
    > [!answer] студенти
    > [!options] студенти | студент | студентів
 
-3. п'ять [___] [Hint: student, m]
+3. п'ять [___]
    > [!answer] студентів
    > [!options] студентів | студенти | студент
 
-4. одна [___] [Hint: book, f]
+4. одна [___]
    > [!answer] книга
    > [!options] книга | книги | книг
 
-5. три [___] [Hint: book, f]
+5. три [___]
    > [!answer] книги
    > [!options] книги | книга | книг
 
-6. десять [___] [Hint: book, f]
+6. десять [___]
    > [!answer] книг
    > [!options] книг | книги | книга
 
@@ -367,11 +367,11 @@ Today you learned numeral-noun agreement:
    > [!answer] столів
    > [!explanation] After 5+, use genitive plural.
    > [!options] столів | столи | стола
-7. дві [___] [Hint: window, n]
+7. дві [___]
    > [!answer] вікна
    > [!options] вікна | вікно | вікон
 
-8. шість [___] [Hint: window, n]
+8. шість [___]
    > [!answer] вікон
    > [!options] вікон | вікна | вікно
 

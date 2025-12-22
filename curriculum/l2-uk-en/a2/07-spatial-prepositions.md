@@ -33,15 +33,6 @@ This module is your comprehensive guide to Ukrainian prepositions. By the end, y
 
 **Why this matters:** Incorrect preposition-case combinations are one of the most common errors learners make. Mastering these patterns will immediately make your Ukrainian sound more natural and precise.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [10 Ukrainian Prepositions! ...](https://www.youtube.com/watch?v=CaKnNZHAex0) — #letslearnukrainian
->
-> **Grammar Guide:** [Prepositions Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -262,7 +253,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ---
 
-## Summary
+# Summary
 
 ## Що ви вивчили
 
@@ -289,7 +280,17 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 **Two-Way Prepositions:** в/у, на, під, за — use accusative for motion (Куди?) and locative/instrumental for location (Де?).
 
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+> - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/)
+> - 📝 [Cases Overview](https://www.ukrainianlessons.com/intro-cases/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Preposition Meanings
 
@@ -495,6 +496,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
   > Yes! "Під столом" (under the table) uses instrumental.
 
 ## group-sort: Prepositions by Case
+> Згрупуйте ці прийменники за відмінками. | Group these prepositions by the case they govern.
 
 > Sort these prepositions into the correct case category.
 
@@ -827,7 +829,7 @@ We're going through the park.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -35,18 +35,6 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 
 
 
-:::info[🔗 External Resources]
-
-**YouTube:** [Ukrainian Possessive Pronouns + Family Vocabulary ](https://www.youtube.com/watch?v=LARvKb7D38M) —  Ukrainian lesson 12|VERBA SCHOOL
-
-
-**Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
-
-**Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
-
-**ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
-:::
-
 
 ## Presentation
 
@@ -316,33 +304,41 @@ You now know:
 
 ---
 
+:::info[🔗 External Resources]
+
+**YouTube:** [Ukrainian Possessive Pronouns + Family Vocabulary ](https://www.youtube.com/watch?v=LARvKb7D38M) —  Ukrainian lesson 12|VERBA SCHOOL
+
+
+**Grammar Guide:** [Possessive Pronouns](https://www.ukrainianlessons.com/grammar-possessive-pronouns/) — Illustrations and audio
+
+**Declension Table:** [Possessive Pronouns Declension](https://www.ukrainianlessons.com/possessive-pronouns-declension/) — Full table for all cases
+
+**ТВІЙ vs СВІЙ:** [Reflexive Possessive Pronoun](https://www.ukrainianlessons.com/reflexive-possessive-pronoun/) — When to use свій
+:::
+
+
 ## 🎯 Activities
 
 ### Possessive Forms
 
 <MatchUp pairs={[
   { left: `Ukrainian`, right: `English` },
-  { left: `мій телефон`, right: `my phone` },
-  { left: `моя книга`, right: `my book` },
-  { left: `моє вікно`, right: `my window` },
-  { left: `мої друзі`, right: `my friends` },
-  { left: `мій брат`, right: `my brother` },
-  { left: `моя сестра`, right: `my sister` },
-  { left: `моє місто`, right: `my city` },
-  { left: `мої батьки`, right: `my parents` },
-  { left: `мій стіл`, right: `my table` },
-  { left: `моя сумка`, right: `my bag` },
-  { left: `моє життя`, right: `my life` },
-  { left: `мої речі`, right: `my things` }
+  { left: `мій / моя / моє`, right: `my` },
+  { left: `твій / твоя / твоє`, right: `your (informal)` },
+  { left: `його`, right: `his / its` },
+  { left: `її`, right: `her` },
+  { left: `наш / наша / наше`, right: `our` },
+  { left: `ваш / ваша / ваше`, right: `your (formal/plural)` },
+  { left: `їхній / їхня / їхнє`, right: `their` },
+  { left: `чий / чия / чиє`, right: `whose` }
 ]} />
 
 ### Gender Agreement
 
 <GroupSort groups={{
-  "Masculine": ["мій телефон", "твій брат", "наш будинок", "ваш стіл", "їхній друг", "його батько"],
-  "Feminine": ["моя книга", "твоя сестра", "наша мама", "ваша сумка", "їхня кімната", "її робота"],
-  "Neuter": ["моє вікно", "твоє місто", "наше життя", "ваше слово", "їхнє село", "його ім'я"],
-  "Plural": ["мої друзі", "твої речі", "наші батьки", "ваші книги", "їхні діти", "її слова"]
+  "Masculine (Мій/Твій)": ["мій паспорт", "твій квиток", "наш стіл", "ваш офіс"],
+  "Feminine (Моя/Твоя)": ["моя книга", "твоя сумка", "наша валіза", "ваша кава"],
+  "Neuter (Моє/Твоє)": ["моє вікно", "твоє море", "наше місто", "ваше ім'я"]
 }} />
 
 ### Choose the Correct Possessive
@@ -567,131 +563,222 @@ You now know:
   }
 ]} />
 
-### Build Sentences
+### Possessive Sentence Order
 
-<Unjumble items={[
-  { jumbled: `книга / Це / моя`, answer: `Це моя книга` },
-  { jumbled: `телефон / твій / Де`, answer: `Де твій телефон` },
-  { jumbled: `вікно / Наше / велике`, answer: `Наше вікно велике` },
-  { jumbled: `машина / Це / його`, answer: `Це його машина` },
-  { jumbled: `студентка / сестра / Її`, answer: `Її сестра студентка` },
-  { jumbled: `друзі / Їхні / тут`, answer: `Їхні друзі тут` },
-  { jumbled: `батьки / ваші / Де`, answer: `Де ваші батьки` },
-  { jumbled: `дім / наш / Чий / це`, answer: `Чий це наш дім` },
-  { jumbled: `цікава / Моя / робота`, answer: `Моя робота цікава` },
-  { jumbled: `життя / його / Це`, answer: `Це його життя` },
-  { jumbled: `гарне / Твоє / місто`, answer: `Твоє місто гарне` },
-  { jumbled: `речі / це / Чиї / їхні`, answer: `Чиї це їхні речі` },
-  { jumbled: `там / стіл / Мій`, answer: `Мій стіл там` },
-  { jumbled: `чиста / Наша / кімната`, answer: `Наша кімната чиста` },
-  { jumbled: `слово / ваше / Це`, answer: `Це ваше слово` }
+<Quiz questions={[
+  {
+    question: `Correct sentence order for: \"This is my book.\"`,
+    options: [
+      { text: `Це моя книга`, correct: true },
+      { text: `моя Це книга`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Where is your phone?\"`,
+    options: [
+      { text: `Де твій телефон`, correct: true },
+      { text: `твій Де телефон`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Our window is big.\"`,
+    options: [
+      { text: `Наше вікно велике`, correct: true },
+      { text: `вікно Наше велике`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"This is his car.\"`,
+    options: [
+      { text: `Це його машина`, correct: true },
+      { text: `його Це машина`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Her sister is a student.\"`,
+    options: [
+      { text: `Її сестра студентка`, correct: true },
+      { text: `сестра Її студентка`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Their friends are here.\"`,
+    options: [
+      { text: `Їхні друзі тут`, correct: true },
+      { text: `друзі Їхні тут`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Where are your parents?\"`,
+    options: [
+      { text: `Де ваші батьки`, correct: true },
+      { text: `ваші Де батьки`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Wait — this is...\"`,
+    options: [
+      { text: `Чий це наш дім`, correct: true },
+      { text: `це Чий наш дім`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"My work is interesting.\"`,
+    options: [
+      { text: `Моя робота цікава`, correct: true },
+      { text: `робота Моя цікава`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"This is his life.\"`,
+    options: [
+      { text: `Це його життя`, correct: true },
+      { text: `його Це життя`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Your city is beautiful.\"`,
+    options: [
+      { text: `Твоє місто гарне`, correct: true },
+      { text: `місто Твоє гарне`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Wait — another trick!...\"`,
+    options: [
+      { text: `Чиї це їхні речі`, correct: true },
+      { text: `це Чиї їхні речі`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"My table is there.\"`,
+    options: [
+      { text: `Мій стіл там`, correct: true },
+      { text: `стіл Мій там`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"Our room is clean.\"`,
+    options: [
+      { text: `Наша кімната чиста`, correct: true },
+      { text: `кімната Наша чиста`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  },  {
+    question: `Correct sentence order for: \"This is your word.\"`,
+    options: [
+      { text: `Це ваше слово`, correct: true },
+      { text: `ваше Це слово`, correct: false },
+      { text: `Incorrect order for this sentence`, correct: false }
+    ]
+  }
 ]} />
 
 ### Інваріантні vs Змінні
 
 <GroupSort groups={{
-  "Змінні (Change)": ["мій", "твій", "наш", "ваш", "їхній", "моя", "твоє", "наші", "їхня"],
-  "Інваріантні (Never Change)": ["його", "її"]
+  "Змінні (Change by Gender)": ["мій / моя / моє", "твій / твоя / твоє", "наш / наша / наше", "ваш / ваша / ваше", "їхній / їхня / їхнє", "чий / чия / чиє", "цей / ця / це"],
+  "Інваріантні (Never Change)": ["його (his)", "її (her)", "їх (their)", "Марка (Mark's)", "Анни (Anna's)"]
 }} />
 
 ### Cultural Context
 
 <Quiz questions={[
   {
-    question: `Which possessive is used for informal \"your\" with friends?`,
+    question: `What is the traditional word for \"family\"?`,
     options: [
+      { text: `родина`, correct: true },
+      { text: `сім’я`, correct: false },
+      { text: `група`, correct: false },
+      { text: `люди`, correct: false }
+    ]
+  },  {
+    question: `Which pronoun refers to \"our house\"?`,
+    options: [
+      { text: `наш`, correct: true },
       { text: `ваш`, correct: false },
-      { text: `твій`, correct: true },
-      { text: `його`, correct: false },
+      { text: `твій`, correct: false },
+      { text: `мій`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"his book\"?`,
+    options: [
+      { text: `його книга`, correct: true },
+      { text: `її книга`, correct: false },
+      { text: `їхня книга`, correct: false },
+      { text: `твоя книга`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"her phone\"?`,
+    options: [
+      { text: `її телефон`, correct: true },
+      { text: `його телефон`, correct: false },
+      { text: `наш телефон`, correct: false },
+      { text: `твій телефон`, correct: false }
+    ]
+  },  {
+    question: `Which word is used for \"whose\"?`,
+    options: [
+      { text: `чий`, correct: true },
+      { text: `який`, correct: false },
+      { text: `де`, correct: false },
+      { text: `хто`, correct: false }
+    ]
+  },  {
+    question: `What is the meaning of \"родина\"?`,
+    options: [
+      { text: `family`, correct: true },
+      { text: `city`, correct: false },
+      { text: `house`, correct: false },
+      { text: `car`, correct: false }
+    ]
+  },  {
+    question: `Which possessive never changes gender?`,
+    options: [
+      { text: `його`, correct: true },
+      { text: `наш`, correct: false },
+      { text: `мій`, correct: false },
+      { text: `твій`, correct: false }
+    ]
+  },  {
+    question: `Is \"тато\" masculine or feminine?`,
+    options: [
+      { text: `masculine`, correct: true },
+      { text: `feminine`, correct: false },
+      { text: `neuter`, correct: false },
+      { text: `both`, correct: false }
+    ]
+  },  {
+    question: `How do you say \"their luggage\"?`,
+    options: [
+      { text: `їхня валіза`, correct: true },
+      { text: `наша валіза`, correct: false },
+      { text: `ваша валіза`, correct: false },
+      { text: `твій валіза`, correct: false }
+    ]
+  },  {
+    question: `What's the formal \"your\"?`,
+    options: [
+      { text: `ваш`, correct: true },
+      { text: `твій`, correct: false },
+      { text: `свій`, correct: false },
       { text: `наш`, correct: false }
     ]
   },  {
-    question: `Which possessive is frozen and never changes?`,
+    question: `What is accurately the meaning of \"Моя мама\"?`,
     options: [
-      { text: `мій`, correct: false },
-      { text: `його`, correct: true },
-      { text: `наш`, correct: false },
-      { text: `їхній`, correct: false }
+      { text: `my mother`, correct: true },
+      { text: `your mother`, correct: false },
+      { text: `her mother`, correct: false },
+      { text: `his mother`, correct: false }
     ]
   },  {
-    question: `How do you say \"our Ukraine\" in Ukrainian?`,
+    question: `What is accurately the meaning of \"Наше місто\"?`,
     options: [
-      { text: `наша Україна`, correct: true },
-      { text: `наш Україна`, correct: false },
-      { text: `наше Україна`, correct: false },
-      { text: `наші Україна`, correct: false }
-    ]
-  },  {
-    question: `Which form of \"my\" goes with neuter nouns?`,
-    options: [
-      { text: `мій`, correct: false },
-      { text: `моя`, correct: false },
-      { text: `моє`, correct: true },
-      { text: `мої`, correct: false }
-    ]
-  },  {
-    question: `In a formal setting, which \"your\" should you use?`,
-    options: [
-      { text: `твій`, correct: false },
-      { text: `ваш`, correct: true },
-      { text: `його`, correct: false },
-      { text: `їхній`, correct: false }
-    ]
-  },  {
-    question: `Which possessive means \"their\"?`,
-    options: [
-      { text: `його`, correct: false },
-      { text: `її`, correct: false },
-      { text: `наш`, correct: false },
-      { text: `їхній`, correct: true }
-    ]
-  },  {
-    question: `Which is correct: \"Це **його** сестра\" or \"Це **його** сестри\"?`,
-    options: [
-      { text: `Це його сестра`, correct: true },
-      { text: `Це його сестри`, correct: false },
-      { text: `Both are correct`, correct: false },
-      { text: `Neither is correct`, correct: false }
-    ]
-  },  {
-    question: `How do you ask \"Whose phone is this?\" in Ukrainian?`,
-    options: [
-      { text: `Що це телефон?`, correct: false },
-      { text: `Хто це телефон?`, correct: false },
-      { text: `Чий це телефон?`, correct: true },
-      { text: `Який це телефон?`, correct: false }
-    ]
-  },  {
-    question: `Which is the feminine form of \"their\"?`,
-    options: [
-      { text: `їхній`, correct: false },
-      { text: `їхня`, correct: true },
-      { text: `їхнє`, correct: false },
-      { text: `їхні`, correct: false }
-    ]
-  },  {
-    question: `In Ukrainian folk songs, \"наша Україна\" expresses:`,
-    options: [
-      { text: `Personal ownership`, correct: false },
-      { text: `Foreign possession`, correct: false },
-      { text: `Collective national identity`, correct: true },
-      { text: `Individual property`, correct: false }
-    ]
-  },  {
-    question: `Which possessive changes to agree with the noun?`,
-    options: [
-      { text: `мій`, correct: true },
-      { text: `його`, correct: false },
-      { text: `її`, correct: false },
-      { text: `All of the above`, correct: false }
-    ]
-  },  {
-    question: `What's the plural form of \"ваш\"?`,
-    options: [
-      { text: `ваші`, correct: false },
-      { text: `ваші`, correct: true },
-      { text: `ваше`, correct: false },
-      { text: `Both A and B`, correct: false }
+      { text: `our city`, correct: true },
+      { text: `your city`, correct: false },
+      { text: `their city`, correct: false },
+      { text: `my city`, correct: false }
     ]
   }
 ]} />

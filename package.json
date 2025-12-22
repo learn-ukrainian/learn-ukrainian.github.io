@@ -22,6 +22,7 @@
     "vocab:enrich:dry": "ts-node scripts/vocab-enrich.ts l2-uk-en --dry-run",
     "vocab:enrich:force": "ts-node scripts/vocab-enrich.ts l2-uk-en --force",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
+    "seo:generate": "python3 scripts/generate_seo.py",
     "claude:deploy": "mkdir -p .claude/skills .claude/commands .claude/stages .claude/quick-ref && cp -r .agent/skills/* .claude/skills/ && cp -r .agent/workflows/* .claude/commands/ && cp -r .agent/stages/* .claude/stages/ && cp -r .agent/quick-ref/* .claude/quick-ref/"
   },
   "repository": {

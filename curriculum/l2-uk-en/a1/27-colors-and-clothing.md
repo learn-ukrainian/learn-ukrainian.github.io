@@ -38,19 +38,6 @@ vocabulary_count: 30
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Colours and Clothes in Ukrainian ](https://www.youtube.com/watch?v=tNgpkde4pnc) —  Speak Ukrainian Language|Learn Ukrainian with Vakulenko
->
->
-> **Colors:** [Colors in Ukrainian](https://www.ukrainianlessons.com/vocabulary-colors/) — All colors with audio
->
-> **Video:** [Learn Ukrainian Colors](https://www.ukrainianlessons.com/video-colors/) — Interactive color practice
->
-> **Clothes:** [Clothes Vocabulary](https://www.ukrainianlessons.com/vocabulary-clothes/) — Clothing items with illustrations
-
 ## Color Adjectives Must Agree
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -215,23 +202,22 @@ These words take **plural adjectives**:
 
 ---
 
-## Підсумок (Summary)
 
-Ви навчилися називати кольори та одяг! (You've learned colors and clothing!)
+# Summary
 
-**Що ви вивчили (What you learned):**
-
-- **12 кольорів (Colors):** білий, чорний, сірий, червоний, помаранчевий, жовтий, зелений, синій, блакитний, фіолетовий, рожевий, коричневий
-- **Модифікатори (Modifiers):** світлий, темний, яскравий
-- **15 предметів одягу (Clothing):** сорочка, футболка, светр, куртка, пальто, штани, джинси, шорти, спідниця, сукня...
-- **Узгодження (Agreement):** білий/біла/біле/білі
-- **Два відтінки синього (Two blues):** синій (темний) vs блакитний (світлий)
+Ви вивчили кольори та одяг. Тепер ви можете описати свою футболку або штани. (You learned colors and clothing. Now you can describe your t-shirt or pants.) Ви знаєте слова "білий" та "чорний". Тепер ви знаєте два сині кольори: синій та блакитний. Це чудова робота! (This is great work!)
 
 ---
 
-**Наступний урок:** Прислівники — як описувати ДІЇ!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Colors Guide](https://www.ukrainianlessons.com/vocabulary-colors/) — Complete color vocabulary
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Вправи (Activities)
+# Activities
+
 
 ## match-up: Колір і одяг
 
@@ -254,29 +240,25 @@ These words take **plural adjectives**:
 
 ## group-sort: Clothing by Gender
 
-> Sort clothing words by grammatical gender.
+> Sort these clothing items according to their grammatical gender in Ukrainian.
 
-### Masculine
+### Masculine (Він)
 - светр
 - капелюх
 - шарф
+- піджак
 
-### Feminine
+### Feminine (Вона)
 - сорочка
 - футболка
 - куртка
 - спідниця
 - сукня
 
-### Neuter
+### Neuter or Plural (Воно/Вони)
 - пальто
-- взуття
-
-### Plural Only
 - штани
 - джинси
-- черевики
-- кросівки
 
 ---
 
@@ -358,51 +340,51 @@ These words take **plural adjectives**:
 
 ## quiz: Що це? (What Is It?)
 
-Виберіть правильну відповідь.
+> Select the correct English translation for these Ukrainian clothing descriptions.
 
-1. Біла сорочка
+1. What is exactly the English translation of "Біла сорочка" here?
    - [x] White shirt
    - [ ] Black shirt
    - [ ] Blue shirt
    - [ ] Red shirt
 
-2. Чорні штани
+2. How do you accurately translate "Чорні штани" into English today?
    - [x] Black pants
    - [ ] White pants
    - [ ] Blue pants
    - [ ] Black shirt
 
-3. Синє пальто
+3. Which English term matches "Синє пальто" accurately here?
    - [x] Blue coat
    - [ ] Blue pants
    - [ ] Red coat
    - [ ] Green coat
 
-4. Червона сукня
+4. How is the phrase "Червона сукня" correctly represented in English?
    - [x] Red dress
    - [ ] Red skirt
    - [ ] Red t-shirt
    - [ ] Yellow dress
 
-5. Зелена футболка
+5. What accurately is the English meaning of "Зелена футболка" now?
    - [x] Green t-shirt
    - [ ] Green dress
    - [ ] Blue t-shirt
    - [ ] Yellow t-shirt
 
-6. Сіра куртка
+6. Which English sentence represents "Сіра куртка" most accurately today?
    - [x] Gray jacket
    - [ ] Gray shirt
    - [ ] Black jacket
    - [ ] Gray pants
 
-7. Жовті кросівки
+7. How do you accurately translate "Жовті кросівки" into English?
    - [x] Yellow sneakers
    - [ ] Yellow shirt
    - [ ] White sneakers
    - [ ] Yellow coat
 
-8. Коричневий капелюх
+8. What is accurately the English meaning of "Коричневий капелюх" now?
    - [x] Brown hat
    - [ ] Black hat
    - [ ] Brown coat
@@ -412,51 +394,51 @@ These words take **plural adjectives**:
 
 ## quiz: Який колір? (What Color?)
 
-Виберіть правильну відповідь.
+> Answer these questions about Ukrainian colors and common associations.
 
-1. Сніг — це якого кольору?
+1. Which color represents the snow in winter accurately?
    - [x] Білий
    - [ ] Чорний
    - [ ] Синій
    - [ ] Зелений
 
-2. Небо вдень — це якого кольору?
+2. What color is the sky in during the day?
    - [x] Блакитний
    - [ ] Чорний
    - [ ] Червоний
    - [ ] Жовтий
 
-3. Трава — це якого кольору?
+3. Which color is associated with the grass accurately?
    - [x] Зелена
    - [ ] Синя
    - [ ] Біла
    - [ ] Жовта
 
-4. Сонце — це якого кольору?
+4. What color is the sun according to its name?
    - [x] Жовте
    - [ ] Біле
    - [ ] Синє
    - [ ] Чорне
 
-5. Море — це якого кольору?
+5. Which color correctly represents the sea in the Ukrainian language?
    - [x] Синє
    - [ ] Біле
    - [ ] Зелене
    - [ ] Жовте
 
-6. Земля — це якого кольору?
+6. What color is the earth according to common knowledge?
    - [x] Коричнева
    - [ ] Біла
    - [ ] Синя
    - [ ] Жовта
 
-7. Ніч — це якого кольору?
+7. Which color is correctly associated with the night time?
    - [x] Чорна
    - [ ] Біла
    - [ ] Синя
    - [ ] Жовта
 
-8. Рожа — це якого кольору?
+8. What is exactly the color of a red flower?
    - [x] Червона
    - [ ] Зелена
    - [ ] Синя
@@ -520,7 +502,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

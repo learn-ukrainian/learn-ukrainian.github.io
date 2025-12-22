@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.4% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 40.7% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (10 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 105 | Included in Core |
+| **Warm-up** | ✅ | 69 | Included in Core |
 | **The Problem: Ambiguity** | ⚪️ | 92 | Skipped |
 | **The Rule: Свій = Subject's Own** | ⚪️ | 0 | Skipped |
 | **When to Use Свій** | ⚪️ | 11 | Skipped |
@@ -52,6 +49,7 @@
 | **Mistake 3: Forgetting to Decline Свій** | ⚪️ | 16 | Skipped |
 | **Language Learning Tip** | ✅ | 119 | Included in Core |
 | **Summary** | ✅ | 59 | Included in Core |
+| **Need More Practice?** | ⚪️ | 36 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Свій vs Його** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Choose Свій or Його** | 🎮 | 8 | Activity (8 items, min 8) |

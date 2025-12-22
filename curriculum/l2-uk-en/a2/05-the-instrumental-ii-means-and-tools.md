@@ -50,13 +50,6 @@ When you want to say "by bus," "with a pen," or "in a loud voice," Ukrainian use
 
 This is the "instrumental" in its truest sense — the case of instruments and means!
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -370,7 +363,7 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 ---
 
-## Підсумок
+# Підсумок
 
 У цьому модулі ви навчилися:
 
@@ -393,7 +386,17 @@ This text describes a typical day in Kyiv, filled with bare Instrumental example
 
 Тепер ви готові! Ви можете розповісти, чим їдете на роботу і чим пишете. 🚌✏️🗣️
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Instrumental with Examples](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+> - 📖 [Transport Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
+> - 📝 [Instrumental Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-instrumental-case/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 The following activities will help you master the bare Instrumental case. Remember: no preposition is needed for transport, tools, body parts, or manner!
 
@@ -602,7 +605,7 @@ The following activities will help you master the bare Instrumental case. Rememb
   > Correct! Пошепки is an adverb meaning "in a whisper."
 
 ## group-sort: Transport vs. Tools
-> Sort these words into the correct category.
+> Розсортуйте ці слова за категоріями. | Sort these items into the correct category.
 
 ### Transport
 - автобусом
@@ -871,7 +874,7 @@ She nods with her head.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

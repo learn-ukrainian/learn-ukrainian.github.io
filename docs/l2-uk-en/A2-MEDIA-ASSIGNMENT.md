@@ -286,7 +286,141 @@ Use this table to identify WHAT to search for, then find the actual URL.
 | M56 | Grammar Review | Review | `Ukrainian A2 grammar comprehensive` |
 | M57 | Final Review | Review | `Ukrainian A2 skills review` |
 
-### Other External Resources
+---
+
+## Verified Resources by Module (3-4 per module)
+
+### A2.1: Cases (M01-11)
+
+**M01: Dative I — Pronouns**
+- 🎥 [All About Dative Case](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+- 📖 [Ukrainian Personal Pronouns](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/)
+- 📝 [Dative Case Grammar](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M02: Dative II — Nouns**
+- 🎥 [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+- 📖 [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
+- 📝 [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M03: Dative Verbs**
+- 🎥 [Dative Case Usage](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
+- 📖 [Ukrainian Verbs](https://www.ukrainianlessons.com/verbs/)
+- 📝 [Dative with Verbs](https://www.ukrainianlessons.com/intro-cases/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M04: Instrumental I**
+- 🎥 [Instrumental Case Explained](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+- 📖 [Instrumental Case Guide](https://www.talkukrainian.com/instrumental-case/)
+- 📝 [Instrumental Usage](https://www.speakua.com/blog/instrumental-case-ukrainian)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M05: Instrumental II — Tools & Transport**
+- 🎥 [Instrumental with Examples](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+- 📖 [Transport Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
+- 📝 [Instrumental Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-instrumental-case/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M06: Being and Becoming — Professions**
+- 🎥 [Instrumental Case](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+- 📖 [Professions Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
+- 📝 [Instrumental with Professions](https://www.ukrainianlanguage.org.uk/read/unit07/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M07: Preposition Master**
+- 🎥 [Prepositions Guide](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+- 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/)
+- 📝 [Cases Overview](https://www.ukrainianlessons.com/intro-cases/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M08-11: Logical Prepositions, All Cases, Post Office, Checkpoint**
+- 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
+- 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.2: Aspect (M12-16)
+
+**M12: Aspect Introduction**
+- 🎥 [Perfective vs Imperfective](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
+- 📖 [Verb Aspect Guide](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+- 📝 [Aspect Overview](https://www.ukrainianlessons.com/perfective-verbs/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M13-16: Past Aspect, Future Aspect, Aspect Pairs, Mastery**
+- 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
+- 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
+- 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.3: Comparison & Conditional (M17-24)
+
+**M17-19: Possessive свій, Comparatives, Superlatives**
+- 🎥 [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
+- 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M20-24: Preferences, Numerals, Conditional, Shopping, Checkpoint**
+- 🎥 [Numbers with Nouns](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
+- 📝 [Numbers Guide](https://www.ukrainianlessons.com/numbers/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.4: Complex Sentences (M25-34)
+
+**M25-32: Narration, Conjunctions, Clauses**
+- 🎥 [Complex Sentences](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/)
+- 📝 [Complex Sentences](https://www.ukrainianlessons.com/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M33: At the Doctor's**
+- 🎥 [Health Vocabulary](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+- 📖 [Something Hurts](https://www.ukrainianlessons.com/something-hurts/)
+- 📝 [Body Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.5: Word Formation (M35-43)
+
+**M35-37: Motion & Action Prefixes**
+- 🎥 [Verb Prefixes](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/)
+- 📝 [Motion Verbs](https://www.ukrainianlessons.com/verbs/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M38-43: Suffixes, Roots, Word Formation**
+- 🎥 [Word Formation](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Vocabulary Building](https://www.ukrainianlessons.com/vocabulary/)
+- 📝 [Grammar Guide](https://www.ukrainianlessons.com/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.6: Vocabulary Expansion (M44-55)
+
+**M44: Food & Cooking**
+- 🎥 [Food Vocabulary](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+- 📖 [Ukrainian Food](https://www.ukrainianlessons.com/ukrainian-food/)
+- 📝 [Cooking Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+**M45-55: Thematic Vocabulary & Checkpoint**
+- 🎥 [Vocabulary Lessons](https://www.youtube.com/@SpeakUkrainian) — Speak Ukrainian
+- 📖 [Vocabulary Guide](https://www.ukrainianlessons.com/vocabulary/)
+- 📝 [Thematic Lists](https://www.ukrainianlessons.com/)
+- 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+### A2.7: Final Review (M56-57)
+
+**M56-57: Grammar & Final Review**
+- 🎥 [A2 Complete](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+- 📖 [Ukrainian Resources](https://www.ukrainianlessons.com/ukrainian-language-resources/)
+- 📝 [Grammar Overview](https://www.ukrainianlessons.com/)
+- 🎙️ [Top Episodes](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/)
+
+---
+
+## Other External Resources
 
 | Module | Source | Resource | Status |
 |--------|--------|----------|--------|

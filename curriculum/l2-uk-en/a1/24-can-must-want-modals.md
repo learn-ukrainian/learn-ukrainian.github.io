@@ -40,16 +40,7 @@ vocabulary_count: 25
 ## Grammar
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian verbs: What to consider?](https://www.youtube.com/watch?v=UprIjfMZgzA) — Taste Ukrainian
->
->
-> **Verbs:** [500+ Ukrainian Verbs](https://www.ukrainianlessons.com/verbs/) — Reference guide for verb conjugation
->
-> **Podcasts:** [Ukrainian Verbs in Context](https://www.ukrainianlessons.com/ukrainian-verbs-podcasts/) — Learn verbs through real conversations
->
-> **Grammar:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Conjugation patterns for all tenses
+
 
 ## Expressing Ability: могти vs вміти
 
@@ -278,22 +269,30 @@ These are impersonal — the "subject" is optional:
 
 ---
 
-## Summary
+# Summary
 
-In this module, you learned:
+Ви вивчили модальні дієслова. Тепер ви знаєте українську краще! Ви знаєте, як сказати "я можу", "я вмію" та "я хочу". Ви також знаєте слова "треба", "можна" та "заборонено". Тепер ви можете планувати свій день! Це була гарна робота (This was good work). Українська мова дуже гарна!
 
-- **Ability**: могти (can) vs вміти (know how to)
-- **Obligation**: повинен (must), мусити (have to), треба/потрібно (need to)
-- **Permission**: можна (may), не можна (not allowed), дозволено/заборонено (permitted/forbidden)
-- **Advice**: слід (should), варто (worth)
-- **Trying**: намагатися, старатися, пробувати
-- **Modal adjectives**: готовий (ready), здатний (capable), згодний (willing)
+> [!myth] **Міф про українську мову (Myth about Ukrainian language)**
+>
+> **Міф:** Українська мова — це діалект.  
+> **Факт:** Це неправда! Українська — це окрема солов'їна мова (separate nightingale language). Вона має свою граматику та історію.
 
 ---
 
 **Coming up:** Module 25 will teach you reflexive verbs for daily routines!
 
-## Activities
+
+> [!resources] External Resources
+>
+> **YouTube:** [Modal Verbs in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Modal Verbs](https://www.ukrainianlessons.com/modal-verbs/) — Ukrainian Lessons
+>
+> **Listening:** [Can and Must in Ukrainian](https://ukrainianlanguage.uk/modal-verbs-can-must/) — Listening practice with audio
+
+# Activities
+
 
 ## match-up: Modal Meanings
 
@@ -413,51 +412,51 @@ Match the Ukrainian modal with its English meaning.
 
 ## quiz: Ability or Skill?
 
-Choose whether the sentence uses ability (могти) or skill (вміти).
+> Decide if these sentences express a general ability (могти) or a learned skill (вміти).
 
-1. Я вмію плавати.
+1. Does the sentence "Я вмію плавати" express ability or skill?
    - [x] Skill (learned ability)
    - [ ] Physical ability
    - [ ] Permission
    - [ ] Obligation
 
-2. Я не можу прийти сьогодні.
+2. How do you categorize the sentence "Я не можу прийти сьогодні"?
    - [x] Physical ability (circumstance)
    - [ ] Skill
    - [ ] Permission
    - [ ] Obligation
 
-3. Вона вміє готувати українські страви.
+3. What category does "Вона вміє готувати українські страви" specifically belong to?
    - [x] Skill (learned ability)
    - [ ] Physical ability
    - [ ] Permission
    - [ ] Obligation
 
-4. Ти можеш відкрити двері?
+4. Which category matches the question "Ти можеш відкрити ці двері?" accurately?
    - [x] Physical ability (request)
    - [ ] Skill
    - [ ] Obligation
    - [ ] Prohibition
 
-5. Він вміє грати на гітарі.
+5. Does the sentence "Він вміє грати на гітарі" mean skill or ability?
    - [x] Skill (learned ability)
    - [ ] Physical ability
    - [ ] Permission
    - [ ] Obligation
 
-6. Ми можемо почати зараз.
+6. How is the sentence "Ми можемо почати зараз" correctly categorized here?
    - [x] Physical ability (circumstance)
    - [ ] Skill
    - [ ] Permission
    - [ ] Obligation
 
-7. Вони вміють танцювати сальсу.
+7. What does the sentence "Вони вміють танцювати сальсу" actually express?
    - [x] Skill (learned ability)
    - [ ] Physical ability
    - [ ] Permission
    - [ ] Obligation
 
-8. Я не можу знайти ключі.
+8. Which category fits "Я не можу знайти свої ключі" accurately?
    - [x] Physical ability (circumstance)
    - [ ] Skill
    - [ ] Permission
@@ -467,51 +466,51 @@ Choose whether the sentence uses ability (могти) or skill (вміти).
 
 ## quiz: Modal Meanings
 
-Select the correct translation.
+> Select the correct English translation for these common Ukrainian modal expressions.
 
-1. Можна увійти?
+1. Which English phrase represents "Можна увійти?" accurately today?
    - [x] May I enter?
    - [ ] Must I enter?
    - [ ] Can I swim?
    - [ ] Should I leave?
 
-2. Тут заборонено палити.
+2. What isaccurately the English meaning of "Тут заборонено палити"?
    - [x] Smoking is forbidden here.
    - [ ] Smoking is allowed here.
    - [ ] You must smoke here.
    - [ ] You should smoke here.
 
-3. Я повинен працювати.
+3. How do you accurately say "Я повинен працювати" in English?
    - [x] I must work.
    - [ ] I can work.
    - [ ] I want to work.
    - [ ] I know how to work.
 
-4. Варто подивитися цей фільм.
+4. What doesaccurately the phrase "Варто подивитися цей фільм" mean?
    - [x] This movie is worth watching.
    - [ ] You must watch this movie.
    - [ ] You can't watch this movie.
    - [ ] This movie is forbidden.
 
-5. Треба вчитися кожен день.
+5. How do you accurately translate "Треба вчитися кожен день"?
    - [x] One must study every day.
    - [ ] One can study every day.
    - [ ] One wants to study every day.
    - [ ] One is allowed to study every day.
 
-6. Вона готова почати.
+6. What does precisely the sentence "Вона готова почати" mean?
    - [x] She is ready to start.
    - [ ] She must start.
    - [ ] She can start.
    - [ ] She wants to start.
 
-7. Тут дозволено фотографувати.
+7. Which English translation is correct for "Тут дозволено фотографувати"?
    - [x] Photography is permitted here.
    - [ ] Photography is forbidden here.
    - [ ] You must take photos here.
    - [ ] You should take photos here.
 
-8. Слід відпочити.
+8. Which phrase accurately translates "Слід відпочити" into English?
    - [x] One should rest.
    - [ ] One must rest.
    - [ ] One can rest.
@@ -573,7 +572,7 @@ Decide if each statement is true or false.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

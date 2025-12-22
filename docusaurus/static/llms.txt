@@ -1,0 +1,56 @@
+# Learn Ukrainian
+> A comprehensive, free Ukrainian language curriculum from A1 to C2.
+
+## About
+Learn Ukrainian is an open-source language learning platform offering 97+ interactive lessons aligned with CEFR and Ukrainian State Standards 2024. The curriculum covers beginner to mastery levels with grammar explanations, cultural context, and interactive exercises.
+
+## Curriculum Structure
+
+### A1 - Beginner (34 modules)
+Cyrillic alphabet and pronunciation, basic phrases and greetings, simple grammar (gender, plurals, basic verbs), numbers, colors, family vocabulary
+URL: /docs/a1/
+
+### A2 - Elementary (57 modules)
+All 7 Ukrainian grammatical cases, verb aspect basics (perfective/imperfective), comparison and superlatives, daily life vocabulary
+URL: /docs/a2/
+
+### B1 - Intermediate (1 modules)
+Aspect mastery and motion verbs, complex sentence structures, participles and verbal adverbs, abstract vocabulary and discourse markers
+URL: /docs/b1/
+
+### B2 - Upper-Intermediate (1 modules)
+Literature and academic writing, professional contexts, register awareness, advanced grammar
+URL: /docs/b2/
+
+### C1 - Advanced (2 modules)
+Stylistics and registers, nuanced expression, specialized topics, near-native proficiency
+URL: /docs/c1/
+
+### C2 - Mastery (2 modules)
+Native-level proficiency, literary analysis, professional specialization, complete fluency
+URL: /docs/c2/
+
+## Key Features
+- Theory-first approach with deep grammar explanations
+- Interactive activities (quizzes, fill-in, matching, error correction)
+- Cultural immersion with authentic materials
+- IPA pronunciation for all vocabulary
+- YouTube videos and external resources integrated
+- 100% free, no ads, no paywalls
+
+## Technical Details
+- Built with Docusaurus
+- Open source: github.com/learn-ukrainian/learn-ukrainian.github.io
+- Curriculum source in Markdown
+- JSON export available for app integration
+
+## Contact
+GitHub: https://github.com/learn-ukrainian/learn-ukrainian.github.io
+
+## Quick Links
+- Start learning: /docs/a1/
+- All levels: /docs/
+- GitHub: https://github.com/learn-ukrainian/learn-ukrainian.github.io
+
+---
+Last updated: {datetime.now().strftime('%Y-%m-%d')}

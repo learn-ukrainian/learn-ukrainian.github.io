@@ -40,17 +40,7 @@ By the end of this module, you'll be able to read **любов** (love), **дя�
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) — Red Purple Ukrainian 
->
->
->
-> **Podcast:** [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/) — Season 1 for beginners, with native speaker audio
->
-> **Г vs Ґ:** [Omniglot - Ukrainian](https://www.omniglot.com/writing/ukrainian.htm) — Detailed explanation of the unique Ukrainian sounds
->
-> **Practice Sounds:** [ENGin Program - Pronunciation Basics](https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners) — Tips for tricky sounds (Щ, Ї, rolled Р)
+
 
 ## Presentation
 
@@ -127,6 +117,16 @@ The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." Th
 > 🌍 **Real World**
 >
 > When you order food in **Київ** (Kyiv), you'll use words like **борщ** (borscht), **цукор** (sugar), and **дякую** (thank you). Pronouncing **Київ** correctly (Kýyiv, not Keev) shows respect for Ukrainian language and identity. Locals will appreciate it!
+
+### The Short Y (Й)
+
+The letter **Й** (yi kratke, "short i") makes a quick "y" sound like in English "boy" or "yes." It never starts words on its own in native Ukrainian words, but appears in borrowed words like **йогурт** (yogurt):
+
+| Letter | Sound | Example | English |
+|--------|-------|---------|---------|
+| **Й й** | /j/ like "y" in "boy" | **й**огурт (yohurt) | yogurt |
+
+You'll also see **Й** at the end of words and syllables, creating sounds like "ay," "oy," or "iy." In **Київ**, the final sound is actually **ЇВ** (yiv), but in words like **край** (edge, country), you hear the **Й** clearly: "kray."
 
 ### The Italic Warning
 
@@ -249,7 +249,7 @@ You know every single one now. Congratulations!
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned the final 14 letters of Ukrainian Cyrillic:
 
@@ -269,7 +269,21 @@ Next module, we'll start learning about noun gender and why it matters!
 
 ---
 
-## Activities
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) — Red Purple Ukrainian 
+>
+> **Podcast:** [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/) — Season 1 for beginners, with native speaker audio
+>
+> **Г vs Ґ:** [Omniglot - Ukrainian](https://www.omniglot.com/writing/ukrainian.htm) — Detailed explanation of the unique Ukrainian sounds
+>
+> **Practice Sounds:** [ENGin Program - Pronunciation Basics](https://www.enginprogram.org/post/ukrainian-pronunciation-basics-a-guide-for-learners) — Tips for tricky sounds (Щ, Ї, rolled Р)
+
+---
+
+# Activities
 
 ## match-up: Letter Sounds
 > Match each letter to its sound.
@@ -582,7 +596,7 @@ Next module, we'll start learning about noun gender and why it matters!
 - ф
 - х
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

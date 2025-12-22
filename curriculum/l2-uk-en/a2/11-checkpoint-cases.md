@@ -39,15 +39,6 @@ This checkpoint reviews all seven Ukrainian cases, prepositions, and practical v
 3. **Prepositions + Cases** - Can you choose the right case?
 4. **Service Vocabulary** - Can you use cases at the post office and bank?
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Skill 1: Dative Case
 
@@ -278,7 +269,7 @@ Read this dialogue and identify the case of each bolded word:
 
 ---
 
-## Summary
+# Summary
 
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
@@ -304,9 +295,26 @@ Read this dialogue and identify the case of each bolded word:
 
 ---
 
-## Activities
+
+
+## Need More Practice?
+
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How I learnt my first 500 words in Ukrainian ...](https://www.youtube.com/watch?v=SdgPUOHXNts) — Vocabooster Review
+>
+> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
+>
+> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
+
+---
+
+---
+
+# Activities
 
 ## match-up: Case Questions
+> З'єднайте відмінок з питанням. | Match the case to the question.
 
 - Nominative :: хто? що?
 - Genitive :: кого? чого?
@@ -374,6 +382,7 @@ Read this dialogue and identify the case of each bolded word:
     > [!options] Друг | Друга | Друже | Другом
 
 ## quiz: Comprehensive Case Quiz
+> Дайте відповіді на питання про відмінки. | Answer the questions about cases.
 
 1. Which case for the subject of a sentence?
 
@@ -510,6 +519,7 @@ Read this dialogue and identify the case of each bolded word:
   > Correct! Відправити листа, зняти гроші.
 
 ## group-sort: Preposition Cases
+> Розсортуйте за відмінком, якого вимагає прийменник. | Sort by the case each preposition requires.
 
 > Sort by the case each preposition requires.
 
@@ -733,7 +743,7 @@ The lamp is above the table.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

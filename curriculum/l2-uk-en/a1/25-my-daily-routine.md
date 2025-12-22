@@ -144,7 +144,7 @@ vocabulary_count: 30
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned:
 
@@ -158,7 +158,16 @@ In this module, you learned:
 
 **Coming up:** Module 26 will teach you adjective agreement for describing things!
 
-## Activities
+> [!resources] External Resources
+>
+> **YouTube:** [Daily Routine in Ukrainian](https://www.youtube.com/watch?v=kY67m6y6Oyc) — Speak Ukrainian
+>
+> **Grammar:** [Reflexive Verbs in Ukrainian](https://www.ukrainianlessons.com/reflexive-verbs/) — Ukrainian Lessons
+>
+> **Reading:** [Daily Routine Text](https://ukrainianlanguage.uk/exercise-daily-routine/) — Ukrainian Language
+
+# Activities
+
 
 ## match-up: Daily Actions
 
@@ -198,6 +207,7 @@ Match the Ukrainian action with its English meaning.
 - вечеряти
 - відпочивати
 - гуляти
+- лягати спати
 
 ---
 
@@ -277,51 +287,51 @@ Match the Ukrainian action with its English meaning.
 
 ## quiz: Daily Routine
 
-Choose the correct translation.
+> Select the most accurate English translation for these sentences.
 
-1. Я прокидаюся о сьомій.
+1. Which translation is correct for "Я прокидаюся о сьомій"?
    - [x] I wake up at seven.
    - [ ] I go to bed at seven.
    - [ ] I work at seven.
    - [ ] I eat at seven.
 
-2. Спочатку я вмиваюся.
+2. How do you accurately translate "Спочатку я вмиваюся"?
    - [x] First I wash my face.
    - [ ] Then I wash my face.
    - [ ] Finally I wash my face.
    - [ ] Never I wash my face.
 
-3. Вона завжди снідає.
+3. What is the meaning of "Вона завжди снідає"?
    - [x] She always has breakfast.
    - [ ] She never has breakfast.
    - [ ] She sometimes has breakfast.
    - [ ] She first has breakfast.
 
-4. Вони повертаються додому.
+4. How do you translate "Вони повертаються додому"?
    - [x] They return home.
    - [ ] They leave home.
    - [ ] They work at home.
    - [ ] They sleep at home.
 
-5. Він одягається швидко.
+5. Which English sentence means "Він одягається швидко"?
    - [x] He gets dressed quickly.
    - [ ] He undresses quickly.
    - [ ] He eats quickly.
    - [ ] He works quickly.
 
-6. Ми обідаємо опівдні.
+6. How do you translate "Ми обідаємо опівдні"?
    - [x] We have lunch at noon.
    - [ ] We have breakfast at noon.
    - [ ] We have dinner at noon.
    - [ ] We work at noon.
 
-7. Я лягаю спати о десятій.
+7. Which translation is right for "Я лягаю спати о десятій"?
    - [x] I go to bed at ten.
    - [ ] I wake up at ten.
    - [ ] I eat at ten.
    - [ ] I work at ten.
 
-8. Нарешті я відпочиваю.
+8. What is the correct translation of "Нарешті я відпочиваю"?
    - [x] Finally I rest.
    - [ ] First I rest.
    - [ ] Then I rest.
@@ -331,51 +341,51 @@ Choose the correct translation.
 
 ## quiz: Reflexive Understanding
 
-Select the correct answer.
+> Test your knowledge of Ukrainian reflexive verb structures here.
 
-1. Which verb is reflexive?
+1. Which of these common verbs is a reflexive verb?
    - [x] вмиватися
    - [ ] читати
    - [ ] їсти
    - [ ] працювати
 
-2. What does "-ся" indicate?
+2. What does the suffix "-ся" specifically indicate in verbs?
    - [x] The action is done to oneself
    - [ ] The action is past tense
    - [ ] The action is future
    - [ ] The action is negative
 
-3. "Я одягаюся" means:
+3. What does the phrase "Я одягаюся" actually mean?
    - [x] I get dressed (myself)
    - [ ] I dress someone else
    - [ ] I undress
    - [ ] I buy clothes
 
-4. When do we use "-сь" instead of "-ся"?
+4. When exactly do we use "-сь" instead of "-ся"?
    - [x] After vowels (я вмиваюсь)
    - [ ] After consonants
    - [ ] In past tense
    - [ ] In future tense
 
-5. Which verb is NOT reflexive?
+5. Which verb listed below is NOT a reflexive verb?
    - [x] снідати
    - [ ] прокидатися
    - [ ] одягатися
    - [ ] повертатися
 
-6. "Вона повертається" means:
+6. What does the sentence "Вона повертається" correctly mean?
    - [x] She returns
    - [ ] She turns someone
    - [ ] She leaves
    - [ ] She works
 
-7. "Голитися" means:
+7. What is the meaning of the verb "Голитися"?
    - [x] To shave (oneself)
    - [ ] To shave someone else
    - [ ] To cut hair
    - [ ] To wash
 
-8. Which ending is correct: "ми вмиваємо___"?
+8. Which reflexive ending is correct: "ми вмиваємо___"?
    - [x] -ся (after consonant)
    - [ ] -сь (after vowel)
    - [ ] No ending needed
@@ -439,7 +449,7 @@ Decide if each statement is true or false.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

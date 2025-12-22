@@ -40,16 +40,7 @@ Unlike English, where "I worked" and "she worked" look the same, Ukrainian past 
 
 
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) — Speak Ukrainian
->
->
-> **Grammar Guide:** [Past Tense in Ukrainian](https://www.ukrainianlessons.com/grammar-past-tense/) — Complete guide with audio and illustrations
->
-> **All Tenses:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
->
-> **Podcast:** [ULP 1-26 | To Be in Past Tense](https://www.ukrainianlessons.com/episode26/) — Learn past tense of бути
+
 
 ## Presentation
 
@@ -268,11 +259,25 @@ Translation:
 
 ---
 
-## Вправи (Activities)
+
+# Summary
+
+Ви вивчили минулий час в українській мові. Ви знаєте закінчення -в, -ла, -ло та -ли. Ви знаєте слова "вчора" та "давно". Це була гарна робота (This was good work).
+
+> [!resources] External Resources
+>
+> **YouTube:** [The Past Tense in Ukrainian](https://www.youtube.com/watch?v=SUx5xUfABIc) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Ukrainian Lessons
+>
+> **Practice:** [Past Tense Exercises](https://ukrainianlanguage.uk/exercise-past-tense/) — Ukrainian Language
+
+# Activities
+
 
 ## match-up: Past Tense Vocabulary
 
-> Match the Ukrainian words with their English meanings.
+Match the Ukrainian words with their English meanings.
 
 | Ukrainian | English |
 |-----------|---------|
@@ -283,11 +288,8 @@ Translation:
 | раніше | earlier |
 | колись | once |
 | минулого тижня | last week |
-| минулого року | last year |
 | був | was (m) |
-| була | was (f) |
 | читав | was reading (m) |
-| працював | was working (m) |
 
 ## group-sort: Gender Endings
 
@@ -298,27 +300,18 @@ Translation:
 - працював
 - говорив
 - був
-- писав
-- слухав
-- жив
 
 ### Feminine (-ла)
 - читала
 - працювала
 - говорила
 - була
-- писала
-- слухала
-- жила
 
 ### Plural (-ли)
 - читали
 - працювали
 - говорили
 - були
-- писали
-- слухали
-- жили
 
 ## fill-in: Complete with Past Tense
 
@@ -366,7 +359,7 @@ Translation:
 
 ## quiz: Understanding Past Tense
 
-> Select the correct answer.
+> Select the correct answer for these grammar questions.
 
 1. How do you form the past tense in Ukrainian?
    - [ ] Add -ю to the infinitive
@@ -382,7 +375,7 @@ Translation:
    - [ ] Я працювали
    > Male speakers use -в ending
 
-3. What does "вчора" mean?
+3. What doesaccurately the word "вчора" mean in English?
    - [ ] Tomorrow
    - [x] Yesterday
    - [ ] Today
@@ -396,14 +389,14 @@ Translation:
    - [ ] їїв
    > Їсти has stem change in past: їв
 
-5. How do you say "She was reading" in Ukrainian?
+5. How do you say accurately "She was reading" in Ukrainian?
    - [ ] Вона читав
    - [x] Вона читала
    - [ ] Вона читало
    - [ ] Вона читати
    > Feminine subject → -ла ending
 
-6. What does "колись" mean?
+6. What does precisely the word "колись" mean in English?
    - [ ] Never
    - [ ] Always
    - [x] Once, sometime
@@ -417,7 +410,7 @@ Translation:
    - [ ] говорити → говорив
    > Їсти → їв (the stem changes, not just the ending)
 
-8. How do you say "We were" in Ukrainian?
+8. How do you accurately say "We were" in Ukrainian?
    - [ ] Ми був
    - [ ] Ми була
    - [ ] Ми було
@@ -534,65 +527,65 @@ Translation:
 
 ## quiz: Time Expressions
 
-> Choose the correct time expression.
+> Choose the correct English translation for these time expressions.
 
-1. What does "минулого місяця" mean?
+1. What does accurately "минулого місяця" mean in English?
    - [ ] Next month
    - [ ] This month
    - [x] Last month
    - [ ] Every month
    > Минулого місяця = last month (genitive)
 
-2. Which word means "recently"?
+2. Which word means accurately "recently" in the Ukrainian language?
    - [ ] давно
    - [x] недавно
    - [ ] раніше
    - [ ] колись
    > Недавно = recently
 
-3. "Позавчора" refers to:
+3. What does accurately "Позавчора" refer to in English?
    - [ ] Tomorrow
    - [ ] Yesterday
    - [x] Day before yesterday
    - [ ] Last week
    > Позавчора = day before yesterday
 
-4. Which means "long ago"?
+4. Which word means accurately "long ago" in Ukrainian today?
    - [x] давно
    - [ ] недавно
    - [ ] завтра
    - [ ] зараз
    > Давно = long ago
 
-5. What does "раніше" mean?
+5. What does the word "раніше" accurately mean today?
    - [ ] Tomorrow
    - [ ] Now
    - [x] Earlier, before
    - [ ] Always
    > Раніше = earlier, before (in the past)
 
-6. "Минулого року" means:
+6. What does accurately "Минулого року" mean in English?
    - [ ] This year
    - [ ] Next year
    - [x] Last year
    - [ ] Every year
    > Минулого року = last year (genitive)
 
-7. What does "колись" mean?
+7. What does the word "колись" accurately mean today?
    - [ ] Never
    - [ ] Always
    - [x] Once, sometime
    - [ ] Often
    > Колись = once, sometime (in the past)
 
-8. "Минулого тижня" means:
+8. What does "Минулого тижня" accurately mean in English?
    - [ ] This week
    - [ ] Next week
    - [x] Last week
    - [ ] Every week
    > Минулого тижня = last week (genitive)
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

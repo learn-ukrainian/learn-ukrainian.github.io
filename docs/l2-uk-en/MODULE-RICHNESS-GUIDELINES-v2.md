@@ -85,12 +85,17 @@
 > *   **A2.2 (M21-40):** **45-50%** — Aspect basics, locative, more cases. Controlled comparison with increased Ukrainian.
 > *   **A2.3 (M41-50):** **50-55%** — Pre-B1 runway. Narrative density increases, complex sentences introduced.
 
-> **Graduated Immersion (B1 Detail) — Phase-Based Progression:**
-> - **B1.1 (M01-10 Aspect):** **50-60%** — Aspect mastery. Transition from A2.
-> - **B1.2 (M11-20 Motion):** **55-65%** — Motion verbs. Theory in simple English.
-> - **B1.3-4 (M21-45 Complex):** **60-70%** — Complex sentences. More Ukrainian explanations.
-> - **B1.5-6 (M46-65 Vocab):** **65-75%** — Vocabulary expansion. Mostly Ukrainian.
-> - **B1.7-8 (M66-80 Skills):** **70-80%** — Cultural content. Pre-B2 runway.
+> **B1+ Immersion Philosophy — Ukrainian-First Approach:**
+> At B1, students learn grammar **IN Ukrainian** — the way native speakers learn in school.
+> - **All B1 modules (M01-80):** **90-95%** Ukrainian
+> - Grammar explanations in Ukrainian with metalanguage (grammar terms as vocabulary)
+> - No English translations except in vocabulary table
+> - Engagement boxes, tips, warnings all in Ukrainian
+>
+> **Why this works:**
+> - Immersion makes learning engaging (boring English theory killed motivation)
+> - Grammar terminology (недоконаний вид, доконаний вид) becomes usable vocabulary
+> - Students can understand Ukrainian grammar resources and discuss with native speakers
 
 > **Immersion Implementation Guide (A2-C2):**
 >
@@ -99,32 +104,28 @@
 > | **A2.1** (M01-20) | **40-45%** | Dialogues, examples, simple instructions | Grammar theory (cases), complex explanations |
 > | **A2.2** (M21-40) | **45-50%** | Dialogues, examples, short narratives | Grammar theory (aspect), complex explanations |
 > | **A2.3** (M41-50) | **50-55%** | Dialogues, narratives, simple explanations | Complex grammar only |
-> | **B1.1-2** (M01-20) | **50-60%** | Narratives, dialogues, examples, strict rules | Complex conceptual theory (aspect logic) |
-> | **B1.3-4** (M21-45) | **60-70%** | Narratives, dialogues, simple theory | Complex syntax theory only |
-> | **B1.5-8** (M46-80) | **70-80%** | Narratives, dialogues, all content | Abstract concept definitions only |
-> | **B2.1-2** (M01-40) | **60-75%** | Narratives, dialogues, most grammar | Very complex theory (passive voice, register) |
-> | **B2.3-5** (M41-125) | **80-90%** | All content | Only historical/cultural nuances requiring English |
+> | **B1** (M01-80) | **90-95%** | Grammar explanations, narratives, dialogues, examples, engagement boxes | Vocabulary table translations only |
+> | **B2** (M01-125) | **95%** | All grammar, all content, all cultural material | Vocabulary table translations only |
 > | **C1.1** (M01-20) | **90-100%** | All content except meta-analysis | Limited contrastive linguistics |
 > | **C1.2-6** (M21-115) | **95-100%** | Everything | `🔗 Language Link` boxes only |
 > | **C2** (M01-80) | **98-100%** | EVERYTHING | Strict <2% allowence for contrastive analysis |
 >
-> **B1-grammar (50-55%) Concrete Examples:**
-> *   ✅ UKRAINIAN: "Читав (impf) — тривала дія. Прочитав (pf) — завершена дія." (Examples)
-> *   ✅ UKRAINIAN: All narratives, dialogues, cultural boxes
-> *   ✅ ENGLISH: "The perfective aspect in Ukrainian encodes 'result reached'..." (Complex grammar theory)
-> *   ✅ ENGLISH: Decision frameworks, metalinguistic analysis
+> **B1 (90-95%) — Full Ukrainian Grammar Instruction:**
+> *   ✅ UKRAINIAN: "Читав — це недоконаний вид. Він показує тривалу дію або процес."
+> *   ✅ UKRAINIAN: "Прочитав — це доконаний вид. Він показує завершену дію з результатом."
+> *   ✅ UKRAINIAN: All grammar explanations using Ukrainian metalanguage
+> *   ✅ UKRAINIAN: All narratives, dialogues, engagement boxes, tips, warnings
+> *   ✅ ENGLISH: Only the "Переклад" column in vocabulary tables
 >
-> **B1-vocab (65-70%) — Higher immersion for vocabulary:**
-> *   ✅ UKRAINIAN: Narratives, dialogues, examples, simple explanations, cultural boxes
-> *   ✅ ENGLISH: Only abstract concept definitions where needed
+> **Metalanguage at B1:** Students learn grammar terminology as vocabulary:
+> *   доконаний вид (perfective aspect), недоконаний вид (imperfective aspect)
+> *   дієслово (verb), іменник (noun), прикметник (adjective), відмінок (case)
+> *   підрядне речення (subordinate clause), підмет (subject), присудок (predicate)
 >
-> **B2-grammar (65-70%) — Ukrainian grammar rules, English for complex theory:**
-> *   ✅ UKRAINIAN: "Пасивний стан утворюється за допомогою..." (Grammar rules in Ukrainian)
-> *   ✅ ENGLISH: Complex grammar theory (passive voice logic, register distinctions)
->
-> **B2-vocab (80-85%) — Near-immersion, transition to C1:**
-> *   ✅ UKRAINIAN: All narratives, dialogues, explanations, cultural content
-> *   ✅ ENGLISH: Only historical/cultural context requiring English clarification
+> **B2 (95%) — Full Ukrainian Immersion:**
+> *   ✅ UKRAINIAN: All grammar, all cultural content, all explanations
+> *   ✅ UKRAINIAN: Advanced metalanguage (дієприслівник, пасивний стан, функціональний стиль)
+> *   ✅ ENGLISH: Only the "Переклад" column in vocabulary tables
 >
 > **C1 (95%) — Near-total immersion:**
 > *   ✅ UKRAINIAN: All grammar, all explanations, all cultural content
@@ -139,43 +140,41 @@
 > *   ✅ UKRAINIAN: Everything — learner operates as near-native
 > *   ⚠️ ALLOWED: Up to 5% Latin/Greek scholarly terms
 
-### Bilingual Content Patterns (B1-B2)
+### Ukrainian-Only Grammar Patterns (B1+)
 
-**Why bilingual?** Complex grammar concepts like aspect, motion verbs, and participles don't exist in English. Explaining the *why* in L1 (English) reduces cognitive load, allowing learners to focus on Ukrainian examples. The audit script measures immersion from lesson content only (before `# Activities`).
+**Why Ukrainian-only at B1+?** Students at this level should learn grammar the way native speakers do — in Ukrainian. English explanations were found to be "boring" and disengaging. Ukrainian metalanguage (grammar terms) becomes usable vocabulary.
 
-**Pattern: Ukrainian concept → English explanation**
+**Pattern: Full Ukrainian grammar explanation**
 
 ```markdown
 ### Доконаний вид — Результат
 
-Коли ви обираєте доконаний вид, ви фокусуєтеся на:
-- **Результаті** — дія завершена, є підсумок
-- **Одноразовості** — конкретна, окрема дія
+Доконаний вид показує дію, яка завершена і має результат.
+
+Коли використовувати доконаний вид:
+- **Результат** — дія завершена, є підсумок
+- **Одноразовість** — конкретна, окрема дія
+- **Послідовність** — спочатку це, потім те
 
 | Приклад | Контекст | Чому доконаний? |
 |---------|----------|-----------------|
 | Я **прочитав** книгу. | Результат | Книга прочитана |
+| Він **написав** листа. | Завершення | Лист готовий |
 
-> 🔗 **When to Use Perfective**
->
-> Use perfective when you want to say:
-> - "I did it (and it's done)" — completed action with result
-> - "I managed to..." — achievement
-> - "First he did X, then Y..." — sequence of completed actions
->
-> **Key insight:** If the action has a clear endpoint that was reached, it's perfective.
+> [!tip] Порада
+> Якщо дія має чіткий кінець, який був досягнутий — це доконаний вид.
 ```
 
-**Pattern: Decision framework in English**
+**Pattern: Ukrainian decision framework**
 
 ```markdown
-> 🔗 **Context Triggers: A Decision Framework**
+> [!info] Як обрати вид?
 >
-> | Question | If YES → | If NO → |
-> |----------|----------|---------|
-> | Was this a one-time completed event? | Perfective | Keep checking |
-> | Did it happen regularly/habitually? | Imperfective | Keep checking |
-> | Was it the background for another action? | Imperfective | Perfective |
+> | Питання | Якщо ТАК → | Якщо НІ → |
+> |---------|------------|-----------|
+> | Це одноразова завершена подія? | Доконаний | Перевір далі |
+> | Це регулярна/звичайна дія? | Недоконаний | Перевір далі |
+> | Це тло для іншої дії? | Недоконаний | Доконаний |
 ```
 
 **What stays Ukrainian:**
@@ -394,22 +393,26 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B1-grammar` | 01-45 (excl. checkpoints) | 1500+ | 20+ | 50-55% | Grammar acquisition: aspect, motion verbs, complex sentences |
-| `B1-vocab` | 46-75 (excl. checkpoints) | 1500+ | 25-30 | 60-65% | Thematic vocabulary: regions, professions, media |
-| `B1-skills` | 76-79 | 1000+ | 15-20 | 55-60% | Receptive skills, reading/listening integration |
-| `B1-checkpoint` | 10, 20, 35, 45, 55, 65, 75 | 800+ | 10-15 | 60%+ | Review & self-assessment with CEFR rubrics |
-| `B1-capstone` | 80 | 1000+ | 10 | 50%+ | Final assessment with comprehensive rubric |
+| `B1-grammar` | 01-45 (excl. checkpoints) | 1500+ | 25+ | 90-95% | Grammar acquisition: aspect, motion verbs, complex sentences |
+| `B1-vocab` | 46-75 (excl. checkpoints) | 1500+ | 35+ | 90-95% | Thematic vocabulary: regions, professions, media |
+| `B1-skills` | 76-79 | 1000+ | 15+ | 90-95% | Receptive skills, reading/listening integration |
+| `B1-checkpoint` | 10, 20, 35, 45, 55, 65, 75 | 800+ | 10+ | 90%+ | Review & self-assessment with CEFR rubrics |
+| `B1-capstone` | 80 | 1000+ | 10 | 90-95% | Final assessment with comprehensive rubric |
+
+**Note:** All B1 modules use Ukrainian-first approach — grammar explained IN Ukrainian with metalanguage support.
 
 ### B2 Module Types
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B2-grammar` | 01-40 | 1750+ | 20+ | 65-70% | Passive voice, participles, register, word formation |
-| `B2-vocab` | 41-70 | 1750+ | 25-30 | 75-80% | Phraseology: proverbs, idioms, synonyms |
-| `B2-history` | 71-95 | 1400+ | 20+ | 80-85% | Ukrainian history narratives |
-| `B2-biography` | 96-120 | 1400+ | 20+ | 80-85% | Biographical narratives (24 notable Ukrainians) |
-| `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10-15 | 70-85% | Phase review & assessment |
-| `B2-capstone` | 121-135 | 1200+ | 10 | 85-90% | Research project & oral defense |
+| `B2-grammar` | 01-40 | 1750+ | 25+ | 95% | Passive voice, participles, register, word formation |
+| `B2-vocab` | 41-70 | 1750+ | 35+ | 95% | Phraseology: proverbs, idioms, synonyms |
+| `B2-history` | 71-95 | 1400+ | 20+ | 95% | Ukrainian history narratives |
+| `B2-biography` | 96-120 | 1400+ | 20+ | 95% | Biographical narratives (24 notable Ukrainians) |
+| `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10+ | 95% | Phase review & assessment |
+| `B2-capstone` | 121-135 | 1200+ | 10 | 95% | Research project & oral defense |
+
+**Note:** B2 achieves full immersion — all grammar terminology and explanations in Ukrainian.
 
 ### C1 Module Types
 

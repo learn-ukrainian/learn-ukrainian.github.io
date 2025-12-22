@@ -34,15 +34,6 @@ When you want to say "He is a doctor," "She became a teacher," or "I work as a p
 
 **Why is this important?** Talking about professions is a fundamental skill in any language. By the end of this module, you'll be able to describe your job, discuss career changes, and ask others about their work — all using proper Ukrainian grammar.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Bandura: The traditional Ukrainian instrument that's also a symbol of ...](https://www.youtube.com/watch?v=AcrRlIR9_Ew) — Instrumental
->
-> **Grammar Guide:** [Ukrainian Cases Overview](https://www.ukrainianlessons.com/intro-cases/) — All 7 cases explained
->
-> **Interactive:** [Talk Ukrainian - Cases](https://talkukrainian.com/grammatical-cases/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -283,7 +274,7 @@ This reading passage demonstrates all three verbs (бути, стати, пра�
 
 ---
 
-## Summary
+# Summary
 
 In this module, you learned how to talk about professions using three key verbs that take the instrumental case: бути (to be), стати (to become), and працювати (to work as). Here's a recap of the key patterns you mastered:
 
@@ -310,7 +301,17 @@ No preposition is needed — just verb + profession in instrumental:
 
 Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫💻
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Instrumental Case](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
+> - 📖 [Professions Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
+> - 📝 [Instrumental with Professions](https://www.ukrainianlanguage.org.uk/read/unit07/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Professions Masculine and Feminine
 
@@ -516,6 +517,7 @@ Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫
   > Correct! Письменник → письменниця.
 
 ## group-sort: Masculine vs. Feminine Professions
+> Розсортуйте професії за родами. | Sort the professions by gender.
 
 > Sort these profession forms into the correct category.
 
@@ -847,7 +849,7 @@ She wanted to become an actress.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

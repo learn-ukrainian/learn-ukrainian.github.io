@@ -37,15 +37,6 @@ Welcome to one of the most important concepts in Ukrainian grammar — verbal as
 - When to use each aspect
 - Common aspect pairs for essential verbs
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Perfective and Imperfective: Verb Aspects in Ukrainian...](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Verb Aspect In Ukrainian Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -190,7 +181,7 @@ Now try these more challenging examples. Think about WHY each aspect is used:
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -230,9 +221,20 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 Тепер ви розумієте основи аспекту! Продовжуйте практикувати — це найважливіша граматична тема для природного мовлення українською. Пам'ятайте: кожен день ви **читаєте** (процес), і колись ви **прочитаєте** всю книгу (результат)! 📚
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Perfective vs Imperfective](https://www.youtube.com/watch?v=YnWlncQJg8o) — Let's Learn Ukrainian
+> - 📖 [Verb Aspect Guide](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
+> - 📝 [Aspect Overview](https://www.ukrainianlessons.com/perfective-verbs/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Aspect Pairs
+> З'єднайте пари дієслів. | Match the verb pairs.
 
 - читати :: прочитати
 - писати :: написати
@@ -300,6 +302,7 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
     > [!options] їхали | приїхали
 
 ## quiz: Process or Result?
+> Це процес чи результат? | Is this process or result?
 
 1. "Я читав книгу цілий вечір." Focus on:
 
@@ -393,43 +396,44 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 > Decide if each statement is true or false.
 
-- [x] Imperfective verbs focus on process and duration.
+- [x] Недоконаний вид фокусується на процесі та тривалості. | Imperfective verbs focus on process and duration.
   > Correct!
 
-- [x] Perfective verbs indicate completed actions.
+- [x] Доконаний вид вказує на завершені дії. | Perfective verbs indicate completed actions.
   > Yes!
 
-- [ ] All aspect pairs use the same root.
+- [ ] Усі видові пари мають один корінь. | All aspect pairs use the same root.
   > Some pairs like говорити/сказати use different roots.
 
-- [x] Most perfective verbs are formed with prefixes.
+- [x] Більшість дієслів доконаного виду утворюються за допомогою префіксів. | Most perfective verbs are formed with prefixes.
   > Correct! Prefixes like про-, на-, з-, по-.
 
-- [ ] You can use perfective for habitual actions.
+- [ ] Можна використовувати доконаний вид для звичних дій. | You can use perfective for habitual actions.
   > Habitual actions require imperfective.
 
-- [x] "Я читав" can mean "I was reading."
+- [x] "Я читав" може означати "I was reading". | "Я читав" can mean "I was reading."
   > Yes! Imperfective shows ongoing process.
 
-- [x] "Я прочитав" means "I finished reading."
+- [x] "Я прочитав" означає "I finished reading". | "Я прочитав" means "I finished reading."
   > Correct!
 
-- [ ] Aspect only matters in past tense.
+- [ ] Вид має значення лише в минулому часі. | Aspect only matters in past tense.
   > Aspect matters in all tenses!
 
-- [x] Брати/взяти use different roots.
+- [x] Брати/взяти мають різні корені. | Брати/взяти use different roots.
   > Yes! They're suppletive pairs.
 
-- [x] Duration words often appear with imperfective.
+- [x] Слова тривалості часто вживаються з недоконаним видом. | Duration words often appear with imperfective.
   > Correct! Words like "довго," "три години."
 
-- [ ] English has the same aspect system.
+- [ ] Англійська мова має таку ж систему виду. | English has the same aspect system.
   > English uses verb forms (was reading vs read), not separate verbs.
 
-- [x] The question "Що ти робив?" uses imperfective.
+- [x] Питання "Що ти робив?" використовує недоконаний вид. | The question "Що ти робив?" uses imperfective.
   > Yes! Asking about activities/process.
 
 ## group-sort: Imperfective vs Perfective
+> Розсортуйте ці дієслова за видом. | Sort these verbs by aspect.
 
 > Sort these verbs by aspect.
 
@@ -718,7 +722,7 @@ She always speaks Ukrainian. (habitual)
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

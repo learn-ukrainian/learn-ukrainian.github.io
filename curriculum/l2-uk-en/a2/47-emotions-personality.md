@@ -193,7 +193,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Oprah Winfrey's Emotional Message About Ukraine...](https://www.youtube.com/watch?v=3KE8phZ_OzA) — Access Hollywood
+> **YouTube:** [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
 >
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >

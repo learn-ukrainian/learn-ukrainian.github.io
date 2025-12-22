@@ -40,15 +40,6 @@ Every time you shop, you compare prices and quality. Every time you describe som
 **Important Note About English vs Ukrainian:**
 Unlike English, which uses "more + adjective" for longer adjectives (more interesting, more comfortable), Ukrainian almost always uses the single-word comparative form (цікавіший, комфортніший). The "більш + adjective" construction exists but is less common in everyday speech.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Comparative & Superlative Adjectives ...](https://www.youtube.com/watch?v=D0OqItrsAQM) — Practice with me!
->
-> **Grammar Guide:** [Adjectives Degrees Comparison](https://talkukrainian.com/adjectives-degrees-comparison/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
 
 ## Presentation
 
@@ -213,7 +204,7 @@ When you want to emphasize how much more something is, use intensifiers before t
 
 ---
 
-## Summary
+# Summary
 
 ## What You Learned
 
@@ -255,9 +246,20 @@ There are two ways to say "than" in Ukrainian:
 
 Тепер ви можете порівнювати що завгодно українською! 📊
 
-## Activities
+## Need More Practice?
+
+> [!resources] External Resources
+> - 🎥 [Comparative Adjectives](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
+> - 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
+> - 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
+> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
+
+---
+
+# Activities
 
 ## match-up: Comparative Forms
+> З'єднайте звичайну форму з вищим ступенем. | Match base form with comparative.
 
 - добрий :: кращий
 - поганий :: гірший
@@ -325,6 +327,7 @@ There are two ways to say "than" in Ukrainian:
     > [!options] молодий | молодший | молодіший | наймолодший
 
 ## quiz: Comparatives
+> Дайте відповіді на питання про вищий ступінь. | Answer questions about comparatives.
 
 1. What's the comparative of "добрий"?
 
@@ -461,6 +464,7 @@ There are two ways to say "than" in Ukrainian:
   > It's irregular: дорогий → дорожчий.
 
 ## group-sort: Regular vs Irregular
+> Розсортуйте за типом творення. | Sort these comparatives by formation type.
 
 > Sort these comparatives by formation type.
 
@@ -746,7 +750,7 @@ Coffee is hotter than tea.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

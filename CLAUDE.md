@@ -203,7 +203,7 @@ curricula-opus/
 ├── curriculum/l2-uk-en/
 │   ├── a1/               # A1 modules (34 modules)
 │   ├── a2/               # A2 modules (50 modules)
-│   ├── b1/               # B1 modules (80 modules)
+│   ├── b1/               # B1 modules (85 modules)
 │   ├── b2/               # B2 modules (125 modules)
 │   ├── c1/               # C1 modules (115 modules)
 │   ├── c2/               # C2 modules (80 modules)
@@ -233,7 +233,7 @@ Level and module number are derived from the file path, not frontmatter.
 |-------|--------|---------|--------------|-------------|
 | A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
 | A2 | `a2/` | 50 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
-| B1 | `b1/` | 80 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
+| B1 | `b1/` | 85 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
 | B2 | `b2/` | 135 | ~2,900 | Advanced - Literature, academic, professional |
 | C1 | `c1/` | 115 | ~2,800 | Proficient - Full complexity, specialized topics |
 | C2 | `c2/` | 80 | ~2,000 | Mastery - Native-level proficiency |
@@ -326,7 +326,7 @@ npm run claude:deploy
 |-------|---------|--------|----------|-----------|
 | A1 | 34/34 | ✅ Complete | ✅ All pass | Ready |
 | A2 | 5/50 | ⏳ In progress | ⏳ | Continue enrichment |
-| B1 | 5/80 | ⏳ In progress | ⏳ | Waiting for A2 |
+| B1 | 5/85 | ⏳ In progress | ⏳ | Waiting for A2 |
 | B2 | 0/125 | ❌ Not started | ❌ | Waiting for B1 |
 | C1 | 0/115 | ❌ Not started | ❌ | Waiting for B2 |
 | C2 | 0/80 | ❌ Not started | ❌ | Waiting for C1 |

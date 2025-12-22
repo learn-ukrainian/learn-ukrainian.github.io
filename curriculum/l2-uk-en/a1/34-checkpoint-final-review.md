@@ -309,120 +309,94 @@ At a café:
 
 ---
 
-## Summary
 
-| Skill | Key Pattern | Quick Test |
-|-------|-------------|------------|
-| **Cyrillic** | 33 letters, False Friends | Can you read "щоденно"? |
-| **Gender** | -а/-я = f, consonant = m, -о/-е = n | What gender is "книга"? |
-| **Verbs** | Present/Past/Future, gender in past | "Вона читав" or "читала"? |
-| **Cases** | Nom/Acc/Gen/Loc | "Немає часу" or "час"? |
-| **Daily Life** | Time, health, food, directions | Can you order at a café? |
+# Summary
 
-**Ready for A2?** If you can do all five skills confidently, you've completed A1! In A2, you'll learn:
-- All 7 cases (adding Dative, Instrumental, Vocative)
-- Aspect (perfective vs imperfective verbs)
-- More complex sentence structures
-- Expanded vocabulary across many domains
+Ви пройшли весь рівень А1! Тепер ви знаєте основи української мови. (You finished the whole A1 level! Now you know the basics of the Ukrainian language.) Ви вмієте читати, будувати прості речення та говорити про себе. Ви готові до рівня А2! Ви великі молодці! (You can read, build simple sentences and talk about yourself. You are ready for A2 level! You are great!)
 
 ---
-
-## Need More Practice?
 
 > [!resources] External Resources
 >
-> **Comprehensive Review:**
-> - 📖 [100 Links for Learning Ukrainian](https://www.ukrainianlessons.com/ukrainian-language-resources/) — Master resource hub
-> - 📖 [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table
-> - 🎙️ [Top 10 Podcast Episodes for Beginners](https://www.ukrainianlessons.com/episodes-for-ukrainian-language-beginners/) — Start here!
->
-> **Specific Topics:**
-> - 🎧 [Ukrainian Alphabet](https://www.ukrainianlessons.com/ukrainian-alphabet/) — All 33 letters with audio
-> - 📖 [Grammar: Past Tense](https://www.ukrainianlessons.com/grammar-past-tense/) — Past tense deep dive
-> - 📖 [Grammar: Future Tense](https://www.ukrainianlessons.com/grammar-future/) — Future tense forms
-> - 📖 [Ukrainian Greetings](https://www.ukrainianlessons.com/greetings/) — Greetings for every occasion
->
-> **Struggling with a skill?** Go back to:
-> - Cyrillic → Modules 1-2
-> - Gender → Module 3
-> - Verbs → Modules 6, 8, 21-22
-> - Cases → Modules 11-16
-> - Daily Life → Modules 23-33
+> **Media:**
+> - [Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — Master Cyrillic
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Complete audio course
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Essential video review
 
 ---
 
-## Activities
+# Activities
 
 ## quiz: Cyrillic Mastery
 > Read each word and choose the correct English meaning.
 
-1. привіт
+1. What accurately is the English meaning of "привіт" here?
    - [x] hello
    - [ ] goodbye
    - [ ] please
    - [ ] thank you
 
-2. вибачте
+2. How do you correctly translate the word "вибачте" today?
    - [ ] hello
    - [x] excuse me
    - [ ] please
    - [ ] goodbye
 
-3. смачного
+3. What correctly represented the Ukrainian word "смачного" in English?
    - [ ] thank you
    - [ ] goodbye
    - [x] bon appétit
    - [ ] please
 
-4. погода
+4. Which category summarizes the term "погода" correctly for you?
    - [ ] food
    - [x] weather
    - [ ] work
    - [ ] city
 
-5. здоров'я
+5. What accurately is the meaning of "здоров'я" in this lesson?
    - [x] health
    - [ ] happiness
    - [ ] holiday
    - [ ] family
 
-6. завтра
+6. How is the phrase "завтра" correctly described in Ukrainian today?
    - [ ] yesterday
    - [x] tomorrow
    - [ ] today
    - [ ] always
 
-7. вчора
+7. Which category correctly represents "вчора" in this specific context?
    - [x] yesterday
    - [ ] tomorrow
    - [ ] today
    - [ ] never
 
-8. дякую
+8. What accurately is the translation for "дякую" into English?
    - [ ] please
    - [ ] hello
    - [x] thank you
    - [ ] goodbye
 
-9. будь ласка
+9. Which phrase accurately summarizes the meaning of "будь ласка" now?
    - [ ] thank you
    - [x] please
    - [ ] hello
    - [ ] goodbye
 
-10. родина
+10. How would you correctly describe "родина" in a family context?
     - [ ] work
     - [ ] food
     - [x] family
     - [ ] city
 
-11. свято
+11. What is correctly the description for "свято" in English now?
     - [ ] family
     - [ ] food
     - [ ] work
     - [x] holiday
 
-12. лікар
+12. Which category correctly describes the person called "лікар" in Ukrainian?
     - [ ] teacher
     - [x] doctor
     - [ ] student
@@ -889,7 +863,7 @@ At a café:
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

@@ -42,19 +42,6 @@ vocabulary_count: 35
 ---
 
 ## Grammar
-
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Vocabulary: Family](https://www.youtube.com/watch?v=4W8ahBUh1Ho) — Let's Learn Ukrainian
->
->
-> **Family Vocabulary:** [Сім'я — Family](https://www.ukrainianlessons.com/vocabulary-family/) — Family tree with audio
->
-> **Podcast:** [FMU 1-33 | Family Members](https://www.ukrainianlessons.com/fmu33/) — Extended family vocabulary
->
-> **Podcast:** [ULP 1-06 | Talking About Family](https://www.ukrainianlessons.com/episode6/) — Family + "I have" construction
-
 ## Talking About Family
 
 > [!observe] Спостереження (Pattern Discovery)
@@ -246,25 +233,22 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 
 ---
 
-## Підсумок (Summary)
 
-Ви навчилися говорити про свою родину! (You've learned to talk about family!)
+# Summary
 
-**Що ви вивчили (What you learned):**
-
-- **Батьки (Parents):** батько/тато, мати/мама, батьки
-- **Брати і сестри (Siblings):** брат, сестра
-- **Бабусі й дідусі (Grandparents):** дідусь, бабуся, онук/онучка
-- **Розширена родина (Extended):** дядько, тітка, двоюрідний брат/сестра
-- **Шлюб (Marriage):** чоловік/дружина, хлопець/дівчина, наречений/наречена
-- **Модифікатори (Modifiers):** старший/молодший, одружений/неодружений
-- **Діти (Children):** дитина/діти, син/дочка
+Ви вивчили багато слів про сім'ю! Тепер ви знаєте, як звати ваших батьків, братів та сестер. (You learned many words about family! Now you know how to name your parents, brothers and sisters.) Ви знаєте, як сказати "у мене є" або "у мене немає". Це був чудовий урок! Ви любите свою родину? (This was a great lesson! Do you love your family?)
 
 ---
 
-**Наступний урок:** Свята та традиції!
+> [!resources] External Resources
+>
+> **Media:**
+> - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я
+> - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family
+> - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
-## Вправи (Activities)
+# Activities
+
 
 ## match-up: Family Members
 
@@ -319,14 +303,12 @@ Match the Ukrainian word with its English meaning.
 - сестра
 - чоловік
 - дружина
-- двоюрідний брат
 
 ### Молодше покоління (Younger Generation)
 - син
 - дочка
 - онук
 - онучка
-- племінник
 
 ---
 
@@ -587,8 +569,8 @@ Put the words in the correct order.
 5. в Києві / батьки / живуть / мої
    > [!answer] Мої батьки живуть в Києві
 
-6. одружений / він
-   > [!answer] Він одружений
+6. вже / дуже / одружений / він / довго
+   > [!answer] Він вже дуже довго одружений
 
 7. дітей / у них / двоє
    > [!answer] У них двоє дітей
@@ -638,7 +620,7 @@ Is this true or false?
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|

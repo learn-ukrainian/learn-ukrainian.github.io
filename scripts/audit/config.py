@@ -219,6 +219,104 @@ STAGE_ORDER = {
     'NARRATIVE': ['pre-engagement', 'immersion', 'narrative', 'deep-dive', 'recognition', 'controlled-production', 'free-production'],
 }
 
+# Activity complexity rules by type and level
+# Enforced by check_activity_complexity()
+ACTIVITY_COMPLEXITY = {
+    'quiz': {
+        'A1': {'min_len': 5, 'max_len': 10, 'options': [3, 4], 'min_items': 8},
+        'A2': {'min_len': 8, 'max_len': 15, 'options': [4], 'min_items': 8},
+        'B1': {'min_len': 12, 'max_len': 20, 'options': [4], 'min_items': 8},
+        'B2': {'min_len': 15, 'max_len': 25, 'options': [4], 'min_items': 8},
+        'C1': {'min_len': 18, 'max_len': 30, 'options': [4], 'min_items': 8},
+        'C2': {'min_len': 20, 'max_len': 35, 'options': [4], 'min_items': 8},
+    },
+    'match-up': {
+        'A1': {'pairs_min': 8, 'pairs_max': 10, 'min_items': 8},
+        'A2': {'pairs_min': 10, 'pairs_max': 12, 'min_items': 8},
+        'B1': {'pairs_min': 12, 'pairs_max': 14, 'min_items': 8},
+        'B2': {'pairs_min': 12, 'pairs_max': 16, 'min_items': 8},
+        'C1': {'pairs_min': 14, 'pairs_max': 18, 'min_items': 8},
+        'C2': {'pairs_min': 14, 'pairs_max': 18, 'min_items': 8},
+    },
+    'fill-in': {
+        'A1': {'sent_min': 3, 'sent_max': 5, 'min_items': 8},
+        'A2': {'sent_min': 6, 'sent_max': 8, 'min_items': 8},
+        'B1': {'sent_min': 10, 'sent_max': 14, 'min_items': 8},
+        'B2': {'sent_min': 12, 'sent_max': 16, 'min_items': 8},
+        'C1': {'sent_min': 14, 'sent_max': 18, 'min_items': 8},
+        'C2': {'sent_min': 16, 'sent_max': 20, 'min_items': 8},
+    },
+    'true-false': {
+        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
+        'A2': {'min_len': 6, 'max_len': 12, 'min_items': 8},
+        'B1': {'min_len': 10, 'max_len': 18, 'min_items': 8},
+        'B2': {'min_len': 14, 'max_len': 22, 'min_items': 8},
+        'C1': {'min_len': 16, 'max_len': 25, 'min_items': 8},
+        'C2': {'min_len': 18, 'max_len': 30, 'min_items': 8},
+    },
+    'group-sort': {
+        'A1': {'groups_min': 2, 'groups_max': 3, 'items_min': 8, 'items_max': 12},
+        'A2': {'groups_min': 2, 'groups_max': 3, 'items_min': 10, 'items_max': 14},
+        'B1': {'groups_min': 3, 'groups_max': 4, 'items_min': 12, 'items_max': 16},
+        'B2': {'groups_min': 3, 'groups_max': 4, 'items_min': 14, 'items_max': 18},
+        'C1': {'groups_min': 3, 'groups_max': 4, 'items_min': 16, 'items_max': 20},
+        'C2': {'groups_min': 3, 'groups_max': 4, 'items_min': 16, 'items_max': 20},
+    },
+    'unjumble': {
+        'A1': {'words_min': 4, 'words_max': 6, 'min_items': 6},
+        'A2': {'words_min': 8, 'words_max': 10, 'min_items': 6},
+        'B1': {'words_min': 12, 'words_max': 16, 'min_items': 6},
+        'B2': {'words_min': 14, 'words_max': 18, 'min_items': 6},
+        'C1': {'words_min': 16, 'words_max': 20, 'min_items': 6},
+        'C2': {'words_min': 18, 'words_max': 22, 'min_items': 6},
+    },
+    'anagram': {
+        'A1': {'min_len': 4, 'max_len': 8, 'min_items': 8},
+        # Not allowed A2+
+    },
+    'error-correction': {
+        'A2': {'errors': 1, 'min_len': 6, 'max_len': 10, 'min_items': 6},
+        'B1': {'errors': 2, 'min_len': 10, 'max_len': 16, 'min_items': 6},
+        'B2': {'errors': 2, 'min_len': 14, 'max_len': 20, 'min_items': 6},
+        'C1': {'errors': 2, 'min_len': 16, 'max_len': 24, 'min_items': 6},
+        'C2': {'errors': 2, 'min_len': 18, 'max_len': 28, 'min_items': 6},
+    },
+    'cloze': {
+        'A2': {'sentences': [3, 4, 5], 'blanks': [3, 4], 'gap_freq': [8, 12]},
+        'B1': {'sentences': [5, 6, 7, 8], 'blanks': [4, 5, 6], 'gap_freq': [6, 10]},
+        'B2': {'sentences': [8, 9, 10, 11, 12], 'blanks': [6, 7, 8], 'gap_freq': [5, 8]},
+        'C1': {'sentences': [10, 15], 'blanks': [8, 10], 'gap_freq': [4, 7]},
+        'C2': {'sentences': [12, 18], 'blanks': [10, 12], 'gap_freq': [4, 6]},
+    },
+    'mark-the-words': {
+        'A2': {'min_len': 8, 'max_len': 12, 'marks': [2, 3, 4], 'min_items': 6},
+        'B1': {'min_len': 12, 'max_len': 18, 'marks': [3, 4, 5], 'min_items': 6},
+        'B2': {'min_len': 16, 'max_len': 22, 'marks': [4, 5, 6], 'min_items': 6},
+        'C1': {'min_len': 18, 'max_len': 25, 'marks': [5, 8], 'min_items': 6},
+        'C2': {'min_len': 20, 'max_len': 30, 'marks': [6, 10], 'min_items': 6},
+    },
+    'dialogue-reorder': {
+        'A2': {'lines': [4, 5, 6], 'speakers': 2, 'min_items': 4},
+        'B1': {'lines': [6, 7, 8], 'speakers': [2, 3], 'min_items': 4},
+        'B2': {'lines': [8, 9, 10], 'speakers': [2, 3], 'min_items': 4},
+        'C1': {'lines': [10, 11, 12], 'speakers': [2, 3, 4], 'min_items': 4},
+    },
+    'select': {
+        'A2': {'min_len': 6, 'max_len': 10, 'options': [4, 5], 'correct': [2, 3], 'min_items': 6},
+        'B1': {'min_len': 10, 'max_len': 14, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},
+        'B2': {'min_len': 12, 'max_len': 18, 'options': [5, 6], 'correct': [2, 4], 'min_items': 6},
+        'C1': {'min_len': 14, 'max_len': 20, 'options': [5, 7], 'correct': [2, 4], 'min_items': 6},
+        'C2': {'min_len': 16, 'max_len': 22, 'options': [6, 8], 'correct': [3, 5], 'min_items': 6},
+    },
+    'translate': {
+        'A2': {'min_len': 4, 'max_len': 8, 'options': 4, 'min_items': 6},
+        'B1': {'min_len': 8, 'max_len': 14, 'options': 4, 'min_items': 6},
+        'B2': {'min_len': 12, 'max_len': 18, 'options': 4, 'min_items': 6},
+        'C1': {'min_len': 16, 'max_len': 22, 'options': 5, 'min_items': 6},
+        'C2': {'min_len': 18, 'max_len': 28, 'options': 5, 'min_items': 6},
+    }
+}
+
 # Valid activity types
 VALID_ACTIVITY_TYPES = [
     "match-up", "fill-in", "quiz", "true-false", "group-sort", "unjumble",
@@ -232,25 +330,6 @@ ACTIVITY_KEYWORDS = [
     "fill-in", "error-correction", "anagram", "cloze",
     "select", "translate", "dialogue-reorder", "mark-the-words"
 ]
-
-# Activity-type-specific minimum items (overrides level default)
-# Some activities naturally have fewer items (e.g., dialogue-reorder, cloze)
-ACTIVITY_MIN_ITEMS = {
-    'quiz': 8,
-    'match-up': 8,
-    'fill-in': 8,
-    'true-false': 8,
-    'group-sort': 8,
-    'unjumble': 6,          # Sentences are longer, fewer needed
-    'anagram': 8,
-    'error-correction': 6,  # Each item requires careful construction
-    'cloze': 6,             # Single passage with multiple blanks
-    'select': 6,
-    'translate': 6,
-    'dialogue-reorder': 5,  # Dialogues can't be too long
-    'mark-the-words': 6,    # Single passage
-    'gap-fill': 8,          # Alias for fill-in
-}
 
 # Core section keywords (not activities)
 CORE_KEYWORDS = [
@@ -318,10 +397,10 @@ LEVEL_CONFIG = {
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
-        'min_vocab': 20,
+        'min_vocab': 25,  # Increased for grammar terminology
         'min_engagement': 5,
-        'min_immersion': 50,
-        'max_immersion': 65,  # Graduated: Starts at 50%, goes up to 60%+
+        'min_immersion': 85,
+        'max_immersion': 98,  # 90-95% target, allow variance
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
@@ -330,10 +409,10 @@ LEVEL_CONFIG = {
         'min_activities': 12,
         'min_items_per_activity': 14,
         'min_types_unique': 4,
-        'min_vocab': 30,
+        'min_vocab': 35,
         'min_engagement': 5,
-        'min_immersion': 60,  # Starts at 60%
-        'max_immersion': 80,  # Max 80% for earlier B1 phases
+        'min_immersion': 85,
+        'max_immersion': 98,  # 90-95% target, allow variance
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
@@ -344,7 +423,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 5,
-        'immersion_graduated': True,  # Phase-based: B1.1 45-50%, B1.2 50-55%, etc.
+        'min_immersion': 85,
+        'max_immersion': 98,  # 90-95% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
@@ -355,8 +435,8 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 15,
         'min_engagement': 4,
-        'min_immersion': 70,  # Aligns with B1.7-8
-        'max_immersion': 85,
+        'min_immersion': 85,
+        'max_immersion': 98,  # 90-95% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'cloze', 'mark-the-words'}
     },
@@ -378,44 +458,44 @@ LEVEL_CONFIG = {
         'min_types_unique': 4,
         'min_vocab': 10,
         'min_engagement': 3,
-        'min_immersion': 70,
-        'max_immersion': 85,
+        'min_immersion': 85,
+        'max_immersion': 98,  # 90-95% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'cloze', 'error-correction'}
     },
     'B2-grammar': {
-        'target_words': 1500,
+        'target_words': 1750,
         'min_activities': 14,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
-        'min_vocab': 20,
+        'min_vocab': 25,  # Increased for advanced grammar terminology
         'min_engagement': 6,
-        'min_immersion': 60,
-        'max_immersion': 75,
+        'min_immersion': 90,
+        'max_immersion': 100,  # 95% target, full immersion
         'transliteration_allowed': False,
         'priority_types': {'error-correction', 'fill-in', 'unjumble', 'cloze'}
     },
     'B2-vocab': {
-        'target_words': 1500,
+        'target_words': 1750,
         'min_activities': 14,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
-        'min_vocab': 30,
+        'min_vocab': 35,
         'min_engagement': 6,
-        'min_immersion': 75,
-        'max_immersion': 90,
+        'min_immersion': 90,
+        'max_immersion': 100,  # 95% target, full immersion
         'transliteration_allowed': False,
         'priority_types': {'match-up', 'mark-the-words', 'translate', 'quiz'}
     },
     'B2': {
-        'target_words': 1500,
+        'target_words': 1750,
         'min_activities': 14,
         'min_items_per_activity': 16,
         'min_types_unique': 4,
         'min_vocab': 25,
         'min_engagement': 6,
-        'min_immersion': 75,
-        'max_immersion': 85,
+        'min_immersion': 90,
+        'max_immersion': 100,  # 95% Ukrainian immersion
         'transliteration_allowed': False,
         'priority_types': {'fill-in', 'unjumble', 'error-correction'}
     },
@@ -820,21 +900,20 @@ def get_a2_immersion_range(module_num: int) -> tuple[int, int]:
 def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
     """Returns (min%, max%) for B1 based on module number.
 
-    Phase-based immersion progression:
-    - B1.1-4 (01-45 Grammar-heavy): 50-60% (Aspect, Motion, Complex sentences)
-    - B1.5-6 (46-65 Vocab): 60-65%
-    - B1.7-8 (66-80 Ukraine/Skills): 65-70%
+    B1 Immersion Philosophy:
+    - M01-05 (B1.0 Bridge): NO immersion limit — teach grammar terminology in English/Ukrainian
+    - M06-85 (B1.1+): 90-95% Ukrainian — grammar explained IN Ukrainian using metalanguage
 
-    Note: B1.1-B1.4 use 50-60% because grammar modules have Ukrainian-heavy
-    activities (~95% Ukrainian) which require more English in theory sections
-    to compensate, but 45-50% proved unrealistic for this structure.
+    The bridge modules (M01-05) prepare students to understand grammar explanations
+    in Ukrainian by teaching them the necessary metalanguage vocabulary first.
     """
-    if module_num <= 45:
-        return (40, 68)  # B1.1-4: Grammar-heavy (Aspect, Motion, Complex, Participles)
-    elif module_num <= 65:
-        return (60, 80)  # B1.5-6 (46-65): Vocabulary expansion (65-75% target, widened)
-    else:
-        return (65, 85)  # B1.7-8 (66-80): Skills & Culture (70-80% target, widened)
+    if module_num <= 5:
+        # Bridge modules: no immersion gate
+        # These modules teach grammar terminology and can use as much English as needed
+        return (0, 100)
+
+    # All other B1 modules target 90-95% Ukrainian immersion
+    return (85, 98)  # Allow 85-98% to account for activity instructions
 
 
 def get_level_config(level_code: str, module_focus: str = None) -> dict:

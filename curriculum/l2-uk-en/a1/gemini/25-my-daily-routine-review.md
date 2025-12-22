@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 779/750
+- **Words:** ✅ 812/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,13 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.3% (target 35-55% (M25))
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (8 interactive elements)
+- **Immersion:** 🇺🇦 38.5% (target 35-55% (M25))
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -28,10 +22,10 @@
 | **My Day — A Typical Routine** | ⚪️ | 88 | Skipped |
 | **Examples in Context** | ✅ | 251 | Included in Core |
 | **Dialogues** | ✅ | 373 | Included in Core |
-| **Summary** | ✅ | 67 | Included in Core |
+| **Summary** | ✅ | 100 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Daily Actions** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: When Do We Do This?** | 🎮 | 11 | Activity (11 items, min 8) |
+| **group-sort: When Do We Do This?** | 🎮 | 12 | Activity (12 items, min 12) |
 | **fill-in: Reflexive Verb Forms** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Sequence Words** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Daily Routine** | 🎮 | 8 | Activity (8 items, min 8) |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1143/1000
+- **Words:** ✅ 1135/1000
 - **Activities:** ✅ 11/10
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 11/4 types
@@ -14,18 +14,15 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.5% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 38.5% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
 
-## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
-
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Warm-up** | ✅ | 149 | Included in Core |
+| **Warm-up** | ✅ | 110 | Included in Core |
 | **Presentation** | ✅ | 0 | Included in Core |
 | **What is Verbal Aspect?** | ⚪️ | 113 | Skipped |
 | **Aspect in Practice** | ⚪️ | 60 | Skipped |
@@ -37,6 +34,7 @@
 | **Practice Examples** | ⚪️ | 123 | Skipped |
 | **Summary** | ✅ | 0 | Included in Core |
 | **What You Learned** | ⚪️ | 348 | Skipped |
+| **Need More Practice?** | ⚪️ | 31 | Skipped |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Aspect Pairs** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Choose the Correct Aspect** | 🎮 | 12 | Activity (12 items, min 8) |
