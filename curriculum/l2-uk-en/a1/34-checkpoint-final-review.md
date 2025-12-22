@@ -312,7 +312,7 @@ At a café:
 
 # Summary
 
-Ви пройшли весь рівень А1! Тепер ви знаєте основи української мови. (You finished the whole A1 level! Now you know the basics of the Ukrainian language.) Ви вмієте читати, будувати прості речення та говорити про себе. Ви готові до рівня А2! Ви великі молодці! (You can read, build simple sentences and talk about yourself. You are ready for A2 level! You are great!)
+Ви пройшли весь рівень А1! Тепер ви знаєте основи української мови. (You finished the whole A1 level! Now you know the basics of the Ukrainian language.) Ви вмієте читати та будувати прості речення. Попереду рівень А2! Ви молодці! (You can read and build simple sentences. A2 level is ahead! You are great!)
 
 ---
 
@@ -405,20 +405,16 @@ At a café:
 ## match-up: Gender Recognition
 > Match each noun with its correct gender.
 
-| Ukrainian | Gender |
-|-----------|--------|
-| книга | feminine |
-| стіл | masculine |
-| вікно | neuter |
-| місто | neuter |
-| брат | masculine |
-| сестра | feminine |
-| море | neuter |
-| день | masculine |
-| ніч | feminine |
-| ім'я | neuter |
-| друг | masculine |
-| родина | feminine |
+- книга :: feminine
+- стіл :: masculine
+- вікно :: neuter
+- місто :: neuter
+- брат :: masculine
+- сестра :: feminine
+- море :: neuter
+- день :: masculine
+- ніч :: feminine
+- друг :: masculine
 
 ## fill-in: Demonstrative Agreement
 > Choose the correct demonstrative (цей/ця/це/ці).
@@ -632,24 +628,18 @@ At a café:
 - місто
 - родина
 - погода
-- здоров'я
-- свято
 
 ### Дієслова (Verbs)
 - читати
 - писати
 - говорити
 - працювати
-- жити
-- їсти
 
 ### Прикметники (Adjectives)
 - великий
 - гарний
 - новий
 - старий
-- холодний
-- смачний
 
 ## group-sort: Gender Recognition
 > Sort nouns by grammatical gender.
@@ -658,96 +648,90 @@ At a café:
 - стіл
 - брат
 - лікар
-- день
 - друг
-- студент
 
 ### Жіночий рід (Feminine)
 - книга
 - сестра
 - родина
 - ніч
-- кава
-- мама
 
 ### Середній рід (Neuter)
 - вікно
 - місто
 - море
-- ім'я
 - свято
-- здоров'я
 
 ## quiz: Daily Life Situations
 > Choose the correct response.
 
-1. Someone asks "Як справи?"
+1. What is the correct response when someone asks you "Як справи?" today?
    - [x] Добре, дякую!
    - [ ] Мене звати Олена.
    - [ ] До побачення!
    - [ ] Смачного!
 
-2. You want to order coffee:
+2. How do you correctly say "Coffee, please" to order in a café?
    - [x] Каву, будь ласка.
    - [ ] Де кава?
    - [ ] Кава смачна.
    - [ ] Я люблю каву.
 
-3. You're asking for directions:
+3. Which phrase is best for asking "Excuse me, where is the pharmacy?"?
    - [x] Вибачте, де аптека?
    - [ ] Аптека добра.
    - [ ] Я в аптеці.
    - [ ] Аптека!
 
-4. You have a headache:
+4. How do you accurately say that you currently have a headache?
    - [x] У мене болить голова.
    - [ ] Моя голова.
    - [ ] Голова тут.
    - [ ] Добра голова.
 
-5. It's someone's birthday:
+5. What do you correctly say for "Happy Birthday" to a friend?
    - [x] З Днем народження!
    - [ ] З Новим роком!
    - [ ] Добрий день!
    - [ ] Дякую!
 
-6. You want to know the time:
+6. How do you ask "What time is it?" in Ukrainian correctly?
    - [x] Котра година?
    - [ ] Яка погода?
    - [ ] Де час?
    - [ ] Який день?
 
-7. You want to ask the price:
+7. Which phrase should you use to ask "How much does it cost?"?
    - [x] Скільки коштує?
    - [ ] Де гроші?
    - [ ] Це дорого.
    - [ ] Дякую!
 
-8. It's raining outside:
+8. How would you accurately describe that it is raining outside right now?
    - [x] Йде дощ.
    - [ ] Дощ холодний.
    - [ ] Є дощ.
    - [ ] Буде дощити.
 
-9. You want to introduce yourself:
+9. What is the standard way to introduce your name in Ukrainian?
    - [x] Мене звати...
    - [ ] Як справи?
    - [ ] Добрий день!
    - [ ] Дякую!
 
-10. The weather is cold:
+10. How do you accurately say "It is cold" to describe the weather?
     - [x] Холодно.
     - [ ] Холодний.
     - [ ] Холод.
     - [ ] Холодна.
 
-11. Someone says "Смачного!" — you respond:
+11. Someone says "Смачного!" to you — what is the correct response today?
     - [x] Дякую!
     - [ ] Привіт!
     - [ ] До побачення!
     - [ ] Вибачте!
 
-12. You're leaving:
+12. How do you accurately say "Goodbye" when you are leaving a place?
     - [x] До побачення!
     - [ ] Привіт!
     - [ ] Дякую!
@@ -846,20 +830,16 @@ At a café:
 ## match-up: Time Expressions
 > Match the Ukrainian phrase with its English meaning.
 
-| Ukrainian | English |
-|-----------|---------|
-| Котра година? | What time is it? |
-| О котрій годині? | At what time? |
-| П'ята година | Five o'clock |
-| О сьомій | At seven |
-| Вранці | In the morning |
-| Ввечері | In the evening |
-| Вчора | Yesterday |
-| Завтра | Tomorrow |
-| Сьогодні | Today |
-| Щодня | Every day |
-| Минулого тижня | Last week |
-| Наступного року | Next year |
+- Котра година? :: What time is it?
+- О котрій годині? :: At what time?
+- П'ята година :: Five o'clock
+- О сьомій :: At seven
+- Вранці :: In the morning
+- Ввечері :: In the evening
+- Вчора :: Yesterday
+- Завтра :: Tomorrow
+- Сьогодні :: Today
+- Щодня :: Every day
 
 ---
 

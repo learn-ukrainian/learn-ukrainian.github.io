@@ -65,7 +65,7 @@ Because in Ukrainian, **gender affects everything**:
 
 **Марко:** Де моя **книга**? (Where is my book?)
 **Таня:** Твоя **книга** на **столі**. (Your book is on the table.)
-**Марко:** а де **вікно**? (And where is the window?)
+**Марко:** А де **вікно**? (And where is the window?)
 **Таня:** **Вікно** там. (The window is there.)
 
 Notice:

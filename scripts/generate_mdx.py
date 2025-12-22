@@ -242,12 +242,20 @@ def parse_match_up(content: str) -> list[MatchPair]:
     if pairs:
         return pairs
 
-    # Try table format
+    # Try table format (skip header row and separator)
+    header_skipped = False
     for line in content.split('\n'):
         line = line.strip()
         if line.startswith('|') and '|' in line[1:]:
             cells = [c.strip() for c in line.split('|')[1:-1]]
-            if len(cells) >= 2 and cells[0] and cells[1] and not cells[0].startswith('-'):
+            # Skip separator line (|---|---|)
+            if cells and cells[0].startswith('-'):
+                continue
+            # Skip header row (first non-separator row)
+            if not header_skipped:
+                header_skipped = True
+                continue
+            if len(cells) >= 2 and cells[0] and cells[1]:
                 pairs.append(MatchPair(left=cells[0], right=cells[1]))
 
     return pairs

@@ -56,7 +56,7 @@
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Module Range** | M01-34 | M01-50 | **M01-80** | **M01-135** | M01-115 | M01-80 |
 | **Core Word Count** | **Graduated*** | **1000+** | **1500+** | **1750+** | **2000+** | **2000+** |
-| **Immersion (% Ukr)** | **10-40%*** | **40-55%*** | **50-80%*** | **60-90%*** | **90-100%** | **98-100%** |
+| **Immersion (% Ukr)** | **10-40%*** | **40-55%*** | **85-98%*** | **100%** | **100%** | **100%** |
 | **Min Vocab Words** | 20+ | 25+ | 20+/30+ | 20+/30+ | 25+ | 25+ |
 | **Example Sentences** | 12+ | 18+ | 24+ | 24+ | 30+ | 32+ |
 | **Engagement Boxes** | 3+ | 4+ | 5+ | 6+ | 7+ | 8+ |
@@ -122,14 +122,15 @@
 > *   дієслово (verb), іменник (noun), прикметник (adjective), відмінок (case)
 > *   підрядне речення (subordinate clause), підмет (subject), присудок (predicate)
 >
-> **B2 (95%) — Full Ukrainian Immersion:**
-> *   ✅ UKRAINIAN: All grammar, all cultural content, all explanations
+> **B2 (100%) — Full Ukrainian Immersion:**
+> *   ✅ UKRAINIAN: All grammar, all cultural content, all explanations, all tips, all instructions
 > *   ✅ UKRAINIAN: Advanced metalanguage (дієприслівник, пасивний стан, функціональний стиль)
-> *   ✅ ENGLISH: Only the "Переклад" column in vocabulary tables
+> *   ✅ ENGLISH: ONLY the "Переклад" column in vocabulary tables — nothing else
+> *   ❌ NO Language Links, no English explanations, no English tips
 >
-> **C1 (95%) — Near-total immersion:**
+> **C1 (100%) — Full immersion:**
 > *   ✅ UKRAINIAN: All grammar, all explanations, all cultural content
-> *   ✅ ENGLISH: Only in dedicated `🔗 Language Link` boxes for cross-linguistic awareness
+> *   ✅ ENGLISH: ONLY the "Переклад" column in vocabulary tables — nothing else
 >
 > **LIT Track (Specialization) — 95-100% Ukrainian:**
 > *   ✅ UKRAINIAN: Everything. Context, analysis, glossaries (UA-UA).
@@ -405,38 +406,40 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B2-grammar` | 01-40 | 1750+ | 25+ | 95% | Passive voice, participles, register, word formation |
-| `B2-vocab` | 41-70 | 1750+ | 35+ | 95% | Phraseology: proverbs, idioms, synonyms |
-| `B2-history` | 71-95 | 1400+ | 20+ | 95% | Ukrainian history narratives |
-| `B2-biography` | 96-120 | 1400+ | 20+ | 95% | Biographical narratives (24 notable Ukrainians) |
-| `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10+ | 95% | Phase review & assessment |
-| `B2-capstone` | 121-135 | 1200+ | 10 | 95% | Research project & oral defense |
+| `B2-grammar` | 01-40 | 1750+ | 25+ | 100% | Passive voice, participles, register, word formation |
+| `B2-vocab` | 41-70 | 1750+ | 35+ | 100% | Phraseology: proverbs, idioms, synonyms |
+| `B2-history` | 71-95 | 1400+ | 20+ | 100% | Ukrainian history narratives |
+| `B2-biography` | 96-120 | 1400+ | 20+ | 100% | Biographical narratives (24 notable Ukrainians) |
+| `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10+ | 100% | Phase review & assessment |
+| `B2-capstone` | 121-135 | 1200+ | 10 | 100% | Research project & oral defense |
 
-**Note:** B2 achieves full immersion — all grammar terminology and explanations in Ukrainian.
+**Note:** B2 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 
 ### C1 Module Types
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `C1-academic` | 01-20 | 1750+ | 24+ | 85-90% | Academic Ukrainian, morphology, syntax |
-| `C1-professional` | 21-35 | 1600+ | 24+ | 90-95% | Professional & social register |
-| `C1-stylistics` | 36-55 | 1600+ | 24+ | 90-95% | 5 functional styles, rhetoric, argumentation |
-| `C1-folk` | 56-80 | 2000+ | 24+ | 95%+ | Folk culture, arts, dialects, Surzhyk |
-| `C1-literature` | 81-115 | 2000+ | 24+ | 95%+ | Literary analysis: classics to contemporary |
-| `C1-checkpoint` | 20, 35, 55, 80, 95, 115 | 1200+ | 15 | 90-95% | Phase review & CEFR self-assessment |
-| `C1-capstone` | 111-112 | 1500+ | 15 | 95%+ | Research paper (2000+ words) & oral defense |
+| `C1-academic` | 01-20 | 1750+ | 24+ | 100% | Academic Ukrainian, morphology, syntax |
+| `C1-professional` | 21-35 | 1600+ | 24+ | 100% | Professional & social register |
+| `C1-stylistics` | 36-55 | 1600+ | 24+ | 100% | 5 functional styles, rhetoric, argumentation |
+| `C1-folk` | 56-80 | 2000+ | 24+ | 100% | Folk culture, arts, dialects, Surzhyk |
+| `C1-literature` | 81-115 | 2000+ | 24+ | 100% | Literary analysis: classics to contemporary |
+| `C1-checkpoint` | 20, 35, 55, 80, 95, 115 | 1200+ | 15 | 100% | Phase review & CEFR self-assessment |
+| `C1-capstone` | 111-112 | 1500+ | 15 | 100% | Research paper (2000+ words) & oral defense |
+
+**Note:** C1 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 
 ### C2 Module Types
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `C2-stylistic` | 01-20 | 1800+ | 25+ | 98%+ | 7 functional styles (incl. religious, epistolary) |
-| `C2-literary` | 21-40 | 1600+ | 25+ | 98%+ | Literary mastery, creative writing, criticism |
-| `C2-professional` | 41-60 | 1600+ | 25+ | 98%+ | Professional meta-skills (domain-agnostic) |
-| `C2-checkpoint` | 20, 40, 60, 66 | 1400+ | 15 | 98%+ | Phase review & assessment |
-| `C2-capstone` | 67-80 | 1400+ | 15-25 | 98%+ | Capstone project: 10,000-word paper OR literary work |
+| `C2-stylistic` | 01-20 | 1800+ | 25+ | 100% | 7 functional styles (incl. religious, epistolary) |
+| `C2-literary` | 21-40 | 1600+ | 25+ | 100% | Literary mastery, creative writing, criticism |
+| `C2-professional` | 41-60 | 1600+ | 25+ | 100% | Professional meta-skills (domain-agnostic) |
+| `C2-checkpoint` | 20, 40, 60, 66 | 1400+ | 15 | 100% | Phase review & assessment |
+| `C2-capstone` | 67-80 | 1400+ | 15-25 | 100% | Capstone project: 10,000-word paper OR literary work |
 
-**Strategic 2% English at C2:** Only for comparative linguistics ("Unlike English...") or untranslatable scholarly terms.
+**Note:** C2 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 
 ---
 

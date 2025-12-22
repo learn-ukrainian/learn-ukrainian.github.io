@@ -16,7 +16,7 @@ For Modules 02-135, we will follow the **"Create"** strategy with strict adheren
 
 1.  **Pedagogy**: **Content-Based Instruction (CBI)**.
     *   *Motto*: "Reading to Learn".
-    *   *Immersion*: **80% Ukrainian**. English usage is restricted to complex metalinguistic comparisons only.
+    *   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
 2.  **Vocabulary Strategy: Expansion & De-duplication**
     1.  **Expansion**: ~25 *new* words per module (High-value, low-frequency).
     2.  **Context**: Authentic texts (media, literature, history).
@@ -37,7 +37,7 @@ The B2 plan has been updated (Issue 117). Critical requirements to implement:
 ### 1. Pedagogical Compliance
 - [ ] **Authenticity**: Texts must mimic real Ukrainian media/literature styles.
 - [ ] **Model Answers**: MANDATORY for all writing tasks.
-- [ ] **Immersion**: > 80% Ukrainian.
+- [ ] **Immersion**: 100% Ukrainian (English only in vocabulary translations).
 
 ### 2. Module Richness (Audit Pass)
 - [ ] **Word Count**: > 1200 words (high density reading).

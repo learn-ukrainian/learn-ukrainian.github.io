@@ -4,32 +4,25 @@
 **Modules:** 01-135 (135 modules)
 **Vocabulary Target:** ~2,900 new words (~22/module)
 **Cumulative Target:** ~6,200 words after B2
-**Immersion:** 20% English / 80% Ukrainian
+**Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **Note:** Folk Culture & Arts (25 modules) moved to C1 for better vocabulary balance.
 
 ---
 
-### Bilingual Content Strategy (B2 Specific)
+### Full Immersion Strategy (B2 Specific)
 
-**Target Immersion:** 80% Ukrainian / 20% English
+**Target Immersion:** 100% Ukrainian
 
-B2 modules use a **reduced bilingual approach** compared to B1:
-- **Ukrainian:** All examples, dialogues, narratives, cultural content, activities, and most explanations
-- **English:** Only for the most complex metalinguistic concepts (passive voice nuances, register system theory, participle formation logic)
+B2 modules use **FULL immersion** — all body text is in Ukrainian:
+- **Ukrainian (100%):** All examples, dialogues, narratives, cultural content, activities, explanations, tips, grammar theory, metalinguistic concepts
+- **English (vocabulary table only):** The "Переклад" column in vocabulary tables — nothing else
 
-**Pattern:** Use `> 🔗 **Language Link**` boxes sparingly for cross-linguistic insights:
+**No Language Link boxes at B2.** All explanations, including passive voice, participles, and register theory, are written entirely in Ukrainian. Students learned all grammar terminology by B1.
 
-```markdown
-> 🔗 **Register Shift**
->
-> Ukrainian differentiates official/scientific/colloquial registers more sharply than English.
-> The passive construction "Наказ видано" signals bureaucratic register instantly.
-```
+**Why full immersion at B2?** At B2, learners have internalized aspect, all cases, and Ukrainian grammar terminology. They can understand complex grammar explanations in Ukrainian. English scaffolding would be a step backwards.
 
-**Why less English than B1?** At B2, learners have internalized aspect and basic grammar. The cognitive load for new concepts (passive, participles, register) is lower because learners can build on existing Ukrainian knowledge.
-
-**Audit threshold:** Immersion must stay ≥70% for lesson content (before `# Activities`).
+**Audit threshold:** Immersion must stay ≥98% for lesson content.
 
 ---
 
@@ -193,7 +186,7 @@ Before writing/reviewing any B2 module, verify:
 | Syntax | Multi-clause, discourse markers |
 | Word formation | Compounds, neologisms as needed |
 | Vocabulary | ~20-25 new words per module |
-| Immersion | 85% Ukrainian |
+| Immersion | 100% Ukrainian |
 
 ---
 
@@ -1528,7 +1521,7 @@ Participles agree with noun in gender, number, case:
 - Apply advanced conjunctions
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Deep Immersion (80-100%):** Shift to full "Reading to Learn". English is allowed ONLY for translation equivalents of specific idioms where meaning cannot be inferred. All narratives, instructions, and context must be in Ukrainian.
+- **Full Immersion (100%):** All content in Ukrainian. English is allowed ONLY in vocabulary table translations. All narratives, instructions, and context must be in Ukrainian.
 
 ### Grammar Progression
 
@@ -2361,7 +2354,7 @@ Participles agree with noun in gender, number, case:
 - Engage with historical texts and narratives
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Narrative Immersion (85-100%):** History modules must be reading-centric. No English explanations of history are permitted. English is allowed only for defining complex obscure archaic terms in vocabulary lists.
+- **Full Immersion (100%):** History modules must be reading-centric. No English explanations permitted. English is allowed ONLY in vocabulary table translations.
 
 ### Module Specifications
 
@@ -2416,7 +2409,7 @@ Participles agree with noun in gender, number, case:
 - Appreciate diverse contributions
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Advanced Immersion (85-100%):** Biographical narratives must be native-level complexity (adapted B2). No English scaffolding for content. Students must "read to survive".
+- **Full Immersion (100%):** Biographical narratives must be native-level complexity (adapted B2). No English scaffolding for content. English is allowed ONLY in vocabulary table translations.
 
 ### Module Specifications
 
@@ -2469,7 +2462,7 @@ Participles agree with noun in gender, number, case:
 - Prepare for B2 certification
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Full Immersion (90-100%):** Capstone phase operates as a native environment. No English allowed except for meta-discussion of translation challenges in academic writing.
+- **Full Immersion (100%):** Capstone phase operates as a native environment. No English allowed except vocabulary table translations.
 
 ### Module Specifications
 
@@ -2646,7 +2639,7 @@ Before generating any B2 module:
 - [ ] Register awareness is integrated
 - [ ] Cultural content is decolonized
 - [ ] Activities match module type
-- [ ] Immersion level is 80% Ukrainian
+- [ ] Immersion level is 100% Ukrainian (English only in vocabulary translations)
 - [ ] No forward references to unlearned content
 - [ ] Review modules cover all preceding content
 

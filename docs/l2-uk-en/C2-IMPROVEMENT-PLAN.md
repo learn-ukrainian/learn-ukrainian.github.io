@@ -298,7 +298,7 @@ This is the main work. All modules need creation from scratch.
 
 **Per-module requirements:**
 - 10-14 activities (varies by phase)
-- 98% Ukrainian immersion
+- 100% Ukrainian immersion (full)
 - 25 vocabulary words average
 - Model answers for all production tasks
 - Individual voice development
@@ -422,7 +422,7 @@ Nothing depends on C2:
 2. **Zero implementation** - Unlike C1 (which has 2 exemplary modules), C2 has nothing
 3. **Dependency chain critical** - B2 at 0% blocks everything above it
 4. **Specialization approach** - Meta-skills for ANY domain (excellent design decision)
-5. **98% immersion** - Nearly full Ukrainian; 2% must be strategic
+5. **100% immersion** - Full Ukrainian; English only in vocabulary translations
 6. **7 functional styles** - Includes religious and epistolary (unique to C2)
 7. **Capstone is substantial** - 10,000+ words or equivalent creative work
 8. **Optional extension tracks** - Planned for future (Legal, Medical, IT, etc.)

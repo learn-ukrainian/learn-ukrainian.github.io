@@ -16,6 +16,9 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 38.5% (target 35-55% (M25))
 
+## MDX VALIDATION
+✅ No issues found
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|

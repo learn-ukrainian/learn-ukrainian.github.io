@@ -4,7 +4,7 @@
 **Modules:** 01-115 (115 modules)
 **Vocabulary Target:** ~2,800 new words (~24/module)
 **Cumulative Target:** ~9,000 words after C1
-**Immersion:** 5% English / 95% Ukrainian
+**Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **Note:** Folk Culture & Arts (25 modules) moved from B2 for better vocabulary balance.
 
@@ -178,7 +178,7 @@ Before writing/reviewing any C1 module, verify:
 | Punctuation | Complex sentence mastery |
 | Rhetoric | Device recognition and production |
 | Vocabulary | ~24 new words per module |
-| Immersion | 95% Ukrainian |
+| Immersion | 100% Ukrainian |
 
 ---
 
@@ -2970,7 +2970,7 @@ This document contains:
 - Phase-by-phase media requirements for all 115 modules
 - Video/Audio source tables with permission tracking
 - Self-created content needs
-- Quality standards for C1 immersion (95% Ukrainian)
+- Quality standards for C1 immersion (100% Ukrainian)
 
 ---
 
@@ -3135,7 +3135,7 @@ Before generating any C1 module:
 - [ ] Register awareness is advanced
 - [ ] Literary content is authentic
 - [ ] Activities match module type
-- [ ] Immersion level is 95% Ukrainian
+- [ ] Immersion level is 100% Ukrainian
 - [ ] No forward references to unlearned content
 - [ ] Review modules cover all preceding content
 

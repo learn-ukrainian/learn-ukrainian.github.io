@@ -38,7 +38,7 @@ The C1 plan is already aligned with the 2024 State Standard. Every new module mu
 
 ### 1. Pedagogical Compliance
 - [ ] **Register**: Explicit focus on register shifting (e.g., transforming casual -> formal).
-- [ ] **Immersion**: **95% Ukrainian**. English allowed *only* for meta-linguistic explanations where misunderstanding would be critical, or in the very first "Diagnostic" setup.
+- [ ] **Immersion**: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
 - [ ] **Structure**: Must include `Diagnostic`, `Analysis`, `Deep Dive`, `Practice` sections.
 
 ### 2. Module Richness (Audit Pass)

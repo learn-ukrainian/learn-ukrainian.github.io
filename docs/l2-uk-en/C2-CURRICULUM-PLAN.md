@@ -4,7 +4,7 @@
 **Modules:** 01-80 (80 modules)
 **Vocabulary Target:** ~2,000 new words (~25/module)
 **Cumulative Target:** ~11,000 words after C2
-**Immersion:** 2% English / 98% Ukrainian
+**Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
 > **Note:** C2 represents native-like mastery with focus on stylistic perfection, literary creation, and professional specialization.
 
@@ -195,7 +195,7 @@ Before writing/reviewing any C2 module, verify:
 | Literary | Creative production ability |
 | Academic | Publication-ready writing |
 | Vocabulary | ~25 new words per module |
-| Immersion | 98% Ukrainian |
+| Immersion | 100% Ukrainian |
 
 ---
 
@@ -1158,7 +1158,7 @@ Before generating any C2 module:
 - [ ] Literary analysis at scholar level
 - [ ] Professional specialization appropriate
 - [ ] Activities require production, not just comprehension
-- [ ] Immersion level is 98% Ukrainian
+- [ ] Immersion level is 100% Ukrainian
 - [ ] Prepares for real-world professional use
 
 ---

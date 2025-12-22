@@ -92,7 +92,7 @@ C1 can begin
 ### From Gemini Assessment
 
 7. **History Phase Placement** - Proverb modules may reference untaught historical contexts
-8. **Immersion Level Jump** - B1 70% → B2 80% may be too aggressive
+8. **Immersion Level** - B2 now uses 100% full immersion (English only in vocabulary translations)
 9. **Activity Density Risk** - 14+ activities × 135 modules = quality risk
 10. **Capstone Project Scope** - M121-122 specifications too vague
 11. **Folk Culture Gap** - Moved to C1 but needed for B2 proverb context
@@ -231,18 +231,18 @@ Current visible checkpoints: M110 (B2.4), M125 (Final)
 **Effort:** Low
 **Status:** ✅ IMPLEMENTED (2025-12-21)
 
-Current plan jumps from B1 (50-70%) to B2 (80%). This may be too aggressive.
+**UPDATED 2025-12-22:** B2 now uses **100% full immersion** (English only in vocabulary table translations).
 
-**Implemented graduated immersion:**
+**All B2 modules use full immersion:**
 | Phase | Content Type | Immersion |
 |-------|-------------|-----------|
-| B2.1a-b (M01-40) | Grammar (metalinguistic) | 75-80% |
-| B2.2 (M41-70) | Phraseology | 80-100% |
-| B2.3 (M71-95) | History (narrative) | 85-100% |
-| B2.4 (M96-120) | Biographies (narrative) | 85-100% |
-| B2.5 (M121-135) | Capstone (pre-C1) | 90-100% |
+| B2.1a-b (M01-40) | Grammar | 100% |
+| B2.2 (M41-70) | Phraseology | 100% |
+| B2.3 (M71-95) | History (narrative) | 100% |
+| B2.4 (M96-120) | Biographies (narrative) | 100% |
+| B2.5 (M121-135) | Capstone (pre-C1) | 100% |
 
-**Rationale:** Grammar requires more metalinguistic explanation (English). Narrative content (history, biographies) can sustain higher immersion.
+**Rationale:** Students learned all grammar terminology at B1. They can understand metalinguistic explanations in Ukrainian.
 
 **Action:**
 - [ ] Update immersion targets in curriculum plan
@@ -396,7 +396,7 @@ This is the main work. All modules need creation from scratch.
 
 **Per-module requirements:**
 - 10-14 activities (varies by type)
-- 70-90% immersion (graduated)
+- 100% immersion (full Ukrainian)
 - 25 vocabulary words average
 - Signature activities as specified
 - Model answers for writing tasks
@@ -461,7 +461,7 @@ B2 achieves **A+ rating** when:
 - [ ] Module count resolved and consistent
 - [ ] Phase numbering unified
 - [ ] All 125/135 modules implemented
-- [ ] Graduated immersion applied (70% → 90%)
+- [ ] Full immersion applied (100%)
 - [ ] Intermediate checkpoints added
 - [ ] Activity counts appropriate per module type
 - [ ] Capstone fully specified with model answer
@@ -596,7 +596,7 @@ python3 scripts/audit_module.py [path]  # Validate module vocabulary
 
 ### Immersion & Metalanguage Scaffolding
 
-**Critical:** At B2's 70-90% immersion, learners encounter sophisticated Ukrainian metalanguage. All grammatical terminology must be explicitly taught BEFORE use.
+**Critical:** At B2's 100% immersion, learners work entirely in Ukrainian. All grammatical terminology was taught at B1 and is now used naturally.
 
 **Problem:** Instructions and explanations use terms learners have never been taught:
 - "Визначте стиль тексту" — but what is "стиль"?

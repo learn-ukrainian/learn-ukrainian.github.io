@@ -33,7 +33,7 @@
 ### From Gemini Assessment
 
 6. **Vocabulary Discrepancy** - Header says ~2,900 words, summary shows ~2,800
-7. **Immersion Jump** - 80% → 95% is largest jump between levels
+7. **Immersion Jump** - B1 at 90-95% → B2/C1 at 100% (now unified)
 8. **Literature Module Specificity** - Contemporary authors get less depth than classics
 9. **Capstone Scope Undefined** - Length, topics, rubric not specified
 10. **Folk Culture Positioning** - Could inform stylistics (archaic forms)
@@ -96,19 +96,19 @@ The C1-CURRICULUM-PLAN.md has comprehensive State Standard mapping. Verify cover
 **Effort:** Low
 **Status:** ✅ Implemented
 
-Current plan jumps from B2 (80%) to C1 (95%). This 15-point jump is the largest in the curriculum.
+B2 and C1 now use 100% full immersion (unified Dec 2025).
 
-**Implemented Graded Immersion (Updated Dec 2025):**
+**Implemented Immersion (Updated Dec 2025):**
 | Phase | Content Type | Immersion |
 |-------|-------------|-----------|
-| C1.1 (M01-20) | Academic (metalinguistic) | 90-100% |
-| C1.2 (M21-35) | Professional/Social | 95-100% |
-| C1.3 (M36-55) | Stylistics/Rhetoric | 95-100% |
-| C1.4 (M56-80) | Folk Culture | 95-100% |
-| C1.5 (M81-95) | Literature Classics | 95-100% |
-| C1.6 (M96-115) | Literature Modern + Capstone | 95-100% |
+| C1.1 (M01-20) | Academic (metalinguistic) | 100% |
+| C1.2 (M21-35) | Professional/Social | 100% |
+| C1.3 (M36-55) | Stylistics/Rhetoric | 100% |
+| C1.4 (M56-80) | Folk Culture | 100% |
+| C1.5 (M81-95) | Literature Classics | 100% |
+| C1.6 (M96-115) | Literature Modern + Capstone | 100% |
 
-**Rationale:** Academic content requires more metalinguistic explanation. Cultural/literary content can sustain higher immersion.
+**Rationale:** Full immersion for all C1 content. English is allowed ONLY in vocabulary table translations.
 
 **Action:**
 - [x] Update immersion targets in curriculum plan
@@ -335,7 +335,7 @@ This is the main work. All modules need creation using M01-02 as quality baselin
 
 **Per-module requirements:**
 - 12-16 activities (varies by type)
-- 85-95% immersion (graduated)
+- 100% immersion (full Ukrainian)
 - 24 vocabulary words average
 - Signature activities as specified
 - Model answers for writing tasks
@@ -383,7 +383,7 @@ C1 cannot realistically proceed until B2 has significant content. Learners need:
 
 ### Phase 1: Plan Fixes (Before Any New Modules)
 - [x] Reconcile vocabulary target (~2,800) ✅
-- [x] Define graduated immersion (85% → 95%) ✅
+- [x] Define full immersion (100%) ✅
 - [x] Expand literature module specificity ✅
 - [x] Define capstone scope with rubrics ✅
 - [x] Verify checkpoint specifications ✅
@@ -415,7 +415,7 @@ C1 cannot realistically proceed until B2 has significant content. Learners need:
 C1 achieves **A+ rating** when:
 
 - [x] Vocabulary target reconciled (~2,800 words) ✅
-- [x] Graduated immersion implemented (85% → 95%) ✅
+- [x] Full immersion implemented (100%) ✅
 - [ ] All 115 modules implemented
 - [x] Contemporary authors have comparable depth to classics ✅ (M104-106 expanded)
 - [x] Capstone fully specified with model answer and rubric ✅ (M111-112)
@@ -558,7 +558,7 @@ python3 scripts/audit_module.py [path]  # Validate module vocabulary
 
 ### Immersion & Metalanguage Scaffolding
 
-**Critical:** At C1's 85-95% immersion, nearly all instruction is in Ukrainian. Academic and literary metalanguage must be explicitly taught.
+**Critical:** At C1's 100% immersion, all instruction is in Ukrainian. Academic and literary metalanguage must be explicitly taught.
 
 **Problem:** C1 content requires understanding of academic/literary terminology:
 - "Проаналізуйте стилістичні засоби" — but what are "стилістичні засоби"?

@@ -17,7 +17,7 @@ For Modules 03-80, we will follow the **"Create"** strategy with strict adherenc
 1.  **Template**: Use M02 (`02-euphony-complete-system.md`) as the template for "Concept Heavy" modules.
 2.  **Pedagogy**: Focus on **Stylistic Precision** and **Creative Production**.
     *   *Activities*: Must include "Transform" (Style rewriting) and "Analyze" (Literary critique).
-    *   *Immersion*: **98% Ukrainian**. English is strictly forbidden except for extremely complex metalinguistic comparisons (e.g., comparing Slavic vs Germanic syntax logic).
+    *   *Immersion*: **100% Ukrainian**. English is allowed ONLY in vocabulary table translations.
 3.  **Vocabulary Strategy: Expansion & De-duplication**
     We will conduct a **Vocabulary Review** for every module during the creation process:
 
@@ -40,7 +40,7 @@ Aligned with C2 ("Рівень вільного володіння другог�
 ### 1. Pedagogical Compliance
 - [ ] **Stylistic Transformation**: Every module must task the learner with rewriting a text from one style to another.
 - [ ] **Model Answers**: MANDATORY for all creative writing tasks.
-- [ ] **Immersion**: >98% Ukrainian text.
+- [ ] **Immersion**: 100% Ukrainian (English only in vocabulary translations).
 
 ### 2. Module Richness (Audit Pass)
 - [ ] **Word Count**: > 1200 words (C2 modules are dense theoretical & literary texts).

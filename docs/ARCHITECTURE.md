@@ -323,9 +323,9 @@ When rewriting modules, apply these standards:
 | A2+ | 61-80 | 50% | 50% | Transition phase |
 | B1 | 81-120 | 40% | 60% | Ukrainian headers, some Ukrainian instructions |
 | B1+ | 121-160 | 30% | 70% | More Ukrainian, English for complex grammar |
-| B2 | 161-200 | 15% | 85% | Near-full immersion |
-| B2+ | 201-240 | 10% | 90% | Full immersion |
-| C1 | 241+ | 5% | 95% | Near-native |
+| B2 | 161-200 | 0% | 100% | Full immersion |
+| B2+ | 201-240 | 0% | 100% | Full immersion |
+| C1 | 241+ | 0% | 100% | Full immersion (native) |
 
 ## Vibe Integration
 
