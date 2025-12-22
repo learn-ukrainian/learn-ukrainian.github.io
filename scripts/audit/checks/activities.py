@@ -16,9 +16,10 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
     A1 M01-M05 Exception: Less strict rules for very early modules (alphabet phase).
     """
     violations = []
-    
-    # Relax rules for A1 M01-M05
+
+    # Relax rules for A1 M01-M05 and B1 M01-M05 (bridge modules)
     is_a1_early = (level_code == 'A1' and module_num <= 5)
+    is_b1_bridge = (level_code == 'B1' and module_num <= 5)
     
     # 1. Parse all activities
     activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
@@ -49,6 +50,15 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
                 rules['groups_min'] = 2
             elif act_type == 'fill-in':
                 rules['min_items'] = 6
+
+        # Apply B1 Bridge Relaxations (M01-M05 teach terminology, not complex grammar)
+        if is_b1_bridge:
+            if act_type == 'quiz':
+                rules['min_len'] = 6  # Shorter prompts for terminology questions
+                rules['max_len'] = 15
+            elif act_type == 'unjumble':
+                rules['words_min'] = 8  # Shorter sentences acceptable
+                rules['words_max'] = 14
         
         # --- Check Item Count ---
         

@@ -158,6 +158,8 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: 
 
     # Auto-detect based on module number
     if level_code == 'B1':
+        if module_num <= 5:
+            return 'bridge'  # M01-05: Bridge modules (metalanguage)
         return 'grammar' if module_num <= 45 else 'vocab'
     elif level_code == 'B2':
         return 'grammar' if module_num <= 40 else 'vocab'

@@ -14,10 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 41.1% (target 35-55% (M31))
+- **Immersion:** 🇺🇦 41.2% (target 35-55% (M31))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -39,6 +42,6 @@
 | **fill-in: У лікаря (At the Doctor's)** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Болить or Болять?** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Health Situations** | 🎮 | 8 | Activity (8 items, min 8) |
-| **unjumble: Health Sentences** | 🎮 | 11 | Activity (11 items, min 6) |
+| **unjumble: Health Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **true-false: Health Facts** | 🎮 | 12 | Activity (12 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

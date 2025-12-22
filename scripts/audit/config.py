@@ -392,6 +392,18 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction'}
     },
+    'B1-bridge': {
+        # Bridge modules (M01-05) teach grammar metalanguage
+        'target_words': 1200,  # Lower target for metalanguage teaching
+        'min_activities': 12,
+        'min_items_per_activity': 14,
+        'min_types_unique': 5,
+        'min_vocab': 20,  # Metalanguage vocabulary
+        'min_engagement': 4,
+        # NO immersion gate - bridge modules teach terminology bilingually
+        'transliteration_allowed': False,
+        'priority_types': {'quiz', 'match-up', 'fill-in', 'translate'}
+    },
     'B1-grammar': {
         'target_words': 1500,
         'min_activities': 12,

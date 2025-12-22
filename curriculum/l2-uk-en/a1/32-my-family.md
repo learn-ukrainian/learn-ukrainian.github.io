@@ -578,8 +578,8 @@ Put the words in the correct order.
 8. бабуся / добра / моя / дуже
    > [!answer] Моя бабуся дуже добра
 
-9. брат / чоловік / це / мій / і
-   > [!answer] Це мій брат і чоловік
+9. брат / сестра / це / мій / і
+    > [!answer] Це мій брат і сестра
 
 10. дочка / у неї / є
    > [!answer] У неї є дочка
@@ -636,19 +636,19 @@ Is this true or false?
 | дідусь | /dʲiˈdusʲ/ | grandfather | n | m | |
 | бабуся | /bɑˈbusʲɑ/ | grandmother | n | f | |
 | онук | /ɔˈnuk/ | grandson | n | m | |
-| онучка | /ɔˈnutʃkɑ/ | granddaughter | n | f | |
+| онучка | /ɔˈnut͡ʃkɑ/ | granddaughter | n | f | |
 | дядько | /ˈdʲɑdʲkɔ/ | uncle | n | m | |
 | тітка | /ˈtʲitkɑ/ | aunt | n | f | |
-| двоюрідний брат | /dwɔˈjurʲidnɪj brɑt/ | cousin (m) | n | m | lit. "second-born brother" |
-| двоюрідна сестра | /dwɔˈjurʲidnɑ sɛsˈtrɑ/ | cousin (f) | n | f | lit. "second-born sister" |
+| двоюрідний брат | /dvɔˈjurʲidnɪj brɑt/ | cousin (m) | n | m | lit. "second-born brother" |
+| двоюрідна сестра | /dvɔˈjurʲidnɑ sɛsˈtrɑ/ | cousin (f) | n | f | lit. "second-born sister" |
 | син | /sɪn/ | son | n | m | |
-| дочка | /ˈdɔtʃkɑ/ | daughter | n | f | |
-| чоловік | /tʃɔlɔˈwʲik/ | husband | n | m | also "man" |
+| дочка | /ˈdɔt͡ʃkɑ/ | daughter | n | f | |
+| чоловік | /t͡ʃɔlɔˈvʲik/ | husband | n | m | also "man" |
 | дружина | /druˈʒɪnɑ/ | wife | n | f | |
-| хлопець | /ˈxlɔpɛtsʲ/ | boyfriend | n | m | also "boy/guy" |
-| дівчина | /dʲiwˈtʃɪnɑ/ | girlfriend | n | f | also "girl" |
-| наречений | /nɑˈrɛtʃɛnɪj/ | fiancé | n | m | |
-| наречена | /nɑˈrɛtʃɛnɑ/ | fiancée | n | f | |
+| хлопець | /ˈxlɔpɛt͡sʲ/ | boyfriend | n | m | also "boy/guy" |
+| дівчина | /dʲivˈt͡ʃɪnɑ/ | girlfriend | n | f | also "girl" |
+| наречений | /nɑˈrɛt͡ʃɛnɪj/ | fiancé | n | m | |
+| наречена | /nɑˈrɛt͡ʃɛnɑ/ | fiancée | n | f | |
 | старший | /ˈstɑrʃɪj/ | older | adj | m | |
 | молодший | /mɔˈlɔdʃɪj/ | younger | adj | m | |
 | середній | /sɛˈrɛdnʲij/ | middle | adj | m | |

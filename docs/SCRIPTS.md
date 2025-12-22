@@ -94,22 +94,12 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 | `validate_html.py` | Validate browser rendering | `npm run validate:html l2-uk-en a1 5` |
 | `audit_module.py` | Module quality checker | `python3 scripts/audit_module.py <file>` |
 
-### Vocabulary (TypeScript)
+### Vocabulary (Python)
 
 | Script | Purpose | Command |
 |--------|---------|---------|
-| `vocab-init.ts` | Create fresh vocabulary DB | `npm run vocab:init` |
-| `vocab-scan.ts` | Populate DB from modules | `npm run vocab:scan` |
-| `vocab-enrich.ts` | Enrich module vocab sections | `npm run vocab:enrich` |
-| `vocab-audit.ts` | Find unknown/premature words | `npx ts-node scripts/vocab-audit.ts` |
-
-### Legacy (TypeScript)
-
-| Script | Purpose | Command |
-|--------|---------|---------|
-| `module-audit.ts` | Find issues in modules | `npx ts-node scripts/module-audit.ts` |
-| `enrich-activities.ts` | Generate activity scaffolds | `npx ts-node scripts/enrich-activities.ts` |
-| `generate-exercises.ts` | Generate exercise templates | `npx ts-node scripts/generate-exercises.ts` |
+| `vocab_init.py` | Create fresh vocabulary DB | `npm run vocab:init` |
+| `populate_vocab_db.py` | Populate DB from modules | `npm run vocab:scan` |
 
 ---
 
@@ -275,21 +265,6 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 - **INFO (Consider):** Optional improvements
 
 ---
-
-### module-audit.ts (Legacy)
-
-**Purpose:** TypeScript module quality checker. Being replaced by `audit_module.py`.
-
-**Usage:**
-```bash
-npx ts-node scripts/module-audit.ts l2-uk-en           # Audit all modules
-npx ts-node scripts/module-audit.ts l2-uk-en 41-65     # Audit range
-npx ts-node scripts/module-audit.ts l2-uk-en 81-90 --fix  # Generate fix prompts
-```
-
-**Options:**
-- `--fix` - Generate actionable fix prompts for Claude
-
 ---
 
 ## Vocabulary Pipeline
@@ -299,50 +274,29 @@ The vocabulary system uses SQLite (`vocabulary.db`) to track all words across mo
 ### Workflow Order
 
 ```
-1. vocab-init    →  Create empty database
-2. vocab-scan    →  Populate from module markdown
-3. vocab-enrich  →  Fill in missing IPA, POS, etc.
-4. vocab-audit   →  Find problems
+1. vocab_init.py        →  Create empty database (Python)
+2. populate_vocab_db.py →  Populate from module markdown (Python)
 ```
 
-### vocab-init.ts
+### vocab_init.py
 
 **Purpose:** Initialize a fresh SQLite vocabulary database with proper schema.
 
 ```bash
 npm run vocab:init                  # Create database
 npm run vocab:init:force            # Force recreate (deletes existing)
+python3 scripts/vocab_init.py l2-uk-en --force  # Direct invocation
 ```
 
 **Creates:** `curriculum/{lang}/vocabulary.db`
 
-### vocab-scan.ts
+### populate_vocab_db.py
 
 **Purpose:** Scans all module markdown files and populates the SQLite database.
 
 ```bash
 npm run vocab:scan                  # Scan all modules
-npx ts-node scripts/vocab-scan.ts l2-uk-en 82    # Scan single module
-```
-
-### vocab-enrich.ts
-
-**Purpose:** Enriches module markdown vocabulary sections from the database.
-
-```bash
-npm run vocab:enrich                # Enrich all modules
-npm run vocab:enrich:dry            # Preview changes (no write)
-npx ts-node scripts/vocab-enrich.ts l2-uk-en 82  # Single module
-```
-
-### vocab-audit.ts
-
-**Purpose:** Scans Ukrainian text in modules and checks against vocabulary database.
-
-```bash
-npx ts-node scripts/vocab-audit.ts l2-uk-en 81     # Audit single module
-npx ts-node scripts/vocab-audit.ts l2-uk-en 81-100 # Audit range
-npx ts-node scripts/vocab-audit.ts l2-uk-en        # Audit all modules
+python3 scripts/populate_vocab_db.py  # Direct invocation
 ```
 
 ---

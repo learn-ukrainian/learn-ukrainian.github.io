@@ -752,30 +752,30 @@ You now know:
 | моя | /mɔˈja/ | my (f) | poss pron | f | змінний |
 | моє | /mɔˈje/ | my (n) | poss pron | n | змінний |
 | мої | /mɔˈji/ | my (pl) | poss pron | pl | змінний |
-| твій | /twij/ | your sg (m) | poss pron | m | змінний, informal |
-| твоя | /twɔˈja/ | your sg (f) | poss pron | f | змінний, informal |
-| твоє | /twɔˈje/ | your sg (n) | poss pron | n | змінний, informal |
-| твої | /twɔˈji/ | your sg (pl) | poss pron | pl | змінний, informal |
+| твій | /tvij/ | your sg (m) | poss pron | m | змінний, informal |
+| твоя | /tvɔˈja/ | your sg (f) | poss pron | f | змінний, informal |
+| твоє | /tvɔˈje/ | your sg (n) | poss pron | n | змінний, informal |
+| твої | /tvɔˈji/ | your sg (pl) | poss pron | pl | змінний, informal |
 | його | /joˈɦɔ/ | his | poss pron | - | інваріантний (never changes) |
 | її | /jiˈji/ | her | poss pron | - | інваріантний (never changes) |
 | наш | /nɑʃ/ | our (m) | poss pron | m | змінний |
 | наша | /ˈnɑʃɑ/ | our (f) | poss pron | f | змінний |
 | наше | /ˈnɑʃe/ | our (n) | poss pron | n | змінний |
 | наші | /ˈnɑʃi/ | our (pl) | poss pron | pl | змінний |
-| ваш | /wɑʃ/ | your pl/formal (m) | poss pron | m | змінний |
-| ваша | /ˈwɑʃɑ/ | your pl/formal (f) | poss pron | f | змінний |
-| ваше | /ˈwɑʃe/ | your pl/formal (n) | poss pron | n | змінний |
-| ваші | /ˈwɑʃi/ | your pl/formal (pl) | poss pron | pl | змінний |
+| ваш | /vɑʃ/ | your pl/formal (m) | poss pron | m | змінний |
+| ваша | /ˈvɑʃɑ/ | your pl/formal (f) | poss pron | f | змінний |
+| ваше | /ˈvɑʃe/ | your pl/formal (n) | poss pron | n | змінний |
+| ваші | /ˈvɑʃi/ | your pl/formal (pl) | poss pron | pl | змінний |
 | їхній | /jixˈnij/ | their (m) | poss pron | m | змінний |
 | їхня | /jixˈnʲa/ | their (f) | poss pron | f | змінний |
 | їхнє | /jixˈnʲe/ | their (n) | poss pron | n | змінний |
 | їхні | /jixˈnʲi/ | their (pl) | poss pron | pl | змінний |
-| свій | /swij/ | one's own (m) | poss pron | m | reflexive, refers to subject |
-| своя | /swɔˈja/ | one's own (f) | poss pron | f | reflexive |
-| своє | /swɔˈje/ | one's own (n) | poss pron | n | reflexive |
-| свої | /swɔˈji/ | one's own (pl) | poss pron | pl | reflexive |
+| свій | /svij/ | one's own (m) | poss pron | m | reflexive, refers to subject |
+| своя | /svɔˈja/ | one's own (f) | poss pron | f | reflexive |
+| своє | /svɔˈje/ | one's own (n) | poss pron | n | reflexive |
+| свої | /svɔˈji/ | one's own (pl) | poss pron | pl | reflexive |
 | річ | /ritʃ/ | thing | noun | f | - |
-| власний | /ˈwlɑsnɪj/ | own | adj | m | власна (f), власне (n) |
+| власний | /ˈvlɑsnɪj/ | own | adj | m | власна (f), власне (n) |
 | чужий | /tʃuˈʒɪj/ | someone else's | adj | m | чужа (f), чуже (n) |
 | разом | /ˈrɑzɔm/ | together | adv | - | - |
 | окремо | /ɔˈkremɔ/ | separately | adv | - | - |

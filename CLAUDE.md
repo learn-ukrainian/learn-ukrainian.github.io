@@ -63,7 +63,7 @@ These were all documented requirements that were ignored during creation.
 <critical>
 **EVERY time you write or rewrite a module:**
 
-1. **READ `.agent/quick-ref/{LEVEL}.md`** - Level-specific targets, activity mix, critical requirements.
+1. **READ `claude_extensions/quick-ref/{LEVEL}.md`** - Level-specific targets, activity mix, critical requirements.
 2. **READ `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`** - Extract the EXACT vocabulary list and grammar scope.
 3. **READ `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`** - Activity counts, sentence complexity, engagement boxes.
 4. **WRITE the module** using ONLY the vocabulary and grammar from those documents.

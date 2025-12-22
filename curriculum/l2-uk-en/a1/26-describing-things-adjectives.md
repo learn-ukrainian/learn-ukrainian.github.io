@@ -552,41 +552,41 @@ Learning adjectives in pairs helps you remember them better:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| великий | /weˈlɪkɪj/ | big, large | adj | m | великий будинок |
+| великий | /vɛˈlɪkɪj/ | big, large | adj | m | великий будинок |
 | малий | /mɑˈlɪj/ | small | adj | m | маленький (dim.) |
-| високий | /wɪˈsɔkɪj/ | tall, high | adj | m | - |
-| низький | /ˈnɪzʲkɪj/ | short, low | adj | m | - |
-| довгий | /ˈdɔwɦɪj/ | long | adj | m | - |
+| високий | /vɪˈsɔkɪj/ | tall, high | adj | m | - |
+| низький | /nɪzʲˈkɪj/ | short, low | adj | m | - |
+| довгий | /ˈdɔvɦɪj/ | long | adj | m | - |
 | короткий | /kɔˈrɔtkɪj/ | short | adj | m | - |
 | широкий | /ʃɪˈrɔkɪj/ | wide | adj | m | - |
-| вузький | /ˈwuzʲkɪj/ | narrow | adj | m | - |
-| новий | /nɔˈwɪj/ | new | adj | m | - |
+| вузький | /vuzʲˈkɪj/ | narrow | adj | m | - |
+| новий | /nɔˈvɪj/ | new | adj | m | - |
 | старий | /stɑˈrɪj/ | old | adj | m | for things/people |
 | молодий | /mɔlɔˈdɪj/ | young | adj | m | - |
 | гарний | /ˈɦɑrnɪj/ | beautiful, nice | adj | m | general positive |
-| красивий | /krɑˈsɪwɪj/ | beautiful | adj | m | for appearance |
+| красивий | /krɑˈsɪvɪj/ | beautiful | adj | m | for appearance |
 | поганий | /pɔˈɦɑnɪj/ | bad | adj | m | - |
 | добрий | /ˈdɔbrɪj/ | good, kind | adj | m | - |
 | злий | /zlɪj/ | angry, evil | adj | m | - |
 | розумний | /rɔˈzumnɪj/ | smart | adj | m | - |
-| дурний | /ˈdurnɪj/ | stupid | adj | m | - |
+| дурний | /durˈnɪj/ | stupid | adj | m | - |
 | сильний | /ˈsɪlʲnɪj/ | strong | adj | m | - |
-| слабкий | /ˈslɑbkɪj/ | weak | adj | m | - |
-| швидкий | /ˈʃwɪdkɪj/ | fast | adj | m | - |
-| повільний | /pɔˈwilʲnɪj/ | slow | adj | m | - |
-| легкий | /ˈleɦkɪj/ | light, easy | adj | m | - |
-| важкий | /wɑʒˈkɪj/ | heavy, hard | adj | m | - |
+| слабкий | /slɑbˈkɪj/ | weak | adj | m | - |
+| швидкий | /ʃvɪdˈkɪj/ | fast | adj | m | - |
+| повільний | /pɔˈvilʲnɪj/ | slow | adj | m | - |
+| легкий | /lɛɦˈkɪj/ | light, easy | adj | m | - |
+| важкий | /vɑʒˈkɪj/ | heavy, hard | adj | m | - |
 | дорогий | /dɔrɔˈɦɪj/ | expensive, dear | adj | m | - |
-| дешевий | /deˈʃewɪj/ | cheap | adj | m | - |
-| цікавий | /tsʲiˈkɑwɪj/ | interesting | adj | m | - |
-| нудний | /ˈnudnɪj/ | boring | adj | m | - |
+| дешевий | /dɛˈʃɛvɪj/ | cheap | adj | m | - |
+| цікавий | /t͡sʲiˈkɑvɪj/ | interesting | adj | m | - |
+| нудний | /nudˈnɪj/ | boring | adj | m | - |
 | простий | /prɔˈstɪj/ | simple | adj | m | - |
-| складний | /ˈsklɑdnɪj/ | complex | adj | m | - |
-| важливий | /wɑʒˈlɪwɪj/ | important | adj | m | - |
-| головний | /ɦɔlɔˈwnɪj/ | main | adj | m | - |
+| складний | /sklɑdˈnɪj/ | complex | adj | m | - |
+| важливий | /vɑʒˈlɪvɪj/ | important | adj | m | - |
+| головний | /ɦɔlɔvˈnɪj/ | main | adj | m | - |
 | різний | /ˈriznɪj/ | different, various | adj | m | - |
-| однаковий | /ɔdnɑˈkɔwɪj/ | same, identical | adj | m | - |
-| особливий | /ɔsɔˈblɪwɪj/ | special | adj | m | - |
-| прикметник | /prɪkˈmetnɪk/ | adjective | n | m | grammar term |
+| однаковий | /ɔdnɑˈkɔvɪj/ | same, identical | adj | m | - |
+| особливий | /ɔsɔˈblɪvɪj/ | special | adj | m | - |
+| прикметник | /prɪkˈmɛtnɪk/ | adjective | n | m | grammar term |
 
 ---

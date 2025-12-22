@@ -675,7 +675,7 @@ questions:
 
 The example below shows the **PPP (Presentation-Practice-Production)** structure.
 Note that **TTT (Test-Teach-Test)** and **CLIL/Narrative** structures are also valid and supported.
-Refer to `.agent/skills/module-architect/SKILL.md` for specific pedagogical section headers.
+Refer to `claude_extensions/skills/module-architect/SKILL.md` for specific pedagogical section headers.
 
 Standard module sections (PPP Example):
 

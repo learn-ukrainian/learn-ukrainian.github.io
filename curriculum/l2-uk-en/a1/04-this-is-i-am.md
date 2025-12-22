@@ -731,12 +731,12 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 | дівчина | /diwˈt͡ʃɪnɑ/ | girl | noun | f | young female |
 | українець | /ukrɑˈjinɛt͡sʲ/ | Ukrainian (male) | noun | m | nationality |
 | українка | /ukrɑˈjinkɑ/ | Ukrainian (female) | noun | f | nationality |
-| англієць | /ˈɑnhlʲiet͡sʲ/ | English person (male) | noun | m | nationality |
-| англійка | /ˈɑnhlʲijkɑ/ | English person (female) | noun | f | nationality |
+| англієць | /ɑnˈɦlijɛt͡sʲ/ | English person (male) | noun | m | nationality |
+| англійка | /ɑnˈɦlijkɑ/ | English person (female) | noun | f | nationality |
 | американець | /ɑmɛrɪˈkɑnɛt͡sʲ/ | American (male) | noun | m | nationality |
 | американка | /ɑmɛrɪˈkɑnkɑ/ | American (female) | noun | f | nationality |
 | канадець | /kɑnɑˈdɛt͡sʲ/ | Canadian (male) | noun | m | nationality |
-| канадка | /kɑnɑdˈkɑ/ | Canadian (female) | noun | f | nationality |
+| канадка | /kɑˈnɑdkɑ/ | Canadian (female) | noun | f | nationality |
 | студент | /stuˈdɛnt/ | student (male) | noun | m | university student |
 | студентка | /stuˈdɛntkɑ/ | student (female) | noun | f | university student |
 | професор | /prɔˈfɛsɔr/ | professor (m/f) | noun | m | can be used for all |

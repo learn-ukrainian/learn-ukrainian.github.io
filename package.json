@@ -7,23 +7,17 @@
     "doc": "docs"
   },
   "scripts": {
-    "lint": "eslint 'scripts/**/*.ts'",
     "generate": ".venv/bin/python scripts/generate_mdx.py",
     "generate:validated": ".venv/bin/python scripts/generate_mdx.py --validate",
-    "generate:ts": "ts-node scripts/generate-mdx.ts",
     "generate:json": ".venv/bin/python scripts/generate_json.py",
     "pipeline": ".venv/bin/python scripts/pipeline.py",
     "validate:mdx": ".venv/bin/python scripts/validate_mdx.py",
     "validate:html": ".venv/bin/python scripts/validate_html.py",
-    "vocab:init": "ts-node scripts/vocab-init.ts",
-    "vocab:init:force": "ts-node scripts/vocab-init.ts l2-uk-en --force",
-    "vocab:scan": "ts-node scripts/vocab-scan.ts",
-    "vocab:enrich": "ts-node scripts/vocab-enrich.ts",
-    "vocab:enrich:dry": "ts-node scripts/vocab-enrich.ts l2-uk-en --dry-run",
-    "vocab:enrich:force": "ts-node scripts/vocab-enrich.ts l2-uk-en --force",
+    "vocab:init": "python3 scripts/vocab_init.py",
+    "vocab:init:force": "python3 scripts/vocab_init.py l2-uk-en --force",
+    "vocab:scan": "python3 scripts/populate_vocab_db.py",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
-    "seo:generate": "python3 scripts/generate_seo.py",
-    "claude:deploy": "mkdir -p .claude/skills .claude/commands .claude/stages .claude/quick-ref && cp -r .agent/skills/* .claude/skills/ && cp -r .agent/workflows/* .claude/commands/ && cp -r .agent/stages/* .claude/stages/ && cp -r .agent/quick-ref/* .claude/quick-ref/"
+    "seo:generate": "python3 scripts/generate_seo.py"
   },
   "repository": {
     "type": "git",

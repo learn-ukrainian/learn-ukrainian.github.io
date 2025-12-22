@@ -551,9 +551,9 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > [!answer] Він працює добре
    > (He works well.)
 
-3. говорить / Вона / українською
-   > [!answer] Вона говорить українською
-   > (She speaks Ukrainian.)
+3. співає / Вона / українською
+   > [!answer] Вона співає українською
+   > (She sings in Ukrainian.)
 
 4. граємо / Ми / футбол
    > [!answer] Ми граємо футбол
@@ -583,13 +583,12 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 | читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | Class I: читаю, читаєш |
 | писати | /pɪˈsɑtɪ/ | to write | verb | - | Class I: пишу, пишеш |
 | працювати | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | Class I: працюю, працюєш |
-| говорити | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш |
 | грати | /ˈɦrɑtɪ/ | to play | verb | - | Class I: граю, граєш |
 | співати | /spiˈvɑtɪ/ | to sing | verb | - | Class I: співаю, співаєш |
 | думати | /ˈdumɑtɪ/ | to think | verb | - | Class I: думаю, думаєш |
 | гуляти | /ɦuˈlʲɑtɪ/ | to walk | verb | - | Class I: гуляю, гуляєш |
 | знати | /ˈznɑtɪ/ | to know | verb | - | Class I: знаю, знаєш |
-| розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | Class II: розумію, розумієш |
+| розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | Class I: розумію, розумієш |
 | слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш |
 | чекати | /t͡ʃeˈkɑtɪ/ | to wait | verb | - | Class I: чекаю, чекаєш |
 | снідати | /sniˈdɑtɪ/ | to have breakfast | verb | - | Class I: снідаю, снідаєш |
@@ -608,7 +607,6 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 | відповідати | /vidpɔviˈdɑtɪ/ | to answer | verb | - | Class I: відповідаю, відповідаєш |
 | відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest | verb | - | Class I: відпочиваю, відпочиваєш |
 | закінчувати | /zɑkint͡ʃuˈvɑtɪ/ | to finish | verb | - | Class I: закінчую, закінчуєш |
-| знаходити | /znɑˈxɔdɪtɪ/ | to find | verb | - | Class II: знаходжу, знаходиш |
 | малювати | /mɑlʲuˈvɑtɪ/ | to draw | verb | - | Class I: малюю, малюєш |
 | мріяти | /mriˈjɑtɪ/ | to dream | verb | - | Class I: мрію, мрієш |
 | називати | /nɑzɪˈvɑtɪ/ | to call/name | verb | - | Class I: називаю, називаєш |

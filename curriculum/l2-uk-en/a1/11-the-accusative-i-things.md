@@ -656,7 +656,7 @@ In this module, you learned:
 | мати | /ˈmɑtɪ/ | to have | verb | - | маю, маєш |
 | нести | /nɛsˈtɪ/ | to carry | verb | - | несу, несеш |
 | класти | /ˈklɑstɪ/ | to put | verb | - | кладу, кладеш |
-| відкривати | /widkrɪˈvɑtɪ/ | to open | verb | - | відкриваю, відкриваєш |
+| відкривати | /vidkrɪˈvɑtɪ/ | to open | verb | - | відкриваю, відкриваєш |
 | закривати | /zɑkrɪˈvɑtɪ/ | to close | verb | - | закриваю, закриваєш |
 | вмикати | /vmɪˈkɑtɪ/ | to turn on | verb | - | вмикаю, вмикаєш |
 | вимикати | /vɪmɪˈkɑtɪ/ | to turn off | verb | - | вимикаю, вимикаєш |

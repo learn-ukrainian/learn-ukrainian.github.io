@@ -74,4 +74,4 @@
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
 - **Guidelines**: `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
 - **Module Content**: `curriculum/l2-uk-en/{level}/`
-- **Skills**: `.agent/skills/module-architect/SKILL.md`
+- **Skills**: `claude_extensions/skills/module-architect/SKILL.md`

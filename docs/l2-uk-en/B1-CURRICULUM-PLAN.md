@@ -9,7 +9,7 @@
 ## Quality Standards & Pedagogical Strategy
 
 **Reference:** `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-**Philosophy:** `.agent/quick-ref/philosophy.md` (Strict Linguistic Standards & Source Authority)
+**Philosophy:** `claude_extensions/quick-ref/philosophy.md` (Strict Linguistic Standards & Source Authority)
 
 ### Ukrainian-First Immersion Strategy (B1 Specific)
 

@@ -855,24 +855,24 @@ Fill in the gaps:
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | повторення | /pɔvtɔˈrɛnʲːɑ/ | repetition, review | noun | n | |
-| правило | /ˈprɑwɪlɔ/ | rule | noun | n | |
+| правило | /ˈprɑvɪlɔ/ | rule | noun | n | |
 | помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | |
-| вправа | /ˈʋprɑwɑ/ | exercise | noun | f | |
-| перевірка | /pɛrɛˈʋirkɑ/ | check, test | noun | f | |
+| вправа | /ˈvprɑvɑ/ | exercise | noun | f | |
+| перевірка | /pɛrɛˈvirkɑ/ | check, test | noun | f | |
 | успіх | /ˈuspix/ | success | noun | m | |
-| вміти | /ˈʋmitɪ/ | to be able to, to know how | verb | - | вмію, вмієш |
+| вміти | /ˈvmitɪ/ | to be able to, to know how | verb | - | вмію, вмієш |
 | розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | розумію, розумієш |
 | пам'ятати | /pɑmʲjɑˈtɑtɪ/ | to remember | verb | - | пам'ятаю, пам'ятаєш |
-| використовувати | /wɪkɔrɪˈstɔwuwɑtɪ/ | to use | verb | - | використовую, використовуєш |
-| чудово | /t͡ʃuˈdɔwɔ/ | wonderfully, excellently | adverb | - | |
+| використовувати | /vɪkɔrɪˈstɔvuvɑtɪ/ | to use | verb | - | використовую, використовуєш |
+| чудово | /t͡ʃuˈdɔvɔ/ | wonderfully, excellently | adverb | - | |
 | добре | /ˈdɔbrɛ/ | well, good | adverb | - | |
-| правильно | /ˈprɑwɪlʲnɔ/ | correctly | adverb | - | |
-| неправильно | /nɛˈprɑwɪlʲnɔ/ | incorrectly | adverb | - | |
+| правильно | /ˈprɑvɪlʲnɔ/ | correctly | adverb | - | |
+| неправильно | /nɛˈprɑvɪlʲnɔ/ | incorrectly | adverb | - | |
 | майже | /ˈmɑjʒɛ/ | almost | adverb | - | |
-| зовсім | /ˈzɔwsim/ | completely | adverb | - | |
+| зовсім | /ˈzɔvsim/ | completely | adverb | - | |
 | ще раз | /ʃt͡ʃɛ rɑz/ | once more, again | phrase | - | |
 | молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |
 | молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |
-| продовжуємо | /prɔdɔˈʋʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
+| продовжуємо | /prɔdɔvˈʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
 
 ---

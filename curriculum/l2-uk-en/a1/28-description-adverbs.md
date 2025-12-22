@@ -583,35 +583,35 @@ Is this true or false?
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| гарно | /ˈhɑrnɔ/ | beautifully | adv | — | from гарний |
-| погано | /pɔˈhɑnɔ/ | badly | adv | — | from поганий |
-| добре | /ˈdɔbre/ | well | adv | — | from добрий |
-| швидко | /ˈʃwɪdkɔ/ | fast, quickly | adv | — | from швидкий |
-| повільно | /pɔˈwilʲnɔ/ | slowly | adv | — | from повільний |
-| цікаво | /t͡sʲiˈkawɔ/ | interestingly | adv | — | from цікавий |
+| гарно | /ˈɦɑrnɔ/ | beautifully | adv | — | from гарний |
+| погано | /pɔˈɦɑnɔ/ | badly | adv | — | from поганий |
+| добре | /ˈdɔbrɛ/ | well | adv | — | from добрий |
+| швидко | /ˈʃvɪdkɔ/ | fast, quickly | adv | — | from швидкий |
+| повільно | /pɔˈvilʲnɔ/ | slowly | adv | — | from повільний |
+| цікаво | /t͡sʲiˈkɑvɔ/ | interestingly | adv | — | from цікавий |
 | нудно | /ˈnudnɔ/ | boringly | adv | — | from нудний |
-| важко | /ˈwɑʒkɔ/ | with difficulty | adv | — | from важкий |
-| легко | /ˈlehkɔ/ | easily | adv | — | from легкий |
-| смачно | /ˈsmɑtʃnɔ/ | deliciously | adv | — | from смачний |
-| дорого | /ˈdɔrɔhɔ/ | expensively | adv | — | from дорогий |
-| дешево | /ˈdeʃewɔ/ | cheaply | adv | — | from дешевий |
+| важко | /ˈvɑʒkɔ/ | with difficulty | adv | — | from важкий |
+| легко | /ˈlɛɦkɔ/ | easily | adv | — | from легкий |
+| смачно | /ˈsmɑt͡ʃnɔ/ | deliciously | adv | — | from смачний |
+| дорого | /ˈdɔrɔɦɔ/ | expensively | adv | — | from дорогий |
+| дешево | /ˈdɛʃɛvɔ/ | cheaply | adv | — | from дешевий |
 | голосно | /hɔˈlɔsnɔ/ | loudly | adv | — | from голосний |
 | тихо | /ˈtɪxɔ/ | quietly | adv | — | from тихий |
-| весело | /ˈweselɔ/ | merrily | adv | — | from веселий |
+| весело | /ˈvɛsɛlɔ/ | merrily | adv | — | from веселий |
 | сумно | /ˈsumnɔ/ | sadly | adv | — | from сумний |
-| серйозно | /serˈjɔznɔ/ | seriously | adv | — | from серйозний |
+| серйозно | /sɛrˈjɔznɔ/ | seriously | adv | — | from серйозний |
 | жартома | /ʒɑrˈtɔmɑ/ | jokingly | adv | — | irregular |
-| ввічливо | /ˈwːitʃlɪwɔ/ | politely | adv | — | from ввічливий |
-| чесно | /ˈtʃesnɔ/ | honestly | adv | — | from чесний |
-| завжди | /ˈzɑwʒdɪ/ | always | adv | — | frequency |
-| часто | /ˈtʃɑstɔ/ | often | adv | — | frequency |
-| зазвичай | /zɑzwɪˈtʃɑj/ | usually | adv | — | frequency |
+| ввічливо | /ˈvvit͡ʃlɪvɔ/ | politely | adv | — | from ввічливий |
+| чесно | /ˈt͡ʃɛsnɔ/ | honestly | adv | — | from чесний |
+| завжди | /ˈzɑvʒdɪ/ | always | adv | — | frequency |
+| часто | /ˈt͡ʃɑstɔ/ | often | adv | — | frequency |
+| зазвичай | /zɑzvɪˈt͡ʃɑj/ | usually | adv | — | frequency |
 | іноді | /iˈnɔdʲi/ | sometimes | adv | — | frequency |
 | рідко | /ˈrʲidkɔ/ | rarely | adv | — | frequency |
 | ніколи | /nʲiˈkɔlɪ/ | never | adv | — | needs не |
 | трохи | /ˈtrɔxɪ/ | a little | adv | — | degree |
-| дуже | /ˈduʒe/ | very | adv | — | degree |
+| дуже | /ˈduʒɛ/ | very | adv | — | degree |
 | занадто | /zɑˈnɑdtɔ/ | too (much) | adv | — | degree |
-| зовсім | /zɔwˈsʲim/ | completely | adv | — | degree |
+| зовсім | /zɔvˈsʲim/ | completely | adv | — | degree |
 
 ---

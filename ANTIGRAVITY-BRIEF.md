@@ -6,8 +6,8 @@ Fix A1 Module 28 (Description - Adverbs) which currently FAILS audit.
 ## Step 1: Read These First (Required)
 
 ```bash
-cat .agent/quick-ref/a1.md
-cat .agent/quick-ref/philosophy.md
+cat claude_extensions/quick-ref/a1.md
+cat claude_extensions/quick-ref/philosophy.md
 ```
 
 ## Step 2: Get Module Vocabulary from Curriculum Plan

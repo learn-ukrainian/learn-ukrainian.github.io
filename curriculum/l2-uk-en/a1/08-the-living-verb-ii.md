@@ -574,11 +574,11 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 > Complete the sentences with the correct verb.
 
 1. Я впевнено ___ українською мовою.
-   - [x] розмовляю
-   - [ ] розмовляєш
-   - [ ] розмовляє
-   - [ ] розмовляють
-   > я розмовляю = I speak
+   - [x] говорю
+   - [ ] говориш
+   - [ ] говорить
+   - [ ] говорять
+   > я говорю = I speak
 
 2. Скажіть, чи ти часто ___ музику?
    - [ ] слухаю
@@ -615,7 +615,7 @@ With Class I and Class II verbs combined, you can now express hundreds of action
    - [ ] люблять
    > я люблю = I love
 
-7. Чи ти часто ідеш ___ в університет?
+7. Чи ти часто ___ в університет?
    - [x] ходиш
    - [ ] ходжу
    - [ ] ходимо
@@ -644,11 +644,11 @@ With Class I and Class II verbs combined, you can now express hundreds of action
     > вона стоїть = she stands
 
 11. Що ці люди роблять? Вони ___ обід.
-    - [ ] готувати
-    - [ ] готуєш
-    - [ ] готує
-    - [x] готують
-    > вони готують = they cook
+   - [ ] їсти
+   - [ ] їси
+   - [ ] їсть
+   - [x] їдять
+   > вони їдять = they eat
 
 12. Що вони роблять? Вони ___.
     - [ ] бачити

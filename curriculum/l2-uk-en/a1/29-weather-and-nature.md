@@ -602,37 +602,37 @@ Is this true or false?
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | погода | /pɔˈhɔdɑ/ | weather | n | f | |
-| температура | /tempɛrɑˈturɑ/ | temperature | n | f | |
-| тепло | /ˈteplɔ/ | warm | adv | — | impersonal |
+| температура | /tɛmpɛrɑˈturɑ/ | temperature | n | f | |
+| тепло | /ˈtɛplɔ/ | warm | adv | — | impersonal |
 | холодно | /ˈxɔlɔdnɔ/ | cold | adv | — | impersonal |
 | жарко | /ˈʒɑrkɔ/ | hot | adv | — | impersonal |
-| сонячно | /ˈsɔnʲɑtʃnɔ/ | sunny | adv | — | impersonal |
+| сонячно | /ˈsɔnʲɑt͡ʃnɔ/ | sunny | adv | — | impersonal |
 | хмарно | /ˈxmɑrnɔ/ | cloudy | adv | — | impersonal |
-| вітряно | /ˈwʲitrʲɑnɔ/ | windy | adv | — | impersonal |
-| сонце | /ˈsɔntsɛ/ | sun | n | n | |
+| вітряно | /ˈvʲitrʲɑnɔ/ | windy | adv | — | impersonal |
+| сонце | /ˈsɔnt͡sɛ/ | sun | n | n | |
 | хмара | /ˈxmɑrɑ/ | cloud | n | f | |
-| вітер | /ˈwʲitɛr/ | wind | n | m | |
-| дощ | /dɔʃtʃ/ | rain | n | m | |
+| вітер | /ˈvʲitɛr/ | wind | n | m | |
+| дощ | /dɔʃt͡ʃ/ | rain | n | m | |
 | сніг | /snʲih/ | snow | n | m | |
-| йде дощ | /jdɛ dɔʃtʃ/ | it's raining | expr | — | literally "rain goes" |
+| йде дощ | /jdɛ dɔʃt͡ʃ/ | it's raining | expr | — | literally "rain goes" |
 | йде сніг | /jdɛ snʲih/ | it's snowing | expr | — | literally "snow goes" |
 | природа | /prɪˈrɔdɑ/ | nature | n | f | |
-| дерево | /ˈdɛrɛwɔ/ | tree | n | n | |
-| квітка | /ˈkwʲitkɑ/ | flower | n | f | |
+| дерево | /ˈdɛrɛvɔ/ | tree | n | n | |
+| квітка | /ˈkvʲitkɑ/ | flower | n | f | |
 | ліс | /lʲis/ | forest | n | m | |
 | парк | /pɑrk/ | park | n | m | |
-| річка | /ˈrʲitʃkɑ/ | river | n | f | |
+| річка | /ˈrʲit͡ʃkɑ/ | river | n | f | |
 | море | /ˈmɔrɛ/ | sea | n | n | |
 | гора | /hɔˈrɑ/ | mountain | n | f | |
 | озеро | /ˈɔzɛrɔ/ | lake | n | n | |
-| тварина | /twɑˈrɪnɑ/ | animal | n | f | |
+| тварина | /tvɑˈrɪnɑ/ | animal | n | f | |
 | пес | /pɛs/ | dog (male) | n | m | |
 | собака | /sɔˈbɑkɑ/ | dog | n | f | general term |
 | кіт | /kʲit/ | cat (male) | n | m | |
 | кішка | /ˈkʲiʃkɑ/ | cat (female) | n | f | |
 | птах | /ptɑx/ | bird | n | m | |
 | риба | /ˈrɪbɑ/ | fish | n | f | |
-| весна | /wɛsˈnɑ/ | spring | n | f | season |
+| весна | /vɛsˈnɑ/ | spring | n | f | season |
 | літо | /ˈlʲitɔ/ | summer | n | n | season |
 | осінь | /ˈɔsʲinʲ/ | autumn | n | f | season |
 | зима | /zɪˈmɑ/ | winter | n | f | season |

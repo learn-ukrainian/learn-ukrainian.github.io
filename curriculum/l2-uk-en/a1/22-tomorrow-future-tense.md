@@ -564,30 +564,30 @@ Decide if each statement is true or false.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| завтра | /ˈzɑwtrɑ/ | tomorrow | adv | - | - |
-| післязавтра | /pisʲlʲɑˈzɑwtrɑ/ | day after tomorrow | adv | - | - |
-| наступного тижня | /nɑˈstupnoɦo ˈtɪʒnʲɑ/ | next week | phrase | - | genitive |
-| наступного місяця | /nɑˈstupnoɦo ˈmisʲɑtsʲɑ/ | next month | phrase | - | genitive |
-| наступного року | /nɑˈstupnoɦo ˈroku/ | next year | phrase | - | genitive |
+| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | - |
+| післязавтра | /pisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | - |
+| наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | next week | phrase | - | genitive |
+| наступного місяця | /nɑˈstupnɔɦɔ ˈmisʲɑt͡sʲɑ/ | next month | phrase | - | genitive |
+| наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | next year | phrase | - | genitive |
 | скоро | /ˈskɔrɔ/ | soon | adv | - | - |
-| пізніше | /ˈpiznʲiʃe/ | later | adv | - | comparative |
+| пізніше | /pizˈnʲiʃe/ | later | adv | - | comparative |
 | потім | /ˈpɔtim/ | then, afterwards | adv | - | - |
 | згодом | /ˈzɦɔdɔm/ | eventually, later | adv | - | - |
 | буду | /ˈbudu/ | I will be | verb | - | future of бути |
 | збираюся | /zbɪˈrɑjusʲɑ/ | I am going to | verb | - | reflexive |
 | планую | /plɑˈnuju/ | I plan | verb | - | Class I |
-| хочу | /ˈxɔtʃu/ | I want | verb | - | irregular |
+| хочу | /ˈxɔt͡ʃu/ | I want | verb | - | irregular |
 | маю намір | /ˈmɑju ˈnɑmir/ | I intend | phrase | - | - |
 | сподіваюся | /spɔdʲiˈvɑjusʲɑ/ | I hope | verb | - | reflexive |
-| обіцяю | /ɔˈbitsʲɑju/ | I promise | verb | - | Class I |
+| обіцяю | /ɔbiˈt͡sʲɑju/ | I promise | verb | - | Class I |
 | спробую | /ˈsprɔbuju/ | I will try | verb | - | perfective |
 | постараюся | /pɔstɑˈrɑjusʲɑ/ | I will try (my best) | verb | - | perfective, reflexive |
 | мрію | /ˈmriju/ | I dream | verb | - | Class I |
 | думаю | /ˈdumɑju/ | I think | verb | - | Class I |
-| вирішив | /wɪˈriʃɪw/ | I decided (m) | verb | - | past, perfective |
-| вже | /wʒe/ | already | adv | - | - |
-| ще | /ʃtʃe/ | still, yet | adv | - | - |
+| вирішив | /vɪˈriʃɪv/ | I decided (m) | verb | - | past, perfective |
+| вже | /vʒɛ/ | already | adv | - | - |
+| ще | /ʃt͡ʃɛ/ | still, yet | adv | - | - |
 | ніколи | /nʲiˈkɔlɪ/ | never | adv | - | - |
-| обов'язково | /ɔbɔwjɑzˈkɔwɔ/ | definitely, must | adv | - | - |
+| обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |
 
 ---

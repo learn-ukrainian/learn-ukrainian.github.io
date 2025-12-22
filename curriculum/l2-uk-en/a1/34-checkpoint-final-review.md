@@ -847,23 +847,23 @@ At a café:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| вітаємо | /wʲiˈtɑjemɔ/ | congratulations | verb | — | 1st pl |
+| вітаємо | /vʲiˈtɑjɛmɔ/ | congratulations | verb | — | 1st pl |
 | досягнення | /dɔsʲɑhˈnɛnʲːɑ/ | achievement | noun | n | |
-| рівень | /ˈrʲiwɛnʲ/ | level | noun | m | |
+| рівень | /ˈrʲivɛnʲ/ | level | noun | m | |
 | прогрес | /prɔˈhrɛs/ | progress | noun | m | |
 | знання | /ˈznɑnʲːɑ/ | knowledge | noun | n | |
-| вміння | /ˈwmʲinʲːɑ/ | skill | noun | n | |
+| вміння | /ˈvmʲinʲːɑ/ | skill | noun | n | |
 | успіх | /usˈpʲix/ | success | noun | m | |
-| мова | /ˈmɔwɑ/ | language | noun | f | |
+| мова | /ˈmɔvɑ/ | language | noun | f | |
 | практика | /ˈprɑktɪkɑ/ | practice | noun | f | |
 | граматика | /hrɑˈmɑtɪkɑ/ | grammar | noun | f | |
-| слово | /ˈslɔwɔ/ | word | noun | n | |
-| речення | /rɛˈtʃɛnʲːɑ/ | sentence | noun | n | |
-| читання | /tʃɪˈtɑnʲːɑ/ | reading | noun | n | |
+| слово | /ˈslɔvɔ/ | word | noun | n | |
+| речення | /rɛˈt͡ʃɛnʲːɑ/ | sentence | noun | n | |
+| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | n | |
 | письмо | /ˈpɪsʲmɔ/ | writing | noun | n | |
-| говоріння | /hɔwɔˈrʲinʲːɑ/ | speaking | noun | n | |
+| говоріння | /hɔvɔˈrʲinʲːɑ/ | speaking | noun | n | |
 | слухання | /ˈsluxɑnʲːɑ/ | listening | noun | n | |
-| повторення | /pɔwtɔˈrɛnʲːɑ/ | review | noun | n | |
+| повторення | /pɔvtɔˈrɛnʲːɑ/ | review | noun | n | |
 | оцінка | /ɔˈt͡sʲinkɑ/ | assessment | noun | f | |
 | розуміння | /rɔzuˈmʲinʲːɑ/ | understanding | noun | n | |
 | майстерність | /mɑjˈstɛrnʲistʲ/ | mastery | noun | f | |

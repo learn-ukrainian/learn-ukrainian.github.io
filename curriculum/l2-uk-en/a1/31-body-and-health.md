@@ -560,6 +560,9 @@ Match the Ukrainian word with its English meaning.
 11. таблетки / ось / ваші
     > [!answer] Ось ваші таблетки
 
+12. мені / погано / дуже
+    > [!answer] Мені дуже погано
+
 ---
 
 ## true-false: Health Facts
@@ -608,33 +611,33 @@ Match the Ukrainian word with its English meaning.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| голова | /hɔlɔˈwɑ/ | head | n | f | |
+| голова | /hɔlɔˈvɑ/ | head | n | f | |
 | рука | /ruˈkɑ/ | hand/arm | n | f | |
 | нога | /nɔˈhɑ/ | leg/foot | n | f | |
-| живіт | /ʒɪˈwʲit/ | stomach | n | m | |
+| живіт | /ʒɪˈvʲit/ | stomach | n | m | |
 | спина | /spɪˈnɑ/ | back | n | f | |
 | горло | /ˈhɔrlɔ/ | throat | n | n | |
 | око | /ˈɔkɔ/ | eye | n | n | pl: очі |
-| вухо | /ˈwuxɔ/ | ear | n | n | pl: вуха |
+| вухо | /ˈvuxɔ/ | ear | n | n | pl: вуха |
 | ніс | /nʲis/ | nose | n | m | |
 | рот | /rɔt/ | mouth | n | m | |
 | зуб | /zub/ | tooth | n | m | pl: зуби |
 | тіло | /ˈtʲilɔ/ | body | n | n | |
-| здоров'я | /zdɔˈrɔwjɑ/ | health | n | n | |
+| здоров'я | /zdɔˈrɔvjɑ/ | health | n | n | |
 | лікар | /ˈlʲikɑr/ | doctor | n | m | |
 | лікарня | /lʲiˈkɑrnʲɑ/ | hospital | n | f | |
 | аптека | /ɑpˈtɛkɑ/ | pharmacy | n | f | |
 | ліки | /ˈlʲikɪ/ | medicine | n | pl | always plural |
 | таблетка | /tɑbˈlɛtkɑ/ | pill/tablet | n | f | |
-| температура | /tempɛrɑˈturɑ/ | fever/temperature | n | f | |
+| температура | /tɛmpɛrɑˈturɑ/ | fever/temperature | n | f | |
 | болить | /bɔˈlɪtʲ/ | hurts | v | — | 3rd person |
-| хворий | /xwɔˈrɪj/ | sick (m) | adj | m | |
-| хвора | /xwɔˈrɑ/ | sick (f) | adj | f | |
-| здоровий | /zdɔˈrɔwɪj/ | healthy (m) | adj | m | |
-| здорова | /zdɔˈrɔwɑ/ | healthy (f) | adj | f | |
+| хворий | /xvɔˈrɪj/ | sick (m) | adj | m | |
+| хвора | /xvɔˈrɑ/ | sick (f) | adj | f | |
+| здоровий | /zdɔˈrɔvɪj/ | healthy (m) | adj | m | |
+| здорова | /zdɔˈrɔvɑ/ | healthy (f) | adj | f | |
 | погано | /pɔˈhɑnɔ/ | bad | adv | — | "Мені погано" |
 | допомога | /dɔpɔˈmɔhɑ/ | help | n | f | |
-| швидка допомога | /ˈʃwɪdkɑ dɔpɔˈmɔhɑ/ | ambulance | n | f | "fast help" |
+| швидка допомога | /ˈʃvɪdkɑ dɔpɔˈmɔhɑ/ | ambulance | n | f | "fast help" |
 | кашель | /ˈkɑʃɛlʲ/ | cough | n | m | |
 | нежить | /ˈnɛʒɪtʲ/ | runny nose | n | m | |
 | застуда | /zɑsˈtudɑ/ | cold (illness) | n | f | |
