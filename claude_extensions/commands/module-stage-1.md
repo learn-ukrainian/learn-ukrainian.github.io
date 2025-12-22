@@ -38,7 +38,26 @@ Extract:
 - Grammar scope
 - Objectives (if listed)
 
-### Step 2b: Detect Checkpoint
+### Step 2b: Read Appropriate Template
+
+**MANDATORY:** Read the template for this module type.
+
+**For B1 modules:**
+- Grammar (M06-45: Aspect, Motion, Complex Sentences, Participles) → `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- Vocabulary (M51-65: Abstract concepts, Opinions, Discourse markers) → `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- Checkpoint (M10, M20, M35, M45, M55, M65, M75, M80) → `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- Cultural (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine) → `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+- Integration (M81-85: Skills, Grammar/Vocab review, Capstone) → `docs/l2-uk-en/templates/b1-integration-module-template.md`
+
+**For other levels:** Check curriculum plan for template references (B2+, C1+, C2+ templates will be available in Phase 3).
+
+The template provides:
+- Required structural sections
+- Common pitfalls to avoid
+- Pre-submission checklist
+- Audit validation examples
+
+### Step 2c: Detect Checkpoint
 
 Check if module is a checkpoint:
 - Curriculum plan says "Checkpoint"

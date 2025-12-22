@@ -38,16 +38,23 @@ From the level, identify:
 
 ### Step 4: Write Content
 
-Replace `[placeholder]` markers with rich content:
+**Follow the template structure** from Stage 1 (Step 2b).
+
+Replace `[placeholder]` markers with rich content following template guidance:
 
 1. **Warm-up/Diagnostic**: Connect to prior knowledge, leading question
 2. **Presentation/Analysis**: Grammar explanation, tables, examples
 3. **Cultural Insight/Deep Dive**: History, culture, engagement boxes
 4. **Practice**: Pattern drills, model exercises
 
-Use ONLY vocabulary from:
+**CRITICAL:** Use ONLY vocabulary from:
 - The module's vocabulary table
 - Prior modules (cumulative)
+
+**Template checklist:**
+- [ ] All required sections from template present
+- [ ] Common pitfalls from template avoided
+- [ ] Structure matches template pattern
 
 ### Step 5: Verify
 
