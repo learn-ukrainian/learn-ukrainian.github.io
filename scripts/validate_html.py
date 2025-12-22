@@ -32,7 +32,7 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 DOCUSAURUS_DIR = PROJECT_ROOT / "docusaurus"
 CURRICULUM_DIR = PROJECT_ROOT / "curriculum"
 
-BASE_URL = "http://localhost:3000/curricula-opus"
+BASE_URL = "http://localhost:3000"
 
 # Activity component names to check for
 ACTIVITY_COMPONENTS = [

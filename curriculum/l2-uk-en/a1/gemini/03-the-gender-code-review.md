@@ -14,7 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 18.5% (target 10-25% (M03))
+- **Immersion:** 🇺🇦 17.2% (target 10-25% (M03))
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (8 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,5 +40,5 @@
 | **true-false: Gender Rules** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: Build the Word** | 🎮 | 12 | Activity (12 items, min 8) |
 | **anagram: More Words** | 🎮 | 12 | Activity (12 items, min 8) |
-| **quiz: Gender Sentence Structure** | 🎮 | 8 | Activity (8 items, min 8) |
+| **quiz: Gender Pronoun Match** | 🎮 | 8 | Activity (8 items, min 8) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

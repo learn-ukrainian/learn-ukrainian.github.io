@@ -549,58 +549,57 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
     > [!answer] ліжко
     > (bed)
 
-## quiz: Gender Sentence Structure
+## quiz: Gender Pronoun Match
 
-> Choose the correct sentence order.
+> Choose the correct pronoun for each noun based on its gender.
 
-1. Identify the correct word order for the sentence: "What is this?"
-   - [x] Що це
-   - [ ] це Що
-   - [ ] це Що
-   > Correct order: Що це
+1. Which pronoun matches **стіл** (table)?
+   - [x] він
+   - [ ] вона
+   - [ ] воно
+   > Стіл ends in a consonant → masculine → він
 
-2. Identify the correct word order for the sentence: "This is a book."
-   - [x] Це книга
-   - [ ] книга Це
-   - [ ] книга Це
-   > Correct order: Це книга
+2. Which pronoun matches **книга** (book)?
+   - [ ] він
+   - [x] вона
+   - [ ] воно
+   > Книга ends in -а → feminine → вона
 
-3. Identify the correct word order for the sentence: "This is a big window."
-   - [x] Це велике вікно
-   - [ ] велике Це вікно
-   - [ ] вікно Це велике
-   > Correct order: Це велике вікно
+3. Which pronoun matches **вікно** (window)?
+   - [ ] він
+   - [ ] вона
+   - [x] воно
+   > Вікно ends in -о → neuter → воно
 
-4. Identify the correct word order for the sentence: "This is a new table."
-   - [x] Це новий стіл
-   - [ ] новий Це стіл
-   - [ ] стіл Це новий
-   > Correct order: Це новий стіл
+4. Which pronoun matches **кімната** (room)?
+   - [ ] він
+   - [x] вона
+   - [ ] воно
+   > Кімната ends in -а → feminine → вона
 
-5. Identify the correct word order for the sentence: "This is a small room."
-   - [x] Це маленька кімната
-   - [ ] маленька Це кімната
-   - [ ] кімната Це маленька
-   > Correct order: Це маленька кімната
+5. Which pronoun matches **дім** (house)?
+   - [x] він
+   - [ ] вона
+   - [ ] воно
+   > Дім ends in a consonant → masculine → він
 
-6. Identify the correct word order for the sentence: "This is a beautiful city."
-   - [x] Це красиве місто
-   - [ ] красиве Це місто
-   - [ ] місто Це красиве
-   > Correct order: Це красиве місто
+6. Which pronoun matches **місто** (city)?
+   - [ ] він
+   - [ ] вона
+   - [x] воно
+   > Місто ends in -о → neuter → воно
 
-7. Identify the correct word order for the sentence: "This is tasty bread."
-   - [x] Це смачний хліб
-   - [ ] смачний Це хліб
-   - [ ] хліб Це смачний
-   > Correct order: Це смачний хліб
+7. Which pronoun matches **лампа** (lamp)?
+   - [ ] він
+   - [x] вона
+   - [ ] воно
+   > Лампа ends in -а → feminine → вона
 
-8. Identify the correct word order for the sentence: "This is cold water."
-   - [x] Це холодна вода
-   - [ ] холодна Це вода
-   - [ ] вода Це холодна
-   > Correct order: Це холодна вода
-
+8. Which pronoun matches **крісло** (armchair)?
+   - [ ] він
+   - [ ] вона
+   - [x] воно
+   > Крісло ends in -о → neuter → воно
 
 ---
 # Vocabulary
