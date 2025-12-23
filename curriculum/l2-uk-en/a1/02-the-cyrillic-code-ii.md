@@ -94,8 +94,8 @@ The soft sign **Ь** (myakyi znak) is perhaps the strangest letter for English s
 
 | Without Ь | With Ь | Difference |
 |-----------|--------|------------|
-| кон (kon) "horse" | кінь (kinʲ) "end" | "n" vs "nʲ" (soft n) |
-| брат (brat) "brother" | брать (bratʲ) "take (they)" | "t" vs "tʲ" (soft t) |
+| рис (rys) "rice" | рись (rysʲ) "lynx" | "s" vs "sʲ" (soft s) |
+| лан (lan) "field" | лань (lanʲ) "doe" | "n" vs "nʲ" (soft n) |
 
 The soft sign appears in the word **будь ла́ска** (please): "budʲ láska." That **Ь** softens the **Д** sound.
 
@@ -105,7 +105,7 @@ The soft sign appears in the word **будь ла́ска** (please): "budʲ lá
 
 ### The Hard I (И)
 
-The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, somewhere between "i" and "uh":
+The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, like "i" in "bit" or "sit":
 
 | Letter | Sound | Example |
 |--------|-------|---------|

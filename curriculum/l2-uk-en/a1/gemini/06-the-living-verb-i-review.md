@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): знаходити...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): розуміти, знаходити...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation
@@ -12,18 +12,18 @@
 - 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1258/500
+- **Words:** ✅ 1253/500
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 7/4 types
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 24/1
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 26.0% (target 15-35% (M06))
+- **Immersion:** 🇺🇦 25.9% (target 15-35% (M06))
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -37,7 +37,7 @@
 | **The Living Verb I** | ⚪️ | 187 | Skipped |
 | **Warm-up** | ✅ | 45 | Included in Core |
 | **Presentation** | ✅ | 449 | Included in Core |
-| **Practice** | ⚪️ | 215 | Skipped |
+| **Practice** | ⚪️ | 210 | Skipped |
 | **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Reading Practice: Мій день (My Day)** | ✅ | 68 | Included in Core |
 | **Summary** | ✅ | 139 | Included in Core |

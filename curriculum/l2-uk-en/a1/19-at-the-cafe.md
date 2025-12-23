@@ -674,8 +674,8 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 |------|-----|---------|-----|--------|------|
 | столик | /ˈstɔlɪk/ | table (small) | noun | m | diminutive of стіл |
 | порекомендувати | /porɛkomɛnduˈvɑtɪ/ | to recommend | verb | - | perfective |
-| спробувати | /sprobuˈvɑtɪ/ | to try | verb | - | perfective |
-| візьму | /ˈvʲizʲmu/ | I'll take | verb | - | future of взяти |
+| спробувати | /ˈsprobuvɑtɪ/ | to try | verb | - | perfective |
+| візьму | /vʲizʲˈmu/ | I'll take | verb | - | future of взяти |
 | принесіть | /prɪnɛˈsʲitʲ/ | bring (imperative) | verb | - | perfective |
 | ще | /ʃt͡ʃɛ/ | still, more, another | adverb | - | |
 | достатньо | /dosˈtɑtʲnʲo/ | enough | adverb | - | |
@@ -684,6 +684,6 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 | замовити | /zɑˈmovɪtɪ/ | to order | verb | - | perfective |
 | круасан | /kruɑˈsɑn/ | croissant | noun | m | |
 | чорний | /ˈt͡ʃornɪj/ | black | adjective | m | |
-| трав'яний | /trɑvʲˈjɑnɪj/ | herbal | adjective | m | |
+| трав'яний | /trɑvjɑˈnɪj/ | herbal | adjective | m | |
 
 ---

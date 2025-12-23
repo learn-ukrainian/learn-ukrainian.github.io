@@ -363,7 +363,7 @@ Gender affects adjectives, pronouns, and case endings. Master gender now, and ev
 
 ## fill-in: Complete with Gender
 
-1. ___ є masculine noun.
+1. ___ is a masculine noun.
    > [!answer] Стіл
    > [!options] Стіл | Книга | Вікно | Кімната
 

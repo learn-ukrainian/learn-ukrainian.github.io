@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1094/750
+- **Words:** ✅ 960/750
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.0% (target 35-55% (M26))
+- **Immersion:** 🇺🇦 36.1% (target 35-55% (M26))
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -27,13 +27,13 @@
 |---|---|---|---|
 | **Describing Things - Adjectives** | ⚪️ | 0 | Skipped |
 | **Warm-up** | ✅ | 54 | Included in Core |
-| **Grammar** | ⚪️ | 63 | Skipped |
-| **Hard Stem Adjective Endings** | ⚪️ | 61 | Skipped |
+| **Grammar** | ⚪️ | 30 | Skipped |
+| **Hard Stem Adjective Endings** | ⚪️ | 28 | Skipped |
 | **Soft Stem Adjective Endings** | ⚪️ | 68 | Skipped |
-| **Adjective Position** | ⚪️ | 45 | Skipped |
+| **Adjective Position** | ⚪️ | 26 | Skipped |
 | **Common Antonym Pairs** | ⚪️ | 9 | Skipped |
-| **Examples in Context** | ✅ | 329 | Included in Core |
-| **Dialogues** | ✅ | 365 | Included in Core |
+| **Examples in Context** | ✅ | 301 | Included in Core |
+| **Dialogues** | ✅ | 344 | Included in Core |
 | **Summary** | ✅ | 100 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Антоніми (Antonym Pairs)** | 🎮 | 12 | Activity (12 items, min 8) |

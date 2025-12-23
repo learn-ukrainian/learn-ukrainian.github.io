@@ -69,9 +69,11 @@ Review the module, fix violations, repeat until PASS.
 - [ ] Mini-dialogues present
 
 ### 6. Linguistic Purity
-- [ ] No Surzhyk (see LINGUISTIC-PURITY-GUIDE.md)
+- [ ] No Surzhyk or "Ghost Words" (Verify spelling is Ukrainian, not Russian). See LINGUISTIC-PURITY-GUIDE.md
 - [ ] No AI contamination ("wait", "actually", "let me")
 - [ ] Correct Ukrainian spelling and grammar
+- [ ] **NO Russian Characters**: Search for `ё`, `ъ`, `ы`, `э` (Forbidden).
+- [ ] **NO Russian Phonetics**: No comparisons like "Ukrainian И is like Russian Ы".
 
 ## Fix Strategy
 

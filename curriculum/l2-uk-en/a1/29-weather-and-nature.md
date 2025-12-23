@@ -422,52 +422,52 @@ Match the Ukrainian word with its English meaning.
 > Choose the correct season based on these Ukrainian weather descriptions.
 
 1. Which season correctly matches "Йде сніг, холодно" here?
-   - [x] Зима
    - [ ] Літо
    - [ ] Весна
+   - [x] Зима
    - [ ] Осінь
 
-2. How is the phrase "Жарко, сонячно, море" accurately categorized today?
-   - [x] Літо
+2. How is the phrase "Жарко, сонячно, море" categorized?
    - [ ] Зима
-   - [ ] Весна
    - [ ] Осінь
+   - [x] Літо
+   - [ ] Весна
 
-3. What season accurately describes "Тепло, квіти, йде дощ"?
+3. What season describes "Тепло, квіти, йде дощ"?
    - [x] Весна
    - [ ] Літо
    - [ ] Зима
    - [ ] Осінь
 
-4. Which category summarizes "Холодно, хмарно, вітряно" most correctly?
-   - [x] Осінь
+4. Which category summarizes "Холодно, хмарно, вітряно"?
    - [ ] Літо
    - [ ] Весна
+   - [x] Осінь
    - [ ] Зима
 
 5. What is the correct season when "Діти грають у сніг"?
+   - [ ] Літо
    - [x] Зима
-   - [ ] Літо
    - [ ] Весна
    - [ ] Осінь
 
-6. Which season do "Люди на пляжі" accurately represent today?
+6. Which season does "Люди на пляжі" represent?
+   - [ ] Зима
    - [x] Літо
-   - [ ] Зима
    - [ ] Осінь
    - [ ] Весна
 
-7. How is "Листя падає з дерев" correctly translated into a season?
+7. How is "Листя падає з дерев" translated into a season?
+   - [ ] Літо
+   - [ ] Весна
    - [x] Осінь
-   - [ ] Літо
-   - [ ] Весна
    - [ ] Зима
 
-8. What is the season when "Птахи повертаються з півдня" correctly?
-   - [x] Весна
+8. What is the season when "Птахи повертаються з півдня"?
    - [ ] Осінь
    - [ ] Зима
    - [ ] Літо
+   - [x] Весна
 
 ---
 
@@ -475,52 +475,52 @@ Match the Ukrainian word with its English meaning.
 
 > Sort these Ukrainian nature words into their correct logical groups.
 
-1. Which category does accurately the word "Собака" belong to?
-   - [x] Тварина
+1. Which category does the word "Собака" belong to?
    - [ ] Рослина
+   - [x] Тварина
    - [ ] Погода
    - [ ] Сезон
 
-2. What is exactly the correct category for "Дерево" here?
-   - [x] Рослина
+2. What is the correct category for "Дерево"?
    - [ ] Тварина
+   - [x] Рослина
    - [ ] Місто
    - [ ] Одяг
 
-3. Which classification fits "Кіт" most accurately in Ukrainian?
-   - [x] Тварина
+3. Which classification accurately fits "Кіт"?
    - [ ] Рослина
+   - [x] Тварина
    - [ ] Транспорт
    - [ ] Гроші
 
-4. What is accurately the group for the word "Квітка"?
-   - [x] Рослина
+4. What is the group for the word "Квітка"?
    - [ ] Тварина
    - [ ] Колір
+   - [x] Рослина
    - [ ] Прислівник
 
-5. Which category represents the word "Птах" most correctly today?
+5. Which category accurately represents the word "Птах"?
    - [x] Тварина
    - [ ] Рослина
    - [ ] Будинок
    - [ ] Сім'я
 
-6. How is the word "Ліс" correctly categorized in English?
-   - [x] Рослина
+6. How is the word "Ліс" categorized?
    - [ ] Тварина
+   - [x] Рослина
    - [ ] Посуд
    - [ ] Робота
 
-7. Which category matches the word "Риба" accurately in Ukrainian?
-   - [x] Тварина
+7. Which category matches the word "Риба"?
    - [ ] Рослина
    - [ ] Овоч
+   - [x] Тварина
    - [ ] Фрукт
 
-8. What accurately is the group for the word "Трава"?
+8. What is the group for the word "Трава"?
+   - [ ] Напій
    - [x] Рослина
    - [ ] Тварина
-   - [ ] Напій
    - [ ] Транспорт
 
 ---
@@ -529,26 +529,26 @@ Match the Ukrainian word with its English meaning.
 
 Put the words in the correct order.
 
-1. погода / яка / сьогодні
-   > [!answer] Яка сьогодні погода
+1. погода / яка / сьогодні / надворі
+   > [!answer] Яка сьогодні погода надворі
 
 2. тепло / сьогодні / і / сонячно
    > [!answer] Сьогодні тепло і сонячно
 
-3. йде / взимку / сніг
-   > [!answer] Взимку йде сніг
+3. йде / взимку / часто / сніг
+   > [!answer] Взимку часто йде сніг
 
-4. жарко / влітку / дуже
-   > [!answer] Влітку дуже жарко
+4. жарко / влітку / завжди / дуже
+   > [!answer] Влітку завжди дуже жарко
 
-5. дощ / весною / йде
-   > [!answer] Весною йде дощ
+5. дощ / весною / часто / йде
+   > [!answer] Весною часто йде дощ
 
 6. є / у мене / собака
    > [!answer] У мене є собака
 
-7. кіт / мій / білий
-   > [!answer] Мій кіт білий
+7. кіт / мій / дуже / білий
+   > [!answer] Мій кіт дуже білий
 
 8. багато / у парку / дерев
    > [!answer] У парку багато дерев
@@ -556,14 +556,14 @@ Put the words in the correct order.
 9. гори / в Карпатах / є
    > [!answer] В Карпатах є гори
 
-10. річка / Дніпро / велика
-   > [!answer] Дніпро велика річка
+10. річка / Дніпро / велика / це
+   > [!answer] Дніпро це велика річка
 
-11. люблю / я / море
-   > [!answer] Я люблю море
+11. люблю / я / дуже / море
+   > [!answer] Я дуже люблю море
 
-12. холодно / надворі / сьогодні
-   > [!answer] Сьогодні надворі холодно
+12. холодно / надворі / сьогодні / дуже
+   > [!answer] Сьогодні надворі дуже холодно
 
 
 ---
@@ -601,7 +601,7 @@ Is this true or false?
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| погода | /pɔˈhɔdɑ/ | weather | n | f | |
+| погода | /pɔˈɦɔdɑ/ | weather | n | f | |
 | температура | /tɛmpɛrɑˈturɑ/ | temperature | n | f | |
 | тепло | /ˈtɛplɔ/ | warm | adv | — | impersonal |
 | холодно | /ˈxɔlɔdnɔ/ | cold | adv | — | impersonal |
@@ -613,14 +613,14 @@ Is this true or false?
 | хмара | /ˈxmɑrɑ/ | cloud | n | f | |
 | вітер | /ˈvʲitɛr/ | wind | n | m | |
 | дощ | /dɔʃt͡ʃ/ | rain | n | m | |
-| сніг | /snʲih/ | snow | n | m | |
+| сніг | /snʲiɦ/ | snow | n | m | |
 | йде дощ | /jdɛ dɔʃt͡ʃ/ | it's raining | expr | — | literally "rain goes" |
-| йде сніг | /jdɛ snʲih/ | it's snowing | expr | — | literally "snow goes" |
+| йде сніг | /jdɛ snʲiɦ/ | it's snowing | expr | — | literally "snow goes" |
 | природа | /prɪˈrɔdɑ/ | nature | n | f | |
 | дерево | /ˈdɛrɛvɔ/ | tree | n | n | |
 | квітка | /ˈkvʲitkɑ/ | flower | n | f | |
 | ліс | /lʲis/ | forest | n | m | |
-| гора | /hɔˈrɑ/ | mountain | n | f | |
+| гора | /ɦɔˈrɑ/ | mountain | n | f | |
 | озеро | /ˈɔzɛrɔ/ | lake | n | n | |
 | тварина | /tvɑˈrɪnɑ/ | animal | n | f | |
 | пес | /pɛs/ | dog (male) | n | m | |

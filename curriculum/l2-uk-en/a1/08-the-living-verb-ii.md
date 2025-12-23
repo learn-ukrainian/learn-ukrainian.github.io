@@ -629,8 +629,8 @@ With Class I and Class II verbs combined, you can now express hundreds of action
    - [ ] хочуть
    > він хоче = he wants
 
-9. Чи ти зараз виконуєш ___ вправу вдома?
-   - [ ] робиш
+9. Чи ти зараз ___ вправу вдома?
+   - [ ] робити
    - [x] робиш
    - [ ] робить
    - [ ] роблять

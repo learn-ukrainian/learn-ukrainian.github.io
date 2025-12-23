@@ -1,16 +1,28 @@
-## Module 19: At the Café
+# Content Consistency Review for a1-19
 
-**Scores:** Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | **Overall 5/5**
-**Status:** ✅ PASS
+## 1. Coherence and Flow
+- **Rating:** 5/5
+- **Comments:** seamless transition from vocab to dialogue.
 
-### Strengths
-- Excellent focus on politeness (`візьму` vs `хочу`) which is crucial for A1 communication.
-- Strong cultural immersion with Lviv coffee culture and Kyiv cake.
-- Functional dialogue practice.
-- Consistent IPA usage.
+## 2. Coherence and Relevance
+- **Rating:** 5/5
+- **Comments:** "Coffee culture" focus is perfect for Lviv/Kyiv context.
 
-### Issues
-- None identified.
+## 3. Educational Value
+- **Rating:** 5/5
+- **Comments:** The distinction between "хочу" and "візьму" is a critical pragmatic lesson often missed in beginners' courses.
 
-### Recommendation
-✅ PASS
+## 4. Language Quality
+- **Rating:** 4/5
+- **Comments:**
+    - **IPA Errors:**
+        - `спробувати` /ˈsprobuvɑtɪ/ (Stress on first syllable). Current: /sprobuˈvɑtɪ/.
+        - `візьму` /vʲizʲˈmu/ (Stress on last syllable). Current: /ˈvʲizʲmu/.
+        - `трав'яний` /trɑvjɑˈnɪj/ (Stress on last syllable). Current: /trɑvʲˈjɑnɪj/.
+
+## 5. Pedagogical Effectiveness
+- **Rating:** 5/5
+- **Comments:** Excellent scaffolding.
+
+## General Comments
+Great module. Fixing IPA.

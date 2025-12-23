@@ -413,7 +413,7 @@ Match the Ukrainian word with its English meaning.
    - [ ] January 1
    - [ ] December 31
 
-2. How do you accurately translate "Новий рік" into English?
+2. How do you translate "Новий рік" into English?
    - [x] New Year
    - [ ] Christmas
    - [ ] Easter
@@ -425,13 +425,13 @@ Match the Ukrainian word with its English meaning.
    - [ ] З Різдвом!
    - [ ] З Великоднем!
 
-4. What accurately is the meaning of "Великдень" in English?
+4. What is the meaning of "Великдень" in English?
    - [x] Easter
    - [ ] Christmas
    - [ ] New Year
    - [ ] Birthday
 
-5. What is correctly represented by "Бажаю щастя!" in English?
+5. What is represented by "Бажаю щастя!"?
    - [x] I wish you happiness!
    - [ ] Happy birthday!
    - [ ] Merry Christmas!
@@ -449,7 +449,7 @@ Match the Ukrainian word with its English meaning.
    - [ ] З Днем народження!
    - [ ] З Великоднем!
 
-8. What correctly is the meaning of "подарунок" here?
+8. What is the meaning of "подарунок"?
    - [x] Gift/present
    - [ ] Cake
    - [ ] Party
@@ -545,7 +545,7 @@ Is this true or false?
 | святкувати | /svjɑtˈkuvɑtɪ/ | to celebrate | v | — | |
 | дарувати | /dɑruˈvɑtɪ/ | to give (as gift) | v | — | |
 | отримувати | /ɔˈtrɪmuvɑtɪ/ | to receive | v | — | |
-| гості | /ˈhɔstʲi/ | guests | n | pl | |
+| гості | /ˈɦɔstʲi/ | guests | n | pl | |
 | торт | /tɔrt/ | cake | n | m | |
 | свічка | /ˈsvʲit͡ʃkɑ/ | candle | n | f | |
 | квіти | /ˈkvʲitɪ/ | flowers | n | pl | |

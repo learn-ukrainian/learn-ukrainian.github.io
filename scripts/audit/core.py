@@ -35,9 +35,11 @@ from .checks import (
     count_items,
     check_markdown_format,
     check_section_order,
+    check_section_order,
     check_activity_ukrainian_content,
     check_resources_placement,
     check_resources_required,
+    check_content_quality,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -728,6 +730,16 @@ def audit_module(file_path: str) -> bool:
             'issue': v['message'],
             'fix': f"Reorder sections to: Summary → Activities → Self-Assessment → External → Vocabulary",
             'line': v.get('line', 0)
+        })
+    
+    # Run content quality checks (LLM-based + deterministic purity checks)
+    content_quality_violations = check_content_quality(content, level_code, module_num)
+    for v in content_quality_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': v['severity'],
+            'issue': v['issue'],
+            'fix': v['fix']
         })
 
     # Run activity content checks (Issue #235)

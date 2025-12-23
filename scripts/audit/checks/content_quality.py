@@ -110,6 +110,7 @@ def call_gemini_api(lesson_content: str, metadata: dict) -> Optional[dict]:
 3. **Educational Value**: Are there clear explanations and useful examples?
 4. **Language Quality**: Is it well-written, not repetitive or confusing?
 5. **Word Salad Check**: Does it contain meaningless filler or repetitive patterns?
+6. **Linguistic Accuracy**: Are all examples valid Ukrainian words? (Flag any Russian words like 'брать', 'кон', 'ы' disguised as Ukrainian).
 
 **Response Format (JSON only):**
 {{
@@ -226,12 +227,39 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
             'fix': 'Suggested fix'
         }
     """
-    if not CONTENT_QUALITY_ENABLED:
-        return []
-
     violations = []
 
-    # Extract lesson content and metadata
+    # --- Deterministic Checks (Run regardless of API Key or Enabled Flag) ---
+    
+    # Check for Russian-only characters (ё, ъ, ы, э)
+    # These should almost NEVER appear in Ukrainian content except in explicit "Russian uses..." comparisons
+    # NOTE: We scan the ENTIRE content (including Activities) for this check.
+    russian_chars = re.compile(r'[ёъыэЁЪЫЭ]')
+    matches = list(russian_chars.finditer(content))
+    
+    if matches:
+        # Check if they are inside a "Russian" context (simple heuristic)
+        # If the word "Russian" or "російськ" is NOT in the same line/paragraph, flag it.
+        bad_matches = []
+        for m in matches:
+            start, end = max(0, m.start() - 50), min(len(content), m.end() + 50)
+            context = content[start:end].lower()
+            # STRICTER CHECK: Even with context, we warn about it, but for now let's just flag if context missing
+            if 'russian' not in context and 'rocійськ' not in context and 'російськ' not in context:
+                bad_matches.append(m.group())
+        
+        if bad_matches:
+             violations.append({
+                'type': 'LINGUISTIC_PURITY',
+                'severity': 'error',
+                'issue': f"Found Russian-only characters in module: {', '.join(set(bad_matches))}",
+                'fix': "Remove Russian characters (ё, ъ, ы, э) or ensure they are properly contextually framed."
+            })
+
+    if not CONTENT_QUALITY_ENABLED:
+        return violations
+
+    # Extract lesson content and metadata for LLM checks
     lesson_content = extract_lesson_content(content)
     metadata = extract_module_metadata(content)
 
@@ -240,7 +268,7 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'warning',
-            'message': f'Lesson content too short ({len(lesson_content)} chars)',
+            'issue': f'Lesson content too short ({len(lesson_content)} chars)',
             'fix': 'Expand lesson content with more explanations and examples'
         })
         return violations
@@ -255,10 +283,14 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'info',
-            'message': 'LLM evaluation unavailable (set GEMINI_API_KEY or ANTHROPIC_API_KEY)',
+            'issue': 'LLM evaluation unavailable (set GEMINI_API_KEY or ANTHROPIC_API_KEY)',
             'fix': 'Set API key in environment to enable content quality checks'
         })
         return violations
+
+    if evaluation is None:
+        return violations
+
 
     # Check overall score
     overall_score = evaluation.get('overall_score', 0)
@@ -266,14 +298,14 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'error',
-            'message': f'Low quality score: {overall_score}/5',
+            'issue': f'Low quality score: {overall_score}/5',
             'fix': f"Issues: {', '.join(evaluation.get('issues', []))}"
         })
     elif overall_score == 3:
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'warning',
-            'message': f'Moderate quality score: {overall_score}/5',
+            'issue': f'Moderate quality score: {overall_score}/5',
             'fix': f"Consider improvements: {', '.join(evaluation.get('issues', []))}"
         })
 
@@ -282,7 +314,7 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'error',
-            'message': 'Content appears to be word salad or meaningless filler',
+            'issue': 'Content appears to be word salad or meaningless filler',
             'fix': 'Rewrite with clear educational structure and meaningful examples'
         })
 
@@ -294,7 +326,7 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
             violations.append({
                 'type': 'CONTENT_QUALITY',
                 'severity': 'warning',
-                'message': f'Low {metric_name} score: {score}/5',
+                'issue': f'Low {metric_name} score: {score}/5',
                 'fix': f"Improve {metric_name.lower()}"
             })
 
@@ -304,14 +336,14 @@ def check_content_quality(content: str, level_code: str, module_num: int) -> lis
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'error',
-            'message': 'LLM recommends complete rewrite',
+            'issue': 'LLM recommends complete rewrite',
             'fix': f"Major issues: {', '.join(evaluation.get('issues', []))}"
         })
     elif recommendation == 'NEEDS_IMPROVEMENT':
         violations.append({
             'type': 'CONTENT_QUALITY',
             'severity': 'warning',
-            'message': 'LLM recommends improvements',
+            'issue': 'LLM recommends improvements',
             'fix': f"Suggested: {', '.join(evaluation.get('issues', []))}"
         })
 

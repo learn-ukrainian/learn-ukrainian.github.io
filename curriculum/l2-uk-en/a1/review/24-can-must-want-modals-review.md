@@ -1,16 +1,27 @@
-## Module 24: Can, Must, Want - Modals
+# Content Consistency Review for a1-24
 
-**Scores:** Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | **Overall 5/5**
-**Status:** ✅ PASS
+## 1. Coherence and Flow
+- **Rating:** 5/5
+- **Comments:** The comparison between "могти" and "вміти" is explained perfectly.
 
-### Strengths
-- Clear distinction between `могти` (ability) and `вміти` (skill).
-- Good explanation of obligation and permission.
-- Strong cultural note about "The Nightingale Language".
+## 2. Coherence and Relevance
+- **Rating:** 5/5
+- **Comments:** Modals are crucial for basic survival ("можна?") and politeness.
 
-### Issues
-- **Minor Issue:** IPA used `/w/`, `/e/` instead of `/ɛ/`, and other minor inconsistencies.
-- **Action Taken:** Fixed IPA to `/v/`, `/ɛ/` and standardized symbols. ✅ FIXED
+## 3. Educational Value
+- **Rating:** 5/5
+- **Comments:** Myth buster about Ukrainian being a dialect is excellent cultural context.
 
-### Recommendation
-✅ PASS
+## 4. Language Quality
+- **Rating:** 4.5/5
+- **Comments:**
+    - **IPA Errors:**
+        - `впевнений` /ˈvpɛvnɛnɪj/ (stress on first syllable). Current: /vpɛvˈnɛnɪj/.
+        - `пробувати` /ˈprɔbuvɑtɪ/ (stress on first syllable). Current: /prɔbuˈvɑtɪ/.
+
+## 5. Pedagogical Effectiveness
+- **Rating:** 5/5
+- **Comments:** Good drills.
+
+## General Comments
+Strong module. Fixing IPA.

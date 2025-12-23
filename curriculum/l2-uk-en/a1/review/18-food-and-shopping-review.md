@@ -1,17 +1,29 @@
-## Module 18: Food & Shopping
+# Content Consistency Review for a1-18
 
-**Scores:** Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | **Overall 5/5**
-**Status:** ✅ PASS
+## 1. Coherence and Flow
+- **Rating:** 5/5
+- **Comments:** Good integration of previous grammar (Accusative/Genitive) into a new context.
 
-### Strengths
-- Comprehensive vocabulary including food, drinks, and non-food items.
-- Excellent cultural insights into market vs supermarket culture.
-- Good S.T.A.L.K.E.R. reference (Grocery Run).
-- Strong pedagogical focus on using Accusative and Genitive in real life.
+## 2. Coherence and Relevance
+- **Rating:** 5/5
+- **Comments:** Highly relevant. Covers supermarkets, markets, and cafes.
 
-### Issues
-- **Minor Issue:** IPA for `страва`, `кава` etc. used `/w/`.
-- **Action Taken:** Fixed IPA to `/v/`. ✅ FIXED
+## 3. Educational Value
+- **Rating:** 5/5
+- **Comments:** Good cultural notes on market etiquette and history (Holodomor, Borsch).
 
-### Recommendation
-✅ PASS
+## 4. Language Quality
+- **Rating:** 4/5
+- **Comments:**
+    - **IPA Errors:**
+        - `зубна` /zubˈnɑ/ (stress on last syllable). Current: /ˈzubnɑ/.
+        - `олівець` /ɔlʲiˈvɛt͡sʲ/ (stress on last syllable, soft l). Current: /ɔˈlivɛt͡sʲ/.
+        - `відчинено` /vidˈt͡ʃɪnɛnɔ/ (stress on `чи`). Current: /vidt͡ʃɪˈnɛnɔ/.
+        - `зачинено` /zɑˈt͡ʃɪnɛnɔ/ (stress on `чи`). Current: /zɑt͡ʃɪˈnɛnɔ/.
+
+## 5. Pedagogical Effectiveness
+- **Rating:** 5/5
+- **Comments:** Drills are effective.
+
+## General Comments
+Strong module. Fixing IPA stress.

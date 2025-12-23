@@ -591,11 +591,11 @@ Decide if each statement is true or false.
 | здатний | /ˈzdɑtnɪj/ | capable (m) | adj | m | здатна (f) |
 | готовий | /ɦɔˈtɔvɪj/ | ready (m) | adj | m | готова (f) |
 | згодний | /ˈzɦɔdnɪj/ | agree, willing (m) | adj | m | згодна (f) |
-| впевнений | /vpɛvˈnɛnɪj/ | sure, confident (m) | adj | m | впевнена (f) |
+| впевнений | /ˈvpɛvnɛnɪj/ | sure, confident (m) | adj | m | впевнена (f) |
 | певний | /ˈpɛvnɪj/ | certain (m) | adj | m | певна (f) |
 | намагатися | /nɑmɑˈɦɑtɪsʲɑ/ | to try, attempt | verb | - | reflexive |
 | старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | verb | - | reflexive |
-| пробувати | /prɔbuˈvɑtɪ/ | to try, taste | verb | - | Class I |
+| пробувати | /ˈprɔbuvɑtɪ/ | to try, taste | verb | - | Class I |
 | вдаватися | /vdɑˈvɑtɪsʲɑ/ | to succeed | verb | - | reflexive |
 | встигати | /vstɪˈɦɑtɪ/ | to manage (in time) | verb | - | Class I |
 | мати змогу | /ˈmɑtɪ ˈzmɔɦu/ | to have ability | phrase | - | - |

@@ -138,7 +138,7 @@ When people see Cyrillic, they often think "Russian alphabet." But Cyrillic belo
 
 Ukrainian Cyrillic has 33 letters. Some exist only in Ukrainian:
 
-**І і** — Ukrainian has this simple "ee" sound; Russian uses Ы instead.
+**І і** — Ukrainian has this simple "ee" sound like in "meet".
 
 **Ї ї** — A uniquely Ukrainian sound (we'll learn it in Module 2).
 

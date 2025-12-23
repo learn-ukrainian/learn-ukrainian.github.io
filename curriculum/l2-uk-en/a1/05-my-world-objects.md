@@ -606,9 +606,9 @@ In this module, you learned:
    > [!answer] Цей
    > [!options] Цей | Ця | Це | Ці
 
-8. — Що ___ на стіні? — ___ картина. (What is that on the wall? That is a painting.)
-   > [!answer] те | Та
-   > [!options] те, Та | той, Той | та, Та | ті, Ті
+8. — Де ___ картина? — Вона на стіні. (Where is that painting? It is on the wall.)
+   > [!answer] Та
+   > [!options] Та | Той | Те | Ті
 
 9. — ___ лампа не працює. — Так, зламана. (This lamp doesn't work. Yes, broken.)
    > [!answer] Ця

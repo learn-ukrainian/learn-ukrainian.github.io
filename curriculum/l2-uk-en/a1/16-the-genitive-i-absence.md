@@ -169,7 +169,7 @@ The word **без** (without) also requires genitive:
 
 ### Українці і час (Ukrainians and Time)
 
-У української культурі фраза "немає часу" (no time) дуже поширена. Українці теплі та гостинні. Вони люблять довгі розмови. Але мешканці міст також дуже зайняті.
+В українській культурі фраза "немає часу" (no time) дуже поширена. Українці теплі та гостинні. Вони люблять довгі розмови. Але мешканці міст також дуже зайняті.
 
 In Ukrainian culture, the phrase "немає часу" (no time) is very common. Ukrainians are warm and hospitable. They love long conversations. But city dwellers are also very busy.
 
@@ -528,10 +528,10 @@ This case is very useful! Next module: genitive with numbers and quantities!
    > Correct: Без цукру, будь ласка
 
 5. Correct sentence order for: "No problem!"
-   - [x] Némає проблем
+   - [x] Немає проблем
    - [ ] проблем Némає
    - [ ] Incorrect order for this sentence
-   > Correct: Némає проблем
+   > Correct: Немає проблем
 
 6. Correct sentence order for: "We don't have a choice."
    - [x] У нас немає вибору
@@ -662,8 +662,8 @@ This case is very useful! Next module: genitive with numbers and quantities!
 | причина | /prɪˈtʃɪnɑ/ | reason | noun | f | gen: причини |
 | сенс | /sens/ | sense | noun | m | gen: сенсу |
 | користь | /ˈkorɪstʲ/ | benefit | noun | f | gen: користі |
-| значення | /znɑˈtʃenʲːɑ/ | meaning | noun | n | gen: значення |
-| різниця | /ˈriznɪt͡sʲɑ/ | difference | noun | f | gen: різниці |
+| значення | /ˈznɑt͡ʃenʲːɑ/ | meaning | noun | n | gen: значення |
+| різниця | /rʲizˈnɪt͡sʲɑ/ | difference | noun | f | gen: різниці |
 | вибір | /ˈvɪbir/ | choice | noun | m | gen: вибору |
 | досвід | /ˈdɔsvid/ | experience | noun | m | gen: досвіду |
 | знання | /ˈznɑnʲːɑ/ | knowledge | noun | n | gen: знання |

@@ -110,7 +110,7 @@ For numbers between tens, simply combine them:
 
 > 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**
 >
-> In the legendary Ukrainian game S.T.A.L.K.E.R., stalkers count their loot in thousands of Russian rubles in the game, but Ukrainian players know the real treasure: **артефакти** (artifacts). If a Bloodsucker drops три артефакти (three artifacts), you're rich! The game developers at GSC Game World in Kyiv put Ukrainian culture into every detail.
+> In the legendary Ukrainian game S.T.A.L.K.E.R., stalkers count their loot, but Ukrainian players know the real treasure: **артефакти** (artifacts). If a Bloodsucker drops три артефакти (three artifacts), you're rich! The game developers at GSC Game World in Kyiv put Ukrainian culture into every detail.
 
 ### Numbers with Nouns: The Grammar of Counting
 
@@ -252,7 +252,7 @@ Modern hryvnia banknotes feature Ukrainian historical figures:
 - **10 грн** - Ivan Mazepa (Іван Мазепа)
 - **20 грн** - Ivan Franko (Іван Франко)
 - **50 грн** - Mykhailo Hrushevsky (Михайло Грушевський)
-- **100 грn** - Taras Shevchenko (Тарас Шевченко)
+- **100 грн** - Taras Shevchenko (Тарас Шевченко)
 - **200 грн** - Lesya Ukrainka (Леся Українка)
 - **500 грн** - Hryhoriy Skovoroda (Григорій Сковорода)
 - **1000 грн** - Volodymyr Vernadsky (Володимир Вернадський)

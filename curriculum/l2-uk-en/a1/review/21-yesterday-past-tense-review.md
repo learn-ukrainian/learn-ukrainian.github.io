@@ -1,16 +1,31 @@
-## Module 21: Yesterday - Past Tense
+# Content Consistency Review for a1-21
 
-**Scores:** Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | **Overall 5/5**
-**Status:** ✅ PASS
+## 1. Coherence and Flow
+- **Rating:** 5/5
+- **Comments:** Clear explanation of gendered past tense.
 
-### Strengths
-- Clear explanation of gender in past tense (-в/-ла/-ло/-ли).
-- Strong engagement with song references ("Chervona Ruta") and family dialogues.
-- Good contrast between "male speaker" and "female speaker" examples.
+## 2. Coherence and Relevance
+- **Rating:** 5/5
+- **Comments:** Essential grammar for narrative.
 
-### Issues
-- **Minor Issue:** IPA used `/w/` and `/u̯/` where we're standardizing on `/v/`.
-- **Action Taken:** Fixed IPA to `/v/`. ✅ FIXED
+## 3. Educational Value
+- **Rating:** 4/5
+- **Comments:**
+    - **Pedagogical Error:** Line 38 states that the past tense endings "-в/-ла/-ло/-ли" ALWAYS contain the letter "л". This is factually incorrect for the masculine singular form "-в". While historically related, pedantically it confuses students who see "читав" and look for an "л".
+    - **Fix:** Clarify that "л" appears in feminine, neuter, and plural forms.
 
-### Recommendation
-✅ PASS
+## 4. Language Quality
+- **Rating:** 4/5
+- **Comments:**
+    - **IPA Errors:**
+        - `раніше` /rɑˈnʲiʃe/ (stress on `i`). Current: /ˈrɑnʲiʃe/.
+        - `колись` /kɔˈlɪsʲ/ (stress on `y`). Current: /ˈkɔlɪsʲ/.
+        - `було` /buˈlɔ/ (stress on `o`). Current: /ˈbulɔ/.
+        - `слухав` /ˈsluxɑv/ (stress on `u`). Current: /sluˈxɑv/.
+
+## 5. Pedagogical Effectiveness
+- **Rating:** 5/5
+- **Comments:** Good drills.
+
+## General Comments
+Strong module. Fixing the "L" rule and IPA.

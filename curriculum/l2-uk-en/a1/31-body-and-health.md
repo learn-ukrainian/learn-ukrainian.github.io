@@ -611,12 +611,12 @@ Match the Ukrainian word with its English meaning.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| голова | /hɔlɔˈvɑ/ | head | n | f | |
+| голова | /ɦɔlɔˈvɑ/ | head | n | f | |
 | рука | /ruˈkɑ/ | hand/arm | n | f | |
-| нога | /nɔˈhɑ/ | leg/foot | n | f | |
+| нога | /nɔˈɦɑ/ | leg/foot | n | f | |
 | живіт | /ʒɪˈvʲit/ | stomach | n | m | |
 | спина | /spɪˈnɑ/ | back | n | f | |
-| горло | /ˈhɔrlɔ/ | throat | n | n | |
+| горло | /ˈɦɔrlɔ/ | throat | n | n | |
 | око | /ˈɔkɔ/ | eye | n | n | pl: очі |
 | вухо | /ˈvuxɔ/ | ear | n | n | pl: вуха |
 | ніс | /nʲis/ | nose | n | m | |
@@ -628,10 +628,10 @@ Match the Ukrainian word with its English meaning.
 | таблетка | /tɑbˈlɛtkɑ/ | pill/tablet | n | f | |
 | болить | /bɔˈlɪtʲ/ | hurts | v | — | 3rd person |
 | хворий | /xvɔˈrɪj/ | sick (m) | adj | m | |
-| хвора | /xvɔˈrɑ/ | sick (f) | adj | f | |
+| хвора | /ˈxvɔrɑ/ | sick (f) | adj | f | |
 | здоровий | /zdɔˈrɔvɪj/ | healthy (m) | adj | m | |
 | здорова | /zdɔˈrɔvɑ/ | healthy (f) | adj | f | |
-| швидка допомога | /ˈʃvɪdkɑ dɔpɔˈmɔhɑ/ | ambulance | n | f | "fast help" |
+| швидка допомога | /ʃvɪdˈkɑ dɔpɔˈmɔɦɑ/ | ambulance | n | f | "fast help" |
 | кашель | /ˈkɑʃɛlʲ/ | cough | n | m | |
 | нежить | /ˈnɛʒɪtʲ/ | runny nose | n | m | |
 | застуда | /zɑsˈtudɑ/ | cold (illness) | n | f | |

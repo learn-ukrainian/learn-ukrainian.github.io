@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 981/300
+- **Words:** ✅ 980/300
 - **Activities:** ✅ 8/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -29,7 +29,7 @@
 | **Warm-up** | ✅ | 109 | Included in Core |
 | **Presentation** | ✅ | 351 | Included in Core |
 | **Practice** | ⚪️ | 134 | Skipped |
-| **Cultural Insight** | ✅ | 156 | Included in Core |
+| **Cultural Insight** | ✅ | 155 | Included in Core |
 | **Production** | ➖ | 58 | Excluded Type |
 | **Summary** | ✅ | 122 | Included in Core |
 | **Need More Practice?** | ⚪️ | 51 | Skipped |

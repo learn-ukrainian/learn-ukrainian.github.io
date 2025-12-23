@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.8% (target 35-55% (M27))
+- **Immersion:** 🇺🇦 38.4% (target 35-55% (M27))
 
 ## MDX VALIDATION
 ✅ No issues found

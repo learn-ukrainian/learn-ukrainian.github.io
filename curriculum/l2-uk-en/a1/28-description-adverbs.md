@@ -445,7 +445,7 @@ Match the adjective with its adverb form.
    - [ ] веселий
    - [ ] веселе
 
-8. Which form correctly represents "The children sing loudly" today?
+8. Which form correctly represents "The children sing loudly"?
    - [x] голосно (adverb)
    - [ ] голосний (adjective)
    - [ ] голосна
@@ -457,49 +457,49 @@ Match the adjective with its adverb form.
 
 > Select the correct English meaning for these Ukrainian frequency adverbs.
 
-1. What is exactly the English translation of "Завжди" today?
+1. What is the English translation of "Завжди"?
    - [x] Always
    - [ ] Sometimes
    - [ ] Never
    - [ ] Rarely
 
-2. Which English word represents the adverb "Часто" most accurately?
+2. Which English word represents the adverb "Часто"?
    - [x] Often
    - [ ] Never
    - [ ] Rarely
    - [ ] Always
 
-3. How do you accurately translate "Іноді" into English now?
+3. How do you translate "Іноді" into English?
    - [x] Sometimes
    - [ ] Always
    - [ ] Never
    - [ ] Often
 
-4. What accurately is the meaning of "Рідко" in English?
+4. What is the meaning of "Рідко" in English?
    - [x] Rarely
    - [ ] Always
    - [ ] Often
    - [ ] Never
 
-5. Which English term correctly matches "Ніколи" in this context?
+5. Which English term matches "Ніколи"?
    - [x] Never
    - [ ] Sometimes
    - [ ] Often
    - [ ] Always
 
-6. How is "Зазвичай" correctly translated into English for you?
+6. How is "Зазвичай" translated into English?
    - [x] Usually
    - [ ] Never
    - [ ] Rarely
    - [ ] Sometimes
 
-7. What is precisely the English meaning of "Дуже" here?
+7. What is the English meaning of "Дуже"?
    - [x] Very
    - [ ] Sometimes
    - [ ] Never
    - [ ] Rarely
 
-8. Which phrase correctly translates the word "Трохи" into English?
+8. Which phrase translates the word "Трохи" into English?
    - [x] A little
    - [ ] Very much
    - [ ] Never
@@ -592,7 +592,7 @@ Is this true or false?
 | весело | /ˈvɛsɛlɔ/ | merrily | adv | — | from веселий |
 | сумно | /ˈsumnɔ/ | sadly | adv | — | from сумний |
 | серйозно | /sɛrˈjɔznɔ/ | seriously | adv | — | from серйозний |
-| жартома | /ʒɑrˈtɔmɑ/ | jokingly | adv | — | irregular |
+| жартома | /ʒɑrtɔˈmɑ/ | jokingly | adv | — | irregular |
 | ввічливо | /ˈvvit͡ʃlɪvɔ/ | politely | adv | — | from ввічливий |
 | чесно | /ˈt͡ʃɛsnɔ/ | honestly | adv | — | from чесний |
 | трохи | /ˈtrɔxɪ/ | a little | adv | — | degree |

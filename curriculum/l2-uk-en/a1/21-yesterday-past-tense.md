@@ -35,7 +35,7 @@ Unlike English, where "I worked" and "she worked" look the same, Ukrainian past 
 
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
-> Минулий час (past tense) завжди має букву **л**! Я читав. Вона працювала. Ми говорили. The Ukrainian past tense ending -в/-ла/-ло/-ли always contains the letter **л**.
+> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an *l* sound!
 
 
 
@@ -596,17 +596,17 @@ Match the Ukrainian words with their English meanings.
 | минулого року | /mɪˈnulɔɦɔ ˈrɔku/ | last year | phrase | - | genitive construction |
 | давно | /dɑvˈnɔ/ | long ago | adverb | - | time expression |
 | недавно | /nɛˈdɑvnɔ/ | recently | adverb | - | time expression |
-| раніше | /ˈrɑnʲiʃe/ | earlier, before | adverb | - | time expression |
-| колись | /ˈkɔlɪsʲ/ | once, sometime | adverb | - | time expression |
+| раніше | /rɑˈnʲiʃe/ | earlier, before | adverb | - | time expression |
+| колись | /kɔˈlɪsʲ/ | once, sometime | adverb | - | time expression |
 | був | /buv/ | was (m) | verb | m | past of бути |
 | була | /buˈlɑ/ | was (f) | verb | f | past of бути |
-| було | /ˈbulɔ/ | was (n) | verb | n | past of бути |
+| було | /buˈlɔ/ | was (n) | verb | n | past of бути |
 | були | /buˈlɪ/ | were (pl) | verb | pl | past of бути |
 | робив | /rɔˈbɪv/ | was doing (m) | verb | m | past of робити |
 | говорив | /ɦɔvɔˈrɪv/ | was speaking (m) | verb | m | past of говорити |
 | писав | /pɪˈsɑv/ | was writing (m) | verb | m | past of писати |
 | читав | /t͡ʃɪˈtɑv/ | was reading (m) | verb | m | past of читати |
-| слухав | /sluˈxɑv/ | was listening (m) | verb | m | past of слухати |
+| слухав | /ˈsluxɑv/ | was listening (m) | verb | m | past of слухати |
 | дивився | /dɪˈvɪvsʲɑ/ | was watching (m) | verb | m | past of дивитися |
 | жив | /ʒɪv/ | was living (m) | verb | m | past of жити |
 | працював | /prɑt͡sʲuˈvɑv/ | was working (m) | verb | m | past of працювати |

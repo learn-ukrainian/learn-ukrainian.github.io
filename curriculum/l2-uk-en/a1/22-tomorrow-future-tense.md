@@ -129,7 +129,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 | Eventually | згодом | Згодом він зрозуміє. |
 | Next week | наступного тижня | Наступного тижня я починаю курс. |
 | Next month | наступного місяця | Наступного місяця вона приїде. |
-| Next year | наступного року | Наступного року ми поженимося. |
+| Next year | наступного року | Наступного року ми одружимося. |
 
 ---
 
@@ -584,7 +584,7 @@ Decide if each statement is true or false.
 | постараюся | /pɔstɑˈrɑjusʲɑ/ | I will try (my best) | verb | - | perfective, reflexive |
 | мрію | /ˈmriju/ | I dream | verb | - | Class I |
 | думаю | /ˈdumɑju/ | I think | verb | - | Class I |
-| вирішив | /vɪˈriʃɪv/ | I decided (m) | verb | - | past, perfective |
+| вирішив | /ˈvɪriʃɪv/ | I decided (m) | verb | - | past, perfective |
 | вже | /vʒɛ/ | already | adv | - | - |
 | обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |
 

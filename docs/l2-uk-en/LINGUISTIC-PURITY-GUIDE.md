@@ -112,3 +112,33 @@ If you find these errors, use the **> [!WARNING]** alert in the review report:
 
 **Rationale:**
 Mixed language creates a pidgin that does not exist in reality. It prevents the brain from switching to "Ukrainian Mode". Even at A1, we use **Pure Ukrainian** sentences, kept simple enough for the level, with full translation or glossary support provided *outside* the sentence.
+
+---
+
+## V. The "No Russian" Policy (Phonetic & Identity)
+
+**Policy:** English-Speaking Learners Only. NO Russian Context.
+
+The curriculum is designed for English speakers. Comparisons to Russian are linguistically sloppy and politically insensitive.
+
+### 1. No Phonetic Comparisons to Russian
+**Rule:** Never define a Ukrainian sound by how it differs from Russian.
+*   ❌ **Forbidden:** "Ukrainian **И** is like Russian **Ы**." (Lazy, inaccurate, assumes prior knowledge).
+*   ✅ **Allowed:** "Ukrainian **И** is like **i** in 'bit'." (Direct English approximation).
+
+### 2. No "Ghost Words" (Russian Vocabulary)
+**Rule:** Do not use Russian words as examples, even if similar.
+*   ❌ **Forbidden:** Using `кон` (Russian) instead of `кінь` (Ukrainian).
+*   ❌ **Forbidden:** Using `брать` (Russian) instead of `брати` (Ukrainian).
+*   **Reason:** This often happens when copy-pasting from poor resources. Always verify examples in a dictionary (`goroh.pp.ua`).
+
+### 3. No Russian Characters
+**Rule:** The following letters must NEVER appear in the content:
+*   **ё, ъ, ы, э**
+*   **EXCEPTION:** Use only in "Prosecutor's Voice" / "Myth Buster" sections to explicitly debunk Russian propaganda or explain historical suppression.
+
+### 4. The "Prosecutor's Voice" Exception
+**Allowance:** You MAY mention Russian only to:
+*   Debunk myths (e.g. "Ukrainian is not a dialect").
+*   Highlight historical crimes (e.g. Ems Ukaz).
+*   Showcase unique Ukrainian features (e.g. "Russian lost the letter Ґ, but we kept it!").

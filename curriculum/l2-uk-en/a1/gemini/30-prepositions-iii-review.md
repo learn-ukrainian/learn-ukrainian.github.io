@@ -10,11 +10,11 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/3
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 6/1
+- **Vocab:** ✅ 17/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.0% (target 35-55% (M30))
+- **Immersion:** 🇺🇦 36.8% (target 35-55% (M30))
 
 ## MDX VALIDATION
 ✅ No issues found

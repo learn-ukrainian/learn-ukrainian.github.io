@@ -39,7 +39,7 @@ This checkpoint tests five core abilities from the entire A1 level:
 
 > 💡 **Did You Know?**
 >
-> After A1, you know ~450 words, 4 cases, 3 verb tenses, and can navigate basic daily life in Ukraine! That's the foundation for everything that comes next.
+> After A1, you know ~850 words, 4 cases, 3 verb tenses, and can navigate basic daily life in Ukraine! That's the foundation for everything that comes next.
 
 ---
 
@@ -330,73 +330,73 @@ At a café:
 ## quiz: Cyrillic Mastery
 > Read each word and choose the correct English meaning.
 
-1. What accurately is the English meaning of "привіт" here?
+1. What is the English meaning of "привіт"?
    - [x] hello
    - [ ] goodbye
    - [ ] please
    - [ ] thank you
 
-2. How do you correctly translate the word "вибачте" today?
+2. How do you translate "вибачте"?
    - [ ] hello
    - [x] excuse me
    - [ ] please
    - [ ] goodbye
 
-3. What correctly represented the Ukrainian word "смачного" in English?
+3. What is the meaning of "смачного" in English?
    - [ ] thank you
    - [ ] goodbye
    - [x] bon appétit
    - [ ] please
 
-4. Which category summarizes the term "погода" correctly for you?
+4. Which category summarizes the term "погода"?
    - [ ] food
    - [x] weather
    - [ ] work
    - [ ] city
 
-5. What accurately is the meaning of "здоров'я" in this lesson?
+5. What is the meaning of "здоров'я"?
    - [x] health
    - [ ] happiness
    - [ ] holiday
    - [ ] family
 
-6. How is the phrase "завтра" correctly described in Ukrainian today?
+6. How is "завтра" described in Ukrainian?
    - [ ] yesterday
    - [x] tomorrow
    - [ ] today
    - [ ] always
 
-7. Which category correctly represents "вчора" in this specific context?
+7. Which category represents the word "вчора"?
    - [x] yesterday
    - [ ] tomorrow
    - [ ] today
    - [ ] never
 
-8. What accurately is the translation for "дякую" into English?
+8. What is the translation for "дякую" into English?
    - [ ] please
    - [ ] hello
    - [x] thank you
    - [ ] goodbye
 
-9. Which phrase accurately summarizes the meaning of "будь ласка" now?
+9. Which phrase summarizes the meaning of "будь ласка"?
    - [ ] thank you
    - [x] please
    - [ ] hello
    - [ ] goodbye
 
-10. How would you correctly describe "родина" in a family context?
+10. How would you describe the word "родина"?
     - [ ] work
     - [ ] food
     - [x] family
     - [ ] city
 
-11. What is correctly the description for "свято" in English now?
+11. What is the description for "свято"?
     - [ ] family
     - [ ] food
     - [ ] work
     - [x] holiday
 
-12. Which category correctly describes the person called "лікар" in Ukrainian?
+12. Which category describes the person called "лікар"?
     - [ ] teacher
     - [x] doctor
     - [ ] student
@@ -666,76 +666,76 @@ At a café:
 > Choose the correct response.
 
 1. What is the correct response when someone asks you "Як справи?" today?
-   - [x] Добре, дякую!
    - [ ] Мене звати Олена.
+   - [x] Добре, дякую!
    - [ ] До побачення!
    - [ ] Смачного!
 
 2. How do you correctly say "Coffee, please" to order in a café?
-   - [x] Каву, будь ласка.
    - [ ] Де кава?
    - [ ] Кава смачна.
+   - [x] Каву, будь ласка.
    - [ ] Я люблю каву.
 
 3. Which phrase is best for asking "Excuse me, where is the pharmacy?"?
-   - [x] Вибачте, де аптека?
    - [ ] Аптека добра.
+   - [x] Вибачте, де аптека?
    - [ ] Я в аптеці.
    - [ ] Аптека!
 
 4. How do you accurately say that you currently have a headache?
-   - [x] У мене болить голова.
    - [ ] Моя голова.
    - [ ] Голова тут.
+   - [x] У мене болить голова.
    - [ ] Добра голова.
 
 5. What do you correctly say for "Happy Birthday" to a friend?
-   - [x] З Днем народження!
    - [ ] З Новим роком!
    - [ ] Добрий день!
+   - [x] З Днем народження!
    - [ ] Дякую!
 
 6. How do you ask "What time is it?" in Ukrainian correctly?
-   - [x] Котра година?
    - [ ] Яка погода?
+   - [x] Котра година?
    - [ ] Де час?
    - [ ] Який день?
 
 7. Which phrase should you use to ask "How much does it cost?"?
-   - [x] Скільки коштує?
    - [ ] Де гроші?
    - [ ] Це дорого.
+   - [x] Скільки коштує?
    - [ ] Дякую!
 
 8. How would you accurately describe that it is raining outside right now?
-   - [x] Йде дощ.
    - [ ] Дощ холодний.
    - [ ] Є дощ.
+   - [x] Йде дощ.
    - [ ] Буде дощити.
 
 9. What is the standard way to introduce your name in Ukrainian?
-   - [x] Мене звати...
    - [ ] Як справи?
+   - [x] Мене звати...
    - [ ] Добрий день!
    - [ ] Дякую!
 
 10. How do you accurately say "It is cold" to describe the weather?
-    - [x] Холодно.
     - [ ] Холодний.
+    - [x] Холодно.
     - [ ] Холод.
     - [ ] Холодна.
 
 11. Someone says "Смачного!" to you — what is the correct response today?
-    - [x] Дякую!
     - [ ] Привіт!
+    - [x] Дякую!
     - [ ] До побачення!
     - [ ] Вибачте!
 
 12. How do you accurately say "Goodbye" when you are leaving a place?
-    - [x] До побачення!
     - [ ] Привіт!
     - [ ] Дякую!
     - [ ] Смачного!
+    - [x] До побачення!
 
 ## true-false: A1 Knowledge Check
 > Is this true or false?
@@ -779,21 +779,21 @@ At a café:
 ## unjumble: Sentence Building
 > Put the words in the correct order.
 
-1. мене / Олена / звати
-   > [!answer] Мене звати Олена.
-   > (My name is Olena.)
+1. мене / Олена / звати / привіт
+   > [!answer] Привіт, мене звати Олена.
+   > (Hi, my name is Olena.)
 
-2. я / з / України
-   > [!answer] Я з України.
+2. я / з / України / родом
+   > [!answer] Я родом з України.
    > (I'm from Ukraine.)
 
 3. вчора / читав / я / книгу
    > [!answer] Вчора я читав книгу.
    > (Yesterday I read a book.)
 
-4. сьогодні / холодно / дуже
-   > [!answer] Сьогодні дуже холодно.
-   > (Today is very cold.)
+4. сьогодні / холодно / дуже / надворі
+   > [!answer] Сьогодні надворі дуже холодно.
+   > (Today is very cold outside.)
 
 5. болить / голова / у мене
    > [!answer] У мене болить голова.
@@ -848,16 +848,16 @@ At a café:
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | вітаємо | /vʲiˈtɑjɛmɔ/ | congratulations | verb | — | 1st pl |
-| досягнення | /dɔsʲɑhˈnɛnʲːɑ/ | achievement | noun | n | |
+| досягнення | /dɔsʲɑɦˈnɛnʲːɑ/ | achievement | noun | n | |
 | рівень | /ˈrʲivɛnʲ/ | level | noun | m | |
-| прогрес | /prɔˈhrɛs/ | progress | noun | m | |
+| прогрес | /prɔˈɦrɛs/ | progress | noun | m | |
 | вміння | /ˈvmʲinʲːɑ/ | skill | noun | n | |
 | практика | /ˈprɑktɪkɑ/ | practice | noun | f | |
-| граматика | /hrɑˈmɑtɪkɑ/ | grammar | noun | f | |
+| граматика | /ɦrɑˈmɑtɪkɑ/ | grammar | noun | f | |
 | речення | /rɛˈt͡ʃɛnʲːɑ/ | sentence | noun | n | |
 | читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | n | |
-| письмо | /ˈpɪsʲmɔ/ | writing | noun | n | |
-| говоріння | /hɔvɔˈrʲinʲːɑ/ | speaking | noun | n | |
+| письмо | /pɪsʲˈmɔ/ | writing | noun | n | |
+| говоріння | /ɦɔvɔˈrʲinʲːɑ/ | speaking | noun | n | |
 | слухання | /ˈsluxɑnʲːɑ/ | listening | noun | n | |
 | оцінка | /ɔˈt͡sʲinkɑ/ | assessment | noun | f | |
 | розуміння | /rɔzuˈmʲinʲːɑ/ | understanding | noun | n | |

@@ -689,7 +689,7 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 | іноді | /iˈnɔdi/ | sometimes | adverb | - | frequency |
 | рідко | /ˈridkɔ/ | rarely | adverb | - | frequency |
 | звичайно | /zvɪˈt͡ʃɑjnɔ/ | usually | adverb | - | frequency |
-| йти | /jˈtɪ/ | to go (on foot) | verb | - | йду, йдеш, йде (M06) |
+| йти | /jˈtɪ/ | to go (on foot) | verb | - | йду, йдеш, йде |
 | звати | /ˈzvɑtɪ/ | to call, name | verb | - | звуть = they call |
 | нічого | /nʲit͡ʃɔˈhɔ/ | nothing, it's okay | pronoun | - | reassuring phrase |
 | робити | /rɔˈbɪtɪ/ | to do, make | verb | - | роблю, робиш |

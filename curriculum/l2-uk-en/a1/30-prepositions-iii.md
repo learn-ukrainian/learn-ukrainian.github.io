@@ -423,51 +423,51 @@ Match the question with its meaning.
 
 > Determine if these Ukrainian sentences express a static location or a specific direction.
 
-1. Which category correctly describes the sentence "Я в парку" here?
+1. Which category correctly describes the sentence "Я в парку"?
+   - [ ] I'm from the park (origin)
    - [x] I am in the park (location)
    - [ ] I'm going to the park (direction)
-   - [ ] I'm from the park (origin)
    - [ ] I was in the park (past)
 
-2. How do you accurately categorize "Я йду в парк" in English?
-   - [x] I'm going to the park (direction)
+2. How do you categorize "Я йду в парк"?
    - [ ] I am in the park (location)
    - [ ] I'm from the park (origin)
+   - [x] I'm going to the park (direction)
    - [ ] I was in the park (past)
 
-3. What accurately is the meaning of "Вдома" in this lesson?
-   - [x] At home (location)
+3. What is the meaning of "Вдома"?
    - [ ] To home (direction)
+   - [x] At home (location)
    - [ ] From home (origin)
    - [ ] About home
 
-4. Which category summarizes the term "Додому" correctly for you today?
-   - [x] Home (direction - going home)
+4. Which category summarizes the term "Додому"?
    - [ ] At home (location)
    - [ ] From home (origin)
+   - [x] Home (direction - going home)
    - [ ] About home
 
-5. How is the phrase "Я з України" correctly described in Ukrainian?
-   - [x] I'm from Ukraine
+5. How is the phrase "Я з України" described?
    - [ ] I'm in Ukraine
    - [ ] I'm going to Ukraine
+   - [x] I'm from Ukraine
    - [ ] I was in Ukraine
 
-6. What is correctly the description for "До лікаря" in English now?
-   - [x] To the doctor
+6. What is the description for "До лікаря"?
    - [ ] At the doctor's
+   - [x] To the doctor
    - [ ] From the doctor
    - [ ] About the doctor
 
-7. Which category correctly represents "Тут" in this context?
+7. Which category correctly represents the word "Тут"?
    - [x] Here (location)
    - [ ] To here (direction)
    - [ ] From here (origin)
    - [ ] About here
 
-8. How would you accurately describe "Сюди" in Ukrainian today?
-   - [x] To here (direction)
+8. How would you accurately describe "Сюди"?
    - [ ] Here (location)
+   - [x] To here (direction)
    - [ ] From here (origin)
    - [ ] About here
 
@@ -477,51 +477,51 @@ Match the question with its meaning.
 
 > Select the correct Ukrainian preposition or phrase for these English descriptions.
 
-1. What accurately is the translation for "I'm FROM Kyiv" here?
-   - [x] з Києва
+1. What is the translation for "I'm FROM Kyiv"?
    - [ ] в Києві
+   - [x] з Києва
    - [ ] до Києва
    - [ ] від Києва
 
-2. Which Ukrainian phrase correctly translates "A gift FROM mom" into English?
-   - [x] від мами
+2. Which Ukrainian phrase translates "A gift FROM mom"?
    - [ ] з мами
    - [ ] до мами
+   - [x] від мами
    - [ ] в мами
 
-3. How do you accurately say "Going TO the doctor" in Ukrainian?
-   - [x] до лікаря
+3. How do you say "Going TO the doctor" in Ukrainian?
    - [ ] в лікаря
    - [ ] з лікаря
+   - [x] до лікаря
    - [ ] від лікаря
 
-4. What is the correct phrase for "Going TO the store" today?
+4. What is the phrase for "Going TO the store"?
    - [x] в магазин
    - [ ] до магазин
    - [ ] з магазину
    - [ ] від магазину
 
-5. Which phrase accurately represents "I'm IN the park" in Ukrainian?
-   - [x] в парку
+5. Which phrase represents "I'm IN the park"?
    - [ ] в парк
+   - [x] в парку
    - [ ] з парку
    - [ ] до парку
 
-6. How is the phrase "Coming FROM school" correctly translated for you?
-   - [x] з школи
+6. How is "Coming FROM school" translated?
    - [ ] в школі
+   - [x] з школи
    - [ ] до школи
    - [ ] від школи
 
-7. What accurately is the Ukrainian term for "Going TO work" now?
-   - [x] на роботу
+7. What is the Ukrainian term for "Going TO work"?
    - [ ] в роботу
    - [ ] до роботи
+   - [x] на роботу
    - [ ] з роботи
 
-8. How should you accurately translate "Letter FROM dad" into Ukrainian?
-   - [x] від татка
+8. How should you translate "Letter FROM dad"?
    - [ ] з татка
+   - [x] від татка
    - [ ] до татка
    - [ ] в татка
 
@@ -531,20 +531,20 @@ Match the question with its meaning.
 
 Put the words in the correct order.
 
-1. ти / де / зараз
-   > [!answer] Де ти зараз
+1. ти / де / зараз / є
+   > [!answer] Де ти зараз є
 
 2. йду / я / в / магазин
    > [!answer] Я йду в магазин
 
-3. з / я / України
-   > [!answer] Я з України
+3. з / я / родом / України
+   > [!answer] Я родом з України
 
-4. куди / йдеш / ти
-   > [!answer] Куди ти йдеш
+4. куди / йдеш / ти / зараз
+   > [!answer] Куди ти зараз йдеш
 
-5. додому / йде / він
-   > [!answer] Він йде додому
+5. додому / йде / він / вже
+   > [!answer] Він вже йде додому
 
 6. лікаря / йду / до / я
    > [!answer] Я йду до лікаря
@@ -552,20 +552,20 @@ Put the words in the correct order.
 7. від / це / мами / подарунок
    > [!answer] Це подарунок від мами
 
-8. вдома / вона / зараз
-   > [!answer] Вона зараз вдома
+8. вдома / вона / є / зараз
+   > [!answer] Вона зараз є вдома
 
 9. прямо / потім / ідіть / праворуч
    > [!answer] Ідіть прямо, потім праворуч
 
-10. аптека / навпроти / банку
-   > [!answer] Аптека навпроти банку
+10. аптека / навпроти / знаходиться / банку
+   > [!answer] Аптека знаходиться навпроти банку
 
 11. цей / аеропорт / дуже / далеко
    > [!answer] Цей аеропорт дуже далеко
 
-12. ти / звідки / родом
-   > [!answer] Звідки ти родом
+12. ти / звідки / родом / скажи
+   > [!answer] Скажи, звідки ти родом
 
 
 ---
@@ -602,11 +602,22 @@ Is this true or false?
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | там | /tɑm/ | there | adv | — | location |
-| вдома | /vdɔˈmɑ/ | at home | adv | — | location |
+| тут | /tut/ | here | adv | — | location |
+| куди | /kuˈdɪ/ | where to | adv | — | direction |
+| звідки | /ˈzvidkɪ/ | where from | adv | — | origin |
+| де | /dɛ/ | where | adv | — | location |
+| вдома | /ˈvdɔmɑ/ | at home | adv | — | location |
 | додому | /dɔˈdɔmu/ | to home | adv | — | direction |
 | з | /z/ | from (place) | prep | — | + Genitive |
+| від | /vid/ | from (person) | prep | — | + Genitive |
 | ліворуч | /lʲivɔˈrut͡ʃ/ | on the left | adv | — | direction |
 | праворуч | /prɑvɔˈrut͡ʃ/ | on the right | adv | — | direction |
+| прямо | /ˈprʲɑmɔ/ | straight | adv | — | direction |
+| навпроти | /nɑvˈprɔtɪ/ | opposite | prep | — | location |
+| близько | /ˈblɪzkɔ/ | near | adv | — | location |
+| далеко | /dɑˈlɛkɔ/ | far | adv | — | location |
+| сюди | /sʲuˈdɪ/ | to here | adv | — | direction |
+| туди | /tuˈdɪ/ | to there | adv | — | direction |
 
 ---
 

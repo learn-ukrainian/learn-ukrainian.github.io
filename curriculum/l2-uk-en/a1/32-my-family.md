@@ -35,7 +35,7 @@ vocabulary_count: 35
 > — **Мою маму звати Олена.** (My mom's name is Olena.)
 > — **Це моя молодша сестра.** (This is my younger sister.)
 >
-> Notice: For "my mom's name," we use Genitive: Мо**ю** маму (Accusative) звати...
+> Notice: For "my mom's name," we use Accusative: Мо**ю** маму (Accusative) звати...
 
 
 
@@ -626,7 +626,8 @@ Is this true or false?
 |------|-----|---------|-----|--------|------|
 | сім'я | /sʲimˈjɑ/ | family | n | f | |
 | родина | /rɔˈdɪnɑ/ | family/kin | n | f | |
-| батьки | /ˈbɑtʲkɪ/ | parents | n | pl | |
+| батьки | /bɑtʲˈkɪ/ | parents | n | pl | |
+| дядько | /ˈdʲɑdʲkɔ/ | uncle | n | m | |
 | брат | /brɑt/ | brother | n | m | |
 | сестра | /sɛsˈtrɑ/ | sister | n | f | |
 | дідусь | /dʲiˈdusʲ/ | grandfather | n | m | |

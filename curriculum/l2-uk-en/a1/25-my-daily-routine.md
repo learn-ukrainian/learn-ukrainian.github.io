@@ -468,7 +468,7 @@ Decide if each statement is true or false.
 | засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | verb | - | Class I |
 | розпорядок | /rɔzpɔˈrʲɑdɔk/ | schedule, routine | noun | m | - |
 | звичка | /ˈzvɪt͡ʃkɑ/ | habit | noun | f | - |
-| зазвичай | /zɑˈzvɪt͡ʃɑj/ | usually | adv | - | - |
+| зазвичай | /zɑzvɪˈt͡ʃɑj/ | usually | adv | - | - |
 | спочатку | /spɔˈt͡ʃɑtku/ | first, at first | adv | - | - |
 | після того | /ˈpislʲɑ ˈtɔɦɔ/ | after that | phrase | - | - |
 | нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - | - |

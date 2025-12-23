@@ -342,49 +342,49 @@ These words take **plural adjectives**:
 
 > Select the correct English translation for these Ukrainian clothing descriptions.
 
-1. What is exactly the English translation of "Біла сорочка" here?
+1. What is the English translation of "Біла сорочка"?
    - [x] White shirt
    - [ ] Black shirt
    - [ ] Blue shirt
    - [ ] Red shirt
 
-2. How do you accurately translate "Чорні штани" into English today?
+2. How do you translate "Чорні штани" into English?
    - [x] Black pants
    - [ ] White pants
    - [ ] Blue pants
    - [ ] Black shirt
 
-3. Which English term matches "Синє пальто" accurately here?
+3. Which English term matches "Синє пальто"?
    - [x] Blue coat
    - [ ] Blue pants
    - [ ] Red coat
    - [ ] Green coat
 
-4. How is the phrase "Червона сукня" correctly represented in English?
+4. How is "Червона сукня" translated into English?
    - [x] Red dress
    - [ ] Red skirt
    - [ ] Red t-shirt
    - [ ] Yellow dress
 
-5. What accurately is the English meaning of "Зелена футболка" now?
+5. What is the English meaning of "Зелена футболка"?
    - [x] Green t-shirt
    - [ ] Green dress
    - [ ] Blue t-shirt
    - [ ] Yellow t-shirt
 
-6. Which English sentence represents "Сіра куртка" most accurately today?
+6. Which English sentence represents "Сіра куртка"?
    - [x] Gray jacket
    - [ ] Gray shirt
    - [ ] Black jacket
    - [ ] Gray pants
 
-7. How do you accurately translate "Жовті кросівки" into English?
+7. How do you translate "Жовті кросівки" into English?
    - [x] Yellow sneakers
    - [ ] Yellow shirt
    - [ ] White sneakers
    - [ ] Yellow coat
 
-8. What is accurately the English meaning of "Коричневий капелюх" now?
+8. What is the English meaning of "Коричневий капелюх"?
    - [x] Brown hat
    - [ ] Black hat
    - [ ] Brown coat
@@ -396,49 +396,49 @@ These words take **plural adjectives**:
 
 > Answer these questions about Ukrainian colors and common associations.
 
-1. Which color represents the snow in winter accurately?
+1. Which color represents the snow?
    - [x] Білий
    - [ ] Чорний
    - [ ] Синій
    - [ ] Зелений
 
-2. What color is the sky in during the day?
+2. What color is the sky during the day?
    - [x] Блакитний
    - [ ] Чорний
    - [ ] Червоний
    - [ ] Жовтий
 
-3. Which color is associated with the grass accurately?
+3. Which color is associated with the grass?
    - [x] Зелена
    - [ ] Синя
    - [ ] Біла
    - [ ] Жовта
 
-4. What color is the sun according to its name?
+4. What color is the sun?
    - [x] Жовте
    - [ ] Біле
    - [ ] Синє
    - [ ] Чорне
 
-5. Which color correctly represents the sea in the Ukrainian language?
+5. Which color represents the sea?
    - [x] Синє
    - [ ] Біле
    - [ ] Зелене
    - [ ] Жовте
 
-6. What color is the earth according to common knowledge?
+6. What color is the earth?
    - [x] Коричнева
    - [ ] Біла
    - [ ] Синя
    - [ ] Жовта
 
-7. Which color is correctly associated with the night time?
+7. Which color is associated with the night?
    - [x] Чорна
    - [ ] Біла
    - [ ] Синя
    - [ ] Жовта
 
-8. What is exactly the color of a red flower?
+8. What is the color of a red flower?
    - [x] Червона
    - [ ] Зелена
    - [ ] Синя

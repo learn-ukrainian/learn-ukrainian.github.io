@@ -133,7 +133,7 @@ Ukrainian cuisine is diverse. Let's organize food into categories:
 
 **Example sentences:**
 
-1. **Ранку я п'ю чай або каву.** (Ranku ya p'yu chay abo kavu.) — In the morning I drink tea or coffee.
+1. **Вранці я п'ю чай або каву.** (Vrantsi ya p'yu chay abo kavu.) — In the morning I drink tea or coffee.
 2. **Вона п'є воду.** (Vona p'ye vodu.) — She drinks water.
 3. **Діти люблять сік.** (Dity lyublyat' sik.) — Children love juice.
 
@@ -695,10 +695,14 @@ In Module 10, you'll review everything you've learned in Modules 1-9. You're com
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| їжа | /jiˈʒɑ/ | food | noun | f | - |
+| їжа | /ˈjiʒɑ/ | food | noun | f | - |
 | сніданок | /sniˈdɑnɔk/ | breakfast | noun | m | - |
 | обід | /ɔˈbid/ | lunch | noun | m | - |
 | вечеря | /veˈt͡ʃerʲɑ/ | dinner | noun | f | - |
+| борщ | /bɔrʃt͡ʃ/ | borshch (beet soup) | noun | m | - |
+| суп | /sup/ | soup | noun | m | - |
+| банан | /bɑˈnɑn/ | banana | noun | m | - |
+| кава | /ˈkɑvɑ/ | coffee | noun | f | - |
 | вареники | /vɑˈrenɪkɪ/ | varenyky (dumplings) | noun | m pl | always plural |
 | курка | /ˈkurkɑ/ | chicken | noun | f | - |
 | сир | /sɪr/ | cheese, cottage cheese | noun | m | breakfast staple |

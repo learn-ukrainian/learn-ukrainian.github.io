@@ -40,22 +40,13 @@ vocabulary_count: 36
 ---
 
 ## Grammar
-## Why Adjective Agreement Matters
-
-In English, adjectives don't change: "a big house," "a big table," "big houses." In Ukrainian, adjectives MUST agree with their nouns in gender (masculine, feminine, neuter) and number (singular, plural).
-
-This might seem complex at first, but it actually helps! When you see an adjective ending, you immediately know what kind of noun follows. It's like a preview system built into the language.
+In English, adjectives don't change ("big house", "big houses"). In Ukrainian, they MUST agree with the noun's gender and number. This helps you predict what kind of noun is coming!
 
 ## Hard Stem Adjective Endings
 
 > [!observe] Pattern Discovery
 >
 > Look at these adjective forms:
-> - **новий** будинок (new house - m)
-> - **нова** книга (new book - f)
-> - **нове** місто (new city - n)
-> - **нові** друзі (new friends - pl)
->
 > The adjective **новий** changes its ending to match the noun!
 
 ### Hard Stem Endings Table
@@ -107,13 +98,11 @@ Most common soft-stem adjectives include colors ending in -ій and some other a
 
 ## Adjective Position
 
-In Ukrainian, adjectives usually come BEFORE the noun (like in English):
+Adjectives usually come BEFORE the noun:
 - **великий** будинок (big house)
-- **цікава** книга (interesting book)
 
-But they can also come AFTER the noun as predicates:
+But can act as predicates AFTER the noun:
 - Будинок **великий**. (The house is big.)
-- Книга **цікава**. (The book is interesting.)
 
 ---
 
@@ -147,9 +136,6 @@ Learning adjectives in pairs helps you remember them better:
 >
 > **Міф (Myth):** Українська мова — це діалект.  
 > **Факт (Fact):** Це неправда. Українська — це дуже давня мова. Вона має свою граматику. Багато людей кажуть: українська мова солов'їна. Це означає: вона дуже мелодійна. Вона дуже красива!
-> - Вони — **добрі** люди. (They are good people.)
-> - Ця книга **цікава**. (This book is interesting.)
-> - Мій телефон **старий**. (My phone is old.)
 
 > [!example] Опис людей (Describing People)
 >
@@ -226,7 +212,7 @@ Learning adjectives in pairs helps you remember them better:
 >
 > Чудова новина: майже всі прикметники використовують однаковий шаблон! Вивчіть закінчення -ий/-а/-е/-і один раз — і ви можете описувати все!
 >
-> The great news is that MOST adjectives follow the same pattern. Learn -ий/-а/-е/-і once, and you can describe anything! The soft endings (-ій/-я/-є) are less common.
+> The great news: MOST adjectives follow the same pattern! Learn -ий/-а/-е/-і once, and you can describe anything.
 
 > 🌍 **Українська vs англійська**
 >
@@ -240,7 +226,7 @@ Learning adjectives in pairs helps you remember them better:
 >
 > Коли ви чуєте "велика" — ви вже знаєте, що далі буде слово жіночого роду! "Велика... машина? Сумка? Книга?" Закінчення — це підказка! Це дуже корисно!
 >
-> Agreement isn't just extra work — it's helpful! When you hear "велика," you immediately know a feminine noun is coming. It's like a grammar preview that helps your brain prepare.
+> Agreement is helpful! When you hear "велика," you know a feminine noun is coming. It's a grammar preview!
 
 ---
 

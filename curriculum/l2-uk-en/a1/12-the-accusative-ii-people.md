@@ -617,11 +617,11 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
    - [ ] Incorrect order for this sentence
    > Correct: Ми чекаємо нашого вчителя біля університету
 
-3. Correct sentence order for: "She knows the new..."
-   - [x] Вона знає нового студента у групі
-   - [ ] знає Вона нового студента у групі
+3. Correct sentence order for: "She knows this..."
+   - [x] Вона знає цього студента у групі
+   - [ ] знає Вона цього студента у групі
    - [ ] Incorrect order for this sentence
-   > Correct: Вона знає нового студента у групі
+   > Correct: Вона знає цього студента у групі
 
 4. Correct sentence order for: "Do you see that..."
    - [x] Ти бачиш того лікаря там

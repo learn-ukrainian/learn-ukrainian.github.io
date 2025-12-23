@@ -136,7 +136,7 @@ Here's how these verbs show up in real Ukrainian life:
 — Так, **читаю** книгу. А ти? (Yes, I'm reading a book. And you?)
 — Я **чекаю** друга. Він **працює** тут. (I'm waiting for a friend. He works here.)
 — Де? (Where?)
-— Тут, у парк. Він **знає** цей парк добре! (Here, in the park. He knows this park well!)
+— Тут. Він **знає** цей парк добре! (Here. He knows this park well!)
 
 **Translation:**
 — Hi! Are you reading?
@@ -367,8 +367,8 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > [!options] співаю | співаєш | співає | співаємо
 
 5. Ви ___ українською?
-   > [!answer] розумієте
-   > [!options] розумію | розумієш | розуміє | розумієте
+   > [!answer] читаєте
+   > [!options] читаю | читаєш | читає | читаєте
 
 6. Скажіть, що вони роблять? Вони ___ про Україну.
    > [!answer] думають
@@ -523,9 +523,9 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
    > [!answer] знаєш
    > (you know)
 
-9. р о з у м і є
-   > [!answer] розуміє
-   > (he/she understands)
+9. ч и т а є
+   > [!answer] читає
+   > (he/she reads)
 
 10. с л у х а є м о
     > [!answer] слухаємо
@@ -588,7 +588,7 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 | думати | /ˈdumɑtɪ/ | to think | verb | - | Class I: думаю, думаєш |
 | гуляти | /ɦuˈlʲɑtɪ/ | to walk | verb | - | Class I: гуляю, гуляєш |
 | знати | /ˈznɑtɪ/ | to know | verb | - | Class I: знаю, знаєш |
-| розуміти | /rɔzuˈmitɪ/ | to understand | verb | - | Class I: розумію, розумієш |
+
 | слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш |
 | чекати | /t͡ʃeˈkɑtɪ/ | to wait | verb | - | Class I: чекаю, чекаєш |
 | снідати | /sniˈdɑtɪ/ | to have breakfast | verb | - | Class I: снідаю, снідаєш |

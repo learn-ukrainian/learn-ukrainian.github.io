@@ -19,9 +19,9 @@ Write ONLY the instructional content sections. Do NOT write activities.
 | A1 | M06-10 | 500+ |
 | A1 | M11+ | 750+ |
 | A2 | all | 1000+ |
-| B1 | all | 1250+ |
-| B2 | all | 1500+ |
-| C1 | all | 1750+ |
+| B1 | all | 1500+ |
+| B2 | all | 1750+ |
+| C1 | all | 2000+ |
 | C2 | all | 2000+ |
 
 ## Immersion Targets
@@ -30,13 +30,11 @@ Write ONLY the instructional content sections. Do NOT write activities.
 |-------|-------------|
 | A1 M01-15 | 15% |
 | A1 M16-34 | 30% |
-| A2 | 40% |
-| B1 grammar (M01-45) | 50% |
-| B1 vocab (M46-80) | 70% |
-| B2 grammar (M01-40) | 70% |
-| B2 vocab (M41-125) | 85% |
-| C1 | 95% |
-| C2 | 95-100% |
+| A2 | 40-55% |
+| B1 (M01-80) | 90-95% (Ukrainian Only) |
+| B2 (M01-125) | 95-100% (Ukrainian Only) |
+| C1 | 100% |
+| C2 | 100% |
 
 ## Required Elements
 
@@ -80,6 +78,7 @@ Box types:
 3. **Grammar Elegance**: Highlight beauty/logic of Ukrainian grammar
 4. **Reading Practice**: Include `## Reading Practice: Title` section
 5. **A1-A2**: Always provide English translation after Ukrainian text
+6. **Linguistic Purity**: STRICTLY NO Russian phonetic comparisons or Russian 'ghost words' (Russian spellings/vocabulary disguised as Ukrainian). You MUST verify every example is authentic Ukrainian (e.g. use 'кіт' not 'кот', 'добре' not 'хорошо'). Check against `LINGUISTIC-PURITY-GUIDE.md`.
 
 ## Vocabulary Usage
 

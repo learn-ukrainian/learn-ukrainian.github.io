@@ -810,14 +810,14 @@ Fill in the gaps:
    > Correct: Разом вісімдесят гривень.
 
 9. Correct sentence order for: "Can I pay by card?"
-   - [x] Можна платити картою?
-   - [ ] платити Можна картою?
+   - [x] Можна платити карткою?
+   - [ ] платити Можна карткою?
    - [ ] Incorrect order for this sentence
-   > Correct: Можна платити картою?
+   > Correct: Можна платити карткою?
 
 10. Correct sentence order for: "Yes, you can pay..."
-   - [x] Так, можна готівкою або картою.
-   - [ ] можна Так, готівкою або картою.
+   - [x] Так, можна готівкою або карткою.
+   - [ ] можна Так, готівкою або карткою.
    - [ ] Incorrect order for this sentence
    > Correct: Так, можна готівкою або картою.
 
@@ -854,7 +854,7 @@ Fill in the gaps:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| повторення | /pɔvtɔˈrɛnʲːɑ/ | repetition, review | noun | n | |
+| повторення | /pɔvˈtɔrɛnʲːɑ/ | repetition, review | noun | n | |
 | правило | /ˈprɑvɪlɔ/ | rule | noun | n | |
 | помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | |
 | вправа | /ˈvprɑvɑ/ | exercise | noun | f | |
@@ -869,6 +869,6 @@ Fill in the gaps:
 | ще раз | /ʃt͡ʃɛ rɑz/ | once more, again | phrase | - | |
 | молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |
 | молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |
-| продовжуємо | /prɔdɔvˈʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
+| продовжуємо | /prɔˈdɔvʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
 
 ---

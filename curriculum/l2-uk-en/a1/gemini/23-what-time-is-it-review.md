@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1095/750
+- **Words:** ✅ 1093/750
 - **Activities:** ✅ 9/8
 - **Density:** ✅ All > 12
 - **Unique_types:** ✅ 6/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 39.6% (target 35-55% (M23))
+- **Immersion:** 🇺🇦 39.7% (target 35-55% (M23))
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -33,7 +33,7 @@
 | **Months of the Year** | ⚪️ | 24 | Skipped |
 | **Time Prepositions** | ⚪️ | 68 | Skipped |
 | **Examples in Context** | ✅ | 345 | Included in Core |
-| **Dialogues** | ✅ | 308 | Included in Core |
+| **Dialogues** | ✅ | 306 | Included in Core |
 | **Summary** | ✅ | 119 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
 | **match-up: Days of the Week** | 🎮 | 12 | Activity (12 items, min 8) |

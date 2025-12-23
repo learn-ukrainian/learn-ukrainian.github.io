@@ -1,17 +1,28 @@
-## Module 31: Body & Health
+# Content Consistency Review for a1-31
 
-**Scores:** Coherence 5/5 | Relevance 5/5 | Educational 5/5 | Language 5/5 | Pedagogy 5/5 | Immersion 5/5 | Activities 5/5 | **Overall 5/5**
-**Status:** ✅ PASS
+## 1. Coherence and Flow
+- **Rating:** 5/5
+- **Comments:** Clear "Pain Formula" explanation.
 
-### Strengths
-- Functional vocabulary for doctor/pharmacy visits.
-- Clear grammar rule for `Болить` vs `Болять`.
-- Cultural note on "folk medicine" is a nice touch.
+## 2. Coherence and Relevance
+- **Rating:** 5/5
+- **Comments:** Essential survival vocabulary (doctor, pharmacy).
 
-### Issues
-- **Minor Issue:** IPA had minor inconsistencies (used `/w/` instead of `/v/`, `/e/` instead of `/ɛ/`).
-- **Minor Issue:** Unjumble activity had 11 items.
-- **Action Taken:** Fixed IPA to `/v/`, `/ɛ/` and standardized. Added 1 item to unjumble. ✅ FIXED
+## 3. Educational Value
+- **Rating:** 5/5
+- **Comments:** 103 emergency number is a key practical detail.
 
-### Recommendation
-✅ PASS
+## 4. Language Quality
+- **Rating:** 4.5/5
+- **Comments:**
+    - **IPA Symbol:** Uses `h` for Ukrainian `г` (e.g., `голова`, `нога`). Should be `ɦ`.
+    - **IPA Stress:**
+        - `хвора` /ˈxvɔrɑ/ (stress on first). Current: /xvɔˈrɑ/.
+        - `швидка` /ʃvɪdˈkɑ/ (stress on last). Current: /ˈʃvɪdkɑ/.
+
+## 5. Pedagogical Effectiveness
+- **Rating:** 5/5
+- **Comments:** Good drills.
+
+## General Comments
+Strong module. Fixing IPA symbols and stress.
