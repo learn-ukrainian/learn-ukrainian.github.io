@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: жіночий, давальний, іменник, відмінок
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: жіночий, відмінок, іменник, давальний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation

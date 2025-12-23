@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): ділитися, особистий...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): особистий, ділитися...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

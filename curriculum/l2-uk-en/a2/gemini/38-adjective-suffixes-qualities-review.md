@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): книжечка, ручечка, молодість, котик...
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (4 words): ручечка, котик, молодість, книжечка...
   - FIX: Add missing words from curriculum plan to module vocabulary section.
 
 ## Recommendation

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: недоконаний, доконаний, вид
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: вид, недоконаний, доконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 - **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): запам'ятав...
   - FIX: Add missing words from curriculum plan to module vocabulary section.

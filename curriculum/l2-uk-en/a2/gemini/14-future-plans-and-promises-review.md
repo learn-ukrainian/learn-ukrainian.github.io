@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## PEDAGOGICAL VIOLATIONS
-- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, недоконаний, вид, доконаний
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: доконаний, час, вид, недоконаний
   - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
 
 ## Recommendation
