@@ -788,5 +788,8 @@ There's a sale today!
 | покупка | /pɔˈkupkɑ/ | purchase | n | f | shopping term |
 | туфлі | /ˈtuflʲi/ | shoes | n | pl | clothing |
 | шкіра | /ˈʃkirɑ/ | leather | n | f | material |
+| економ | /ɛkɔˈnɔm/ | economy, budget | adj | m | shopping term |
+| невигідний | /nɛˈʋɪɦidnɪj/ | unprofitable, bad deal | adj | m | shopping term |
+| преміум | /prɛˈmium/ | premium | adj | m | shopping term |
 
 ---

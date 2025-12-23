@@ -792,3 +792,4 @@ The lamp is above the table.
 | закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |
 | послуга | /pɔsˈluɦɑ/ | service | noun | f | Acc: послугу |
 | оплата | /ɔpˈlɑtɑ/ | payment | noun | f | Acc: оплату |
+| кличний | /ˈklɪtʃnɪj/ | Vocative (case) | adj | m | grammar term |

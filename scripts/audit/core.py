@@ -48,6 +48,7 @@ from .checks.vocabulary import (
     check_vocab_matches_plan,
     check_metalanguage_scaffolding,
     check_vocab_table_format,
+    get_cumulative_vocab,
 )
 from .gates import (
     GateResult,
@@ -708,8 +709,9 @@ def audit_module(file_path: str) -> bool:
         has_critical_failure = True
 
     # Run metalanguage scaffolding check
+    cumulative_vocab = get_cumulative_vocab(level_code, module_num - 1)
     metalang_violations = check_metalanguage_scaffolding(
-        content, vocab_words, level_code, module_num
+        content, vocab_words, level_code, module_num, cumulative_vocab
     )
     pedagogical_violations.extend(metalang_violations)
 

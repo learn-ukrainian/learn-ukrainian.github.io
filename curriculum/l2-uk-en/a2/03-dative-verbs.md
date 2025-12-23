@@ -858,5 +858,7 @@ Grandma tells the grandchildren a story.
 | належати | /nɑleˈʒɑtɪ/ | to belong | verb | — | + Dat |
 | сподобатися | /spodoˈbɑtɪsʲɑ/ | to come to like | verb | — | perfective of подобатися |
 | захотітися | /zɑxoˈtitɪsʲɑ/ | to feel like, want | verb | — | + Dat; impersonal |
+| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | aspect term |
+| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | aspect term |
 
 ---

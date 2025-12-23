@@ -534,7 +534,8 @@ def check_metalanguage_scaffolding(
     content: str,
     vocab_words: set[str],
     level: str,
-    module_num: int = 0
+    module_num: int = 0,
+    cumulative_vocab: set[str] = None
 ) -> list[dict]:
     """
     Check if grammatical/linguistic terms used in instructions are taught first.
@@ -542,28 +543,19 @@ def check_metalanguage_scaffolding(
     At A1-A2, grammar terms should appear in vocabulary before being used
     in Ukrainian instructions. This ensures learners understand instructions.
 
-    Note: For later modules in a level, we assume basic metalanguage has been
-    introduced in earlier modules (e.g., gender terms in M03 for A1).
-
     Args:
         content: Full module content
         vocab_words: Words from the module's vocabulary section
         level: Level code
-        module_num: Module number (used to skip check for later modules)
+        module_num: Module number
+        cumulative_vocab: Words from previous modules (optional)
 
     Returns:
         List of violations for untaught metalanguage terms
     """
     violations = []
 
-    # Skip metalanguage check for later modules - assume terms were taught earlier
-    # A1: gender terms taught in M03, cases in M11-16, etc.
-    # A2: case names taught early, aspect introduced
     level_upper = level.upper()
-    if level_upper == 'A1' and module_num >= 10:
-        return violations  # Basic metalanguage taught by M10
-    if level_upper == 'A2' and module_num >= 15:
-        return violations  # A2 metalanguage taught by M15
     if level_upper in ('B1', 'B2', 'C1', 'C2', 'LIT'):
         return violations  # B1+ and LIT assumes all metalanguage known
 
@@ -575,15 +567,19 @@ def check_metalanguage_scaffolding(
     for i in range(current_idx + 1):
         relevant_metalang.update(METALANGUAGE_BY_LEVEL.get(level_order[i], set()))
 
-    # Find metalanguage terms used in content but not in vocabulary
+    # Find metalanguage terms used in content but not in current or cumulative vocabulary
     content_lower = content.lower()
     vocab_lower = {w.lower() for w in vocab_words}
+    
+    # If cumulative_vocab is provided, merge it for the check
+    known_vocab = vocab_lower.copy()
+    if cumulative_vocab:
+        known_vocab.update({w.lower() for w in cumulative_vocab})
 
     used_but_not_taught = []
     for term in relevant_metalang:
-        if term in content_lower and term not in vocab_lower:
-            # Check it's used in Ukrainian context (not just in English explanations)
-            # Look for the term near Ukrainian text
+        if term in content_lower and term not in known_vocab:
+            # Check it's used in Ukrainian context
             if re.search(rf'\b{term}\b', content_lower):
                 used_but_not_taught.append(term)
 

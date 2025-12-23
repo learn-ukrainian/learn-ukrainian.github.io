@@ -782,7 +782,7 @@ We will finish the project!
 | майбутнє | /mɑjˈbutnʲɛ/ | future | noun | n | grammar term |
 | обіцянка | /ɔbiˈt͡sʲɑnkɑ/ | promise | noun | f | common noun |
 | майбутній | /mɑjˈbutnʲij/ | future | adj | m | grammar term |
-| дієслово | /diɛˈslɔʋɔ/ | verb | noun | n | grammar term |
+| родовий | /rɔdɔˈʋɪj/ | Genitive (case) | adj | m | grammar term |
 
 ---
 

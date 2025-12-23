@@ -537,3 +537,4 @@ Identify and fix errors in these purpose sentences.
 | розповів | /rɔzpɔˈʋiu̯/ | told, narrated (masc) | verb | masc | past of розповідати |
 | метою | /mɛˈtɔju/ | with the goal | noun | fem | instrumental of мета |
 | задля | /ˈzɑdlʲɑ/ | for the sake of | prep | — | purpose |
+| пояснив | /pɔˈjɑsnɪʋ/ | explained (masc) | verb | masc | past of пояснити |

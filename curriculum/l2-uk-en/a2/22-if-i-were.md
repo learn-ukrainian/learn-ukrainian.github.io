@@ -801,5 +801,8 @@ I would want to see that.
 | реальність | /rɛˈɑlʲnisʲtʲ/ | reality | n | f | - |
 | багатий | /bɑˈɦɑtɪj/ | rich | adj | m | - |
 | щасливий | /ʃt͡ʃɑsˈlɪʋɪj/ | happy | adj | m | - |
+| поїхав | /pɔˈjixɑʋ/ | went (by vehicle) | verb | m | perfective past |
+| певно | /ˈpɛʋnɔ/ | probably, surely | adv | — | epistemic |
+| умовний | /uˈmɔʋnɪj/ | conditional (mood) | adj | m | grammar term |
 
 ---

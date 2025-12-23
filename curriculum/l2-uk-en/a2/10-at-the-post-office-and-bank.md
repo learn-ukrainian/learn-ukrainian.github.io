@@ -831,6 +831,7 @@ I want to exchange dollars.
 | позика | /pɔˈzɪkɑ/ | loan | noun | f | Acc: позику |
 | касир | /kɑˈsɪr/ | cashier | noun | m | professional term |
 | бланк | /blɑnk/ | form, blank | noun | m | Acc: бланк |
+| бандероль | /bɑndɛˈrɔlʲ/ | small package | noun | f | Acc: бандероль |
 
 ---
 

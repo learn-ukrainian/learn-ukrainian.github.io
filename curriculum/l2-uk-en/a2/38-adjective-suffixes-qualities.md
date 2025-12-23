@@ -558,3 +558,9 @@ Find and fix the suffix errors based on the required emotional or logical tone i
 | творчість | /ˈtʋɔrt͡ʃnistʲ/ | creativity | noun | fem | — |
 | ніжність | /ˈniʒnistʲ/ | tenderness | noun | fem | — |
 | лагідність | /ˈlɑɦidnistʲ/ | gentleness | noun | fem | — |
+| котик | /ˈkɔtɪk/ | kitty (dim.) | noun | masc | — |
+| молодість | /ˈmɔlɔdistʲ/ | youth | noun | fem | — |
+| книжечка | /ˈknɪʒɛt͡ʃkɑ/ | little book (dim.) | noun | fem | — |
+| ручечка | /ˈrut͡ʃɛt͡ʃkɑ/ | little pen (dim.) | noun | fem | — |
+| суфікс | /ˈsufiks/ | suffix | noun | m | grammar term |
+| творення | /ˈtʋɔrɛnːʲɑ/ | formation | noun | n | grammar term |

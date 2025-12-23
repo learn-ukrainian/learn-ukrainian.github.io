@@ -583,3 +583,5 @@ Identify the words and phrases that express feelings or states.
 | шкода | /ˈʃkɔdɑ/ | a pity, sorry | adv | — | impersonal |
 | щасливо | /ʃt͡ʃɑsˈlɪʋɔ/ | happily | adv | — | impersonal |
 | рада | /ˈrɑdɑ/ | glad (fem) | adj | fem | temporary |
+| переляканий | /pɛrɛˈlʲɑkɑnɪj/ | frightened, scared | adj | m | emotional state |
+| сумний | /ˈsumnɪj/ | sad | adj | m | emotional state |

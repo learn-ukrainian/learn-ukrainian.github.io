@@ -758,6 +758,8 @@ Did you finish? (asking about completion)
 | продав | /prɔˈdɑʋ/ | sold | verb | m | perf. past masc. |
 | відкрив | /ʋidˈkrɪʋ/ | opened | verb | m | perf. past masc. |
 | закрив | /zɑˈkrɪʋ/ | closed | verb | m | perf. past masc. |
+| запам'ятав | /zɑpɑˈmʲɑtɑʋ/ | remembered | verb | m | perf. past masc. |
+| вид | /ʋɪd/ | aspect | noun | m | grammar term |
 
 ---
 
