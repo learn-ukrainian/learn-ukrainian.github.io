@@ -394,11 +394,13 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B1-grammar` | 01-45 (excl. checkpoints) | 1500+ | 25+ | 90-95% | Grammar acquisition: aspect, motion verbs, complex sentences |
-| `B1-vocab` | 46-75 (excl. checkpoints) | 1500+ | 35+ | 90-95% | Thematic vocabulary: regions, professions, media |
-| `B1-skills` | 76-79 | 1000+ | 15+ | 90-95% | Receptive skills, reading/listening integration |
-| `B1-checkpoint` | 10, 20, 35, 45, 55, 65, 75 | 800+ | 10+ | 90%+ | Review & self-assessment with CEFR rubrics |
-| `B1-capstone` | 80 | 1000+ | 10 | 90-95% | Final assessment with comprehensive rubric |
+| `B1-metalanguage` | 01-05 | 1500+ | 25+ | flexible | Grammar terminology in Ukrainian (B1.0 bridge) |
+| `B1-grammar` | 06-50 (excl. checkpoints) | 1500+ | 25+ | 90-95% | Grammar acquisition: aspect, motion verbs, complex sentences, advanced grammar |
+| `B1-vocab` | 51-70 (excl. checkpoints) | 1500+ | 35+ | 90-95% | Thematic vocabulary: abstract concepts, opinions, discourse |
+| `B1-cultural` | 71-79 | 1500+ | 25+ | 90-95% | Contemporary Ukraine: regions, music, cinema, tech, sports, cuisine |
+| `B1-skills` | 81-84 | 1000+ | 15+ | 90-95% | Receptive skills, reading/listening integration |
+| `B1-checkpoint` | 15, 25, 40, 50, 60, 70, 80 | 800+ | 10+ | 90%+ | Review & self-assessment with CEFR rubrics |
+| `B1-capstone` | 85 | 1000+ | 10 | 90-95% | Final assessment with comprehensive rubric
 
 **Note:** All B1 modules use Ukrainian-first approach — grammar explained IN Ukrainian with metalanguage support.
 
