@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, відмінок, орудний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ⚠️ 2046/1000 (>2000 may be too long)
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
+- **Vocab:** ✅ 23/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.4% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 41.4% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -44,11 +56,11 @@
 | **fill-in: Instrumental Without Preposition** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Instrumental Uses** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Instrumental Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Transport vs. Tools** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Transport vs. Tools** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Instrumental Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
 | **error-correction: Fix the Instrumental** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 10 | Activity (10 items, min 6) |
-| **dialogue-reorder: Asking Directions** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Asking Directions** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Bare Instrumental** | 🎮 | 15 | Activity (15 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

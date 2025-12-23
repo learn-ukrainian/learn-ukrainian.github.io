@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, недоконаний, вид, доконаний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1096/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 34/25
+- **Vocab:** ✅ 27/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 36.1% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 35.4% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -39,11 +51,11 @@
 | **fill-in: Choose the Correct Future** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Future Tense** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Future Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Future Formation** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Future Formation** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Future Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Choose Correct Future** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Future Plans** | 🎮 | 12 | Activity (12 items, min 6) |
-| **dialogue-reorder: Making Plans** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Future Plans** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Making Plans** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Perfective Future** | 🎮 | 9 | Activity (9 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -27,12 +27,12 @@
 ### Vocabulary Targets (Updated Dec 2025)
 | Level | Module Target | Cumulative Target | Note |
 |-------|---------------|-------------------|------|
-| **A1** | ~30 words | ~900 | Enriched for activity density |
-| **A2** | ~25-30 words | ~2,150 | Enriched |
-| **B1** | ~30-40 words | ~4,550 | Narrative-driven expansion |
-| **B2** | ~25 words | ~7,650 | Specialized domains |
-| **C1** | ~25 words | ~10,550 | Academic/Literary |
-| **C2** | ~25 words | ~12,550 | Native mastery |
+| **A1** | ~25 words | ~850 | Deduplicated (Introduced Once) |
+| **A2** | ~17 words | ~1,800 | Deduplicated (Cumulative) |
+| **B1** | ~35 words | ~4,500 | Narrative-driven expansion |
+| **B2** | ~25 words | ~7,500 | Specialized domains |
+| **C1** | ~25 words | ~10,500 | Academic/Literary |
+| **C2** | ~25 words | ~12,500 | Native mastery |
 
 ### User Preferences
 - **User**: Krisztian (Hungarian native).

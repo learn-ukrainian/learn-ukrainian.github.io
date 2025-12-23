@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "Review" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: місцевий, називний, відмінок, давальний, кличний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1196/1000
 - **Activities:** ✅ 10/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 27/25
+- **Vocab:** ✅ 4/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.7% (checkpoint - no gate)
+- **Immersion:** 🇺🇦 43.8% (checkpoint - no gate)
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -35,10 +47,10 @@
 | **fill-in: Case Selection** | 🎮 | 12 | Activity (12 items, min 6) |
 | **quiz: Comprehensive Case Quiz** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Case Rules Review** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Preposition Cases** | 🎮 | 17 | Activity (17 items, min 8) |
+| **group-sort: Preposition Cases** | 🎮 | 17 | Activity (17 items, min 12) |
 | **unjumble: Case Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Service Dialogue** | 🎮 | 6 | Activity (6 items, min 6) |
-| **dialogue-reorder: Case Usage in Context** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Service Dialogue** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Case Usage in Context** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Identify Cases** | 🎮 | 14 | Activity (14 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

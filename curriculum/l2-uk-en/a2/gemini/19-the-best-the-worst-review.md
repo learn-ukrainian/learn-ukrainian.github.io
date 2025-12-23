@@ -10,14 +10,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 7/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 21/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 42.8% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 42.4% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,11 +46,11 @@
 | **fill-in: Form the Superlative** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Superlatives** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Superlative Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Comparative vs Superlative** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Comparative vs Superlative** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Superlative Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Form the Superlative** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: World Records** | 🎮 | 8 | Activity (8 items, min 6) |
-| **dialogue-reorder: The Best** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: World Records** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: The Best** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Superlatives** | 🎮 | 8 | Activity (8 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

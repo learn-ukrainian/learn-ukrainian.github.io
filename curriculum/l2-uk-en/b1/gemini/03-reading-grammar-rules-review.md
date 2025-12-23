@@ -3,24 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1287/1200
+- **Words:** ✅ 1724/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 8/4
+- **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 20/20
+- **Vocab:** ✅ 39/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 66.6% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
+- **Immersion:** 🇺🇦 62.8% (B1.1 Aspect)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -30,9 +24,12 @@
 | **Explanation Patterns: Пояснювальні конструкції** | ✅ | 75 | Included in Core |
 | **Instruction Patterns: Інструкції** | ✅ | 52 | Included in Core |
 | **Word Formation Terms: Словотвір** | ⚪️ | 52 | Skipped |
+| **Activity Instruction Verbs: Інструкції для вправ** | ➖ | 105 | Excluded Type |
+| **Analytical Terms: Аналітична лексика** | ⚪️ | 97 | Skipped |
+| **Style and Register: Стиль і регістр** | ⚪️ | 104 | Skipped |
 | **Practice** | ⚪️ | 395 | Skipped |
 | **Mini-Dialogues** | ✅ | 301 | Included in Core |
-| **Підсумок** | ✅ | 269 | Included in Core |
+| **Підсумок** | ✅ | 400 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Пояснювальні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Словотвір** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -10,14 +10,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 15/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 38.5% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 37.7% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -40,11 +43,11 @@
 | **fill-in: Choose the Correct Aspect** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Process or Result?** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Aspect Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Imperfective vs Perfective** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Imperfective vs Perfective** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Aspect Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Fix the Aspect** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 11 | Activity (11 items, min 6) |
-| **dialogue-reorder: Aspect in Conversation** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Aspect in Conversation** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Identify Aspect** | 🎮 | 9 | Activity (9 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

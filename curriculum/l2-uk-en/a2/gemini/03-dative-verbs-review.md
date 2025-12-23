@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: час, відмінок, давальний
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1989/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
+- **Vocab:** ✅ 9/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 44.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 43.4% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -43,11 +55,11 @@
 | **fill-in: Choose the Correct Form** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Dative Verb Patterns** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Dative Verb Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Verb Categories** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Verb Categories** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Dative Verb Sentences** | 🎮 | 6 | Activity (6 items, min 6) |
 | **error-correction: Fix the Dative Errors** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 8 | Activity (8 items, min 6) |
-| **dialogue-reorder: At the Doctor's Office** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: At the Doctor's Office** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Dative Objects** | 🎮 | 19 | Activity (19 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

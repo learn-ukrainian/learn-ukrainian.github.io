@@ -3,24 +3,18 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1215/1200
+- **Words:** ✅ 1445/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 9/4
+- **Engagement:** ✅ 11/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/20
+- **Vocab:** ✅ 34/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 72.2% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
+- **Immersion:** 🇺🇦 70.1% (B1.1 Aspect)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -29,10 +23,12 @@
 | **Presentation** | ✅ | 135 | Included in Core |
 | **The Aspect Terms: Вид** | ⚪️ | 155 | Skipped |
 | **The Tense Terms: Час** | ⚪️ | 80 | Skipped |
+| **Negation Terminology** | ⚪️ | 108 | Skipped |
+| **Verb Forms** | ⚪️ | 101 | Skipped |
 | **Understanding Aspect Pairs** | ⚪️ | 174 | Skipped |
 | **Practice** | ⚪️ | 287 | Skipped |
 | **Mini-Dialogues** | ✅ | 188 | Included in Core |
-| **Підсумок** | ✅ | 141 | Included in Core |
+| **Підсумок** | ✅ | 162 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Вид дієслова** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Час дієслова** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): ділитися, особистий...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1044/1000
 - **Activities:** ✅ 10/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 2/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.7% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 39.9% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (10 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -54,11 +66,11 @@
 | **match-up: Свій vs Його** | 🎮 | 8 | Activity (8 items, min 8) |
 | **fill-in: Choose Свій or Його** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Concept Check** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Family Story** | 🎮 | 6 | Activity (6 items, min 6) |
+| **cloze: Family Story** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Possessive Sentences** | 🎮 | 8 | Activity (8 items, min 6) |
 | **error-correction: Wrong Possessive** | 🎮 | 6 | Activity (6 items, min 6) |
-| **group-sort: Declension Forms** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Declension Forms** | 🎮 | 18 | Activity (18 items, min 12) |
 | **match-up: Case Selection** | 🎮 | 8 | Activity (8 items, min 6) |
 | **fill-in: Interview Story** | 🎮 | 8 | Activity (8 items, min 8) |
-| **cloze: Edge Cases** | 🎮 | 6 | Activity (6 items, min 6) |
+| **cloze: Edge Cases** | 🎮 | 12 | Activity (12 items, min 12) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

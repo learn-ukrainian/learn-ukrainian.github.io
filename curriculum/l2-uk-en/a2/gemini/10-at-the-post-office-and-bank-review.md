@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): бандероль...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1101/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/25
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 48.0% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 47.9% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -37,11 +49,11 @@
 | **fill-in: Complete the Sentences** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Service Situations** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Service Facts** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Post Office vs Bank** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Post Office vs Bank** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Service Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Fix the Case** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Complete the Dialogue** | 🎮 | 12 | Activity (12 items, min 6) |
-| **dialogue-reorder: At the Post Office** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Complete the Dialogue** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: At the Post Office** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Case Forms** | 🎮 | 13 | Activity (13 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

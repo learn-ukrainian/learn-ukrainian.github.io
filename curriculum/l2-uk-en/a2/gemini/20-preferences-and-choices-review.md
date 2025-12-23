@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (2 words): комфортніше, шкідливіше...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1155/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 20/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 47.2% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 46.6% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,11 +53,11 @@
 | **fill-in: Express Preferences** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Preferences** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Preference Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Preference Expressions** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Preference Expressions** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Preference Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Fix Preferences** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Expressing Preferences** | 🎮 | 11 | Activity (11 items, min 6) |
-| **dialogue-reorder: Making Choices** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Expressing Preferences** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Making Choices** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Preference Words** | 🎮 | 9 | Activity (9 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

@@ -2,6 +2,15 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: знахідний, місцевий, відмінок
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1261/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +19,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 36/25
+- **Vocab:** ✅ 8/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 40.0% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 38.6% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -44,11 +56,11 @@
 | **fill-in: Choose the Correct Preposition** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Motion or Location?** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Preposition Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Prepositions by Case** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Prepositions by Case** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Preposition Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Fix the Case** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 9 | Activity (9 items, min 6) |
-| **dialogue-reorder: Asking for Directions** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Asking for Directions** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Preposition + Case** | 🎮 | 12 | Activity (12 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

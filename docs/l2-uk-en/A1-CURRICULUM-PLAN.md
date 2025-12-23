@@ -2,7 +2,7 @@
 
 **Status:** ✅ COMPLETE
 **Modules:** 01-34 (34 modules)
-**Vocabulary Target:** ~900 words (level), ~900 cumulative
+**Vocabulary Target:** ~850 unique words (total)
 
 ---
 

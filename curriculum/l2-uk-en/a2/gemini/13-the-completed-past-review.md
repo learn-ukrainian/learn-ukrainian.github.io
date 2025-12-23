@@ -2,6 +2,17 @@
 **Phase:** A2 | **Level:** A2 | **Pedagogy:** "PPP" | **Target:** 1000
 **Overall Status:** ✅ PASS
 
+## PEDAGOGICAL VIOLATIONS
+- **[METALANGUAGE]** Metalanguage terms used but not in vocabulary: недоконаний, доконаний, вид
+  - FIX: Add these grammar terms to vocabulary with translations, or use English equivalents.
+- **[VOCAB_PLAN_MISSING]** Missing vocabulary from plan (1 words): запам'ятав...
+  - FIX: Add missing words from curriculum plan to module vocabulary section.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 2 pedagogical violations (minor)
+
 ## Gates
 - **Words:** ✅ 1063/1000
 - **Activities:** ✅ 11/10
@@ -10,14 +21,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 29/25
+- **Vocab:** ✅ 24/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.2% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 36.0% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -40,11 +54,11 @@
 | **fill-in: Perfective or Imperfective Past** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: Aspect in Past Tense** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Past Tense Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Verb Aspect** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Verb Aspect** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Past Tense Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Choose Correct Aspect** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Aspect in Context** | 🎮 | 12 | Activity (12 items, min 6) |
-| **dialogue-reorder: Completed vs Process** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Aspect in Context** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Completed vs Process** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Find Perfective Past** | 🎮 | 10 | Activity (10 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

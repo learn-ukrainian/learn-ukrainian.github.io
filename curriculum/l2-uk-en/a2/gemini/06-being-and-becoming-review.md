@@ -10,14 +10,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 4/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 28/25
+- **Vocab:** ✅ 16/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 43.1% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 42.0% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -42,11 +45,11 @@
 | **fill-in: Бути/Стати + Instrumental** | 🎮 | 12 | Activity (12 items, min 8) |
 | **quiz: When to Use Instrumental** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Instrumental with Professions** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Masculine vs. Feminine Professions** | 🎮 | 12 | Activity (12 items, min 8) |
+| **group-sort: Masculine vs. Feminine Professions** | 🎮 | 12 | Activity (12 items, min 12) |
 | **unjumble: Profession Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Fix the Instrumental** | 🎮 | 12 | Activity (12 items, min 6) |
-| **cloze: Complete the Story** | 🎮 | 8 | Activity (8 items, min 6) |
-| **dialogue-reorder: Job Interview** | 🎮 | 14 | Activity (14 items, min 5) |
+| **cloze: Complete the Story** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Job Interview** | 🎮 | 14 | Activity (14 items, min 4) |
 | **mark-the-words: Find Instrumental Forms** | 🎮 | 9 | Activity (9 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 36 | Activity (36 items, min 6) |
 | **Vocabulary** | ➖ | 34 | Excluded Type |

@@ -10,14 +10,17 @@
 - **Priority:** ✅ Priority types used
 - **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 37/25
+- **Vocab:** ✅ 22/1
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 37.3% (target 35-50% (A2.1))
+- **Immersion:** 🇺🇦 40.0% (target 35-50% (A2.1))
 
 ## MDX VALIDATION
 ✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -39,11 +42,11 @@
 | **fill-in: Identify the Pattern** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Aspect Formation** | 🎮 | 12 | Activity (12 items, min 8) |
 | **true-false: Formation Rules** | 🎮 | 12 | Activity (12 items, min 8) |
-| **group-sort: Formation Patterns** | 🎮 | 13 | Activity (13 items, min 8) |
+| **group-sort: Formation Patterns** | 🎮 | 15 | Activity (15 items, min 12) |
 | **unjumble: Aspect Pattern Sentences** | 🎮 | 12 | Activity (12 items, min 6) |
 | **error-correction: Find the Perfective** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Pattern Recognition** | 🎮 | 8 | Activity (8 items, min 6) |
-| **dialogue-reorder: Learning Aspect** | 🎮 | 12 | Activity (12 items, min 5) |
+| **cloze: Pattern Recognition** | 🎮 | 12 | Activity (12 items, min 12) |
+| **dialogue-reorder: Learning Aspect** | 🎮 | 12 | Activity (12 items, min 4) |
 | **mark-the-words: Identify Perfective Verbs** | 🎮 | 10 | Activity (10 items, min 6) |
 | **translate: English to Ukrainian** | 🎮 | 24 | Activity (24 items, min 6) |
 | **Vocabulary** | ➖ | 0 | Excluded Type |

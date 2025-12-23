@@ -2,7 +2,7 @@
 
 **Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
 **Modules:** 01-57 (57 modules)
-**Vocabulary Target:** ~1,250 words (level), ~2,150 cumulative
+**Vocabulary Target:** ~950 unique words (level), ~1,800 cumulative (A1+A2)
 
 ---
 

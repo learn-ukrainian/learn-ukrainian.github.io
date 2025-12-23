@@ -1,23 +1,29 @@
 # Audit Report: 01-how-to-talk-about-grammar.md
-**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1500
-**Overall Status:** ✅ PASS
+**Phase:** B1 | **Level:** B1 | **Pedagogy:** "PPP" | **Target:** 1200
+**Overall Status:** ❌ FAIL
+
+## PEDAGOGICAL VIOLATIONS
+- **[COMPLEXITY_WORD_COUNT]** quiz 'Відмінки' Q1 prompt length 21 (target: 6-15)
+  - FIX: Adjust prompt length to 6-15 words.
+
+## Recommendation
+**📝 UPDATE** (severity 10/100)
+
+- 1 pedagogical violations (minor)
 
 ## Gates
-- **Words:** ✅ 1543/1500
+- **Words:** ✅ 1543/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
-- **Unique_types:** ✅ 12/4 types
+- **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 6/5
+- **Engagement:** ✅ 6/4
 - **Audio:** ℹ️ No audio
-- **Vocab:** ✅ 25/25
+- **Vocab:** ✅ 25/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
-- **Pedagogy:** ✅ Level-appropriate
+- **Pedagogy:** ❌ 1 violations
 - **Immersion:** 🇺🇦 68.1% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,234 @@
+=== A2 Production Module Audit Report ===
+
+Auditing M1: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M2: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M3: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M4: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M5: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M6: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M7: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M8: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M9: ...
+  ⚠️  ERROR
+Error: File  not found.
+
+Auditing M10: 10-at-the-post-office-and-bank...
+  ✅ PASSED
+
+Auditing M11: 11-checkpoint-cases...
+  ✅ PASSED
+
+Auditing M12: 12-aspect-introduction...
+  ✅ PASSED
+
+Auditing M13: 13-the-completed-past...
+  ✅ PASSED
+
+Auditing M14: 14-future-plans-and-promises...
+  ✅ PASSED
+
+Auditing M15: 15-aspect-morphology...
+  ✅ PASSED
+
+Auditing M16: 16-aspect-mastery-pairs...
+  ✅ PASSED
+
+Auditing M17: 17-possessive-sviy...
+  ✅ PASSED
+
+Auditing M18: 18-bigger-better-stronger...
+  ✅ PASSED
+
+Auditing M19: 19-the-best-the-worst...
+  ✅ PASSED
+
+Auditing M20: 20-preferences-and-choices...
+  ✅ PASSED
+
+Auditing M21: 21-numerals-and-nouns...
+  ✅ PASSED
+
+Auditing M22: 22-if-i-were...
+  ✅ PASSED
+
+Auditing M23: 23-smart-shopping...
+  ✅ PASSED
+
+Auditing M24: 24-checkpoint-aspect-comparison...
+  ✅ PASSED
+
+Auditing M25: 25-telling-stories...
+  ✅ PASSED
+
+Auditing M26: 26-because-and-although...
+  ✅ PASSED
+
+Auditing M27: 27-she-said-that...
+  ✅ PASSED
+
+Auditing M28: 28-i-think-that...
+  ✅ PASSED
+
+Auditing M29: 29-i-feel-like...
+  ✅ PASSED
+
+Auditing M30: 30-in-order-to...
+  ✅ PASSED
+
+Auditing M31: 31-which-one...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M32: 32-time-clauses...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M33: 33-at-the-doctor...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M34: 34-checkpoint...
+  ✅ PASSED
+
+Auditing M35: 35-basic-motion-prefixes...
+  ✅ PASSED
+
+Auditing M36: 36-advanced-motion-prefixes...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M37: 37-action-verb-prefixes...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M38: 38-adjective-suffixes-qualities...
+  ✅ PASSED
+
+Auditing M39: 39-adj-suffixes...
+  ✅ PASSED
+
+Auditing M40: 40-root-families-i...
+  ✅ PASSED
+
+Auditing M41: 41-root-families-ii...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M42: 42-wf-mastery...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M43: 43-checkpoint-word-formation...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M44: 44-food-and-cooking...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M45: 45-home-and-furniture...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M46: 46-nature-and-weather...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M47: 47-emotions-personality...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M48: 48-work-professions...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M49: 49-technology-media...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M50: 50-hobbies-leisure...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M51: 51-education-learning...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M52: 52-shopping-services...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M53: 53-sports-fitness...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M54: 54-health-body...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+Auditing M55: 55-checkpoint-vocabulary...
+  ❌ FAILED
+❌ AUDIT FAILED. Correct errors before proceeding.
+
+========================================
+=== SUMMARY ===
+PASSED: 26
+FAILED: 20
+ERRORS: 9
+
+=== FAILING MODULES ===
+  - M31: 31-which-one
+  - M32: 32-time-clauses
+  - M33: 33-at-the-doctor
+  - M36: 36-advanced-motion-prefixes
+  - M37: 37-action-verb-prefixes
+  - M41: 41-root-families-ii
+  - M42: 42-wf-mastery
+  - M43: 43-checkpoint-word-formation
+  - M44: 44-food-and-cooking
+  - M45: 45-home-and-furniture
+  - M46: 46-nature-and-weather
+  - M47: 47-emotions-personality
+  - M48: 48-work-professions
+  - M49: 49-technology-media
+  - M50: 50-hobbies-leisure
+  - M51: 51-education-learning
+  - M52: 52-shopping-services
+  - M53: 53-sports-fitness
+  - M54: 54-health-body
+  - M55: 55-checkpoint-vocabulary
+
+=== ERROR MODULES (need investigation) ===
+  - M1: 
+  - M2: 
+  - M3: 
+  - M4: 
+  - M5: 
+  - M6: 
+  - M7: 
+  - M8: 
+  - M9: 
