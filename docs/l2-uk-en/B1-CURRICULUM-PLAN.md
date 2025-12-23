@@ -9,9 +9,9 @@
 ## 📋 Templates & Resources
 
 **Before creating B1 modules, consult these templates:**
-- [Grammar modules (M06-45: Aspect, Motion, Complex Sentences, Participles)](templates/b1-grammar-module-template.md)
-- [Vocabulary modules (M51-65: Abstract concepts, Opinions, Discourse markers)](templates/b1-vocab-module-template.md)
-- [Checkpoint modules (M10, M20, M35, M45, M55, M65, M75, M80)](templates/b1-checkpoint-module-template.md)
+- [Grammar modules (M06-50: Aspect, Motion, Complex Sentences, Advanced Grammar)](templates/b1-grammar-module-template.md)
+- [Vocabulary modules (M51-70: Abstract concepts, Opinions, Discourse markers)](templates/b1-vocab-module-template.md)
+- [Checkpoint modules (M15, M25, M40, M50, M60, M70, M80)](templates/b1-checkpoint-module-template.md)
 - [Cultural modules (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine)](templates/b1-cultural-module-template.md)
 - [Integration modules (M81-85: News reading, Podcasts, Grammar/Vocab integration, Capstone)](templates/b1-integration-module-template.md)
 

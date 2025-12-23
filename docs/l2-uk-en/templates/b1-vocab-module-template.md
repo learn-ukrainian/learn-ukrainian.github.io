@@ -1,6 +1,6 @@
 # B1 Vocabulary Expansion Module Template
 
-**Purpose:** Reference template for creating B1 vocabulary expansion modules (M51-65: Abstract concepts, Opinions, Discourse markers, Synonymy, Collocations)
+**Purpose:** Reference template for creating B1 vocabulary expansion modules (M51-70: Abstract concepts, Opinions, Discourse markers, Synonymy, Collocations)
 
 **Based on:** B1 Curriculum Plan specifications for Phase B1.5-B1.6 vocabulary modules
 

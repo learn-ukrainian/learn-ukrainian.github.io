@@ -1,6 +1,6 @@
 # B1 Checkpoint Module Template
 
-**Purpose:** Reference template for creating B1 checkpoint modules (M10, M20, M35, M45, M55, M65, M75, M80)
+**Purpose:** Reference template for creating B1 checkpoint modules (M15, M25, M40, M50, M60, M70, M80)
 
 **Based on:** M05 (Ready for Immersion) which achieved ✅ 5.0/5 exemplary score
 

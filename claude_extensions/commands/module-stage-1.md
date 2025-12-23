@@ -43,9 +43,9 @@ Extract:
 **MANDATORY:** Read the template for this module type.
 
 **For B1 modules:**
-- Grammar (M06-45: Aspect, Motion, Complex Sentences, Participles) → `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-- Vocabulary (M51-65: Abstract concepts, Opinions, Discourse markers) → `docs/l2-uk-en/templates/b1-vocab-module-template.md`
-- Checkpoint (M10, M20, M35, M45, M55, M65, M75, M80) → `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- Grammar (M06-50: Aspect, Motion, Complex Sentences, Advanced Grammar) → `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- Vocabulary (M51-70: Abstract concepts, Opinions, Discourse markers) → `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- Checkpoint (M15, M25, M40, M50, M60, M70, M80) → `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
 - Cultural (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine) → `docs/l2-uk-en/templates/b1-cultural-module-template.md`
 - Integration (M81-85: Skills, Grammar/Vocab review, Capstone) → `docs/l2-uk-en/templates/b1-integration-module-template.md`
 

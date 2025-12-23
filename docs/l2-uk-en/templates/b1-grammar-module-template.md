@@ -1,6 +1,6 @@
 # B1 Grammar Module Template
 
-**Purpose:** Reference template for creating B1 grammar modules (M06-45: Aspect, Motion Verbs, Complex Sentences, Participles)
+**Purpose:** Reference template for creating B1 grammar modules (M06-50: Aspect, Motion Verbs, Complex Sentences, Advanced Grammar)
 
 **Based on:** M06 (Aspect - Complete System) which achieved ✅ PASS on all audit gates
 
