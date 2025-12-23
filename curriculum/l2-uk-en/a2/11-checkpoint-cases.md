@@ -384,99 +384,111 @@ Read this dialogue and identify the case of each bolded word:
 ## quiz: Comprehensive Case Quiz
 > Дайте відповіді на питання про відмінки. | Answer the questions about cases.
 
-1. Which case for the subject of a sentence?
+1. When identifying the grammatical function of a sentence's subject, which case is used?
 
 - [x] Nominative
 - [ ] Accusative
 - [ ] Genitive
+- [ ] Dative
 
 ---
 
-2. "Мені холодно" uses which case for "мені"?
+2. In the expression "Мені холодно" the pronoun "мені" is in which grammatical case?
 
 - [x] Dative
 - [ ] Accusative
 - [ ] Genitive
-
----
-
-3. "Працювати лікарем" uses which case?
-
-- [x] Instrumental
-- [ ] Accusative
-- [ ] Nominative
-
----
-
-4. "До школи" uses which case?
-
-- [x] Genitive
-- [ ] Accusative
 - [ ] Locative
 
 ---
 
-5. "Про книгу" uses which case?
+3. In the sentence "Працювати лікарем," which grammatical case is used for the profession?
 
-- [x] Accusative
+- [x] Instrumental
+- [ ] Accusative
+- [ ] Nominative
 - [ ] Genitive
-- [ ] Instrumental
 
 ---
 
-6. "З другом" uses which case?
+4. When using the preposition "до" as in "до школи," which grammatical case follows?
 
-- [x] Instrumental
-- [ ] Genitive
+- [x] Genitive
+- [ ] Accusative
+- [ ] Locative
 - [ ] Dative
 
 ---
 
-7. "В школі" uses which case?
+5. When speaking about something, as in "про книгу," which grammatical case follows "про"?
+
+- [x] Accusative
+- [ ] Genitive
+- [ ] Instrumental
+- [ ] Dative
+
+---
+
+6. When expressing accompaniment "with a friend" as in "з другом," which case is used?
+
+- [x] Instrumental
+- [ ] Genitive
+- [ ] Dative
+- [ ] Accusative
+
+---
+
+7. In the phrase "в школі" expressing location at school, which grammatical case is used?
 
 - [x] Locative
 - [ ] Accusative
 - [ ] Genitive
+- [ ] Instrumental
 
 ---
 
-8. "Немає часу" uses which case?
+8. In the expression "Немає часу" meaning there's no time, which grammatical case is used?
 
 - [x] Genitive
 - [ ] Nominative
 - [ ] Accusative
+- [ ] Dative
 
 ---
 
-9. Which case for "Мамо!"?
+9. When addressing someone directly, as in "Мамо!", which grammatical case is this example of?
 
 - [x] Vocative
 - [ ] Nominative
 - [ ] Dative
+- [ ] Accusative
 
 ---
 
-10. "Я бачу маму" — which case?
+10. In the sentence "Я бачу маму," the word "маму" functions as what grammatical case?
 
 - [x] Accusative
 - [ ] Nominative
 - [ ] Genitive
-
----
-
-11. "Платити карткою" — which case?
-
-- [x] Instrumental
-- [ ] Accusative
 - [ ] Dative
 
 ---
 
-12. "Допоможіть мені" — which case?
+11. When paying by card, as in "Платити карткою," which grammatical case expresses the method?
+
+- [x] Instrumental
+- [ ] Accusative
+- [ ] Dative
+- [ ] Genitive
+
+---
+
+12. In the request "Допоможіть мені," which grammatical case is the pronoun "мені" in?
 
 - [x] Dative
 - [ ] Accusative
 - [ ] Instrumental
+- [ ] Genitive
 
 ## true-false: Case Rules Review
 
@@ -550,23 +562,25 @@ Read this dialogue and identify the case of each bolded word:
 
 ## unjumble: Case Sentences
 
-1. книгу | другові | Я | даю
-   > [!answer] Я даю книгу другові
+> Put the words in the correct order.
 
-2. лікарем | Він | працює
-   > [!answer] Він працює лікарем
+1. книгу / другові / Я / даю / на / день / народження / сьогодні
+   > [!answer] Я даю книгу другові на день народження сьогодні
 
-3. школи | Я | до | йду
-   > [!answer] Я йду до школи
+2. лікарем / Він / працює / в / лікарні / вже / три / роки
+   > [!answer] Він працює лікарем в лікарні вже три роки
 
-4. холодно | Мені
-   > [!answer] Мені холодно
+3. школи / Я / до / йду / щодня / о / восьмій / годині
+   > [!answer] Я йду до школи щодня о восьмій годині
 
-5. цукру | без | Кава
-   > [!answer] Кава без цукру
+4. холодно / Мені / взимку / коли / я / виходжу / на / вулицю
+   > [!answer] Мені холодно взимку коли я виходжу на вулицю
 
-6. столом | над | Лампа
-   > [!answer] Лампа над столом
+5. цукру / без / Кава / і / молока / будь / ласка / мені
+   > [!answer] Кава без цукру і молока будь ласка мені
+
+6. столом / над / Лампа / світить / яскраво / у / моїй / кімнаті
+   > [!answer] Лампа над столом світить яскраво у моїй кімнаті
 
 ## cloze: Service Dialogue
 
@@ -596,6 +610,33 @@ Read this dialogue and identify the case of each bolded word:
 
 6. квитанція | квитанцію | квитанції
 > [!answer] квитанція
+
+---
+
+У банку я хочу зняти [___:1].
+Мені потрібно обміняти [___:2] на гривні.
+Який сьогодні [___:3]?
+Тридцять сім [___:4] за долар.
+Я хочу відкрити новий [___:5].
+Дайте мені нову [___:6], будь ласка.
+
+1. гроші | грошей | грошам
+> [!answer] гроші
+
+2. долари | доларів | доларами
+> [!answer] долари
+
+3. курс | курсу | курсом
+> [!answer] курс
+
+4. гривень | гривні | гривнями
+> [!answer] гривень
+
+5. рахунок | рахунку | рахунком
+> [!answer] рахунок
+
+6. картку | картка | карткою
+> [!answer] картку
 
 ## dialogue-reorder: Case Usage in Context
 
@@ -747,30 +788,7 @@ The lamp is above the table.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |
-| називний | /nɑzɪʋˈnɪj/ | nominative | adj | m | case name |
-| родовий | /rɔdɔˈʋɪj/ | genitive | adj | m | case name |
-| давальний | /dɑˈʋɑlʲnɪj/ | dative | adj | m | case name |
-| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | case name |
-| орудний | /ɔˈrudnɪj/ | instrumental | adj | m | case name |
-| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | case name |
-| кличний | /ˈklɪt͡ʃnɪj/ | vocative | adj | m | case name |
 | прийменник | /prɪjˈmɛnnɪk/ | preposition | noun | m | grammar term |
 | закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |
-| пошта | /ˈpɔʃtɑ/ | post office | noun | f | service location |
-| банк | /bɑnk/ | bank | noun | m | service location |
-| лист | /lɪst/ | letter | noun | m | Acc: листа |
-| посилка | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |
-| рахунок | /ˈrɑxunɔk/ | account | noun | m | Acc: рахунок |
-| гроші | /ˈɦrɔʃi/ | money | noun | pl | Acc: гроші |
-| картка | /ˈkɑrtkɑ/ | card | noun | f | Acc: картку |
-| курс | /kurs/ | exchange rate | noun | m | banking term |
-| квитанція | /kʋɪˈtɑnt͡sʲijɑ/ | receipt | noun | f | Acc: квитанцію |
-| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | noun | f | Ukrainian currency |
-| час | /t͡ʃɑs/ | time | noun | m | Gen: часу |
-| адреса | /ɑˈdrɛsɑ/ | address | noun | f | Acc: адресу |
-| переказ | /pɛrɛˈkɑz/ | money transfer | noun | m | banking term |
 | послуга | /pɔsˈluɦɑ/ | service | noun | f | Acc: послугу |
 | оплата | /ɔpˈlɑtɑ/ | payment | noun | f | Acc: оплату |
-| валюта | /ʋɑˈlʲutɑ/ | currency | noun | f | banking term |
-| готівка | /ɦɔˈtiʋkɑ/ | cash | noun | f | no plural form |

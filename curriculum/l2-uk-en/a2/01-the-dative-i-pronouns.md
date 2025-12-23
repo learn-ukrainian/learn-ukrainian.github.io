@@ -330,7 +330,7 @@ The activities below progress from recognition (matching, sorting) to production
 
 ## match-up: Nominative to Dative
 
-> Match the nominative pronoun with its dative form.
+> Знайдіть відповідні пари: займенник у називному відмінку → давальний відмінок.
 
 | Nominative | Dative |
 |------------|--------|
@@ -342,6 +342,9 @@ The activities below progress from recognition (matching, sorting) to production
 | ви | вам |
 | вони | їм |
 | воно | йому |
+| подобатися (до кого?) | мені подобається |
+| потрібно (кому?) | тобі потрібно |
+| холодно (кому?) | йому холодно |
 
 ## group-sort: Pronoun Cases [stage: recognition]
 
@@ -470,84 +473,84 @@ The activities below progress from recognition (matching, sorting) to production
 
 > Choose the correct translation.
 
-1. "I like coffee" in Ukrainian is:
+1. When you want to say "I like coffee" in Ukrainian, how do you express this sentiment?
    - [ ] Я подобаюся кава.
    - [x] Мені подобається кава.
    - [ ] Моя подобається кава.
    - [ ] Мене подобається кава.
    > The person who likes goes into Dative (мені), not Nominative.
 
-2. "She needs to rest" in Ukrainian is:
+2. If you want to tell someone "She needs to rest" in Ukrainian, which sentence is correct?
    - [ ] Вона потрібно відпочити.
    - [ ] Її потрібно відпочити.
    - [x] Їй потрібно відпочити.
    - [ ] Вона потрібна відпочити.
    > The person who needs goes into Dative (їй).
 
-3. "He is cold" in Ukrainian is:
+3. When expressing that "He is cold" in Ukrainian, which construction should you use?
    - [ ] Він холодно.
    - [x] Йому холодно.
    - [ ] Його холодно.
    - [ ] Він холодний.
    > Physical states use Dative + adverb construction.
 
-4. "Do you like Kyiv?" in Ukrainian is:
+4. To ask "Do you like Kyiv?" in Ukrainian, which sentence would a native speaker use?
    - [x] Тобі подобається Київ?
    - [ ] Ти подобаєшся Київ?
    - [ ] Твій подобається Київ?
    - [ ] Тебе подобається Київ?
    > The person who likes is in Dative (тобі).
 
-5. "We need help" in Ukrainian is:
+5. When you want to say "We need help" in Ukrainian, which sentence is grammatically correct?
    - [ ] Ми потрібно допомога.
    - [ ] Ми потрібна допомога.
    - [x] Нам потрібна допомога.
    - [ ] Нас потрібна допомога.
    > "We" in Dative is "нам," and допомога is feminine, so потрібна.
 
-6. "They find it interesting" in Ukrainian is:
+6. To express that "They find it interesting" in Ukrainian, which sentence captures this meaning correctly?
    - [ ] Вони цікаво.
    - [x] Їм цікаво.
    - [ ] Їх цікаво.
    - [ ] Вони цікаві.
    > Emotional states use Dative pronoun + adverb.
 
-7. What does "Мені здається" mean?
+7. When a Ukrainian speaker says "Мені здається", what meaning are they trying to express?
    - [ ] I am seen
    - [x] It seems to me
    - [ ] I see
    - [ ] I am being
    > «здаватися» вимагає давального відмінка.
 
-8. What does "Тобі добре?" mean?
+8. If someone asks you "Тобі добре?" in Ukrainian, what are they inquiring about?
    - [ ] You are good?
    - [x] Are you okay?
    - [ ] Your good?
    - [ ] Do you have good?
    > Literally "To-you it's good?" meaning "Are you feeling okay?"
 
-9. Which pronoun means "to her"?
+9. When referring to a female recipient, which Ukrainian pronoun means "to her" in the Dative case?
    - [ ] її
    - [x] їй
    - [ ] вона
    - [ ] йому
    > «їй» — давальна форма від «вона».
 
-10. Which pronoun means "to them"?
+10. When referring to multiple people as recipients, which Ukrainian pronoun means "to them" in Dative?
     - [ ] вони
     - [ ] їх
     - [x] їм
     - [ ] вонам
     > «їм» — давальна форма від «вони».
 
-11. "Дякую тобі" means:
+11. When a Ukrainian speaker says "Дякую тобі", what are they expressing to the listener?
     - [x] I thank you
     - [ ] You thank me
     - [ ] Thanks for you
     - [ ] Your thanks
     > дякувати takes Dative: тобі = to you.
 
-12. In "Вам каву?", the speaker is:
+12. In the phrase "Вам каву?", what is the speaker doing or offering to the recipient?
     - [ ] Asking if you have coffee
     - [x] Offering you coffee
     - [ ] Thanking you for coffee
@@ -634,11 +637,13 @@ The activities below progress from recognition (matching, sorting) to production
 
 > Заповніть пропуски правильними займенниками в давальному відмінку.
 
-Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело.
+Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело. Погода чудова!
 
 Офіціант запитує: «[___:3] каву?» Марія каже: «Так, [___:4] каву, будь ласка.» А Петро каже: «Ні, [___:5] не потрібно. [___:6] краще чай.»
 
-Увечері [___:7] холодно. Вони йдуть додому. [___:8] подобається Одеса!
+Марія телефонує подрузі: «[___:7] подобається тут!» Подруга відповідає: «[___:8] теж хочеться поїхати!»
+
+Увечері [___:9] холодно. Вони йдуть додому. На вулиці [___:10] весело. [___:11] подобається Одеса! [___:12] потрібно приїхати знову.
 
 1. Їм | Їх | Вони
    > [!answer] Їм
@@ -658,63 +663,75 @@ The activities below progress from recognition (matching, sorting) to production
 6. Мені | Мене | Я
    > [!answer] Мені
 
-7. їм | їх | вони
+7. Мені | Мене | Я
+   > [!answer] Мені
+
+8. Мені | Мене | Я
+   > [!answer] Мені
+
+9. їм | їх | вони
    > [!answer] їм
 
-8. Їм | Їх | Вони
-   > [!answer] Їм
+10. їм | їх | вони
+    > [!answer] їм
+
+11. Їм | Їх | Вони
+    > [!answer] Їм
+
+12. Їм | Їх | Вони
+    > [!answer] Їм
 
 ## unjumble: Dative Sentences [stage: free-production]
 
 > Put the words in the correct order.
 
-1. подобається | Мені | музика | українська
-   > [!answer] Мені подобається українська музика
-   > (I like Ukrainian music.) [4 words]
+1. подобається / Мені / музика / українська / і / народні / пісні / дуже
+   > [!answer] Мені дуже подобається українська музика і народні пісні
+   > (I really like Ukrainian music and folk songs.) [8 words]
 
-2. потрібно | Тобі | відпочити
-   > [!answer] Тобі потрібно відпочити
-   > (You need to rest.) [3 words]
+2. потрібно / Тобі / добре / відпочити / після / важкого / дня / сьогодні
+   > [!answer] Тобі сьогодні потрібно добре відпочити після важкого дня
+   > (You need to rest well today after a hard day.) [8 words]
 
-3. холодно | Йому | тут
-   > [!answer] Йому тут холодно
-   > (He's cold here.) [3 words]
+3. холодно / Йому / тут / в / цій / великій / кімнаті / дуже
+   > [!answer] Йому дуже холодно тут в цій великій кімнаті
+   > (He's very cold here in this big room.) [8 words]
 
-4. подобається | їй | Київ | Чи
-   > [!answer] Чи їй подобається Київ
-   > (Does she like Kyiv?) [4 words]
+4. подобається / їй / Київ / Чи / як / столиця / України / взагалі
+   > [!answer] Чи їй взагалі подобається Київ як столиця України
+   > (Does she generally like Kyiv as the capital of Ukraine?) [8 words]
 
-5. потрібна | Нам | допомога
-   > [!answer] Нам потрібна допомога
-   > (We need help.) [3 words]
+5. потрібна / Нам / допомога / з / цим / складним / завданням / твоя
+   > [!answer] Нам потрібна твоя допомога з цим складним завданням
+   > (We need your help with this difficult task.) [8 words]
 
-6. цікаво | Вам | тут
-   > [!answer] Вам тут цікаво
-   > (Is it interesting for you here?) [3 words]
+6. цікаво / Вам / тут / працювати / в / цій / компанії / Чи
+   > [!answer] Чи вам цікаво працювати тут в цій компанії
+   > (Is it interesting for you to work here in this company?) [8 words]
 
-7. футбол | Їм | подобається
-   > [!answer] Їм подобається футбол
-   > (They like football.) [3 words]
+7. футбол / Їм / подобається / український / і / вони / дивляться / матчі
+   > [!answer] Їм подобається український футбол і вони дивляться матчі
+   > (They like Ukrainian football and they watch matches.) [8 words]
 
-8. здається | Мені | це | що | правда
-   > [!answer] Мені здається, що це правда
-   > (It seems to me that this is true.) [5 words]
+8. здається / Мені / що / це / правда / і / я / вірю
+   > [!answer] Мені здається, що це правда, і я вірю
+   > (It seems to me that this is true, and I believe it.) [8 words]
 
-9. тепло | Тобі | зараз
-   > [!answer] Тобі зараз тепло
-   > (Are you warm now?) [3 words]
+9. тепло / Тобі / зараз / в / цьому / новому / светрі / Чи
+   > [!answer] Чи тобі зараз тепло в цьому новому светрі
+   > (Are you warm now in this new sweater?) [8 words]
 
-10. весело | Нам | дуже | тут
-    > [!answer] Нам тут дуже весело
-    > (We're having a lot of fun here.) [4 words]
+10. весело / Нам / дуже / тут / на / цій / вечірці / сьогодні
+    > [!answer] Нам сьогодні дуже весело тут на цій вечірці
+    > (We're having a lot of fun here at this party today.) [8 words]
 
-11. потрібно | Йому | працювати | більше
-    > [!answer] Йому потрібно більше працювати
-    > (He needs to work more.) [4 words]
+11. потрібно / Йому / працювати / більше / щоб / заробити / гроші / гарні
+    > [!answer] Йому потрібно більше працювати, щоб заробити гарні гроші
+    > (He needs to work more to earn good money.) [8 words]
 
-12. подобаються | Їй | квіти
-    > [!answer] Їй подобаються квіти
-    > (She likes flowers.) [3 words]
+12. подобаються / Їй / квіти / червоні / особливо / троянди / і / тюльпани
+    > [!answer] Їй подобаються червоні квіти, особливо троянди і тюльпани
+    > (She likes red flowers, especially roses and tulips.) [8 words]
 
 ## dialogue-reorder: At the Restaurant [stage: free-production]
 
@@ -830,22 +847,10 @@ The activities below progress from recognition (matching, sorting) to production
 | їм | /jim/ | to them | pron | - | Dative of вони |
 | подобатися | /pɔdɔˈbɑtɪsʲɑ/ | to be liked, to please | verb | - | + Dative |
 | здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | verb | - | + Dative |
-| потрібно | /pɔˈtrʲibnɔ/ | needed, necessary | adv | - | + Dative + inf/noun |
-| необхідно | /nɛɔbˈxʲidnɔ/ | essential, necessary | adv | - | more formal than потрібно |
-| цікаво | /t͡sʲiˈkɑvɔ/ | interesting | adv | - | Мені цікаво. |
-| важко | /ˈvɑʒkɔ/ | difficult, hard | adv | - | Мені важко. |
-| легко | /ˈlɛɦkɔ/ | easy | adv | - | Мені легко. |
 | приємно | /prɪˈjɛmnɔ/ | pleasant | adv | - | Мені приємно. |
 | боляче | /bɔˈlʲɑt͡ʃɛ/ | painful | adv | - | Мені боляче. |
-| сумно | /ˈsumnɔ/ | sad | adv | - | Мені сумно. |
-| весело | /ˈvɛsɛlɔ/ | fun, merry | adv | - | Нам весело. |
-| гарно | /ˈɦɑrnɔ/ | beautiful, well | adv | - | Мені тут гарно. |
-| погано | /ˈpɔɦɑnɔ/ | bad | adv | - | Йому погано. |
-| холодно | /ˈxɔlɔdnɔ/ | cold | adv | - | Мені холодно. |
-| тепло | /ˈtɛplɔ/ | warm | adv | - | Тобі тепло? |
 | допомагати | /dɔpɔmɑˈɦɑtɪ/ | to help | verb | - | + Dative |
 | заважати | /zɑʋɑˈʒɑtɪ/ | to bother, disturb | verb | - | + Dative |
-| дякувати | /dʲɑˈkuʋɑtɪ/ | to thank | verb | - | + Dative |
 | зрозуміло | /zrɔzuˈmilɔ/ | clear, understood | adv | - | Вам зрозуміло? |
 | відмінок | /vidˈminɔk/ | grammatical case | noun | m | grammar term |
 | називний | /nɑzɪʋˈnɪj/ | Nominative (case) | adj | m | хто? що? |
@@ -855,4 +860,4 @@ The activities below progress from recognition (matching, sorting) to production
 | родовий | /rɔdɔˈvɪj/ | Genitive (case) | adj | m | кого? чого? |
 | місцевий | /misˈt͡sɛvɪj/ | Locative (case) | adj | m | де? на чому? |
 | іменник | /iˈmɛnːɪk/ | noun | noun | m | grammar term |
-| час | /t͡ʃɑs/ | time | noun | m | Скільки часу? |
+| займенник | /zɑjˈmɛnːɪk/ | pronoun | noun | m | grammar term |

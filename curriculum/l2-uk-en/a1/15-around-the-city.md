@@ -844,12 +844,9 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 | туди | /tuˈdɪ/ | there (direction) | adverb | - | motion |
 | сюди | /sʲuˈdɪ/ | here (direction) | adverb | - | motion toward speaker |
 | звідти | /ˈzʲvidtɪ/ | from there | adverb | - | origin |
-| куди | /kuˈdɪ/ | where (to) | adverb | - | question word for direction |
 | пішки | /piʃˈkɪ/ | on foot | adverb | - | walking |
 | автобус | /ɑvˈtɔbus/ | bus | noun | m | на автобусі = by bus |
 | трамвай | /trɑmˈvaj/ | tram | noun | m | на трамваї = by tram |
-| метро | /mɛˈtrɔ/ | metro | noun (indecl.) | n | subway |
-| таксі | /tɑkˈsi/ | taxi | noun (indecl.) | n | на таксі = by taxi |
 | машина | /mɑˈʃɪnɑ/ | car | noun | f | на машині = by car |
 | велосипед | /vɛlɔsɪˈpɛd/ | bicycle | noun | m | на велосипеді = by bicycle |
 

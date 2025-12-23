@@ -149,8 +149,8 @@ Now let's see these words in action through stories about Ukrainian sports life 
 Ukraine has beautiful mountains — the **Carpathians** (*Карпати*).
 Hiking (*походи в гори*) is a very popular sport here.
 People take backpacks and tents and go to mount Hoverla (the highest peak, 2061m).
-It is not easy to climb, but the view is amazing.
-You breathe fresh air and drink pure water.
+Підніматися нелегко, але краєвид чудовий. (It is not easy to climb, but the view is amazing).
+Ви дихаєте свіжим повітрям і п'єте чисту воду. (You breathe fresh air and drink pure water).
 There are no stadiums or referees, only you and nature. This is the best fitness for the soul.
 
 ### Cycling in the City
@@ -207,13 +207,9 @@ It is a celebration of willpower.
 > [!tip] **Tip** "Sporty Diet"
 > Ukrainian athletes love **гречка** (buckwheat). It acts as a superfood full of iron and protein. If you want to be strong like Klitschko, eat buckwheat porridge with meat or salads!
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Name sports: **футбол**, **теніс**, **бокс**, **плавання**
@@ -241,81 +237,87 @@ A healthy mind in a healthy body!
 >
 > Спорт — це здоров'я! Українці кажуть: «Рух — це життя!»
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Sports Knowledge
 
-1. Who is Andriy Shevchenko?
+1. Who is **Андрій Шевченко** (Andriy Shevchenko) in Ukrainian sports?
    - [x] Football legend
    - [ ] Boxer
    - [ ] Singer
-   > Legendary footballer and coach.
+   - [ ] Dancer
 
-2. Which case follows "займатися"?
+2. Which grammatical case must follow **займатися** (to practice)?
    - [x] Instrumental
    - [ ] Nominative
    - [ ] Accusative
-   > Займатися спортОМ.
+   - [ ] Genitive
 
-3. "Вболівальник" means...
-   - [x] fan | supporter
+3. What does the word **вболівальник** refer to in sports?
+   - [x] fan / supporter
    - [ ] player
    - [ ] referee
-   > Fan.
+   - [ ] coach
 
-4. Hoverla is...
+4. What famous geographical feature is **Говерла** (Hoverla) typically known as in Ukraine?
    - [x] highest mountain
    - [ ] biggest stadium
-   - [ ] river
-   > Mountain (2061m).
+   - [ ] longest river
+   - [ ] deepest lake
 
-5. Dynamo Kyiv's rival is...
+5. Who is the historic rival of **Динамо Київ** (Dynamo Kyiv)?
    - [x] Shakhtar Donetsk
    - [ ] Karpaty Lviv
    - [ ] Desna
-   > Shakhtar.
+   - [ ] Liverpool
 
-6. "Басейн" is for...
+6. What activity is a **басейн** primarily designed for?
    - [x] swimming
    - [ ] running
    - [ ] boxing
-   > Pool.
+   - [ ] sleeping
 
-7. "Тренуватися" means...
+7. What specific physical action does the Ukrainian verb **тренуватися** describe in English?
    - [x] to train/workout
    - [ ] to sleep
    - [ ] to eat
-   > Train.
+   - [ ] to read
 
-8. "Рахунок" in sports means...
+8. In a sports context, what does **рахунок** mean?
    - [x] score
    - [ ] bill (restaurant)
    - [ ] count
-   > Score (e.g. 2:0).
+   - [ ] money
 
-9. Klitschko brothers are famous for...
+9. The **Клички** (Klitschko) brothers are famous for which sport?
    - [x] boxing
    - [ ] tennis
    - [ ] hockey
-   > Boxing champions.
+   - [ ] basketball
 
-10. "Змагання" is...
+10. What is the meaning of the noun **змагання**?
     - [x] competition
     - [ ] training
     - [ ] game
-    > Competition.
+    - [ ] ball
 
-11. "Перемога" means...
+11. What is the correct English translation of the important Ukrainian noun **перемога**?
     - [x] victory
     - [ ] loss
     - [ ] draw
-    > Victory.
+    - [ ] start
 
-12. "Гравець" is...
+12. What role does a **гравець** perform on the field?
     - [x] player
     - [ ] fan
     - [ ] coach
-    > Player.
+    - [ ] doctor
 
 ## match-up: Sports Vocab
 
@@ -467,53 +469,53 @@ A healthy mind in a healthy body!
 
 ## unjumble: Sport Sentences
 
-1. Я | люблю | дивитися | футбол
-   > [!answer] Я люблю дивитися футбол
-   > I like watching football.
+1. Я / дуже / люблю / дивитися / футбол / з / друзями
+   > [!answer] Я дуже люблю дивитися футбол з друзями
+   > I really like watching football with friends.
 
-2. Ми | йдемо | на | стадіон
-   > [!answer] Ми йдемо на стадіон
-   > We are going to the stadium.
+2. Ми / сьогодні / йдемо / на / великий / олімпійський / стадіон
+   > [!answer] Ми сьогодні йдемо на великий олімпійський стадіон
+   > We are going to the big Olympic stadium today.
 
-3. Він | займається | боксом | щодня
-   > [!answer] Він займається боксом щодня
-   > He practices boxing every day.
+3. Він / серйозно / займається / боксом / щодня / після / роботи
+   > [!answer] Він серйозно займається боксом щодня після роботи
+   > He practices boxing seriously every day after work.
 
-4. Наша | команда | вчора | виграла
-   > [!answer] Наша команда вчора виграла
-   > Our team won yesterday.
+4. Наша / сильна / команда / вчора / нарешті / виграла / матч
+   > [!answer] Наша сильна команда вчора нарешті виграла матч
+   > Our strong team finally won the match yesterday.
 
-5. Я | не | вмію | плавати
-   > [!answer] Я не вмію плавати
-   > I don't know how to swim.
+5. Я / зовсім / не / вмію / швидко / плавати / в / басейні
+   > [!answer] Я зовсім не вмію швидко плавати в басейні
+   > I don't know how to swim fast in the pool at all.
 
-6. Олена | ходить | у | спортзал
-   > [!answer] Олена ходить у спортзал
-   > Olena goes to the gym.
+6. Олена / часто / ходить / у / новий / спортзал / біля / дому
+   > [!answer] Олена часто ходить у новий спортзал біля дому
+   > Olena often goes to the new gym near home.
 
-7. Який | зараз | рахунок | матчу
-   > [!answer] Який зараз рахунок матчу
-   > What is the match score now?
+7. Який / зараз / рахунок / цього / цікавого / футбольного / матчу
+   > [!answer] Який зараз рахунок цього цікавого футбольного матчу
+   > What is the score of this interesting football match now?
 
-8. Мій | брат — | олімпійський | чемпіон
-   > [!answer] Мій брат олімпійський чемпіон
-   > My brother is an Olympic champion.
+8. Мій / старший / брат — / відомий / олімпійський / чемпіон / з / боксу
+   > [!answer] Мій старший брат відомий олімпійський чемпіон з боксу
+   > My older brother is a famous Olympic boxing champion.
 
-9. Треба | багато | тренуватися
-   > [!answer] Треба багато тренуватися
-   > One needs to train a lot.
+9. Треба / дуже / багато / тренуватися / щоб / стати / сильним
+   > [!answer] Треба дуже багато тренуватися щоб стати сильним
+   > One needs to train very much to become strong.
 
-10. Спорт — | це | моє | життя
-    > [!answer] Спорт це моє життя
-    > Sport is my life.
+10. Спорт — / це / моє / активне / і / здорове / життя
+    > [!answer] Спорт це моє активне і здорове життя
+    > Sport is my active and healthy life.
 
-11. Де | твої | нові | кросівки
-    > [!answer] Де твої нові кросівки
-    > Where are your new sneakers?
+11. Де / лежать / твої / нові / білі / кросівки / для / бігу
+    > [!answer] Де лежать твої нові білі кросівки для бігу
+    > Where are your new white sneakers for running lying?
 
-12. Ми | бігаємо | вранці | в | лісі
-    > [!answer] Ми бігаємо вранці в лісі
-    > We run in the morning in the forest.
+12. Ми / повільно / бігаємо / вранці / в / зеленому / лісі
+    > [!answer] Ми повільно бігаємо вранці в зеленому лісі
+    > We run slowly in the morning in the green forest.
 
 ## error-correction: Sport Mistakes
 
@@ -600,6 +602,11 @@ A healthy mind in a healthy body!
 [___:5] стає 1:0.
 Ми кричимо "Ура!". Це [___:6]!
 Спорт — це сильні [___:7].
+Ми любимо нашу [___:8].
+Цей [___:9] був дуже цікавим.
+На стадіоні була чудова [___:10].
+Всі [___:11] аплодували.
+Ми пішли додому [___:12].
 
 1. матч | урок | обід
    > [!answer] матч
@@ -609,7 +616,6 @@ A healthy mind in a healthy body!
 
 3. пас | бас | час
    > [!answer] пас
-> Pass (football term).
 
 4. гравець | тренер | водій
    > [!answer] гравець
@@ -622,6 +628,21 @@ A healthy mind in a healthy body!
 
 7. емоції | порції | акції
    > [!answer] емоції
+
+8. команду | музику | каву
+   > [!answer] команду
+
+9. футбол | теніс | бокс
+   > [!answer] футбол
+
+10. атмосфера | погода | вода
+    > [!answer] атмосфера
+
+11. люди | машини | дерева
+    > [!answer] люди
+
+12. щасливі | сумні | хворі
+    > [!answer] щасливі
 
 ## dialogue-reorder: Gym Chat
 
@@ -706,26 +727,23 @@ A healthy mind in a healthy body!
     - [ ] Спати.
     > Become (champion).
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | спорт | /spɔrt/ | sport | noun | m | |
-| футбол | /futˈbɔl/ | football | noun | m | |
 | баскетбол | /basketˈbɔl/ | basketball | noun | m | |
 | теніс | /ˈtɛnis/ | tennis | noun | m | |
 | бокс | /bɔks/ | boxing | noun | m | |
 | плавання | /ˈplaʋannʲa/ | swimming | noun | n | |
 | біг | /bih/ | running | noun | m | |
 | гімнастика | /himˈnastɪka/ | gymnastics | noun | f | |
-| стадіон | /stadiˈɔn/ | stadium | noun | m | |
 | спортзал | /spɔrtˈzal/ | gym | noun | m | |
 | басейн | /baˈsɛjn/ | pool | noun | m | |
 | команда | /koˈmanda/ | team | noun | f | |
 | гравець | /hraˈʋɛtsʲ/ | player | noun | m | |
 | вболівальник | /ʋboliˈʋalʲnɪk/ | fan | noun | m | |
 | тренер | /ˈtrɛner/ | coach | noun | m | |
-| чемпіон | /tʃempiˈɔn/ | champion | noun | m | |
 | тренуватися | /trenuˈʋatɪsʲa/ | to train | verb | - | |
 | займатися | /zajˈmatɪsʲa/ | to practice | verb | - | |
 | бігати | /ˈbihatɪ/ | to run | verb | - | |
@@ -734,9 +752,6 @@ A healthy mind in a healthy body!
 | програвати | /prohraˈʋatɪ/ | to lose | verb | - | |
 | змагання | /zmaˈhannʲa/ | competition | noun | n | |
 | матч | /matʃ/ | match | noun | m | |
-| рахунок | /raˈxunok/ | score | noun | m | |
-| перемога | /pereˈmɔha/ | victory | noun | f | |
 | м'яч | /mʲatʃ/ | ball | noun | m | |
 | гол | /hɔl/ | goal | noun | m | |
 | медаль | /meˈdalʲ/ | medal | noun | f | |
-| здоров'я | /zdɔˈrɔʋjja/ | health | noun | n | |

@@ -93,7 +93,7 @@ def step_lint(lang_pair: str, level: Optional[str], module_num: Optional[int]) -
                 print(f"  ❌ {md_file.stem}")
                 # Show first error
                 for line in stdout.split('\n'):
-                    if '❌' in line or 'ERROR' in line.upper():
+                    if ('❌' in line or 'ERROR' in line.upper()) and not line.strip().startswith('>'):
                         print(f"     {line.strip()}")
                         break
 

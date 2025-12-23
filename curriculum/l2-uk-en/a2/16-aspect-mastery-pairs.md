@@ -431,48 +431,86 @@ Today you drilled the 30 most common aspect pairs.
 ## quiz: Aspect Selection
 > Виберіть правильний вид дієслова у реченні. | Select the aspect of the verb in the sentence.
 
-1. "Я **прочитав** книгу."
-   - [x] Доконаний
-   - [ ] Недоконаний
+1. In the Ukrainian sentence "Я прочитав книгу," what is the grammatical aspect of the verb?
 
-2. "Я **читав**, коли ти подзвонив."
-   - [ ] Доконаний
-   - [x] Недоконаний
+- [x] Доконаний
+- [ ] Недоконаний
+- [ ] Теперішній
+- [ ] Майбутній
 
-3. "Я **читаю** щодня."
-   - [ ] Доконаний
-   - [x] Недоконаний
+---
 
-4. "Вона **написала** листа."
-   - [x] Доконаний
-   - [ ] Недоконаний
+2. In the sentence "Я читав книгу, коли ти подзвонив," what is the focus of the first verb?
 
-5. "Ми **зробимо** це завтра."
-   - [x] Доконаний
-   - [ ] Недоконаний
+- [x] Недоконаний
+- [ ] Доконаний
+- [ ] Теперішній
+- [ ] Наказ
 
-6. "Я **буду читати** ввечері."
-   - [ ] Доконаний
-   - [x] Недоконаний
+---
 
-7. "Ти **закінчив**?"
-   - [x] Доконаний
-   - [ ] Недоконаний
+3. When a speaker says "Я читаю книгу щодня," what grammatical aspect are they using?
 
-8. "Він **вчиться** щодня."
-   - [ ] Доконаний
-   - [x] Недоконаний
+- [x] Недоконаний
+- [ ] Доконаний
+- [ ] Майбутній
+- [ ] Наказ
+
+---
+
+4. In the sentence "Вона написала листа," which grammatical aspect describes the action's completion?
+
+- [x] Доконаний
+- [ ] Недоконаний
+- [ ] Тривалий
+- [ ] Початковий
+
+---
+
+5. In the sentence "Ми зробимо це завтра," what is the grammatical aspect of the future verb?
+
+- [x] Доконаний
+- [ ] Недоконаний
+- [ ] Теперішній
+- [ ] Минулий
+
+---
+
+6. In the sentence "Я буду читати книгу ввечері," which future formation type is being used?
+
+- [x] Недоконаний
+- [ ] Доконаний
+- [ ] Теперішній
+- [ ] Наказ
+
+---
+
+7. When asking someone "Ти закінчив це завдання?" what aspectual focus are you inquiring about?
+
+- [x] Доконаний
+- [ ] Недоконаний
+- [ ] Теперішній
+- [ ] Майбутній
+
+---
+
+8. In the sentence "Він вчиться щодня," what grammatical category describes this repeated action?
+
+- [x] Недоконаний
+- [ ] Доконаний
+- [ ] Майбутній
+- [ ] Наказ
 
 ## cloze: Context Selection
 
 > Choose the correct aspect based on the context hint.
 
-Я вже [___:1] книгу. (finished)
-Вона [___:2] листи щодня. (writes habitually)
-Ми [___:3] домашнє завдання вчора. (completed)
-Він [___:4] каву кожного ранку. (drinks habitually)
-Вона [___:5] їжу зараз. (is cooking now)
-Ти вже [___:6] відповідь? (Did you find?)
+Я вже [___:1] цю дуже цікаву книгу. (finished)
+Вона [___:2] довгі листи додому щодня. (writes habitually)
+Ми [___:3] все складне домашнє завдання вчора. (completed)
+Він [___:4] гарячу каву кожного ранку. (drinks habitually)
+Вона [___:5] смачну вечерю для нас зараз. (is cooking now)
+Ти вже [___:6] правильну відповідь на це питання? (Did you find?)
 
 1. прочитав | читав
    > [!answer] прочитав
@@ -492,24 +530,55 @@ Today you drilled the 30 most common aspect pairs.
 6. знайшов | знаходив
    > [!answer] знайшов
 
+---
+
+Сьогодні зранку я [___:1] (completion) каву. Потім я [___:2] (process) статтю одну годину. Ми [___:3] (repetition) в офіс щодня, але сьогодні [___:4] (single event) пізно. Вона [___:5] (activity) три години і нарешті [___:6] (result) роботу.
+
+1. випив | пив
+   > [!answer] випив
+
+2. читав | прочитав
+   > [!answer] читав
+
+3. ходимо | пішли
+   > [!answer] ходимо
+
+4. прийшли | приходимо
+   > [!answer] прийшли
+
+5. працювала | попрацювала
+   > [!answer] працювала
+
+6. закінчила | закінчувала
+   > [!answer] закінчила
+
 ## unjumble: Aspect Sentences
 
-1. книгу | прочитав | Я | цю
-   > [!answer] Я прочитав цю книгу
-2. листа | Вона | написала
-   > [!answer] Вона написала листа
-3. зробили | Ми | завдання
-   > [!answer] Ми зробили завдання
-4. побачив | Він | її
-   > [!answer] Він побачив її
-5. почула | шум | Вона
-   > [!answer] Вона почула шум
-6. каву | випив | Я
-   > [!answer] Я випив каву
-7. все | зрозумів | Він
-   > [!answer] Він зрозумів все
-8. двері | відкрила | Вона
-   > [!answer] Вона відкрила двері
+> Put the words in the correct order.
+
+1. я / обов'язково / прочитав / цю / цікаву / книгу / вчора / ввечері
+   > [!answer] Я прочитав цю цікаву книгу вчора ввечері
+
+2. вона / написала / дуже / великого / листа / до / своєї / мами
+   > [!answer] Вона написала дуже великого листа до своєї мами
+
+3. ми / зробили / все / це / складне / домашнє / завдання / сьогодні
+   > [!answer] Ми зробили все складне домашнє завдання сьогодні
+
+4. він / побачив / її / у / цьому / великому / парку / вчора / вранці
+   > [!answer] Він побачив її у цьому великому парку вчора вранці
+
+5. вона / почула / якийсь / дуже / дивний / шум / на / нашій / вулиці
+   > [!answer] Вона почула якийсь дуже дивний шум на нашій вулиці
+
+6. я / випив / смачну / гарячу / каву / сьогодні / дуже / рано / вранці
+   > [!answer] Я випив гарячу каву сьогодні дуже рано вранці
+
+7. він / зрозумів / все / це / нове / правило / тільки / вчора / вранці
+   > [!answer] Він зрозумів все це нове правило тільки вчора вранці
+
+8. вона / швидко / відкрила / ці / великі / білі / двері / у / кімнаті
+   > [!answer] Вона відкрила ці великі білі двері у кімнаті
 
 ## error-correction: Wrong Aspect
 
@@ -552,19 +621,23 @@ Today you drilled the 30 most common aspect pairs.
 ## group-sort: Formation Pattern
 > Згрупуйте дієслова за способом творення доконаного виду. | Group verbs by how perfective is formed.
 
-> Group verbs by how perfective is formed.
-
-### Prefix (про-, на-, з-, по-)
+### Prefix (про-, на-, з-, по-, ви-)
 - читати → прочитати
 - писати → написати
 - робити → зробити
 - бачити → побачити
+- вчити → вивчити
+- готувати → приготувати
 
-### Suppletive (different roots)
+### Suppletive / Variable
 - говорити → сказати
 - брати → взяти
 - шукати → знайти
 - класти → покласти
+- купувати → купити
+- давати → дати
+- вставати → встати
+- відкривати → відкрити
 
 ---
 
@@ -572,36 +645,10 @@ Today you drilled the 30 most common aspect pairs.
 
 | Word | IPA | English | POS | Gender | Aspect |
 |------|-----|---------|-----|--------|--------|
-| читати | /t͡ʃɪtˈɑtɪ/ | to read | verb | — | impf |
-| прочитати | /prɔt͡ʃɪtˈɑtɪ/ | to read (finish) | verb | — | pf |
-| писати | /pɪsˈɑtɪ/ | to write | verb | — | impf |
-| написати | /nɑpɪsˈɑtɪ/ | to write (finish) | verb | — | pf |
-| робити | /rɔbˈɪtɪ/ | to do/make | verb | — | impf |
-| зробити | /zrɔbˈɪtɪ/ | to do/make (finish) | verb | — | pf |
-| говорити | /ɦɔʋɔrˈɪtɪ/ | to speak/say | verb | — | impf |
-| сказати | /skɑzˈɑtɪ/ | to say (once) | verb | — | pf |
-| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | — | impf |
-| побачити | /pɔbˈɑt͡ʃɪtɪ/ | to see (catch sight) | verb | — | pf |
-| брати | /brˈɑtɪ/ | to take | verb | — | impf |
-| взяти | /ʋzʲˈɑtɪ/ | to take (once) | verb | — | pf |
-| давати | /dɑʋˈɑtɪ/ | to give | verb | — | impf |
-| дати | /dˈɑtɪ/ | to give (once) | verb | — | pf |
-| вчити | /ʋt͡ʃˈɪtɪ/ | to learn/teach | verb | — | impf |
-| вивчити | /ʋˈɪʋt͡ʃɪtɪ/ | to learn (master) | verb | — | pf |
-| розуміти | /rɔzumˈitɪ/ | to understand | verb | — | impf |
 | зрозуміти | /zrɔzumˈitɪ/ | to understand (grasp) | verb | — | pf |
-| пам'ятати | /pɑmjɑtˈɑtɪ/ | to remember | verb | — | impf |
 | запам'ятати | /zɑpɑmjɑtˈɑtɪ/ | to memorize | verb | — | pf |
-| забувати | /zɑbuʋˈɑtɪ/ | to forget | verb | — | impf |
 | забути | /zɑbˈutɪ/ | to forget (once) | verb | — | pf |
-| купувати | /kupuʋˈɑtɪ/ | to buy | verb | — | impf |
 | купити | /kupˈɪtɪ/ | to buy (once) | verb | — | pf |
-| відкривати | /ʋidkrɪʋˈɑtɪ/ | to open | verb | — | impf |
-| відкрити | /ʋidkrˈɪtɪ/ | to open (once) | verb | — | pf |
-| починати | /pɔt͡ʃɪnˈɑtɪ/ | to begin | verb | — | impf |
-| почати | /pɔt͡ʃˈɑtɪ/ | to begin (once) | verb | — | pf |
-| закінчувати | /zɑkint͡ʃuʋˈɑtɪ/ | to finish | verb | — | impf |
-| закінчити | /zɑkˈint͡ʃɪtɪ/ | to finish (once) | verb | — | pf |
 | готувати | /ɦɔtuʋˈɑtɪ/ | to cook/prepare | verb | — | impf |
 | приготувати | /prɪɦɔtuʋˈɑtɪ/ | to cook (finish) | verb | — | pf |
 | мити | /mˈɪtɪ/ | to wash | verb | — | impf |
@@ -612,19 +659,13 @@ Today you drilled the 30 most common aspect pairs.
 | відремонтувати | /ʋidrɛmɔntuʋˈɑtɪ/ | to repair (finish) | verb | — | pf |
 | будувати | /buduʋˈɑtɪ/ | to build | verb | — | impf |
 | побудувати | /pɔbuduʋˈɑtɪ/ | to build (finish) | verb | — | pf |
-| малювати | /mɑlʲuʋˈɑtɪ/ | to draw/paint | verb | — | impf |
 | намалювати | /nɑmɑlʲuʋˈɑtɪ/ | to draw (finish) | verb | — | pf |
 | дзвонити | /dzvɔnˈɪtɪ/ | to call (phone) | verb | — | impf |
 | подзвонити | /pɔdzvɔnˈɪtɪ/ | to call (once) | verb | — | pf |
-| питати | /pɪtˈɑtɪ/ | to ask | verb | — | impf |
 | запитати | /zɑpɪtˈɑtɪ/ | to ask (once) | verb | — | pf |
-| відповідати | /ʋidpɔʋidˈɑtɪ/ | to answer | verb | — | impf |
 | відповісти | /ʋidpɔʋˈistɪ/ | to answer (once) | verb | — | pf |
-| платити | /plɑtˈɪtɪ/ | to pay | verb | — | impf |
 | заплатити | /zɑplɑtˈɪtɪ/ | to pay (once) | verb | — | pf |
-| продавати | /prɔdɑʋˈɑtɪ/ | to sell | verb | — | impf |
 | продати | /prɔdˈɑtɪ/ | to sell (once) | verb | — | pf |
 | знаходити | /znɑxˈɔdɪtɪ/ | to find | verb | — | impf |
 | знайти | /znɑjtˈɪ/ | to find (once) | verb | — | pf |
 | губити | /ɦubˈɪtɪ/ | to lose | verb | — | impf |
-| загубити | /zɑɦubˈɪtɪ/ | to lose (once) | verb | — | pf |

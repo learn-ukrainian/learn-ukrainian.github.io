@@ -183,13 +183,9 @@ Wait, normally we say: *Я — лікар* (Nominative) for simple ID. But descr
 > [!tip] Talking about Future Plans
 > Use **хотіти бути** + instrumental: *Я хочу бути лікарем*. This expresses your professional goal.
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Name professions: **лікар**, **вчитель**, **інженер**, **програміст**
@@ -199,81 +195,63 @@ You learned to:
 
 Work is not just about money; it's about passion and contribution. Whether you are a lawyer or a driver, your work matters. Keep learning Ukrainian to expand your professional horizons!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Profession Quiz
 
-1. Who treats people?
+1. Can you identify the person who treats sick people in a hospital?
    - [x] лікар
    - [ ] вчитель
    - [ ] інженер
-   > Лікар treats people.
+   - [ ] водій
 
-2. Where does a teacher work?
+2. Where does a teacher typically work every day?
    - [x] в школі
    - [ ] в лікарні
    - [ ] на фабриці
-   > Teacher works in a school (школа).
+   - [ ] в магазині
 
-3. Who writes code?
+3. Which professional is primarily responsible for writing computer code?
    - [x] програміст
    - [ ] водій
    - [ ] юрист
-   > Programmer writes code.
+   - [ ] продавець
 
-4. What is "salary" in Ukrainian?
+4. What is the correct translation for the word "salary" in Ukrainian?
    - [x] зарплата
    - [ ] робота
    - [ ] відпустка
-   > Salary is зарплата.
+   - [ ] кар'єра
 
-5. Who manages a team?
+5. Who is the person that manages a team or company?
    - [x] менеджер
    - [ ] колега
    - [ ] клієнт
-   > Manager manages (керує).
+   - [ ] студент
 
-6. What implies "to earn"?
+6. Which Ukrainian verb specifically means "to earn money" for work?
    - [x] заробляти
    - [ ] працювати
    - [ ] керувати
-   > Заробляти means to earn.
+   - [ ] звільняти
 
-7. Where does a factory worker work?
+7. Where does a factory worker typically perform their job?
    - [x] на фабриці
    - [ ] в офісі
    - [ ] в магазині
-   > At the factory = на фабриці.
+   - [ ] у школі
 
-8. What is the opposite of "to hire"?
+8. What is the correct opposite of the verb "to hire"?
    - [x] звільнити
    - [ ] платити
    - [ ] працювати
-   > To fire = звільнити.
-
-9. Who sells goods?
-   - [x] продавець
-   - [ ] водій
-   - [ ] лікар
-   > Seller = продавець.
-
-10. What do you build?
-    - [x] кар'єру
-    - [ ] зарплату
-    - [ ] відпустку
-    > You build a career (кар'єру).
-
-11. Who creates technology?
-    - [x] інженер
-    - [ ] юрист
-    - [ ] лікар
-    > Engineer = інженер.
-
-12. Where involves "open space" preposition?
-    - [x] на фабриці
-    - [ ] в офісі
-    - [ ] в школі
-    > На фабриці involves 'на' (on/at).
+   - [ ] відпочивати
 
 ## match-up: Profession Match-up
 
@@ -425,53 +403,37 @@ Work is not just about money; it's about passion and contribution. Whether you a
 
 ## unjumble: Unjumble Sentences
 
-1. Я | працюю | в | офісі
-   > [!answer] Я працюю в офісі
-   > I work in an office.
+1. Я / працюю / в / сучасному / офісі / у / центрі / міста
+   > [!answer] Я працюю в сучасному офісі у центрі міста
+   > I work in a modern office in the city center.
 
-2. Він | хоче | бути | лікарем
-   > [!answer] Він хоче бути лікарем
-   > He wants to be a doctor.
+2. Він / дуже / сильно / хоче / бути / хорошим / кваліфікованим / лікарем
+   > [!answer] Він дуже сильно хоче бути хорошим кваліфікованим лікарем
+   > He wants very much to be a good qualified doctor.
 
-3. Ми | маємо | хорошу | зарплату
-   > [!answer] Ми маємо хорошу зарплату
-   > We have a good salary.
+3. Ми / нарешті / маємо / стабільну / і / високу / зарплату
+   > [!answer] Ми нарешті маємо стабільну і високу зарплату
+   > We finally have a stable and high salary.
 
-4. Директор | керує | великою | компанією
-   > [!answer] Директор керує великою компанією
-   > The director manages a large company.
+4. Директор / успішно / керує / нашою / великою / міжнародною / компанією
+   > [!answer] Директор успішно керує нашою великою міжнародною компанією
+   > The director successfully manages our large international company.
 
-5. Вчитель | любить | свою | роботу
-   > [!answer] Вчитель любить свою роботу
-   > The teacher loves his work.
+5. Вчитель / дуже / любить / свою / складну / але / важливу / роботу
+   > [!answer] Вчитель дуже любить свою складну але важливу роботу
+   > The teacher loves his difficult but important work very much.
 
-6. Інженер | будує | новий | міст
-   > [!answer] Інженер будує новий міст
-   > The engineer builds a new bridge.
+6. Інженер / сьогодні / будує / новий / міст / через / широку / ріку
+   > [!answer] Інженер сьогодні будує новий міст через широку ріку
+   > The engineer is building a new bridge across the wide river today.
 
-7. Мій | колега | мені | допоміг
-   > [!answer] Мій колега мені допоміг
-   > My colleague helped me.
+7. Мій / добрий / колега / мені / дуже / допоміг / із / проектом
+   > [!answer] Мій добрий колега мені дуже допоміг із проектом
+   > My good colleague helped me a lot with the project.
 
-8. Вона | пішла | у | відпустку
-   > [!answer] Вона пішла у відпустку
-   > She went on vacation.
-
-9. Клієнт | завжди | має | рацію
-   > [!answer] Клієнт завжди має рацію
-   > The client is always right.
-
-10. Програміст | пише | складний | код
-    > [!answer] Програміст пише складний код
-    > The programmer writes complex code.
-
-11. Юрист | знає | всі | закони
-    > [!answer] Юрист знає всі закони
-    > The lawyer knows all laws.
-
-12. Студент | мріє | про | кар'єру
-    > [!answer] Студент мріє про кар'єру
-    > The student dreams of a career.
+8. Вона / вчора / пішла / у / довгу / літню / відпустку
+   > [!answer] Вона вчора пішла у довгу літню відпустку
+   > She went on a long summer vacation yesterday.
 
 ## error-correction: Fix the Mistakes
 
@@ -554,6 +516,7 @@ Work is not just about money; it's about passion and contribution. Whether you a
 Через рік його [___:5] новим менеджером. Тепер у нього є своя [___:6].
 Він [___:7] великими проєктами. Його [___:8] зросла.
 Максим любить свій [___:9] і своїх колег. Влітку він поїде у [___:10].
+Він каже, що [___:11] робить людину щасливою. Успіх — це [___:12].
 
 1. кар'єру | роботу | школу
    > [!answer] кар'єру
@@ -583,7 +546,13 @@ Work is not just about money; it's about passion and contribution. Whether you a
    > [!answer] офіс
 
 10. відпустку | роботу | лікарню
-   > [!answer] відпустку
+    > [!answer] відпустку
+
+11. праця | лінь | гра
+    > [!answer] праця
+
+12. результат | початок | кінець
+    > [!answer] результат
 
 ## dialogue-reorder: Interview Dialogue
 
@@ -669,37 +638,18 @@ Work is not just about money; it's about passion and contribution. Whether you a
     - [ ] працювати
     > Conjugated verb 'we work'.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| лікар | /ˈlʲikɑr/ | doctor | noun | m | |
-| вчитель | /ˈwtʃɪtelʲ/ | teacher | noun | m | |
-| інженер | /inʒeˈnɛr/ | engineer | noun | m | |
-| програміст | /proɦrɑˈmʲist/ | programmer | noun | m | |
-| юрист | /juˈrɪst/ | lawyer | noun | m | |
-| менеджер | /ˈmɛnedʒer/ | manager | noun | m | |
-| директор | /dɪˈrɛktor/ | director | noun | m | |
-| продавець | /prodɑˈwɛt͡sʲ/ | seller | noun | m | |
-| водій | /woˈdʲij/ | driver | noun | m | |
-| офіс | /ˈɔfis/ | office | noun | m | |
 | фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |
-| школа | /ˈʃkɔlɑ/ | school | noun | f | |
-| лікарня | /lʲiˈkɑrnʲɑ/ | hospital | noun | f | |
-| магазин | /mɑɦɑˈzɪn/ | shop | noun | m | |
 | компанія | /komˈpɑnʲijɑ/ | company | noun | f | |
-| працювати | /prɑt͡sʲuˈwɑtɪ/ | to work | verb | - | |
-| заробляти | /zɑrobˈlʲɑtɪ/ | to earn | verb | - | |
 | керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |
 | звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |
 | найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |
 | кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |
 | зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |
-| відпустка | /widˈpustkɑ/ | vacation | noun | f | |
-| робота | /roˈbɔtɑ/ | work/job | noun | f | |
 | професія | /proˈfɛsʲijɑ/ | profession | noun | f | |
-| колега | /koˈlɛɦɑ/ | colleague | noun | m/f | |
 | клієнт | /klʲiˈjɛnt/ | client | noun | m | |
 | начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |
-| успішний | /uˈspʲiʃnɪj/ | successful | adj | m | |
 | зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |

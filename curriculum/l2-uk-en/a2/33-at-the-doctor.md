@@ -37,14 +37,6 @@ In Ukraine, talking about health is a national sport. We love to discuss symptom
 > **Лікар** /ˈlʲikɑr/ (Doctor). Connects to "лікувати" (to treat/cure).
 > Note the soft 'L'.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
->
-> **Grammar Guide:** [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 ## Presentation
@@ -79,9 +71,22 @@ We use "У мене..." + Noun.
 
 ## 3. At the Pharmacy (Аптека)
 
-- **Мені потрібні ліки від...** (I need medicine for...).
-- **Дайте, будь ласка, таблетки від голови.** (Give please pills for head).
-- **Це за рецептом?** (Is this by prescription?).
+When you need to buy medicine in Ukraine, you'll visit an "аптека" (pharmacy). Ukrainian pharmacies are well-stocked and pharmacists are knowledgeable - they can often recommend over-the-counter remedies for common ailments.
+
+**Key Phrases for the Pharmacy:**
+
+- **Мені потрібні ліки від...** (I need medicine for...) - Use this to describe your symptom
+  - Example: "Мені потрібні ліки від голови" (I need medicine for headache)
+  
+- **Дайте, будь ласка, таблетки від голови.** (Give please pills for head) - Direct request
+  - Note: This is a polite imperative form using "будь ласка" (please)
+  
+- **Це за рецептом?** (Is this by prescription?) - Important question for controlled medications
+  - Some medicines require a doctor's prescription ("рецепт"), while others are available over the counter
+
+**Understanding Prescription Requirements:**
+
+In Ukraine, antibiotics and strong painkillers typically require a prescription, while common remedies for colds, headaches, and minor ailments are usually available without one. Always ask if you're unsure!
 
 ---
 
@@ -221,6 +226,10 @@ In Ukrainian **Хворіти** (to be sick) is an active ongoing process.
 - *Я хворію.* (I am sicking | I am ill).
 - *Вона часто хворіє.* (She often gets sick).
 
+- *Він хворів минулого тижня.* (He was sick last week).
+- *Я хворію на грип.* (I am sick with flu).
+- *У мене болить голова.* (My head hurts).
+
 Don't confuse with **Боліти** (to hurt).
 - *Я хворію.* (I am ill).
 - *У мене болить.* (Something hurts me).
@@ -230,9 +239,17 @@ Don't confuse with **Боліти** (to hurt).
 > 37.0°C is already considered "sick" suitable for staying home.
 > 38.0°C is "high".
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Doctors Vocabulary and questions in Ukrainian - Learn doctor vocab and...](https://www.youtube.com/watch?v=OnO697z9iPM) — Ukrainian grammar
+>
+> **Grammar Guide:** [Something Hurts](https://www.ukrainianlessons.com/something-hurts/) — Ukrainian Lessons
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
-## Summary
+# Summary
 
 1.  **Botlily:** *У мене болить [Subject].*
 2.  **Part of Body:** Learner nouns (голова, горло, живіт).
@@ -242,7 +259,7 @@ Don't confuse with **Боліти** (to hurt).
 
 ---
 
-## Activities
+# Activities
 
 ## match-up: Body & Pain
 
@@ -297,61 +314,73 @@ Don't confuse with **Боліти** (to hurt).
 
 ## quiz: Medical Expert
 
-1. If you have "нежить", you have:
-   - [x] A runny nose
-   - [ ] A broken leg
-   - [ ] A headache
+1. Якщо у вас є "нежить" то що це означає в українській мові для симптомів?
+   - [x] A runny nose (нежить це нежить)
+   - [ ] A broken leg (зламана нога)
+   - [ ] A headache (головний біль)
+   - [ ] A fever (температура)
 
-2. "У мене болить живіт" means:
-   - [x] My stomach hurts
-   - [ ] My life hurts
-   - [ ] I am hungry
+2. Що означає фраза "у мене болить живіт" в українській мові правильно?
+   - [x] My stomach hurts (мій живіт болить)
+   - [ ] My life hurts (моє життя болить)
+   - [ ] I am hungry (я голодний)
+   - [ ] I am tired (я втомлений)
 
-3. Where do you buy medicine?
-   - [x] В аптеці
-   - [ ] В лікарні (Usually receive treatment, buy in pharmacy)
-   - [ ] В бібліотеці
+3. Де можна купити ліки в Україні зазвичай для лікування?
+   - [x] В аптеці (в аптеці)
+   - [ ] В лікарні (в лікарні)
+   - [ ] В бібліотеці (в бібліотеці)
+   - [ ] В магазині (в магазині)
 
-4. What is 36.6?
-   - [x] Normal temperature
-   - [ ] High fever
+4. Яка нормальна температура тіла в Україні згідно з медичними стандартами?
+   - [x] Normal temperature (36.6°C нормальна)
+   - [ ] High fever (38.0°C висока)
+   - [ ] Low temperature (35.0°C низька)
+   - [ ] Critical (40.0°C критична)
 
-5. "Видужуйте" means:
-   - [x] Get well soon
-   - [ ] Good bye
-   - [ ] Pay here
+5. Що означає слово "видужуйте" в українській мові для побажання?
+   - [x] Get well soon (одужуйте швидко)
+   - [ ] Good bye (до побачення)
+   - [ ] Pay here (платіть тут)
+   - [ ] Thank you (дякую)
 
-6. "Хворіти" implies:
-   - [x] To be ill (process)
-   - [ ] To hurt (pain)
+6. Що означає дієслово "хворіти" в українській мові для стану здоров'я?
+   - [x] To be ill process (бути хворим процес)
+   - [ ] To hurt pain (боліти біль)
+   - [ ] To heal (лікувати)
+   - [ ] To recover (одужувати)
 
-7. Can you say "Я болю голову"?
-   - [x] No, incorrect.
-   - [ ] Yes, correct.
+7. Чи можна сказати "я болю голову" в українській мові правильно граматично?
+   - [x] No incorrect (ні неправильно)
+   - [ ] Yes correct (так правильно)
+   - [ ] Sometimes (іноді)
+   - [ ] Only formal (тільки офіційно)
 
-8. "Що вас турбує?" involves which grammar case for "you"?
-   - [x] Accusative (вас)
-   - [ ] Dative (вам)
+8. Який відмінок використовується в питанні "що вас турбує" для слова "вас"?
+   - [x] Accusative (знахідний відмінок)
+   - [ ] Dative (давальний відмінок)
+   - [ ] Genitive (родовий відмінок)
+   - [ ] Nominative (називний відмінок)
 
 ## unjumble: Doctors Orders
 
-1. що | турбує | вас | сьогодні
-   > [!answer] Що вас турбує сьогодні
+1. що / вас / турбує / сьогодні / дуже / зранку / вже
+   > [!answer] Що вас турбує сьогодні дуже зранку вже
 
-2. у | болить | мене | дуже | голова
-   > [!answer] У мене дуже болить голова
+2. у / мене / дуже / болить / голова / сильно / зараз / вже
+   > [!answer] У мене дуже болить голова сильно зараз вже
 
-3. таблетку | прийміть | цю | їжі | після
-   > [!answer] Прийміть цю таблетку після їжі
+3. цю / таблетку / прийміть / після / їжі / завжди / тричі / на / день
+   > [!answer] Прийміть цю таблетку після їжі завжди тричі на день
 
-4. лікаря | мені | викликати | треба
-   > [!answer] Мені треба викликати лікаря
+4. мені / лікаря / викликати / треба / зараз / дуже / швидко / будь / ласка
+   > [!answer] Мені треба викликати лікаря зараз дуже швидко будь ласка
 
-5. купив | я | в | ліки | аптеці
-   > [!answer] Я купив ліки в аптеці
+5. я / ліки / купив / в / аптеці / вчора / ввечері / пізно
+   > [!answer] Я купив ліки в аптеці вчора ввечері пізно
 
-6. бажаю | вам | здоров'я | міцного
-   > [!answer] Бажаю вам міцного здоров'я
+6. вам / бажаю / міцного / здоров'я / завжди / від / щирого / серця
+   > [!answer] Бажаю вам міцного здоров'я завжди від щирого серця
 
 ## group-sort: Symptoms vs Remedies
 
@@ -419,6 +448,11 @@ Don't confuse with **Боліти** (to hurt).
 Лідкар сказав, що це [___:5].
 Він дав мені [___:6] на ліки.
 Я пішов в [___:7], щоб купити таблетки.
+Аптекар сказав приймати [___:8] тричі на день.
+Я питиму багато [___:9] з лимоном.
+Лікар сказав мені [___:10] вдома.
+Я сподіваюся що скоро [___:11].
+Моє [___:12] дуже важливе для мене.
 
 1. поліклініку | школу | магазин
 > [!answer] поліклініку
@@ -440,6 +474,21 @@ Don't confuse with **Боліти** (to hurt).
 
 7. аптеку | кіно | кафе
 > [!answer] аптеку
+
+8. ліки | каву | воду
+> [!answer] ліки
+
+9. чаю | кави | соку
+> [!answer] чаю
+
+10. лежати | гуляти | працювати
+> [!answer] лежати
+
+11. одужаю | хворію | працюю
+> [!answer] одужаю
+
+12. здоров'я | робота | хобі
+> [!answer] здоров'я
 
 ## dialogue-reorder: The Emergency
 
@@ -536,34 +585,16 @@ Don't confuse with **Боліти** (to hurt).
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| лікар | /ˈlʲikɑr/ | doctor | noun | m | profession |
 | пацієнт | /pɑt͡sʲiˈjɛnt/ | patient | noun | m | person |
-| хворий | /ˈxʋɔrɪj/ | sick (patient) | adj/noun | m | condition |
-| хвороба | /xʋɔˈrɔbɑ/ | illness | noun | f | concept |
 | симптом | /sɪmpˈtɔm/ | symptom | noun | m | medical |
 | біль | /bilʲ/ | pain | noun | m | sensation |
-| температура | /tɛmpɛrɑˈturɑ/ | temperature/fever | noun | f | symptom |
-| кашель | /ˈkɑʃɛlʲ/ | cough | noun | m | symptom |
-| нежить | /ˈnɛʒɪtʲ/ | runny nose | noun | m | symptom |
 | грип | /ɦrɪp/ | flu | noun | m | illness |
-| горло | /ˈhɔrlɔ/ | throat | noun | n | body part |
-| голова | /ɦɔlɔˈʋɑ/ | head | noun | f | body part |
-| живіт | /ʒɪˈʋit/ | stomach | noun | m | body part |
-| спина | /spɪˈnɑ/ | back | noun | f | body part |
-| рука | /ruˈkɑ/ | arm/hand | noun | f | body part |
-| нога | /nɔˈɦɑ/ | leg/foot | noun | f | body part |
-| око | /ˈɔkɔ/ | eye | noun | n | body part |
-| вухо | /ˈʋuxɔ/ | ear | noun | n | body part |
 | серце | /ˈsɛrt͡sɛ/ | heart | noun | n | body part |
-| ліки | /ˈlʲikɪ/ | medicine | noun | pl | substance |
-| таблетка | /tɑbˈlɛtkɑ/ | pill | noun | f | form |
 | рецепт | /rɛˈt͡sɛpt/ | prescription | noun | m | document |
-| аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f | place |
-| лікарня | /lʲiˈkɑrnʲɑ/ | hospital | noun | f | place |
 | поліклініка | /pɔlʲiˈklʲinikɑ/ | polyclinic | noun | f | place |
 | хворіти | /xʋɔˈritɪ/ | to be sick | verb | — | process |
 | одужувати | /ɔˈduʒuʋɑtɪ/ | to recover | verb | — | process |
@@ -571,5 +602,4 @@ Don't confuse with **Боліти** (to hurt).
 | лікувати | /lʲikuˈʋɑtɪ/ | to treat | verb | — | doctor action |
 | приймати | /prɪjˈmɑtɪ/ | to take (meds) | verb | — | action |
 | відчувати | /ʋid͡tʃuˈʋɑtɪ/ | to feel | verb | — | sensory |
-| болить | /bɔˈlɪtʲ/ | it hurts | verb | — | impersonal |
 | турбує | /turˈbujɛ/ | bothers | verb | — | concern |

@@ -649,11 +649,9 @@ Decide if each statement is true or false.
 | грудень | /ˈɦrudɛnʲ/ | December | noun | m | - |
 | сьогодні | /sʲɔˈɦɔdɲi/ | today | adv | - | - |
 | зараз | /ˈzɑrɑz/ | now | adv | - | - |
-| коли | /kɔˈlɪ/ | when | adv | - | - |
 | о котрій | /ɔ kɔtˈrij/ | at what time | phrase | - | - |
 | о | /ɔ/ | at (time) | prep | - | об before vowels |
 | об | /ɔb/ | at (before vowel) | prep | - | variant of о |
-| до | /dɔ/ | until, to | prep | - | + genitive |
 | після | /ˈpislʲɑ/ | after | prep | - | + genitive |
 | з...до | /z...dɔ/ | from...to | phrase | - | + genitive |
 | протягом | /prɔˈtʲɑɦɔm/ | during, for | prep | - | + genitive |

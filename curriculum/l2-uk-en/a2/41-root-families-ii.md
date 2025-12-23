@@ -35,15 +35,8 @@ In this module, we focus on three important root families: perception roots for 
 
 English has similar patterns: "see" gives us "sight", "seer", "foresee", "oversee". Ukrainian's system is even more productive because of its rich prefixation and suffixation system.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW...](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
----
+
 
 ## Presentation
 
@@ -191,6 +184,63 @@ Related to internal perception:
 > **думл-** (думати) — внутрішнє сприйняття
 > Всі ці корені описують різні типи сприйняття!
 
+### Learning Strategy: Mastering Perception Roots
+
+The perception roots in this module (бач-, слух-, чут-, мов-) are among the most frequently used in Ukrainian. Mastering them gives you access to hundreds of everyday expressions and phrases.
+
+**Understanding Root-Based Learning:**
+
+Root-based vocabulary acquisition is one of the most efficient strategies for language learning. Instead of memorizing each word individually, you learn the core meaning (the root) and then understand how prefixes and suffixes modify that meaning. This approach reduces cognitive load because you're learning patterns rather than isolated items.
+
+For example, once you know that бач- means "see," you can deduce:
+- бачити - the basic verb
+- бачення - the abstract noun form
+- побачення - the prefix по- adds the meaning of "a single instance"
+- передбачення - the prefix перед- means "before," so "seeing before" = prediction
+
+This pattern repeats across all root families in Ukrainian, making it a highly systematic language for vocabulary building.
+
+**Why These Roots Matter:**
+
+These roots appear in some of the most common Ukrainian expressions:
+- "До побачення!" (Goodbye!) - literally "until seeing"
+- "Слухай!" (Listen!) - imperative form, very common
+- "Я чую" (I hear) - basic sensory expression
+- "Українська мова" (Ukrainian language) - national identity
+
+**Memory Techniques:**
+
+1. **Create Sensory Associations**: Link each root to a physical sensation. When you see бач-, imagine looking at something. When you see слух-, imagine listening to music. This creates stronger neural pathways.
+
+2. **Use the Contrast Method**: The distinction between слухати (active listening) and чути (passive hearing) is crucial. Practice by categorizing situations: "I'm listening to a lecture" = слухаю. "I hear birds outside" = чую. This distinction exists in many languages (German: hören/zuhören, Spanish: oír/escuchar).
+
+3. **Build Word Families Visually**: Create a mind map with the root in the center and all related words branching out. For example:
+   - Center: бач-
+   - Branches: бачити, бачення, побачення, передбачення, огляд, погляд, вигляд
+
+**Common Learner Challenges:**
+
+These are the most frequent mistakes that learners make when working with perception roots. Understanding these distinctions early will save you from developing bad habits.
+
+- **Challenge 1**: Confusing мова with мовлення
+  - **The Problem**: Both words relate to language/speech, but they describe different aspects
+  - **The Solution**: Remember that мова is static (like a dictionary or language system), мовлення is dynamic (like the act of speaking or a conversation in progress)
+  - **Example**: "Українська мова" (the Ukrainian language as a system) vs "Його мовлення чітке" (His speech/speaking is clear)
+  - **Linguistic Note**: This distinction exists in many languages. In English, we have "language" (system) vs "speech" (act). In French: "langue" vs "parole".
+
+- **Challenge 2**: Mixing up почуття and відчуття
+  - **The Problem**: Both come from the чут- root but refer to different types of perception
+  - **The Solution**: Think of почуття as "feelings of the heart" (emotions) and відчуття as "feelings of the body" (physical sensations)
+  - **Example**: "Я маю почуття любові" (I have feelings of love - emotional) vs "Я маю відчуття холоду" (I have a sensation of cold - physical)
+  - **Memory Trick**: The prefix від- in відчуття suggests "from" (something external affecting you physically)
+
+- **Challenge 3**: Forgetting when to use побачення vs бачення
+  - **The Problem**: These words look very similar but have completely different meanings
+  - **The Solution**: побачення has the prefix по- which often indicates a single event (like a meeting or date), while бачення is abstract (like a vision, perspective, or way of seeing)
+  - **Example**: "Ми маємо побачення о 3-й" (We have a meeting at 3) vs "Його художнє бачення унікальне" (His artistic vision is unique)
+  - **Grammar Note**: побачення is countable (you can have one, two, three meetings), while бачення is usually uncountable (it's an abstract concept)
+
+
 ---
 
 ## Common Mistakes
@@ -232,7 +282,7 @@ These words look similar but mean different things. Бачення is vision or 
 
 ---
 
-## Summary
+# Summary
 
 **Корінь бач-:**
 - бачити
@@ -277,7 +327,17 @@ These words look similar but mean different things. Бачення is vision or 
 >
 > Шукайте корені у нових словах — це найкращий спосіб розширити словник!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW...](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+---
+
+# Activities
 
 ## match-up: Perception Roots
 
@@ -343,45 +403,67 @@ These words look similar but mean different things. Бачення is vision or 
 
 ## quiz: Perception Roots
 
-1. "Бач-" relates to:
-   - [x] Seeing
-   - [ ] Hearing
-   - [ ] Speaking
+1. До якого саме типу сприйняття відноситься український корінь "бач-" у словах "бачити" та "бачення" згідно з логікою мови?
+   - [x] Цей корінь безпосередньо відноситься до процесу бачення та зорового сприйняття світу
+   - [ ] Цей корінь безпосередньо відноситься до процесу слухання та аудіального сприйняття
+   - [ ] Цей корінь безпосередньо відноситься до процесу говоріння та мовленнєвої діяльності
+   - [ ] Цей корінь безпосередньо відноситься до процесу думання та розумової діяльності
 
-2. "Слух-" relates to:
-   - [x] Hearing
-   - [ ] Seeing
-   - [ ] Thinking
+---
 
-3. "Говор-/мов-" relates to:
-   - [x] Speaking
-   - [ ] Seeing
-   - [ ] Hearing
+2. До якого саме типу сприйняття відноситься український корінь "слух-" у словах "слухати" та "слух" згідно з логікою мови?
+   - [x] Цей корінь безпосередньо відноситься до процесу активного слухання та аудіального сприйняття
+   - [ ] Цей корінь безпосередньо відноситься до процесу бачення та зорового сприйняття світу
+   - [ ] Цей корінь безпосередньо відноситься до процесу думання та розумової діяльності людини
+   - [ ] Цей корінь безпосередньо відноситься до процесу говоріння та мовленнєвої діяльності
 
-4. "Побачення" means:
-   - [x] Meeting/date
-   - [ ] Vision
-   - [ ] Prediction
+---
 
-5. "Слухач" means:
-   - [x] Listener
-   - [ ] Speaker
-   - [ ] Viewer
+3. До якої саме сфери діяльності відносяться українські корені "говор-" та "мов-" у словах "говорити" і "мова"?
+   - [x] Ці корені безпосередньо відносяться до сфери говоріння мовлення та мовної комунікації
+   - [ ] Ці корені безпосередньо відносяться до сфери бачення та зорового сприйняття
+   - [ ] Ці корені безпосередньо відносяться до сфери слухання та аудіального сприйняття
+   - [ ] Ці корені безпосередньо відносяться до сфери думання та розумової діяльності
 
-6. "Мова" vs "мовлення":
-   - [x] Мова = language system
-   - [ ] Мова = act of speaking
-   - [ ] They are the same
+---
 
-7. "Мовчати" means:
-   - [x] To be silent
-   - [ ] To speak
-   - [ ] To listen
+4. Що саме означає українське слово "побачення" яке утворене від кореня "бач-" з префіксом "по-" у повсякденній мові?
+   - [x] Це слово означає зустріч або побачення між людьми у певний час
+   - [ ] Це слово означає художнє бачення або перспективу митця на світ
+   - [ ] Це слово означає передбачення або прогноз майбутніх подій
+   - [ ] Це слово означає процес спостереження або дивлення на щось
 
-8. "Почуття" vs "відчуття":
-   - [x] Почуття = emotional feeling
-   - [ ] Почуття = physical sensation
-   - [ ] They are the same
+---
+
+5. Що саме означає українське слово "слухач" яке утворене від кореня "слух-" з суфіксом "-ач" у контексті освіти?
+   - [x] Це слово означає людину яка слухає лекції або радіопередачі уважно
+   - [ ] Це слово означає людину яка говорить або виступає перед аудиторією публічно
+   - [ ] Це слово означає людину яка дивиться або спостерігає за подіями навколо
+   - [ ] Це слово означає людину яка думає або роздумує над складними питаннями
+
+---
+
+6. Яка саме різниця між українськими словами "мова" та "мовлення" які обидва походять від кореня "мов-" у лінгвістиці?
+   - [x] Слово "мова" означає мовну систему а "мовлення" означає акт говоріння
+   - [ ] Слово "мова" означає акт говоріння а "мовлення" означає мовну систему
+   - [ ] Ці два слова є повними синонімами і означають абсолютно одне й те саме
+   - [ ] Слово "мова" означає письмо а "мовлення" означає усне спілкування
+
+---
+
+7. Що саме означає українське дієслово "мовчати" яке утворене від кореня "мов-" з додатковим елементом "-ч-" у повсякденній мові?
+   - [x] Це дієслово означає бути мовчазним або не говорити зовсім у певній ситуації
+   - [ ] Це дієслово означає говорити або розмовляти з іншими людьми активно
+   - [ ] Це дієслово означає слухати або сприймати звуки вухами уважно
+   - [ ] Це дієслово означає дивитися або спостерігати за подіями очима
+
+---
+
+8. Яка саме різниця між українськими словами "почуття" та "відчуття" які обидва походять від кореня "чут-" у психології?
+   - [x] Слово "почуття" означає емоційні переживання а "відчуття" означає фізичні відчуття
+   - [ ] Слово "почуття" означає фізичні відчуття а "відчуття" означає емоційні переживання
+   - [ ] Ці два слова є повними синонімами і означають абсолютно одне й те саме
+   - [ ] Слово "почуття" означає слухання а "відчуття" означає бачення
 
 ## cloze: Story Comprehension
 
@@ -393,6 +475,12 @@ These words look similar but mean different things. Бачення is vision or 
 Професор [___:4] про мову. (speaks)
 Студенти уважно [___:5]. (listen)
 Марія і студент домовились про [___:6]. (meeting)
+У Тараса було [___:7] спокою. (feeling)
+Оксана зрозуміла [___:8] свого друга. (vision)
+Вони продовжили [___:9] про природу. (conversation)
+Студент мав глибокі [___:10] про тему. (feelings)
+Марія записує важливу [___:11]. (information)
+Вони люблять [___:12] тишу в лісі. (to listen to)
 
 1. бачив | чув | слухав
    > [!answer] бачив
@@ -412,24 +500,43 @@ These words look similar but mean different things. Бачення is vision or 
 6. побачення | розмову | мовчання
    > [!answer] побачення
 
+7. почуття | відчуття | бачення
+   > [!answer] почуття
+
+8. бачення | побачення | думку
+   > [!answer] бачення
+
+9. розмову | мову | мовчання
+   > [!answer] розмову
+
+10. почуття | відчуття | думки
+   > [!answer] почуття
+
+11. інформацію | розмову | мову
+   > [!answer] інформацію
+
+12. слухати | чути | бачити
+   > [!answer] слухати
+
 ## unjumble: Perception Sentences
 
-1. бачу | Я | тебе
-   > [!answer] Я бачу тебе
-2. музику | чую | Я
-   > [!answer] Я чую музику
-3. уважно | Слухай
-   > [!answer] Слухай уважно
-4. гарне | мовлення | Це
-   > [!answer] Це гарне мовлення
-5. цікава | розмова | була | Це
-   > [!answer] Це була цікава розмова
-6. мовчить | Він | весь | час
-   > [!answer] Він мовчить весь час
-7. почуття | глибокі | Це
-   > [!answer] Це глибокі почуття
-8. слухачі | уважні | Вони
-   > [!answer] Вони уважні слухачі
+1. я / зараз / бачу / тебе / дуже / чітко / перед / собою
+   > [!answer] Я зараз бачу тебе дуже чітко перед собою
+2. я / чую / красиву / музику / здалеку / на / вулиці / зараз
+   > [!answer] Я чую красиву музику здалеку на вулиці зараз
+3. будь / ласка / слухай / мене / дуже / уважно / зараз / тут
+   > [!answer] Будь ласка слухай мене дуже уважно зараз тут
+4. це / справді / дуже / гарне / чітке / мовлення / від / професора
+   > [!answer] Це справді дуже гарне чітке мовлення від професора
+5. це / була / дуже / цікава / довга / розмова / між / друзями / вчора
+   > [!answer] Це була дуже цікава довга розмова між друзями вчора
+6. він / мовчить / увесь / час / під / час / лекції / сьогодні
+   > [!answer] Він мовчить увесь час під час лекції сьогодні
+7. це / справді / дуже / глибокі / сильні / почуття / до / неї
+   > [!answer] Це справді дуже глибокі сильні почуття до неї
+8. вони / завжди / дуже / уважні / добрі / слухачі / на / лекціях
+   > [!answer] Вони завжди дуже уважні добрі слухачі на лекціях
+
 
 ## error-correction: Root Usage
 
@@ -556,32 +663,18 @@ These words look similar but mean different things. Бачення is vision or 
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | — | perception |
-| бачення | /ˈbɑt͡ʃɛnʲɑ/ | vision | noun | n | abstract |
-| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |
-| передбачення | /pɛrɛdˈbɑt͡ʃɛnʲɑ/ | prediction | noun | n | abstract |
-| огляд | /ˈɔɦlʲɑd/ | review | noun | m | abstract |
-| погляд | /ˈpɔɦlʲɑd/ | look/view | noun | m | abstract |
-| вигляд | /ˈʋɪɦlʲɑd/ | appearance | noun | m | abstract |
-| слухати | /ˈsluxɑtɪ/ | to listen | verb | — | perception |
 | слух | /slux/ | hearing | noun | m | sense |
 | послух | /ˈpɔslux/ | obedience | noun | m | abstract |
-| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | person |
-| чути | /ˈt͡ʃutɪ/ | to hear | verb | — | perception |
 | почуття | /pɔˈt͡ʃutʲɑ/ | feeling | noun | n | emotion |
 | відчуття | /ʋidˈt͡ʃutʲɑ/ | sensation | noun | n | perception |
-| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | speech |
 | розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |
-| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |
 | мовлення | /ˈmɔʋlɛnʲɑ/ | speech | noun | n | activity |
 | мовець | /mɔˈʋɛt͡sʲ/ | speaker | noun | m | person |
 | мовчати | /mɔʋˈt͡ʃɑtɪ/ | to be silent | verb | — | speech |
 | мовчання | /mɔʋˈt͡ʃɑnʲɑ/ | silence | noun | n | state |
 | мовчазний | /mɔʋˈt͡ʃɑznɪj/ | silent (person) | adj | m | quality |
-| думати | /ˈdumɑtɪ/ | to think | verb | — | mental |
-| думка | /ˈdumkɑ/ | thought | noun | f | abstract |
 | роздуми | /rɔzˈdumɪ/ | reflections | noun | pl | abstract |

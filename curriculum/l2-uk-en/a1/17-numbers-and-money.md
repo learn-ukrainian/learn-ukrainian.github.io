@@ -762,14 +762,12 @@ You can now count, ask prices, and shop confidently in Ukraine!
 | долар | /ˈdɔlɑr/ | dollar | noun | m | - |
 | євро | /ˈɛvrɔ/ | euro | noun | n | indeclinable |
 | ціна | /t͡siˈnɑ/ | price | noun | f | - |
-| скільки | /ˈskʲilʲkɪ/ | how much/many | adverb | - | - |
 | коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (3sg) |
 | дорого | /ˈdɔrɔɦɔ/ | expensive | adverb | - | also: expensively |
 | дешево | /ˈdɛʃɛvɔ/ | cheap | adverb | - | also: cheaply |
 | знижка | /ˈznɪʒkɑ/ | discount | noun | f | - |
 | решта | /ˈrɛʃtɑ/ | change (money) | noun | f | money returned |
 | платити | /plɑˈtɪtɪ/ | to pay | verb | - | плачу, платиш |
-| купувати | /kupuˈvɑtɪ/ | to buy | verb | - | купую, купуєш |
 | продавати | /prɔdɑˈvɑtɪ/ | to sell | verb | - | продаю, продаєш |
 | каса | /ˈkɑsɑ/ | cashier, checkout | noun | f | - |
 | рахунок | /rɑˈxunɔk/ | bill, check | noun | m | - |

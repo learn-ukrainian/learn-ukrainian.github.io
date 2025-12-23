@@ -30,15 +30,7 @@ import MarkTheWords, { MarkTheWordsActivity } from '@site/src/components/MarkThe
 3. **Health & Body** - Can you discuss health and symptoms?
 4. **Shopping & Travel** - Can you handle transactions and trips?
 
-:::info[🔗 External Resources]
 
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
----
 
 ## Skill 1: Daily Life
 
@@ -401,6 +393,14 @@ Read the story and answer the questions:
 
 ---
 
+:::info[🔗 External Resources]
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
+
 ## 🎯 Activities
 
 ### Vocabulary Categories
@@ -478,88 +478,100 @@ Read the story and answer the questions:
 
 <Quiz questions={[
   {
-    question: `\"Прокидатися\" means:`,
+    question: `What is the meaning of the reflexive verb \"прокидатися\" in English?`,
     options: [
       { text: `To wake up`, correct: true },
       { text: `To fall asleep`, correct: false },
-      { text: `To eat`, correct: false }
+      { text: `To eat breakfast`, correct: false },
+      { text: `To get dressed`, correct: false }
     ]
   },  {
-    question: `\"Працювати лікарем\" uses:`,
+    question: `Which grammatical case is used in the phrase \"працювати лікарем\"?`,
     options: [
       { text: `Instrumental case`, correct: true },
       { text: `Accusative case`, correct: false },
-      { text: `Nominative case`, correct: false }
+      { text: `Nominative case`, correct: false },
+      { text: `Genitive case`, correct: false }
     ]
   },  {
-    question: `\"У мене болить голова\" — голова is:`,
+    question: `In the phrase \"У мене болить голова\", what is the grammatical role of \"голова\"?`,
     options: [
       { text: `Nominative (subject)`, correct: true },
       { text: `Accusative (object)`, correct: false },
-      { text: `Genitive`, correct: false }
+      { text: `Genitive (possession)`, correct: false },
+      { text: `Dative (recipient)`, correct: false }
     ]
   },  {
-    question: `\"Заплатити карткою\" — карткою is:`,
+    question: `In the phrase \"Заплатити карткою\", what case is \"карткою\" in?`,
     options: [
       { text: `Instrumental (means)`, correct: true },
       { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: false }
+      { text: `Dative`, correct: false },
+      { text: `Locative`, correct: false }
     ]
   },  {
-    question: `\"Вчитися\" means:`,
+    question: `What is the primary meaning of the verb \"вчитися\" in an educational context?`,
     options: [
       { text: `To study (as student)`, correct: true },
-      { text: `To teach`, correct: false },
-      { text: `To learn a subject`, correct: false }
+      { text: `To teach a class`, correct: false },
+      { text: `To learn a subject`, correct: false },
+      { text: `To read a book`, correct: false }
     ]
   },  {
-    question: `\"Вивчати\" means:`,
+    question: `What does the verb \"вивчати\" specifically mean when talking about education?`,
     options: [
       { text: `To learn (a subject)`, correct: true },
       { text: `To be a student`, correct: false },
-      { text: `To teach`, correct: false }
+      { text: `To teach`, correct: false },
+      { text: `To write`, correct: false }
     ]
   },  {
-    question: `\"Квиток\" means:`,
+    question: `What is the English translation of the travel word \"квиток\"?`,
     options: [
       { text: `Ticket`, correct: true },
       { text: `Key`, correct: false },
-      { text: `Bag`, correct: false }
+      { text: `Bag`, correct: false },
+      { text: `Map`, correct: false }
     ]
   },  {
-    question: `\"Знижка\" means:`,
+    question: `What does the shopping word \"знижка\" mean in a store?`,
     options: [
       { text: `Discount`, correct: true },
       { text: `Receipt`, correct: false },
-      { text: `Price`, correct: false }
+      { text: `Price`, correct: false },
+      { text: `Change`, correct: false }
     ]
   },  {
-    question: `\"Горло\" means:`,
+    question: `What part of the body is \"горло\" in English?`,
     options: [
       { text: `Throat`, correct: true },
       { text: `Head`, correct: false },
-      { text: `Leg`, correct: false }
+      { text: `Leg`, correct: false },
+      { text: `Arm`, correct: false }
     ]
   },  {
-    question: `\"Подорож\" means:`,
+    question: `What is the correct translation for the word \"подорож\"?`,
     options: [
       { text: `Trip/journey`, correct: true },
-      { text: `Work`, correct: false },
-      { text: `Food`, correct: false }
+      { text: `Work/job`, correct: false },
+      { text: `Food/meal`, correct: false },
+      { text: `Rest/sleep`, correct: false }
     ]
   },  {
-    question: `\"Готель\" means:`,
+    question: `What kind of establishment is a \"готель\" for travelers?`,
     options: [
       { text: `Hotel`, correct: true },
       { text: `House`, correct: false },
-      { text: `Restaurant`, correct: false }
+      { text: `Restaurant`, correct: false },
+      { text: `Hospital`, correct: false }
     ]
   },  {
-    question: `\"Вітальня\" means:`,
+    question: `Which room in the house is called \"вітальня\" in Ukrainian?`,
     options: [
       { text: `Living room`, correct: true },
       { text: `Bedroom`, correct: false },
-      { text: `Kitchen`, correct: false }
+      { text: `Kitchen`, correct: false },
+      { text: `Bathroom`, correct: false }
     ]
   }
 ]} />
@@ -636,8 +648,13 @@ Read the story and answer the questions:
 Вчора у мене боліла [___:4].
 Я пішов до [___:5] і купив ліки.
 У вихідні я хочу поїхати в [___:6].
-Я вже купив [___:7] на поїзд.`}
-  blanks={[{ index: 0, answer: `прокидаюся`, options: [`прокидаюся`, `засинаю`, `сплю`] }, { index: 1, answer: `снідаю`, options: [`снідаю`, `вечеряю`, `сплю`] }, { index: 2, answer: `менеджером`, options: [`менеджером`, `менеджер`, `менеджера`] }, { index: 3, answer: `голова`, options: [`голова`, `голову`, `голові`] }, { index: 4, answer: `лікаря`, options: [`лікаря`, `лікарем`, `лікар`] }, { index: 5, answer: `подорож`, options: [`подорож`, `роботу`, `аптеку`] }, { index: 6, answer: `квитки`, options: [`квитки`, `квиток`, `квитку`] }]}
+Я вже купив [___:7] на поїзд.
+Я забронював [___:8] у центрі.
+Там я буду [___:9] і відпочивати.
+Ввечері я піду в [___:10] на вечерю.
+Я люблю [___:11] нові місця.
+Це буде чудова [___:12]!`}
+  blanks={[{ index: 0, answer: `прокидаюся`, options: [`прокидаюся`, `засинаю`, `сплю`] }, { index: 1, answer: `снідаю`, options: [`снідаю`, `вечеряю`, `сплю`] }, { index: 2, answer: `менеджером`, options: [`менеджером`, `менеджер`, `менеджера`] }, { index: 3, answer: `голова`, options: [`голова`, `голову`, `голові`] }, { index: 4, answer: `аптеки`, options: [`аптеки`, `аптека`, `аптеку`] }, { index: 5, answer: `подорож`, options: [`подорож`, `роботу`, `аптеку`] }, { index: 6, answer: `квитки`, options: [`квитки`, `квиток`, `квитку`] }, { index: 7, answer: `готель`, options: [`готель`, `парк`, `вокзал`] }, { index: 8, answer: `гуляти`, options: [`гуляти`, `працювати`, `хворіти`] }, { index: 9, answer: `ресторан`, options: [`ресторан`, `магазин`, `банк`] }, { index: 10, answer: `вивчати`, options: [`вивчати`, `забувати`, `втрачати`] }, { index: 11, answer: `поїздка`, options: [`поїздка`, `робота`, `хвороба`] }]}
 />
 
 ### At the Store
@@ -660,12 +677,12 @@ Read the story and answer the questions:
 ### Daily Routines
 
 <Unjumble items={[
-  { jumbled: `прокидаюся | я | Вранці | о | 7:00`, answer: `Вранці я прокидаюся о 7:00` },
-  { jumbled: `програмістом | Він | працює`, answer: `Він працює програмістом` },
-  { jumbled: `голова | У | болить | мене`, answer: `У мене болить голова` },
-  { jumbled: `карткою | Можна | заплатити`, answer: `Можна заплатити карткою` },
-  { jumbled: `університеті | вчиться | в | Вона`, answer: `Вона вчиться в університеті` },
-  { jumbled: `де | аптека | тут | Де`, answer: `Де тут аптека` }
+  { jumbled: `Вранці / я / завжди / прокидаюся / дуже / рано / о / сьомій`, answer: `Вранці я завжди прокидаюся дуже рано о сьомій` },
+  { jumbled: `Мій / старший / брат / зараз / успішно / працює / програмістом`, answer: `Мій старший брат зараз успішно працює програмістом` },
+  { jumbled: `Сьогодні / у / мене / дуже / сильно / болить / голова`, answer: `Сьогодні у мене дуже сильно болить голова` },
+  { jumbled: `Скажіть / будь ласка / чи / можна / тут / заплатити / карткою`, answer: `Скажіть будь ласка чи можна тут заплатити карткою` },
+  { jumbled: `Вона / зараз / дуже / старанно / вчиться / в / національному / університеті`, answer: `Вона зараз дуже старанно вчиться в національному університеті` },
+  { jumbled: `Вибачте / скажіть / де / тут / є / найближча / аптека`, answer: `Вибачте скажіть де тут є найближча аптека` }
 ]} />
 
 ### Find the Vocabulary
@@ -724,28 +741,4 @@ Read the story and answer the questions:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| квартира | /kʋarˈtɪra/ | apartment | noun | f | home |
-| вітальня | /ʋiˈtalʲnʲa/ | living room | noun | f | home |
-| кухня | /ˈkuxnʲa/ | kitchen | noun | f | home |
-| прокидатися | /prɔkɪˈdatɪsʲa/ | to wake up | verb | — | reflexive |
-| засинати | /zasɪˈnatɪ/ | to fall asleep | verb | — | routine |
-| снідати | /ˈsnʲidatɪ/ | to have breakfast | verb | — | routine |
-| лікар | /ˈlʲikar/ | doctor | noun | m | profession |
-| програміст | /prɔɦraˈmist/ | programmer | noun | m | profession |
-| вчитися | /ʋt͡ʃɪˈtɪsʲa/ | to study | verb | — | reflexive |
-| вивчати | /ʋɪʋˈt͡ʃatɪ/ | to learn | verb | — | transitive |
-| голова | /ɦɔlɔˈʋa/ | head | noun | f | body |
-| горло | /ˈɦɔrlɔ/ | throat | noun | n | body |
-| живіт | /ʒɪˈʋit/ | stomach | noun | m | body |
-| температура | /tɛmpɛraˈtura/ | temperature | noun | f | health |
-| застуда | /zasˈtuda/ | cold | noun | f | health |
-| аптека | /apˈtɛka/ | pharmacy | noun | f | health |
-| гроші | /ˈɦrɔʃi/ | money | noun | pl | shopping |
-| картка | /ˈkartka/ | card | noun | f | shopping |
-| чек | /t͡ʃɛk/ | receipt | noun | m | shopping |
-| знижка | /ˈznɪʒka/ | discount | noun | f | shopping |
-| подорож | /ˈpɔdɔrɔʒ/ | trip | noun | f | travel |
-| квиток | /kʋɪˈtɔk/ | ticket | noun | m | travel |
-| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | travel |
 | поїзд | /ˈpɔjizd/ | train | noun | m | travel |
-| настрій | /ˈnastrij/ | mood | noun | m | emotion |

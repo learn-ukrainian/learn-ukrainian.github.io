@@ -471,99 +471,111 @@ The following activities will help you master the bare Instrumental case. Rememb
 
 ## quiz: Instrumental Uses
 
-1. Як сказати "by bus"?
+1. When you want to say "by bus" in Ukrainian, which form correctly expresses the means of transport?
 
 - [ ] з автобусом
 - [x] автобусом
 - [ ] на автобус
+- [ ] автобуса
 
 ---
 
-2. Яке речення правильне?
+2. When expressing that someone writes with a pen, which Ukrainian sentence is grammatically correct?
 
 - [x] Я пишу ручкою.
 - [ ] Я пишу з ручкою.
 - [ ] Я пишу ручка.
+- [ ] Я пишу ручку.
 
 ---
 
-3. Коли використовуємо орудний БЕЗ прийменника?
+3. In Ukrainian grammar, when do we use the Instrumental case WITHOUT a preposition (bare Instrumental)?
 
 - [x] Для засобу пересування та інструментів
 - [ ] Для супроводу (з ким?)
 - [ ] Для місця (де?)
+- [ ] Для часу (коли?)
 
 ---
 
-4. Як сказати "with a knife"?
+4. When expressing that someone cuts bread with a knife, which form is correct for "with a knife"?
 
 - [x] ножем
 - [ ] з ножем
 - [ ] ножа
+- [ ] ніж
 
 ---
 
-5. Яке речення правильне?
+5. When someone speaks quietly, which Ukrainian sentence correctly expresses "in a quiet voice"?
 
 - [x] Він говорить тихим голосом.
 - [ ] Він говорить з тихим голосом.
 - [ ] Він говорить тихий голос.
+- [ ] Він говорить тихого голосу.
 
 ---
 
-6. Як сказати "by train"?
+6. When expressing "by train" in Ukrainian, which form correctly shows the means of transport?
 
 - [x] поїздом
 - [ ] з поїздом
 - [ ] на поїзд
+- [ ] поїзда
 
 ---
 
-7. "Метро" в орудному відмінку...
+7. The Ukrainian word "метро" in the Instrumental case for "by metro" takes which form?
 
 - [x] не змінюється
 - [ ] стає "метром"
 - [ ] стає "метрою"
+- [ ] стає "метри"
 
 ---
 
-8. Як сказати "with eyes"?
+8. When expressing seeing "with eyes" in Ukrainian, which irregular Instrumental form is correct?
 
 - [x] очима
 - [ ] очами
 - [ ] з очами
+- [ ] очей
 
 ---
 
-9. Яке речення правильне?
+9. When expressing that someone cuts bread with a knife, which Ukrainian sentence is correct?
 
 - [x] Вона ріже хліб ножем.
 - [ ] Вона ріже хліб з ножем.
 - [ ] Вона ріже хліб ніж.
+- [ ] Вона ріже хліб ножа.
 
 ---
 
-10. Як сказати "by email"?
+10. When expressing "by email" in Ukrainian, which Instrumental form is correct?
 
 - [x] електронною поштою
 - [ ] з електронною поштою
 - [ ] електронна пошта
+- [ ] електронної пошти
 
 ---
 
-11. "Ножиці" в орудному відмінку...
+11. When using "scissors" in Ukrainian, which Instrumental form of "ножиці" is correct?
 
 - [x] ножицями
 - [ ] ножицею
 - [ ] ножицям
+- [ ] ножиць
 
 ---
 
-12. Як сказати "in a whisper"?
+12. When expressing "in a whisper" in Ukrainian, which form is correct?
 
 - [x] пошепки
 - [ ] з пошепки
 - [ ] пошепкою
+- [ ] пошепку
 
 ## true-false: Instrumental Rules
 > Decide if each statement is true or false.
@@ -626,29 +638,29 @@ The following activities will help you master the bare Instrumental case. Rememb
 ## unjumble: Instrumental Sentences
 > Put the words in the correct order.
 
-1. вона | їде | до | центру | трамваєм
-   > [!answer] Вона їде до центру трамваєм
-   > (She goes to the center by tram.)
+1. Вона / їде / до / центру / трамваєм / щодня / вранці / швидко
+   > [!answer] Вона щодня вранці швидко їде до центру трамваєм
+   > (She quickly goes downtown by tram every morning.) [8 words]
 
-2. вона | пише | листа | ручкою
-   > [!answer] Вона пише листа ручкою
-   > (She writes a letter with a pen.)
+2. Вона / пише / листа / ручкою / своїй / бабусі / кожного / тижня
+   > [!answer] Вона кожного тижня пише листа своїй бабусі ручкою
+   > (She writes a letter to her grandma with a pen every week.) [8 words]
 
-3. він | ріже | хліб | ножем
-   > [!answer] Він ріже хліб ножем
-   > (He cuts bread with a knife.)
+3. Він / ріже / хліб / ножем / на / кухні / кожного / ранку
+   > [!answer] Він кожного ранку ріже хліб ножем на кухні
+   > (He cuts bread with a knife in the kitchen every morning.) [8 words]
 
-4. ми | їмо | суп | ложкою
-   > [!answer] Ми їмо суп ложкою
-   > (We eat soup with a spoon.)
+4. Ми / їмо / суп / ложкою / на / обід / кожного / дня
+   > [!answer] Ми кожного дня на обід їмо суп ложкою
+   > (We eat soup with a spoon for lunch every day.) [8 words]
 
-5. вона | летить | до | Парижа | літаком
-   > [!answer] Вона летить до Парижа літаком
-   > (She flies to Paris by plane.)
+5. Вона / летить / до / Парижа / літаком / цього / тижня / вперше
+   > [!answer] Вона вперше цього тижня летить до Парижа літаком
+   > (She flies to Paris by plane for the first time this week.) [8 words]
 
-6. він | говорить | тихим | голосом
-   > [!answer] Він говорить тихим голосом
-   > (He speaks in a quiet voice.)
+6. Він / говорить / тихим / голосом / у / бібліотеці / завжди / ввічливо
+   > [!answer] Він завжди ввічливо говорить тихим голосом у бібліотеці
+   > (He always politely speaks in a quiet voice in the library.) [8 words]
 
 ## error-correction: Fix the Instrumental
 > Each sentence has ONE error. Find and correct it.
@@ -692,7 +704,7 @@ The following activities will help you master the bare Instrumental case. Rememb
 ## cloze: Complete the Story
 > Fill in the blanks with the correct words.
 
-Вранці я йду на зупинку і їду [___:1] на роботу. На роботі працюю [___:2] цілий день. Пишу листи [___:3] і надсилаю їх [___:4]. Увечері їду додому [___:5] — це швидше.
+Вранці я йду на зупинку і їду [___:1] на роботу. На роботі працюю [___:2] цілий день. Пишу листи [___:3] і надсилаю їх [___:4]. Увечері їду додому [___:5] — це швидше. Вдома розмовляю [___:6] з родиною.
 
 1. автобусом | з автобусом | автобус
    > [!answer] автобусом
@@ -709,9 +721,12 @@ The following activities will help you master the bare Instrumental case. Rememb
 5. метро | з метро | на метро
    > [!answer] метро
 
+6. телефоном | з телефоном | телефон
+   > [!answer] телефоном
+
 ---
 
-На кухні мама готує обід. Вона ріже м'ясо [___:1]. Салат ріже [___:2]. Потім ми сідаємо за стіл і їмо: суп [___:3], а другу страву [___:4]. Тато розповідає історію тихим [___:5].
+На кухні мама готує обід. Вона ріже м'ясо [___:1]. Салат ріже [___:2]. Потім ми сідаємо за стіл і їмо: суп [___:3], а другу страву [___:4]. Тато розповідає історію тихим [___:5]. Після обіду брат їде на тренування [___:6].
 
 1. ножем | з ножем | ніж
    > [!answer] ножем
@@ -727,6 +742,9 @@ The following activities will help you master the bare Instrumental case. Rememb
 
 5. голосом | з голосом | голос
    > [!answer] голосом
+
+6. велосипедом | з велосипедом | велосипед
+   > [!answer] велосипедом
 
 ## dialogue-reorder: Asking Directions
 
@@ -881,9 +899,7 @@ She nods with her head.
 | автобусом | /ɑʋˈtobusɔm/ | by bus | adv | — | instrumental of автобус |
 | трамваєм | /trɑmˈʋɑjɛm/ | by tram | adv | — | instrumental of трамвай |
 | тролейбусом | /trɔˈlejbusɔm/ | by trolleybus | adv | — | instrumental of тролейбус |
-| метро | /mɛˈtrɔ/ | metro, by metro | noun | n | indeclinable |
 | машиною | /mɑˈʃɪnɔju/ | by car | adv | — | instrumental of машина |
-| таксі | /tɑˈksi/ | taxi, by taxi | noun | n | indeclinable |
 | поїздом | /ˈpɔjizdɔm/ | by train | adv | — | instrumental of поїзд |
 | літаком | /liˈtɑkɔm/ | by plane | adv | — | instrumental of літак |
 | ручкою | /ˈrutʃkɔju/ | with a pen | adv | — | instrumental of ручка |
@@ -903,8 +919,5 @@ She nods with her head.
 | головою | /ɦɔlɔˈʋɔju/ | with head | adv | — | instrumental of голова |
 | голосом | /ˈɦɔlɔsɔm/ | with voice, in voice | adv | — | instrumental of голос |
 | пошепки | /pɔˈʃɛpkɪ/ | in a whisper | adv | — | manner adverb |
-| орудний | /oˈrudnɪj/ | Instrumental (case) | adj | m | this module |
-| відмінок | /vidˈminɔk/ | grammatical case | noun | m | review |
-| час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---

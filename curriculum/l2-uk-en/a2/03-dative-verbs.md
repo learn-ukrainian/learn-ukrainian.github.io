@@ -424,99 +424,111 @@ The following activities will help you master Dative verb patterns. Progress thr
 
 ## quiz: Dative Verb Patterns
 
-1. Який відмінок потрібен після "допомагати"?
+1. When you want to say "I help my mother" in Ukrainian, which grammatical case does the verb "допомагати" require?
 
 - [ ] Accusative
 - [x] Dative
 - [ ] Genitive
+- [ ] Instrumental
 
 ---
 
-2. "Подобатися" — яка конструкція правильна?
+2. For the verb "подобатися" (to please/like), which construction is grammatically correct in Ukrainian?
 
 - [x] Мені подобається кава.
 - [ ] Я подобаюся кава.
 - [ ] Я подобаю каву.
+- [ ] Мене подобається кава.
 
 ---
 
-3. Яке речення правильне?
+3. When expressing "I believe this person" in Ukrainian with the verb "вірити", which sentence is correct?
 
 - [ ] Я вірю цей людина.
 - [ ] Я вірю цю людину.
 - [x] Я вірю цій людині.
+- [ ] Я вірю ця людина.
 
 ---
 
-4. "Давати" потребує...
+4. The verb "давати" (to give) requires which case or cases for its objects in Ukrainian grammar?
 
 - [ ] тільки давального відмінка
 - [ ] тільки знахідного відмінка
 - [x] давального + знахідного відмінка
+- [ ] тільки родового відмінка
 
 ---
 
-5. Як сказати "I thank the teacher"?
+5. How do you correctly say "I thank the teacher" in Ukrainian using the verb "дякувати"?
 
 - [ ] Я дякую вчитель.
 - [x] Я дякую вчителеві.
 - [ ] Я дякую вчителя.
+- [ ] Я дякую вчителем.
 
 ---
 
-6. Яке речення правильне?
+6. When expressing that a mother forbids children to eat candy, which Ukrainian sentence is grammatically correct?
 
 - [x] Мама забороняє дітям їсти цукерки.
 - [ ] Мама забороняє дітей їсти цукерки.
 - [ ] Мама забороняє діти їсти цукерки.
+- [ ] Мама забороняє дітьми їсти цукерки.
 
 ---
 
-7. "Заздрити" потребує...
+7. Which grammatical case does the Ukrainian verb "заздрити" (to envy) require for its object?
 
 - [x] давального відмінка
 - [ ] знахідного відмінка
 - [ ] родового відмінка
-
----
-
-8. Як сказати "The noise bothers me"?
-
-- [x] Шум заважає мені.
-- [ ] Шум заважає мене.
-- [ ] Шум заважає я.
-
----
-
-9. Яке речення правильне?
-
-- [ ] Я пояснюю учні правило.
-- [ ] Я пояснюю учнів правило.
-- [x] Я пояснюю учням правило.
-
----
-
-10. "Співчувати" потребує...
-
-- [x] давального відмінка
-- [ ] знахідного відмінка
 - [ ] орудного відмінка
 
 ---
 
-11. Як сказати "I forgive you"?
+8. How do you correctly express "The noise bothers me" in Ukrainian using the verb "заважати"?
+
+- [x] Шум заважає мені.
+- [ ] Шум заважає мене.
+- [ ] Шум заважає я.
+- [ ] Шум заважає мною.
+
+---
+
+9. When saying "I explain the rule to students" in Ukrainian with "пояснювати", which sentence is correct?
+
+- [ ] Я пояснюю учні правило.
+- [ ] Я пояснюю учнів правило.
+- [x] Я пояснюю учням правило.
+- [ ] Я пояснюю учнями правило.
+
+---
+
+10. Which grammatical case does the Ukrainian verb "співчувати" (to sympathize/empathize) require for its object?
+
+- [x] давального відмінка
+- [ ] знахідного відмінка
+- [ ] орудного відмінка
+- [ ] родового відмінка
+
+---
+
+11. How do you correctly say "I forgive you" in Ukrainian using the verb "пробачати"?
 
 - [ ] Я пробачаю ти.
 - [x] Я пробачаю тобі.
 - [ ] Я пробачаю тебе.
+- [ ] Я пробачаю тобою.
 
 ---
 
-12. Яке речення правильне?
+12. When expressing "He advises me to rest" with the verb "радити", which Ukrainian sentence is correct?
 
 - [x] Він радить мені відпочити.
 - [ ] Він радить мене відпочити.
 - [ ] Він радить я відпочити.
+- [ ] Він радить мною відпочити.
 
 ## true-false: Dative Verb Rules
 > Decide if each statement is true or false.
@@ -579,29 +591,29 @@ The following activities will help you master Dative verb patterns. Progress thr
 ## unjumble: Dative Verb Sentences
 > Put the words in the correct order.
 
-1. я | допомагаю | мамі | готувати | обід
-   > [!answer] Я допомагаю мамі готувати обід
-   > (I help mom cook lunch.)
+1. Я / допомагаю / мамі / готувати / обід / кожного / дня / ввечері
+   > [!answer] Я кожного дня ввечері допомагаю мамі готувати обід
+   > (I help mom cook lunch every day in the evening.) [8 words]
 
-2. мені | подобається | ця | музика
-   > [!answer] Мені подобається ця музика
-   > (I like this music.)
+2. Мені / дуже / подобається / ця / українська / народна / музика / справді
+   > [!answer] Мені справді дуже подобається ця українська народна музика
+   > (I really very much like this Ukrainian folk music.) [8 words]
 
-3. він | показує | другові | нову | машину
-   > [!answer] Він показує другові нову машину
-   > (He shows his friend the new car.)
+3. Він / показує / другові / нову / машину / в / гаражі / сьогодні
+   > [!answer] Він сьогодні показує другові нову машину в гаражі
+   > (He shows his friend the new car in the garage today.) [8 words]
 
-4. вчитель | пояснює | учням | складне | правило
-   > [!answer] Вчитель пояснює учням складне правило
-   > (The teacher explains a complex rule to students.)
+4. Вчитель / пояснює / учням / складне / граматичне / правило / в / класі
+   > [!answer] Вчитель пояснює учням складне граматичне правило в класі
+   > (The teacher explains a complex grammar rule to students in class.) [8 words]
 
-5. я | дякую | тобі | за | допомогу
-   > [!answer] Я дякую тобі за допомогу
-   > (I thank you for the help.)
+5. Я / щиро / дякую / тобі / за / твою / чудову / допомогу
+   > [!answer] Я щиро дякую тобі за твою чудову допомогу
+   > (I sincerely thank you for your wonderful help.) [8 words]
 
-6. ця | музика | заважає | мені | спати
-   > [!answer] Ця музика заважає мені спати
-   > (This music prevents me from sleeping.)
+6. Ця / гучна / музика / заважає / мені / добре / спати / вночі
+   > [!answer] Ця гучна музика заважає мені добре спати вночі
+   > (This loud music prevents me from sleeping well at night.) [8 words]
 
 ## error-correction: Fix the Dative Errors
 > Each sentence has ONE error. Find and correct it.
@@ -645,7 +657,7 @@ The following activities will help you master Dative verb patterns. Progress thr
 ## cloze: Complete the Story
 > Fill in the blanks with the correct words.
 
-Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу.
+Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу. Директор [___:5] їй нову методику. Марія [___:6] колегам свій досвід.
 
 1. пояснює | пояснювати | пояснюється
    > [!answer] пояснює
@@ -659,9 +671,15 @@ The following activities will help you master Dative verb patterns. Progress thr
 4. дякують | дякувати | дякуються
    > [!answer] дякують
 
+5. радить | радити | радиться
+   > [!answer] радить
+
+6. показує | показувати | показується
+   > [!answer] показує
+
 ---
 
-Мій брат Олег любить музику. [___:1] подобається рок. Але наша мама каже, що музика [___:2] їй. Олег [___:3] маму — він слухає музику в навушниках. Тепер мама [___:4] Олегові, що він уважний.
+Мій брат Олег любить музику. [___:1] подобається рок. Але наша мама каже, що музика [___:2] їй. Олег [___:3] маму — він слухає музику в навушниках. Тепер мама [___:4] Олегові, що він уважний. Олег [___:5] мамі за розуміння. Батьки [___:6] Олегові слухати музику ввечері.
 
 1. Йому | Його | Він
    > [!answer] Йому
@@ -674,6 +692,12 @@ The following activities will help you master Dative verb patterns. Progress thr
 
 4. каже | говорить | розповідає
    > [!answer] каже
+
+5. дякує | дякувати | дякує
+   > [!answer] дякує
+
+6. дозволяють | дозволяти | дозволяється
+   > [!answer] дозволяють
 
 ## dialogue-reorder: At the Doctor's Office
 
@@ -825,33 +849,14 @@ Grandma tells the grandchildren a story.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| допомагати | /dopoˈmɑɦɑtɪ/ | to help | verb | — | + Dat |
-| заважати | /zɑʋɑˈʒɑtɪ/ | to disturb, bother | verb | — | + Dat |
-| подобатися | /podoˈbɑtɪsʲɑ/ | to please, be liked | verb | — | + Dat |
-| вірити | /ˈʋirɪtɪ/ | to believe | verb | — | + Dat |
-| довіряти | /doʋiˈrʲɑtɪ/ | to trust | verb | — | + Dat |
-| дякувати | /dʲɑˈkuʋɑtɪ/ | to thank | verb | — | + Dat |
 | вибачати | /ʋɪbɑˈtʃɑtɪ/ | to excuse, forgive | verb | — | + Dat |
 | пробачати | /probɑˈtʃɑtɪ/ | to forgive (serious) | verb | — | + Dat |
 | заздрити | /ˈzɑzdrɪtɪ/ | to envy | verb | — | + Dat |
 | симпатизувати | /sɪmpɑtɪˈzuʋɑtɪ/ | to sympathize | verb | — | + Dat |
 | співчувати | /spiʋtʃuˈʋɑtɪ/ | to feel for, empathize | verb | — | + Dat |
-| личити | /lɪˈtʃɪtɪ/ | to suit, become | verb | — | + Dat |
-| підходити | /pidxoˈdɪtɪ/ | to suit, fit | verb | — | + Dat |
-| вистачати | /ʋɪstɑˈtʃɑtɪ/ | to be enough | verb | — | + Dat |
-| бракувати | /brɑˈkuʋɑtɪ/ | to lack, be short of | verb | — | + Dat |
-| шкодити | /ʃkoˈdɪtɪ/ | to harm | verb | — | + Dat |
 | служити | /sluˈʒɪtɪ/ | to serve | verb | — | + Dat |
 | належати | /nɑleˈʒɑtɪ/ | to belong | verb | — | + Dat |
 | сподобатися | /spodoˈbɑtɪsʲɑ/ | to come to like | verb | — | perfective of подобатися |
 | захотітися | /zɑxoˈtitɪsʲɑ/ | to feel like, want | verb | — | + Dat; impersonal |
-| дозволяти | /dozʋoˈlʲɑtɪ/ | to allow, permit | verb | — | + Dat + Inf |
-| забороняти | /zɑboroˈnʲɑtɪ/ | to forbid | verb | — | + Dat + Inf |
-| радити | /ˈrɑdɪtɪ/ | to advise | verb | — | + Dat + Acc |
-| відповідати | /ʋidpoʋiˈdɑtɪ/ | to answer, reply | verb | — | + Dat |
-| телефонувати | /telefoˈnuʋɑtɪ/ | to phone, call | verb | — | + Dat |
-| відмінок | /vidˈminɔk/ | grammatical case | noun | m | grammar term |
-| давальний | /dɑˈvɑlʲnɪj/ | Dative (case) | adj | m | кому? чому? |
-| час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---

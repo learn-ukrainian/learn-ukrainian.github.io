@@ -715,13 +715,9 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 |------|-----|---------|-----|--------|------|
 | я | /jɑ/ | I | pron | - | always lowercase (except sentence start) |
 | ти | /tɪ/ | you (sg informal) | pron | - | use with friends, family |
-| він | /win/ | he | pron | - | masculine pronouns, people |
-| вона | /wɔˈnɑ/ | she | pron | - | feminine pronouns, people |
-| воно | /wɔˈnɔ/ | it | pron | - | neuter nouns |
 | ми | /mɪ/ | we | pron | - | first person plural |
 | ви | /vɪ/ | you (pl/formal) | pron | - | plural OR formal singular |
 | вони | /wɔˈnɪ/ | they | pron | - | third person plural |
-| це | /t͡sɛ/ | this, these | pron | - | doesn't change for plural |
 | то | /tɔ/ | that | pron | - | less common than це |
 | ось | /ɔsʲ/ | here is | part | - | "Ось книга" = Here is a book |
 | людина | /lʲuˈdɪnɑ/ | person, human | noun | f | grammatically f, but any person |
@@ -737,7 +733,6 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 | американка | /ɑmɛrɪˈkɑnkɑ/ | American (female) | noun | f | nationality |
 | канадець | /kɑnɑˈdɛt͡sʲ/ | Canadian (male) | noun | m | nationality |
 | канадка | /kɑˈnɑdkɑ/ | Canadian (female) | noun | f | nationality |
-| студент | /stuˈdɛnt/ | student (male) | noun | m | university student |
 | студентка | /stuˈdɛntkɑ/ | student (female) | noun | f | university student |
 | професор | /prɔˈfɛsɔr/ | professor (m/f) | noun | m | can be used for all |
 | професорка | /prɔfɛˈsɔrkɑ/ | professor (female) | noun | f | modern feminine form |

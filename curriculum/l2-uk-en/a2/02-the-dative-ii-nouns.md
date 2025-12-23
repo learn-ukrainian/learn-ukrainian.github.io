@@ -436,99 +436,111 @@ The following activities will help you master Dative noun endings through variou
 
 ## quiz: Dative or Not?
 
-1. Яке речення правильне?
+1. Коли ви хочете дати книгу другові, яке речення граматично правильне в українській мові?
 
 - [ ] Я даю книгу друг.
 - [x] Я даю книгу другові.
 - [ ] Я даю книгу друга.
+- [ ] Я даю книгу другом.
 
 ---
 
-2. Яке речення правильне?
+2. Якщо дівчина телефонує своїй мамі щодня, яке речення правильне в українській мові?
 
 - [ ] Вона телефонує мама.
 - [ ] Вона телефонує маму.
 - [x] Вона телефонує мамі.
+- [ ] Вона телефонує мамою.
 
 ---
 
-3. Яке речення правильне?
+3. Коли ми пишемо листи батькам у Канаду, яка форма іменника правильна?
 
 - [x] Ми пишемо батькам.
 - [ ] Ми пишемо батьки.
 - [ ] Ми пишемо батьків.
+- [ ] Ми пишемо батьками.
 
 ---
 
-4. Як сказати "She helps her sister"?
+4. Якщо ви хочете сказати "She helps her sister" українською, яке речення правильне?
 
 - [ ] Вона допомагає сестра.
 - [ ] Вона допомагає сестру.
 - [x] Вона допомагає сестрі.
+- [ ] Вона допомагає сестрою.
 
 ---
 
-5. Яка форма правильна для "to the city"?
+5. Коли ви хочете сказати "to the city" українською, яка форма давального відмінка правильна?
 
 - [ ] місто
 - [x] місту
 - [ ] міста
+- [ ] містом
 
 ---
 
-6. Як сказати "I believe my friend"?
+6. Якщо ви хочете висловити довіру другові, як сказати "I believe my friend" українською?
 
 - [ ] Я вірю друг.
 - [x] Я вірю другові.
 - [ ] Я вірю друга.
+- [ ] Я вірю другом.
 
 ---
 
-7. Яке речення правильне?
+7. Коли вчитель показує фото своїм учням, яке речення граматично правильне в українській мові?
 
 - [x] Він показує фото вчителеві.
 - [ ] Він показує фото вчитель.
 - [ ] Він показує фото вчителя.
+- [ ] Він показує фото вчителем.
 
 ---
 
-8. Як сказати "They write to their parents"?
+8. Якщо ви хочете сказати "They write to their parents" українською, яка форма правильна?
 
 - [ ] Вони пишуть батьки.
 - [ ] Вони пишуть батьків.
 - [x] Вони пишуть батькам.
+- [ ] Вони пишуть батьками.
 
 ---
 
-9. Яка форма "подруга" в давальному відмінку?
+9. Коли жіночий іменник "подруга" стоїть у давальному відмінку, яка форма правильна з урахуванням чергування?
 
 - [ ] подругі
 - [x] подрузі
 - [ ] подругу
+- [ ] подругою
 
 ---
 
-10. Як сказати "The doctor explains to the patient"?
+10. Якщо лікар пояснює діагноз пацієнтові в кабінеті, як це сказати правильно українською?
 
 - [ ] Лікар пояснює пацієнт.
 - [ ] Лікар пояснює пацієнта.
 - [x] Лікар пояснює пацієнтові.
+- [ ] Лікар пояснює пацієнтом.
 
 ---
 
-11. Яка форма "донька" в давальному відмінку?
+11. Коли ви хочете утворити давальний відмінок від слова "донька", яка форма правильна з чергуванням?
 
 - [ ] доньки
 - [ ] доньку
 - [x] доньці
+- [ ] донькою
 
 ---
 
-12. Яке речення правильне?
+12. Коли щось личить вашому імені або підходить до нього, яке речення граматично правильне?
 
 - [x] Це личить твоєму імені.
 - [ ] Це личить твоє ім'я.
 - [ ] Це личить твоєго імені.
+- [ ] Це личить твоїм іменем.
 
 ## true-false: Dative Rules
 > Decide if each statement is true or false.
@@ -593,29 +605,29 @@ The following activities will help you master Dative noun endings through variou
 ## unjumble: Dative Sentences
 > Put the words in the correct order.
 
-1. я | даю | книгу | другові
-   > [!answer] Я даю книгу другові
-   > (I give a book to my friend.)
+1. Я / даю / книгу / другові / в / новому / магазині / сьогодні
+   > [!answer] Я сьогодні даю книгу другові в новому магазині
+   > (Today I give a book to my friend at the new store.) [8 words]
 
-2. вона | телефонує | мамі | щодня
-   > [!answer] Вона телефонує мамі щодня
-   > (She calls mom every day.)
+2. Вона / телефонує / мамі / щодня / ввечері / після / роботи / завжди
+   > [!answer] Вона щодня завжди телефонує мамі ввечері після роботи
+   > (She always calls mom every evening after work.) [8 words]
 
-3. ми | пишемо | листа | бабусі
-   > [!answer] Ми пишемо листа бабусі
-   > (We write a letter to grandma.)
+3. Ми / пишемо / листа / бабусі / з / Канади / кожного / тижня
+   > [!answer] Ми кожного тижня пишемо листа бабусі з Канади
+   > (We write a letter to grandma from Canada every week.) [8 words]
 
-4. він | допомагає | сестрі | з | уроками
-   > [!answer] Він допомагає сестрі з уроками
-   > (He helps his sister with homework.)
+4. Він / допомагає / сестрі / з / уроками / кожного / дня / вдома
+   > [!answer] Він кожного дня допомагає сестрі з уроками вдома
+   > (He helps his sister with homework at home every day.) [8 words]
 
-5. батько | дарує | квіти | мамі
-   > [!answer] Батько дарує квіти мамі
-   > (Father gives flowers to mom.)
+5. Батько / дарує / квіти / мамі / на / день / народження / щороку
+   > [!answer] Батько щороку дарує квіти мамі на день народження
+   > (Father gives flowers to mom for her birthday every year.) [8 words]
 
-6. лікар | пояснює | діагноз | пацієнтові
-   > [!answer] Лікар пояснює діагноз пацієнтові
-   > (The doctor explains the diagnosis to the patient.)
+6. Лікар / пояснює / діагноз / пацієнтові / в / кабінеті / дуже / детально
+   > [!answer] Лікар дуже детально пояснює діагноз пацієнтові в кабінеті
+   > (The doctor explains the diagnosis to the patient very thoroughly in the office.) [8 words]
 
 ## error-correction: Fix the Dative
 > Each sentence has ONE error. Find and correct it.
@@ -659,7 +671,7 @@ The following activities will help you master Dative noun endings through variou
 ## cloze: Complete the Dialogue
 > Fill in the blanks with the correct words.
 
-Олег: Кому ти [___:1] листа? Марія: Я пишу [___:2]. У неї день народження. Олег: О, а що ти їй [___:3]? Марія: Я [___:4] їй теплий шарф. Олег: Гарна ідея! Я теж хочу надіслати щось [___:5].
+Олег: Кому ти [___:1] листа? Марія: Я пишу [___:2]. У неї день народження. Олег: О, а що ти їй [___:3]? Марія: Я [___:4] їй теплий шарф. Він [___:5] моїй бабусі. Олег: Гарна ідея! Я теж хочу надіслати щось [___:6].
 
 1. пишеш | читаєш | даєш
    > [!answer] пишеш
@@ -673,12 +685,15 @@ The following activities will help you master Dative noun endings through variou
 4. дарую | даю | надсилаю
    > [!answer] дарую
 
-5. батькам | батьки | батьків
+5. подобається | личить | пасує
+   > [!answer] подобається
+
+6. батькам | батьки | батьків
    > [!answer] батькам
 
 ---
 
-У кафе. Офіціант: [___:1] ви замовляєте каву? Клієнт: Ні, я замовляю каву [___:2]. Офіціант: А що [___:3] вашій подрузі? Клієнт: Їй [___:4] чай з лимоном. Офіціант: Добре! Я [___:5] вам замовлення.
+У кафе. Офіціант: [___:1] ви замовляєте каву? Клієнт: Ні, я замовляю каву [___:2]. Офіціант: А що [___:3] вашій подрузі? Клієнт: Їй [___:4] чай з лимоном. Офіціант: Добре! Я [___:5] вам замовлення. Дякую, що [___:6] нашому кафе!
 
 1. Кому | Собі | Тобі
    > [!answer] Собі
@@ -694,6 +709,9 @@ The following activities will help you master Dative noun endings through variou
 
 5. принесу | приношу | приносити
    > [!answer] принесу
+
+6. довіряєте | вірите | допомагаєте
+   > [!answer] довіряєте
 
 ## dialogue-reorder: At the Post Office
 
@@ -841,16 +859,10 @@ He writes to the teacher.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| давати | /dɑˈʋɑtɪ/ | to give | verb | — | imperfective; + Dat + Acc |
-| дарувати | /dɑruˈʋɑtɪ/ | to gift, give as present | verb | — | imperfective; + Dat + Acc |
 | посилати | /posɪˈlɑtɪ/ | to send | verb | — | imperfective; + Dat + Acc |
 | надсилати | /nɑdsɪˈlɑtɪ/ | to send | verb | — | formal; impf; + Dat + Acc |
-| показувати | /pokɑˈzuʋɑtɪ/ | to show | verb | — | imperfective; + Dat + Acc |
 | пояснювати | /pojɑˈsnjuʋɑtɪ/ | to explain | verb | — | imperfective; + Dat + Acc |
 | розповідати | /rɔzpoʋiˈdɑtɪ/ | to tell, narrate | verb | — | imperfective; + Dat + Acc |
-| допомагати | /dopoˈmɑɦɑtɪ/ | to help | verb | — | imperfective; + Dat |
-| заважати | /zɑʋɑˈʒɑtɪ/ | to disturb, bother | verb | — | imperfective; + Dat |
-| подобатися | /podoˈbɑtɪsʲɑ/ | to please, be liked | verb | — | imperfective; + Dat |
 | личити | /lɪˈtʃɪtɪ/ | to suit, become | verb | — | imperfective; + Dat |
 | підходити | /pidxoˈdɪtɪ/ | to suit, fit | verb | — | imperfective; + Dat |
 | пасувати | /pɑsuˈʋɑtɪ/ | to match, go well | verb | — | imperfective; + Dat |
@@ -862,9 +874,5 @@ He writes to the teacher.
 | радити | /ˈrɑdɪtɪ/ | to advise | verb | — | imperfective; + Dat + Acc |
 | дозволяти | /dozʋoˈlʲɑtɪ/ | to allow, permit | verb | — | imperfective; + Dat + Inf |
 | забороняти | /zɑboroˈnʲɑtɪ/ | to forbid | verb | — | imperfective; + Dat + Inf |
-| відповідати | /ʋidpoʋiˈdɑtɪ/ | to answer, reply | verb | — | imperfective; + Dat |
-| телефонувати | /telefoˈnuʋɑtɪ/ | to phone, call | verb | — | imperfective; + Dat |
-| писати | /pɪˈsɑtɪ/ | to write | verb | — | imperfective; + Dat + Acc |
-| лист | /lɪst/ | letter | noun | m | plural: листи |
 
 ---

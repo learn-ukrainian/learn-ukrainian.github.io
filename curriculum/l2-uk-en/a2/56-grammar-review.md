@@ -17,20 +17,23 @@ objectives:
 vocab_count: 10
 ---
 
-## Warm-up
+## Warm-up: Перевірка знань
 
-Congratulations! You are almost at the end of Level A2.
-You know words, you can speak, you can survive in Ukraine.
-But do you speak *correctly*?
-Grammar is the skeleton of the language. Today we will check if your skeleton is strong.
-We will review cases, verb aspects, and complex sentences.
+**Вітаємо! Ви вже майже на фініші другого рівня А2.**
 
-In this review, you'll master three key areas:
-1. **The 7 Cases** — Nominative to Vocative with their functions
-2. **Verb Aspect** — Process (Imperfective) vs Result (Perfective)
-3. **Complex Sentences** — Connectors like *тому що*, *якщо*, *щоб*
+Тепер ви знаєте багато слів, можете спілкуватися на базові теми та розумієте українську мову. Але чи говорите ви *правильно*? Граматика — це скелет мови. Якщо скелет міцний, ви можете виражати складні думки точно і красиво.
 
-## Presentation
+Сьогодні ми повторимо найскладніші теми:
+1. **Сім відмінків** — від Називного до Кличного.
+2. **Вид дієслова** — як розрізняти процес і результат.
+3. **Складні речення** — як правильно використовувати сполучники *тому що*, *якщо*, *щоб*.
+
+> [!important] **Порада**
+> Не бійтеся робити помилки. Навіть носії мови іноді помиляються. Головне — практикуватися щодня!
+
+## Presentation: Граматичний довідник
+
+### Сім відмінків: Короткий гід (The 7 Cases)
 
 ### The 7 Cases: Quick Guide
 
@@ -239,8 +242,19 @@ Here are errors that students often make:
    - Error: *Моє ім'я є Том.* (English structure).
    - Correct: *Мене звати Том.* (They call me Tom).
 
-> [!tip] **Pro Tip** "Listen more"
-> The best way to learn grammar is context. When you hear a song, ask yourself: Why is it "ти" here and "тобі" there? Analyzing real inputs creates deep neural connections.
+> [!tip] **Порада від професіонала**
+> Найкращий спосіб вивчити граматику — це контекст. Коли ви слухаєте пісню, запитайте себе: чому тут "ти", а там "тобі"? Аналіз реальних текстів створює глибокі зв'язки у мозку.
+
+
+
+# Summary
+
+This review covered:
+- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).
+- **Aspect**: The timeline of the verb (Process vs Result).
+- **Structure**: Complex sentences make you sound smart.
+
+You are now ready for the **Capstone Module**. Good luck!
 
 > [!resources] 🔗 External Resources
 >
@@ -250,105 +264,96 @@ Here are errors that students often make:
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
-
-This review covered:
-- **Cases**: The backbone of the sentence (Subj, Obj, Loc, Instr...).
-- **Aspect**: The timeline of the verb (Process vs Result).
-- **Structure**: Complex sentences make you sound smart.
-
-You are now ready for the **Capstone Module**. Good luck!
-
-## Activities
+# Activities
 
 ## quiz: Grammar Master
 
-1. Which case is used for location usually?
+1. Which grammatical case is primarily used for indicating a location in Ukrainian?
    - [x] Locative
    - [ ] Accusative
    - [ ] Dative
-   > Locative (Місцевий).
+   - [ ] Genitive
 
-2. "Я працюю..."
-   - [x] менеджером
-   - [ ] менеджер
-   - [ ] менеджера
-   > Instrumental.
+2. Which case correctly completes the phrase "Я працюю..." to mean "I work as"?
+   - [x] Instrumental (менеджером)
+   - [ ] Nominative (менеджер)
+   - [ ] Genitive (менеджера)
+   - [ ] Locative (менеджері)
 
-3. "У мене немає..."
-   - [x] часу
-   - [ ] час
-   - [ ] часом
-   > Genitive.
+3. Which case is required after the phrase "У мене немає..." (I don't have)?
+   - [x] Genitive (часу)
+   - [ ] Accusative (час)
+   - [ ] Instrumental (часом)
+   - [ ] Dative (часу)
 
-4. "Я бачу..."
-   - [x] сестру
-   - [ ] сестра
-   - [ ] сестрі
-   > Accusative.
+4. Which case is used for the direct object in the phrase "Я бачу..."?
+   - [x] Accusative (сестру)
+   - [ ] Nominative (сестра)
+   - [ ] Dative (сестрі)
+   - [ ] Locative (сестрі)
 
-5. "Imperfective" verb means...
-   - [x] Process | Habit
-   - [ ] Result
-   - [ ] Command
-   > Habitual or ongoing.
+5. What does the "Imperfective" verb aspect typically describe in a sentence?
+   - [x] Process / Habit / Duration
+   - [ ] Result / Completion
+   - [ ] Command / Order
+   - [ ] Wish / Desire
 
-6. "Щоб" means...
-   - [x] In order to
-   - [ ] Because
-   - [ ] But
-   > Purpose.
+6. What is the meaning and function of the connector "щоб" in a complex sentence?
+   - [x] In order to / Purpose
+   - [ ] Because / Reason
+   - [ ] But / Contrast
+   - [ ] And / Addition
 
-7. "Я даю подарунок..."
-   - [x] мамі
-   - [ ] мама
-   - [ ] мами
-   > Dative (Recipient).
+7. Which case is used for the recipient in the phrase "Я даю подарунок..."?
+   - [x] Dative (мамі)
+   - [ ] Nominative (мама)
+   - [ ] Genitive (мами)
+   - [ ] Accusative (маму)
 
-8. "Я пишу..."
-   - [x] олівцем
-   - [ ] олівець
-   - [ ] олівця
-   > Instrumental (Tool).
+8. Which case is used to describe the tool in the phrase "Я пишу..."?
+   - [x] Instrumental (олівцем)
+   - [ ] Nominative (олівець)
+   - [ ] Genitive (олівця)
+   - [ ] Accusative (олівець)
 
-9. "Він прийшов з..."
-   - [x] магазину
-   - [ ] магазин
-   - [ ] магазині
-   > Genitive (From).
+9. Which case is used with the preposition "з" meaning "from" in "Він прийшов з..."?
+   - [x] Genitive (магазину)
+   - [ ] Nominative (магазин)
+   - [ ] Locative (магазині)
+   - [ ] Instrumental (магазином)
 
-10. "Ми говоримо про..."
-    - [x] політику
-    - [ ] політика
-    - [ ] політики
-    > Accusative (About).
+10. Which case follows the preposition "про" in the phrase "Ми говоримо про..."?
+    - [x] Accusative (політику)
+    - [ ] Nominative (політика)
+    - [ ] Genitive (політики)
+    - [ ] Instrumental (політикою)
 
-11. "Я живу в..."
-    - [x] Україні
-    - [ ] Україна
-    - [ ] України
-    > Locative.
+11. Which case is used for location in the phrase "Я живу в..."?
+    - [x] Locative (Україні)
+    - [ ] Nominative (Україна)
+    - [ ] Genitive (України)
+    - [ ] Accusative (Україну)
 
-12. "Привіт, ..."
-    - [x] друже
-    - [ ] друг
-    - [ ] друга
-    > Vocative.
+12. Which special case form is used when addressing someone directly, like "Привіт, ..."?
+    - [x] Vocative (друже)
+    - [ ] Nominative (друг)
+    - [ ] Genitive (друга)
+    - [ ] Dative (другу)
 
 ## match-up: Case Functions
 
-- Subject :: Nominative
-- Possession/Of :: Genitive
-- Recipient/Feeling :: Dative
-- Direct Object :: Accusative
-- Instrument/Role :: Instrumental
-- Location :: Locative
-- Addressing :: Vocative
-- Without :: Genitive
-- With (someone) :: Instrumental
-- Examples of "From" :: Genitive
-- Giving to :: Dative
-- Being somewhere :: Locative
+- Студент читає книгу :: Називний (Суб'єкт)
+- Немає вільного часу :: Родовий (Відсутність)
+- Даю подарунок мамі :: Давальний (Адресат)
+- Бачу гарну дівчину :: Знахідний (Об'єкт)
+- Пишу гострою ручкою :: Орудний (Інструмент)
+- Я працюю інженером :: Орудний (Роль)
+- Живу в центрі міста :: Місцевий (Місце)
+- Привіт, мій друже! :: Кличний (Звертання)
+- Машина стоїть біля :: Родовий (Прийменник)
+- Ми йдемо до театру :: Родовий (Напрямок)
+- Їду автобусом на :: Орудний (Транспорт)
+- Мрію про відпустку :: Місцевий (Об'єкт думки)
 
 ## fill-in: Case Challenge
 
@@ -485,53 +490,53 @@ You are now ready for the **Capstone Module**. Good luck!
 
 ## unjumble: Sentence Builder
 
-1. Я | не | пішов | у | кіно | тому | що | працював
+1. Я / не / пішов / у / кіно / тому / що / працював
    > [!answer] Я не пішов у кіно тому що працював
    > I didn't go to the cinema because I was working.
 
-2. Коли | ми | прийшли | він | вже | спав
-   > [!answer] Коли ми прийшли він вже спав
-   > When we arrived he was already asleep.
+2. Коли / ми / прийшли / додому / він / вже / давно / спав
+   > [!answer] Коли ми прийшли додому він вже давно спав
+   > When we came home he was already sleeping for a long time.
 
-3. Я | хочу | щоб | ти | купив | хліб
-   > [!answer] Я хочу щоб ти купив хліб
-   > I want you to buy bread.
+3. Я / дуже / хочу / щоб / ти / купив / свіжий / хліб
+   > [!answer] Я дуже хочу щоб ти купив свіжий хліб
+   > I really want you to buy fresh bread.
 
-4. Студент | який | читає | книгу | мій | друг
-   > [!answer] Студент який читає книгу мій друг
-   > The student who is reading a book is my friend.
+4. Цей / молодий / студент / який / читає / книгу / мій / друг
+   > [!answer] Цей молодий студент який читає книгу мій друг
+   > This young student who is reading a book is my friend.
 
-5. Якщо | буде | сонце | ми | підемо | гуляти
-   > [!answer] Якщо буде сонце ми підемо гуляти
-   > If there is sun we will go for a walk.
+5. Якщо / завтра / буде / гарне / сонце / ми / підемо / гуляти
+   > [!answer] Якщо завтра буде гарне сонце ми підемо гуляти
+   > If there is beautiful sun tomorrow we will go for a walk.
 
-6. Він | сказав | що | любить | Україну
-   > [!answer] Він сказав що любить Україну
-   > He said that he loves Ukraine.
+6. Він / мені / сказав / що / дуже / сильно / любить / Україну
+   > [!answer] Він мені сказав що дуже сильно любить Україну
+   > He told me that he loves Ukraine very much.
 
-7. Я | пишу | листа | своєму | другу
-   > [!answer] Я пишу листа своєму другу
-   > I am writing a letter to my friend.
+7. Я / зараз / пишу / довгого / листа / своєму / найкращому / другу
+   > [!answer] Я зараз пишу довгого листа своєму найкращому другу
+   > I am writing a long letter to my best friend now.
 
-8. Ми | їдемо | автобусом | до | Львова
-   > [!answer] Ми їдемо автобусом до Львова
-   > We are going by bus to Lviv.
+8. Ми / їдемо / цим / великим / автобусом / до / міста / Львова
+   > [!answer] Ми їдемо цим великим автобусом до міста Львова
+   > We are going by this big bus to the city of Lviv.
 
-9. У | мене | немає | вільного | часу
-   > [!answer] У мене немає вільного часу
-   > I have no free time.
+9. На / жаль / у / мене / сьогодні / немає / вільного / часу
+   > [!answer] На жаль у мене сьогодні немає вільного часу
+   > Unfortunately I have no free time today.
 
-10. Мені | дуже | подобається | ця | музика
-    > [!answer] Мені дуже подобається ця музика
-    > I really like this music.
+10. Мені / дуже / подобається / ця / весела / українська / народна / музика
+    > [!answer] Мені дуже подобається ця весела українська народна музика
+    > I really like this cheerful Ukrainian folk music.
 
-11. Де | ти | був | вчора | ввечері
-    > [!answer] Де ти був вчора ввечері
-    > Where were you yesterday evening?
+11. Скажи / мені / де / ти / був / вчора / пізно / ввечері
+    > [!answer] Скажи мені де ти був вчора пізно ввечері
+    > Tell me where you were yesterday late in the evening.
 
-12. Мамо | де | мої | теплі | шкарпетки
-    > [!answer] Мамо де мої теплі шкарпетки
-    > Mom, where are my warm socks?
+12. Мамо / скажи / де / лежать / мої / теплі / зимові / шкарпетки
+    > [!answer] Мамо скажи де лежать мої теплі зимові шкарпетки
+    > Mom, tell me where my warm winter socks are lying.
 
 ## error-correction: Fix the Letter
 
@@ -621,37 +626,46 @@ You are now ready for the **Capstone Module**. Good luck!
 Мій друг [___:6] не читає книги.
 Він любить [___:7] у футбол.
 Ми з [___:8] різні, але ми друзі.
+У нас є спільна [___:9].
+Ми разом [___:10] англійську.
+Я [___:11], що це важливо.
+Ми хочемо [___:12] світ.
 
 1. новий | нова | нове
    > [!answer] новий
 
 2. навчаюся | навчаюсь | вчу
    > [!answer] навчаюся
-> I study.
 
 3. купив | купував | куплю
    > [!answer] купив
-> Result (yesterday).
 
 4. була | був | було
    > [!answer] була
-> Fem agreement.
 
 5. весь | все | всі
    > [!answer] весь
-> Accusative time.
 
 6. ніколи | завжди | часто
    > [!answer] ніколи
-> Never.
 
 7. грати | граю | грав
    > [!answer] грати
-> Infinitive.
 
 8. ним | він | його
    > [!answer] ним
-> Instrumental pronoun (with him).
+
+9. мета | ціль | мрія
+   > [!answer] мрія
+
+10. вивчаємо | вчимо | знаємо
+    > [!answer] вивчаємо
+
+11. думаю | знаю | бачу
+    > [!answer] думаю
+
+12. побачити | бачити | дивитися
+    > [!answer] побачити
 
 ## dialogue-reorder: Asking for Help
 
@@ -736,32 +750,10 @@ You are now ready for the **Capstone Module**. Good luck!
     - [ ] Genitive
     > See mom.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| граматика | /hraˈmatɪka/ | grammar | noun | f | |
-| правило | /ˈpraʋɪlɔ/ | rule | noun | n | |
-| помилка | /pɔˈmɪlka/ | mistake | noun | f | |
-| відмінок | /ʋidˈminɔk/ | case | noun | m | Grammatical case. |
-| дієслово | /dijeˈslɔʋɔ/ | verb | noun | n | |
-| іменник | /iˈmɛnnɪk/ | noun | noun | m | |
-| минулий | /mɪˈnulɪj/ | past | adj | m | |
-| теперішній | /teˈpɛriʃnij/ | present | adj | m | |
-| майбутній | /majˈbutnij/ | future | adj | m | |
-| речення | /ˈrɛtʃennʲa/ | sentence | noun | n | |
-| будувати | /buduˈʋatɪ/ | to build | verb | - | |
 | виправляти | /ʋɪpraʋˈlʲatɪ/ | to correct | verb | - | |
-| правильно | /ˈpraʋɪlnɔ/ | correctly | adv | - | |
 | наприклад | /naˈprɪklad/ | for example | adv | - | |
-| тому що | /tɔˈmu ʃtʃɔ/ | because | conj | - | |
-| якщо | /jakˈʃtʃɔ/ | if | conj | - | |
-| дякувати | /ˈdʲakuʋatɪ/ | to thank | verb | - | |
-| допомагати | /dɔpɔmaˈhatɪ/ | to help | verb | - | |
-| чекати | /tʃeˈkatɪ/ | to wait | verb | - | |
-| розуміти | /rozumˈitɪ/ | to understand | verb | - | |
-| пам'ятати | /pamjaˈtatɪ/ | to remember | verb | - | |
-| знати | /znatɪ/ | to know | verb | - | |
-| вчити | /ˈʋtʃɪtɪ/ | to learn | verb | - | |
-| мова | /ˈmɔʋa/ | language | noun | f | |
 | задоволення | /zadɔˈʋɔlennʲa/ | pleasure | noun | n | |

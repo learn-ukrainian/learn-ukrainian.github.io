@@ -38,13 +38,9 @@ vocabulary_count: 48
 
 А потім... ми перевіримо все.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+> А потім... ми перевіримо все.
+
+---
 
 ---
 
@@ -78,12 +74,12 @@ Verb: **Слухати** (To listen).
 
 *У нього добрий слух.* (He has good hearing/ear for music).
 
-## Family 3: Thought - ДУМ
+## Family 3: ДУМ
 Verb: **Думати** (To think).
 
 | Word | Meaning | Logic |
 | :--- | :--- | :--- |
-| **Думка** | Thought | Opinion | Think-ka |
+| **Думка** | Thought | Think-ka |
 | **Роздуми** | Reflections | Out-thoughts (Spreading thoughts) |
 | **Задум** | Plan | Concept | Behind-thought (Deep idea) |
 | **Обдумати** | To think over | Round-think |
@@ -342,7 +338,7 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 
 ---
 
-## Summary
+# Summary
 
 Congratulations! You have completed the **Word Formation** phase.
 This is a huge milestone.
@@ -392,7 +388,15 @@ Get ready to speak!
 >
 > Суфікси також важливі: -ець (читач → читачець), -ість (добрий → доброта)
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## match-up: Root Match
 
@@ -473,59 +477,68 @@ Get ready to speak!
 
 ## unjumble: High Sentences
 
-1. гарна | Це | дуже | думка
-   > [!answer] Це дуже гарна думка
-2. українську | Ми | мову | вивчаємо
-   > [!answer] Ми вивчаємо українську мову
-3. уважно | Слухачі | професора | слухають
-   > [!answer] Слухачі уважно слухають професора
-4. зробив | Я | замовлення | вже
-   > [!answer] Я вже зробив замовлення
-5. була | серйозна | Це | розмова
-   > [!answer] Це була серйозна розмова
-6. має | Він | талант | письменницький
-   > [!answer] Він має письменницький талант
+1. гарна / Це / дуже / думка / про / майбутнє / проект
+   > [!answer] Це дуже гарна думка про майбутнє проект
+2. українську / Ми / мову / вивчаємо / щодня / з / радістю / в / школі
+   > [!answer] Ми вивчаємо українську мову щодня з радістю в школі
+3. уважно / Слухачі / професора / слухають / під / час / цікавої / промови
+   > [!answer] Слухачі уважно слухають професора під час цікавої промови
+4. зробив / Я / замовлення / вже / в / цьому / новому / ресторані
+   > [!answer] Я вже зробив замовлення в цьому новому ресторані
+5. була / серйозна / Це / розмова / між / двома / добрими / друзями
+   > [!answer] Це була серйозна розмова між двома добрими друзями
+6. має / Він / талант / письменницький / і / пише / чудові / книги
+   > [!answer] Він має письменницький талант і пише чудові книги
 
 ## quiz: Formation Check
 
-1. "Мовчати" means:
-   - [x] To be silent
-   - [ ] To speak loud
-   - [ ] To sing
+1. What is the literal meaning of the verb "Мовчати"?
+   - [x] To be silent (keep quiet)
+   - [ ] To speak loud (shout)
+   - [ ] To sing (make music)
+   - [ ] To whisper (speak softly)
 
-2. "Замовлення" contains which root?
+2. The Ukrainian word "Замовлення" (Order) contains which specific root component?
    - [x] МОВ
    - [ ] ДУМ
    - [ ] ХІД
+   - [ ] РОБ
 
-3. "Слухач" suffix "-ач" indicates:
-   - [x] Person (Doer)
-   - [ ] Process
-   - [ ] Quality
+3. The suffix "-ач" in "Слухач" indicates what meaning?
+   - [x] Person who does the action (Agent)
+   - [ ] The process of doing action
+   - [ ] The quality of the object
+   - [ ] The location of the action
 
-4. "Переклад" (Translation) literally means:
-   - [x] Cross-lay
+4. What is the literal logic of "Переклад" (Translation)?
+   - [x] Cross-lay (Laying meaning across)
    - [ ] In-write
    - [ ] Out-speak
+   - [ ] Re-read
 
-5. Adjective from "Наука":
+5. Which adjective is correctly derived from "Наука" (Science)?
    - [x] Науковий
    - [ ] Наукний
    - [ ] Наукач
+   - [ ] Наукський
 
-6. "Вхід" and "Вихід" are opposites.
-   - [x] True
-   - [ ] False
+6. Can you explain why the words "Вхід" and "Вихід" are typically paired together?
+   - [x] They are opposites
+   - [ ] They are synonyms
+   - [ ] They are unrelated words
+   - [ ] They are different spellings of one word
 
-7. "Придумати" means:
+7. Can you identify the correct meaning of the Ukrainian verb "Придумати"?
    - [x] To invent
    - [ ] To forget
    - [ ] To sleep
+   - [ ] To analyze
 
-8. "Ukrainian language" is:
+8. "Українська мова is beautiful." Which form is correct?
    - [x] Українська мова
    - [ ] Український мова
    - [ ] Українське мова
+   - [ ] Українські мова
 
 ## cloze: The Conference
 
@@ -540,6 +553,10 @@ Get ready to speak!
 Ми маємо знайти [___:6].
 Це наш спільний [___:7].
 Всі сидять [___:8].
+Після промови буде [___:9].
+Це [___:10] для всіх нас.
+Ми напишемо [___:11] про цю подію.
+Це гарна [___:12] для роздумів.
 
 1. промовець | співак | актор
    > [!answer] промовець
@@ -564,6 +581,18 @@ Get ready to speak!
 
 8. мовчки | голосно | швидко
    > [!answer] мовчки
+
+9. перерва | вечірка | робота
+   > [!answer] перерва
+
+10. наука | гра | забава
+   > [!answer] наука
+
+11. статтю | книгу | листа
+   > [!answer] статтю
+
+12. тема | проблема | гра
+   > [!answer] тема
 
 ## error-correction: Wrong Logic
 
@@ -654,65 +683,32 @@ Get ready to speak!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
-| Word | IPA | English | POS | Root |
-|------|-----|---------|-----|------|
-| мова | /mˈɔʋɑ/ | language | noun | мов |
-| розмова | /rɔzmˈɔʋɑ/ | conversation | noun | мов |
-| промова | /prɔmˈɔʋɑ/ | speech | noun | мов |
-| замовлення | /zɑmˈɔʋlɛnʲːɑ/ | order | noun | мов |
-| мовчати | /mɔʋt͡ʃˈɑtɪ/ | to be silent | verb | мов |
-| мовлення | /mˈɔʋlɛnʲːɑ/ | speech (process) | noun | мов |
-| слухати | /slˈuxɑtɪ/ | to listen | verb | слух |
-| слух | /slux/ | hearing/ear | noun | слух |
-| слухач | /sluxˈɑt͡ʃ/ | listener | noun | слух |
-| слухняний | /sluxnʲˈɑnɪj/ | obedient | adj | слух |
-| послух | /pˈɔslux/ | obedience | noun | слух |
-| думати | /dˈumɑtɪ/ | to think | verb | дум |
-| думка | /dˈumkɑ/ | thought/opinion | noun | дум |
-| роздуми | /rˈɔzdumɪ/ | reflections | noun | дум |
-| задум | /zˈɑdum/ | plan/concept | noun | дум |
-| обдумати | /ɔbdˈumɑtɪ/ | to think over | verb | дум |
-| придумати | /prɪdˈumɑtɪ/ | to invent | verb | дум |
-| вхід | /wxid/ | entrance | noun | хід |
-| вихід | /ʋˈɪxid/ | exit | noun | хід |
-| перехід | /pɛrɛˈxid/ | crossing | noun | хід |
-| переклад | /pɛrˈɛklɑd/ | translation | noun | клад |
-| перемога | /pɛrɛmˈɔɦɑ/ | victory | noun | мог |
-| вступ | /wstup/ | introduction | noun | ступ |
-| виступ | /ʋˈɪstup/ | performance | noun | ступ |
-| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | пис |
-| мовець | /mɔʋˈɛt͡ʃ/ | speaker | noun | мов |
-| науковий | /nɑuˈkɔʋɪj/ | scientific | adj | наук |
-| український | /ukrɑˈjinʲsʲkɪj/ | Ukrainian | adj | україн |
-| гарний | /ɦˈɑrnɪj/ | good/beautiful | adj | гарн |
-| питання | /pɪtˈɑnʲːɑ/ | question | noun | пит |
-| відповідь | /ʋˈidpɔʋidʲ/ | answer | noun | від |
-| розум | /rˈɔzum/ | mind/reason | noun | ум |
-| погляд | /pˈɔɦlʲɑd/ | glance/view | noun | гляд |
-| вигляд | /ʋˈɪɦlʲɑd/ | look/appearance | noun | гляд |
-| огляд | /ɔˈɦlʲɑd/ | review | noun | гляд |
-| відчуття | /ʋid.t͡ʃuˈtʲːɑ/ | sensation | noun | чу |
-| почуття | /pɔ.t͡ʃuˈtʲːɑ/ | feeling | noun | чу |
-| мовчання | /mɔʋt͡ʃˈɑnʲːɑ/ | silence | noun | мов |
-| побачення | /pɔbˈɑt͡ʃɛnʲːɑ/ | date/meeting | noun | бач |
-| передбачення | /pɛrɛdbˈɑt͡ʃɛnʲːɑ/ | prediction | noun | бач |
-| рід | /rid/ | lineage/genus | noun | рід |
-| рідний | /ˈridnɪj/ | native/dear | adj | рід |
-| природа | /prɪˈrɔdɑ/ | nature | noun | рід |
-| народ | /nɑˈrɔd/ | people/nation | noun | рід |
-| земний | /zɛmˈnɪj/ | earthly | adj | зем |
-| передмістя | /pɛrɛdˈmistʲɑ/ | suburb | noun | міст |
-| світ | /sʋit/ | world | noun | світ |
-| світло | /ˈsʋitlɔ/ | light | noun | світ |
-| світити | /sʋiˈtɪtɪ/ | to shine | verb | світ |
-| освіта | /ɔsˈʋitɑ/ | education | noun | світ |
-| всесвіт | /ˈʋsɛsʋit/ | universe | noun | світ |
-| земля | /zɛmˈlʲɑ/ | earth/land | noun | зем |
-| земляк | /zɛmˈlʲɑk/ | countryman | noun | зем |
-| підземний | /pidˈzɛmnɪj/ | underground | adj | зем |
-| іноземець | /inɔˈzɛmɛt͡sʲ/ | foreigner | noun | зем |
-| місто | /ˈmistɔ/ | city | noun | міст |
-| міський | /misʲˈkɪj/ | urban | adj | міст |
-| містянин | /misˈtʲɑnɪn/ | city dweller | noun | міст |
+| Word | IPA | English | POS | Gender | Note |
+|------|-----|---------|-----|--------|------|
+| промова | /prɔmˈɔʋɑ/ | speech | noun | f | мов |
+| замовлення | /zɑmˈɔʋlɛnʲːɑ/ | order | noun | n | мов |
+| слухняний | /sluxnʲˈɑnɪj/ | obedient | adj | m | слух |
+| задум | /zˈɑdum/ | plan/concept | noun | m | дум |
+| обдумати | /ɔbdˈumɑtɪ/ | to think over | verb | - | дум |
+| придумати | /prɪdˈumɑtɪ/ | to invent | verb | - | дум |
+| переклад | /pɛrˈɛklɑd/ | translation | noun | m | клад |
+| перемога | /pɛrɛmˈɔɦɑ/ | victory | noun | f | мог |
+| вступ | /wstup/ | introduction | noun | m | ступ |
+| виступ | /ʋˈɪstup/ | performance | noun | m | ступ |
+| відповідь | /ʋˈidpɔʋidʲ/ | answer | noun | f | від |
+| розум | /rˈɔzum/ | mind/reason | noun | m | ум |
+| рід | /rid/ | lineage/genus | noun | m | рід |
+| народ | /nɑˈrɔd/ | people/nation | noun | m | рід |
+| земний | /zɛmˈnɪj/ | earthly | adj | m | zem |
+| передмістя | /pɛrɛdˈmistʲɑ/ | suburb | noun | n | міст |
+| світло | /ˈsʋitlɔ/ | light | noun | n | світ |
+| світити | /sʋiˈtɪtɪ/ | to shine | verb | - | світ |
+| освіта | /ɔsˈʋitɑ/ | education | noun | f | світ |
+| всесвіт | /ˈʋsɛsʋit/ | universe | noun | m | світ |
+| земля | /zɛmˈlʲɑ/ | earth/land | noun | f | зем |
+| земляк | /zɛmˈlʲɑk/ | countryman | noun | m | зем |
+| підземний | /pidˈzɛmnɪj/ | underground | adj | m | зем |
+| іноземець | /inɔˈzɛmɛt͡sʲ/ | foreigner | noun | m | зем |
+| містянин | /misˈtʲɑnɪn/ | city dweller | noun | m | міст |

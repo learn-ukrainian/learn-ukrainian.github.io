@@ -1,789 +1,622 @@
 ---
 module: a2-28
-title: "I Think That..."
-subtitle: "Expressing Opinions"
+title: I Think That...
+subtitle: "Expressing Opinions and Beliefs"
 version: "1.0"
 phase: "A2.3"
-pedagogy: "PPP"
+pedagogy: "Communicative"
 duration: "60 min"
 transliteration: none
 tags:
-  - grammar
   - opinions
-  - functional
+  - thoughts
+  - agreement
 grammar:
-  - opinion structures
-  - agreeing and disagreeing
-  - uncertainty markers
+  - opinion verbs
+  - that-clauses
+  - agreement forms
 objectives:
-  - "Learner can express opinions using що-clauses"
+  - "Learner can express simple opinions"
   - "Learner can agree and disagree politely"
-  - "Learner can qualify statements with certainty markers"
-  - "Learner can discuss views respectfully"
+  - "Learner understands the contrast between думати and вважати"
 vocabulary_count: 25
 ---
 
+# Summary
+
 ## Warm-up
 
-Everyone has opinions! In any conversation, you need to express what you think, believe, and feel about topics — and to do it politely. This is especially important in Ukrainian culture, where showing respect for others' views matters greatly. This module teaches you the essential phrases for sharing opinions and for agreeing or disagreeing without causing offense. You will learn how to soften your statements when you are not completely certain, and how to acknowledge other people's points of view even when you do not share them.
+What do you think about Ukrainian music? How do you feel about the weather today?
+Expressing opinions is the bridge between basic communication and real conversation. In this lesson, we move beyond just facts and start sharing our thoughts. We will learn how to agree, disagree, and open up our point of view to others in a respectful and culturally appropriate way.
 
-**What you'll learn:**
-- Opinion expressions such as "I think that..." and "In my opinion..."
-- Phrases for agreeing and disagreeing politely
-- Qualifying opinions with words like "maybe" and "probably"
-- Discussing different views respectfully in conversation
+**In this module, we will explore:**
+- **I think that:** Я думаю, що...
+- **I believe/consider:** Я вважаю, що...
+- **In my opinion:** На мою думку...
+- **From my point of view:** З моєї точки зору...
+- **Agreement:** Я згоден / Я згодна.
+- **Disagreement:** Я не згоден / Я не згодна.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+> 💡 **Cognitive Tip**
+> When you express an opinion in Ukrainian, you are often using the same **що** (that) connector we learned in the past. The logic is identical: you are reporting a thought or belief instead of a direct statement. This helps simplify the sentence structure because you don't need to learn a new grammar rule for every verb of thought.
 
 ---
 
 ## Presentation
 
-## Expressing Opinions
+## 1. Expressing Your View
 
-In Ukrainian, expressing an opinion involves a main clause with an opinion verb followed by a що-clause (that-clause). This structure is similar to English but requires careful attention to the conjunction "що" which connects the two parts.
+The most common way to start an opinion is with "I think". Depending on how formal or certain you are, you can choose different openers.
 
-### Core Opinion Structures
+| Ukrainian | Meaning | Usage |
+|-----------|---------|-------|
+| **Я думаю, що...** | I think that... | General, everyday opinion |
+| **Я вважаю, що...** | I consider/believe that... | More formal, serious, or argued |
+| **Я гадаю, що...** | I guess/think that... | Common in literature and songs |
+| **На мою думку, ...** | In my opinion... | Classic opener for any setting |
+| **На мій погляд, ...** | From my point of view... | Focuses on your visual or ethical perspective |
+| **З моєї точки зору, ...** | From my point of view... | Analytic and formal perspective |
+| **Мені здається, що...** | It seems to me that... | Softer, less categorical |
 
-| Expression | Meaning | Formality |
-|------------|---------|-----------|
-| Я думаю, що... | I think that... | neutral |
-| Я вважаю, що... | I believe/consider that... | formal |
-| Я гадаю, що... | I think/suppose that... | casual |
-| Мені здається, що... | It seems to me that... | soft/tentative |
-| На мою думку, ... | In my opinion, ... | formal |
-| На мій погляд, ... | From my point of view... | formal |
-| З моєї точки зору, ... | From my perspective... | very formal |
+### Examples:
+- **Я думаю, що** українська мова дуже милозвучна. (I think that Ukrainian is very melodic.)
+- **На мою думку,** це місто найкраще у світі. (In my opinion, this city is the best in the world.)
+- **З моєї точки зору,** проект має великий потенціал. (From my point of view, the project has great potential.)
 
-**Examples in Context:**
-- **Я думаю, що** це правда. (I think that this is true.)
-- **Мені здається, що** він правий. (It seems to me that he's right.)
-- **На мою думку,** це хороша ідея. (In my opinion, this is a good idea.)
-- **Я вважаю, що** це несправедливо. (I believe that this is unfair.)
+> [!important] Grammar Note: Case with "На думку"
+> The phrase **На думку** requires the **Genitive** case for the possessor because "opinion" belongs to someone.
+> - На **мою** думку (In my opinion)
+> - На думку **лікаря** (In the doctor's opinion)
+> - На думку **експертів** (In the experts' opinion)
 
-> 💡 **Soft vs. Strong Opinions**
->
-> The expression "Мені здається, що..." sounds gentler and more tentative than "Я думаю, що..." — use it when you are not certain or when you want to appear more open to other viewpoints. This is especially useful in polite conversation where you want to avoid sounding too assertive.
+## 2. Agreement and Support
 
-### Certainty Markers
+When someone shares a view, you can support it or add to it. Being able to confirm someone else's idea is a key social skill in Ukraine.
 
-When expressing opinions, you often want to indicate how certain you are. Ukrainian has several adverbs that modify the strength of your statement.
+- **Я згоден.** (I agree - masculine)
+- **Я згодна.** (I agree - feminine)
+- **Я погоджуюся.** (I agree / I am agreeing - universal verb)
+- **Безумовно!** (Absolutely! / Undeniably!)
+- **Очевидно!** (Obviously!)
+- **Це правда.** (That is true.)
+- **Ви абсолютно праві.** (You are absolutely right.)
+- **Це точно!** (That's for sure!)
+- **Я теж так думаю.** (I think so too.)
 
-| Marker | Meaning | Certainty Level | Example |
-|--------|---------|-----------------|---------|
-| безумовно | undoubtedly | very high | Це **безумовно** правда. |
-| очевидно | obviously | high | **Очевидно**, він правий. |
-| напевно | probably | medium-high | Він **напевно** прийде. |
-| мабуть | probably | medium | **Мабуть**, це так. |
-| можливо | possibly | medium-low | **Можливо**, я помиляюся. |
-| здається | it seems | low | **Здається**, буде дощ. |
+## 3. Disagreement and Doubt
 
-> 📜 **When to Qualify Your Statements**
->
-> Adding certainty markers shows that you are open to other perspectives. Saying "Можливо, я думаю..." sounds much more open than simply "Я думаю..." without qualification. This is considered polite in Ukrainian conversation.
+Ukrainians can be very direct when they disagree, but it's often more polite to soften it. Using "I'm not sure" is often better than "You are wrong."
 
----
+- **Я не згоден.** (I don't agree - masculine)
+- **Я не погоджуюся.** (I don't agree / I disagree.)
+- **Це не так.** (That's not so / That's not how it is.)
+- **Це неправда.** (That's not true.)
+- **Мені важко сказати.** (It's hard for me to say / I'm not sure.)
+- **Навряд чи.** (Hardly / I doubt it.)
+- **Я так не думаю.** (I don't think so.)
+- **Ви помиляєтеся.** (You are mistaken.)
 
-## Agreeing and Disagreeing
+### The Art of Politeness
 
-Knowing how to agree and disagree politely is crucial for respectful conversation. Ukrainian offers various expressions at different levels of formality and strength.
-
-### Agreeing
-
-| Expression | Meaning | Strength |
-|------------|---------|----------|
-| Я згоден/згодна. | I agree. (m/f) | strong |
-| Це правда. | That's true. | neutral |
-| Так, точно. | Yes, exactly. | strong |
-| Я теж так думаю. | I think so too. | neutral |
-| Ви маєте рацію. | You're right. | polite/formal |
-| Абсолютно! | Absolutely! | very strong |
-
-> [!tip] Agreement Phrases
-> Note that "згоден" is the masculine form and "згодна" is the feminine form. Always use the form that matches your gender.
-
-### Disagreeing
-
-| Expression | Meaning | Politeness |
-|------------|---------|------------|
-| Я не згоден/не згодна. | I disagree. (m/f) | neutral |
-| Це не так. | That's not so. | neutral |
-| Я б не сказав/сказала. | I wouldn't say that. (m/f) | polite |
-| Не зовсім. | Not exactly. | soft |
-| Можливо, але... | Possibly, but... | very polite |
-| Я не впевнений/впевнена. | I'm not sure. (m/f) | soft |
-
-> [!important] Polite Disagreement
-> Direct disagreement can sound harsh in Ukrainian. Using "Я б не сказав/сказала" or "Не зовсім" softens your disagreement and shows respect for the other person's opinion. Starting with "Можливо, але..." acknowledges their point before introducing your different view.
+In Ukrainian culture, being "honest" is highly valued, but so is maintaining a good relationship. If you disagree, try to start with a "softener" before delivering your point. Phrases like **"Можливо, ви маєте рацію, але..."** (Maybe you are right, but...) or **"Я розумію ваш погляд, проте..."** (I understand your view, however...) are perfect for this. These structures allow you to show that you are listening and respecting the other person's intellect, even if you ultimately reach a different conclusion. This balance between directness and hospitality is a hallmark of Ukrainian intellectual life.
 
 ---
 
-## Cultural Insight
+## Theoretical Deep Dive: Choosing Your Verb
 
-## Discussing Opinions in Ukrainian Culture
+While "думати" is the most common verb of thought, Ukrainian distinguishes between the act of thinking (thinking process) and holding a firm belief (conviction).
 
-Ukrainians value open discussion and often express opinions directly in casual settings. However, politeness and respect for others' views are paramount in formal or professional contexts.
+- **Думати** is a process. *Я думаю про тебе.* (I am thinking of you.)
+- **Вважати** is a result. *Він вважає це помилкою.* (He considers this a mistake.)
 
-**Common strategies for polite discussion:**
-
-**Softening your opinions:**
-- Мені здається... (It seems to me...)
-- Можливо, я помиляюся, але... (Maybe I'm wrong, but...)
-
-**Respecting others' views:**
-- Ви маєте рацію, але... (You're right, but...)
-- Я розумію вашу думку, проте... (I understand your view, however...)
-
-**Common phrases for debates:**
-- А що ви думаєте? (And what do you think?)
-- Але подумайте про... (But think about...)
-- З іншого боку... (On the other hand...)
-
-> 🔍 **Cultural Note**
->
-> A polite Ukrainian strategy when disagreeing is to first acknowledge the other person's point with "Ви маєте рацію" (You're right) before introducing your different view. This shows respect and keeps the conversation friendly.
+When you share an opinion, you can use both, but "вважати" sounds more authoritative. If you are debating a topic in a business or academic setting, "вважати" or "з моєї точки зору" will make you sound more professional and prepared. On the other hand, in a casual conversation with a friend at a cafe, "я думаю" or "мені здається" is more natural and friendly. This nuance is part of the "intellectual hospitality" that characterizes Ukrainian social life.
 
 ---
 
-## Practice
+## The Philosophy of the Kitchen
 
-## Practice Dialogues
+In Ukraine, the kitchen is more than just a place to cook; it is the center of intellectual life. This phenomenon, often called "Kitchen Philosophy" (кухонна філософія), dates back to the Soviet era when the kitchen was the only safe space to discuss forbidden ideas, politics, and literature. Even today, despite the abundance of modern cafes and open public spaces, the most profound and honest discussions often happen around a small kitchen table. This unique cultural setting creates an atmosphere of intimacy and trust that is rarely found in more formal environments.
 
-Practice expressing opinions in these scenarios:
-
-1. **I think the book is interesting.**
-   → Я думаю, що книга цікава.
-
-2. **In my opinion, this is a good idea.**
-   → На мою думку, це хороша ідея.
-
-3. **I agree with you.**
-   → Я згоден/згодна з вами.
-
-4. **I wouldn't say that.**
-   → Я б не сказав/не сказала.
-
-5. **Possibly, you're right.**
-   → Можливо, ви маєте рацію.
+When you learn to say "Я думаю, що..." or "Можливо, ви праві...", you are not just learning grammar; you are learning the tools of this intellectual hospitality. Ukrainians appreciate when someone can sit for hours debating the future of democracy, the nuances of some historical event, or the best way to make borscht. Being able to articulate your point of view (точка зору) and respect the points of others is considered a mark of a well-educated person in the Ukrainian social fabric. This cultural nuance of sharing thoughts and beliefs is a vital part of building deep, lasting trust between people.
 
 ---
 
-## Розмова про фільм
+> [!cultural] Intellectual Hospitality
+> Ukrainians value deep discussions, often late into the night. Discussing politics, history, or philosophy over tea is a national pastime. Don't be afraid to express a strong opinion; it's often seen as a sign of respect and engagement. If you are invited to a kitchen talk, be prepared to explain *why* you think what you think!
 
-Оксана і Тарас обговорюють новий фільм.
+> [!cultural] History Bite: The Tradition of Debate
+> Ukraine has a long history of intellectual debate. The Kyiv-Mohyla Academy, founded in the 17th century, was a center of philosophical thought where students were taught to argue and defend their positions in Latin and Ukrainian. This tradition of "free speech" and "critical thinking" survived even through times of intense censorship. Today, this manifest in the way Ukrainians participate in civil society—always ready to discuss, disagree, and ultimately find a common path for the country.
 
-**Оксана:** Тарасе, ти бачив новий фільм?
-
-**Тарас:** Так, бачив. Я думаю, що він дуже цікавий.
-
-**Оксана:** Справді? Мені здається, що він занадто довгий.
-
-**Тарас:** Можливо, ти маєш рацію. Але, на мою думку, історія захоплююча.
-
-**Оксана:** Я не зовсім згодна. Я вважаю, що кінець був слабкий.
-
-**Тарас:** Це цікава думка. Напевно, режисер хотів здивувати глядачів.
-
-**Оксана:** Мабуть, так. Але я б не сказала, що йому це вдалося.
-
-**Тарас:** Що ж, у кожного своя думка!
-
-**Оксана:** Безумовно! Це і робить кіно цікавим.
-
-> 🌍 **Discussing Films in Ukraine**
->
-> Ukrainians love discussing films and often have passionate debates about cinema. It's common to hear phrases like "На мою думку, це шедевр!" or "Я не згоден, фільм надто комерційний." Film discussions are a great way to practice expressing opinions in real conversations!
+> [!important] The "Maybe" Buffer
+> If you want to sound less categorical and more open to discussion, start your sentence with **"Можливо..."** (Maybe) or **"Напевно..."** (Probably).
+> *Можливо, ви маєте рацію, але я не зовсім певний у цифрах.* (Maybe you are right, but I'm not entirely certain about the numbers.)
 
 ---
 
-## Різні думки про погоду
+## Language in Action
 
-Марія і Петро дивляться у вікно.
+## Dialogue: The Best Coffee
 
-**Марія:** Петре, як ти думаєш, сьогодні буде дощ?
+Two friends, Petro and Maksym, are debating where to find the best atmosphere.
 
-**Петро:** Мені здається, що так. Небо дуже темне.
+**Petro:** Слухай, Максиме, я думаю, що найкраща кава все-таки у Львові.
+**Maksym:** Я цілком згоден з тобою! Там особлива атмосфера і стара архітектура.
+**Petro:** А на мою думку, ціна на каву в центрі зараз стала занадто високою.
+**Maksym:** Навряд чи вона вища, ніж у Києві чи Варшаві. Це ж туристичне місто.
+**Petro:** Можливо, але я вважаю, що треба шукати маленькі кав’ярні без реклами.
+**Maksym:** Це точно! Там завжди смачніше, дешевше і затишніше.
+**Petro:** З моєї точки зору, саме такі місця зберігають справжній дух міста.
+**Maksym:** Безумовно. Давайте підемо в ту нову кав’ярню завтра?
 
-**Марія:** Я не впевнена. На мій погляд, хмари рухаються на схід.
+## Dialogue: The Plan
 
-**Петро:** Можливо. Але, я гадаю, краще взяти парасольку.
+Two colleagues, Olena and Ihor, are discussing a future trip.
 
-**Марія:** Ти маєш рацію. Краще бути готовим!
+**Olena:** Ігоре, ти вже думав про нашу відпустку в Карпатах?
+**Ihor:** Так, я вважаю, що нам треба поїхати в червні.
+**Olena:** На мою думку, у червні там занадто часто йдуть дощі.
+**Ihor:** Навряд чи. Минулого року погода була чудова.
+**Olena:** Я не погоджуюся. Я бачила прогноз, і він не дуже добрий.
+**Ihor:** Можливо, ви праві. Але я гадаю, що ризикнути варто.
+**Olena:** Я не зовсім згодна. Давайте краще поїдемо в Івано-Франківськ.
+**Ihor:** Це цікавий погляд. З моєї точки зору, це гарна альтернатива.
+**Olena:** Очевидно, що там більше музеїв і кав'ярень на випадок дощу.
+**Ihor:** Це точно! Я теж так думаю тепер. Ви переконали мене.
 
-**Петро:** Безумовно! Я завжди так думаю про погоду в Україні.
-
-**Марія:** Згодна з тобою. Погода тут непередбачувана.
-
-> 🎯 **Practice Tip**
->
-> When practicing these dialogues, try to use different certainty markers each time. Instead of always saying "Я думаю, що..." try "Мені здається, що..." or "На мою думку..." This variety makes your Ukrainian sound more natural and shows mastery of multiple expressions.
+### Analysis of the Conversation
+1.  **Я думаю, що...**: The most humble way to start a debate.
+2.  **Я цілком згоден**: "I completely agree" (adds emphasis).
+3.  **На мою думку**: A parenthetical phrases that shifts the focus back to the speaker.
+4.  **Навряд чи**: A gentle way to say "I don't think so" without being aggressive.
+5.  **З моєї точки зору**: A more professional or structured way to summarize a position.
 
 ---
 
-## Корисні фрази
-
-Here are useful phrases for discussions:
-
-- **Що ви думаєте про це?** — What do you think about this?
-- **Яка ваша думка?** — What's your opinion?
-- **Чи ви згодні зі мною?** — Do you agree with me?
-- **Давайте обговоримо це.** — Let's discuss this.
-- **Це цікава точка зору.** — That's an interesting point of view.
-- **Дозвольте не погодитися.** — Allow me to disagree.
+> [!important] Myth: "Everyone thinks the same"
+> **Myth:** Ukrainian culture is monolithic and everyone agrees on history and politics because of the war.
+> **Reality:** Ukraine is a vibrant democracy with a huge diversity of opinions. Debating historical memory and future direction is a core part of the modern Ukrainian identity. We value the right to disagree and discuss diverse perspectives openly.
 
 ---
 
-## Summary
+> [!resources] 🔗 External Resources
+> - **YouTube:** [How to express your opinion in Ukrainian](https://www.youtube.com/results?search_query=express+opinion+ukrainian) — Various teachers
+> - **Article:** [Ukrainian Conversation Starters](https://www.ukrainianlessons.com/conversation/) — Ukrainian Lessons
+> - **Flashcards:** [Quizlet: Ukrainian Opinions](https://quizlet.com/) — Practice the vocabulary
 
-## What You Learned in This Module
+# Activities
 
-This module covered essential expressions for sharing opinions in Ukrainian.
-
-**Opinion structures:**
-- Я думаю/вважаю/гадаю, що... — for stating what you think
-- Мені здається, що... — for softer, tentative opinions
-- На мою думку | На мій погляд — for formal contexts
-
-**Agreeing expressions:** Я згоден/згодна, Це правда, Ви маєте рацію
-**Disagreeing expressions:** Я не згоден, Не зовсім, Я б не сказав
-
-**Certainty markers:** безумовно, напевно, можливо
-
-Remember: adding certainty markers like "можливо" or "мабуть" makes your statements more polite and shows openness to other views.
-
-Тепер ви можете висловлювати свою думку українською мовою! 💭
-
-## Activities
-
-## match-up: Opinion Expressions
+## match-up: Opinion Expressions (Concept: Semantic Pairing)
+Match the Ukrainian expression to its English equivalent.
 
 - Я думаю, що :: I think that
-- Я вважаю, що :: I believe that
-- Мені здається, що :: It seems to me that
+- Я вважаю, що :: I consider that
 - На мою думку :: In my opinion
-- Я згоден :: I agree (m)
-- Я не згодна :: I disagree (f)
-- Це правда :: That's true
-- Не зовсім :: Not exactly
-- Можливо :: Possibly
-- Напевно :: Probably
-- Безумовно :: Undoubtedly
-- Очевидно :: Obviously
+- На мій погляд :: From my view
+- Я згоден :: I agree
+- Ви праві :: You are right
+- Навряд чи :: Hardly / I doubt it
+- Я не впевнений :: I am not sure
 
-## fill-in: Express Opinions
+## fill-in: Express Opinions (Concept: Contextual Usage)
+Complete the sentences with the correct opinion markers.
 
-> Complete with the correct word or phrase.
+1. Я [___:1], що це місто дуже красиве. (think)
+   > [!answer] думаю
+   > [!options] думаю | бачу | сплю | їм
 
-1. ___ думаю, що це правда. (I)
-   > [!answer] Я
-   > [!options] Я | Мені | Він | Вона
+2. На [___:2] думку, квитки занадто дорогі. (my)
+   > [!answer] мою
+   > [!options] мою | мій | моє | мої
 
-2. ___ мою думку, це добре. (In)
-   > [!answer] На
-   > [!options] На | До | В | З
-
-3. Я ___ з вами. (agree — m)
-   > [!answer] згоден
-   > [!options] згоден | згодна | думаю | вважаю
-
-4. Мені ___, що він правий. (seems)
+3. Мені [___:3], що сьогодні буде дощ. (seems)
    > [!answer] здається
-   > [!options] здається | думаю | кажу | вважаю
+   > [!options] здається | подобається | хочеться | пишеться
 
-5. Це ___ правда. (undoubtedly)
-   > [!answer] безумовно
-   > [!options] безумовно | можливо | не | так
-
-6. Ви маєте ___. (right)
-   > [!answer] рацію
-   > [!options] рацію | правду | думку | погляд
-
-7. ___, я помиляюся. (Possibly)
-   > [!answer] Можливо
-   > [!options] Можливо | Безумовно | Напевно | Точно
-
-8. Я б не ___. (wouldn't say)
-   > [!answer] сказав
-   > [!options] сказав | казав | думав | вважав
-
-9. Не ___. (Not exactly)
-   > [!answer] зовсім
-   > [!options] зовсім | так | правда | точно
-
-10. Я ___ так думаю. (also)
-    > [!answer] теж
-    > [!options] теж | так | не | все
-
-11. Він ___ прийде. (probably)
-    > [!answer] напевно
-    > [!options] напевно | можливо | безумовно | не
-
-12. Це не ___. (so)
-    > [!answer] так
-    > [!options] так | правда | зовсім | точно
-
-## quiz: Understanding Opinions
-
-1. "Я думаю, що" means:
-
-- [x] I think that
-- [ ] I don't think
-- [ ] She thinks
-
----
-
-2. "Мені здається, що" is:
-
-- [x] A soft, tentative opinion
-- [ ] A strong opinion
-- [ ] An expression of disagreement
-
----
-
-3. "На мою думку" means:
-
-- [x] In my opinion
-- [ ] I don't know
-- [ ] Possibly
-
----
-
-4. "Я згоден" means:
-
-- [x] I agree (masculine)
-- [ ] I disagree
-- [ ] I think
-
----
-
-5. "Не зовсім" means:
-
-- [x] Not exactly
-- [ ] I agree completely
-- [ ] That's true
-
----
-
-6. "Безумовно" indicates:
-
-- [x] High certainty
-- [ ] Low certainty
-- [ ] Disagreement
-
----
-
-7. "Можливо" indicates:
-
-- [x] Medium-low certainty
-- [ ] Very high certainty
-- [ ] Total disagreement
-
----
-
-8. "Ви маєте рацію" means:
-
-- [x] You're right
-- [ ] You're wrong
-- [ ] I'm not sure
-
----
-
-9. "Я б не сказав" is:
-
-- [x] Polite disagreement
-- [ ] Strong agreement
-- [ ] A question
-
----
-
-10. "Очевидно" means:
-
-- [x] Obviously
-- [ ] Possibly
-- [ ] Not at all
-
----
-
-11. "Я не згодна" is said by:
-
-- [x] A woman disagreeing
-- [ ] A man disagreeing
-- [ ] Someone agreeing
-
----
-
-12. "Мабуть" means:
-
-- [x] Probably
-- [ ] Definitely
-- [ ] Not at all
-
-## true-false: Opinion Rules
-
-> Decide if each statement is true or false.
-
-- [x] "Я думаю, що" introduces an opinion.
-  > Correct! This is a standard opinion structure.
-
-- [x] "Мені здається" is softer than "Я думаю."
-  > Yes! It sounds more tentative.
-
-- [ ] "Безумовно" means "possibly."
-  > "Безумовно" means "undoubtedly" — high certainty.
-
-- [x] "Я згодна" is the feminine form.
-  > Correct! Masculine is "згоден."
-
-- [x] "Не зовсім" is soft disagreement.
-  > Yes! It means "not exactly."
-
-- [ ] "На мою думку" is casual.
-  > "На мою думку" is actually formal.
-
-- [x] "Можливо" shows uncertainty.
-  > Correct! It means "possibly."
-
-- [x] "Ви маєте рацію" is polite.
-  > Yes! It's a respectful way to say "you're right."
-
-- [ ] "Я б не сказав" is strong disagreement.
-  > It's actually POLITE disagreement.
-
-- [x] "Мабуть" = probably.
-  > Correct!
-
-- [x] Adding "можливо" softens statements.
-  > Yes! It makes you sound more open.
-
-- [ ] "Очевидно" shows low certainty.
-  > "Очевидно" shows HIGH certainty.
-
-## group-sort: Agree vs Disagree
-
-> Sort these expressions by function.
-
-### Agreeing
-- Я згоден/згодна.
-- Це правда.
-- Так, точно.
-- Ви маєте рацію.
-- Я теж так думаю.
-- Абсолютно!
-
-### Disagreeing
-- Я не згоден/не згодна.
-- Це не так.
-- Не зовсім.
-- Я б не сказав/сказала.
-- Можливо, але...
-- Я не впевнений.
-
-## unjumble: Opinion Sentences
-
-> Put the words in the correct order.
-
-1. я | думаю | що | фільм | цікавий
-   > [!answer] Я думаю, що фільм цікавий
-
-2. мені | здається | що | вона | зайнята
-   > [!answer] Мені здається, що вона зайнята
-
-3. на | мою | думку | це | добре
-   > [!answer] На мою думку, це добре
-
-4. я | згоден | з | вами
-   > [!answer] Я згоден з вами
-
-5. це | не | так
-   > [!answer] Це не так
-
-6. можливо | я | помиляюся
-   > [!answer] Можливо, я помиляюся
-
-7. ви | маєте | рацію
-   > [!answer] Ви маєте рацію
-
-8. я | б | не | сказав
-   > [!answer] Я б не сказав
-
-9. безумовно | це | правда
-   > [!answer] Безумовно, це правда
-
-10. напевно | він | прийде
-    > [!answer] Напевно, він прийде
-
-11. я | теж | так | думаю
-    > [!answer] Я теж так думаю
-
-12. не | зовсім | але | близько
-    > [!answer] Не зовсім, але близько
-
-## error-correction: Fix the Expression
-
-> Choose the correct form for each context.
-
-1. ___ думаю, що це правда. (I think)
-   > [!error] I think
-   > [!answer] Я
-   > [!explanation] "Я думаю, що..." is the correct structure.
-   > [!options] Я | Мені | Він | Вона
-
-2. ___, це хороша ідея. (In my opinion)
-   > [!error] In my opinion
-   > [!answer] На мою думку
-   > [!explanation] "На мою думку, ..." is the formal opinion structure.
-   > [!options] Я думаю | На мою думку | Мені здається | Він каже
-
-3. Я ___ з вами. (agree — masculine)
-   > [!error] agree — masculine
+4. Я цілком [___:4] з вашою пропозицією. (agree - masc)
    > [!answer] згоден
-   > [!explanation] Masculine form is "згоден," feminine is "згодна."
-   > [!options] згодна | згоден | згодно | згодні
+   > [!options] згоден | згодна | згодні | згодне
 
-4. Ви ___ рацію. (have right)
-   > [!error] have right
-   > [!answer] маєте
-   > [!explanation] "Ви маєте рацію" = You're right.
-   > [!options] маєте | має | маю | мати
+5. Ви [___:5], це рішення найкраще. (right)
+   > [!answer] праві
+   > [!options] праві | ліві | старі | малі
 
-5. Я б ___ сказала. (wouldn't)
-   > [!error] wouldn't
-   > [!answer] не
-   > [!explanation] "Я б не сказала" = I wouldn't say.
-   > [!options] не | так | вже | ще
+6. [___:6] чи ми встигнемо на поїзд. (hardly)
+   > [!answer] Навряд
+   > [!options] Навряд | Майже | Зовсім | Дуже
 
-6. ___ він прийде. (Probably)
-   > [!error] Probably
-   > [!answer] Напевно
-   > [!explanation] Напевно = probably.
-   > [!options] Можливо | Напевно | Безумовно | Очевидно
+7. Я вважаю, [___:7] треба більше працювати. (that)
+   > [!answer] що
+   > [!options] що | чи | як | де
 
-## cloze: Opinion Exchange
+8. Я не [___:8], що це правильна відповідь. (sure - masc)
+   > [!answer] впевнений
+   > [!options] впевнений | впевнена | впевнені | впевнене
 
-> Complete the dialogue with correct expressions.
+## quiz: Understanding Opinions (Concept: Logical Deduction)
+Answer questions about expressing thoughts in Ukrainian.
 
-— [___:1], що цей фільм хороший.
-— [___:2], я теж так думаю!
-— Але моя сестра [___:3].
-— Що вона [___:4]?
-— Вона [___:5], що фільм нудний.
-— [___:6], кожен має свою думку.
+1. Як саме найчастіше починають висловлювати свою власну думку в українській мові, щоб це звучало нейтрально та зрозуміло?
+- [x] Зазвичай використовують популярну та просту фразу "Я думаю, що..."
+- [ ] Використовують дуже гучний і довгий крик на початку кожної розмови
+- [ ] Використовують лише складні математичні формули для обґрунтування слів
+- [ ] Використовують повне мовчання протягом трьох хвилин перед кожним реченням
 
-1. Я думаю | Він каже
-> [!answer] Я думаю
+---
 
-2. Так | Ні
-> [!answer] Так
+2. Який саме граматичний відмінок потрібно обов'язково використовувати після конструкції "На думку...", щоб вказати на власника ідеї?
+- [x] Для позначення власника думки використовують Родовий відмінок (кого? чого?)
+- [ ] Для позначення власника думки використовують лише Орудний відмінок
+- [ ] Для позначення власника думки використовують Кличний відмінок для звертання
+- [ ] Для позначення власника думки використовують Майбутній час дієслова
 
-3. не згодна | згодна
-> [!answer] не згодна
+---
 
-4. думає | робить
-> [!answer] думає
+3. Що саме ви маєте на увазі, коли кажете своєму співрозмовнику "Ви абсолютно праві" під час дискусії?
+- [x] Ви висловлюєте свою повну та рішучу згоду з думкою або позицією людини
+- [ ] Ви вказуєте людині, що їй треба йти тільки праворуч на наступному перехресті
+- [ ] Ви критикуєте людину за її дуже погану та стару поведінку минулого тижня
+- [ ] Ви просите людину швидко принести вам склянку холодної чистої води
 
-5. вважає | не знає
+---
+
+4. Який саме емоційний відтінок значення вносить у розмову українська корисна фраза сумніву "Навряд чи"?
+- [x] Ця фраза виражає сильний сумнів або велику непевність у певному факті
+- [ ] Ця фраза виражає повну та абсолютну впевненість у щасливому майбутньому
+- [ ] Ця фраза вказує на те, що зараз на вулиці йде дуже сильний холодний дощ
+- [ ] Ця фраза означає, що ви хочете терміново купити собі новий теплий одяг
+
+---
+
+5. Чи потрібно зазвичай змінювати час дієслова в реченні, коли ви просто звітуєте про свою власну думку?
+- [x] Ні, час дієслова зазвичай залишається таким самим, як він звучить у самій думці
+- [ ] Так, ми завжди маємо змінювати абсолютно всі часи дієслів на минулий час
+- [ ] Так, ми маємо використовувати тільки форми майбутнього часу для всіх думок
+- [ ] Так, час дієслова змінюється тільки якщо ми дуже голосно кричимо на друга
+
+---
+
+6. Що саме ви хочете передати близькому другу, коли вживаєте вступну фразу "Мені здається"?
+- [x] Ви висловлюєте свою думку обережно, як власне суб'єктивне враження чи відчуття
+- [ ] Ви висловлюєте дуже точний та перевірений часом науковий факт із підручника
+- [ ] Ви просите друга негайно зачинити всі вікна в цьому великому старому домі
+- [ ] Ви кажете другу, що ви вже дуже хочете швидко піти додому і відпочити
+
+---
+
+7. Яка форма прикметника "Згоден" (Agree) є граматично правильною для жінки, яка висловлює свою згоду?
+- [x] Для жінки правильною є форма прикметника або стану "Я згодна" з закінченням -а
+- [ ] Для жінки правильною є форма прикметника або стану "Я згоден" з нульовим закінченням
+- [ ] Для жінки правильною є форма прикметника або стану "Я згодне" з закінченням -е
+- [ ] Для жінки правильною є форма іменника "Згода" в називному відмінку однини
+
+---
+
+8. У якій саме життєвій ситуації найбільш доречно вживати офіційне дієслово "Я вважаю, що..."?
+- [x] Коли ви висловлюєте серйозну, зважену та добре аргументовану власну позицію
+- [ ] Коли ви просто розповідаєте друзям новий смішний анекдот про старого рибалку
+- [ ] Коли ви просите продавця в магазині продати вам трохи свіжого білого хліба
+- [ ] Коли ви шукаєте правильну дорогу до центрального парку в новому місті
+
+---
+
+9. Як правильно та природно сказати "I think so too" українською мовою в щоденній розмові?
+- [x] Найкраще сказати фразу "Я теж так думаю" своєму другу або колезі
+- [ ] Найкраще сказати фразу "Я теж так дивлюся" своєму другу або колезі
+- [ ] Найкраще сказати фразу "Я теж так сплю" своєму другу або колезі
+- [ ] Найкраще сказати фразу "Я теж так їм" своєму другу або колезі
+
+---
+
+10. Що саме ви хочете повідомити, коли кажете "Ви помиляєтеся" під час гарячої суперечки на роботі?
+- [x] Ви ввічливо вказуєте людині на те, що вона каже якусь неправду або помиляється
+- [ ] Ви кажете людині, що вона дуже гарно та модно сьогодні одягнена для зустрічі
+- [ ] Ви просите людину принести вам нову цікаву книгу про історію вашої країни
+- [ ] Ви кажете людині, що зараз саме час для дуже смачного обіду в ресторані
+
+---
+
+11. Чи можна часто починати власну думку зі слова "Можливо..." для пом'якшення загального тону?
+- [x] Так, це чудовий спосіб зробити власну заяву менш категоричною та агресивною
+- [ ] Ні, в українській мові категорично не можна вживати це слово на початку
+- [ ] Так, але тільки якщо ви розмовляєте з дуже маленькими дітьми на вулиці
+- [ ] Ні, це слово використовується виключно в підручниках з дуже вищої математики
+
+---
+
+12. Яке слово найкраще перекладає термін "opinion" у фіксованій конструкції "на мою думку"?
+- [x] Це українське слово "думка", що вказує на процес особистого мислення
+- [ ] Це українське слово "голова", що вказує на частину тіла будь-якої людини
+- [ ] Це українське слово "книга", що вказує на друковане джерело нових знань
+- [ ] Це українське слово "слово", що вказує на окрему одиницю людського мовлення
+
+## true-false: Opinion Rules (Concept: Concept Validation)
+Validate the rules of expressing opinions.
+
+1. "Я згоден" should be used by a woman.
+   - [ ] True
+   - [x] False
+   > Women say "Я згодна".
+
+2. "Я думаю, що" means "I think that".
+   - [x] True
+   - [ ] False
+   > This is the direct translation.
+
+3. "Навряд чи" expresses total certainty.
+   - [ ] True
+   - [x] False
+   > It expresses doubt.
+
+4. "На мою думку" acts as a parenthetical phrase.
+   - [x] True
+   - [ ] False
+   > It adds perspective to the sentence.
+
+5. You should shift tenses to the past when sharing someone's opinion.
+   - [ ] True
+   - [x] False
+   > Usually keep the original tense.
+
+6. "Вважати" is more formal than "думати".
+   - [x] True
+   - [ ] False
+   > Correct.
+
+7. "Ви праві" means "You are left".
+   - [ ] True
+   - [x] False
+   > It means "You are right".
+
+8. Opinions in Ukraine are often discussed deeply at night.
+   - [x] True
+   - [ ] False
+   > This is a cultural trait.
+
+## group-sort: Agree vs Disagree (Згода чи Незгода) (Concept: Semantic Categorization)
+Sort these expressions into agreement or disagreement.
+
+### Agreement (Згода)
+- Я згоден
+- Я згодна
+- Ви праві
+- Це точно!
+- Я теж так думаю
+- Звичайно!
+- Безумовно!
+- Очевидно!
+
+### Disagreement (Незгода)
+- Я не згоден
+- Я не згодна
+- Навряд чи
+- Ви помиляєтеся
+- Я так не думаю
+- Це неправда
+- Це не так
+- Мені важко сказати
+
+## unjumble: Opinion Sentences (Concept: Syntax Integrity)
+Rearrange the words to form correct sentences expressing opinions.
+
+1. я / думаю / що / сучасна / українська / мова / є / дуже / милозвучна / і / справді / красива
+   > [!answer] Я думаю, що сучасна українська мова є дуже милозвучна і справді красива
+
+2. на / мою / думку / цей / зовсім / новий / фільм / справді / вартий / вашої / особливої / уваги
+   > [!answer] На мою думку, цей зовсім новий фільм справді вартий вашої особливої уваги
+
+3. він / твердо / стверджує / що / це / складне / рішення / є / єдино / правильним / для / нас
+   > [!answer] Він твердо стверджує, що це складне рішення є єдино правильним для нас
+
+4. лікар / вважає / що / цей / пацієнт / повинен / трохи / більше / відпочивати / та / багато / спати
+   > [!answer] Лікар вважає, що цей пацієнт повинен трохи більше відпочивати та багато спати
+
+5. я / цілком / згоден / що / нам / треба / швидше / це / зробити
+   > [!answer] Я цілком згоден, що нам треба швидше це зробити
+
+6. вона / навряд / чи / погодиться / на / таку / дуже / дивну / і / ризиковану / нову / пропозицію
+   > [!answer] Вона навряд чи погодиться на таку дуже дивну і ризиковану нову пропозицію
+
+## error-correction: Fix the Expression (Concept: Critical Proofreading)
+Identify and fix errors in these opinion sentences.
+
+1. Я **згодна** з братом.
+   > [!error] згодна
+   > [!answer] згоден
+   > [!explanation] Men use the masculine form згоден.
+   > [!options] згоден | згодна
+
+2. На **мій** думку, це добре.
+   > [!error] мій
+   > [!answer] мою
+   > [!explanation] Думка is feminine, so use мою.
+   > [!options] мою | мій
+
+3. Я **думати**, що він прийде.
+   > [!error] думати
+   > [!answer] думаю
+   > [!explanation] Use the conjugated form думаю.
+   > [!options] думаю | думати
+
+4. Це **навряд**, що він знає.
+   > [!error] навряд
+   > [!answer] навряд чи
+   > [!explanation] Use the full particle навряд чи.
+   > [!options] навряд чи | навряд
+
+5. Я вважаю, **чи** він правий.
+   > [!error] чи
+   > [!answer] що
+   > [!explanation] Use що for belief statements.
+   > [!options] що | чи
+
+6. Ви **помилка**, це не так.
+   > [!error] помилка
+   > [!answer] помиляєтеся
+   > [!explanation] Use the verb помиляєтеся.
+   > [!options] помиляєтеся | помилка
+
+## cloze: Opinion Exchange (Concept: Contextual Application)
+Complete the conversation about the new project.
+
+**Анна:** [___:1] мою думку, цей проект дуже перспективний.
+**Іван:** Я не [___:2]. Мені [___:3], що він занадто дорогий.
+**Анна:** Але директор [___:4], що ми отримаємо прибуток.
+**Іван:** [___:5] чи це станеться так швидко.
+**Анна:** Ви [___:6], Іване. Ми вже провели аналіз ринку.
+**Іван:** Можливо. Але я все одно [___:7], що треба бути обережними.
+**Анна:** Я [___:8] з вами, що ризики є. Але я [___:9], що вони мінімальні.
+**Іван:** Я [___:10] так не думаю. Проте, [___:11] спробувати варто.
+**Анна:** [___:12] так! Давайте почнемо роботу.
+
+1. На | У
+> [!answer] На
+
+2. згоден | бачу
+> [!answer] згоден
+
+3. здається | подобається
+> [!answer] здається
+
+4. вважає | знає
 > [!answer] вважає
 
-6. Можливо | Напевно
-> [!answer] Можливо
+5. Навряд | Майже
+> [!answer] Навряд
 
----
+6. помиляєтеся | праві
+> [!answer] помиляєтеся
 
-— [___:1] думку, це хороший ресторан.
-— Я [___:2]! Тут смачно.
-— [___:3] це найкращий ресторан у місті.
-— [___:4], але близько!
-— Ви [___:5] рацію.
-— [___:6], що ми прийшли сюди.
+7. думаю | сплю
+> [!answer] думаю
 
-1. На мою | В мою
-> [!answer] На мою
-
-2. згодна | не згодна
+8. згодна | згоден
 > [!answer] згодна
 
-3. Мабуть | Не
-> [!answer] Мабуть
+9. вважаю | пишу
+> [!answer] вважаю
 
-4. Не зовсім | Так
-> [!answer] Не зовсім
+10. теж | зовсім
+> [!answer] теж
 
-5. маєте | не маєте
-> [!answer] маєте
+11. можливо | навряд
+> [!answer] можливо
 
-6. Добре | Погано
-> [!answer] Добре
+12. Саме | Хоча
+> [!answer] Саме
 
-## dialogue-reorder: Discussing Views
+## dialogue-reorder: Discussing Views (Concept: Narrative Coherence)
+Order the dialogue logically.
 
-> Arrange this conversation in the correct order.
-
-- Я думаю, що ця книга цікава.
-- Я згоден, вона справді хороша.
-- А що ти думаєш про фільм?
-- Мені здається, що книга краща.
-- Можливо, ти маєш рацію.
-- Напевно, книги завжди кращі!
-
-> [!answer]
-> 1. Я думаю, що ця книга цікава.
-> 2. Я згоден, вона справді хороша.
-> 3. А що ти думаєш про фільм?
-> 4. Мені здається, що книга краща.
-> 5. Можливо, ти маєш рацію.
-> 6. Напевно, книги завжди кращі!
-
----
-
-- На мою думку, це погана ідея.
-- Я б не сказав. Чому ти так думаєш?
-- Тому що це занадто дорого.
-- Ви маєте рацію, але якість хороша.
-- Не зовсім. Є дешевші варіанти.
-- Можливо, давайте порівняємо.
+- Як тобі цей ресторан?
+- Я думаю, що їжа тут дуже смачна.
+- А я не згоден. Мій стейк був сухий.
+- Справді? На мою думку, він виглядав добре.
+- Вигляд — це ще не все. Я вважаю, що сервіс теж повільний.
+- Ви праві, офіціанта ми чекали довго.
+- Я більше сюди не прийду.
+- А я теж так думаю тепер.
+- Може, підемо в інше місце завтра?
+- Навряд чи я захочу їсти в цьому районі знову.
+- Ви дуже критичні сьогодні!
+- Можливо, але я просто чесний.
 
 > [!answer]
-> 1. На мою думку, це погана ідея.
-> 2. Я б не сказав. Чому ти так думаєш?
-> 3. Тому що це занадто дорого.
-> 4. Ви маєте рацію, але якість хороша.
-> 5. Не зовсім. Є дешевші варіанти.
-> 6. Можливо, давайте порівняємо.
+> 1. Як тобі цей ресторан?
+> 2. Я думаю, що їжа тут дуже смачна.
+> 3. А я не згоден. Мій стейк був сухий.
+> 4. Справді? На мою думку, він виглядав добре.
+> 5. Вигляд — це ще не все. Я вважаю, що сервіс теж повільний.
+> 6. Ви праві, офіціанта ми чекали довго.
+> 7. Я більше сюди не прийду.
+> 8. А я теж так думаю тепер.
+> 9. Може, підемо в інше місце завтра?
+> 10. Навряд чи я захочу їсти в цьому районі знову.
+> 11. Ви дуже критичні сьогодні!
+> 12. Можливо, але я просто чесний.
 
-## mark-the-words: Find Opinion Expressions
+## mark-the-words: Find Opinion Expressions (Concept: Pattern Recognition)
+Identify the opinion-marking phrases in the text.
 
-> Click on OPINION expressions only.
+Я [думаю](correct), що це добре. На [мою думку](correct), це важливо. Мені [здається](correct), ви помиляєтеся. Я [вважаю](correct), що час іти. Я не [певний](correct) у цьому. Ви [праві](correct)! Навряд [чи](correct) це допоможе. Я [згоден](correct) з вами. Я [теж](correct) так думаю.
 
-[Я думаю, що](correct) це правда. [Мені здається](correct), що він правий. [На мою думку](correct), це добре.
+## translate: English to Ukrainian (Concept: Cross-Linguistic Transfer)
 
----
+1. I think that she is right.
+- [x] Я думаю, що вона права.
+- [ ] Я думаю, чи вона права.
 
-[Я згоден](correct)! [Це правда](correct). [Ви маєте рацію](correct).
+2. In my opinion, it is too late.
+- [x] На мою думку, вже занадто пізно.
+- [ ] На мою думку, вже занадто скоро.
 
----
+3. I completely agree with you.
+- [x] Я цілком згоден з вами.
+- [ ] Я цілком не певний з вами.
 
-[Можливо](correct), я помиляюся. [Напевно](correct), він прийде. [Безумовно](correct), це так.
+4. It seems to me that it works.
+- [x] Мені здається, що це працює.
+- [ ] Мені здається, що це спить.
 
-## translate: English to Ukrainian
+5. I doubt that it is true.
+- [x] Навряд чи це правда.
+- [ ] Це точно правда.
 
-1. I think that this is true.
+6. What do you think about this?
+- [x] Що ви про це думаєте?
+- [ ] Де ви про це думаєте?
 
-- [x] Я думаю, що це правда.
-- [ ] Я знаю, що це правда.
+7. You are mistaken about this.
+- [x] Ви помиляєтеся щодо цього.
+- [ ] Ви праві щодо цього.
 
----
+8. I am not sure about the plan.
+- [x] Я не знаю точно щодо плану.
+- [ ] Я згоден щодо плану.
 
-2. In my opinion, this is a good idea.
+9. Probably we should stay.
+- [x] Напевно, нам треба залишитися.
+- [ ] Напевно, нам треба піти.
 
-- [x] На мою думку, це хороша ідея.
-- [ ] Я думаю хороша ідея.
+10. Maybe you have a point.
+- [x] Можливо, ви маєте рацію.
+- [ ] Можливо, ви маєте книгу.
 
----
-
-3. I agree with you.
-
-- [x] Я згоден/згодна з вами.
-- [ ] Я думаю з вами.
-
----
-
-4. That's not so.
-
-- [x] Це не так.
-- [ ] Це так.
-
----
-
-5. It seems to me that he's right.
-
-- [x] Мені здається, що він правий.
-- [ ] Я думаю, що він правий.
-
----
-
-6. You're right.
-
-- [x] Ви маєте рацію.
-- [ ] Ви не праві.
-
----
-
-7. I wouldn't say that.
-
-- [x] Я б не сказав/сказала.
-- [ ] Я так не думаю.
-
----
-
-8. Possibly, I'm wrong.
-
-- [x] Можливо, я помиляюся.
-- [ ] Я точно помиляюся.
-
----
-
-9. Undoubtedly, this is true.
-
-- [x] Безумовно, це правда.
-- [ ] Можливо, це правда.
-
----
-
-10. He will probably come.
-
-- [x] Напевно, він прийде.
-- [ ] Він точно прийде.
-
----
-
-11. Not exactly.
-
-- [x] Не зовсім.
-- [ ] Так, точно.
-
----
+11. She considers this important.
+- [x] Вона вважає це важливим.
+- [ ] Вона думає це важливим.
 
 12. I think so too.
-
 - [x] Я теж так думаю.
-- [ ] Я так не думаю.
+- [ ] Я теж так бачу.
 
----
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| думати | /ˈdumɑtɪ/ | to think | verb | — | imperfective |
-| вважати | /ʋʋɑˈʒɑtɪ/ | to believe, consider | verb | — | imperfective |
-| гадати | /ɦɑˈdɑtɪ/ | to suppose, think | verb | — | imperfective |
-| здаватися | /zdɑˈʋɑtɪsʲɑ/ | to seem | verb | — | imperfective |
-| думка | /ˈdumkɑ/ | opinion, thought | noun | f | abstract |
-| погляд | /ˈpɔɦlʲɑd/ | view, opinion | noun | m | abstract |
-| точка зору | /ˈtɔt͡ʃkɑ ˈzɔru/ | point of view | phrase | f | formal |
-| згоден | /ˈzɦɔdɛn/ | agree (m) | adj | m | predicative |
-| згодна | /ˈzɦɔdnɑ/ | agree (f) | adj | f | predicative |
-| погоджуватися | /pɔɦɔˈdʒuʋɑtɪsʲɑ/ | to agree | verb | — | imperfective |
-| правда | /ˈprɑʋdɑ/ | truth | noun | f | abstract |
-| неправда | /nɛˈprɑʋdɑ/ | untruth, lie | noun | f | abstract |
-| рація | /ˈrɑt͡sijɑ/ | right, reason | noun | f | мати рацію |
-| можливо | /mɔʒˈlɪʋɔ/ | possibly | adv | — | epistemic |
-| напевно | /nɑˈpɛʋnɔ/ | probably | adv | — | epistemic |
-| мабуть | /mɑˈbutʲ/ | probably | adv | — | epistemic |
-| безумовно | /bɛzuˈmɔʋnɔ/ | undoubtedly | adv | — | epistemic |
-| очевидно | /ɔˈt͡ʃɛʋɪdnɔ/ | obviously | adv | — | epistemic |
-| зовсім | /zɔʋˈsim/ | at all, entirely | adv | — | negation |
-| точно | /ˈtɔt͡ʃnɔ/ | exactly | adv | — | affirmation |
-| справді | /sprɑʋˈdi/ | really, truly | adv | — | affirmation |
-| впевнений | /ʋˈpɛʋnɛnɪj/ | sure, confident (m) | adj | m | epistemic |
-| впевнена | /ʋˈpɛʋnɛnɑ/ | sure, confident (f) | adj | f | epistemic |
-| абсолютно | /ɑbsɔˈlʲutnɔ/ | absolutely | adv | — | affirmation |
-| помилятися | /pɔmɪˈlʲɑtɪsʲɑ/ | to be wrong | verb | — | imperfective |
-
----
+| вважати | /ʋʋɑˈʒɑtɪ/ | to consider, believe | verb | — | formal |
+| гадати | /ɦɑˈdɑtɪ/ | to guess, think | verb | — | poetic |
+| здається | /ˈzdɑjɛt͡sʲɑ/ | it seems | verb | — | 3rd sg |
+| на мою думку | /nɑ ˈmɔju ˈdumku/ | in my opinion | phrase | — | opener |
+| на мій погляд | /nɑ mij ˈpɔɦlʲɑd/ | from my view | phrase | — | opener |
+| з моєї точки зору | /z mɔˈjɛji ˈtɔt͡ʃkɪ ˈzɔru/ | from my point of view | phrase | — | analytic |
+| згоден | /ˈzɦɔdɛn/ | agree (masc) | adj | masc | state |
+| згодна | /ˈzɦɔdnɑ/ | agree (fem) | adj | fem | state |
+| не згоден | /nɛ ˈzɦɔdɛn/ | disagree (masc) | adj | masc | state |
+| погоджуватися | /pɔˈɦɔdʒuʋɑtɪsʲɑ/ | to agree | verb | — | process |
+| не погоджуватися | /nɛ pɔˈɦɔdʒuʋɑtɪsʲɑ/ | to disagree | verb | — | process |
+| правда | /ˈprɑu̯dɑ/ | truth | noun | fem | fact |
+| неправда | /nɛˈprɑu̯dɑ/ | lie, untruth | noun | fem | fact |
+| не так | /nɛ tɑk/ | not so | phrase | — | negative |
+| безумовно | /bɛzuˈmɔu̯nɔ/ | absolutely | adv | — | strong |
+| очевидно | /ɔt͡ʃɛˈʋɪdnɔ/ | obviously | adv | — | modal |
+| навряд чи | /nɑu̯ˈrʲɑd t͡ʃɪ/ | hardly, doubtfully | part | — | doubt |
+| помилятися | /pɔmɪˈlʲɑtɪsʲɑ/ | to be mistaken | verb | — | error |
+| правий | /ˈprɑʋɪj/ | right, correct | adj | masc | state |
+| рація | /ˈrɑt͡sʲijɑ/ | rightness (have reason) | noun | fem | idiom |
+| погодитися | /pɔˈɦɔdɪtɪsʲɑ/ | to agree | verb | — | perfective |
+| суперечка | /supɛˈrɛt͡ʃkɑ/ | argument, dispute | noun | fem | social |
+| цілком | /t͡sіlˈkɔm/ | completely | adv | — | degree |
+| обговорювати | /ɔbɦɔˈʋɔrʲuʋɑtɪ/ | to discuss | verb | — | activity |
+| позиція | /pɔˈzɪt͡sʲijɑ/ | position, stance | noun | fem | formal |
+| аргумент | /ɑrɦuˈmɛnt/ | argument | noun | masc | formal |
+| власне | /ˈʋlɑsnɛ/ | actually, properly | adv | — | filler |

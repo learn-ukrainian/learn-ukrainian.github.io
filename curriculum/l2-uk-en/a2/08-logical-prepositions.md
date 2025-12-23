@@ -378,13 +378,16 @@ Key distinctions:
 - після
 - крім
 - замість
+- до
 
 ### Accusative (Кого? Що?)
 - через
 - про
+- на
 
 ### Instrumental (Ким? Чим?)
 - з
+- над
 
 ### Locative (На чому?)
 - о/об
@@ -427,45 +430,53 @@ Key distinctions:
 
 ## quiz: Logical Prepositions
 
-1. "Для" requires which case?
+1. In Ukrainian grammar, which grammatical case does the preposition "для" (for) always require?
    - [x] Genitive
    - [ ] Accusative
    - [ ] Instrumental
+   - [ ] Locative
 
-2. "Через дощ" means:
+2. When someone says "Через дощ ми залишилися вдома," what does "через" express here?
    - [x] Because of rain
    - [ ] Through the rain
    - [ ] About rain
+   - [ ] Without rain
 
-3. "Від мами" means:
-   - [x] From mom
-   - [ ] For mom
-   - [ ] With mom
+3. When you receive "Лист від мами," what does the preposition "від" indicate in this context?
+   - [x] From mom (source)
+   - [ ] For mom (benefit)
+   - [ ] With mom (accompaniment)
+   - [ ] About mom (topic)
 
-4. Which preposition means "about"?
+4. When expressing the topic of a conversation in Ukrainian, which preposition correctly means "about"?
    - [x] про
    - [ ] для
    - [ ] від
+   - [ ] через
 
-5. "Без цукру" means:
+5. When ordering "Кава без цукру" at a café, what does "без" express in this phrase?
    - [x] Without sugar
    - [ ] With sugar
    - [ ] For sugar
+   - [ ] Instead of sugar
 
-6. "О третій" refers to:
+6. When arranging to meet "О третій годині," what does the preposition "о" indicate here?
    - [x] Time (at 3 o'clock)
    - [ ] Place (at the third)
    - [ ] Person (about the third)
+   - [ ] Duration (for 3 hours)
 
-7. "Замість чаю" means:
+7. When someone orders "Чай замість кави," what does the preposition "замість" express here?
    - [x] Instead of tea
    - [ ] About tea
    - [ ] Without tea
+   - [ ] After tea
 
-8. Which preposition takes Instrumental?
+8. In Ukrainian, which preposition always requires the Instrumental case to follow it?
    - [x] з
    - [ ] для
    - [ ] про
+   - [ ] без
 
 ## cloze: Story Gaps
 
@@ -479,6 +490,10 @@ Key distinctions:
 [___:6] сніданку вона зателефонувала.
 [___:7] роботу вона не їздить часто додому.
 Всі її люблять, [___:8] одного колеги.
+Вона взяла чай [___:9] кави сьогодні.
+Марія планує відпустку [___:10] роботи.
+Вона поїде [___:11] подругою в гори.
+Це буде подорож [___:12] планів.
 
 1. від | для | про
    > [!answer] від
@@ -504,24 +519,53 @@ Key distinctions:
 8. крім | для | з
    > [!answer] крім
 
+9. замість | з | без
+   > [!answer] замість
+
+10. після | до | для
+    > [!answer] після
+
+11. з | без | для
+    > [!answer] з
+
+12. без | з | про
+    > [!answer] без
+
 ## unjumble: Logical Sentences
 
-1. цукру | Кава | без
-   > [!answer] Кава без цукру
-2. тебе | Це | для
-   > [!answer] Це для тебе
-3. мами | Лист | від
-   > [!answer] Лист від мами
-4. дощ | залишився | Через | я | вдома
-   > [!answer] Через дощ я залишився вдома
-5. про | говорили | Ми | тебе
-   > [!answer] Ми говорили про тебе
-6. молоком | Кава | з
-   > [!answer] Кава з молоком
-7. третій | о | Зустрінемось
-   > [!answer] Зустрінемось о третій
-8. кави | Чай | замість
-   > [!answer] Чай замість кави
+> Put the words in the correct order.
+
+1. цукру / Кава / без / і / молока / будь / ласка / мені
+   > [!answer] Кава без цукру і молока будь ласка мені
+   > (Coffee without sugar and milk, please, for me.)
+
+2. тебе / Це / для / я / купив / подарунок / у / магазині
+   > [!answer] Це подарунок для тебе я купив у магазині
+   > (This is a gift for you I bought at the store.)
+
+3. мами / Лист / від / прийшов / вчора / з / села / нашого
+   > [!answer] Лист від мами прийшов вчора з нашого села
+   > (A letter from mom arrived yesterday from our village.)
+
+4. дощ / залишився / Через / я / вдома / і / читав / книгу
+   > [!answer] Через дощ я залишився вдома і читав книгу
+   > (Because of rain I stayed home and read a book.)
+
+5. про / говорили / Ми / тебе / і / твою / нову / роботу
+   > [!answer] Ми говорили про тебе і твою нову роботу
+   > (We talked about you and your new job.)
+
+6. молоком / Кава / з / і / цукром / будь / ласка / мені
+   > [!answer] Кава з молоком і цукром будь ласка мені
+   > (Coffee with milk and sugar, please, for me.)
+
+7. третій / о / Зустрінемось / годині / біля / входу / в / метро
+   > [!answer] Зустрінемось о третій годині біля входу в метро
+   > (Let's meet at three o'clock near the metro entrance.)
+
+8. кави / Чай / замість / будь / ласка / і / з / лимоном
+   > [!answer] Чай замість кави будь ласка і з лимоном
+   > (Tea instead of coffee please and with lemon.)
 
 ## error-correction: Wrong Preposition
 
@@ -720,6 +764,12 @@ I can't live without you.
 [___:2] дітей чи [___:3] дорослих?
 [___:4] дорослих. І щось [___:5] кашлю.
 Сироп [___:6] цукру підійде?
+Так, дякую. Це подарунок [___:7] бабусі.
+Візьміть вітаміни [___:8] імунітету.
+Скільки коштує? Я хочу заплатити [___:9] готівкою.
+Будь ласка, прийміть ліки [___:10] їжі.
+Можна взяти чай [___:11] кави?
+Так, ось чай [___:12] лимоном.
 
 1. від | для | про
    > [!answer] від
@@ -738,6 +788,24 @@ I can't live without you.
 
 6. без | з | для
    > [!answer] без
+
+7. для | від | про
+   > [!answer] для
+
+8. для | від | без
+   > [!answer] для
+
+9. без | з | для
+   > [!answer] без
+
+10. після | до | через
+    > [!answer] після
+
+11. замість | з | без
+    > [!answer] замість
+
+12. з | без | для
+    > [!answer] з
 
 ## match-up: Case Endings
 
@@ -758,33 +826,7 @@ I can't live without you.
 
 | Word | IPA | English | POS | Gender | Case |
 |------|-----|---------|-----|--------|------|
-| для | /dlʲɑ/ | for | prep | - | Gen |
-| без | /bɛz/ | without | prep | - | Gen |
-| від | /ʋid/ | from | prep | - | Gen |
-| після | /pˈislʲɑ/ | after | prep | - | Gen |
-| крім | /krim/ | except | prep | - | Gen |
-| замість | /zˈɑmistʲ/ | instead of | prep | - | Gen |
-| через | /t͡ʃˈɛrɛz/ | because of | through | prep | - | Acc |
-| про | /prɔ/ | about | prep | - | Acc |
-| о | /ɔ/ | at (time) | prep | - | Loc |
-| об | /ɔb/ | at (before vowel) | prep | - | Loc |
-| з | /z/ | with | prep | - | Instr |
-| із | /iz/ | with (variant) | prep | - | Instr |
-| зі | /zi/ | with (before cluster) | prep | - | Instr |
-| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - | - |
-| лист | /lɪst/ | letter | noun | - | - |
-| ліки | /lˈikɪ/ | medicine | noun | - | - |
-| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - | - |
 | хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - | - |
-| цукор | /t͡sˈukɔr/ | sugar | noun | - | - |
-| молоко | /mɔlɔkˈɔ/ | milk | noun | - | - |
 | відпустка | /ʋidpˈustkɑ/ | vacation | noun | - | - |
-| робота | /rɔbˈɔtɑ/ | work | noun | - | - |
-| обід | /ɔbˈid/ | lunch | noun | - | - |
-| сніданок | /snˈidɑnɔk/ | breakfast | noun | - | - |
-| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - | - |
-| посилка | /pɔsˈɪlkɑ/ | package | noun | - | - |
-| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - | - |
 | мета | /mˈɛtɑ/ | goal | noun | - | - |
-| користь | /kˈɔrɪstʲ/ | benefit | noun | - | - |
 | відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - | - |

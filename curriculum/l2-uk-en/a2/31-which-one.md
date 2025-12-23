@@ -39,12 +39,6 @@ In Ukrainian, "that/which/who" corresponds to one flexible word: **Який**.
 > [!note] Pronunciation
 > **Який** /jɑˈkɪj/. It rhymes with "key" but starts with "ya".
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 ## Presentation
@@ -67,23 +61,44 @@ It must match the **Gender** and **Number** of the main word.
 
 ## 2. The Case Detective
 
-This is the tricky part.
-Inside the relative clause, **який** acts like a noun adjective. Its case depends on its **role within the clause**.
+This is the tricky part, but it's also what makes Ukrainian relative clauses so precise and elegant.
+
+Inside the relative clause, **який** acts like a noun or adjective. Its case depends on its **role within the clause**, not on the main sentence.
+
+**Understanding the Logic:**
+
+When you use a relative clause, you're essentially embedding a mini-sentence inside your main sentence. The word **який** plays a role in that mini-sentence (subject, object, etc.), and its case reflects that role.
 
 **Scenario A: Subject (Nominative)**
-- *Я знаю хлопця, **який** любить мене.* (The boy loves me).
+- *Я знаю хлопця, **який** любить мене.* (I know a boy **who** loves me).
+- Analysis: In the relative clause "який любить мене," the word "який" is the subject (he loves). Therefore, it's in the Nominative case.
 
 **Scenario B: Object (Accusative)**
-- *Я знаю хлопця, **якого** люблю я.* (I love **whom**? The boy).
+- *Я знаю хлопця, **якого** люблю я.* (I know a boy **whom** I love).
+- Analysis: In the relative clause "якого люблю я," the word "якого" is the direct object (I love whom?). Therefore, it's in the Accusative case. Note that for animate masculine nouns, Accusative = Genitive form.
 
 **Scenario C: Prepositional (Locative)**
-- *Це будинок, **у якому** я живу.* (In which I live).
+- *Це будинок, **у якому** я живу.* (This is the house **in which** I live).
+- Analysis: The preposition "у" (in) requires the Locative case when indicating location. Therefore, "якому" is in the Locative case.
 
-**Think inside the box:**
-Look ONLY at the second part of the sentence to determine the case of *який*.
-1. *...я живу.* (I live).
-2. *...у будинку.* (In the house -> Locative).
-3. Result: *...у якому.*
+**Step-by-Step Strategy:**
+
+To determine the correct case of **який**, follow these steps:
+
+1. **Isolate the relative clause**: Look ONLY at the part after the comma.
+2. **Identify the role**: What role does "який" play in that clause? (subject, object, with a preposition, etc.)
+3. **Apply case rules**: Use the same case rules you already know for nouns.
+4. **Check agreement**: Make sure "який" agrees in gender and number with the antecedent (the word before the comma).
+
+**Example Walkthrough:**
+
+Sentence: *Це будинок, у якому я живу.*
+
+1. Isolate: "у якому я живу" (in which I live)
+2. Role: "якому" follows the preposition "у" indicating location
+3. Case: "у" + location = Locative case
+4. Agreement: "будинок" is masculine, so "який" → "якому" (masculine Locative)
+5. Result: "у якому" ✓
 
 ---
 
@@ -206,9 +221,15 @@ A detective interviews a witness about a robbery.
 Я хочу, **щоб** мої друзі приходили до мене в гості.
 Ми будемо пити чай і говорити про життя.
 
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
-## Summary
+# Summary
 
 1.  **Agreement:** *Який* matches the gender/number of the word it describes (Antecedent).
 2.  **Case:** *Який* changes case based on its function inside the relative clause.
@@ -218,7 +239,7 @@ A detective interviews a witness about a robbery.
 
 ---
 
-## Activities
+# Activities
 
 ## match-up: Noun-Pronoun Link
 
@@ -276,65 +297,73 @@ A detective interviews a witness about a robbery.
 
 ## quiz: Detective Works
 
-1. In "Людина, яку я бачу", what is the case of "яку"?
-   - [x] Accusative
-   - [ ] Nominative
-   - [ ] Genitive
+1. У реченні "Людина, яку я бачу", який відмінок має слово "яку" згідно з правилами?
+   - [x] Accusative (знахідний відмінок)
+   - [ ] Nominative (називний відмінок)
+   - [ ] Genitive (родовий відмінок)
+   - [ ] Dative (давальний відмінок)
 
-2. In "Людина, яка бачить мене", what is the case of "яка"?
-   - [x] Nominative
-   - [ ] Accusative
-   - [ ] Dative
+2. У реченні "Людина, яка бачить мене", який відмінок має слово "яка" згідно з правилами?
+   - [x] Nominative (називний відмінок)
+   - [ ] Accusative (знахідний відмінок)
+   - [ ] Dative (давальний відмінок)
+   - [ ] Genitive (родовий відмінок)
 
-3. "Який" must agree in **gender** with:
-   - [x] The word before the comma (Antecedent)
-   - [ ] The verb after the comma
-   - [ ] The speaker
+3. Слово "який" повинно узгоджуватися за родом з яким словом у реченні?
+   - [x] The word before the comma (слово перед комою)
+   - [ ] The verb after the comma (дієслово після коми)
+   - [ ] The speaker (той хто говорить)
+   - [ ] The object of the sentence (додаток речення)
 
-4. Translate: "The friends I live with".
-   - [x] Друзі, з якими я живу.
-   - [ ] Друзі, з які я живу.
+4. Як перекласти англійською "The friends I live with" українською мовою правильно?
+   - [x] Друзі, з якими я живу
+   - [ ] Друзі, з які я живу
+   - [ ] Друзі, які я живу
+   - [ ] Друзі, з яких я живу
 
-5. "Книгу" is feminine. The relative pronoun starts as:
-   - [x] Яка
-   - [ ] Який
-   - [ ] Яке
+5. Якщо слово "книгу" жіночого роду то відносний займенник починається як яка форма?
+   - [x] Яка (жіночий рід)
+   - [ ] Який (чоловічий рід)
+   - [ ] Яке (середній рід)
+   - [ ] Які (множина)
 
-6. "Про" (about) usually triggers which case?
-   - [x] Accusative
-   - [ ] Dative
-   - [ ] Instrumental
+6. Прийменник "про" зазвичай вимагає якого відмінка після себе в українській мові?
+   - [x] Accusative (знахідний відмінок)
+   - [ ] Dative (давальний відмінок)
+   - [ ] Instrumental (орудний відмінок)
+   - [ ] Genitive (родовий відмінок)
 
-7. "У/В" (in) usually triggers which case for location?
-   - [x] Locative
-   - [ ] Nominative
-   - [ ] Genitive
+7. Прийменник "у" або "в" для позначення місця вимагає якого відмінка в українській?
+   - [x] Locative (місцевий відмінок)
+   - [ ] Nominative (називний відмінок)
+   - [ ] Genitive (родовий відмінок)
+   - [ ] Accusative (знахідний відмінок)
 
-8. Is "який" used for people?
-   - [x] Yes, for everyone.
-   - [ ] No, only for things.
+8. Чи використовується слово "який" для позначення людей в українській мові правильно?
+   - [x] Yes, for everyone (так для всіх)
+   - [ ] No, only for things (ні тільки для речей)
+   - [ ] Only for animals (тільки для тварин)
+   - [ ] Only in formal speech (тільки в офіційному мовленні)
 
 ## unjumble: Building Bridges
 
-1. це | чоловік | працює | який | тут
-   > [!answer] Це чоловік, який тут працює
+1. це / чоловік / який / тут / працює / дуже / добре / зараз
+   > [!answer] Це чоловік, який тут працює дуже добре зараз
 
-2. книга | яку | я | читаю | цікава
-   > [!answer] Книга, яку я читаю, цікава
-   > Or "Це цікава книга, яку я читаю." - let's stick to simple relative embedding.
+2. книга / яку / я / читаю / зараз / дуже / цікава / справді
+   > [!answer] Книга, яку я читаю зараз, дуже цікава справді
 
-3. ми | місто | любимо | в | живемо | якому
-   > [!answer] Ми любимо місто, в якому живемо
+3. ми / любимо / місто / в / якому / живемо / вже / давно
+   > [!answer] Ми любимо місто, в якому живемо вже давно
 
-4. дівчина | з | якою | я | говорив
-   > [!answer] Дівчина, з якою я говорив
+4. дівчина / з / якою / я / говорив / вчора / дуже / розумна
+   > [!answer] Дівчина, з якою я говорив вчора, дуже розумна
 
-5. люди | які | знають | все | тут
-   > [!answer] Люди, які знають все, тут
-   > Or "Тут люди, які знають все."
+5. люди / які / знають / все / тут / живуть / дуже / давно
+   > [!answer] Люди, які знають все, тут живуть дуже давно
 
-6. це | дім | який | я | купив
-   > [!answer] Це дім, який я купив
+6. це / дім / який / я / купив / минулого / року / тут
+   > [!answer] Це дім, який я купив минулого року тут
 
 ## group-sort: Which Case?
 
@@ -356,40 +385,37 @@ A detective interviews a witness about a robbery.
 
 ## true-false: Grammar Truths
 
-1. "Який" never changes form.
-   - [ ] True
-   - [x] False
+1. Слово "який" ніколи не змінює свою форму в українській мові.
+   - [ ] Правда
+   - [x] Неправда
 
-2. You need a comma before "який".
-   - [x] True
-   - [ ] False
+2. Потрібна кома перед словом "який" у відносних реченнях.
+   - [x] Правда
+   - [ ] Неправда
 
-3. "House, in which I live" uses Locative case.
-   - [x] True
-   - [ ] False
+3. У фразі "будинок, у якому я живу" використовується місцевий відмінок.
+   - [x] Правда
+   - [ ] Неправда
 
-4. "Girl, who sings" uses Accusative case for "who".
-   - [ ] True
-   - [x] False
-   > She is the subject of singing -> Nominative.
+4. У фразі "дівчина, яка співає" слово "яка" має знахідний відмінок.
+   - [ ] Правда
+   - [x] Неправда
 
-5. "Which" and "Who" are different words in Ukrainian.
-   - [ ] True
-   - [x] False
-   > Usually both are "Який".
+5. Слова "який" та "хто" це різні слова в українській мові.
+   - [ ] Правда
+   - [x] Неправда
 
-6. "Про" takes Dative case.
-   - [ ] True
-   - [x] False
-   > Accusative.
+6. Прийменник "про" вимагає давального відмінка після себе.
+   - [ ] Правда
+   - [x] Неправда
 
-7. "З" (with) takes Instrumental case.
-   - [x] True
-   - [ ] False
+7. Прийменник "з" вимагає орудного відмінка після себе.
+   - [x] Правда
+   - [ ] Неправда
 
-8. "Який" is only for masculine words.
-   - [ ] True
-   - [x] False
+8. Слово "який" використовується тільки для чоловічого роду.
+   - [ ] Правда
+   - [x] Неправда
 
 ## cloze: My Dream House
 
@@ -402,6 +428,11 @@ A detective interviews a witness about a robbery.
 У мене буде пес, [___:5] буде гратися.
 І сусіди, [___:6] не шумлять.
 Це життя, про [___:7] я мріяв.
+Я хочу сад, [___:8] ростуть квіти.
+Це буде будинок, [___:9] я завжди мріяв.
+Я знайду друзів, з [___:10] можна говорити.
+Це місто, [___:11] я хочу жити.
+І робота, [___:12] мені подобається.
 
 1. який | яка
 > [!answer] який
@@ -423,6 +454,21 @@ A detective interviews a witness about a robbery.
 
 7. яке | яким
 > [!answer] яке
+
+8. у якому | який
+> [!answer] у якому
+
+9. про який | який
+> [!answer] про який
+
+10. якими | які
+> [!answer] якими
+
+11. у якому | який
+> [!answer] у якому
+
+12. яка | якій
+> [!answer] яка
 
 ## dialogue-reorder: The Stranger
 
@@ -520,11 +566,10 @@ A detective interviews a witness about a robbery.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| який | /jɑˈkɪj/ | which/who (masc) | pron | m | base |
 | яка | /jɑˈkɑ/ | which/who (fem) | pron | f | form |
 | яке | /jɑˈkɛ/ | which/who (neut) | pron | n | form |
 | які | /jɑˈki/ | which/who (pl) | pron | pl | form |
@@ -536,16 +581,4 @@ A detective interviews a witness about a robbery.
 | якою | /jɑˈkɔju/ | whom/which (instr) | pron | f | declension |
 | якими | /jɑˈkɪmɪ/ | whom/which (instr pl) | pron | pl | declension |
 | котрий | /kɔtˈrɪj/ | which (out of selection) | pron | m | synonym |
-| що | /ʃt͡ʃɔ/ | that/which | pron | — | indeclinable |
-| де | /dɛ/ | where | adv | — | relative |
-| куди | /kuˈdɪ/ | where to | adv | — | relative |
-| звідки | /zˈʋidkɪ/ | where from | adv | — | relative |
-| коли | /kɔˈlɪ/ | when | adv | — | relative |
-| чий | /t͡ʃɪj/ | whose | pron | m | poss |
-| чия | /t͡ʃɪˈjɑ/ | whose | pron | f | poss |
-| чиє | /t͡ʃɪˈjɛ/ | whose | pron | n | poss |
-| людина | /lʲuˈdɪnɑ/ | person | noun | f | substantive |
-| річ | /rit͡ʃ/ | thing | noun | f | substantive |
 | місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |
-| час | /t͡ʃɑs/ | time | noun | m | substantive |
-| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | substantive |

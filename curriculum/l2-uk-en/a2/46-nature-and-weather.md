@@ -32,13 +32,7 @@ This module covers essential vocabulary for discussing nature, weather, seasons,
 
 Ukrainian weather patterns vary significantly by region. Kyiv experiences cold winters and warm summers, while Crimea and Odesa have milder climates near the sea. The Carpathians receive heavy snowfall, making them perfect for winter sports.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 
 ---
 
@@ -227,7 +221,7 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ---
 
-## Summary
+# Summary
 
 **Ландшафт:**
 - гора
@@ -276,7 +270,15 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 >
 > Українці дуже люблять говорити про погоду! Це завжди гарна тема для розмови.
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Nature & Weather in Ukrainian...](https://www.youtube.com/watch?v=x9qlDTX3fVg) — Pinhok Languages
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## match-up: Nature Words
 
@@ -333,93 +335,110 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ## quiz: Nature & Weather
 
-1. "Гора" is:
+1. Can you identify the correct translation for the Ukrainian word "Гора"?
    - [x] Mountain
    - [ ] Valley
+   - [ ] Forest
    - [ ] River
 
-2. "Озеро" is:
-   - [x] Lake
-   - [ ] Sea
-   - [ ] River
+2. Which Ukrainian word corresponds to the large body of water called "Lake"?
+   - [x] Озеро
+   - [ ] Море
+   - [ ] Ріка
+   - [ ] Ставок
 
-3. "Сонячно" means:
+3. If the weather is described as "Сонячно", what does it mean?
    - [x] Sunny
    - [ ] Cloudy
    - [ ] Rainy
+   - [ ] Windy
 
-4. "Дощ" means:
-   - [x] Rain
-   - [ ] Snow
-   - [ ] Wind
+4. What phenomenon is happening when Ukrainians say "Іде дощ"?
+   - [x] It is raining
+   - [ ] It is snowing
+   - [ ] The sun is shining
+   - [ ] The wind is blowing
 
-5. "Весна" is:
-   - [x] Spring
-   - [ ] Summer
-   - [ ] Winter
+5. Which season is characterized by blooming flowers and warming weather?
+   - [x] Весна
+   - [ ] Зима
+   - [ ] Осінь
+   - [ ] Літо
 
-6. "Зима" is:
-   - [x] Winter
-   - [ ] Summer
-   - [ ] Autumn
+6. When do Ukrainians typically go to the sea for a vacation?
+   - [x] Влітку
+   - [ ] Взимку
+   - [ ] Восени
+   - [ ] Навесні
 
-7. "Туман" means:
-   - [x] Fog
-   - [ ] Rain
-   - [ ] Snow
+7. What weather condition makes it difficult to see clearly outside?
+   - [x] Туман
+   - [ ] Сонце
+   - [ ] Вітер
+   - [ ] Тепло
 
-8. "Літо" means:
-   - [x] Summer
-   - [ ] Winter
-   - [ ] Autumn
+8. If you see "Блискавка" and hear "Грім", what is happening?
+   - [x] A thunderstorm
+   - [ ] A sunny day
+   - [ ] A light rain
+   - [ ] A snowstorm
 
 ## cloze: Story Comprehension
 
 > Complete based on the stories.
 
-Сім'я Петренків їде на [___:1]. (nature)
-Погода [___:2] і тепла. (sunny)
-Озеро [___:3] і прозоре. (clean)
-Оксана їде на [___:4] влітку. (sea)
-Осінь — це [___:5] пора. (golden)
-Взимку падає білий [___:6]. (snow)
+Україна має чудову [___:1]. На заході є високі [___:2] Карпати. Там взимку падає [___:3] і люди катаються на лижах. На півдні є Чорне [___:4]. Влітку там дуже [___:5] і тепло. Люди люблять плавати у [___:6] і засмагати на [___:7]. Через Київ тече велика [___:8] Дніпро. Навесні все цвіте і [___:9]. Восени часто йде [___:10] і стає прохолодно. Тоді буває сильний [___:11]. Але кожна [___:12] року по-своєму красива.
 
-1. природу | море | дачу
+1. природу | погоду | роботу
    > [!answer] природу
 
-2. сонячна | хмарна | дощова
-   > [!answer] сонячна
+2. гори | долини | міста
+   > [!answer] гори
 
-3. чисте | брудне | мале
-   > [!answer] чисте
+3. сніг | дощ | град
+   > [!answer] сніг
 
-4. море | гори | ліс
+4. море | озеро | поле
    > [!answer] море
 
-5. золота | зелена | біла
-   > [!answer] золота
+5. сонячно | хмарно | темно
+   > [!answer] сонячно
 
-6. сніг | дощ | листя
-   > [!answer] сніг
+6. воді | піску | траві
+   > [!answer] воді
+
+7. пляжі | даху | вулиці
+   > [!answer] пляжі
+
+8. ріка | дорога | стежка
+   > [!answer] ріка
+
+9. зелене | біле | чорне
+   > [!answer] зелене
+
+10. дощ | сніг | сонце
+    > [!answer] дощ
+
+11. вітер | туман | мороз
+    > [!answer] вітер
+
+12. пора | година | хвилина
+    > [!answer] пора
 
 ## unjumble: Weather Sentences
 
-1. сонячно | Сьогодні | тепло | і
-   > [!answer] Сьогодні сонячно і тепло
-2. йде | Надворі | дощ
-   > [!answer] Надворі йде дощ
-3. холодно | Взимку | дуже
-   > [!answer] Взимку дуже холодно
-4. падає | білий | Сніг
-   > [!answer] Падає білий сніг
-5. чудова | погода | Яка
-   > [!answer] Яка чудова погода
-6. весну | Я | люблю
-   > [!answer] Я люблю весну
-7. хмарно | буде | Завтра
-   > [!answer] Завтра буде хмарно
-8. гарне | озеро | Яке
-   > [!answer] Яке гарне озеро
+1. Сьогодні / на / вулиці / дуже / гарна / і / тепла / погода
+   > [!answer] Сьогодні на вулиці дуже гарна і тепла погода
+2. Влітку / ми / часто / їздимо / відпочивати / на / синє / море
+   > [!answer] Влітку ми часто їздимо відпочивати на синє море
+3. Взимку / в / горах / падає / білий / сніг / і / холодно
+   > [!answer] Взимку в горах падає білий сніг і холодно
+4. Осінь / це / золота / пора / коли / листя / стає / жовтим
+   > [!answer] Осінь це золота пора коли листя стає жовтим
+5. Навесні / птахи / повертаються / додому / і / співають / веселі / пісні
+   > [!answer] Навесні птахи повертаються додому і співають веселі пісні
+6. Яке / величезне / і / красиве / озеро / ми / бачимо / перед / собою
+   > [!answer] Яке величезне і красиве озеро ми бачимо перед собою
 
 ## error-correction: Weather Mistakes
 
@@ -559,37 +578,18 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| гора | /ɦɔˈra/ | mountain | noun | f | landscape |
 | долина | /dɔˈlɪna/ | valley | noun | f | landscape |
-| ліс | /lis/ | forest | noun | m | nature |
-| озеро | /ˈɔzerɔ/ | lake | noun | n | water |
 | ріка | /riˈka/ | river | noun | f | water |
-| море | /ˈmɔre/ | sea | noun | n | water |
 | океан | /ɔkeˈan/ | ocean | noun | m | water |
-| пляж | /plʲaʒ/ | beach | noun | m | landscape |
 | поле | /ˈpɔle/ | field | noun | n | landscape |
 | луг | /luɦ/ | meadow | noun | m | landscape |
-| сонячно | /ˈsɔnʲatʃnɔ/ | sunny | adv | — | weather |
-| хмарно | /ˈxmarnɔ/ | cloudy | adv | — | weather |
-| дощ | /dɔʃtʃ/ | rain | noun | m | weather |
-| сніг | /sniɦ/ | snow | noun | m | weather |
-| вітер | /ˈviter/ | wind | noun | m | weather |
 | гроза | /ɦrɔˈza/ | thunderstorm | noun | f | weather |
 | туман | /tuˈman/ | fog | noun | m | weather |
 | блискавка | /blɪsˈkavka/ | lightning | noun | f | weather |
 | грім | /ɦrim/ | thunder | noun | m | weather |
-| весна | /vesˈna/ | spring | noun | f | season |
-| літо | /ˈlitɔ/ | summer | noun | n | season |
-| осінь | /ˈɔsinʲ/ | autumn | noun | f | season |
-| зима | /zɪˈma/ | winter | noun | f | season |
-| дерево | /ˈderevɔ/ | tree | noun | n | flora |
-| квітка | /kvitˈka/ | flower | noun | f | flora |
 | трава | /traˈva/ | grass | noun | f | flora |
-| птах | /ptax/ | bird | noun | m | fauna |
-| тварина | /tvaˈrɪna/ | animal | noun | f | fauna |
-| погода | /pɔˈɦɔda/ | weather | noun | f | climate |
 | клімат | /ˈklimat/ | climate | noun | m | environment |

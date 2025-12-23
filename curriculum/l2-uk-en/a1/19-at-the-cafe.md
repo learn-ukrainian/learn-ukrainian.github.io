@@ -680,21 +680,10 @@ Tipping is becoming more common in Ukraine, especially in cities. 10% is standar
 | ще | /ʃt͡ʃɛ/ | still, more, another | adverb | - | |
 | достатньо | /dosˈtɑtʲnʲo/ | enough | adverb | - | |
 | все | /fsɛ/ | everything, all | pronoun | - | |
-| разом | /ˈrɑzom/ | together | adverb | - | |
-| окремо | /ˈokrɛmo/ | separately | adverb | - | |
-| рахунок | /rɑˈxunok/ | check, bill | noun | m | |
-| меню | /mɛˈnju/ | menu | noun | n | |
 | замовляти | /zɑmovˈlʲɑtɪ/ | to order | verb | - | imperfective |
 | замовити | /zɑˈmovɪtɪ/ | to order | verb | - | perfective |
-| офіціант | /ofʲit͡sʲiˈɑnt/ | waiter | noun | m | |
-| офіціантка | /ofʲit͡sʲiˈɑntkɑ/ | waitress | noun | f | |
-| чай | /t͡ʃɑj/ | tea | noun | m | |
-| кава | /ˈkɑvɑ/ | coffee | noun | f | |
 | круасан | /kruɑˈsɑn/ | croissant | noun | m | |
-| смачно | /ˈsmɑt͡ʃno/ | delicious (adverb) | adverb | - | |
 | чорний | /ˈt͡ʃornɪj/ | black | adjective | m | |
 | трав'яний | /trɑvʲˈjɑnɪj/ | herbal | adjective | m | |
-| цукор | /ˈt͡sukɔr/ | sugar | noun | m | |
-| молоко | /moloˈko/ | milk | noun | n | |
 
 ---

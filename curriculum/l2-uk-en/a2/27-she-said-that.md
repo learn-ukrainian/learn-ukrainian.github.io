@@ -22,6 +22,8 @@ objectives:
 vocabulary_count: 25
 ---
 
+# Summary
+
 ## Warm-up
 
 "Did you hear what she said?"
@@ -34,19 +36,11 @@ In Ukrainian, it's easier! You usually keep the original tense.
 - **The Tense:** Keeping it real (present stays present)
 - **The Verbs:** Saying vs Telling vs Asking
 
-> 🧠 **Think about it**
+> 💡 **Think about it**
 > Imagine someone says **"I am hungry."**
 > In English, you report: "He said (that) he **was** hungry."
 > In Ukrainian, you report: "Він сказав, що він **голодний**" (He said that he [is] hungry).
 > Logic: At that moment in history, he *is* hungry.
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech...](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
 ---
 
@@ -67,11 +61,13 @@ In Ukrainian Reported Speech, you typically **do not change the tense** of the v
 - Вона сказала, що **вона** любить каву. (She said that she *likes* coffee.)
 
 > [!important] Simplify
-> You don't need to shift "like" to "liked". The logic is: "She said: [insert her current feeling at that time]."
+> You don't need to shift "like" to "liked". The logic is: "She said: [insert her current feeling at that time]." This makes Ukrainian reporting much more intuitive for learners, as you can almost always reuse the original sentence structure without major grammatical overhaul.
 
 ### Future Tense
 - **Direct:** Він сказав: "Я **буду** там." (I will be there.)
 - **Indirect:** Він сказав, що він **буде** там. (He said he *will* be there.)
+
+This simplicity is a major advantage of the Ukrainian language. Once you know the present tense, you can report what anyone says without worrying about complex temporal shifts common in Germanic languages.
 
 ## 2. Reporting Verbs
 
@@ -107,6 +103,7 @@ You need more than just "said".
 
 When reporting a question, we don't use "що". We use **чи** (if/whether) or question words.
 
+
 - **Direct:** "Ти любиш джаз?"
 - **Indirect:** Він запитав, **чи** я люблю джаз. (He asked *if* I like jazz.)
 
@@ -137,10 +134,9 @@ How you say it matters. Ukrainian has many reporting verbs to convey attitude.
 | Request | **Просити** (To ask/beg) | "Я прошу, щоб ти прийшов." |
 | Deceit | **Брехати** (To lie) | "Він бреше, що хворий." |
 
-> [!note] Subjunctive Trap
-> In English: "I ask that you **be** there." (Subjunctive).
-> In Ukrainian: "Я прошу, щоб ти **був** там." (Past tense!).
-> When reporting a **command** or **wish** (using **щоб**), use the **past tense** of the verb!
+> When reporting a **command** or **wish** (using **щоб**), use the **past tense** of the verb! This is similar to the English subjunctive, but simpler since it always uses the standard past form. For example, "I ask that you write" becomes "Я прошу, щоб ти писав."
+
+Ukrainian reporting is all about maintaining the integrity of the witness. You are not changing their world; you are simply providing a window into it. This is why the tenses remain "frozen" in the state they were originally uttered.
 
 ---
 
@@ -156,16 +152,18 @@ This is a powerful informal network. If you live in an apartment block, the gran
 
 If you respect them and say "Dobryi den", you are a "good child". If not, reports will spread that you are rude or suspicious!
 
-> [!fact] Superstition: Talking about the Future
-> Many Ukrainians are superstitious about reporting future plans.
-> *"Хочеш насмішити Бога — розкажи йому про свої плани"* (If you want to make God laugh, tell him your plans).
-> People often say **"Тьху-тьху-тьху"** (spitting sound) after saying something good, so they don't jinx it.
-
-## Trust and Promises
+> [!cultural] The Language of Resistance
+> During the Soviet era, reported speech was often a tool of propaganda. Official reports would often start with "Повідомляють, що..." (It is reported that...) to distance the source from the information. However, the Ukrainian underground press used reporting verbs to challenge these narratives, often using "Стверджують" (Claim) to cast doubt on official lies.
+>
+> Using your own voice to report the truth is a political act in Ukrainian history. When you report what someone said, you are becoming a witness and a transmitter of their story.
 
 Be careful with **"Обіцяти"** (to promise). In strict contexts, *"Обіцянка — цяцянка, а дурневі радість"* (A promise is a toy, and a fool is happy). This proverb means promises are often empty. Ukrainian culture values action over words.
 However, **"Дати слово"** (To give one's word) is serious.
 * *Він дав слово, що зробить це.*
+
+> [!tip] Myth: Ukrainian is just a dialect
+> **Myth:** Since Ukrainian reporting speech is similar to some other Slavic languages, it's just a dialect.
+> **Reality:** Ukrainian has a unique system of speech verbs and distinct phonetics in reporting. Its structure is independent and follows its own historical evolution.
 
 ---
 
@@ -185,6 +183,8 @@ Two neighbors, Halyna and Oksana, are talking.
 **Oksana:** Треба запитати його жінку.
 **Halyna:** Вона мовчить як риба. Я питала, але вона відповіла, що це "не моя справа".
 **Oksana:** Ого! Це підозріло. Значить, точно виграв!
+
+*Ukrainian villages are often the source of the fastest information networks.*
 
 ### Analysis of Gossip
 1.  **Кажуть, що...**: Initiating the rumor.
@@ -230,7 +230,7 @@ Read the chain of messages. See how information changes.
 
 ---
 
-## Summary
+## Summary Table
 
 Reporting speech in Ukrainian is both simple and powerful.
 
@@ -245,9 +245,17 @@ Now you can spread the news (or the gossip)!
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech...](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## match-up: Reporting Verbs
+# Activities
+
+## match-up: Reporting Verbs (Concept: Direct-to-Indirect Mapping)
 
 > Match the verb to its definition.
 
@@ -260,150 +268,200 @@ Now you can spread the news (or the gossip)!
 - Критикувати :: To criticize
 - Питати :: To ask
 
-## fill-in: Report the Sentence
+## fill-in: Report the Sentence (Concept: Pronoun Adaptation)
 
 > Complete the reported speech phrases.
 
-1. "Я втомився." → Він сказав, ___ він втомився. (that)
+1. Я втомився. → Він сказав, ___ він втомився.
    > [!answer] що
    > [!options] що | чи | як | де
 
-2. "Ти прийдеш?" → Він запитав, ___ я прийду. (if)
+2. Ти прийдеш? → Він запитав, ___ я прийду.
    > [!answer] чи
    > [!options] чи | що | як | де
 
-3. "Це помилка!" → Вона ___, що це помилка. (claimed/asserted)
+3. Це помилка! → Вона ___, що це помилка.
    > [!answer] стверджувала
    > [!options] стверджувала | питала | мовчала | спала
 
-4. "Не забудь паспорт." → Мама ___, щоб я взяв паспорт. (reminded)
+4. Не забудь паспорт. → Мама ___, щоб я взяв паспорт.
    > [!answer] нагадала
    > [!options] нагадала | забула | сказала | повідомила
 
-5. "Я не брав це!" → Він ___, що брав це. (denied)
+5. Я не брав це! → Він ___, що брав це.
    > [!answer] заперечив
    > [!options] заперечив | підтвердив | сказав | обіцяв
 
-6. "Ми купили дім." → Вони ___, що купили дім. (informed/reported)
+6. Ми купили дім. → Вони ___, що купили дім.
    > [!answer] повідомили
    > [!options] повідомили | запитали | заперечили | приховали
 
-7. "Суп холодний!" → Клієнт ___, що суп холодний. (complained)
+7. Суп холодний! → Клієнт ___, що суп холодний.
    > [!answer] поскаржився
    > [!options] поскаржився | похвалив | з'їв | нагадав
 
-8. "Я все зроблю." → Він ___, що все зробить. (promised)
+8. Я все зроблю. → Він ___, що все зробить.
    > [!answer] пообіцяв
    > [!options] пообіцяв | заперечив | спитав | забув
 
-9. "Де ти?" → Вона спитала, ___ я. (where)
+9. Де ти? → Вона спитала, ___ я.
    > [!answer] де
    > [!options] де | що | чи | коли
 
-10. "Молодець!" → Учитель ___ студента. (praised)
+10. Молодець! → Учитель ___ студента.
     > [!answer] похвалив
     > [!options] похвалив | розкритикував | спитав | нагадав
 
-## quiz: Logic of Reporting
+## quiz: Logic of Reporting (Concept: Logical Deduction)
+> Дайте відповіді на питання про правильне вживання непрямої мови та дієслів мовлення в українській мові. | Answer questions about the correct use of indirect speech and speech verbs in Ukrainian.
 
-1. Do you usually change the verb tense in Ukrainian reported speech?
-   - [x] No, usually keep the original tense.
-   - [ ] Yes, always move one tense back.
-   - [ ] Yes, change to Future.
+1. Чи змінюється зазвичай час дієслова в українській непрямій мові, якщо подія ще триває?
 
-2. Which word translates "if" in "He asked IF I know"?
-   - [x] Чи
-   - [ ] Якщо
-   - [ ] Якби
+- [x] Ні, зазвичай ми повністю зберігаємо оригінальний час
+- [ ] Так, ми завжди змінюємо час на один крок назад
+- [ ] Так, ми обов'язково змінюємо всі дієслова на майбутній час
+- [ ] Так, час змінюється тільки для дуже довгих речень
 
-3. "Кажуть, що..." introduces:
-   - [x] Rumors | General opinion
-   - [ ] Scientific facts
-   - [ ] Direct command
+---
 
-4. "Заперечувати" means:
-   - [x] To deny
-   - [ ] To agree
-   - [ ] To ask
+2. Яке українське слово найкраще перекладає "if" у реченні "Він запитав, чи я це знаю"?
 
-5. If someone says "Я буду там", you report:
-   - [x] Він сказав, що буде там.
-   - [ ] Він сказав, що був там.
-   - [ ] Він сказав, що буду там.
+- [x] Українська частка "Чи"
+- [ ] Українська частка "Якщо"
+- [ ] Українська частка "Якби"
+- [ ] Українська частка "Що"
 
-6. "Нагадати" implies:
-   - [x] Someone might forget
-   - [ ] Someone doesn't know
-   - [ ] Someone is lying
+---
 
-7. "Критикувати" is:
-   - [x] Negative (Criticize)
-   - [ ] Positive (Praise)
-   - [ ] Neutral
+3. Який саме відтінок значень вносить у розповідь популярний початок історії "Кажуть, що..."?
 
-8. "Пояснити" is used when:
-   - [x] Giving reasons or making something clear
-   - [ ] Asking for items
-   - [ ] Refusing
+- [x] Це вказує на певні чутки або загальну думку
+- [ ] Це вказує на дуже точні наукові чи історичні факти
+- [ ] Це вказує на прямий і суворий наказ начальника
+- [ ] Це вказує на початок дуже веселої української пісні
 
-9. "Скаржитися" implies:
-   - [x] Dissatisfaction
-   - [ ] Happiness
-   - [ ] Confusion
+---
 
-10. Which is formal?
-    - [x] Повідомити
-    - [ ] Казати
-    - [ ] Балакати
+4. Що саме ви робите, коли використовуєте в розмові українське дієслово "Заперечувати"?
 
-11. "Переконувати" means:
-    - [x] To convince/persuade
-    - [ ] To translate
-    - [ ] To cross
+- [x] Ви офіційно кажете, що якась інформація є неправдою
+- [ ] Ви повністю погоджуєтеся з думкою свого співрозмовника
+- [ ] Ви ввічливо просите друга про невелику послугу
+- [ ] Ви розпочинаєте нову цікаву розповідь про подорож
 
-12. The most neutral verb is:
-    - [x] Казати/Сказати
-    - [ ] Скаржитися
-    - [ ] Кричати
+---
 
-## unjumble: Reconstruct the Report
+5. Як правильно передати непрямою мовою фразу Максима, який сказав: "Я буду там завтра"?
 
-1. що | він | сказав | прийде | не
-   > [!answer] Він сказав, що не прийде
+- [x] Максим сказав, що він буде там завтра
+- [ ] Максим сказав, що він уже був там учора
+- [ ] Максим сказав, що я буду там завтра
+- [ ] Максим сказав, про те що він уже вдома був
 
-2. чи | вона | вдома | запитала | я
-   > [!answer] Вона запитала, чи я вдома
+---
 
-3. це | заперечив | він | правда | що
-   > [!answer] Він заперечив, що це правда
+6. Про що саме ми сигналізуємо слухачеві, коли вживаємо дієслово "Нагадати" в непрямій мові?
 
-4. пообіцяла | подзвонити | вона | завтра
-   > [!answer] Вона пообіцяла подзвонити завтра
+- [x] Що хтось інший міг випадково забути певну інформацію
+- [ ] Що хтось інший зовсім не знає жодної інформації
+- [ ] Що хтось інший навмисно каже неправду співрозмовнику
+- [ ] Що хтось інший дуже сильно хоче піти спати зараз
 
-5. нагадав | про | бос | зустріч
-   > [!answer] Бос нагадав про зустріч
+---
 
-6. лікар | що | здорові | повідомив | ми
-   > [!answer] Лікар повідомив, що ми здорові
+7. Який емоційний колір має українське дієслово "Критикувати" у вашій розповіді?
 
-## group-sort: Verb Intention
+- [x] Це дієслово має негативне забарвлення оцінки
+- [ ] Це дієслово має дуже позитивне забарвлення оцінки
+- [ ] Це дієслово є цілком нейтральним і безпристрасним
+- [ ] Це дієслово вказує лише на голосне звучання голосу
 
-### Information (Neutral)
-- Казати
-- Повідомити
-- Розповідати
-- Пояснити
-- Відповідати
+---
 
-### Influence/Emotion (Strong)
-- Скаржитися
-- Критикувати
-- Хвалити
-- Заперечувати
-- Переконувати
-- Обіцяти
+8. У якій саме ситуації найкраще використовувати українське дієслово "Пояснити" в діалозі?
 
-## true-false: True or False?
+- [x] Коли ми наводимо вагомі причини або роз'яснюємо щось
+- [ ] Коли ми просимо про якісь конкретні предмети в магазині
+- [ ] Коли ми категорично відмовляємося щось робити зовсім
+- [ ] Коли ми шукаємо правильний шлях до нового будинку
+
+---
+
+9. Що саме ви відчуваєте або виражаєте, вживаючи дієслово "Скаржитися" у розмові?
+
+- [x] Виражаєте своє незадоволення певною ситуацією або річчю
+- [ ] Виражаєте надзвичайну радість та повне задоволення
+- [ ] Виражаєте повне нерозуміння того, що зараз відбувається
+- [ ] Виражаєте велике бажання почати працювати швидше
+
+---
+
+10. Яке з цих трьох українських дієслів мовлення є найбільш офіційним та діловим?
+
+- [x] Це офіційне дієслово "Повідомити"
+- [ ] Це повсякденне дієслово "Казати"
+- [ ] Це дуже неформальне дієслово "Балакати"
+- [ ] Це гучне емоційне дієслово "Кричати"
+
+---
+
+11. Що саме ми маємо на увазі, коли кажемо "Він намагається мене переконати" в дискусії?
+
+- [x] Він намагається змусити мене повірити в його думку
+- [ ] Він намагається швидко перекласти мій текст іншою мовою
+- [ ] Він намагається дуже обережно перейти широку дорогу
+- [ ] Він намагається згадати моє ім'я після довгої перерви
+
+---
+
+12. Які українські дієслівні форми мовлення вважаються найбільш нейтральними для звіту?
+
+- [x] Нейтральні форми "Казати" або "Сказати"
+- [ ] Емоційна та роздратована форма "Скаржитися"
+- [ ] Дуже гучна та напружена форма "Кричати"
+- [ ] Тиха та таємнича форма "Шепотіти"
+
+## unjumble: Reconstruct the Report (Concept: Syntax Integrity)
+> Впорядкуйте слова, щоб утворити правильні речення з непрямою мовою. | Order the words to form correct sentences with indirect speech.
+
+1. він / чітко / сказав / що / сьогодні / взагалі / не / прийде
+   > [!answer] Він чітко сказав, що сьогодні взагалі не прийде
+
+2. вона / ввічливо / запитала / мене / чи / я / вже / вдома
+   > [!answer] Вона ввічливо запитала мене, чи я вже вдома
+
+3. він / категорично / заперечив / що / це / є / чиста / правда
+   > [!answer] Він категорично заперечив, що це є чиста правда
+
+4. вона / твердо / пообіцяла / нам / обов'язково / подзвонити / завтра / вранці
+   > [!answer] Вона твердо пообіцяла нам обов'язково подзвонити завтра вранці
+
+5. бос / знову / нагадав / усім / нам / про / дуже / важливу / зустріч
+   > [!answer] Бос знову нагадав усім нам про дуже важливу зустріч
+
+6. лікар / повідомив / що / ми / всі / тепер / цілком / здорові
+   > [!answer] Лікар повідомив, що ми всі тепер цілком здорові
+
+## group-sort: Verb Intention (Concept: Semantic Categorization)
+> Розподіліть дієслова за їхнім наміром: передача інформації чи сильний вплив. | Sort the verbs by their intention: information or strong influence.
+
+### Information (Передача інформації)
+- Казати (To say)
+- Повідомити (To inform)
+- Розповідати (To tell/narrate)
+- Пояснити (To explain)
+- Відповідати (To answer)
+- Повторити (To repeat)
+
+### Influence or Emotion (Вплив або емоція)
+- Скаржитися (To complain)
+- Критикувати (To criticize)
+- Хвалити (To praise)
+- Заперечувати (To deny)
+- Переконувати (To convince)
+- Обіцяти (To promise)
+
+## true-false: True or False? (Concept: Concept Validation)
 
 1. If Max says "I am eating", you report "Max said he ate".
    - [ ] True
@@ -450,17 +508,10 @@ Now you can spread the news (or the gossip)!
     - [x] True
     > "They say..."
 
-## cloze: The Gossip
+## cloze: The Gossip Flow (Concept: Contextual Application)
+> Доповніть текст про чутки, використовуючи правильні дієслова мовлення та сполучники. | Complete the text about rumors using correct speech verbs and conjunctions.
 
-> Complete the gossip.
-
-Ти чула новини про Олю?
-Марія [___:1], що Оля виходить заміж!
-Я запитала Олю, [___:2] це правда.
-Оля [___:3], що ні. Вона сказала, [___:4] це просто чутки.
-Але Петро [___:5], що бачив її в магазині весільних суконь.
-Він [___:6], що сукня була дуже гарна.
-Хтось тут [___:7]!
+Ти вже чула останні новини про нашу Олю? Марія [___:1], що Оля скоро виходить заміж за Олега! Я відразу запитала Олю, [___:2] це справді чиста правда. Але Оля [___:3] мені сьогодні, що це зовсім ні. Вона твердо сказала, [___:4] це просто неправдиві чутки в офісі. Але Петро [___:5], що бачив її вчора в магазині весільних суконь. Він навіть [___:6], що її нова сукня була дуже гарна. Хтось тут точно [___:7] нам усім сьогодні! Я думаю, що треба [___:8] Олі ще раз про це. Може, вона [___:9] все нам пізніше? Я [___:10], що дізнаюся правду скоро. [___:11] вона сама розкаже. Адже всі [___:12], що це цікаво!
 
 1. сказала | поїла
 > [!answer] сказала
@@ -483,7 +534,22 @@ Now you can spread the news (or the gossip)!
 7. бреше | спить
 > [!answer] бреше
 
-## dialogue-reorder: The Interview Report
+8. нагадати | забути
+> [!answer] нагадати
+
+9. пояснить | замовкне
+> [!answer] пояснить
+
+10. обіцяю | заперечую
+> [!answer] обіцяю
+
+11. Нехай | Хоча
+> [!answer] Нехай
+
+12. кажуть | мовчать
+> [!answer] кажуть
+
+## dialogue-reorder: The Interview Report (Concept: Narrative Coherence)
 
 - Що він тобі сказав на співбесіді?
 - Він запитав, де я працював раніше.
@@ -504,7 +570,7 @@ Now you can spread the news (or the gossip)!
 > 7. Це добре! Він сказав, коли подзвонить?
 > 8. Він повідомив, що подзвонить у вівторок.
 
-## mark-the-words: Find Reporting Verbs
+## mark-the-words: Find Reporting Verbs (Concept: Pattern Recognition)
 
 Він [сказав](correct), що прийде. Вона [запитала](correct), коли це буде. Ми [повідомили](correct), що вже готові. Директор [наказав](correct) працювати. Клієнт [поскаржився](correct) на сервіс. Ти [пообіцяв](correct) допомогти!
 
@@ -512,52 +578,45 @@ Now you can spread the news (or the gossip)!
 
 Я [заперечую](correct) все. Він [стверджує](correct) протилежне. Хто [пояснить](correct) це правило?
 
-## error-correction: Fix the Report
+## error-correction: Fix the Report (Concept: Critical Proofreading)
 
-1. Він сказав, що він **був** голодний зараз. (Direct: "I am hungry")
+1. Він сказав, що він **був** голодний зараз.
    > [!error] був
    > [!answer] голодний
    > [!explanation] Don't backshift tenses. Keep present.
    > [!options] голодний | був
 
-2. Вона запитала, **що** я прийду. (Direct: "Will you come?")
+2. Вона запитала, **що** я прийду.
    > [!error] що
    > [!answer] чи
-   > [!explanation] For Yes/No questions, use "чи" (if).
+   > [!explanation] For Yes/No questions, use чи.
    > [!options] чи | що
 
-3. Вони **говорили**, що це правда. (Use transitive verb for facts)
+3. Вони **говорили**, що це правда.
    > [!error] говорили
    > [!answer] сказали
-   > [!explanation] "Говорити" is to speak/talk. "Сказати" is to say something specific.
+   > [!explanation] Говорити is to speak, сказати is to say.
    > [!options] сказали | говорили
 
-4. Він **відповів** питання. (Case error)
+4. Він **відповів** питання.
    > [!error] відповів
    > [!answer] поставив
-   > [!explanation] "Ask" a question is "поставити", or simple "запитати". "Відповісти" is to answer. Wait, maybe the sentence meant "He answered the question". Then it needs "на питання". Let's assume mismatch verb.
-   > [!options] запитав | відповів
+   > [!explanation] Use поставити for asking questions.
+   > [!options] запитав | відповів | поставив
 
-5. Вона **заперечила**, що вона зробила це. (Deny)
-   > [!error] заперечила
-   > [!answer] заперечила
-   > [!explanation] Wait, this is correct. Let's make an error: "Вона **погодилася**, що вона не робила це" (She agreed that she didn't do it - awkward). Or "Вона **відмовила**, що це правда" (Refused that it is true - wrong word).
-   > [!options] заперечила | відмовила
-
-   *Let's try simpler error:*
-   Він сказав, **як** мене звати. (Direct: My name is...)
+5. Вона каже, **як** мене звати.
    > [!error] як
    > [!answer] що
-   > [!explanation] "Сказав, як" means "Told HOW". "Сказав, що" means "Said THAT".
+   > [!explanation] Use що for statements.
    > [!options] що | як
 
-6. Я **обіцяю**, що я зробив це вчора. (Tense mismatch with promise)
+6. Я **обіцяю**, що я зробив це вчора.
    > [!error] обіцяю
    > [!answer] стверджую
-   > [!explanation] You can't promise the past. You claim/assert the past.
+   > [!explanation] You cannot promise the past.
    > [!options] стверджую | обіцяю
 
-## translate: English to Ukrainian
+## translate: English to Ukrainian (Concept: Cross-Linguistic Transfer)
 
 1. He said that he is tired.
    - [x] Він сказав, що стомився.
@@ -609,22 +668,15 @@ Now you can spread the news (or the gossip)!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| сказати | /skɑˈzɑtɪ/ | to say | verb | — | perfective |
-| казати | /kɑˈzɑtɪ/ | to say | tell | verb | — | imperfective |
-| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | talk | verb | — | activity |
-| розповідати | /rɔzpɔʋiˈdɑtɪ/ | to tell | narrate | verb | — | story |
-| питати | /pɪˈtɑtɪ/ | to ask | verb | — | imperfective |
-| запитати | /zɑpɪˈtɑtɪ/ | to ask | verb | — | perfective |
-| відповідати | /ʋidpɔʋiˈdɑtɪ/ | to answer | verb | — | general |
-| повідомити | /pɔʋiˈdɔmɪtɪ/ | to inform | notify | verb | — | formal |
+| казати | /kɑˈzɑtɪ/ | to say, tell | verb | — | imperfective |
+| повідомити | /pɔʋiˈdɔmɪtɪ/ | to inform, notify | verb | — | formal |
 | пояснити | /pɔjɑsˈnɪtɪ/ | to explain | verb | — | logic |
-| стверджувати | /stʋɛrˈdʒuʋɑtɪ/ | to assert | claim | verb | — | argument |
+| стверджувати | /stʋɛrˈdʒuʋɑtɪ/ | to assert, claim | verb | — | argument |
 | заперечувати | /zɑpɛˈrɛt͡ʃuʋɑtɪ/ | to deny | verb | — | argument |
-| обіцяти | /ɔbiˈt͡sʲɑtɪ/ | to promise | verb | — | commitment |
 | попередити | /pɔpɛˈrɛdɪtɪ/ | to warn | verb | — | danger |
 | нагадати | /nɑɦɑˈdɑtɪ/ | to remind | verb | — | memory |
 | переконувати | /pɛrɛˈkɔnuʋɑtɪ/ | to convince | verb | — | argument |
@@ -632,9 +684,7 @@ Now you can spread the news (or the gossip)!
 | хвалити | /xʋɑˈlɪtɪ/ | to praise | verb | — | emotion |
 | критикувати | /krɪtɪkuˈʋɑtɪ/ | to criticize | verb | — | emotion |
 | коментувати | /kɔmɛntuˈʋɑtɪ/ | to comment | verb | — | general |
-| що | /ʃt͡ʃɔ/ | that | conj | — | connector |
 | кричати | /krɪˈt͡ʃɑtɪ/ | to shout | verb | — | emotion |
-| просити | /prɔˈsɪtɪ/ | to ask | beg | verb | — | request |
 | вимагати | /ʋɪmɑˈɦɑtɪ/ | to demand | verb | — | strong request |
 | шепотіти | /ʃɛpɔˈtitɪ/ | to whisper | verb | — | quiet |
 | брехати | /brɛˈxɑtɪ/ | to lie | verb | — | negative |

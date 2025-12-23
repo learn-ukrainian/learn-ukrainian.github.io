@@ -325,94 +325,111 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 ## quiz: Future Tense
 > Дайте відповіді на питання про майбутній час. | Answer questions about the future tense.
 
-1. How is imperfective future formed?
+1. Which of the following correctly describes how the imperfective future is formed in Ukrainian?
 
 - [x] буду + infinitive
-- [ ] conjugated verb
-- [ ] will + verb
+- [ ] conjugated imperfective verb
+- [ ] will + infinitive
+- [ ] conjugated perfective verb
 
 ---
 
-2. How is perfective future formed?
+2. Which of the following correctly describes how the perfective future is formed in Ukrainian?
 
 - [x] conjugated perfective verb
 - [ ] буду + infinitive
-- [ ] буму + verb
+- [ ] conjugated imperfective verb
+- [ ] will + perfective
 
 ---
 
-3. "Я буду читати" means:
+3. What is the specific meaning of the Ukrainian future tense phrase "Я буду читати"?
 
 - [x] I will be reading (process)
 - [ ] I will finish reading (result)
+- [ ] I read yesterday
+- [ ] I am reading now
 
 ---
 
-4. "Я прочитаю" means:
+4. What is the specific meaning of the Ukrainian perfective future verb "Я прочитаю"?
 
 - [x] I will read/finish (result)
 - [ ] I will be reading (process)
+- [ ] I have read
+- [ ] I read every day
 
 ---
 
-5. Which is stronger for promises?
+5. Which of these future tense forms carries a stronger sense of commitment for promises?
 
 - [x] Perfective future (Я зроблю!)
 - [ ] Imperfective future (Я буду робити)
+- [ ] Present tense
+- [ ] Past tense
 
 ---
 
-6. "Прочитаю" is which person?
+6. Which personal pronoun corresponds to the Ukrainian perfective future verb form "Прочитаю"?
 
 - [x] я (first person singular)
 - [ ] ти (second person singular)
 - [ ] він (third person singular)
+- [ ] ми (first person plural)
 
 ---
 
-7. "Напишемо" is which person?
+7. Which personal pronoun corresponds to the Ukrainian perfective future verb form "Напишемо"?
 
 - [x] ми (first person plural)
 - [ ] вони (third person plural)
 - [ ] ви (second person plural)
+- [ ] я (first person singular)
 
 ---
 
-8. Future of "я" + "бути":
+8. What is the correct future form of the auxiliary verb "бути" for the pronoun "я"?
 
 - [x] буду
 - [ ] будеш
 - [ ] будуть
+- [ ] буде
 
 ---
 
-9. Future of "ви" + "бути":
+9. What is the correct future form of the auxiliary verb "бути" for the pronoun "ви"?
 
 - [x] будете
 - [ ] будемо
 - [ ] будуть
+- [ ] будеш
 
 ---
 
-10. Perfective future can be formed from:
+10. From which type of Ukrainian verbs can the perfective future tense be technically formed?
 
 - [x] Only perfective verbs
 - [ ] Only imperfective verbs
-- [ ] Both aspects
+- [ ] Both aspects equally
+- [ ] Only modal verbs
 
 ---
 
-11. "Вона буде писати" — aspect?
+11. In the Ukrainian sentence "Вона буде писати," what is the grammatical aspect being used?
 
 - [x] Imperfective
 - [ ] Perfective
+- [ ] Progressive
+- [ ] Habitual
 
 ---
 
-12. "Вона напише" — aspect?
+12. In the Ukrainian sentence "Вона напише," what is the grammatical aspect being used?
 
 - [x] Perfective
 - [ ] Imperfective
+- [ ] Continuous
+- [ ] Present
 
 ## true-false: Future Rules
 
@@ -479,41 +496,41 @@ In Ukrainian culture, using perfective future often carries more weight. When yo
 
 > Put the words in the correct order.
 
-1. я | прочитаю | книгу | завтра
-   > [!answer] Я прочитаю книгу завтра
+1. я / обов'язково / прочитаю / цю / нову / цікаву / книгу / завтра / вранці
+   > [!answer] Я прочитаю цю нову цікаву книгу завтра вранці
 
-2. вона | буде | працювати | завтра
-   > [!answer] Вона буде працювати завтра
+2. вона / буде / працювати / у / цьому / великому / офісі / завтра / ввечері
+   > [!answer] Вона буде працювати у цьому великому офісі завтра ввечері
 
-3. він | напише | листа
-   > [!answer] Він напише листа
+3. він / обов'язково / напише / довгого / листа / додому / вже / сьогодні / ввечері
+   > [!answer] Він напише довгого листа додому вже сьогодні ввечері
 
-4. ми | будемо | вчити | українську
-   > [!answer] Ми будемо вчити українську
+4. ми / будемо / вчити / цю / гарну / українську / мову / кожного / нового / дня
+   > [!answer] Ми будемо вчити цю гарну українську мову кожного дня
 
-5. я | зроблю | це
-   > [!answer] Я зроблю це
+5. я / зроблю / все / це / складне / домашнє / завдання / дуже / скоро
+   > [!answer] Я зроблю це складне домашнє завдання дуже скоро
 
-6. вони | приїдуть | завтра
-   > [!answer] Вони приїдуть завтра
+6. вони / приїдуть / до / нашого / міста / завтра / дуже / рано / вранці
+   > [!answer] Вони приїдуть до нашого міста завтра вранці
 
-7. ти | будеш | читати | щодня
-   > [!answer] Ти будеш читати щодня
+7. ти / обов'язково / будеш / читати / нову / книгу / щодня / після / роботи
+   > [!answer] Ти будеш читати нову книгу щодня після роботи
 
-8. вона | скаже | правду
-   > [!answer] Вона скаже правду
+8. вона / скаже / нам / всю / правду / про / цю / складну / ситуацію
+   > [!answer] Вона скаже нам всю правду про цю ситуацію
 
-9. ми | побачимо | море
-   > [!answer] Ми побачимо море
+9. ми / побачимо / прекрасне / синє / море / вже / наступного / теплого / літа
+   > [!answer] Ми побачимо прекрасне синє море наступного літа
 
-10. він | буде | писати | цілий | день
-    > [!answer] Він буде писати цілий день
+10. він / буде / старанно / писати / статтю / цілий / день / у / бібліотеці
+    > [!answer] Він буде писати цю статтю цілий день у бібліотеці
 
-11. я | візьму | книгу
-    > [!answer] Я візьму книгу
+11. я / візьму / цю / стару / книгу / зі / свого / столу / завтра
+    > [!answer] Я візьму цю стару книгу зі свого столу завтра
 
-12. вони | будуть | вчитися
-    > [!answer] Вони будуть вчитися
+12. вони / будуть / вчитися / в / університеті / ще / три / довгі / роки
+    > [!answer] Вони будуть вчитися в університеті ще три роки
 
 ## error-correction: Choose Correct Future
 
@@ -745,7 +762,6 @@ We will finish the project!
 | скажу | /skɑˈʒu/ | I will say | verb | — | perf. fut. 1sg |
 | побачу | /pɔˈbɑt͡ʃu/ | I will see | verb | — | perf. fut. 1sg |
 | почую | /pɔˈt͡ʃuju/ | I will hear | verb | — | perf. fut. 1sg |
-| візьму | /ˈʋizʲmu/ | I will take | verb | — | perf. fut. 1sg |
 | дам | /dɑm/ | I will give | verb | — | perf. fut. 1sg |
 | піду | /piˈdu/ | I will go | verb | — | perf. fut. 1sg |
 | прийду | /prɪjˈdu/ | I will come | verb | — | perf. fut. 1sg |
@@ -754,7 +770,6 @@ We will finish the project!
 | увійду | /uˈʋijdu/ | I will enter | verb | — | perf. fut. 1sg |
 | почну | /pɔt͡ʃˈnu/ | I will begin | verb | — | perf. fut. 1sg |
 | закінчу | /zɑˈkint͡ʃu/ | I will finish | verb | — | perf. fut. 1sg |
-| буду | /ˈbudu/ | I will be | verb | — | auxiliary for impf. fut. |
 | будеш | /ˈbudɛʃ/ | you will be | verb | — | auxiliary 2sg |
 | буде | /ˈbudɛ/ | he/she will be | verb | — | auxiliary 3sg |
 | будемо | /ˈbudɛmɔ/ | we will be | verb | — | auxiliary 1pl |
@@ -765,14 +780,9 @@ We will finish the project!
 | знайду | /znɑjˈdu/ | I will find | verb | — | perf. fut. 1sg |
 | запам'ятаю | /zɑpɑmjɑˈtɑju/ | I will remember | verb | — | perf. fut. 1sg |
 | майбутнє | /mɑjˈbutnʲɛ/ | future | noun | n | grammar term |
-| завтра | /ˈzɑʋtrɑ/ | tomorrow | adv | — | time marker |
 | обіцянка | /ɔbiˈt͡sʲɑnkɑ/ | promise | noun | f | common noun |
-| вид | /ʋid/ | aspect | noun | m | grammar term |
 | майбутній | /mɑjˈbutnʲij/ | future | adj | m | grammar term |
 | дієслово | /diɛˈslɔʋɔ/ | verb | noun | n | grammar term |
-| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |
-| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |
-| час | /t͡ʃɑs/ | time | noun | m | common noun |
 
 ---
 

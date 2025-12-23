@@ -592,17 +592,6 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 | слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш |
 | чекати | /t͡ʃeˈkɑtɪ/ | to wait | verb | - | Class I: чекаю, чекаєш |
 | снідати | /sniˈdɑtɪ/ | to have breakfast | verb | - | Class I: снідаю, снідаєш |
-| я | /jɑ/ | I | pronoun | - | 1st person singular |
-| ти | /tɪ/ | you | pronoun | - | 2nd person singular |
-| він | /vin/ | he | pronoun | m | 3rd person singular |
-| вона | /vɔˈnɑ/ | she | pronoun | f | 3rd person singular |
-| воно | /vɔˈnɔ/ | it | pronoun | n | 3rd person singular |
-| ми | /mɪ/ | we | pronoun | - | 1st person plural |
-| ви | /vɪ/ | you | pronoun | - | 2nd person plural/formal |
-| вони | /vɔˈnɪ/ | they | pronoun | - | 3rd person plural |
-| книга | /ˈknɪɦɑ/ | book | noun | f | common object |
-| музика | /ˈmuzɪkɑ/ | music | noun | f | common topic |
-| футбол | /fudˈbɔl/ | football | noun | m | sport |
 | вечеряти | /vet͡ʃeˈrʲɑtɪ/ | to have dinner | verb | - | Class I: вечеряю, вечеряєш |
 | відповідати | /vidpɔviˈdɑtɪ/ | to answer | verb | - | Class I: відповідаю, відповідаєш |
 | відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest | verb | - | Class I: відпочиваю, відпочиваєш |

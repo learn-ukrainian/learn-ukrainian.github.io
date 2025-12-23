@@ -22,6 +22,8 @@ objectives:
 vocabulary_count: 25
 ---
 
+# Summary
+
 ## Warm-up
 
 Everyone loves a good story. Whether you are telling a joke, explaining your weekend, or writing a report, the *order* of events matters.
@@ -37,14 +39,6 @@ In this module, you will move beyond simple sentences like "I woke up. I ate. I 
 > 🧠 **Think about it**
 > In your native language, how do you signal that a story is ending? Do you change your tone? Do you use a specific word like "Eventually"? Ukrainian implies this with words like **врешті-решт**.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Past Tense in the Ukrainian language...](https://www.youtube.com/watch?v=IxHx6fajRvU) — VERBA SCHOOL
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 ## Presentation
@@ -58,6 +52,8 @@ To tell a story, you need road signs. These words tell the listener where they a
 - **Одного разу** (Once | One day) — classic fairytale start ("Once upon a time").
 - **Колись** (Sometime in the past | Once)
 - **Якось** (Once | Somehow) — informal storytelling start ("Once I was walking...").
+
+Using these opening words immediately signals to your listener that a narrative is beginning. **Спочатку** is more structured and used for a list of events, while **Одного разу** creates a mystical or anecdotal atmosphere.
 
 ### The Middle (Moving Forward)
 - **Потім** (Then)
@@ -74,6 +70,8 @@ To tell a story, you need road signs. These words tell the listener where they a
 - **Нарешті** (Finally | At last) — usually implies relief or long wait.
 - **Врешті-решт** (In the end | Eventually) — implies a result after complications.
 - **Згодом** (Later on | Subsequently) — shows passage of time after the event.
+
+Choosing the right ending word depends on the emotional weight of your story. If you finally reached your goal after much effort, **нарешті** is the perfect choice to express your satisfaction.
 
 ## 2. Sequencing in Action
 
@@ -95,6 +93,8 @@ We also need words to locate events relative to "now" or "then".
   - "Це було давно." (It was long ago.)
 - **Недавно | Нещодавно** (Recently | Not long ago)
   - "Ми бачилися недавно." (We saw each other recently.)
+
+Using **давно** vs. **недавно** is a great way to provide immediate scale to your story. If you start with **давно**, your listener prepares for a historical or long-past event, whereas **недавно** suggests the information is fresh and perhaps more relevant to the present moment.
 
 ## 4. Dialogue: The Fish That Got Away
 
@@ -191,7 +191,7 @@ Read this story and notice the bold words.
 
 ---
 
-## Summary
+## Summary Table
 
 Telling a story is like building a house. You need a foundation (**Спочатку**), walls (**Потім**), windows (**Раптом**), and a roof (**Нарешті**).
 
@@ -205,7 +205,15 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Past Tense in the Ukrainian language...](https://www.youtube.com/watch?v=IxHx6fajRvU) — VERBA SCHOOL
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## dialogue-reorder: Order the Story
 
@@ -296,93 +304,139 @@ Now you can turn a boring list of facts into an exciting narrative!
     > [!options] тільки-но | довго | раніше | потім
 
 ## quiz: Understand the Sequence
+> Дайте відповіді на питання про правильне вживання сполучників послідовності в українській розповіді. | Answer questions about the correct use of sequence connectors in Ukrainian narration.
 
-1. Which word starts a story?
-   - [x] Спочатку
-   - [ ] Потім
-   - [ ] Нарешті
+1. Яке перевірене часом слово найкраще підходить для того, щоб почати нову розповідь?
 
-2. Which word implies a sudden change?
-   - [x] Несподівано
-   - [ ] Врешті-решт
-   - [ ] Перед цим
+- [x] Спочатку ми вирішили піти в парк
+- [ ] Потім ми побачили там великого собаку
+- [ ] Нарешті ми повернулися додому ввечері
+- [ ] Раптом у небі з'явилася яскрава зірка
 
-3. "Я **ще** працюю" means:
-   - [x] I am still working.
-   - [ ] I am already working.
-   - [ ] I finished working.
+---
 
-4. "Це було **недавно**" means:
-   - [x] It was recently.
-   - [ ] It was long ago.
-   - [ ] It will be soon.
+2. Коли в історії відбувається щось несподіване, яке слово ми зазвичай використовуємо?
 
-5. Which word connects two actions in sequence?
-   - [x] Після цього
-   - [ ] Але
-   - [ ] Або
+- [x] Несподівано двері відчинилися від вітру
+- [ ] Врешті-решт ми закінчили цю роботу
+- [ ] Перед цим я довго читав книгу
+- [ ] Кожного дня я роблю цю саму справу
 
-6. "Врешті-решт" is best used for:
-   - [x] The final conclusion/result
-   - [ ] The beginning
-   - [ ] A sudden surprise
+---
 
-7. "Одного разу" usually corresponds to:
-   - [x] Once upon a time | One day
-   - [ ] First of all
-   - [ ] Immediately
+3. Що саме означає речення "Я ще працюю", коли хтось запитує вас про справу?
 
-8. "Негайно" means:
-   - [x] Immediately | Urgently
-   - [ ] Slowly
-   - [ ] Never
+- [x] Я все ще продовжую процес роботи зараз
+- [ ] Я вже повністю закінчив усю роботу зараз
+- [ ] Я тільки збираюся почати працювати зараз
+- [ ] Я ніколи не буду працювати в цьому місці
 
-9. "Перед цим" means:
-   - [x] Before this
-   - [ ] After this
-   - [ ] During this
+---
 
-10. "Саме тоді" emphasizes:
-    - [x] An exact moment
-    - [ ] A long duration
-    - [ ] A future plan
+4. Як правильно перекласти українською мовою англійське речення "It was recently"?
 
-11. "Згодом" implies:
-    - [x] Some time later
-    - [ ] At the same time
-    - [ ] Yesterday
+- [x] Це сталося зі мною зовсім недавно
+- [ ] Це сталося зі мною дуже давно
+- [ ] Це обов'язково станеться зі мені скоро
+- [ ] Це ніколи не ставалося зі мною раніше
 
-12. "Вже" indicates:
-    - [x] Completion | Already
-    - [ ] Continuation
-    - [ ] Repetition
+---
+
+5. Який вираз найкраще поєднує дві різні дії в одну часову послідовність?
+
+- [x] Після цього я пішов у старий парк
+- [ ] Він часто читає нову газету зранку
+- [ ] Ми любимо пити гарячу чорну каву
+- [ ] Учора була дуже гарна й тепла погода
+
+---
+
+6. В якій частині розповіді найчастіше вживають вираз "Врешті-решт" для результату?
+
+- [x] У самому кінці розповіді для висновку
+- [ ] На самому початку для старту історії
+- [ ] Перед початком несподіваного повороту подій
+- [ ] Завжди в середині для продовження історії
+
+---
+
+7. Якому англійському виразу зазвичай відповідає українська фраза "Одного разу"?
+
+- [x] Once upon a time or one day
+- [ ] First of all and most important
+- [ ] Immediately or as fast as possible
+- [ ] Sometimes but not very often today
+
+---
+
+8. Що ви маєте на увазі, коли кажете комусь "Зробіть це негайно" в розмові?
+
+- [x] Зробіть це відразу і дуже швидко
+- [ ] Робіть це дуже повільно та впевнено
+- [ ] Ніколи не робіть цього в майбутньому
+- [ ] Зробіть це, коли у вас буде час
+
+---
+
+9. Як правильно розуміти українську часову конструкцію "Перед цим" у контексті?
+
+- [x] Дія, яка відбулася раніше за іншу
+- [ ] Дія, яка відбулася після іншої пізніше
+- [ ] Дія, яка відбувається саме зараз тут
+- [ ] Дія, яка ніколи в житті не відбувалася
+
+---
+
+10. На що саме ми робимо акцент, вживаючи вираз "Саме тоді"?
+
+- [x] На точному та конкретному моменті часу
+- [ ] На тривалому періоді часу в минолому
+- [ ] На певному плані на далеке майбутнє
+- [ ] На повторенні однієї й тієї ж дії
+
+---
+
+11. Який часовий проміжок позначає українське слово "Згодом" у розповіді?
+
+- [x] Через певний час після певної події
+- [ ] Саме в той самий момент у часі
+- [ ] Тільки вчора ввечері перед сном
+- [ ] Завжди вранці перед важкою роботою
+
+---
+
+12. Що допомагає нам виразити українське слово "Вже" у реченні про завершення?
+
+- [x] Завершеність певної дії або результат
+- [ ] Продовження тривалого процесу зараз
+- [ ] Повторення дії багато разів раніше
+- [ ] Відсутність будь-якої дії в минулому
 
 ## group-sort: Time Categories
+> Розподіліть часові маркери за їхніми функціями в українській розповіді. | Sort the time markers by their functions in a Ukrainian story.
 
-> Sort the words into categories.
-
-### Start/Past
+### Старт або минуле
 - Спочатку
 - Раніше
 - Давно
 - Колись
 - Одного разу
 
-### Sequence/Middle
+### Послідовність або середина
 - Потім
 - Після цього
 - Тоді
 - Далі
 - Згодом
 
-### Surprise/Speed
+### Сюрприз або швидкість
 - Раптом
 - Несподівано
 - Відразу
 - Негайно
 - Раптово
 
-### Finish/Result
+### Фініш або результат
 - Нарешті
 - Врешті-решт
 - У кінці
@@ -442,20 +496,10 @@ Now you can turn a boring list of facts into an exciting narrative!
     - [x] True
     > Aspect is crucial for sequencing (process vs result).
 
-## cloze: The Lost Keys
+## cloze: The Lost Keys in the City
+> Доповніть розповідь про загублені ключі, використовуючи правильні часові маркери. | Complete the story about lost keys using correct time markers.
 
-> Complete the story.
-
-[___:1] я прийшов додому. Я хотів відкрити двері, але [___:2] зрозумів, що не маю ключів!
-Я шукав у кишені, у сумці, але марно.
-[___:3] я подумав: "Може, я залишив їх на роботі?".
-Я [___:4] зателефонував колезі. Він сказав, що на моєму столі нічого немає.
-[___:5] я згадав! Я був у кафе [___:6]. Може, вони там?
-Я [___:7] побіг у кафе.
-[___:8] я прибіг, кафе [___:9] зачинялося.
-Я [___:10] встиг зайти всередину.
-Офіціант усміхнувся і віддав мені ключі.
-[___:11], я був удома. Яка пригода!
+[___:1] я прийшов додому після роботи. Я хотів відкрити двері, але [___:2] зрозумів, що не маю ключів у кишені! Я шукав усюди, але марно. [___:3] я подумав: "Може, я залишив їх на роботі на столі?". Я [___:4] зателефонував колезі. Він сказав, що на моєму робочому столі нічого немає. [___:5] я згадав! Я був у маленькому кафе [___:6] за кавою. Може, вони залишилися саме там? Я [___:7] побіг у те кафе. [___:8] я прибіг, кафе [___:9] зачинялося. Я [___:10] встиг зайти всередину до офіціанта. Він усміхнувся і відразу віддав мені мої ключі. [___:11], я був удома і відпочивав. [___:12] я тепер завжди перевіряю ключі!
 
 1. Спочатку | Нарешті
 > [!answer] Спочатку
@@ -489,6 +533,9 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 11. Нарешті | Раптом
 > [!answer] Нарешті
+
+12. Врешті-решт | Спочатку
+> [!answer] Врешті-решт
 
 ## dialogue-reorder: Telling a Funny Story
 
@@ -623,33 +670,21 @@ Now you can turn a boring list of facts into an exciting narrative!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| спочатку | /spɔˈt͡ʃɑtku/ | at first | first | adv | — | sequence |
-| потім | /ˈpɔtim/ | then | afterwards | adv | — | sequence |
 | після цього | /ˈpisʲlʲɑ ˈt͡sʲɔɦɔ/ | after this | phrase | — | sequence |
 | перед цим | /ˈpɛrɛd ˈt͡sɪm/ | before this | phrase | — | sequence |
-| нарешті | /nɑˈrɛʃti/ | finally | at last | adv | — | sequence |
-| врешті-решт | /ˈʋrɛʃti ˈrɛʃt/ | in the end | eventually | adv | — | sequence |
-| тоді | /tɔˈdi/ | then | at that time | adv | — | sequence |
-| одного разу | /ɔdˈnɔɦɔ ˈrɑzu/ | one day | once | phrase | — | story start |
-| якось | /ˈjɑkɔsʲ/ | once | somehow | adv | — | story start |
-| колись | /kɔˈlɪsʲ/ | once | sometime (past) | adv | — | time time |
-| раптом | /ˈrɑptɔm/ | suddenly | adv | — | drama |
+| врешті-решт | /ˈʋrɛʃti ˈrɛʃt/ | in the end | adv | — | sequence |
+| тоді | /tɔˈdi/ | then | adv | — | sequence |
+| одного разу | /ɔdˈnɔɦɔ ˈrɑzu/ | one day | phrase | — | story start |
+| якось | /ˈjɑkɔsʲ/ | once | adv | — | story start |
 | несподівано | /nɛspɔˈdiʋɑnɔ/ | unexpectedly | adv | — | drama |
 | відразу | /ʋidˈrɑzu/ | immediately | adv | — | speed |
-| негайно | /nɛˈɦɑjnɔ/ | immediately | urgently | adv | — | speed |
-| згодом | /ˈzɦɔdɔm/ | subsequently | later | adv | — | time flow |
-| пізніше | /pizˈniʃɛ/ | later | adv | — | time flow |
-| раніше | /rɑˈniʃɛ/ | earlier | before | adv | — | time |
-| давно | /dɑʋˈnɔ/ | long ago | adv | — | time |
-| недавно | /nɛˈdɑʋnɔ/ | recently | adv | — | time |
+| негайно | /nɛˈɦɑjnɔ/ | immediately | adv | — | speed |
 | щойно | /ˈʃt͡ʃɔjnɔ/ | just now | adv | — | time |
-| ледве | /ˈlɛdʋɛ/ | barely | hardly | adv | — | time/degree |
-| ще | /ʃt͡ʃɛ/ | still | yet | adv | — | aspect |
-| вже | /ʋʒɛ/ | already | adv | — | aspect |
-| тільки-но | /ˈtɪlʲkɪ nɔ/ | just | as soon as | adv | — | time |
-| саме тоді | /ˈsɑmɛ tɔˈdi/ | just then | at that moment | phrase | — | precision |
+| ледве | /ˈlɛdʋɛ/ | barely, hardly | adv | — | time/degree |
+| тільки-но | /ˈtɪlʲkɪ nɔ/ | just | adv | — | time |
+| саме тоді | /ˈsɑmɛ tɔˈdi/ | just then | phrase | — | precision |
 

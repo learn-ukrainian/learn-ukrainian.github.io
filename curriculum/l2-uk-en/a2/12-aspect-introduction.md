@@ -304,93 +304,111 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 ## quiz: Process or Result?
 > Це процес чи результат? | Is this process or result?
 
-1. "Я читав книгу цілий вечір." Focus on:
+1. When you say "Я читав книгу цілий вечір," which aspectual focus are you emphasizing?
 
 - [x] Process (imperfective)
 - [ ] Result (perfective)
+- [ ] Future intent
+- [ ] Single event
 
 ---
 
-2. "Я прочитав книгу." Focus on:
+2. When a speaker says "Я прочитав книгу," what is the primary focus of the action?
 
 - [x] Result (perfective)
 - [ ] Process (imperfective)
+- [ ] Habitual action
+- [ ] Ongoing duration
 
 ---
 
-3. "Вона завжди говорить правду." Focus on:
+3. In the sentence "Вона завжди говорить правду," what kind of action is being described?
 
 - [x] Habitual action (imperfective)
 - [ ] Single event (perfective)
+- [ ] Future promise
+- [ ] Completed result
 
 ---
 
-4. "Він сказав 'так'." Focus on:
+4. When someone says "Він сказав 'так'," what characterizes the nature of this specific action?
 
 - [x] Single completed event (perfective)
 - [ ] Ongoing process (imperfective)
+- [ ] Repeated habit
+- [ ] Long duration
 
 ---
 
-5. What is the perfective of "читати"?
+5. Which of these options correctly identifies the perfective aspect of the verb "читати"?
 
 - [x] прочитати
 - [ ] читати
 - [ ] читавати
+- [ ] зачитати
 
 ---
 
-6. What is the imperfective of "написати"?
+6. Which of these options correctly identifies the imperfective aspect of the verb "написати"?
 
 - [x] писати
 - [ ] написати
 - [ ] пописати
+- [ ] дописати
 
 ---
 
-7. "Я писав три години" emphasizes:
+7. When you say "Я писав три години," which aspectual meaning are you emphasizing here?
 
 - [x] Duration (imperfective)
 - [ ] Completion (perfective)
+- [ ] Future goal
+- [ ] Single result
 
 ---
 
-8. "Я написав листа" emphasizes:
+8. When you say "Я написав листа," what is the main point you are communicating?
 
 - [x] Completion (perfective)
 - [ ] Duration (imperfective)
+- [ ] Habitual writing
+- [ ] Future intent
 
 ---
 
-9. говорити | сказати are:
+9. What term describes the relationship between the Ukrainian verb pairs "говорити" and "сказати"?
 
-- [x] Suppletive pairs (different roots)
+- [x] Suppletive pairs
 - [ ] Prefixed pairs
-- [ ] The same verb
+- [ ] Identical roots
+- [ ] Soft endings
 
 ---
 
-10. Which prefix makes "читати" perfective?
+10. Which specific prefix is commonly used to make the verb "читати" into its perfective form?
 
 - [x] про-
 - [ ] на-
 - [ ] з-
-
----
-
-11. Which prefix makes "писати" perfective?
-
-- [x] на-
-- [ ] про-
 - [ ] по-
 
 ---
 
-12. Aspect is primarily about:
+11. Which specific prefix is commonly used to make the verb "писати" into its perfective form?
+
+- [x] на-
+- [ ] про-
+- [ ] по-
+- [ ] ви-
+
+---
+
+12. In Ukrainian grammar, the concept of verbal aspect is primarily concerned with emphasizing what?
 
 - [x] Process vs. result
 - [ ] Past vs. future
 - [ ] First vs. third person
+- [ ] Singular vs. plural
 
 ## true-false: Aspect Rules
 
@@ -457,41 +475,41 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 > Put the words in the correct order.
 
-1. я | читав | книгу | дві | години
-   > [!answer] Я читав книгу дві години
+1. я / читав / цікаву / книгу / дві / години / вчора / ввечері
+   > [!answer] Я читав цікаву книгу дві години вчора ввечері
 
-2. вона | прочитала | книгу
-   > [!answer] Вона прочитала книгу
+2. вона / прочитала / всю / нову / книгу / дуже / швидко / вчора
+   > [!answer] Вона прочитала всю нову книгу дуже швидко вчора
 
-3. він | написав | листа | вчора
-   > [!answer] Він написав листа вчора
+3. він / написав / довгого / листа / до / своєї / мами / вчора
+   > [!answer] Він написав довгого листа до своєї мами вчора
 
-4. ми | читаємо | щодня
-   > [!answer] Ми читаємо щодня
+4. ми / читаємо / українські / книги / та / газети / щодня / вдома
+   > [!answer] Ми читаємо українські книги та газети щодня вдома
 
-5. вона | сказала | правду
-   > [!answer] Вона сказала правду
+5. вона / сказала / щиру / правду / про / всю / цю / ситуацію
+   > [!answer] Вона сказала щиру правду про всю цю ситуацію
 
-6. я | бачив | море
-   > [!answer] Я бачив море
+6. я / бачив / синє / море / вперше / у / моєму / житті
+   > [!answer] Я бачив синє море вперше у моєму житті
 
-7. він | зробив | домашнє | завдання
-   > [!answer] Він зробив домашнє завдання
+7. він / зробив / все / домашнє / завдання / дуже / добре / вчора
+   > [!answer] Він зробив все домашнє завдання дуже добре вчора
 
-8. вона | завжди | говорить | українською
-   > [!answer] Вона завжди говорить українською
+8. вона / завжди / говорить / українською / мовою / зі / своєю / сестрою
+   > [!answer] Вона завжди говорить українською мовою зі своєю сестрою
 
-9. я | вже | прочитав | книгу
-   > [!answer] Я вже прочитав книгу
+9. я / вже / прочитав / цю / цікаву / книгу / до / кінця
+   > [!answer] Я вже прочитав цю цікаву книгу до кінця
 
-10. він | довго | писав
-    > [!answer] Він довго писав
+10. він / довго / і / уважно / писав / цю / нову / статтю
+    > [!answer] Він довго і уважно писав цю нову статтю
 
-11. ми | нарешті | приїхали
-    > [!answer] Ми нарешті приїхали
+11. ми / нарешті / приїхали / до / Києва / сьогодні / дуже / рано
+    > [!answer] Ми нарешті приїхали до Києва сьогодні дуже рано
 
-12. я | взяв | книгу
-    > [!answer] Я взяв книгу
+12. я / взяв / свою / стару / книгу / зі / столу / вчора
+    > [!answer] Я взяв свою стару книгу зі столу вчора
 
 ## error-correction: Fix the Aspect
 
@@ -568,9 +586,9 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 ---
 
-Сьогодні вранці я [___:1]. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] до роботи. На роботі я [___:5] цілий день. Увечері я [___:6] додому.
+Сьогодні вранці я [___:1]. Я [___:2] каву і [___:3] сніданок. Потім я [___:4] до роботи. На роботі я [___:5] цілий день. Увечері я [___:6] додому і [___:7] смачну вечерю.
 
-1. встати | встав
+1. встати | вставати
 > [!answer] встав
 
 2. пити | випити
@@ -587,6 +605,9 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 
 6. йти | прийти
 > [!answer] прийшов
+
+7. готувати | приготувати
+> [!answer] приготував
 
 ## dialogue-reorder: Aspect in Conversation
 
@@ -726,25 +747,15 @@ She always speaks Ukrainian. (habitual)
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | — | imperfective |
 | прочитати | /prɔt͡ʃɪˈtɑtɪ/ | to read/finish | verb | — | perfective |
-| писати | /pɪˈsɑtɪ/ | to write | verb | — | imperfective |
 | написати | /nɑpɪˈsɑtɪ/ | to write/finish | verb | — | perfective |
-| робити | /rɔˈbɪtɪ/ | to do/make | verb | — | imperfective |
 | зробити | /zrɔˈbɪtɪ/ | to do/finish | verb | — | perfective |
-| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak/say | verb | — | imperfective |
 | сказати | /skɑˈzɑtɪ/ | to say/tell | verb | — | perfective |
-| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | — | imperfective |
 | побачити | /pɔˈbɑt͡ʃɪtɪ/ | to see/catch sight | verb | — | perfective |
-| брати | /ˈbrɑtɪ/ | to take | verb | — | imperfective |
 | взяти | /ˈʋzʲɑtɪ/ | to take | verb | — | perfective |
-| давати | /dɑˈʋɑtɪ/ | to give | verb | — | imperfective |
 | дати | /ˈdɑtɪ/ | to give | verb | — | perfective |
-| їсти | /ˈjistɪ/ | to eat | verb | — | imperfective |
 | з'їсти | /ˈzjistɪ/ | to eat up | verb | — | perfective |
-| пити | /ˈpɪtɪ/ | to drink | verb | — | imperfective |
 | випити | /ˈʋɪpɪtɪ/ | to drink up | verb | — | perfective |
-| вчити | /ˈʋt͡ʃɪtɪ/ | to learn/teach | verb | — | imperfective |
 | вивчити | /ˈʋɪʋt͡ʃɪtɪ/ | to learn/master | verb | — | perfective |
 | аспект | /ɑˈspɛkt/ | aspect | noun | m | grammar term |
 | вид | /ʋid/ | aspect, type | noun | m | недоконаний/доконаний вид |

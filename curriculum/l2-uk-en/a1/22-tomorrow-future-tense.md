@@ -586,8 +586,6 @@ Decide if each statement is true or false.
 | думаю | /ˈdumɑju/ | I think | verb | - | Class I |
 | вирішив | /vɪˈriʃɪv/ | I decided (m) | verb | - | past, perfective |
 | вже | /vʒɛ/ | already | adv | - | - |
-| ще | /ʃt͡ʃɛ/ | still, yet | adv | - | - |
-| ніколи | /nʲiˈkɔlɪ/ | never | adv | - | - |
 | обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |
 
 ---

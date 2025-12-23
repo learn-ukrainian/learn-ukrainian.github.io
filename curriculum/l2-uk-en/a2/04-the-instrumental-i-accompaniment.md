@@ -464,99 +464,111 @@ The following activities will help you master Instrumental case endings through 
 
 ## quiz: Instrumental Forms
 
-1. Яка форма "вчитель" в орудному відмінку?
+1. When you want to form the Instrumental case of "вчитель" (teacher), which ending is correct?
 
 - [ ] вчителя
 - [x] вчителем
 - [ ] вчителеві
+- [ ] вчителю
 
 ---
 
-2. Як сказати "with my sister"?
+2. How do you correctly say "with my sister" in Ukrainian using the Instrumental case?
 
 - [ ] з моя сестра
 - [x] з моєю сестрою
 - [ ] з моєї сестри
+- [ ] з мою сестру
 
 ---
 
-3. Яке закінчення орудного відмінка для жіночого роду?
+3. For feminine nouns in the Instrumental case, which endings are typically correct in Ukrainian grammar?
 
 - [ ] -ом
 - [x] -ою/-ею
 - [ ] -ам
+- [ ] -ові
 
 ---
 
-4. Як сказати "with me"?
+4. How do you correctly express "with me" in Ukrainian using the proper Instrumental form?
 
 - [ ] з я
 - [ ] з мене
 - [x] зі мною
+- [ ] з мою
 
 ---
 
-5. Яка форма "діти" в орудному відмінку?
+5. When forming the Instrumental plural of "діти" (children), which irregular form is correct?
 
 - [ ] дітями
 - [x] дітьми
 - [ ] дітей
+- [ ] дітям
 
 ---
 
-6. Як сказати "coffee with milk"?
+6. How do you correctly say "coffee with milk" in Ukrainian using the Instrumental case?
 
 - [x] кава з молоком
 - [ ] кава з молока
 - [ ] кава з молоко
+- [ ] кава з молокою
 
 ---
 
-7. Який прийменник перед "снігом"?
+7. When using "with snow" in Ukrainian, which preposition variant is required before "снігом"?
 
 - [ ] з
 - [ ] із
 - [x] зі
+- [ ] зе
 
 ---
 
-8. Як сказати "I met him"?
+8. How do you correctly say "I met him" in Ukrainian using the Instrumental case?
 
 - [ ] Я познайомився з він.
 - [x] Я познайомився з ним.
 - [ ] Я познайомився з його.
+- [ ] Я познайомився з йому.
 
 ---
 
-9. Яка форма "люди" в орудному відмінку?
+9. When forming the Instrumental plural of "люди" (people), which irregular form is correct?
 
 - [ ] людями
 - [x] людьми
 - [ ] людей
+- [ ] людям
 
 ---
 
-10. Як сказати "with friends"?
+10. How do you correctly express "with friends" in Ukrainian using the Instrumental plural?
 
-- [ ] з *друзі*
+- [ ] з друзі
 - [x] з друзями
-- [ ] з *друзі*в
+- [ ] з друзів
+- [ ] з другами
 
 ---
 
-11. Яка форма "батько" в орудному відмінку?
+11. When forming the Instrumental case of "батько" (father), which ending is correct?
 
 - [ ] батька
 - [x] батьком
 - [ ] батькові
+- [ ] батьку
 
 ---
 
-12. Як сказати "She married Petro"?
+12. How do you correctly say "She married Petro" in Ukrainian using the Instrumental case?
 
 - [x] Вона одружилася з Петром.
 - [ ] Вона одружилася Петра.
 - [ ] Вона одружилася з Петра.
+- [ ] Вона одружилася з Петрові.
 
 ## true-false: Instrumental Rules
 > Decide if each statement is true or false.
@@ -624,29 +636,29 @@ The following activities will help you master Instrumental case endings through 
 ## unjumble: Instrumental Sentences
 > Put the words in the correct order.
 
-1. я | йду | в | кіно | з | другом
-   > [!answer] Я йду в кіно з другом
-   > (I'm going to the cinema with a friend.)
+1. Я / йду / в / кіно / з / другом / сьогодні / ввечері
+   > [!answer] Я сьогодні ввечері йду в кіно з другом
+   > (I'm going to the cinema with a friend this evening.) [8 words]
 
-2. вона | розмовляє | з | сестрою | по | телефону
-   > [!answer] Вона розмовляє з сестрою по телефону
-   > (She's talking with her sister on the phone.)
+2. Вона / розмовляє / з / сестрою / по / телефону / кожного / дня
+   > [!answer] Вона кожного дня розмовляє з сестрою по телефону
+   > (She talks with her sister on the phone every day.) [8 words]
 
-3. ми | живемо | з | батьками | в | Києві
-   > [!answer] Ми живемо з батьками в Києві
-   > (We live with our parents in Kyiv.)
+3. Ми / живемо / з / батьками / в / Києві / вже / давно
+   > [!answer] Ми вже давно живемо з батьками в Києві
+   > (We have been living with our parents in Kyiv for a long time.) [8 words]
 
-4. він | гуляє | з | собакою | в | парку
-   > [!answer] Він гуляє з собакою в парку
-   > (He's walking with the dog in the park.)
+4. Він / гуляє / з / собакою / в / парку / кожного / ранку
+   > [!answer] Він кожного ранку гуляє з собакою в парку
+   > (He walks with the dog in the park every morning.) [8 words]
 
-5. я | п'ю | каву | з | молоком
-   > [!answer] Я п'ю каву з молоком
-   > (I drink coffee with milk.)
+5. Я / завжди / п'ю / каву / з / молоком / вранці / зранку
+   > [!answer] Я завжди зранку п'ю каву з молоком вранці
+   > (I always drink coffee with milk in the morning.) [8 words]
 
-6. вона | познайомилася | з | хлопцем | на | вечірці
-   > [!answer] Вона познайомилася з хлопцем на вечірці
-   > (She met a guy at the party.)
+6. Вона / познайомилася / з / хлопцем / на / вечірці / минулого / тижня
+   > [!answer] Вона познайомилася з хлопцем на вечірці минулого тижня
+   > (She met a guy at the party last week.) [8 words]
 
 ## error-correction: Fix the Instrumental
 > Кожне речення має ОДНУ помилку. Знайдіть і виправте її.
@@ -690,28 +702,31 @@ The following activities will help you master Instrumental case endings through 
 ## cloze: Complete the Story
 > Fill in the blanks with the correct words.
 
-У суботу ми пішли в ресторан [___:1]. Марія прийшла [___:2]. Петро прийшов [___:3]. Ми їли піцу [___:4] і пили каву [___:5]. Було дуже весело!
+У суботу ми пішли в ресторан [___:1]. Марія прийшла [___:2]. Петро прийшов [___:3]. Ми їли піцу [___:4] і пили каву [___:5]. Увечері ми [___:6] разом. Було дуже весело!
 
-1. з друзями | з *друзі* | з друзів
+1. з друзями | з друзі | з друзів
    > [!answer] з друзями
 
-2. з чоловіком | з *чоловік* | з чоловіка
+2. з чоловіком | з чоловік | з чоловіка
    > [!answer] з чоловіком
 
-3. з дівчиною | з *дівчина* | з дівчини
+3. з дівчиною | з дівчина | з дівчини
    > [!answer] з дівчиною
 
-4. з грибами | з *гриби* | з грибів
+4. з грибами | з гриби | з грибів
    > [!answer] з грибами
 
-5. з молоком | з *молоко* | з молока
+5. з молоком | з молоко | з молока
    > [!answer] з молоком
+
+6. танцювали | танцюють | танцювати
+   > [!answer] танцювали
 
 ---
 
-Оленка живе [___:1]. Вона часто [___:2] з подругами. Минулого тижня вона [___:3] з хлопцем на вечірці. Тепер вони часто [___:4]. Може, вони [___:5]?
+Оленка живе [___:1]. Вона часто [___:2] з подругами. Минулого тижня вона [___:3] з хлопцем на вечірці. Тепер вони часто [___:4]. Вона [___:5] з батьками про нього. Може, вони [___:6]?
 
-1. з батьками | з *батьки* | з батьків
+1. з батьками | з батьки | з батьків
    > [!answer] з батьками
 
 2. зустрічається | зустрічатися | зустрічаюсь
@@ -723,7 +738,10 @@ The following activities will help you master Instrumental case endings through 
 4. гуляють | гуляти | гуляємо
    > [!answer] гуляють
 
-5. одружаться | одружуються | одружитися
+5. розмовляє | розмовляти | розмовляюсь
+   > [!answer] розмовляє
+
+6. одружаться | одружуються | одружитися
    > [!answer] одружаться
 
 ## dialogue-reorder: Meeting Someone New
@@ -878,15 +896,12 @@ I meet with friends every week.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| з | /z/ | with | prep | — | + Instrumental |
 | із | /iz/ | with | prep | — | variant before clusters |
 | зі | /zi/ | with | prep | — | variant before з, с, ш, щ |
-| разом | /ˈrɑzom/ | together | adv | — | разом з + Instr |
 | разом з | /ˈrɑzom z/ | together with | prep | — | + Instrumental |
 | поруч з | /ˈporutʃ z/ | next to | prep | — | + Instrumental |
 | поряд з | /ˈporʲɑd z/ | alongside | prep | — | + Instrumental |
 | зустрічатися | /zustriˈtʃɑtɪsʲɑ/ | to meet | verb | — | impf; з + Instr |
-| гуляти | /ɦuˈlʲɑtɪ/ | to walk, stroll | verb | — | impf |
 | розмовляти | /rozmɔʋˈlʲɑtɪ/ | to talk, converse | verb | — | impf; з + Instr |
 | спілкуватися | /spilkuˈʋɑtɪsʲɑ/ | to communicate | verb | — | impf; з + Instr |
 | зустрітися | /zuˈstritɪsʲɑ/ | to meet | verb | — | pf; з + Instr |
@@ -900,18 +915,6 @@ I meet with friends every week.
 | приятелювати | /prɪjɑˈtelʲuʋɑtɪ/ | to be on friendly terms | verb | — | impf; з + Instr |
 | сусідити | /suˈsidɪtɪ/ | to be neighbors | verb | — | impf; з + Instr |
 | жити | /ˈʒɪtɪ/ | to live | verb | — | impf |
-| працювати | /prɑˈt͡sjuʋɑtɪ/ | to work | verb | — | impf; з + Instr (with) |
-| їсти | /ˈjistɪ/ | to eat | verb | — | impf |
-| пити | /ˈpɪtɪ/ | to drink | verb | — | impf |
-| грати | /ˈɦrɑtɪ/ | to play | verb | — | impf; з + Instr (with) |
-| відмінок | /vidˈminɔk/ | grammatical case | noun | m | grammar term |
-| називний | /nɑzɪʋˈnɪj/ | Nominative (case) | adj | m | review |
-| родовий | /rɔdɔˈvɪj/ | Genitive (case) | adj | m | review |
-| давальний | /dɑˈvɑlʲnɪj/ | Dative (case) | adj | m | review |
-| знахідний | /znɑˈxidnɪj/ | Accusative (case) | adj | m | review |
-| місцевий | /misˈt͡sɛvɪj/ | Locative (case) | adj | m | review |
-| кличний | /ˈklɪtʃnɪj/ | Vocative (case) | adj | m | review |
 | орудний | /oˈrudnɪj/ | Instrumental (case) | adj | m | this module |
-| час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---

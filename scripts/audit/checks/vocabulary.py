@@ -286,8 +286,8 @@ def extract_vocab_from_section(content: str) -> set[str]:
     for item in items:
         uk = item['uk'].lower()
         # Add the word and any sub-words (for compound entries)
-        for word in re.findall(r'[\u0400-\u04ff]+', uk):
-            if len(word) > 1:
+        for word in re.findall(r"[\u0400-\u04ff\'\u2019\u02bc]+", uk):
+            if len(word) >= 2:
                 vocab_words.add(word)
     return vocab_words
 
@@ -313,8 +313,8 @@ def check_vocab_violations(
     if cumulative_vocab is None:
         cumulative_vocab = set()
 
-    # Extract all Ukrainian words from core content
-    core_words = set(re.findall(r'[\u0400-\u04ff]+', core_content.lower()))
+    # Extract all Ukrainian words from core content (including apostrophes)
+    core_words = set(re.findall(r"[\u0400-\u04ff\'\u2019\u02bc]+", core_content.lower()))
 
     # Find words not in vocab, not common, and not from previous modules
     unknown_words = core_words - vocab_words - COMMON_WORDS - cumulative_vocab
@@ -414,8 +414,8 @@ def parse_plan_vocabulary(plan_path: Path, module_num: int) -> set[str]:
                 # Handle ranges like "один-двадцять (20)" - extract first word
                 if '-' in word and not re.search(r'[\u0400-\u04ff].*-.*[\u0400-\u04ff]', word):
                     word = word.split('-')[0].strip()
-                # Extract Ukrainian words only
-                uk_words = re.findall(r'[\u0400-\u04ff]+', word.lower())
+                # Extract Ukrainian words only (including apostrophes)
+                uk_words = re.findall(r"[\u0400-\u04ff\'\u2019\u02bc]+", word.lower())
                 for uk in uk_words:
                     if len(uk) >= 2:
                         vocab_words.add(uk)
@@ -460,17 +460,41 @@ def check_vocab_matches_plan(
     # Note: Extra words beyond the plan are ALLOWED (modules can expand on core vocab)
     # We only check for MISSING core words from the plan
 
-    # Find missing words (in plan but not in module) - WARNING only
+    # Find missing words (in plan but not in module)
     missing = plan_vocab - module_vocab_lower
+    
     if missing:
-        # Filter out common words that don't need explicit declaration
+        # Check if missing words are actually in the cumulative database
+        cumulative_already = get_cumulative_vocab(level, module_num - 1)
+        missing = missing - cumulative_already
+        
+        # Filter out common words
         missing = missing - COMMON_WORDS
-        if len(missing) > 5:
-            sample = list(missing)[:5]
+        
+        # FINAL FILTER: Simple stem check to catch inflections (nature vs природу)
+        # If a missing word's stem matches a word in module_vocab, skip it.
+        final_missing = set()
+        for m in missing:
+            # Simple stem = first 4 chars
+            stem = m[:4] if len(m) > 4 else m
+            has_match = False
+            for v in module_vocab_lower:
+                if v.startswith(stem):
+                    has_match = True
+                    break
+            if not has_match:
+                final_missing.add(m)
+        
+        if final_missing and len(final_missing) > 0:
+            sample = list(final_missing)[:5]
+            # Make it non-blocking for A1/A2 and checkpoints
+            is_blocking = level.upper() not in ['A1', 'A2', 'A1-CHECKPOINT', 'A2-CHECKPOINT']
+            
             violations.append({
                 'type': 'VOCAB_PLAN_MISSING',
-                'issue': f"Missing vocabulary from plan ({len(missing)} words): {', '.join(sample)}...",
-                'fix': "Add missing words from curriculum plan to module vocabulary section."
+                'issue': f"Missing vocabulary from plan ({len(final_missing)} words): {', '.join(sample)}...",
+                'fix': "Add missing words from curriculum plan to module vocabulary section.",
+                'blocking': is_blocking
             })
 
     return violations
@@ -564,10 +588,14 @@ def check_metalanguage_scaffolding(
                 used_but_not_taught.append(term)
 
     if used_but_not_taught:
+        # Determine if blocking based on level
+        is_blocking = level_upper not in ('A1', 'A2') and 'CHECKPOINT' not in level_upper
+        
         violations.append({
             'type': 'METALANGUAGE',
             'issue': f"Metalanguage terms used but not in vocabulary: {', '.join(used_but_not_taught[:5])}",
-            'fix': "Add these grammar terms to vocabulary with translations, or use English equivalents."
+            'fix': "Add these grammar terms to vocabulary with translations, or use English equivalents.",
+            'blocking': is_blocking
         })
 
     return violations

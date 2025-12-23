@@ -603,7 +603,7 @@ def check_activity_ukrainian_content(content: str, level_code: str = 'A1', modul
     
     
     # Find all activity sections
-    activity_pattern = r'##\s*(quiz|match-up|fill-in|true-false|group-sort|unjumble|error-correction|anagram|cloze|select|translate|dialogue-reorder|mark-the-words):\s*([^\n]+)\n(.*?)(?=\n##|\n#\s|\Z)'
+    activity_pattern = r'##\s*([a-z-]+):\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
     activities = re.findall(activity_pattern, content, re.DOTALL | re.IGNORECASE)
     
     # Determine threshold based on level

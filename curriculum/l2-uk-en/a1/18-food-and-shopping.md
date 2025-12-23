@@ -707,30 +707,11 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 |------|-----|---------|-----|--------|------|
 | страва | /ˈstrɑvɑ/ | dish | noun | f | |
 | закуска | /zɑˈkuskɑ/ | appetizer | noun | f | |
-| салат | /sɑˈlɑt/ | salad | noun | m | |
-| суп | /sup/ | soup | noun | m | |
-| борщ | /bɔrʃt͡ʃ/ | borscht | noun | m | |
 | десерт | /dɛˈsɛrt/ | dessert | noun | m | |
 | напій | /nɑˈpij/ | beverage | noun | m | |
-| кава | /ˈkɑvɑ/ | coffee | noun | f | |
-| чай | /t͡ʃɑj/ | tea | noun | m | |
-| сік | /sik/ | juice | noun | m | |
-| вода | /vɔˈdɑ/ | water | noun | f | |
 | вино | /vɪˈnɔ/ | wine | noun | n | |
 | пиво | /ˈpɪvɔ/ | beer | noun | n | |
-| м'ясо | /ˈmjɑsɔ/ | meat | noun | n | |
-| курка | /ˈkurkɑ/ | chicken | noun | f | |
-| риба | /ˈrɪbɑ/ | fish | noun | f | |
-| овочі | /ˈɔvɔt͡ʃi/ | vegetables | noun | pl | |
-| картопля | /kɑrˈtɔplʲɑ/ | potato | noun | f | |
-| хліб | /xlib/ | bread | noun | m | |
-| сир | /sɪr/ | cheese | noun | m | |
-| яйце | /ˈjɑjt͡sɛ/ | egg | noun | n | |
-| смачний | /ˈsmɑt͡ʃnɪj/ | tasty | adj | m | |
 | меню | /mɛˈnju/ | menu | noun | n | |
-| офіціант | /ɔfit͡siˈɑnt/ | waiter | noun | m | |
-| офіціантка | /ɔfit͡siˈɑntkɑ/ | waitress | noun | f | |
-| рахунок | /rɑˈxunɔk/ | bill/check | noun | m | |
 | мило | /ˈmɪlɔ/ | soap | noun | n | |
 | шампунь | /ʃɑmˈpunʲ/ | shampoo | noun | m | |
 | зубна паста | /ˈzubnɑ ˈpɑstɑ/ | toothpaste | noun | f | |
@@ -738,17 +719,8 @@ Next module (M19: At the Café), you'll practice full café dialogues using all 
 | ручка | /ˈrut͡ʃkɑ/ | pen | noun | f | |
 | олівець | /ɔˈlivɛt͡sʲ/ | pencil | noun | m | |
 | зошит | /ˈzɔʃɪt/ | notebook | noun | m | |
-| купувати | /kupuˈvɑtɪ/ | to buy | verb | - | купую, купуєш |
 | супермаркет | /supɛrˈmɑrkɛt/ | supermarket | noun | m | |
-| магазин | /mɑɦɑˈzɪn/ | store | noun | m | |
 | пакет | /pɑˈkɛt/ | bag | noun | m | |
-| каса | /ˈkɑsɑ/ | checkout | noun | f | |
-| продавець | /prɔdɑˈvɛt͡sʲ/ | salesperson (m) | noun | m | |
-| продавчиня | /prɔdɑvˈt͡ʃɪnʲɑ/ | salesperson (f) | noun | f | |
-| ціна | /t͡siˈnɑ/ | price | noun | f | |
-| знижка | /ˈznɪʒkɑ/ | discount | noun | f | |
-| дорого | /ˈdɔrɔɦɔ/ | expensive | adv | - | |
-| дешево | /dɛˈʃɛvɔ/ | cheap | adv | - | |
 | відчинено | /vidt͡ʃɪˈnɛnɔ/ | open | adv | - | |
 | зачинено | /zɑt͡ʃɪˈnɛnɔ/ | closed | adv | - | |
 | свіжий | /ˈsʲvʲiʒɪj/ | fresh | adj | m | |

@@ -186,13 +186,9 @@ Where do we go?
 — Ти можеш виступати на концерті!
 — Може, колись, — усміхається вона. — А поки я співаю для тебе.
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Discuss creative hobbies: **малювати**, **грати**, **співати**
@@ -202,80 +198,87 @@ You learned to:
 
 Life is not only work. Ukrainians value their rest highly. Make sure you rest well and find a hobby that makes you truly happy! Don't forget to invite friends!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Hobby Quiz
 
-1. What implies creating a picture?
+1. Which Ukrainian verb implies creating a picture or drawing?
    - [x] малювати
    - [ ] співати
    - [ ] грати
-   > To paint/draw = малювати.
+   - [ ] писати
 
-2. Where do you sleep camping?
+2. Where would you typically sleep when you are camping in the forest?
    - [x] у наметі
    - [ ] у театрі
    - [ ] у музеї
-   > In a tent = у наметі.
+   - [ ] у школі
 
-3. What do you need to enter a cinema?
+3. What document do you necessarily need to enter a cinema or theater?
    - [x] квиток
    - [ ] намет
    - [ ] сцену
-   > Ticket = квиток.
+   - [ ] паспорт
 
-4. Who watches a performance?
+4. What do we call a person who watches a performance or show?
    - [x] глядач
    - [ ] актор
    - [ ] співак
-   > Spectator = глядач.
+   - [ ] водій
 
-5. What instrument is "грати на..."?
-   - [x] на гітарі
-   - [ ] в футбол
-   - [ ] в теніс
-   > Instruments use 'на' + Locative. Sports use 'в' + Accusative.
+5. Which phrase correctly describes playing a musical instrument in Ukrainian?
+   - [x] грати на гітарі
+   - [ ] грати в гітару
+   - [ ] грати з гітарою
+   - [ ] грати про гітару
 
-6. Is "хобі" declinable?
+6. Is the word "хобі" declinable in the Ukrainian language cases?
    - [x] No, it is indeclinable
    - [ ] Yes, хобі, хоббі, хоббю
-   > Хобі never changes form.
+   - [ ] Yes, but only in plural
+   - [ ] Depends on the gender
 
-7. Which involves collecting things?
+7. Which verb involves gathering a set of similar items over time?
    - [x] колекціонувати
    - [ ] співати
    - [ ] бігати
-   > To collect = колекціонувати.
+   - [ ] спати
 
-8. Where do you see actors?
+8. Where can you see actors performing a play on stage?
    - [x] в театрі
    - [ ] в наметі
    - [ ] в лісі
-   > In theater = в театрі.
+   - [ ] в офісі
 
-9. What is "leisure"?
+9. What is the general Ukrainian term for "rest" or "leisure"?
    - [x] відпочинок
    - [ ] робота
    - [ ] сон
-   > Rest/Leisure = відпочинок.
+   - [ ] стрес
 
-10. What is a "journey"?
+10. Which word describes a long trip or the act of traveling?
     - [x] подорож
     - [ ] квиток
     - [ ] сцена
-    > Journey/Trip = подорож.
+    - [ ] дім
 
-11. To take photos is...
+11. Which verb means "to take photos" of people or nature?
     - [x] фотографувати
     - [ ] малювати
     - [ ] писати
-    > To photograph.
+    - [ ] читати
 
-12. To see sights/inspect implies...
+12. Which verb specifically implies inspecting sights or a city as a tourist?
     - [x] оглядати
     - [ ] спати
     - [ ] їсти
-    > Оглядати (місто, замок).
+    - [ ] бігати
 
 ## match-up: Hobby Vocabulary
 
@@ -427,53 +430,53 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 
 ## unjumble: Weekend Sentences
 
-1. Ми | йдемо | в | кіно | завтра
-   > [!answer] Ми йдемо в кіно завтра
-   > We are going to the cinema tomorrow.
+1. Ми / завтра / з / друзями / йдемо / дивитися / кіно
+   > [!answer] Ми завтра з друзями йдемо дивитися кіно
+   > We are going to watch a movie with friends tomorrow.
 
-2. Я | люблю | грати | на | гітарі
-   > [!answer] Я люблю грати на гітарі
-   > I like playing guitar.
+2. Я / дуже / люблю / грати / нові / пісні / на / гітарі
+   > [!answer] Я дуже люблю грати нові пісні на гітарі
+   > I really like playing new songs on the guitar.
 
-3. Вона | часто | подорожує | світом
-   > [!answer] Вона часто подорожує світом
-   > She often travels the world.
+3. Вона / часто / і / з / радістю / подорожує / цікавим / світом
+   > [!answer] Вона часто і з радістю подорожує цікавим світом
+   > She travels the interesting world often and with joy.
 
-4. У | мене | є | нове | хобі
-   > [!answer] У мене є нове хобі
-   > I have a new hobby.
+4. У / мене / нарешті / з'явилося / нове / і / цікаве / хобі
+   > [!answer] У мене нарешті з'явилося нове і цікаве хобі
+   > I finally have a new and interesting hobby.
 
-5. Ми | купили | квитки | в | театр
-   > [!answer] Ми купили квитки в театр
-   > We bought tickets to the theater.
+5. Ми / вже / купили / дорогі / квитки / в / оперний / театр
+   > [!answer] Ми вже купили дорогі квитки в оперний театр
+   > We have already bought expensive tickets to the opera theater.
 
-6. Він | колекціонує | старі | картини
-   > [!answer] Він колекціонує старі картини
-   > He collects old paintings.
+6. Він / давно / колекціонує / старі / та / рідкісні / картини
+   > [!answer] Він давно колекціонує старі та рідкісні картини
+   > He has been collecting old and rare paintings for a long time.
 
-7. Глядачі | люблять | цей | концерт
-   > [!answer] Глядачі люблять цей концерт
-   > Spectators love this concert.
+7. Глядачі / дуже / люблять / цей / гучний / і / веселий / концерт
+   > [!answer] Глядачі дуже люблять цей гучний і веселий концерт
+   > Spectators really love this loud and fun concert.
 
-8. Вони | відпочивають | на | дачі
-   > [!answer] Вони відпочивають на дачі
-   > They are resting at the dacha.
+8. Вони / зараз / спокійно / відпочивають / на / своїй / літній / дачі
+   > [!answer] Вони зараз спокійно відпочивають на своїй літній дачі
+   > They are currently resting calmly at their summer dacha.
 
-9. Олена | гарно | танцює | гопак
-   > [!answer] Олена гарно танцює гопак
-   > Olena dances hopak well.
+9. Олена / дуже / гарно / і / енергійно / танцює / український / гопак
+   > [!answer] Олена дуже гарно і енергійно танцює український гопак
+   > Olena dances the Ukrainian hopak very beautifully and energetically.
 
-10. Це | був | чудовий | відпочинок
-    > [!answer] Це був чудовий відпочинок
-    > It was a great rest.
+10. Це / був / наш / найкращий / і / незабутній / літній / відпочинок
+    > [!answer] Це був наш найкращий і незабутній літній відпочинок
+    > It was our best and unforgettable summer vacation.
 
-11. Я | відвідую | музеї | влітку
-    > [!answer] Я відвідую музеї влітку
-    > I visit museums in summer.
+11. Я / часто / відвідую / цікаві / історичні / музеї / влітку
+    > [!answer] Я часто відвідую цікаві історичні музеї влітку
+    > I often visit interesting historical museums in the summer.
 
-12. Намет | стоїть | у | лісі
-    > [!answer] Намет стоїть у лісі
-    > The tent stands in the forest.
+12. Наш / великий / намет / стоїть / у / зеленому / сосновому / лісі
+    > [!answer] Наш великий намет стоїть у зеленому сосновому лісі
+    > Our large tent stands in the green pine forest.
 
 ## error-correction: Fix the Hobby
 
@@ -557,6 +560,7 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 Ми дивилися новий [___:6]. В залі були інші [___:7].
 Потім ми пішли в [___:8]. Там була [___:9] сучасного мистецтва.
 Ми любимо такий [___:10].
+Ввечері ми обговорювали [___:11] і пили [___:12].
 
 1. дачу | роботу | школу
    > [!answer] дачу
@@ -586,7 +590,13 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
    > [!answer] виставка
 
 10. відпочинок | урок | сон
-   > [!answer] відпочинок
+    > [!answer] відпочинок
+
+11. враження | проблеми | гроші
+    > [!answer] враження
+
+12. чай | воду | суп
+    > [!answer] чай
 
 ## dialogue-reorder: Weekend Plans
 
@@ -671,33 +681,22 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
     - [ ] Розкидати
     > Pack (gather) suitcase.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| малювати | /malʲuˈvatɪ/ | to draw/paint | verb | - | |
-| співати | /sʲpiˈvatɪ/ | to sing | verb | - | |
 
-| танцювати | /tantsʲuˈvatɪ/ | to dance | verb | - | |
-| грати | /ˈɦratɪ/ | to play | verb | - | |
-| читати | /tʃɪˈtatɪ/ | to read | verb | - | |
-| писати | /pɪˈsatɪ/ | to write | verb | - | |
 | фотографувати | /fotoɦrafuˈvatɪ/ | to photograph | verb | - | |
 | колекціонувати | /kolektsʲionuˈvatɪ/ | to collect | verb | - | |
 
 | подорожувати | /podoroʒuˈvatɪ/ | to travel | verb | - | |
 | відвідувати | /vidˈviduvatɪ/ | to visit | verb | - | |
-| оглядати | /oɦlʲaˈdatɪ/ | to sightsee | verb | - | |
 | збирати | /zbɪˈratɪ/ | to gather/collect | verb | - | |
 | кіно | /kiˈnɔ/ | cinema | noun | n | indecl. |
-| театр | /teˈatr/ | theater | noun | m | |
 | концерт | /konˈtsɛrt/ | concert | noun | m | |
 | виставка | /ˈvɪstavka/ | exhibition | noun | f | |
-| музей | /muˈzɛj/ | museum | noun | m | |
 | намет | /naˈmɛt/ | tent | noun | m | |
-| квиток | /kvɪˈtɔk/ | ticket | noun | m | |
 | сцена | /ˈstsɛna/ | stage | noun | f | |
-| глядач | /ɦlʲaˈdatʃ/ | spectator | noun | m | |
 | хобі | /ˈxɔbi/ | hobby | noun | n | indecl. |
 | захоплення | /zaˈxɔplenʲːa/ | passion/hobby | noun | n | |
 | відпочинок | /vidpoˈtʃɪnok/ | rest/leisure | noun | m | |
@@ -705,5 +704,4 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 | подорож | /ˈpɔdoroʒ/ | trip/journey | noun | f | |
 | дача | /ˈdatʃa/ | summer house | noun | f | |
 | шашлик | /ʃaʃˈlɪk/ | BBQ (meat) | noun | m | |
-| гостинність | /hosˈtɪnʲːistʲ/ | hospitality | noun | f | |
 | вечорниці | /vetʃorˈnɪtsʲi/ | evening gathering | noun | pl | |

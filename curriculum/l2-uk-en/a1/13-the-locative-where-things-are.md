@@ -726,8 +726,6 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 | у | /u/ | in, inside | prep | - | before clusters |
 | в | /v/ | in, inside | prep | - | before single consonants |
 | на | /nɑ/ | on, at | prep | - | |
-| кімната | /ˈkimnɑtɑ/ | room | noun | f | |
-| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | |
 | ванна | /ˈvɑnːɑ/ | bathroom | noun | f | |
 | спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | |
 | вітальня | /viˈtɑlʲnʲɑ/ | living room | noun | f | |
@@ -738,16 +736,10 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 | квартира | /kvɑrˈtɪrɑ/ | apartment | noun | f | |
 | офіс | /ˈɔfis/ | office | noun | m | |
 | робота | /rɔˈbɔtɑ/ | work, job | noun | f | |
-| школа | /ˈʃkɔlɑ/ | school | noun | f | |
-| університет | /unʲivɛrsɪˈtɛt/ | university | noun | m | |
 | лікарня | /liˈkɑrnʲɑ/ | hospital | noun | f | |
-| магазин | /mɑɦɑˈzɪn/ | shop, store | noun | m | |
 | аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f | |
 | ринок | /ˈrɪnɔk/ | market | noun | m | |
-| центр | /t͡sɛntr/ | center | noun | m | |
-| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | |
 | готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |
-| парк | /pɑrk/ | park | noun | m | |
 | пляж | /plʲɑʒ/ | beach | noun | m | |
 | музей | /muˈzɛj/ | museum | noun | m | |
 | театр | /tɛˈɑtr/ | theater | noun | m | |

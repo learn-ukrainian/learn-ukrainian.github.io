@@ -201,15 +201,9 @@ Apps like **Glovo** or **Bolt Food** work 24/7. You can order sushi, burgers, or
 > [!tip] **Tip** "Sales"
 > Black Friday is popular in Ukraine, but big **розпродаж** (sales) also happen in January and July. Look for signs saying **"Знижки до -70%"**. It's the best time to buy clothes!
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Use shop types: **магазин**, **ринок**, **супермаркет**, **аптека**
@@ -249,81 +243,89 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 >
 > Запрошуємо до покупок! Шопінг в Україні — це зручно та швидко!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Shopping Facts
 
-1. Where do you usually bargain?
+1. Where would you typically go if you want to bargain for a lower price?
    - [x] на ринку
    - [ ] у супермаркеті
    - [ ] в аптеці
-   > Bargaining (торгуватися) is for the market.
+   - [ ] у банку
 
-2. "Готівка" means...
+2. What is the Ukrainian word "готівка" used to describe?
    - [x] cash
    - [ ] card
    - [ ] discount
-   > Cash.
+   - [ ] check
 
-3. "Нова Пошта" is famous for...
+3. What key feature is the "Нова Пошта" service most famous for?
    - [x] speed and modern service
    - [ ] losing letters
    - [ ] selling food
-   > Fast private post.
+   - [ ] slow delivery
 
-4. To ask for the price, you say...
+4. Which phrase should you use to ask for the price of an item?
    - [x] Скільки коштує?
    - [ ] Як тебе звати?
    - [ ] Де магазин?
-   > How much does it cost?
+   - [ ] Котра година?
 
-5. "Знижка" is...
+5. What does the word "знижка" mean when you see it in a store?
    - [x] discount
    - [ ] receipt
    - [ ] bag
-   > Discount.
+   - [ ] price
 
-6. Where do you buy medicine?
+6. Where would you go if you needed to buy medicine or pills?
    - [x] в аптеці
    - [ ] у банку
    - [ ] на пошті
-   > Pharmacy (аптека).
+   - [ ] у кафе
 
-7. What do you get after paying?
+7. What document do you receive from the cashier after paying for goods?
    - [x] чек
    - [ ] чергу
    - [ ] ціну
-   > Receipt (чек).
+   - [ ] пакет
 
-8. "Черга" is...
+8. What does the word "черга" mean when you see people waiting?
    - [x] queue/line
    - [ ] cashier
    - [ ] money
-   > Queue.
+   - [ ] door
 
-9. Monobank is a...
+9. What type of banking institution is Monobank known as in Ukraine?
    - [x] neo-bank inside a phone
    - [ ] state post office
-   - [ ] market
-   > Digital bank.
+   - [ ] market stall
+   - [ ] traditional bank branch
 
-10. "Решта" is...
+10. What is "решта" that you receive after a cash payment?
     - [x] change (money returned)
     - [ ] price
     - [ ] card
-    > Change.
+    - [ ] bill
 
-11. "Міряти" means to...
-    - [x] try on (clothes)
-    - [ ] buy
-    - [ ] eat
-    > To try on.
+11. What action does the verb "міряти" describe in a clothing store?
+    - [x] to try on (clothes)
+    - [ ] to buy
+    - [ ] to eat
+    - [ ] to sleep
 
-12. Can you pay with Apple Pay in Ukraine?
+12. Is it possible to pay with Apple Pay or Google Pay in Ukraine?
     - [x] Yes, almost everywhere
     - [ ] No, cash only
     - [ ] Only in banks
-    > Widespread acceptance.
+    - [ ] Only in Kyiv
 
 ## match-up: Shop Vocabulary
 
@@ -475,53 +477,53 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 
 ## unjumble: Shopping Dialogue
 
-1. Скільки | коштує | цей | хліб
-   > [!answer] Скільки коштує цей хліб
-   > How much is this bread?
+1. Скільки / зараз / коштує / цей / смачний / білий / хліб
+   > [!answer] Скільки зараз коштує цей смачний білий хліб
+   > How much does this tasty white bread cost now?
 
-2. Я | хочу | заплатити | карткою
-   > [!answer] Я хочу заплатити карткою
-   > I want to pay by card.
+2. Я / сьогодні / хочу / заплатити / за / це / своєю / карткою
+   > [!answer] Я сьогодні хочу заплатити за це своєю карткою
+   > I want to pay for this with my card today.
 
-3. Де | тут | найближчий | банк
-   > [!answer] Де тут найближчий банк
-   > Where is the nearest bank here?
+3. Де / тут / знаходиться / найближчий / і / відкритий / банк
+   > [!answer] Де тут знаходиться найближчий і відкритий банк
+   > Where is the nearest and open bank located here?
 
-4. У | нас | сьогодні | знижка
-   > [!answer] У нас сьогодні знижка
-   > We have a discount today.
+4. У / нас / сьогодні / діє / дуже / велика / святкова / знижка
+   > [!answer] У нас сьогодні діє дуже велика святкова знижка
+   > We have a very big holiday discount today.
 
-5. Я | йду | в | супермаркет
-   > [!answer] Я йду в супермаркет
-   > I am going to the supermarket.
+5. Я / йду / в / новий / великий / супермаркет / за / продуктами
+   > [!answer] Я йду в новий великий супермаркет за продуктами
+   > I am going to the new big supermarket for groceries.
 
-6. Дайте | мені | чек | будь ласка
-   > [!answer] Дайте мені чек будь ласка
-   > Give me the receipt please.
+6. Дайте / мені / будь ласка / мій / фіскальний / чек
+   > [!answer] Дайте мені будь ласка мій фіскальний чек
+   > Give me my fiscal receipt please.
 
-7. Ця | сукня | дуже | дорога
-   > [!answer] Ця сукня дуже дорога
-   > This dress is very expensive.
+7. Ця / червона / вечірня / сукня / дуже / гарна / але / дорога
+   > [!answer] Ця червона вечірня сукня дуже гарна але дорога
+   > This red evening dress is very beautiful but expensive.
 
-8. Ми | замовляємо | їжу | додому
-   > [!answer] Ми замовляємо їжу додому
-   > We order food to home.
+8. Ми / часто / замовляємо / смачну / їжу / з / ресторану / додому
+   > [!answer] Ми часто замовляємо смачну їжу з ресторану додому
+   > We often order tasty food from the restaurant to home.
 
-9. На | пошті | велика | черга
-   > [!answer] На пошті велика черга
-   > There is a big queue at the post office.
+9. На / старій / пошті / сьогодні / дуже / велика / і / довга / черга
+   > [!answer] На старій пошті сьогодні дуже велика і довга черга
+   > There is a very big and long queue at the old post office today.
 
-10. Ваша | решта — | двадцять | гривень
-    > [!answer] Ваша решта двадцять гривень
-    > Your change is 20 hryvnias.
+10. Ваша / решта — / це / двадцять / п'ять / нових / гривень
+    > [!answer] Ваша решта — це двадцять п'ять нових гривень
+    > Your change is twenty-five new hryvnias.
 
-11. Я | люблю | купувати | на | ринку
-    > [!answer] Я люблю купувати на ринку
-    > I like buying at the market.
+11. Я / більше / люблю / купувати / свіжі / овочі / на / ринку
+    > [!answer] Я більше люблю купувати свіжі овочі на ринку
+    > I prefer buying fresh vegetables at the market more.
 
-12. Мені | треба | поміряти | взуття
-    > [!answer] Мені треба поміряти взуття
-    > I need to try on shoes.
+12. Мені / терміново / треба / поміряти / це / зручне / взуття
+    > [!answer] Мені терміново треба поміряти це зручне взуття
+    > I urgently need to try on these comfortable shoes.
 
 ## error-correction: Shop Grammar
 
@@ -606,6 +608,8 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 Касир питає: "Пакет потрібен?". Я кажу: "Ні, дякую".
 Я плачу [___:6], тому що не люблю [___:7].
 Касир дає мені [___:8]. Шопінг закінчено.
+Вдома я мию [___:9] і [___:10].
+Потім я [___:11] смачну [___:12].
 
 1. кошик | пакет | стіл
    > [!answer] кошик
@@ -630,6 +634,18 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 
 8. чек | гроші | товар
    > [!answer] чек
+
+9. овочі | руки | підлогу
+   > [!answer] овочі
+
+10. фрукти | посуд | вікна
+    > [!answer] фрукти
+
+11. готую | купую | продаю
+    > [!answer] готую
+
+12. вечерю | воду | чергу
+    > [!answer] вечерю
 
 ## dialogue-reorder: Buying Shoes
 
@@ -715,37 +731,15 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
     - [ ] Мирити.
     > Try on vs Reconcile.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| магазин | /mahaˈzɪn/ | shop/store | noun | m | |
-| супермаркет | /superˈmarket/ | supermarket | noun | m | |
-| ринок | /ˈrɪnok/ | market | noun | m | |
-| аптека | /apˈtɛka/ | pharmacy | noun | f | |
-| банк | /bank/ | bank | noun | m | |
-| пошта | /ˈpɔʃta/ | post office | noun | f | |
 | перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |
 | хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |
-| готівка | /hoˈtiʋka/ | cash | noun | f | |
-| картка | /ˈkartka/ | card | noun | f | |
-| чек | /tʃɛk/ | receipt | noun | m | |
-| ціна | /tsiˈna/ | price | noun | f | |
-| знижка | /ˈznɪʒka/ | discount | noun | f | |
-| черга | /ˈtʃɛrha/ | queue | noun | f | |
-| каса | /ˈkasa/ | checkout | noun | f | |
-| решта | /ˈrɛʃta/ | change | noun | f | |
-| купувати | /kupuˈvatɪ/ | to buy | verb | - | |
-| платити | /plaˈtɪtɪ/ | to pay | verb | - | |
-| замовляти | /zamoʋˈlʲatɪ/ | to order | verb | - | |
 | міряти | /ˈmirʲatɪ/ | to try on | verb | - | |
-| коштувати | /kɔʃtuˈvatɪ/ | to cost | verb | - | |
 | торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |
 | відділення | /vidˈdilennʲa/ | branch/office | noun | n | |
-| рахунок | /raˈxunok/ | account/bill | noun | m | |
 | одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |
-| взуття | /vzutˈtʲa/ | footwear | noun | n | |
 | продукти | /proˈduktɪ/ | groceries | noun | pl | |
-| овочі | /ˈɔvotʃi/ | vegetables | noun | pl | |
-| фрукти | /ˈfruktɪ/ | fruits | noun | pl | |
 | сервіс | /ˈsɛrvis/ | service | noun | m | |

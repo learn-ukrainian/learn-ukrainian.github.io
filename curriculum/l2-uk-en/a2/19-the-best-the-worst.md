@@ -334,101 +334,113 @@ Use these to add emotion without comparison:
     > [!options] талановитіша | найталановитіша | талановита | надталановита
 
 ## quiz: Superlatives
-> Дайте відповіді на питання про найвищий ступінь. | Answer questions about superlatives.
+> Дайте відповіді на питання про найвищий ступінь порівняння прикметників. | Answer questions about the superlative degree of adjectives.
 
-1. How do you form superlatives in Ukrainian?
-
-- [x] най- + comparative
-- [ ] більш + adjective
-- [ ] -ший + adjective
-
----
-
-2. What's the superlative of "кращий"?
-
-- [x] найкращий
-- [ ] кращіший
-- [ ] добрійший
-
----
-
-3. What's the superlative of "більший"?
-
-- [x] найбільший
-- [ ] більшіший
-- [ ] найвеликий
-
----
-
-4. "Найгірший" means:
-
-- [x] worst
-- [ ] better
-- [ ] bad
-
----
-
-5. "Найдорожчий" means:
-
-- [x] most expensive
-- [ ] cheapest
-- [ ] expensive
-
----
-
-6. Which is an intensifier?
-
-- [x] дуже — very
-- [ ] ніж — than
-- [ ] за — for
-
----
-
-7. "Надзвичайно" means:
-
-- [x] extraordinarily
-- [ ] badly
-- [ ] quickly
-
----
-
-8. Superlatives agree in:
-
-- [x] gender, number, case
-- [ ] only gender
-- [ ] nothing
-
----
-
-9. "Найкраща книга" — which gender?
-
-- [x] feminine
-- [ ] masculine
-- [ ] neuter
-
----
-
-10. "Найбільше місто" — which gender?
-
-- [x] neuter
-- [ ] masculine
-- [ ] feminine
-
----
-
-11. The superlative prefix is:
+1. Which of the following prefixes is universally used in Ukrainian to form the superlative degree of adjectives?
 
 - [x] най-
 - [ ] пре-
 - [ ] над-
+- [ ] ви-
 
 ---
 
-12. Ukrainian superlative formation is:
+2. What is the correct superlative form of the irregular Ukrainian adjective "кращий" to mean "the best"?
 
-- [x] completely regular (always най-)
-- [ ] highly irregular
-- [ ] only for some adjectives
+- [x] найкращий
+- [ ] добріший
+- [ ] найдобрий
+- [ ] прегарний
+
+---
+
+3. Which of the following superlative forms corresponds to the Ukrainian comparative "більший," meaning "the biggest"?
+
+- [x] найбільший
+- [ ] найвеликий
+- [ ] великший
+- [ ] більшавий
+
+---
+
+4. What is the specific English meaning of the Ukrainian superlative adjective "найгірший"?
+
+- [x] the worst
+- [ ] better
+- [ ] very bad
+- [ ] more bad
+
+---
+
+5. What is the correct English translation for the Ukrainian superlative adjective "найдорожчий" in a retail context?
+
+- [x] the most expensive
+- [ ] the cheapest
+- [ ] extremely expensive
+- [ ] very dear
+
+---
+
+6. Which of the following Ukrainian adverbs serves as a common intensifier for adjectives, meaning "very"?
+
+- [x] дуже
+- [ ] ніж
+- [ ] за
+- [ ] під
+
+---
+
+7. What is the specific meaning of the Ukrainian intensifier "надзвичайно" when modifying an adjective?
+
+- [x] extraordinarily
+- [ ] extraordinarily badly
+- [ ] very quickly
+- [ ] somewhat
+
+---
+
+8. In a Ukrainian sentence, which grammatical categories must a superlative adjective agree with in relation to its noun?
+
+- [x] Gender, number, and case
+- [ ] Only gender and number
+- [ ] Only case and gender
+- [ ] Only number
+
+---
+
+9. In the phrase "найкраща книга," what is the grammatical gender of the superlative adjective "найкраща"?
+
+- [x] Жіночий рід
+- [ ] Чоловічий рід
+- [ ] Середній рід
+- [ ] Множина
+
+---
+
+10. In the Ukrainian expression "найбільше місто," what is the grammatical gender of the superlative form?
+
+- [x] Середній рід
+- [ ] Чоловічий рід
+- [ ] Жіночий рід
+- [ ] Множина
+
+---
+
+11. What is the primary morphological component added to a comparative adjective to create a superlative in Ukrainian?
+
+- [x] The prefix "най-"
+- [ ] The suffix "-ший"
+- [ ] The ending "-ий"
+- [ ] The particle "більш"
+
+---
+
+12. Which statement best describes the formation of superlatives for adjectives with irregular comparative forms?
+
+- [x] They follow the regular rule of adding "най-" to the comparative
+- [ ] They use a completely unique word root for the superlative
+- [ ] They require the prefix "над-" instead of "най-"
+- [ ] They cannot form a superlative degree in standard Ukrainian
 
 ## true-false: Superlative Rules
 
@@ -495,41 +507,41 @@ Use these to add emotion without comparison:
 
 > Put the words in the correct order.
 
-1. це | найкраща | книга
-   > [!answer] Це найкраща книга
+1. це / безумовно / сьогодні / найкраща / нова / книга / у / цій / бібліотеці
+   > [!answer] Це сьогодні найкраща нова книга у цій бібліотеці
 
-2. він | найстаріший | студент
-   > [!answer] Він найстаріший студент
+2. він / зараз / найстаріший / і / найдосвідченіший / студент / у / нашому / університеті
+   > [!answer] Він зараз найстаріший і найдосвідченіший студент у університеті
 
-3. Україна | найбільша | країна | в | Європі
-   > [!answer] Україна найбільша країна в Європі
+3. Україна / це / найбільша / і / найкрасивіша / країна / у / всій / Європі
+   > [!answer] Україна найбільша і найкрасивіша країна у всій Європі
 
-4. це | найгірший | день
-   > [!answer] Це найгірший день
+4. це / був / напевно / найгірший / і / найважчий / день / у / моєму / житті
+   > [!answer] Це був найгірший і найважчий день у моєму житті
 
-5. вона | найрозумніша | людина
-   > [!answer] Вона найрозумніша людина
+5. вона / справді / найрозумніша / і / найталановитіша / людина / у / нашій / команді
+   > [!answer] Вона справді найрозумніша і найталановитіша людина у команді
 
-6. Дніпро | найдовша | річка
-   > [!answer] Дніпро найдовша річка
+6. великий / Дніпро / це / найдовша / і / найважливіша / річка / в / Україні
+   > [!answer] Дніпро найдовша і найважливіша річка в Україні
 
-7. цей | фільм | дуже | цікавий
-   > [!answer] Цей фільм дуже цікавий
+7. цей / новий / український / фільм / дуже / цікавий / для / всіх / глядачів
+   > [!answer] Цей новий український фільм дуже цікавий для всіх глядачів
 
-8. він | найкращий | друг
-   > [!answer] Він найкращий друг
+8. він / мій / найкращий / і / найвірніший / друг / вже / багато / років
+   > [!answer] Він мій найкращий і найвірніший друг вже багато років
 
-9. моя | мама | найкраща
-   > [!answer] Моя мама найкраща
+9. моя / мила / мама / завжди / найкраща / і / найдобріша / у / світі
+   > [!answer] Моя мама завжди найкраща і найдобріша у світі
 
-10. це | найдорожчий | телефон
-    > [!answer] Це найдорожчий телефон
+10. це / був / дуже / дорогий / і / найгарніший / телефон / у / магазині
+    > [!answer] Це був найдорожчий і найгарніший телефон у магазині
 
-11. вона | надзвичайно | талановита
-    > [!answer] Вона надзвичайно талановита
+11. вона / надзвичайно / талановита / і / дуже / працьовита / молода / дівчина
+    > [!answer] Вона надзвичайно талановита і дуже працьовита молода дівчина
 
-12. Говерла | найвища | гора
-    > [!answer] Говерла найвища гора
+12. Говерла / це / найвища / і / найпопулярніша / гора / в / українських / Карпатах
+    > [!answer] Говерла найвища і найпопулярніша гора в українських Карпатах
 
 ## error-correction: Form the Superlative
 
@@ -573,9 +585,9 @@ Use these to add emotion without comparison:
 
 ## cloze: World Records
 
-> Fill in the superlative forms.
+> Fill in the superlative forms based on the context.
 
-Україна — [___:1] країна в Європі за територією. [___:2] річка — Дніпро. [___:3] гора — Говерла. [___:4] місто — Київ.
+Україна — [___:1] країна в Європі за територією. [___:2] річка в нашій країні — Дніпро. [___:3] гора — Говерла. [___:4] місто України — Київ. Це наше [___:5] і [___:6] серце.
 
 1. найбільша | більша | велика
 > [!answer] найбільша
@@ -589,9 +601,15 @@ Use these to add emotion without comparison:
 4. найбільше | більше | велике
 > [!answer] найбільше
 
+5. найстаріше | старіше | старе
+> [!answer] найстаріше
+
+6. найкраще | краще | добре
+> [!answer] найкраще
+
 ---
 
-Моя мама — [___:1] ! Мій друг — [___:2] ! Це — [___:3] день у моєму житті! Я [___:4] щаслива людина!
+Моя мама — [___:1] людина у світі! Мій друг — [___:2] хлопець у школі! Це був [___:3] день у моєму житті! Я був [___:4] щаслива людина. Ми бачили [___:5] краєвиди і [___:6] гори.
 
 1. найкраща | краща | добра
 > [!answer] найкраща
@@ -602,8 +620,14 @@ Use these to add emotion without comparison:
 3. найкращий | кращий | хороший
 > [!answer] найкращий
 
-4. дуже | надзвичайно | неймовірно
-> [!answer] дуже
+4. найщасливіша | щасливіша | щаслива
+> [!answer] найщасливіша
+
+5. найгарніші | гарніші | гарні
+> [!answer] найгарніші
+
+6. найвищі | вищі | високі
+> [!answer] найвищі
 
 ## dialogue-reorder: The Best
 
@@ -770,15 +794,11 @@ This is the cheapest option.
 | найшвидший | /nɑjˈʃʋɪdʃɪj/ | fastest | adj | m | superlative of швидкий |
 | найцікавіший | /nɑjt͡siˈkɑʋiʃɪj/ | most interesting | adj | m | superlative of цікавий |
 | найважливіший | /nɑjʋɑʒˈlɪʋiʃɪj/ | most important | adj | m | superlative of важливий |
-| дуже | /ˈduʒɛ/ | very | adv | — | intensifier |
 | надзвичайно | /nɑdzʋɪˈt͡ʃɑjnɔ/ | extraordinarily | adv | — | intensifier |
 | неймовірно | /nɛjmɔˈʋirnɔ/ | incredibly | adv | — | intensifier |
 | страшенно | /strɑˈʃɛnnɔ/ | terribly | adv | — | intensifier |
 | вкрай | /ˈʋkrɑj/ | extremely | adv | — | intensifier |
 | світ | /sʋit/ | world | n | m | - |
-| чемпіон | /t͡ʃɛmpiˈɔn/ | champion | n | m | - |
 | рекорд | /rɛˈkɔrd/ | record | n | m | - |
-| подарунок | /pɔdɑˈrunɔk/ | gift, present | n | m | - |
-| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | v | impf | - |
 
 ---

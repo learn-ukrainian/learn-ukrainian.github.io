@@ -383,9 +383,9 @@ Key distinctions:
 ### Case Requirements
 
 <GroupSort groups={{
-  "Genitive (Кого? Чого?)": ["для", "без", "від", "після", "крім", "замість"],
-  "Accusative (Кого? Що?)": ["через", "про"],
-  "Instrumental (Ким? Чим?)": ["з"],
+  "Genitive (Кого? Чого?)": ["для", "без", "від", "після", "крім", "замість", "до"],
+  "Accusative (Кого? Що?)": ["через", "про", "на"],
+  "Instrumental (Ким? Чим?)": ["з", "над"],
   "Locative (На чому?)": ["о/об"]
 }} />
 
@@ -431,60 +431,68 @@ Key distinctions:
 
 <Quiz questions={[
   {
-    question: `\"Для\" requires which case?`,
+    question: `In Ukrainian grammar, which grammatical case does the preposition \"для\" (for) always require?`,
     options: [
       { text: `Genitive`, correct: true },
       { text: `Accusative`, correct: false },
-      { text: `Instrumental`, correct: false }
+      { text: `Instrumental`, correct: false },
+      { text: `Locative`, correct: false }
     ]
   },  {
-    question: `\"Через дощ\" means:`,
+    question: `When someone says \"Через дощ ми залишилися вдома,\" what does \"через\" express here?`,
     options: [
       { text: `Because of rain`, correct: true },
       { text: `Through the rain`, correct: false },
-      { text: `About rain`, correct: false }
+      { text: `About rain`, correct: false },
+      { text: `Without rain`, correct: false }
     ]
   },  {
-    question: `\"Від мами\" means:`,
+    question: `When you receive \"Лист від мами,\" what does the preposition \"від\" indicate in this context?`,
     options: [
-      { text: `From mom`, correct: true },
-      { text: `For mom`, correct: false },
-      { text: `With mom`, correct: false }
+      { text: `From mom (source)`, correct: true },
+      { text: `For mom (benefit)`, correct: false },
+      { text: `With mom (accompaniment)`, correct: false },
+      { text: `About mom (topic)`, correct: false }
     ]
   },  {
-    question: `Which preposition means \"about\"?`,
+    question: `When expressing the topic of a conversation in Ukrainian, which preposition correctly means \"about\"?`,
     options: [
       { text: `про`, correct: true },
       { text: `для`, correct: false },
-      { text: `від`, correct: false }
+      { text: `від`, correct: false },
+      { text: `через`, correct: false }
     ]
   },  {
-    question: `\"Без цукру\" means:`,
+    question: `When ordering \"Кава без цукру\" at a café, what does \"без\" express in this phrase?`,
     options: [
       { text: `Without sugar`, correct: true },
       { text: `With sugar`, correct: false },
-      { text: `For sugar`, correct: false }
+      { text: `For sugar`, correct: false },
+      { text: `Instead of sugar`, correct: false }
     ]
   },  {
-    question: `\"О третій\" refers to:`,
+    question: `When arranging to meet \"О третій годині,\" what does the preposition \"о\" indicate here?`,
     options: [
       { text: `Time (at 3 o'clock)`, correct: true },
       { text: `Place (at the third)`, correct: false },
-      { text: `Person (about the third)`, correct: false }
+      { text: `Person (about the third)`, correct: false },
+      { text: `Duration (for 3 hours)`, correct: false }
     ]
   },  {
-    question: `\"Замість чаю\" means:`,
+    question: `When someone orders \"Чай замість кави,\" what does the preposition \"замість\" express here?`,
     options: [
       { text: `Instead of tea`, correct: true },
       { text: `About tea`, correct: false },
-      { text: `Without tea`, correct: false }
+      { text: `Without tea`, correct: false },
+      { text: `After tea`, correct: false }
     ]
   },  {
-    question: `Which preposition takes Instrumental?`,
+    question: `In Ukrainian, which preposition always requires the Instrumental case to follow it?`,
     options: [
       { text: `з`, correct: true },
       { text: `для`, correct: false },
-      { text: `про`, correct: false }
+      { text: `про`, correct: false },
+      { text: `без`, correct: false }
     ]
   }
 ]} />
@@ -508,23 +516,31 @@ Key distinctions:
 
 [___:7] роботу вона не їздить часто додому.
 
-Всі її люблять, [___:8] одного колеги.`}
+Всі її люблять, [___:8] одного колеги.
 
-  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `про`, options: [`про`, `для`, `від`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `з`, options: [`з`, `без`, `для`] }, { index: 4, answer: `о`, options: [`о`, `після`, `для`] }, { index: 5, answer: `Після`, options: [`Після`, `Через`, `Для`] }, { index: 6, answer: `Через`, options: [`Через`, `Для`, `Про`] }, { index: 7, answer: `крім`, options: [`крім`, `для`, `з`] }]}
+Вона взяла чай [___:9] кави сьогодні.
+
+Марія планує відпустку [___:10] роботи.
+
+Вона поїде [___:11] подругою в гори.
+
+Це буде подорож [___:12] планів.`}
+
+  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `про`, options: [`про`, `для`, `від`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `з`, options: [`з`, `без`, `для`] }, { index: 4, answer: `о`, options: [`о`, `після`, `для`] }, { index: 5, answer: `Після`, options: [`Після`, `Через`, `Для`] }, { index: 6, answer: `Через`, options: [`Через`, `Для`, `Про`] }, { index: 7, answer: `крім`, options: [`крім`, `для`, `з`] }, { index: 8, answer: `замість`, options: [`замість`, `з`, `без`] }, { index: 9, answer: `після`, options: [`після`, `до`, `для`] }, { index: 10, answer: `з`, options: [`з`, `без`, `для`] }, { index: 11, answer: `без`, options: [`без`, `з`, `про`] }]}
 
 />
 
 ### Logical Sentences
 
 <Unjumble items={[
-  { jumbled: `цукру | Кава | без`, answer: `Кава без цукру` },
-  { jumbled: `тебе | Це | для`, answer: `Це для тебе` },
-  { jumbled: `мами | Лист | від`, answer: `Лист від мами` },
-  { jumbled: `дощ | залишився | Через | я | вдома`, answer: `Через дощ я залишився вдома` },
-  { jumbled: `про | говорили | Ми | тебе`, answer: `Ми говорили про тебе` },
-  { jumbled: `молоком | Кава | з`, answer: `Кава з молоком` },
-  { jumbled: `третій | о | Зустрінемось`, answer: `Зустрінемось о третій` },
-  { jumbled: `кави | Чай | замість`, answer: `Чай замість кави` }
+  { jumbled: `цукру / Кава / без / і / молока / будь / ласка / мені`, answer: `Кава без цукру і молока будь ласка мені` },
+  { jumbled: `тебе / Це / для / я / купив / подарунок / у / магазині`, answer: `Це подарунок для тебе я купив у магазині` },
+  { jumbled: `мами / Лист / від / прийшов / вчора / з / села / нашого`, answer: `Лист від мами прийшов вчора з нашого села` },
+  { jumbled: `дощ / залишився / Через / я / вдома / і / читав / книгу`, answer: `Через дощ я залишився вдома і читав книгу` },
+  { jumbled: `про / говорили / Ми / тебе / і / твою / нову / роботу`, answer: `Ми говорили про тебе і твою нову роботу` },
+  { jumbled: `молоком / Кава / з / і / цукром / будь / ласка / мені`, answer: `Кава з молоком і цукром будь ласка мені` },
+  { jumbled: `третій / о / Зустрінемось / годині / біля / входу / в / метро`, answer: `Зустрінемось о третій годині біля входу в метро` },
+  { jumbled: `кави / Чай / замість / будь / ласка / і / з / лимоном`, answer: `Чай замість кави будь ласка і з лимоном` }
 ]} />
 
 ### Wrong Preposition
@@ -693,8 +709,14 @@ Key distinctions:
   passage={`Мені потрібні ліки [___:1] головного болю.
 [___:2] дітей чи [___:3] дорослих?
 [___:4] дорослих. І щось [___:5] кашлю.
-Сироп [___:6] цукру підійде?`}
-  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 4, answer: `від`, options: [`від`, `для`, `про`] }, { index: 5, answer: `без`, options: [`без`, `з`, `для`] }]}
+Сироп [___:6] цукру підійде?
+Так, дякую. Це подарунок [___:7] бабусі.
+Візьміть вітаміни [___:8] імунітету.
+Скільки коштує? Я хочу заплатити [___:9] готівкою.
+Будь ласка, прийміть ліки [___:10] їжі.
+Можна взяти чай [___:11] кави?
+Так, ось чай [___:12] лимоном.`}
+  blanks={[{ index: 0, answer: `від`, options: [`від`, `для`, `про`] }, { index: 1, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 2, answer: `для`, options: [`для`, `від`, `з`] }, { index: 3, answer: `Для`, options: [`Для`, `Від`, `Без`] }, { index: 4, answer: `від`, options: [`від`, `для`, `про`] }, { index: 5, answer: `без`, options: [`без`, `з`, `для`] }, { index: 6, answer: `для`, options: [`для`, `від`, `про`] }, { index: 7, answer: `для`, options: [`для`, `від`, `без`] }, { index: 8, answer: `без`, options: [`без`, `з`, `для`] }, { index: 9, answer: `після`, options: [`після`, `до`, `через`] }, { index: 10, answer: `замість`, options: [`замість`, `з`, `без`] }, { index: 11, answer: `з`, options: [`з`, `без`, `для`] }]}
 />
 
 ### Case Endings
@@ -713,33 +735,7 @@ Key distinctions:
 
 | Word | IPA | English | POS | Gender | Case |
 |------|-----|---------|-----|--------|------|
-| для | /dlʲɑ/ | for | prep | - | Gen |
-| без | /bɛz/ | without | prep | - | Gen |
-| від | /ʋid/ | from | prep | - | Gen |
-| після | /pˈislʲɑ/ | after | prep | - | Gen |
-| крім | /krim/ | except | prep | - | Gen |
-| замість | /zˈɑmistʲ/ | instead of | prep | - | Gen |
-| через | /t͡ʃˈɛrɛz/ | because of | through | prep | - | Acc |
-| про | /prɔ/ | about | prep | - | Acc |
-| о | /ɔ/ | at (time) | prep | - | Loc |
-| об | /ɔb/ | at (before vowel) | prep | - | Loc |
-| з | /z/ | with | prep | - | Instr |
-| із | /iz/ | with (variant) | prep | - | Instr |
-| зі | /zi/ | with (before cluster) | prep | - | Instr |
-| подарунок | /pɔdˈɑrunɔk/ | gift | noun | - | - |
-| лист | /lɪst/ | letter | noun | - | - |
-| ліки | /lˈikɪ/ | medicine | noun | - | - |
-| здоров'я | /zdɔrˈɔʋjɑ/ | health | noun | - | - |
 | хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - | - |
-| цукор | /t͡sˈukɔr/ | sugar | noun | - | - |
-| молоко | /mɔlɔkˈɔ/ | milk | noun | - | - |
 | відпустка | /ʋidpˈustkɑ/ | vacation | noun | - | - |
-| робота | /rɔbˈɔtɑ/ | work | noun | - | - |
-| обід | /ɔbˈid/ | lunch | noun | - | - |
-| сніданок | /snˈidɑnɔk/ | breakfast | noun | - | - |
-| вечеря | /ʋɛt͡ʃˈɛrʲɑ/ | dinner | noun | - | - |
-| посилка | /pɔsˈɪlkɑ/ | package | noun | - | - |
-| причина | /prɪt͡ʃˈɪnɑ/ | reason | noun | - | - |
 | мета | /mˈɛtɑ/ | goal | noun | - | - |
-| користь | /kˈɔrɪstʲ/ | benefit | noun | - | - |
 | відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - | - |

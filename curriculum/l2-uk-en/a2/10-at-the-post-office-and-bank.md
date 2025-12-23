@@ -321,99 +321,111 @@ In this module you learned essential vocabulary for two key service locations in
 
 ## quiz: Service Situations
 
-1. What do you say to send a letter?
+1. When you want to send a letter in Ukrainian, which is the correct sentence?
 
 - [x] Я хочу відправити листа.
 - [ ] Я хочу відправити лист.
 - [ ] Я хочу відправити листом.
+- [ ] Я хочу відправити листі.
 
 ---
 
-2. How do you ask for the exchange rate?
+2. When you want to ask about the exchange rate at a bank, which is correct?
 
 - [x] Який сьогодні курс?
 - [ ] Який сьогодні гроші?
 - [ ] Який сьогодні банк?
+- [ ] Який сьогодні рахунок?
 
 ---
 
-3. To pay by card, you say:
+3. When expressing payment method in Ukrainian, you say "платити..." with which case?
 
 - [x] Платити карткою.
 - [ ] Платити картку.
 - [ ] Платити картки.
+- [ ] Платити картка.
 
 ---
 
-4. "I need to withdraw money" is:
+4. When you need to withdraw money at a bank, which is the correct Ukrainian sentence?
 
 - [x] Мені потрібно зняти гроші.
 - [ ] Мені потрібно зняти грошей.
 - [ ] Мені потрібно зняти грошам.
+- [ ] Мені потрібно зняти грошима.
 
 ---
 
-5. "A package from Ukraine":
+5. When saying "a package from Ukraine," which is the correct case form?
 
 - [x] Посилка з України.
 - [ ] Посилка з Україна.
 - [ ] Посилка з Україну.
+- [ ] Посилка з Україні.
 
 ---
 
-6. "Give me the receipt":
+6. When asking someone to "give me the receipt," which is the correct Ukrainian sentence?
 
 - [x] Дайте мені квитанцію.
 - [ ] Дайте мені квитанція.
 - [ ] Дайте мені квитанції.
+- [ ] Дайте мені квитанцією.
 
 ---
 
-7. How much is a stamp?
+7. When asking "how much is a stamp?" at the post office, which is correct?
 
 - [x] Скільки коштує марка?
 - [ ] Скільки коштує марку?
 - [ ] Скільки коштує марки?
+- [ ] Скільки коштує маркою?
 
 ---
 
-8. I want to open an account:
+8. When you want to open a bank account in Ukrainian, which sentence is correct?
 
 - [x] Я хочу відкрити рахунок.
 - [ ] Я хочу відкрити рахунку.
 - [ ] Я хочу відкрити рахунком.
+- [ ] Я хочу відкрити рахунці.
 
 ---
 
-9. Write the address:
+9. When asking someone to "write the address" on an envelope, which Ukrainian sentence is correct?
 
 - [x] Напишіть адресу.
 - [ ] Напишіть адреса.
 - [ ] Напишіть адреси.
+- [ ] Напишіть адресою.
 
 ---
 
-10. Five hundred hryvnias:
+10. When expressing the quantity "five hundred hryvnias" in Ukrainian, which form is correct?
 
 - [x] П'ятсот гривень.
 - [ ] П'ятсот гривня.
 - [ ] П'ятсот гривні.
+- [ ] П'ятсот гривню.
 
 ---
 
-11. I lost my card:
+11. When saying "I lost my card" in Ukrainian, which grammatical form of "картка" is correct?
 
 - [x] Я загубив картку.
 - [ ] Я загубив картка.
 - [ ] Я загубив карткою.
+- [ ] Я загубив картки.
 
 ---
 
-12. The national currency is:
+12. What is Ukraine's national currency, which you will use at banks and post offices?
 
 - [x] гривня
 - [ ] рубль
 - [ ] злотий
+- [ ] євро
 
 ## true-false: Service Facts
 
@@ -480,41 +492,41 @@ In this module you learned essential vocabulary for two key service locations in
 
 > Put the words in the correct order.
 
-1. я | хочу | відправити | листа
-   > [!answer] Я хочу відправити листа
+1. я / хочу / відправити / листа / до / Канади / будь / ласка
+   > [!answer] Я хочу відправити листа до Канади будь ласка
 
-2. мені | потрібно | зняти | гроші
-   > [!answer] Мені потрібно зняти гроші
+2. мені / потрібно / зняти / гроші / з / рахунку / сьогодні / вранці
+   > [!answer] Мені потрібно зняти гроші з рахунку сьогодні вранці
 
-3. скільки | коштує | марка
-   > [!answer] Скільки коштує марка
+3. скільки / коштує / марка / до / Німеччини / будь / ласка / скажіть
+   > [!answer] Скільки коштує марка до Німеччини будь ласка скажіть
 
-4. який | сьогодні | курс
-   > [!answer] Який сьогодні курс
+4. який / сьогодні / курс / долара / до / гривні / будь / ласка
+   > [!answer] Який сьогодні курс долара до гривні будь ласка
 
-5. дайте | будь ласка | квитанцію
-   > [!answer] Дайте, будь ласка, квитанцію
+5. дайте / будь / ласка / квитанцію / і / чек / на / це
+   > [!answer] Дайте будь ласка квитанцію і чек на це
 
-6. посилка | з | України
-   > [!answer] Посилка з України
+6. посилка / з / України / прийшла / вчора / дуже / швидко / сюди
+   > [!answer] Посилка з України прийшла вчора дуже швидко сюди
 
-7. я | хочу | обміняти | долари
-   > [!answer] Я хочу обміняти долари
+7. я / хочу / обміняти / долари / на / гривні / сьогодні / зараз
+   > [!answer] Я хочу обміняти долари на гривні сьогодні зараз
 
-8. напишіть | адресу | на | конверті
-   > [!answer] Напишіть адресу на конверті
+8. напишіть / адресу / на / конверті / будь / ласка / тут / чітко
+   > [!answer] Напишіть адресу на конверті будь ласка тут чітко
 
-9. платити | карткою
-   > [!answer] Платити карткою
+9. платити / карткою / чи / готівкою / будь / ласка / скажіть / мені
+   > [!answer] Платити карткою чи готівкою будь ласка скажіть мені
 
-10. мені | потрібна | нова | картка
-    > [!answer] Мені потрібна нова картка
+10. мені / потрібна / нова / картка / бо / стара / не / працює
+    > [!answer] Мені потрібна нова картка бо стара не працює
 
-11. я | хочу | відкрити | рахунок
-    > [!answer] Я хочу відкрити рахунок
+11. я / хочу / відкрити / рахунок / у / вашому / банку / сьогодні
+    > [!answer] Я хочу відкрити рахунок у вашому банку сьогодні
 
-12. п'ятсот | гривень
-    > [!answer] П'ятсот гривень
+12. п'ятсот / гривень / будь / ласка / зніміть / з / мого / рахунку
+    > [!answer] П'ятсот гривень будь ласка зніміть з мого рахунку
 
 ## error-correction: Fix the Case
 
@@ -800,40 +812,24 @@ I want to exchange dollars.
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | пошта | /ˈpɔʃtɑ/ | post office | noun | f | service location |
-| банк | /bɑnk/ | bank | noun | m | service location |
-| лист | /lɪst/ | letter | noun | m | Acc: листа |
-| посилка | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |
 | марка | /ˈmɑrkɑ/ | stamp | noun | f | Acc: марку |
-| конверт | /kɔnˈʋɛrt/ | envelope | noun | m | Acc: конверт |
 | адреса | /ɑdˈrɛsɑ/ | address | noun | f | Acc: адресу |
 | індекс | /ˈindɛks/ | postal code | noun | m | Acc: індекс |
 | квитанція | /kʋɪˈtɑnt͡sʲijɑ/ | receipt | noun | f | Acc: квитанцію |
-| рахунок | /ˈrɑxunɔk/ | account | noun | m | Acc: рахунок |
-| картка | /ˈkɑrtkɑ/ | card | noun | f | Acc: картку |
-| гроші | /ˈɦrɔʃi/ | money | noun | pl | Acc: гроші |
-| готівка | /ɦɔˈtiʋkɑ/ | cash | noun | f | Acc: готівку |
 | валюта | /ʋɑˈlʲutɑ/ | currency | noun | f | Acc: валюту |
 | переказ | /pɛrɛˈkɑz/ | transfer | noun | m | Acc: переказ |
 | кредит | /krɛˈdɪt/ | credit, loan | noun | m | Acc: кредит |
 | курс | /kurs/ | exchange rate | noun | m | banking term |
-| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | noun | f | Ukrainian currency |
-| долар | /ˈdɔlɑr/ | dollar | noun | m | foreign currency |
 | відправляти | /ʋidprɑʋˈlʲɑtɪ/ | to send | verb | — | requires Acc |
-| отримувати | /ɔtrɪˈmuʋɑtɪ/ | to receive | verb | — | requires Acc |
-| надсилати | /nɑdˈsɪlɑtɪ/ | to mail | verb | — | requires Acc |
 | знімати | /zniˈmɑtɪ/ | to withdraw | verb | — | requires Acc |
 | вкладати | /ʋklɑˈdɑtɪ/ | to deposit | verb | — | requires Acc |
 | обмінювати | /ɔbmiˈnʲuʋɑtɪ/ | to exchange | verb | — | requires Acc |
-| платити | /plɑˈtɪtɪ/ | to pay | verb | — | + Instr for method |
-| відкривати | /ʋidkrɪˈʋɑtɪ/ | to open | verb | — | requires Acc |
-| закривати | /zɑkrɪˈʋɑtɪ/ | to close | verb | — | requires Acc |
 | загубити | /zɑɦuˈbɪtɪ/ | to lose | verb | — | perfective |
 | чек | /t͡ʃɛk/ | check, receipt | noun | m | Acc: чек |
 | черга | /ˈt͡ʃɛrɦɑ/ | queue, line | noun | f | Acc: чергу |
 | відсоток | /ʋidˈsɔtɔk/ | interest rate, percent | noun | m | Gen: відсотка |
 | позика | /pɔˈzɪkɑ/ | loan | noun | f | Acc: позику |
 | касир | /kɑˈsɪr/ | cashier | noun | m | professional term |
-| каса | /ˈkɑsɑ/ | cash register | noun | f | Acc: касу |
 | бланк | /blɑnk/ | form, blank | noun | m | Acc: бланк |
 
 ---

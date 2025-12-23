@@ -359,58 +359,83 @@ Today you learned the reflexive possessive pronoun **свій**.
    > [!options] свою | її
 
 ## quiz: Concept Check
-> Перевірте розуміння концепції. | Check your understanding of the concept.
+> Дайте відповіді на питання про вживання займенника "свій". | Answer questions about the use of the pronoun "sviy".
 
-1. "Свій" refers back to:
-   - [x] The subject of the sentence
-   - [ ] Any person mentioned
-   - [ ] Only third person
+1. Which scenario best describes the primary grammatical function of the reflexive possessive pronoun "свій" in Ukrainian?
 
-2. "Він любить його маму" means:
-   - [x] He loves someone else's mom
-   - [ ] He loves his own mom
-   - [ ] He loves my mom
+- [x] Refers back to the subject of the same sentence
+- [ ] Refers to someone else's property only
+- [ ] Used only with masculine singular subjects
+- [ ] Replaces only the second person plural possessive
 
-3. When can you use мій instead of свій?
-   - [x] When the subject is "я"
-   - [ ] Always
-   - [ ] Never
+---
 
-4. "Вона миє свої руки" means:
-   - [x] She washes her own hands
-   - [ ] She washes his hands
-   - [ ] She washes your hands
+2. In the sentence "Я люблю свою маму," which of the following English phrases correctly captures the intended meaning?
 
-5. Which declines: свій or його?
-   - [x] Only свій
-   - [ ] Only його
-   - [ ] Both
+- [x] I love my (own) mother
+- [ ] I love your mother
+- [ ] I love her mother
+- [ ] I love his mother
 
-6. "Свого" is which case?
-   - [x] Genitive
-   - [ ] Dative
-   - [ ] Instrumental
+---
 
-7. "Ми любимо свою країну" means:
-   - [x] We love our country
-   - [ ] We love their country
-   - [ ] We love his country
+3. What is the subtle but important difference between "Він любить його маму" and "Він любить свою маму"?
 
-8. The subject is "Марія". Which is correct for "her book"?
-   - [x] свою книгу
-   - [ ] її книгу
-   - [ ] мою книгу
+- [x] "Його" means someone else's mother; "своя" means his own
+- [ ] There is no functional difference in standard Ukrainian
+- [ ] "Його" is formal; "своя" is familiar and casual
+- [ ] "Його" is only for objects; "своя" is for people
+
+---
+
+4. Which of the following statements correctly identifies how the pronoun "свій" is declined in a Ukrainian sentence?
+
+- [x] It declines exactly like the possessive pronoun "мій"
+- [ ] It has only one fixed form for all genders
+- [ ] It never changes its ending regardless of the case
+- [ ] it declines like a regular non-possessive adjective
+
+---
+
+5. Can the pronoun "свій" be used grammatically as part of the subject (nominative case) in a main clause?
+
+- [x] No, it usually refers to something the subject possesses
+- [ ] Yes, it is common to start sentences with "Свій батько..."
+- [ ] Only when the verb is in the past tense
+- [ ] Only in the third person plural form
+
+---
+
+6. Which of the following is the correct feminine accusative form of "свій" to match the noun "книгу"?
+
+- [x] свою ( accusative feminine singular)
+- [ ] своєї (genitive feminine singular)
+- [ ] своїй (dative feminine singular)
+- [ ] своєю (instrumental feminine singular)
+
+---
+
+7. When using the first or second person, are both "мій" and "свій" generally considered acceptable in standard Ukrainian?
+
+- [x] Yes, both are common, but "свій" is very natural
+- [ ] No, "мій" is considered grammatically incorrect
+- [ ] Only "мій" is used for family members
+- [ ] Only "свій" is used for inanimate objects
+
+---
+
+8. To which personal pronoun refers "свої" in the following sentence: "Ми любимо свої традиції"?
+
+- [x] ми
+- [ ] ви
+- [ ] вони
+- [ ] я
 
 ## cloze: Family Story
 
-> Complete with свій/її/його.
+> Complete the text about a family using "свій" in the correct case.
 
-Марія готує у [___:1] кухні. (her own)
-Її мама приїхала з [___:2] чоловіком. (her own husband)
-Марія показала [___:3] квартиру. (her own)
-Батько говорив про [___:4] роботу. (his own)
-Мама взяла [___:5] сумку. (her own)
-Марія слухала [___:6] батьків. (her own)
+Марія готує у [своїй:1] кухні. (her own) Її мама приїхала зі [своїм:2] чоловіком. (her own husband) Марія показала [свою:3] квартиру. (her own) Батько говорив про [свою:4] роботу. (his own) Мама взяла [свою:5] сумку. (her own) Марія слухала [своїх:6] батьків. (her own)
 
 1. своїй | її
    > [!answer] своїй
@@ -430,24 +455,55 @@ Today you learned the reflexive possessive pronoun **свій**.
 6. своїх | її
    > [!answer] своїх
 
+---
+
+Мій брат розповів про [свій:1] день. (his own) Максим любить [свою:2] роботу. (his own) Ми цінуємо [свою:3] родину. (our own) Ви бачите [свої:4] помилки. (your own) Вони шукають [свої:5] речі. (their own) Сестра миє [своє:6] обличчя. (her own)
+
+1. свій | його
+   > [!answer] свій
+
+2. свою | його
+   > [!answer] свою
+
+3. свою | нашу
+   > [!answer] свою
+
+4. свої | ваші
+   > [!answer] свої
+
+5. свої | їхні
+   > [!answer] свої
+
+6. своє | її
+   > [!answer] своє
+
 ## unjumble: Possessive Sentences
 
-1. свою | Він | книгу | читає
-   > [!answer] Він читає свою книгу
-2. маму | свою | Вона | любить
-   > [!answer] Вона любить свою маму
-3. у | живуть | своєму | Вони | домі
-   > [!answer] Вони живуть у своєму домі
-4. сумку | взяла | свою | Марія
-   > [!answer] Марія взяла свою сумку
-5. зі | говорить | своїм | Він | братом
-   > [!answer] Він говорить зі своїм братом
-6. про | думаю | своє | Я | майбутнє
-   > [!answer] Я думаю про своє майбутнє
-7. своїй | у | спить | Вона | кімнаті
-   > [!answer] Вона спить у своїй кімнаті
-8. своїх | Ми | любимо | батьків
-   > [!answer] Ми любимо своїх батьків
+> Put the words in the correct order.
+
+1. він / дуже / часто / читає / свою / нову / цікаву / книгу
+   > [!answer] Він дуже часто читає свою нову цікаву книгу
+
+2. вона / дуже / сильно / любить / свою / рідну / добру / маму
+   > [!answer] Вона дуже сильно любить свою рідну добру маму
+
+3. вони / зараз / живуть / у / своєму / великому / білому / домі
+   > [!answer] Вони зараз живуть у своєму великому домі
+
+4. Марія / швидко / взяла / свою / синю / сумку / зі / столу
+   > [!answer] Марія швидко взяла свою синю сумку зі столу
+
+5. він / довго / говорить / зі / своїм / старшим / розумним / братом
+   > [!answer] Він довго говорить зі своїм старшим братом
+
+6. я / завжди / думаю / про / своє / прекрасне / щасливе / майбутнє
+   > [!answer] Я завжди думаю про своє прекрасне щасливе майбутнє
+
+7. вона / міцно / спить / у / своїй / новій / тихій / кімнаті
+   > [!answer] Вона міцно спить у своїй новій тихій кімнаті
+
+8. ми / дуже / щиро / любимо / своїх / добрих / старих / батьків
+   > [!answer] Ми щиро любимо своїх добрих старих батьків
 
 ## error-correction: Wrong Possessive
 
@@ -488,21 +544,31 @@ Today you learned the reflexive possessive pronoun **свій**.
    > [!options] її | свою
 
 ## group-sort: Declension Forms
-> Згрупуйте форми за родом. | Group the forms by gender.
-
-> Group the forms by gender.
+> Розсортуйте форми займенника за родом. | Sort the pronoun forms by gender.
 
 ### Masculine (свій, свого, своєму)
 - свій дім
 - свого брата
 - своєму батькові
 - своїм братом
+- свого тата
+- своєму другові
 
 ### Feminine (своя, своєї, своїй, свою)
 - своя сестра
 - своєї мами
 - своїй подрузі
 - свою книгу
+- свою статтю
+- своєї родини
+
+### Neuter / Plural
+- своє майбутнє
+- свої речі
+- своїх батьків
+- своїми друзями
+- своє обличчя
+- своїх успіхів
 
 ## match-up: Case Selection
 > З'єднайте контекст із правильною формою. | Match the context to the correct form.
@@ -556,14 +622,9 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ## cloze: Edge Cases
 
-> Complete using sviy/yoho.
+> Choose "свій" or the regular possessive based on the context.
 
-Він попросив мене взяти [___:1] книгу. (his own)
-Треба любити [___:2] країну. (one's)
-Марія знає, що Петро любить [___:3] роботу. (his own)
-Добре мати [___:4] житло. (one's own)
-Вона хоче, щоб я прочитав [___:5] статтю. (her own)
-Він допоміг [___:6] братові. (his own)
+Він попросив мене взяти [свою:1] книгу. (his own) Треба любити [свою:2] країну. (one's own) Марія знає, що Петро любить [свою:3] роботу. (his own) Добре мати [своє:4] житло. (one's own) Вона хоче, щоб я прочитав [свою:5] статтю. (her own) Він допоміг [своєму:6] братові. (his own)
 
 1. свою | його
    > [!answer] свою
@@ -585,32 +646,31 @@ Today you learned the reflexive possessive pronoun **свій**.
 
 ---
 
+Я бачу [свій:1] дім. (my own) Ти відкрив [своє:2] вікно. (your own) Ми знаємо [свої:3] цілі. (our own) Ви купили [свою:4] машину. (your own) Вони чекають [своїх:5] друзів. (their own) Вона миє [свої:6] руки. (her own)
+
+1. свій | мій
+   > [!answer] свій
+
+2. своє | твоє
+   > [!answer] своє
+
+3. свої | наші
+   > [!answer] свої
+
+4. свою | вашу
+   > [!answer] свою
+
+5. своїх | їхніх
+   > [!answer] своїх
+
+6. свої | її
+   > [!answer] свої
+
+---
+
 # Vocabulary
 
 | Word | IPA | English | POS | Gender | Forms |
 |------|-----|---------|-----|--------|-------|
-| свій | /sʋij/ | one's own (m) | pron | m | свого, своєму, своїм |
-| своя | /sʋɔjˈɑ/ | one's own (f) | pron | f | своєї, своїй, свою |
-| своє | /sʋɔjˈɛ/ | one's own (n) | pron | n | свого, своєму |
-| свої | /sʋɔjˈi/ | one's own (pl) | pron | pl | своїх, своїм, своїми |
-| його | /jɔɦˈɔ/ | his | pron | — | - |
-| її | /jijˈi/ | her | pron | — | - |
-| їхній | /jixnʲij/ | their | pron | — | їхнього, їхньому |
-| власний | /ʋlˈɑsnɪj/ | own (adj) | adj | — | - |
-| належати | /nɑlɛʒˈɑtɪ/ | to belong | verb | — | - |
-| мій | /mij/ | my | pron | — | мого, моєму |
-| твій | /tʋij/ | your (sg) | pron | — | твого, твоєму |
-| наш | /nɑʃ/ | our | pron | — | нашого, нашому |
-| ваш | /ʋɑʃ/ | your (pl/formal) | pron | — | вашого, вашому |
-| кімната | /kimnˈɑtɑ/ | room | noun | f | - |
-| квартира | /kʋɑrtˈɪrɑ/ | apartment | noun | f | - |
-| будинок | /budˈɪnɔk/ | building/house | noun | m | - |
-| сумка | /sˈumkɑ/ | bag | noun | f | - |
-| робота | /rɔbˈɔtɑ/ | work | noun | f | - |
 | життя | /ʒɪtʲˈɑ/ | life | noun | f | - |
-| майбутнє | /mɑjbˈutnʲɛ/ | future | noun | m | - |
-| батьки | /bɑtʲkˈɪ/ | parents | noun | pl | батьків, батькам |
-| брат | /brɑt/ | brother | noun | m | брата, братові |
-| сестра | /sɛstrˈɑ/ | sister | noun | f | сестри, сестрі |
-| подруга | /pɔdrˈuɦɑ/ | female friend | noun | f | - |
 | гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | m | - |

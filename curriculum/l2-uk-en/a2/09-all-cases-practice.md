@@ -330,99 +330,111 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 ## quiz: Which Case?
 
-1. Я читаю книгу. What case is "книгу"?
+1. In the sentence "Я читаю книгу," which grammatical case is the word "книгу"?
 
 - [x] Accusative
 - [ ] Nominative
 - [ ] Genitive
+- [ ] Dative
 
 ---
 
-2. Немає часу. What case is "часу"?
+2. In the Ukrainian expression "Немає часу," which grammatical case is the word "часу"?
 
 - [x] Genitive
 - [ ] Dative
 - [ ] Locative
+- [ ] Instrumental
 
 ---
 
-3. Вона дає подарунок мамі. What case is "мамі"?
+3. In the sentence "Вона дає подарунок мамі," which grammatical case is the word "мамі"?
 
 - [x] Dative
 - [ ] Locative
 - [ ] Genitive
+- [ ] Accusative
 
 ---
 
-4. Студент читає. What case is "студент"?
+4. In the sentence "Студент читає," which grammatical case is the word "студент"?
 
 - [x] Nominative
 - [ ] Accusative
 - [ ] Vocative
+- [ ] Genitive
 
 ---
 
-5. Ми їдемо автобусом. What case is "автобусом"?
+5. In the sentence "Ми їдемо автобусом," which grammatical case is the word "автобусом"?
 
 - [x] Instrumental
+- [ ] Dative
+- [ ] Locative
+- [ ] Accusative
+
+---
+
+6. In the sentence "Книга на столі," which grammatical case is the word "столі"?
+
+- [x] Locative
+- [ ] Instrumental
+- [ ] Genitive
+- [ ] Dative
+
+---
+
+7. In the greeting "Друже, привіт!" which grammatical case is the word "друже"?
+
+- [x] Vocative
+- [ ] Nominative
+- [ ] Dative
+- [ ] Accusative
+
+---
+
+8. In the sentence "Я йду з другом," which grammatical case is the word "другом"?
+
+- [x] Instrumental
+- [ ] Genitive
 - [ ] Dative
 - [ ] Locative
 
 ---
 
-6. Книга на столі. What case is "столі"?
-
-- [x] Locative
-- [ ] Instrumental
-- [ ] Genitive
-
----
-
-7. Друже, привіт! What case is "друже"?
-
-- [x] Vocative
-- [ ] Nominative
-- [ ] Dative
-
----
-
-8. Я йду з другом. What case is "другом"?
-
-- [x] Instrumental
-- [ ] Genitive
-- [ ] Dative
-
----
-
-9. Which case for "I see mom"?
+9. When saying "Я бачу маму" in Ukrainian, which grammatical case should you use for "маму"?
 
 - [x] Accusative
 - [ ] Nominative
 - [ ] Dative
+- [ ] Genitive
 
 ---
 
-10. Which case for "There is no bread"?
+10. When expressing absence with "Немає хліба," which grammatical case is required for "хліба"?
 
 - [x] Genitive
 - [ ] Accusative
 - [ ] Nominative
+- [ ] Dative
 
 ---
 
-11. Which case for "at the university"?
+11. When expressing location "в університеті" in Ukrainian, which grammatical case is required?
 
 - [x] Locative
 - [ ] Genitive
 - [ ] Accusative
+- [ ] Instrumental
 
 ---
 
-12. Which case for "I give to friend"?
+12. When saying "Я даю другові" in Ukrainian, which grammatical case is used for "другові"?
 
 - [x] Dative
 - [ ] Accusative
 - [ ] Instrumental
+- [ ] Genitive
 
 ## true-false: Case Rules
 > Визначте, чи правильне твердження про відмінки. | Decide if the statement about cases is true or false.
@@ -470,29 +482,23 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 > Sort these functions into the correct case category.
 
-### Nominative
+### Nominative/Genitive
 - subject of sentence
 - хто? що?
-
-### Genitive
 - possession
 - absence
 - quantity
 
-### Dative
+### Dative/Accusative
 - recipient
 - кому?
-
-### Accusative
 - direct object
 - direction
 
-### Instrumental
+### Instrumental/Locative
 - with someone
 - tool/means
 - profession
-
-### Locative
 - location
 - always with preposition
 
@@ -500,41 +506,41 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 > Put the words in the correct order.
 
-1. я | бачу | маму
-   > [!answer] Я бачу маму
+1. я / бачу / маму / і / тата / у / магазині / сьогодні
+   > [!answer] Я бачу маму і тата у магазині сьогодні
 
-2. книга | на | столі | лежить
-   > [!answer] Книга лежить на столі
+2. книга / на / столі / лежить / вже / давно / тут / у
+   > [!answer] Книга лежить на столі вже давно тут у
 
-3. він | дає | подарунок | сестрі
-   > [!answer] Він дає подарунок сестрі
+3. він / дає / подарунок / сестрі / на / день / народження / сьогодні
+   > [!answer] Він дає подарунок сестрі на день народження сьогодні
 
-4. немає | часу
-   > [!answer] Немає часу
+4. немає / часу / сьогодні / у / мене / на / це / зовсім
+   > [!answer] Немає часу сьогодні у мене на це зовсім
 
-5. ми | їдемо | автобусом
-   > [!answer] Ми їдемо автобусом
+5. ми / їдемо / автобусом / до / центру / міста / щодня / вранці
+   > [!answer] Ми їдемо автобусом до центру міста щодня вранці
 
-6. вона | пише | ручкою
-   > [!answer] Вона пише ручкою
+6. вона / пише / ручкою / у / зошиті / на / уроці / завжди
+   > [!answer] Вона пише ручкою у зошиті на уроці завжди
 
-7. друже | привіт
-   > [!answer] Друже, привіт
+7. друже / привіт / як / ти / сьогодні / себе / почуваєш / добре
+   > [!answer] Друже привіт як ти сьогодні себе почуваєш добре
 
-8. я | йду | з | другом
-   > [!answer] Я йду з другом
+8. я / йду / з / другом / у / парк / щодня / ввечері
+   > [!answer] Я йду з другом у парк щодня ввечері
 
-9. студент | читає | книгу
-   > [!answer] Студент читає книгу
+9. студент / читає / книгу / про / Україну / в / бібліотеці / сьогодні
+   > [!answer] Студент читає книгу про Україну в бібліотеці сьогодні
 
-10. чашка | кави
-    > [!answer] Чашка кави
+10. їхня / чашка / кави / стоїть / на / столі / в / кафе
+    > [!answer] Їхня чашка кави стоїть на столі в кафе
 
-11. мама | готує | обід
-    > [!answer] Мама готує обід
+11. мама / готує / обід / для / всієї / родини / щодня / ввечері
+    > [!answer] Мама готує обід для всієї родини щодня ввечері
 
-12. вона | в | університеті
-    > [!answer] Вона в університеті
+12. вона / в / університеті / вчиться / вже / три / роки / зараз
+    > [!answer] Вона в університеті вчиться вже три роки зараз
 
 ## error-correction: Fix the Case
 
@@ -808,31 +814,14 @@ Mom cooks dinner.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| хто | /xtɔ/ | who | pron | — | question word |
-| що | /ʃt͡ʃɔ/ | what | pron | — | question word |
 | кого | /kɔˈɦɔ/ | whom | pron | — | Gen/Acc of хто |
 | чого | /t͡ʃɔˈɦɔ/ | of what | pron | — | Gen of що |
 | кому | /kɔˈmu/ | to whom | pron | — | Dat of хто |
-| чому | /t͡ʃɔˈmu/ | why, to what | pron | — | Dat of що |
 | ким | /kɪm/ | by whom | pron | — | Instr of хто |
 | чим | /t͡ʃɪm/ | with what | pron | — | Instr of що |
-| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |
-| називний | /nɑzɪʋˈnɪj/ | nominative | adj | m | grammar term |
-| родовий | /rɔdɔˈʋɪj/ | genitive | adj | m | grammar term |
-| давальний | /dɑˈʋɑlʲnɪj/ | dative | adj | m | grammar term |
-| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | grammar term |
-| орудний | /ɔˈrudnɪj/ | instrumental | adj | m | grammar term |
-| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | grammar term |
-| кличний | /ˈklɪt͡ʃnɪj/ | vocative | adj | m | grammar term |
 | підмет | /ˈpidmɛt/ | subject | noun | m | grammar term |
 | додаток | /ˈdɔdɑtɔk/ | object | noun | m | grammar term |
 | присудок | /prɪˈsudɔk/ | predicate | noun | m | grammar term |
-| немає | /nɛˈmɑjɛ/ | there is no | verb | — | requires genitive |
-| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | — | requires accusative |
-| давати | /dɑˈʋɑtɪ/ | to give | verb | — | requires dative |
-| їхати | /ˈjixɑtɪ/ | to go by vehicle | verb | — | can take instrumental |
-| писати | /pɪˈsɑtɪ/ | to write | verb | — | instrument in instrumental |
 | звертатися | /zʋɛrˈtɑtɪsʲɑ/ | to address | verb | — | uses vocative |
-| час | /t͡ʃɑs/ | time | noun | m | example noun |
 
 ---

@@ -360,99 +360,113 @@ Adding different prefixes to the same root creates different perfective verbs wi
     > [!options] про- prefix | на- prefix | по- prefix | suppletive
 
 ## quiz: Aspect Formation
-> Як утворився доконаний вид? | How was the perfective formed?
+> Дайте відповіді на питання про творення аспекту. | Answer questions about aspect formation.
 
-1. Which prefix means "through/completion"?
+1. Which common prefix is most frequently used to form the perfective aspect of the verb "читати"?
 
-- [x] про-
-- [ ] на-
-- [ ] по-
-
----
-
-2. Which prefix is common for writing/creating?
-
-- [x] на-
-- [ ] про-
-- [ ] ви-
+- [x] про- (прочитати)
+- [ ] на- (начитати)
+- [ ] з- (зчитати)
+- [ ] по- (почитати)
 
 ---
 
-3. If a verb has -ва- or -ува-, it's usually:
+2. Which common prefix is most frequently used to form the perfective aspect of the verb "писати"?
 
-- [x] Imperfective
-- [ ] Perfective
-
----
-
-4. "Говорити | сказати" are:
-
-- [x] Suppletive pairs (different roots)
-- [ ] Prefixed pairs
-- [ ] Suffixed pairs
+- [x] на- (написати)
+- [ ] про- (прописати)
+- [ ] з- (списати)
+- [ ] по- (пописати)
 
 ---
 
-5. What's the perfective of "давати"?
+3. What suffix is typically removed or changed to turn the imperfective verb "відкривати" into its perfective form?
 
-- [x] дати (remove -ва-)
-- [ ] давив
-- [ ] подавати
-
----
-
-6. What's the perfective of "вчити"?
-
-- [x] вивчити (ви- prefix)
-- [ ] провчити
-- [ ] вчивати
+- [x] -ва- (відкрити)
+- [ ] -ну- (відкринути)
+- [ ] -и- (відкрити)
+- [ ] -а- (відкривати)
 
 ---
 
-7. Prefix "з-" becomes "с-" before:
+4. Which of the following examples shows the "-ну-" suffix being used to indicate a single, quick action?
 
-- [x] Voiceless consonants
-- [ ] Vowels
-- [ ] All consonants
-
----
-
-8. "Показувати" is:
-
-- [x] Imperfective (-ува-)
-- [ ] Perfective
+- [x] гукнути (from гукати)
+- [ ] читати (from прочитати)
+- [ ] робити (from зробити)
+- [ ] писати (from написати)
 
 ---
 
-9. Adding different prefixes to одне verb creates:
+5. What specific change occurs to the root vowel when transforming the imperfective verb "допомагати" into its perfective form?
 
-- [x] Different verbs with different meanings
-- [ ] The same verb with same meaning
-- [ ] Only aspect change
-
----
-
-10. "Ви-" often means:
-
-- [x] Out, mastery, completion
-- [ ] In, beginning
-- [ ] Under
+- [x] а → о (допомогти)
+- [ ] е → і (допомогти)
+- [ ] и → і (допомогти)
+- [ ] о → а (допомогти)
 
 ---
 
-11. Number of suppletive pairs is:
+6. What specific vowel change is observed when the imperfective verb "замітати" is transformed into the perfective "замести"?
 
-- [x] Small, must memorize
-- [ ] Large
-- [ ] Zero
+- [x] і → е (замести)
+- [ ] а → о (замести)
+- [ ] е → і (замести)
+- [ ] о → а (замести)
 
 ---
 
-12. When you see a prefixed verb, assume:
+7. Which of the following pairs is a classic example of a "suppletive pair" used to express aspect in Ukrainian?
 
-- [x] It's probably perfective
-- [ ] It's probably imperfective
-- [ ] You can't tell
+- [x] говорити / сказати
+- [ ] читати / прочитати
+- [ ] писати / написати
+- [ ] робити / зробити
+
+---
+
+8. What is the perfective counterpart of the irregular aspect pair involving the common Ukrainian verb "брати"?
+
+- [x] взяти
+- [ ] побрати
+- [ ] зібрати
+- [ ] заберу
+
+---
+
+9. In the verb pair "купувати" and "купити," what morphological change is primarily responsible for the aspectual difference?
+
+- [x] Suffix change (-ува- vs -и-)
+- [ ] Prefix addition
+- [ ] Vowel change in root
+- [ ] Consonant change in root
+
+---
+
+10. What is the correct perfective form of the Ukrainian verb "бачити," meaning "to see" or "to catch sight of"?
+
+- [x] побачити
+- [ ] бачити
+- [ ] перебачити
+- [ ] добачити
+
+---
+
+11. What is the correct imperfective form that corresponds to the perfective Ukrainian verb "дати," meaning "to give"?
+
+- [x] давати
+- [ ] додав
+- [ ] даяти
+- [ ] наддати
+
+---
+
+12. Which category of aspectual transformation does the verb pair "стрибати" (to jump) and "стрибнути" (to jump once) belong to?
+
+- [x] Aspectual Suffixes (-ну-)
+- [ ] Prefixation
+- [ ] Root vowel change
+- [ ] Suppletive pairs
 
 ## true-false: Formation Rules
 
@@ -495,74 +509,70 @@ Adding different prefixes to the same root creates different perfective verbs wi
   > Different prefixes add different meanings!
 
 ## group-sort: Formation Patterns
-> Розсортуйте пари за способом творення доконаного виду. | Sort these pairs by how the perfective is formed.
+> Розсортуйте пари за типом творення аспекту. | Sort the pairs by formation type.
 
-> Sort these pairs by how the perfective is formed.
+### Prefixation
+- читати / прочитати
+- писати / написати
+- бачити / побачити
+- робити / зробити
 
-### Prefix про-
-- читати/прочитати
-- слухати/прослухати
+### Suffix Changes
+- відкривати / відкрити
+- купувати / купити
+- давати / дати
+- розповідати / розповісти
 
-### Prefix на-
-- писати/написати
-- малювати/намалювати
+### Root Changes
+- допомагати / допомогти
+- замітати / замести
+- лягати / лягти
 
-### Prefix з-
-- робити/зробити
-- їсти/з'їсти
-
-### Prefix по-
-- бачити/побачити
-- чути/почути
-
-### -ва- removal
-- давати/дати
-- вставати/встати
-- відпочивати/відпочити
-
-### Suppletive
-- говорити/сказати
-- брати/взяти
+### Suppletive / Semelfactive
+- говорити / сказати
+- брати / взяти
+- гукати / гукнути
+- стрибати / стрибнути
 
 ## unjumble: Aspect Pattern Sentences
 
 > Put the words in the correct order.
 
-1. про | читати | = | прочитати
-   > [!answer] Про- + читати = прочитати
+1. я / обов'язково / прочитаю / цю / нову / цікаву / книгу / завтра / ввечері
+   > [!answer] Я прочитаю цю нову цікаву книгу завтра ввечері
 
-2. на | писати | = | написати
-   > [!answer] На- + писати = написати
+2. вона / написала / дуже / великого / листа / до / своєї / мами / вчора
+   > [!answer] Вона написала дуже великого листа до своєї мами вчора
 
-3. з | робити | = | зробити
-   > [!answer] З- + робити = зробити
+3. ми / нарешті / зробили / все / це / складне / домашнє / завдання / сьогодні
+   > [!answer] Ми зробили все складне домашнє завдання сьогодні
 
-4. давати | мінус | -ва- | = | дати
-   > [!answer] Давати мінус -ва- = дати
+4. він / сказав / мені / всю / щиру / правду / про / цю / ситуацію
+   > [!answer] Він сказав мені всю щиру правду про цю ситуацію
 
-5. говорити | сказати | різні | корені
-   > [!answer] Говорити і сказати різні корені
+5. я / вже / бачив / це / синє / прекрасне / море / у / своєму / житті
+   > [!answer] Я вже бачив це синє прекрасне море у своєму житті
 
-6. по | бачити | = | побачити
-   > [!answer] По- + бачити = побачити
+6. вона / взяла / свою / нову / книгу / зі / столу / сьогодні / вранці
+   > [!answer] Вона взяла свою нову книгу зі столу сьогодні вранці
 
-7. ви | вчити | = | вивчити
-   > [!answer] Ви- + вчити = вивчити
+7. ми / часто / бачили / його / у / цьому / великому / парку / влітку
+   > [!answer] Ми часто бачили його у цьому великому парку влітку
 
-8. вставати | встати | -ва- | видалення
-   > [!answer] Вставати → встати: -ва- видалення
+8. він / швидко / відкрив / це / велике / вікно / у / своїй / кімнаті
+   > [!answer] Він швидко відкрив це велике вікно у своїй кімнаті
 
-9. брати | взяти | суплетивна | пара
-   > [!answer] Брати/взяти суплетивна пара
+9. я / вже / купив / ці / дуже / смачні / яблука / в / новому / магазині
+   > [!answer] Я вже купив ці дуже смачні яблука в новому магазині
 
-10. з'їсти | їсти | з- | префікс
-    > [!answer] Їсти + з- префікс = з'їсти
+10. вона / завжди / говорить / тільки / українською / мовою / з / нами / вдома
+    > [!answer] Вона завжди говорить тільки українською мовою з нами вдома
 
-11. відпочивати | відпочити | -ва-
-    > [!answer] Відпочивати → відпочити: -ва- removal
+11. ми / нарешті / почули / цей / гарний / новий / український / голос / сьогодні
+    > [!answer] Ми нарешті почули цей гарний новий український голос сьогодні
 
-12. показувати | показати | -ува-
-    > [!answer] Показувати → показати: -ува- removal
+12. він / раптом / гукнув / свого / старого / друга / на / цій / вулиці
+    > [!answer] Він раптом гукнув свого старого друга на цій вулиці
 
 ## error-correction: Find the Perfective
 
@@ -606,37 +616,49 @@ Adding different prefixes to the same root creates different perfective verbs wi
 
 ## cloze: Pattern Recognition
 
-> Identify the aspect formation pattern.
+> Fill in the correct verb form based on the pattern.
 
-Аспектна пара читати/прочитати використовує [___:1]. Пара писати/написати використовує [___:2]. Пара давати/дати використовує [___:3]. Пара говорити/сказати — це [___:4] пара.
+Коли я [___:1] (process) книгу, я [___:2] (completion) її. Коли вона [___:3] (process) листа, вона [___:4] (completion) його. Ми [___:5] (process) роботу і [___:6] (completion) завдання.
 
-1. про- | на- | -ва- removal | suppletive
-> [!answer] про-
+1. читати: читав | прочитав
+> [!answer] читав
 
-2. про- | на- | -ва- removal | suppletive
-> [!answer] на-
+2. прочитати: читав | прочитав
+> [!answer] прочитав
 
-3. про- | на- | -ва- removal | suppletive
-> [!answer] -ва- removal
+3. писати: писала | написала
+> [!answer] писала
 
-4. prefixed | suffixed | suppletive
-> [!answer] suppletive
+4. написати: писала | написала
+> [!answer] написала
+
+5. робити: робили | зробили
+> [!answer] робили
+
+6. зробити: робили | зробили
+> [!answer] зробили
 
 ---
 
-Префікс [___:1] додає значення "завершення" чи "через". Префікс [___:2] часто пов'язаний з писанням. Суфікс [___:3] зазвичай є ознакою недоконаного виду. Дієслова на кшталт брати/взяти — це [___:4] пари.
+Він часто [___:1] (repetition), але вчора він [___:2] (single event). Коли вони [___:3] (duration), ми [___:4] (result). Вона [___:5] (activity) три години і [___:6] (completion) проект.
 
-1. про- | на- | по- | ви-
-> [!answer] про-
+1. гукати: гукав | гукнув
+> [!answer] гукав
 
-2. про- | на- | по- | ви-
-> [!answer] на-
+2. гукнути: гукав | гукнув
+> [!answer] гукнув
 
-3. -ти | -ва- | -ати | -ити
-> [!answer] -ва-
+3. вчити: вчили | вивчити
+> [!answer] вчили
 
-4. prefixed | suffixed | suppletive
-> [!answer] suppletive
+4. вивчити: вчили | вивчили
+> [!answer] вивчили
+
+5. готувати: готувала | приготувала
+> [!answer] готувала
+
+6. приготувати: готувала | приготувала
+> [!answer] приготувала
 
 ## dialogue-reorder: Learning Aspect
 
@@ -776,43 +798,28 @@ She drank the coffee.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| відпочивати | /ʋidpɔˈt͡ʃɪʋɑtɪ/ | to rest | verb | — | imperfective |
 | відпочити | /ʋidpɔˈt͡ʃɪtɪ/ | to rest | verb | — | perfective |
-| вставати | /ʋstɑˈʋɑtɪ/ | to get up | verb | — | imperfective |
 | встати | /ˈʋstɑtɪ/ | to get up | verb | — | perfective |
-| одягатися | /ɔdʲɑˈɦɑtɪsʲɑ/ | to dress | verb | — | imperfective |
 | одягнутися | /ɔdʲɑɦˈnutɪsʲɑ/ | to dress | verb | — | perfective |
 | сідати | /siˈdɑtɪ/ | to sit down | verb | — | imperfective |
 | сісти | /ˈsistɪ/ | to sit down | verb | — | perfective |
 | лягати | /lʲɑˈɦɑtɪ/ | to lie down | verb | — | imperfective |
 | лягти | /ˈlʲɑɦtɪ/ | to lie down | verb | — | perfective |
-| відкривати | /ʋidkrɪˈʋɑtɪ/ | to open | verb | — | imperfective |
 | відкрити | /ʋidˈkrɪtɪ/ | to open | verb | — | perfective |
-| закривати | /zɑkrɪˈʋɑtɪ/ | to close | verb | — | imperfective |
 | закрити | /zɑˈkrɪtɪ/ | to close | verb | — | perfective |
-| вмикати | /ʋmɪˈkɑtɪ/ | to turn on | verb | — | imperfective |
 | увімкнути | /uʋimkˈnutɪ/ | to turn on | verb | — | perfective |
-| вимикати | /ʋɪmɪˈkɑtɪ/ | to turn off | verb | — | imperfective |
 | вимкнути | /ˈʋɪmknutɪ/ | to turn off | verb | — | perfective |
-| починати | /pɔt͡ʃɪˈnɑtɪ/ | to begin | verb | — | imperfective |
 | почати | /pɔˈt͡ʃɑtɪ/ | to begin | verb | — | perfective |
-| закінчувати | /zɑkint͡ʃuˈʋɑtɪ/ | to finish | verb | — | imperfective |
 | закінчити | /zɑˈkint͡ʃɪtɪ/ | to finish | verb | — | perfective |
-| отримувати | /ɔtrɪˈmuʋɑtɪ/ | to receive | verb | — | imperfective |
 | отримати | /ɔˈtrɪmɑtɪ/ | to receive | verb | — | perfective |
-| посилати | /pɔsɪˈlɑtɪ/ | to send | verb | — | imperfective |
 | послати | /pɔˈslɑtɪ/ | to send | verb | — | perfective |
 | вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | imperfective |
 | вибрати | /ˈʋɪbrɑtɪ/ | to choose | verb | — | perfective |
 | вирішувати | /ʋɪriˈʃuʋɑtɪ/ | to decide | verb | — | imperfective |
 | вирішити | /ʋɪˈriʃɪtɪ/ | to decide | verb | — | perfective |
-| вид | /ʋid/ | aspect | noun | m | grammar term |
-| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |
-| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |
 | префікс | /prɛˈfiks/ | prefix | noun | m | grammar term |
 | суфікс | /ˈsufiks/ | suffix | noun | m | grammar term |
 | корінь | /ˈkɔrinʲ/ | root | noun | m | grammar term |
-| дієслово | /diɛˈslɔʋɔ/ | verb | noun | n | grammar term |
 
 ---
 

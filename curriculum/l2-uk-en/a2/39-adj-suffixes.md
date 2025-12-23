@@ -40,9 +40,9 @@ Input: **Україна** [Noun] -> Machine -> Output: **Україн-ський
 
 > [!question] The Universal Endings
 > Remember that the suffix changes the *meaning*, but the *ending* (flexion) must still match the Gender!
-> - Музичн**ий** (Masc)
-> - Музичн**а** (Fem)
-> - Музичн**е** (Neut)
+> - Музичн**ий**
+> - Музичн**а**
+> - Музичн**е**
 > - Музичн**і** (Plural)
 >
 > This is exactly like regular adjectives (Good -> Гарний, Гарна, Гарне).
@@ -50,13 +50,7 @@ Input: **Україна** [Noun] -> Machine -> Output: **Україн-ський
 > Root + Suffix + Ending.
 > Think of it like a sandwich: Root is the meat, Suffix is the cheese, Ending is the bread.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Grammar: ADJECTIVE CASES - Adjective declension...](https://www.youtube.com/watch?v=NjIXb7cc9UY) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 
 ---
 
@@ -297,11 +291,55 @@ Let's review the "machine parts" one last time.
 5.  **Active Adjectives** = These describe a state, like "Hot" (Burning) or "Fresh" (Blooming). They often behave like verbs frozen in time.
 
 Remember: Adjectives must always agree with their noun in Gender, Number, and Case!
-A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian passport" is *Український паспорт* (Masc).
+A "Ukrainian book" is *Українська книга*, but a "Ukrainian passport" is *Український паспорт*.
+
+### Learning Strategy: The Three-Step Method
+
+When you encounter a new noun and want to turn it into an adjective, follow these three simple steps:
+
+**Step 1: Identify the Category**
+Ask yourself: "What kind of relationship am I describing?"
+- Is it about WHERE something is from? → Use **-ськ-** (Kyiv → Київський)
+- Is it about WHAT FIELD it belongs to? → Use **-ов-** (Science → Науковий)  
+- Is it about a GENERAL QUALITY? → Use **-н-** (Music → Музичний)
+- Do I want to make it CUTE or SMALL? → Add **-еньк-** to any adjective
+
+**Step 2: Find the Stem**
+Remove the noun ending and find the core:
+- Музика → Музик- (stem)
+- Україна → Україн- (stem)
+- Наука → Наук- (stem)
+
+**Step 3: Add the Suffix + Gender Ending**
+Attach your chosen suffix, then add the gender ending:
+- Музик- + -н- + -ий = Музичний
+- Музик- + -н- + -а = Музична
+- Музик- + -н- + -е = Музичне
+
+With practice, this process becomes automatic. You'll start to "feel" which suffix sounds right, just like native speakers do. The key is to practice with real examples and pay attention to patterns you notice in Ukrainian texts, songs, and conversations.
+
+### Common Mistakes to Avoid
+
+1. **Don't mix up -ськ- and -н-**: "Київний" is wrong! Cities always use **-ськ-** → Київський.
+2. **Don't forget gender agreement**: The suffix stays the same, but the ending must match the noun's gender.
+3. **Don't overuse diminutives**: While **-еньк-** is charming, using it too much can sound childish. Save it for when you really want to express affection or politeness.
+
+### Practice Tips for Mastery
+
+The best way to internalize these patterns is through active practice. Try these exercises in your daily study routine:
+
+- **Noun-to-Adjective Drill**: Take 10 nouns from your vocabulary list each day and practice converting them to adjectives using the appropriate suffix. Say them out loud and write them down.
+- **Gender Practice**: For each adjective you create, practice all four forms (masculine, feminine, neuter, plural). This builds muscle memory for agreement patterns.
+- **Real-World Application**: When reading Ukrainian texts, circle every adjective you find and try to identify which suffix it uses and why. This helps you see the patterns in authentic context.
+- **Listening Practice**: When watching Ukrainian videos or listening to podcasts, pay special attention to adjectives. Notice how native speakers use diminutives and which suffixes appear most frequently in different contexts (news vs. casual conversation).
+
+Remember: language learning is a marathon, not a sprint. These patterns will become second nature with consistent practice over time!
+
+
 
 ---
 
-## Summary
+# Summary
 
 1.  **-н-ий** = General quality (Музичний, Смачний).
 2.  **-ов-ий** = Material/Relational (Науковий, Кольоровий).
@@ -311,7 +349,17 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Ukrainian Grammar: ADJECTIVE CASES - Adjective declension...](https://www.youtube.com/watch?v=NjIXb7cc9UY) — Let's Learn Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+---
+
+# Activities
 
 ## match-up: Suffix Match
 
@@ -473,18 +521,18 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ## unjumble: Scientific Talk
 
-1. експеримент | це | хімічний
-   > [!answer] Це хімічний експеримент
-2. проблема | це | фізична
-   > [!answer] Це фізична проблема
-3. мапа | де | географічна
-   > [!answer] Де географічна мапа
-4. факт | це | історичний
-   > [!answer] Це історичний факт
-5. рівняння | це | математичне
-   > [!answer] Це математичне рівняння
-6. журнал | це | науковий
-   > [!answer] Це науковий журнал
+1. це / дуже / важливий / хімічний / експеримент / для / нашої / лабораторії
+   > [!answer] Це дуже важливий хімічний експеримент для нашої лабораторії
+2. ми / вивчаємо / складну / фізичну / проблему / в / нашому / університеті
+   > [!answer] Ми вивчаємо складну фізичну проблему в нашому університеті
+3. де / знаходиться / велика / географічна / мапа / нашої / країни / зараз
+   > [!answer] Де знаходиться велика географічна мапа нашої країни зараз
+4. це / справді / цікавий / історичний / факт / про / наше / минуле
+   > [!answer] Це справді цікавий історичний факт про наше минуле
+5. студенти / розв'язують / складне / математичне / рівняння / на / дошці / сьогодні
+   > [!answer] Студенти розв'язують складне математичне рівняння на дошці сьогодні
+6. професор / читає / новий / науковий / журнал / у / своєму / кабінеті
+   > [!answer] Професор читає новий науковий журнал у своєму кабінеті
 
 ## fill-in: City Vibes
 
@@ -524,45 +572,67 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ## quiz: Logic Check
 
-1. Which suffix is used for "Urban/Rural"?
-   - [x] -ський
-   - [ ] -овий
-   - [ ] -ний
+1. Який саме суфікс ми використовуємо для прикметників "міський" та "сільський" в українській мові?
+   - [x] Це спеціальний суфікс -ський для позначення походження
+   - [ ] Це загальний суфікс -овий для матеріалів
+   - [ ] Це базовий суфікс -ний для якостей
+   - [ ] Це суфікс -чий для станів
 
-2. Which suffix is used for "Scientific"?
-   - [x] -овий
-   - [ ] -ський
-   - [ ] -чий
+---
 
-3. "Гарячий" describes:
-   - [x] Temperature (Hot)
-   - [ ] Color (Red)
-   - [ ] Taste (Spicy)
+2. Який саме суфікс найкраще підходить для створення прикметника "науковий" від іменника "наука"?
+   - [x] Ми використовуємо суфікс -овий для відносних прикметників
+   - [ ] Ми використовуємо суфікс -ський для походження
+   - [ ] Ми використовуємо суфікс -чий для станів
+   - [ ] Ми використовуємо суфікс -ний для якостей
 
-4. "Маленький" uses which suffix?
-   - [x] -еньк- (Diminutive)
-   - [ ] -ськ- (Origin)
-   - [ ] -ов- (Material)
+---
 
-5. "Жіночий" means:
-   - [x] Women's/Female
-   - [ ] Men's/Male
-   - [ ] Child's
+3. Що саме описує український прикметник "гарячий" у реченні "гарячий чай"?
+   - [x] Цей прикметник описує високу температуру напою
+   - [ ] Цей прикметник описує червоний колір напою
+   - [ ] Цей прикметник описує гострий смак напою
+   - [ ] Цей прикметник описує розмір чашки
 
-6. "Сільський" relates to:
-   - [x] Village
-   - [ ] Salt
-   - [ ] Sun
+---
 
-7. "Український" matches "people" (люди) in plural as:
-   - [x] Українські
-   - [ ] Українська
-   - [ ] Український
+4. Який саме спеціальний суфікс використовується в прикметнику "маленький" для вираження зменшеності?
+   - [x] Це пестливий суфікс -еньк- для зменшення
+   - [ ] Це суфікс -ськ- для походження
+   - [ ] Це суфікс -ов- для матеріалу
+   - [ ] Це суфікс -ний для якості
 
-8. "Смаковий" relates to:
-   - [x] Taste
-   - [ ] Smell
-   - [ ] Touch
+---
+
+5. Що саме означає український прикметник "жіночий" у фразі "жіночий одяг"?
+   - [x] Це означає одяг для жінок або жіночий стиль
+   - [ ] Це означає одяг для чоловіків або чоловічий стиль
+   - [ ] Це означає одяг для дітей або дитячий стиль
+   - [ ] Це означає одяг для літніх людей
+
+---
+
+6. До якого саме поняття відноситься український прикметник "сільський" у фразі "сільське життя"?
+   - [x] Цей прикметник відноситься до села та сільської місцевості
+   - [ ] Цей прикметник відноситься до солі як приправи
+   - [ ] Цей прикметник відноситься до сонця та світла
+   - [ ] Цей прикметник відноситься до силі та енергії
+
+---
+
+7. Як саме правильно узгодити прикметник "український" з іменником "люди" у множині?
+   - [x] Правильна форма множини буде "українські люди"
+   - [ ] Правильна форма множини буде "українська люди"
+   - [ ] Правильна форма множини буде "український люди"
+   - [ ] Правильна форма множини буде "українське люди"
+
+---
+
+8. До якого саме відчуття відноситься український прикметник "смаковий" у науковій термінології?
+   - [x] Цей прикметник відноситься до смаку та смакових рецепторів
+   - [ ] Цей прикметник відноситься до нюху та запахів
+   - [ ] Цей прикметник відноситься до дотику та текстури
+   - [ ] Цей прикметник відноситься до зору та кольорів
 
 ## cloze: The Professor's Day
 
@@ -657,7 +727,7 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
@@ -667,11 +737,8 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 | російський | /rɔˈsʲij sʲkɪj/ | Russian | adj | masc | -ський |
 | англійський | /ɑnˈɦlʲijsʲkɪj/ | English | adj | masc | -ський |
 | міський | /mʲisʲˈkɪj/ | urban/city | adj | masc | -ський |
-| сільський | /sʲilʲˈsʲkɪj/ | rural/village | adj | masc | -ський |
 | людський | /lʲudˈsʲkɪj/ | human | adj | masc | -ський |
 | дитячий | /dɪˈtʲɑt͡ʃɪj/ | children's | adj | masc | -чий |
-| жіночий | /ʒiˈnɔt͡ʃɪj/ | women's/female | adj | masc | -чий |
-| чоловічий | /t͡ʃɔlɔˈʋit͡ʃɪj/ | men's/male | adj | masc | -чий |
 | кольоровий | /kɔlʲɔˈrɔʋɪj/ | colorful | adj | masc | -овий |
 | смаковий | /smɑkɔˈʋɪj/ | taste (adj) | adj | masc | -овий |
 | матеріальний | /mɑtɛriˈɑlʲnɪj/ | material | adj | masc | -ний |
@@ -685,9 +752,4 @@ A "Ukrainian book" is *Українська книга* (Fem), but a "Ukrainian 
 | звичайний | /zʋɪˈt͡ʃɑjnɪj/ | ordinary | adj | masc | -ний |
 | маленький | /mɑˈlɛnʲkɪj/ | small/little | adj | masc | -еньк |
 | свіженький | /sʋiˈʒɛnʲkɪj/ | fresh (dim) | adj | masc | -еньк |
-| гарячий | /ɦɑˈrʲɑt͡ʃɪj/ | hot | adj | masc | -чий |
-| холодний | /xɔˈlɔdnɪj/ | cold | adj | masc | -ний |
 | теплий | /tˈɛplɪj/ | warm | adj | masc | -ий |
-| свіжий | /sˈʋiʒɪj/ | fresh | adj | masc | -ий |
-| старий | /stɑˈrɪj/ | old | adj | masc | -ий |
-| молодий | /mɔlɔˈdɪj/ | young | adj | masc | -ий |

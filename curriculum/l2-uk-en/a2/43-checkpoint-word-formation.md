@@ -35,11 +35,9 @@ vocabulary_count: 25
 3. **Adjective Suffixes** - Can you use -ний, -овий, -ський?
 4. **Root Families** - Can you recognize ход-, пис-, бач-?
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+> А потім... ми перевіримо все.
+
+---
 
 ---
 
@@ -304,7 +302,7 @@ Analyze these words by breaking them into parts:
 
 ---
 
-## Summary
+# Summary
 
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
@@ -318,9 +316,13 @@ Analyze these words by breaking them into parts:
 > Якщо ви знаєте корінь, ви можете зрозуміти багато споріднених слів.
 > *If you know the root, you can understand many related words.*
 
----
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Activities
+# Activities
 
 ## match-up: Word Formation Pairs
 
@@ -393,99 +395,99 @@ Analyze these words by breaking them into parts:
 
 ## quiz: Word Formation Quiz
 
-1. "При-" means:
-
-- [x] Arrival
-- [ ] Exit
-- [ ] Re-do
-
----
-
-2. "Ви-" means:
-
-- [x] Exit
-- [ ] Arrival
-- [ ] Entering
+1. What is the primary meaning of the prefix "При-"?
+   - [x] Arrival (approaching)
+   - [ ] Exit (leaving)
+   - [ ] Re-do (doing again)
+   - [ ] Under (below)
 
 ---
 
-3. "-ння" creates:
-
-- [x] Verbal nouns
-- [ ] Adjectives
-- [ ] Agent nouns
-
----
-
-4. "-ість" creates:
-
-- [x] Abstract nouns
-- [ ] Verbs
-- [ ] Adjectives
+2. What is the primary meaning of the prefix "Ви-"?
+   - [x] Exit (leaving/out of)
+   - [ ] Arrival (approaching)
+   - [ ] Entering (going in)
+   - [ ] Over (above)
 
 ---
 
-5. "-ач" creates:
-
-- [x] Agent nouns
-- [ ] Abstract nouns
-- [ ] Verbal nouns
-
----
-
-6. "-ський" is used for:
-
-- [x] Nationality/place adjectives
-- [ ] Abstract nouns
-- [ ] Verbs
+3. What kind of words do you form with the suffix "-ння"?
+   - [x] Verbal nouns (Process)
+   - [ ] Adjectives (Qualities)
+   - [ ] Agent nouns (People)
+   - [ ] Verbs (Actions)
 
 ---
 
-7. Root "ход-" means:
-
-- [x] Walk/go
-- [ ] Write
-- [ ] See
-
----
-
-8. Root "пис-" means:
-
-- [x] Write
-- [ ] Walk
-- [ ] Hear
+4. What kind of words do you form with the suffix "-ість"?
+   - [x] Abstract nouns (Qualities)
+   - [ ] Verbs (Actions)
+   - [ ] Adjectives (Descriptions)
+   - [ ] Agent nouns (People)
 
 ---
 
-9. "Перехід" is formed from:
-
-- [x] пере- + ход-
-- [ ] при- + хід
-- [ ] ви- + хід
-
----
-
-10. "Читання" is formed from:
-
-- [x] чита- + -ння
-- [ ] чита- + -ач
-- [ ] чита- + -ість
+5. What kind of words do you form with the suffix "-ач"?
+   - [x] Agent nouns (Person who does)
+   - [ ] Abstract nouns (Concepts)
+   - [ ] Verbal nouns (Processes)
+   - [ ] Adjectives (Qualities)
 
 ---
 
-11. "Український" uses suffix:
-
-- [x] -ський
-- [ ] -ний
-- [ ] -овий
+6. What is the main use of the suffix "-ський"?
+   - [x] Nationality/place adjectives
+   - [ ] Abstract nouns
+   - [ ] Verbs
+   - [ ] Verbal nouns
 
 ---
 
-12. "Музичний" uses suffix:
+7. What is the core meaning of the root "ход-"?
+   - [x] Walk/go (Movement)
+   - [ ] Write (Text)
+   - [ ] See (Vision)
+   - [ ] Speak (Language)
 
-- [x] -ний
-- [ ] -ський
-- [ ] -овий
+---
+
+8. What is the core meaning of the root "пис-"?
+   - [x] Write (Text)
+   - [ ] Walk (Movement)
+   - [ ] Hear (Audio)
+   - [ ] Read (Text)
+
+---
+
+9. Can you identify how the Ukrainian word **"Перехід"** (Crossing) is structurally formed?
+   - [x] пере- + ход-
+   - [ ] при- + хід
+   - [ ] ви- + хід
+   - [ ] під- + хід
+
+---
+
+10. What are the specific components that form the Ukrainian word **"Читання"** (Reading)?
+    - [x] чита- + -ння
+    - [ ] чита- + -ач
+    - [ ] чита- + -ість
+    - [ ] чита- + -ник
+
+---
+
+11. Which suffix is used in the word "Український"?
+    - [x] -ський
+    - [ ] -ний
+    - [ ] -овий
+    - [ ] -ість
+
+---
+
+12. Which suffix is used in the word "Музичний"?
+    - [x] -ний
+    - [ ] -ський
+    - [ ] -овий
+    - [ ] -ач
 
 ## group-sort: Word Parts
 
@@ -554,25 +556,20 @@ Analyze these words by breaking them into parts:
 - [x] Root families share core meaning.
   > Yes! ход- = all about walking
 
-## unjumble: Word Formation
+## unjumble: Word Formation Rules
 
-1. вхід = в- (у) + хід (ходити)
-   > [!answer] вхід = вхід
-
-2. вихід = ви- (з) + хід (ходити)
-   > [!answer] вихід = вихід
-
-3. читання = чита- (читати) + -ння (дія)
-   > [!answer] читання = читання
-
-4. читач = чита- (читати) + -ач (особа)
-   > [!answer] читач = читач
-
-5. важливість = важлив- (важливий) + -ість (якість)
-   > [!answer] важливість = важливість
-
-6. український = Україн- (Україна) + -ський (прикметник)
-   > [!answer] український = український
+1. префікс / змінює / значення / слова / і / стоїть / на / початку
+   > [!answer] Префікс змінює значення слова і стоїть на початку
+2. суфікс / стоїть / в / кінці / слова / і / створює / нові / частини / мови
+   > [!answer] Суфікс стоїть в кінці слова і створює нові частини мови
+3. корінь / це / головна / частина / слова / яка / має / основне / значення
+   > [!answer] Корінь це головна частина слова яка має основне значення
+4. ми / вживаємо / суфікс / ач / для / назви / людей / які / діють
+   > [!answer] Ми вживаємо суфікс ач для назви людей які діють
+5. українська / мова / має / дуже / багату / систему / словотвору / слів
+   > [!answer] Українська мова має дуже багату систему словотвору слів
+6. треба / знати / корені / слів / щоб / розуміти / нові / слова
+   > [!answer] Треба знати корені слів щоб розуміти нові слова
 
 ## cloze: Complete the Words
 
@@ -584,6 +581,12 @@ Analyze these words by breaking them into parts:
 [___:4] — це дія читати.
 [___:5] — це якість бути важливим.
 Місто, де я народився — [___:6].
+Ми переходимо вулицю через [___:7].
+Він пише книги, він [___:8].
+Цей прапор — [___:9].
+[___:10] слухає музику.
+Цей інструмент — [___:11].
+Ось [___:12] у магазин.
 
 1. прийшов | вийшов | увійшов
 > [!answer] прийшов
@@ -602,6 +605,24 @@ Analyze these words by breaking them into parts:
 
 6. київський | Київ | київському
 > [!answer] київський
+
+7. перехід | вхід | вихід
+> [!answer] перехід
+
+8. письменник | писати | читач
+> [!answer] письменник
+
+9. український | Україна | українець
+> [!answer] український
+
+10. Слухач | Співак | Танцюрист
+> [!answer] Слухач
+
+11. музичний | музика | музикант
+> [!answer] музичний
+
+12. вхід | вихід | схід
+> [!answer] вхід
 
 ## mark-the-words: Find Word Parts
 
@@ -708,32 +729,11 @@ Click on the prefix, suffix, or root in each word.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| префікс | /ˈprɛfiks/ | prefix | noun | m | grammar |
-| суфікс | /ˈsufiks/ | suffix | noun | m | grammar |
-| корінь | /ˈkɔrinʲ/ | root | noun | m | grammar |
 | словотвір | /slɔʋɔˈtʋir/ | word formation | noun | m | grammar |
-| вхід | /ʋxid/ | entrance | noun | m | location |
-| вихід | /ˈʋɪxid/ | exit | noun | m | location |
-| перехід | /pɛrɛˈxid/ | crossing | noun | m | location |
-| пішохід | /piʃɔˈxid/ | pedestrian | noun | m | agent |
-| читання | /t͡ʃɪˈtɑnʲɑ/ | reading | noun | n | verbal noun |
-| писання | /pɪˈsɑnʲɑ/ | writing | noun | n | verbal noun |
-| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | f | abstract |
-| письменник | /pɪsʲˈmɛnnɪk/ | writer | noun | m | agent |
-| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | m | agent |
-| слухач | /sluˈxɑt͡ʃ/ | listener | noun | m | agent |
-| український | /ukrɑˈjinsʲkɪj/ | Ukrainian | adj | m | nationality |
-| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | m | from noun |
 | словниковий | /slɔʋnɪˈkɔʋɪj/ | dictionary (adj) | adj | m | relating to |
-| мова | /ˈmɔʋɑ/ | language | noun | f | abstract |
-| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |
-| побачення | /pɔˈbɑt͡ʃɛnʲɑ/ | meeting/date | noun | n | event |
-| значення | /znɑˈt͡ʃɛnʲɑ/ | meaning | noun | n | abstract |
 | частина | /t͡ʃɑsˈtɪnɑ/ | part | noun | f | component |
 | віддієслівний | /ʋiddiɛˈslɔʋnɪj/ | verbal (adj) | adj | m | grammar |
-| прикметник | /prɪˈkmɛtnɪk/ | adjective | noun | m | grammar |
-| іменник | /iˈmɛnnɪk/ | noun | noun | m | grammar |

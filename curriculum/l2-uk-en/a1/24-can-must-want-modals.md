@@ -577,7 +577,6 @@ Decide if each statement is true or false.
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | могти | /mɔɦˈtɪ/ | can, be able to | verb | - | irregular |
-| вміти | /ˈvmitɪ/ | know how to | verb | - | Class II |
 | повинен | /pɔˈvɪnɛn/ | must, should (m) | adj | m | повинна (f) |
 | мусити | /ˈmusɪtɪ/ | must, have to | verb | - | Class II |
 | треба | /ˈtrɛbɑ/ | need to, must | adv | - | impersonal |

@@ -40,12 +40,6 @@ In Ukrainian, these structures control the flow of your story.
 > [!note] Pronunciation
 > **Поки** /ˈpɔkɪ/ means "while" or "until". It connects simultaneous actions.
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 ## Presentation
@@ -88,18 +82,31 @@ Use this for instant reaction.
 
 ## Deep Dive: Before vs After
 
-"Before" is tricky in Ukrainian because it forces you to think about "Before WHAT?".
+"Before" is tricky in Ukrainian because it forces you to think about "Before WHAT?". Unlike English, where you can say "before going," Ukrainian requires a full clause structure.
 
-- **Перед тим як** (Before [doing something]).
+**Understanding the Structure:**
+
+In English, we often use gerunds (verb + -ing) after "before": "before eating," "before leaving," "before speaking." Ukrainian doesn't work this way. Instead, you need to use a full clause with a conjugated verb.
+
+- **Перед тим як** (Before [doing something]) - Literally: "Before that, how..."
 - *Перед тим як вийти, вимкни світло.* (Before going out, turn off the light).
-- **Перш ніж** (Before | Prior to). Synonym, slightly more literary.
+  - Analysis: "вийти" is the infinitive "to go out," used after "як"
+
+- **Перш ніж** (Before | Prior to) - Synonym, slightly more literary and formal.
 - *Перш ніж сказати, подумай.* (Before speaking, think).
+  - Note: This is more common in written or formal Ukrainian
 
-**Logic Check:**
-- English: "Call me before getting home."
-- Ukrainian: "Call me before that, how [you] arrive home." -> *Подзвони мені **перед тим як** прийдеш додому.*
+**Step-by-Step Translation:**
 
-It requires a full verb phrase!
+English: "Call me before getting home."
+
+Breakdown:
+1. Identify the main action: "Call me" = "Подзвони мені"
+2. Identify the time reference: "before getting home"
+3. Convert to Ukrainian clause structure: "before that, how you arrive home"
+4. Result: *Подзвони мені **перед тим як** прийдеш додому.*
+
+It requires a full verb phrase - you can't just say *"перед прийти додому" without the "тим як" structure.
 
 > [!cultural] Myth: "Punctuality"
 > In Ukraine, usually "коли я прийду" (when I come) is flexible. But trains are very punctual.
@@ -109,24 +116,43 @@ It requires a full verb phrase!
 
 ## Deep Dive: Complex Time Connectors
 
-Sometimes simple "when" is not enough. You need precision.
+Sometimes simple "when" is not enough. You need precision to express nuanced time relationships. Ukrainian offers several sophisticated time connectors that allow you to be very specific about how events relate to each other temporally.
+
+**Why Use Complex Connectors?**
+
+While basic connectors like "коли" and "поки" work for most situations, complex connectors add:
+- **Emphasis**: Highlighting the frequency or uniqueness of an event
+- **Contrast**: Showing how two simultaneous actions differ in nature
+- **Specificity**: Pinpointing exact moments or dates
 
 ### 1. The Loop: Кожного разу, коли...
-"Every time when..."
+
+"Every time when..." - Use this to emphasize repetition or patterns.
+
 - *Кожного разу, коли я бачу її, я радію.* (Every time I see her, I rejoice).
+  - Analysis: This emphasizes the consistent pattern of the reaction
 - *Раз у раз, коли ми зустрічаємося...* (Time and again, when we meet...).
+  - Note: "Раз у раз" is more emphatic, suggesting "without fail"
 
 ### 2. The Parallel: Тим часом як...
-"Meanwhile, as..." or "Whereas..."
+
+"Meanwhile, as..." or "Whereas..." - Use this to contrast two simultaneous actions or to show background context.
+
 - *Я працював, тим часом як він спав.* (I worked, meanwhile he slept).
+  - Analysis: Emphasizes the contrast between the two activities
 - *В той час як усі святкували, я вчився.* (At that time as everyone celebrated, I studied).
+  - Note: "В той час як" is a synonym, slightly more formal
 
 ### 3. The Date: Того дня, коли...
-"On that day when..."
+
+"On that day when..." - Use this to mark a specific, memorable moment in time.
+
 - *Того дня, коли народився син, йшов дощ.* (On the day the son was born, it rained).
+  - Analysis: Creates a narrative anchor for the story
+  - This construction is common in storytelling and reminiscences
 
 > [!tip] Logic Check
-> Unlike English "While X, Y", Ukrainian prefers "X, тим часом як Y" if you want to contrast the two actions heavily. But for simple background action, use **поки**.
+> Unlike English "While X, Y", Ukrainian prefers "X, тим часом як Y" if you want to contrast the two actions heavily. But for simple background action ("I listened to music while cooking"), use **поки** instead. The choice depends on whether you want to emphasize the contrast or just show simultaneity.
 
 ---
 
@@ -208,9 +234,15 @@ But **поки не** means "until" (literally "while not").
 
 It's logical: I stay in the state of "waiting" during the time that "finishing" has NOT happened yet.
 
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
-## Summary
+# Summary
 
 1.  **Simultaneous:** Use **Поки** (While) or **В той час як**.
 2.  **Sequential:** Use **Коли** (When) or **Після того як** (After).
@@ -220,7 +252,7 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-## Activities
+# Activities
 
 ## match-up: Time Connectors
 
@@ -275,58 +307,73 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ## quiz: Time Logic
 
-1. "Поки" usually goes with which Aspect?
-   - [x] Imperfective (Process)
-   - [ ] Perfective (Result)
+1. Слово "поки" зазвичай вимагає якого виду дієслова в українській мові для процесу?
+   - [x] Imperfective (недоконаний вид для процесу)
+   - [ ] Perfective (доконаний вид для результату)
+   - [ ] Both equally (обидва однаково)
+   - [ ] Neither (жоден з них)
 
-2. "Коли" usually goes with which Aspect for sequence?
-   - [x] Perfective (Result)
-   - [ ] Imperfective (Process)
+2. Слово "коли" для послідовності подій зазвичай вимагає якого виду дієслова в українській?
+   - [x] Perfective (доконаний вид для результату)
+   - [ ] Imperfective (недоконаний вид для процесу)
+   - [ ] Both equally (обидва однаково)
+   - [ ] Neither (жоден з них)
 
-3. "Після того як" implies:
-   - [x] One action strictly follows another
-   - [ ] Actions happen together
+3. Що означає конструкція "після того як" в українській мові для послідовності дій?
+   - [x] One action strictly follows another (одна дія строго слідує за іншою)
+   - [ ] Actions happen together (дії відбуваються разом)
+   - [ ] Actions are unrelated (дії не пов'язані)
+   - [ ] Actions happen before (дії відбуваються раніше)
 
-4. Translate: "Before I go..."
-   - [x] Перед тим як я піду...
-   - [ ] Перед я піду...
+4. Як правильно перекласти англійською "Before I go" українською мовою з правильною граматикою?
+   - [x] Перед тим як я піду
+   - [ ] Перед я піду
+   - [ ] Перед піду
+   - [ ] Тим як я піду
 
-5. "Поки не" implies:
-   - [x] Until
-   - [ ] While
-   - [ ] Because
+5. Що означає конструкція "поки не" в українській мові для часових відношень?
+   - [x] Until (до того часу поки)
+   - [ ] While (в той час як)
+   - [ ] Because (тому що)
+   - [ ] After (після того)
 
-6. Is a comma needed before "коли" in the middle of a sentence?
-   - [x] Yes, always.
-   - [ ] No, never.
+6. Чи потрібна кома перед словом "коли" в середині речення в українській мові?
+   - [x] Yes always (так завжди)
+   - [ ] No never (ні ніколи)
+   - [ ] Sometimes (іноді)
+   - [ ] Only in formal writing (тільки в офіційному письмі)
 
-7. "Як тільки" shows:
-   - [x] Instant reaction
-   - [ ] Long wait
+7. Що показує конструкція "як тільки" в українській мові для часових відношень?
+   - [x] Instant reaction (миттєва реакція)
+   - [ ] Long wait (довге очікування)
+   - [ ] Parallel action (паралельна дія)
+   - [ ] Repeated action (повторювана дія)
 
-8. "Перш ніж" is a synonym for:
+8. Синонімом якого виразу є "перш ніж" в українській мові для часових відношень?
    - [x] Перед тим як
    - [ ] Після того як
+   - [ ] Поки не
+   - [ ] Як тільки
 
 ## unjumble: Time Lines
 
-1. кожного | разу | коли | я | дзвоню | він | зайнятий
-   > [!answer] Кожного разу, коли я дзвоню, він зайнятий
+1. кожного / разу / коли / я / дзвоню / він / завжди / зайнятий / дуже
+   > [!answer] Кожного разу, коли я дзвоню, він завжди зайнятий дуже
 
-2. ми | гуляли | тим | часом | як | йшов | дощ
-   > [!answer] Ми гуляли, тим часом як йшов дощ
+2. ми / гуляли / тим / часом / як / йшов / дощ / сильний / вчора
+   > [!answer] Ми гуляли, тим часом як йшов дощ сильний вчора
 
-3. я | заснув | після | як | того | прочитав
-   > [!answer] Я заснув після того, як прочитав
+3. я / заснув / після / того / як / прочитав / книгу / цікаву / вчора
+   > [!answer] Я заснув після того, як прочитав книгу цікаву вчора
 
-4. подзвони | як | тільки | будеш | вдома
-   > [!answer] Подзвони, як тільки будеш вдома
+4. подзвони / мені / як / тільки / будеш / вдома / сьогодні / ввечері
+   > [!answer] Подзвони мені, як тільки будеш вдома сьогодні ввечері
 
-5. перед | тим | як | сказати | подумай
-   > [!answer] Перед тим як сказати, подумай
+5. перед / тим / як / сказати / щось / подумай / добре / завжди
+   > [!answer] Перед тим як сказати щось, подумай добре завжди
 
-6. я | чекав | поки | ти | не | прийшов
-   > [!answer] Я чекав, поки ти не прийшов
+6. я / чекав / тут / поки / ти / не / прийшов / нарешті / додому
+   > [!answer] Я чекав тут, поки ти не прийшов нарешті додому
 
 ## group-sort: Process vs Point
 
@@ -393,6 +440,11 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 [___:5] мама кликала мене, я біг назад.
 Я не лягав спати, [___:6] сонце не сідало.
 Це був час, [___:7] я був щасливий.
+Я завжди пам'ятаю, [___:8] ми гуляли.
+[___:9] я думаю про це, я усміхаюся.
+Тепер я знаю, [___:10] це було найкраще.
+[___:11] я виріс, все змінилося.
+Але [___:12] я забуду те літо, я буду щасливий.
 
 1. Коли | Де
 > [!answer] Коли
@@ -403,17 +455,32 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 3. Після того як | Перед тим як
 > [!answer] Після того як
 
-4. перед тим як | поки (Logic: wash hands BEFORE reading)
+4. перед тим як | поки
 > [!answer] перед тим як
 
 5. Кожного разу коли | Поки
 > [!answer] Кожного разу коли
 
-6. поки | коли (Logic: Until the sun set)
+6. поки | коли
 > [!answer] поки
 
 7. коли | де
 > [!answer] коли
+
+8. як тільки | де
+> [!answer] як тільки
+
+9. Кожного разу коли | Де
+> [!answer] Кожного разу коли
+
+10. що | як
+> [!answer] що
+
+11. Після того як | Перед тим як
+> [!answer] Після того як
+
+12. поки не | коли
+> [!answer] поки не
 
 ## dialogue-reorder: The Meeting
 
@@ -510,18 +577,13 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| коли | /kɔˈlɪ/ | when | conj | — | trigger |
 | поки | /ˈpɔkɪ/ | while/until | conj | — | trigger |
 | доки | /ˈdɔkɪ/ | while/until | conj | — | synonym |
 | як тільки | /jɑk ˈtilʲkɪ/ | as soon as | phrase | — | instant |
-| щойно | /ˈʃt͡ʃɔjnɔ/ | just now | as soon as | adv | — | instant |
-| ледве | /ˈlɛdʋɛ/ | barely | hardly | adv | — | nuance |
-| тоді | /tɔˈdi/ | then | adv | — | time |
-| завжди | /zɑʋˈʒdɪ/ | always | adv | — | freq |
 | перед тим як | /pɛrɛd tɪm jɑk/ | before | conj | — | complex |
 | після того як | /pisʲlʲɑ tɔɦɔ jɑk/ | after | conj | — | complex |
 | перш ніж | /pɛrʃ niʒ/ | before | conj | — | literary |
@@ -532,23 +594,14 @@ It's logical: I stay in the state of "waiting" during the time that "finishing" 
 | того дня | /tɔɦɔ dnʲɑ/ | on that day | phrase | — | specific |
 | тоді коли | /tɔdi kɔlɪ/ | then when | phrase | — | specific |
 | в той час як | /ʋ tɔj t͡ʃɑs jɑk/ | at that time | phrase | — | parallel |
-| ніж | /niʒ/ | than | before | conj | — | comparison |
 | раз | /rɑz/ | time | once | noun | m | count |
 | часом | /ˈt͡ʃɑsɔm/ | sometimes | adv | — | freq |
-| ніколи | /niˈkɔlɪ/ | never | adv | — | freq |
-| часто | /ˈt͡ʃɑstɔ/ | often | adv | — | freq |
-| рідко | /ˈridkɔ/ | rarely | adv | — | freq |
-| вчора | /ˈʋt͡ʃɔrɑ/ | yesterday | adv | — | time |
-| сьогодні | /sʲɔˈɦɔdnʲi/ | today | adv | — | time |
-| завтра | /ˈzɑʋtrɑ/ | tomorrow | adv | — | time |
 | вранці | /ˈʋrɑnt͡sʲi/ | in the morning | adv | — | time |
 | вдень | /ʋdɛnʲ/ | in the afternoon | adv | — | time |
 | ввечері | /ˈʋʋɛt͡ʃɛri/ | in the evening | adv | — | time |
 | вночі | /ʋnɔˈt͡ʃi/ | at night | adv | — | time |
 | довго | /ˈdɔʋɦɔ/ | long (time) | adv | — | duration |
-| швидко | /ˈʃʋɪdkɔ/ | quickly | adv | — | speed |
 | ранок | /ˈrɑnɔk/ | morning | noun | m | part of day |
 | день | /dɛnʲ/ | day | noun | m | concept |
 | вечір | /ˈʋɛt͡ʃir/ | evening | noun | m | part of day |
 | ніч | /nit͡ʃ/ | night | noun | f | part of day |
-| час | /t͡ʃɑs/ | time | noun | m | concept |

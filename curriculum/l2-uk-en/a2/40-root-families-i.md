@@ -39,13 +39,7 @@ Today, we unlock four "Super Roots":
 > - **Ви** + **Хід** = Out + Go = Exit
 > - **Пере** + **Хід** = Across + Go = Crossing
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Welsh vs. Ukrainian: 8 similar words explained...](https://www.youtube.com/watch?v=6B_GwMcttmU) — BenjaminAngwin
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 
 ---
 
@@ -135,6 +129,34 @@ Spreading paint. Painting walls.
 > If you know "Ex-" means "Out" and "Port" means "Carry", you know "Export".
 > Same in Ukrainian: "Ви-" (Out) + "Хід" (Go) = Exit.
 
+### Why Root Families Matter: A Learning Strategy
+
+Understanding root families is one of the most powerful techniques for rapid vocabulary expansion in Ukrainian. Instead of memorizing thousands of individual words, you learn a few dozen roots and prefixes, then combine them like Lego blocks.
+
+**The Math is Compelling:**
+- Learn 4 roots (ХІД, ПИС, ЧИТ, БАЧ) = 4 words
+- Learn 6 common prefixes (В-, Ви-, Пере-, При-, Від-, По-) = 6 words
+- Combine them = 24+ words you can understand!
+
+That's a 6x return on your learning investment. And this is just the beginning—Ukrainian has dozens of productive roots and prefixes.
+
+**How to Practice Root Recognition:**
+
+1. **Create a Root Journal**: When you encounter a new word, try to identify its root. Write down the root, the prefix, and the meaning. Over time, you'll build a personal dictionary of patterns.
+
+2. **Play the Guessing Game**: When you see an unfamiliar word in Ukrainian text, don't immediately look it up. First, try to break it into parts and guess the meaning. You'll be surprised how often you're right!
+
+3. **Use Flashcards Wisely**: Instead of making flashcards for individual words, make flashcards for roots and prefixes. Then practice combining them mentally.
+
+4. **Look for Patterns in English**: English also uses roots (though from Latin and Greek). Recognizing this pattern in your native language makes it easier to apply the same strategy in Ukrainian. For example: "tele-" (far) + "phone" (sound) = telephone. Same logic as "Пере-" (across) + "Хід" (go) = crossing.
+
+**Common Beginner Mistakes:**
+
+- **Don't assume all similar-looking words share a root.** Sometimes words that look similar are actually unrelated. Always verify the root meaning.
+- **Don't forget that roots can change slightly due to phonetics.** For example, ХІД can appear as ХОД in some words (Ходити vs Вхід). These are the same root with different vowels.
+- **Don't ignore the prefix!** The prefix completely changes the meaning. Вхід and Вихід have the same root but opposite meanings because of the prefixes.
+
+
 ---
 
 ## Deep Dive: The Power of 'Pere-'
@@ -179,8 +201,8 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 
 > [!cultural] Cultural Insight: Signs
 > Common signs in Ukraine rely on these roots:
-> - **Вхід** (Entrance) - Usually Green.
-> - **Вихід** (Exit) - Also Green (Safety).
+> - **Вхід** - Usually Green.
+> - **Вихід** - Also Green (Safety).
 > - **Перехід** (Crossing) - Blue sign with a walking person.
 > - **Немає виходу** (No exit).
 
@@ -267,7 +289,7 @@ It corresponds to the Latin **Trans-** (Across) or **Re-** (Again).
 > For example, the handwritten *т* often looks like an English *m*.
 > Mastering the *pidpys* (signature) is a true art form in Ukraine!
 
-## Summary
+# Summary
 
 We have unlocked the power of "Lego Language".
 Instead of memorizing thousands of random words, you now see the connections.
@@ -283,7 +305,17 @@ Logic wins!
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Welsh vs. Ukrainian: 8 similar words explained...](https://www.youtube.com/watch?v=6B_GwMcttmU) — BenjaminAngwin
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+---
+
+# Activities
 
 ## group-sort: Root Sorter
 
@@ -364,60 +396,82 @@ Logic wins!
 
 ## unjumble: Document Logic
 
-1. потрібен | Мені | підпис | ваш
-   > [!answer] Мені потрібен ваш підпис
-2. зробив | Я | опис | товару
-   > [!answer] Я зробив опис товару
-3. читає | Письменник | книгу | свою
-   > [!answer] Письменник читає свою книгу
-4. гарний | У | вигляд | нього
-   > [!answer] У нього гарний вигляд
-5. тут | Де | перехід
-   > [!answer] Де тут перехід
-6. читання | Це | урок
-   > [!answer] Це урок читання
+1. мені / дуже / потрібен / ваш / офіційний / підпис / на / цьому / документі / зараз
+   > [!answer] Мені дуже потрібен ваш офіційний підпис на цьому документі зараз
+2. я / вже / зробив / детальний / опис / усього / товару / для / клієнта
+   > [!answer] Я вже зробив детальний опис усього товару для клієнта
+3. відомий / письменник / уважно / читає / свою / нову / книгу / вголос / сьогодні
+   > [!answer] Відомий письменник уважно читає свою нову книгу вголос сьогодні
+4. у / мого / друга / завжди / дуже / гарний / зовнішній / вигляд / щодня
+   > [!answer] У мого друга завжди дуже гарний зовнішній вигляд щодня
+5. де / саме / тут / знаходиться / безпечний / підземний / перехід / зараз
+   > [!answer] Де саме тут знаходиться безпечний підземний перехід зараз
+6. це / буде / цікавий / урок / читання / української / літератури / завтра
+   > [!answer] Це буде цікавий урок читання української літератури завтра
 
 ## quiz: Root Logic
 
-1. If "Вхід" is Entrance, what is "Вихід"?
-   - [x] Exit
-   - [ ] Crossing
-   - [ ] Signature
+1. Якщо українське слово "Вхід" означає "Entrance", то що саме означає протилежне слово "Вихід" у цій логіці?
+   - [x] Це означає "Exit" або вихід назовні з приміщення
+   - [ ] Це означає "Crossing" або перехід через дорогу
+   - [ ] Це означає "Signature" або підпис на документі
+   - [ ] Це означає "Arrival" або прибуття до місця
 
-2. What does "Підпис" literally mean?
-   - [x] Under-write
-   - [ ] Over-write
-   - [ ] Re-write
+---
 
-3. "Передбачення" (Prediction) contains which root?
-   - [x] БАЧ
-   - [ ] ХІД
-   - [ ] ПИС
+2. Що саме буквально означає українське слово "Підпис" якщо розкласти його на частини?
+   - [x] Це буквально означає "Under-write" або писати знизу
+   - [ ] Це буквально означає "Over-write" або писати зверху
+   - [ ] Це буквально означає "Re-write" або переписувати знову
+   - [ ] Це буквально означає "Out-write" або виписувати назовні
 
-4. A "Пішохід" goes on:
-   - [x] Foot (Пішки)
-   - [ ] Car (Машина)
-   - [ ] Horse (Кінь)
+---
 
-5. "До побачення" includes the root meaning:
-   - [x] Seeing
-   - [ ] Writing
-   - [ ] Walking
+3. Який саме корінь міститься в українському слові "Передбачення" що означає "Prediction" або передбачення?
+   - [x] У цьому слові міститься корінь БАЧ що означає бачення
+   - [ ] У цьому слові міститься корінь ХІД що означає рух
+   - [ ] У цьому слові міститься корінь ПИС що означає письмо
+   - [ ] У цьому слові міститься корінь ЧИТ що означає читання
 
-6. "Погляд" usually relates to:
-   - [x] Opinion | Glance
-   - [ ] Walking style
-   - [ ] Handwriting
+---
 
-7. Which word describes a person?
-   - [x] Письменник
-   - [ ] Письмо
-   - [ ] Напис
+4. Яким саме способом пересувається українське слово "Пішохід" що означає "Pedestrian" або пішохід?
+   - [x] Ця людина пересувається пішки на своїх власних ногах
+   - [ ] Ця людина пересувається на машині або автомобілі
+   - [ ] Ця людина пересувається на коні або верхи
+   - [ ] Ця людина пересувається на велосипеді або роликах
 
-8. "Читання" is the process of:
-   - [x] Reading
-   - [ ] Writing
-   - [ ] Walking
+---
+
+5. Який саме корінь міститься в українській фразі "До побачення" що означає "Goodbye" або до побачення?
+   - [x] У цій фразі міститься корінь що означає "Seeing" або бачення
+   - [ ] У цій фразі міститься корінь що означає "Writing" або письмо
+   - [ ] У цій фразі міститься корінь що означає "Walking" або ходіння
+   - [ ] У цій фразі міститься корінь що означає "Reading" або читання
+
+---
+
+6. До чого саме зазвичай відноситься українське слово "Погляд" у повсякденній мові та спілкуванні?
+   - [x] Це слово відноситься до думки або швидкого погляду
+   - [ ] Це слово відноситься до стилю ходьби людини
+   - [ ] Це слово відноситься до почерку або письма
+   - [ ] Це слово відноситься до швидкості читання тексту
+
+---
+
+7. Яке саме з цих українських слів описує конкретну людину а не процес або дію?
+   - [x] Слово "Письменник" описує людину що пише книги
+   - [ ] Слово "Письмо" описує процес написання листа
+   - [ ] Слово "Напис" описує текст на стіні
+   - [ ] Слово "Підпис" описує підпис на документі
+
+---
+
+8. Що саме означає український іменник "Читання" який походить від дієслова "Читати" що означає "To read"?
+   - [x] Це слово означає процес читання книг або текстів
+   - [ ] Це слово означає процес написання книг або текстів
+   - [ ] Це слово означає процес ходіння або прогулянки
+   - [ ] Це слово означає процес бачення або спостереження
 
 ## fill-in: Medical Form
 
@@ -467,6 +521,10 @@ Logic wins!
 Там є гарний [___:6].
 Потім ми знайдемо [___:7].
 Я скажу: "До [___:8]!"
+Вона має чудовий [___:9].
+Я зроблю [___:10] у щоденнику.
+Це буде гарне [___:11].
+Ми любимо [___:12] разом.
 
 1. побачення | побачити | бачення
 > [!answer] побачення
@@ -491,6 +549,18 @@ Logic wins!
 
 8. побачення | бачення | перебачення
 > [!answer] побачення
+
+9. вигляд | погляд | огляд
+> [!answer] вигляд
+
+10. запис | напис | підпис
+> [!answer] запис
+
+11. побачення | бачення | передбачення
+> [!answer] побачення
+
+12. походи | переходи | виходи
+> [!answer] походи
 
 ## error-correction: Wrong Root
 
@@ -581,34 +651,23 @@ Logic wins!
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Root |
 |------|-----|---------|-----|--------|------|
-| ходити | /xɔˈdɪtɪ/ | to walk | verb | - | хід |
 | хід | /xid/ | motion/move | noun | masc | хід |
-| вхід | /wxid/ | entrance | noun | masc | хід |
-| вихід | /ʋˈɪxid/ | exit | noun | masc | хід |
 | похід | /pɔˈxid/ | hike/campaign | noun | masc | хід |
 | прихід | /prɪˈxid/ | arrival | noun | masc | хід |
 | відхід | /ʋidˈxid/ | departure | noun | masc | хід |
 | перехід | /pɛrɛˈxid/ | crossing | noun | masc | хід |
 | пішохід | /piʃɔˈxid/ | pedestrian | noun | masc | хід |
-| писати | /pɪˈsɑtɪ/ | to write | verb | - | пис |
-| письмо | /pɪsʲˈmɔ/ | writing | noun | neut | пис |
-| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | пис |
 | підпис | /pidˈpɪs/ | signature | noun | masc | пис |
 | запис | /zˈɑpɪs/ | record/note | noun | masc | пис |
 | опис | /ɔˈpɪs/ | description | noun | masc | пис |
 | напис | /nˈɑpɪs/ | inscription | noun | masc | пис |
 | надпис | /nˈɑdpɪs/ | label/inscription | noun | masc | пис |
-| читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | чит |
-| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | чит |
-| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | чит |
-| прочитати | /prɔt͡ʃɪˈtɑtɪ/ | to read (perf) | verb | - | чит |
 | дочитати | /dɔt͡ʃɪˈtɑtɪ/ | to finish reading | verb | - | чит |
 | перечитати | /pɛrɛt͡ʃɪˈtɑtɪ/ | to re-read | verb | - | чит |
-| бачити | /bˈɑt͡ʃɪtɪ/ | to see | verb | - | бач |
 | бачення | /bˈɑt͡ʃɛnʲːɑ/ | vision | noun | neut | бач |
 | побачення | /pɔbˈɑt͡ʃɛnʲːɑ/ | date/meeting | noun | neut | бач |
 | передбачення | /pɛrɛdbˈɑt͡ʃɛnʲːɑ/ | prediction | noun | neut | бач |

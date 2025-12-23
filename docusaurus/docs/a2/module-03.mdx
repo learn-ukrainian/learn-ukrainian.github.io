@@ -471,88 +471,100 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 <Quiz questions={[
   {
-    question: `Який відмінок потрібен після \"допомагати\"?`,
+    question: `When you want to say \"I help my mother\" in Ukrainian, which grammatical case does the verb \"допомагати\" require?`,
     options: [
       { text: `Accusative`, correct: false },
       { text: `Dative`, correct: true },
-      { text: `Genitive`, correct: false }
+      { text: `Genitive`, correct: false },
+      { text: `Instrumental`, correct: false }
     ]
   },  {
-    question: `\"Подобатися\" — яка конструкція правильна?`,
+    question: `For the verb \"подобатися\" (to please/like), which construction is grammatically correct in Ukrainian?`,
     options: [
       { text: `Мені подобається кава.`, correct: true },
       { text: `Я подобаюся кава.`, correct: false },
-      { text: `Я подобаю каву.`, correct: false }
+      { text: `Я подобаю каву.`, correct: false },
+      { text: `Мене подобається кава.`, correct: false }
     ]
   },  {
-    question: `Яке речення правильне?`,
+    question: `When expressing \"I believe this person\" in Ukrainian with the verb \"вірити\", which sentence is correct?`,
     options: [
       { text: `Я вірю цей людина.`, correct: false },
       { text: `Я вірю цю людину.`, correct: false },
-      { text: `Я вірю цій людині.`, correct: true }
+      { text: `Я вірю цій людині.`, correct: true },
+      { text: `Я вірю ця людина.`, correct: false }
     ]
   },  {
-    question: `\"Давати\" потребує...`,
+    question: `The verb \"давати\" (to give) requires which case or cases for its objects in Ukrainian grammar?`,
     options: [
       { text: `тільки давального відмінка`, correct: false },
       { text: `тільки знахідного відмінка`, correct: false },
-      { text: `давального + знахідного відмінка`, correct: true }
+      { text: `давального + знахідного відмінка`, correct: true },
+      { text: `тільки родового відмінка`, correct: false }
     ]
   },  {
-    question: `Як сказати \"I thank the teacher\"?`,
+    question: `How do you correctly say \"I thank the teacher\" in Ukrainian using the verb \"дякувати\"?`,
     options: [
       { text: `Я дякую вчитель.`, correct: false },
       { text: `Я дякую вчителеві.`, correct: true },
-      { text: `Я дякую вчителя.`, correct: false }
+      { text: `Я дякую вчителя.`, correct: false },
+      { text: `Я дякую вчителем.`, correct: false }
     ]
   },  {
-    question: `Яке речення правильне?`,
+    question: `When expressing that a mother forbids children to eat candy, which Ukrainian sentence is grammatically correct?`,
     options: [
       { text: `Мама забороняє дітям їсти цукерки.`, correct: true },
       { text: `Мама забороняє дітей їсти цукерки.`, correct: false },
-      { text: `Мама забороняє діти їсти цукерки.`, correct: false }
+      { text: `Мама забороняє діти їсти цукерки.`, correct: false },
+      { text: `Мама забороняє дітьми їсти цукерки.`, correct: false }
     ]
   },  {
-    question: `\"Заздрити\" потребує...`,
+    question: `Which grammatical case does the Ukrainian verb \"заздрити\" (to envy) require for its object?`,
     options: [
       { text: `давального відмінка`, correct: true },
       { text: `знахідного відмінка`, correct: false },
-      { text: `родового відмінка`, correct: false }
-    ]
-  },  {
-    question: `Як сказати \"The noise bothers me\"?`,
-    options: [
-      { text: `Шум заважає мені.`, correct: true },
-      { text: `Шум заважає мене.`, correct: false },
-      { text: `Шум заважає я.`, correct: false }
-    ]
-  },  {
-    question: `Яке речення правильне?`,
-    options: [
-      { text: `Я пояснюю учні правило.`, correct: false },
-      { text: `Я пояснюю учнів правило.`, correct: false },
-      { text: `Я пояснюю учням правило.`, correct: true }
-    ]
-  },  {
-    question: `\"Співчувати\" потребує...`,
-    options: [
-      { text: `давального відмінка`, correct: true },
-      { text: `знахідного відмінка`, correct: false },
+      { text: `родового відмінка`, correct: false },
       { text: `орудного відмінка`, correct: false }
     ]
   },  {
-    question: `Як сказати \"I forgive you\"?`,
+    question: `How do you correctly express \"The noise bothers me\" in Ukrainian using the verb \"заважати\"?`,
+    options: [
+      { text: `Шум заважає мені.`, correct: true },
+      { text: `Шум заважає мене.`, correct: false },
+      { text: `Шум заважає я.`, correct: false },
+      { text: `Шум заважає мною.`, correct: false }
+    ]
+  },  {
+    question: `When saying \"I explain the rule to students\" in Ukrainian with \"пояснювати\", which sentence is correct?`,
+    options: [
+      { text: `Я пояснюю учні правило.`, correct: false },
+      { text: `Я пояснюю учнів правило.`, correct: false },
+      { text: `Я пояснюю учням правило.`, correct: true },
+      { text: `Я пояснюю учнями правило.`, correct: false }
+    ]
+  },  {
+    question: `Which grammatical case does the Ukrainian verb \"співчувати\" (to sympathize/empathize) require for its object?`,
+    options: [
+      { text: `давального відмінка`, correct: true },
+      { text: `знахідного відмінка`, correct: false },
+      { text: `орудного відмінка`, correct: false },
+      { text: `родового відмінка`, correct: false }
+    ]
+  },  {
+    question: `How do you correctly say \"I forgive you\" in Ukrainian using the verb \"пробачати\"?`,
     options: [
       { text: `Я пробачаю ти.`, correct: false },
       { text: `Я пробачаю тобі.`, correct: true },
-      { text: `Я пробачаю тебе.`, correct: false }
+      { text: `Я пробачаю тебе.`, correct: false },
+      { text: `Я пробачаю тобою.`, correct: false }
     ]
   },  {
-    question: `Яке речення правильне?`,
+    question: `When expressing \"He advises me to rest\" with the verb \"радити\", which Ukrainian sentence is correct?`,
     options: [
       { text: `Він радить мені відпочити.`, correct: true },
       { text: `Він радить мене відпочити.`, correct: false },
-      { text: `Він радить я відпочити.`, correct: false }
+      { text: `Він радить я відпочити.`, correct: false },
+      { text: `Він радить мною відпочити.`, correct: false }
     ]
   }
 ]} />
@@ -621,12 +633,12 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 ### Dative Verb Sentences
 
 <Unjumble items={[
-  { jumbled: `я | допомагаю | мамі | готувати | обід`, answer: `Я допомагаю мамі готувати обід` },
-  { jumbled: `мені | подобається | ця | музика`, answer: `Мені подобається ця музика` },
-  { jumbled: `він | показує | другові | нову | машину`, answer: `Він показує другові нову машину` },
-  { jumbled: `вчитель | пояснює | учням | складне | правило`, answer: `Вчитель пояснює учням складне правило` },
-  { jumbled: `я | дякую | тобі | за | допомогу`, answer: `Я дякую тобі за допомогу` },
-  { jumbled: `ця | музика | заважає | мені | спати`, answer: `Ця музика заважає мені спати` }
+  { jumbled: `Я / допомагаю / мамі / готувати / обід / кожного / дня / ввечері`, answer: `Я кожного дня ввечері допомагаю мамі готувати обід` },
+  { jumbled: `Мені / дуже / подобається / ця / українська / народна / музика / справді`, answer: `Мені справді дуже подобається ця українська народна музика` },
+  { jumbled: `Він / показує / другові / нову / машину / в / гаражі / сьогодні`, answer: `Він сьогодні показує другові нову машину в гаражі` },
+  { jumbled: `Вчитель / пояснює / учням / складне / граматичне / правило / в / класі`, answer: `Вчитель пояснює учням складне граматичне правило в класі` },
+  { jumbled: `Я / щиро / дякую / тобі / за / твою / чудову / допомогу`, answer: `Я щиро дякую тобі за твою чудову допомогу` },
+  { jumbled: `Ця / гучна / музика / заважає / мені / добре / спати / вночі`, answer: `Ця гучна музика заважає мені добре спати вночі` }
 ]} />
 
 ### Fix the Dative Errors
@@ -679,8 +691,8 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 ### Complete the Story
 
 <Cloze
-  passage={`Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу.`}
-  blanks={[{ index: 0, answer: `Йому`, options: [`Йому`, `Його`, `Він`] }, { index: 1, answer: `заважає`, options: [`заважає`, `заважати`, `заважається`] }, { index: 2, answer: `розуміє`, options: [`пробачає`, `розуміє`, `любить`] }, { index: 3, answer: `каже`, options: [`каже`, `говорить`, `розповідає`] }]}
+  passage={`Марія працює вчителькою. Щодня вона [___:1] учням нові теми. Коли учень не розуміє, вона [___:2] йому. Марія [___:3] своїм учням — вони старанні. Батьки [___:4] Марії за хорошу роботу. Директор [___:5] їй нову методику. Марія [___:6] колегам свій досвід.`}
+  blanks={[{ index: 0, answer: `Йому`, options: [`Йому`, `Його`, `Він`] }, { index: 1, answer: `заважає`, options: [`заважає`, `заважати`, `заважається`] }, { index: 2, answer: `розуміє`, options: [`пробачає`, `розуміє`, `любить`] }, { index: 3, answer: `каже`, options: [`каже`, `говорить`, `розповідає`] }, { index: 4, answer: `дякує`, options: [`дякує`, `дякувати`, `дякує`] }, { index: 5, answer: `дозволяють`, options: [`дозволяють`, `дозволяти`, `дозволяється`] }]}
 />
 
 ### At the Doctor's Office
@@ -768,33 +780,14 @@ This reading presents a teacher's diary entries over one week. Each entry uses m
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| допомагати | /dopoˈmɑɦɑtɪ/ | to help | verb | — | + Dat |
-| заважати | /zɑʋɑˈʒɑtɪ/ | to disturb, bother | verb | — | + Dat |
-| подобатися | /podoˈbɑtɪsʲɑ/ | to please, be liked | verb | — | + Dat |
-| вірити | /ˈʋirɪtɪ/ | to believe | verb | — | + Dat |
-| довіряти | /doʋiˈrʲɑtɪ/ | to trust | verb | — | + Dat |
-| дякувати | /dʲɑˈkuʋɑtɪ/ | to thank | verb | — | + Dat |
 | вибачати | /ʋɪbɑˈtʃɑtɪ/ | to excuse, forgive | verb | — | + Dat |
 | пробачати | /probɑˈtʃɑtɪ/ | to forgive (serious) | verb | — | + Dat |
 | заздрити | /ˈzɑzdrɪtɪ/ | to envy | verb | — | + Dat |
 | симпатизувати | /sɪmpɑtɪˈzuʋɑtɪ/ | to sympathize | verb | — | + Dat |
 | співчувати | /spiʋtʃuˈʋɑtɪ/ | to feel for, empathize | verb | — | + Dat |
-| личити | /lɪˈtʃɪtɪ/ | to suit, become | verb | — | + Dat |
-| підходити | /pidxoˈdɪtɪ/ | to suit, fit | verb | — | + Dat |
-| вистачати | /ʋɪstɑˈtʃɑtɪ/ | to be enough | verb | — | + Dat |
-| бракувати | /brɑˈkuʋɑtɪ/ | to lack, be short of | verb | — | + Dat |
-| шкодити | /ʃkoˈdɪtɪ/ | to harm | verb | — | + Dat |
 | служити | /sluˈʒɪtɪ/ | to serve | verb | — | + Dat |
 | належати | /nɑleˈʒɑtɪ/ | to belong | verb | — | + Dat |
 | сподобатися | /spodoˈbɑtɪsʲɑ/ | to come to like | verb | — | perfective of подобатися |
 | захотітися | /zɑxoˈtitɪsʲɑ/ | to feel like, want | verb | — | + Dat; impersonal |
-| дозволяти | /dozʋoˈlʲɑtɪ/ | to allow, permit | verb | — | + Dat + Inf |
-| забороняти | /zɑboroˈnʲɑtɪ/ | to forbid | verb | — | + Dat + Inf |
-| радити | /ˈrɑdɪtɪ/ | to advise | verb | — | + Dat + Acc |
-| відповідати | /ʋidpoʋiˈdɑtɪ/ | to answer, reply | verb | — | + Dat |
-| телефонувати | /telefoˈnuʋɑtɪ/ | to phone, call | verb | — | + Dat |
-| відмінок | /vidˈminɔk/ | grammatical case | noun | m | grammar term |
-| давальний | /dɑˈvɑlʲnɪj/ | Dative (case) | adj | m | кому? чому? |
-| час | /t͡ʃɑs/ | time | noun | m | review from A1 |
 
 ---

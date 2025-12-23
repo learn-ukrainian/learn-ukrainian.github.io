@@ -191,15 +191,9 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 
 Сміливість і чесність — це головні українські цінності.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Name basic emotions: радість, сум, гнів, страх
@@ -210,81 +204,65 @@ You learned to:
 
 Remember that emotions in Ukrainian culture are often expressed openly. Use these new words to share your feelings with friends and family. Practice describing the characters in books or movies using the personality adjectives you learned. Are they сміливі or боягузливі? Чесні or нечесні? This will help you master the vocabulary.
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [How do you really feel? (Ukrainian)](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Emotion Recognition
 
-1. What emotion does "радість" express?
-   - [ ] anger
-   - [x] joy
-   - [ ] fear
-   > Радість means joy or happiness.
+1. What emotion does the Ukrainian word "радість" primarily express to others?
+   - [x] Joy
+   - [ ] Anger
+   - [ ] Fear
+   - [ ] Sadness
 
-2. Which verb means "to worry"?
-   - [ ] радіти
-   - [ ] сумувати
-   - [x] хвилюватися
-   > Хвилюватися means to worry or be anxious.
+2. If someone says "Я хвилююся", what state are they likely describing?
+   - [x] They are worried
+   - [ ] They are happy
+   - [ ] They are angry
+   - [ ] They are sleepy
 
-3. What is the opposite of "сміливий"?
-   - [x] боягузливий
-   - [ ] добрий
-   - [ ] веселий
-   > Боягузливий is the opposite of сміливий.
+3. What is the direct opposite personality trait of "сміливий" (brave)?
+   - [x] Боягузливий
+   - [ ] Добрий
+   - [ ] Веселий
+   - [ ] Розумний
 
-4. Which word describes disappointment?
-   - [ ] задоволений
-   - [x] розчарований
-   - [ ] здивований
-   > Розчарований means disappointed.
+4. Which word would you use to describe a feeling of deep disappointment?
+   - [x] Розчарований
+   - [ ] Задоволений
+   - [ ] Здивований
+   - [ ] Щасливий
 
-5. What does "щирість" mean?
-   - [ ] courage
-   - [ ] intelligence
-   - [x] sincerity
-   > Щирість means sincerity or genuine openness.
+5. What does the quality of "щирість" represent in a person's character?
+   - [x] Sincerity
+   - [ ] Courage
+   - [ ] Intelligence
+   - [ ] Laziness
 
-6. How do you say "I feel well"?
-   - [x] Я почуваюся добре
-   - [ ] Я відчуваю добре
-   - [ ] Я буваю добре
-   > Use почуватися for "to feel" about your state.
+6. Who was famous in Ukrainian history for their emotional openness?
+   - [x] Cossacks
+   - [ ] Farmers
+   - [ ] Merchants
+   - [ ] Builders
 
-7. What prefix makes adjectives negative?
-   - [ ] за-
-   - [x] не-
-   - [ ] від-
-   > The prefix не- makes adjectives negative: добрий → недобрий.
+7. Which grammatical case is required when using the verb "боятися" (to fear)?
+   - [x] Genitive
+   - [ ] Nominative
+   - [ ] Dative
+   - [ ] Instrumental
 
-8. Which is a positive personality trait?
-   - [ ] лінивий
-   - [x] чесний
-   - [ ] нетерплячий
-   > Чесний is a positive trait.
-
-9. What does "стурбований" mean?
-   - [x] worried
-   - [ ] happy
-   - [ ] surprised
-   > Стурбований means worried or concerned.
-
-10. Which word means "brave"?
-    - [ ] добрий
-    - [ ] терплячий
-    - [x] сміливий
-    > Сміливий means brave or courageous.
-
-11. What is "гнів" in English?
-    - [ ] joy
-    - [x] anger
-    - [ ] fear
-    > Гнів means anger.
-
-12. How do you describe a permanent trait?
-    - [ ] бути + nominative
-    - [x] бути + instrumental
-    - [ ] мати + accusative
-    > Use бути + instrumental: Він є добрим.
+8. If a person is "чесний", how do they typically behave?
+   - [x] They are honest
+   - [ ] They are lazy
+   - [ ] They are angry
+   - [ ] They are fearful
 
 ## fill-in: Complete the Sentences
 
@@ -435,53 +413,37 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
 
 ## unjumble: Emotion Sentences
 
-1. Я | дуже | радий | тебе | бачити
-   > [!answer] Я дуже радий тебе бачити
-   > I am very happy to see you.
+1. Я / дуже / радий / бачити / тебе / сьогодні / в / цьому / парку
+   > [!answer] Я дуже радий бачити тебе сьогодні в цьому парку
+   > I am very happy to see you today in this park.
 
-2. Вона | сумує | за | домом
-   > [!answer] Вона сумує за домом
-   > She misses home.
+2. Вона / часто / сумує / за / своїм / рідним / домом / і / сім'єю
+   > [!answer] Вона часто сумує за своїм рідним домом і сім'єю
+   > She often misses her native home and family.
 
-3. Діти | раділи | подарункам
-   > [!answer] Діти раділи подарункам
-   > The children were happy about the gifts.
+3. Маленькі / діти / завжди / щиро / радіють / новим / цікавим / подарункам
+   > [!answer] Маленькі діти завжди щиро радіють новим цікавим подарункам
+   > Small children always sincerely rejoice at new interesting gifts.
 
-4. Мама | хвилюється | за | сина
-   > [!answer] Мама хвилюється за сина
-   > Mom worries about her son.
+4. Наша / мама / дуже / сильно / хвилюється / за / свого / сина
+   > [!answer] Наша мама дуже сильно хвилюється за свого сина
+   > Our mom worries very strongly about her son.
 
-5. Він | боїться | темряви
-   > [!answer] Він боїться темряви
-   > He is afraid of darkness.
+5. Він / боїться / темряви / коли / залишається / один / вдома / ввечері
+   > [!answer] Він боїться темряви коли залишається один вдома ввечері
+   > He is afraid of darkness when he stays alone at home in the evening.
 
-6. Ми | дивувалися | його | таланту
-   > [!answer] Ми дивувалися його таланту
-   > We were surprised at his talent.
+6. Ми / всі / дуже / дивувалися / його / великому / музичному / таланту
+   > [!answer] Ми всі дуже дивувалися його великому музичному таланту
+   > We all were very surprised at his great musical talent.
 
-7. Вона | є | доброю | людиною
-   > [!answer] Вона є доброю людиною
-   > She is a kind person.
+7. Ця / жінка / є / дуже / доброю / і / чесною / людиною
+   > [!answer] Ця жінка є дуже доброю і чесною людиною
+   > This woman is a very kind and honest person.
 
-8. Сміливі | люди | змінюють | світ
-   > [!answer] Сміливі люди змінюють світ
-   > Brave people change the world.
-
-9. Я | задоволений | результатом
-   > [!answer] Я задоволений результатом
-   > I am satisfied with the result.
-
-10. Він | був | сміливим | воїном
-    > [!answer] Він був сміливим воїном
-    > He was a brave warrior.
-
-11. Я | почуваюся | добре | сьогодні
-    > [!answer] Я почуваюся добре сьогодні
-    > I feel well today.
-
-12. Добрі | вчинки | роблять | світ | кращим
-    > [!answer] Добрі вчинки роблять світ кращим
-    > Kind deeds make the world better.
+8. Сміливі / люди / можуть / змінити / цей / великий / світ / накраще
+   > [!answer] Сміливі люди можуть змінити цей великий світ накраще
+   > Brave people can change this big world for the better.
 
 ## error-correction: Fix the Mistakes
 
@@ -570,6 +532,8 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
 — Ти справді [___:9] і добра, — сказала подруга.
 — Я [___:10] допомогти! — усміхнулася Марійка.
 
+Це була справжня [___:11]. Тепер вони обидві [___:12].
+
 1. чудовий | злий | лінивий
    > [!answer] чудовий
 
@@ -598,7 +562,13 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
    > [!answer] терпляча
 
 10. щаслива | сумна | зла
-   > [!answer] щаслива
+    > [!answer] щаслива
+
+11. радість | журба | нудьга
+    > [!answer] радість
+
+12. щасливі | сумні | злі
+    > [!answer] щасливі
 
 ## dialogue-reorder: At the Party
 
@@ -687,37 +657,21 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
     - [ ] спокійна
     > Стати + instrumental.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| радість | /ˈrɑdʲisʲtʲ/ | joy | noun | f | |
 | сум | /sum/ | sadness | noun | m | |
 | гнів | /ɦnʲiw/ | anger | noun | m | |
 | страх | /strɑx/ | fear | noun | m | |
 | здивування | /zdɪwuˈwɑnʲːɑ/ | surprise | noun | n | |
-| щастя | /ˈʃtʃɑsʲtʲɑ/ | happiness | noun | n | |
-| радіти | /rɑˈdʲitɪ/ | to rejoice | verb | - | + dat |
-| сумувати | /sumuˈwɑtɪ/ | to be sad | verb | - | + за + instr |
-| хвилюватися | /xwɪlʲuˈwɑtɪsʲɑ/ | to worry | verb | - | + за + acc |
-| боятися | /boˈjɑtɪsʲɑ/ | to be afraid | verb | - | + gen |
-| дивуватися | /dɪwuˈwɑtɪsʲɑ/ | to be surprised | verb | - | + dat |
-| задоволений | /zɑdoˈwɔlenɪj/ | satisfied | adj | m | + instr |
-| розчарований | /rozʧɑˈrowɑnɪj/ | disappointed | adj | m | |
 | стурбований | /sturˈbowɑnɪj/ | worried | adj | m | |
 | схвильований | /sxwɪlʲˈjowɑnɪj/ | excited | adj | m | |
-| здивований | /zdɪˈwowɑnɪj/ | surprised | adj | m | |
-| добрий | /ˈdɔbrɪj/ | kind | adj | m | |
 | чесний | /ˈtʃɛsnɪj/ | honest | adj | m | |
 | сміливий | /smʲiˈlɪwɪj/ | brave | adj | m | |
 | терплячий | /terˈplʲɑtʃɪj/ | patient | adj | m | |
-| розумний | /roˈzumnɪj/ | smart | adj | m | |
-| веселий | /weˈsɛlɪj/ | cheerful | adj | m | |
-| злий | /zlɪj/ | mean, angry | adj | m | |
 | лінивий | /lʲiˈnɪwɪj/ | lazy | adj | m | |
 | боягузливий | /bojɑɦuzˈlɪwɪj/ | cowardly | adj | m | |
 | нетерплячий | /neterˈplʲɑtʃɪj/ | impatient | adj | m | |
-| щирість | /ˈʃtʃɪrisʲtʲ/ | sincerity | noun | f | |
 | характер | /xɑˈrɑkter/ | character | noun | m | |
-| почуватися | /potʃuˈwɑtɪsʲɑ/ | to feel (state) | verb | - | + adv |
 | настрій | /nɑˈstrʲij/ | mood | noun | m | |

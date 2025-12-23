@@ -507,7 +507,6 @@ Is this true or false?
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | білий | /ˈbilɪj/ | white | adj | m | color |
-| чорний | /ˈt͡ʃɔrnɪj/ | black | adj | m | color |
 | сірий | /ˈsirɪj/ | gray | adj | m | color |
 | червоний | /t͡ʃɛrˈvɔnɪj/ | red | adj | m | color |
 | помаранчевий | /pɔmɑˈrɑnt͡ʃɛvɪj/ | orange | adj | m | color |
@@ -527,7 +526,6 @@ Is this true or false?
 | куртка | /ˈkurtkɑ/ | jacket | n | f | clothing |
 | пальто | /pɑlʲˈtɔ/ | coat | n | n | indeclinable |
 | штани | /ʃtɑˈnɪ/ | pants | n | pl | always plural |
-| джинси | /ˈdʒɪnsɪ/ | jeans | n | pl | always plural |
 | шорти | /ˈʃɔrtɪ/ | shorts | n | pl | always plural |
 | спідниця | /spidˈnɪt͡sʲɑ/ | skirt | n | f | clothing |
 | сукня | /ˈsuknʲɑ/ | dress | n | f | clothing |

@@ -620,9 +620,6 @@ Is this true or false?
 | дерево | /ˈdɛrɛvɔ/ | tree | n | n | |
 | квітка | /ˈkvʲitkɑ/ | flower | n | f | |
 | ліс | /lʲis/ | forest | n | m | |
-| парк | /pɑrk/ | park | n | m | |
-| річка | /ˈrʲit͡ʃkɑ/ | river | n | f | |
-| море | /ˈmɔrɛ/ | sea | n | n | |
 | гора | /hɔˈrɑ/ | mountain | n | f | |
 | озеро | /ˈɔzɛrɔ/ | lake | n | n | |
 | тварина | /tvɑˈrɪnɑ/ | animal | n | f | |
@@ -631,7 +628,6 @@ Is this true or false?
 | кіт | /kʲit/ | cat (male) | n | m | |
 | кішка | /ˈkʲiʃkɑ/ | cat (female) | n | f | |
 | птах | /ptɑx/ | bird | n | m | |
-| риба | /ˈrɪbɑ/ | fish | n | f | |
 | весна | /vɛsˈnɑ/ | spring | n | f | season |
 | літо | /ˈlʲitɔ/ | summer | n | n | season |
 | осінь | /ˈɔsʲinʲ/ | autumn | n | f | season |

@@ -552,7 +552,6 @@ Learning adjectives in pairs helps you remember them better:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| великий | /vɛˈlɪkɪj/ | big, large | adj | m | великий будинок |
 | малий | /mɑˈlɪj/ | small | adj | m | маленький (dim.) |
 | високий | /vɪˈsɔkɪj/ | tall, high | adj | m | - |
 | низький | /nɪzʲˈkɪj/ | short, low | adj | m | - |
@@ -560,10 +559,7 @@ Learning adjectives in pairs helps you remember them better:
 | короткий | /kɔˈrɔtkɪj/ | short | adj | m | - |
 | широкий | /ʃɪˈrɔkɪj/ | wide | adj | m | - |
 | вузький | /vuzʲˈkɪj/ | narrow | adj | m | - |
-| новий | /nɔˈvɪj/ | new | adj | m | - |
-| старий | /stɑˈrɪj/ | old | adj | m | for things/people |
 | молодий | /mɔlɔˈdɪj/ | young | adj | m | - |
-| гарний | /ˈɦɑrnɪj/ | beautiful, nice | adj | m | general positive |
 | красивий | /krɑˈsɪvɪj/ | beautiful | adj | m | for appearance |
 | поганий | /pɔˈɦɑnɪj/ | bad | adj | m | - |
 | добрий | /ˈdɔbrɪj/ | good, kind | adj | m | - |
@@ -578,7 +574,6 @@ Learning adjectives in pairs helps you remember them better:
 | важкий | /vɑʒˈkɪj/ | heavy, hard | adj | m | - |
 | дорогий | /dɔrɔˈɦɪj/ | expensive, dear | adj | m | - |
 | дешевий | /dɛˈʃɛvɪj/ | cheap | adj | m | - |
-| цікавий | /t͡sʲiˈkɑvɪj/ | interesting | adj | m | - |
 | нудний | /nudˈnɪj/ | boring | adj | m | - |
 | простий | /prɔˈstɪj/ | simple | adj | m | - |
 | складний | /sklɑdˈnɪj/ | complex | adj | m | - |

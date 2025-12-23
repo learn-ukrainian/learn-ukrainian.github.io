@@ -1,580 +1,516 @@
 ---
 module: a2-35
-title: Motion Verb Prefixes
-subtitle: "The GPS of Ukrainian"
+title: Motion Prefixes I — Entering and Exiting
+subtitle: "Mastering the В- and ВИ- Logic"
 version: "1.0"
 phase: "A2.4"
-pedagogy: "Inquiry"
+pedagogy: "PPP"
 duration: "60 min"
 transliteration: none
 tags:
   - grammar
   - verbs
   - prefixes
-  - motion
+  - word-formation
 grammar:
-  - motion verb prefixes (при-, ви-, в-, за-, пере-, від-, під-, об-)
-  - formation of perfective motion verbs
-  - destination cases (в/на + Acc)
+  - prefix в- (entry)
+  - prefix ви- (exit)
+  - perfective motion verbs
+  - directional cases (в + Acc, з + Gen)
 objectives:
-  - "Learner can express specific directions of movement"
-  - "Learner can understand arrival, departure, and entry concepts"
-  - "Learner can give detailed route descriptions"
-vocabulary_count: 35
+  - "Learner can distinguish between entering and exiting space using prefixes"
+  - "Learner can use correct destination prepositions for motion"
+  - "Learner can express the completion of a movement"
+vocabulary_count: 25
 ---
 
-## Warm-up
+# Summary
 
-Prepare your imaginary travel bag. We are going on a journey!
-In Module 01, you learned **йти** (to go).
-But "going" is boring. Do you want to **arrived**, **exit**, **enter**, **cross**, or **pass by**?
-In Ukrainian, you don't need new words for this. You just need a **prefix**!
-A prefix is like a GPS instruction added to the front of the verb.
+## The Logic of Movement 🌍
 
-> [!question] Think about it
-> In English, you say "go **out**", "come **in**", "walk **away**".
-> In Ukrainian, these prepositions become prefixes attached to the verb:
-> - Go **out** -> **Ви**йти
-> - Come **in** -> **У**війти
-> - Walk **away** -> **Від**ійти
+> 🧭
 
-> [!resources] 🔗 External Resources
+In English, we often rely on separate adverbs or prepositions to show direction: we "go **in**", "walk **out**", or "drive **into**" a parking lot. In Ukrainian, this logic is encapsulated within the verb itself through a powerful system of **prefixes**. This is the core of Slavic word formation. By snapping a small block (the prefix) onto the front of a base verb, you create a new, precise concept with its own directional vector. Think of the prefix as the "GPS instruction" built into the DNA of the action. This allows for extreme precision in describing spatial transitions without needing a huge vocabulary of separate roots.
+
+Today, we focus on the most fundamental pair of opposites in the directional universe: **В- (Into)** and **ВИ- (Out)**. 
+
+### Core Prefixes: The Inbound/Outbound Switch
+
+| Prefix | Meaning | Base Verb | New Verb | Result |
+| :--- | :--- | :--- | :--- | :--- |
+| **В- / У-** | **Into** | йти/їхати | **в**війти / **в**'їхати | Inside the space |
+| **ВИ-** | **Out** | йти/їхати | **ви**йти / **ви**їхати | Outside the space |
+
+### The "Apostrophe" Rule for Wheels
+When you add the prefix **в-** to the verb **їхати** (to drive), the meeting of the consonant "в" and the vowel "ї" requires a hard stop in pronunciation. We represent this with an apostrophe: **в'їхати**. Without it, the sounds would blur together in a way that is unnatural to the Ukrainian phonetic system. When you say **в'їхати**, imagine hitting a tiny pause right after the "v" before saying "yi-khaty." This preserves the independence of the prefix and the root, which is a key feature of Ukrainian phonetics.
+
+---
+
+## The Morphological Shift: From Process to Result
+
+What is the deeper reason for using these prefixes? Can't we just use the base verbs and add prepositions like in English? While "Я йшов у будинок" (I was walking into the house) is grammatically possible, it sounds incomplete and focuses only on the journey, not the transition. In Ukrainian, the goal of movement is usually shown by a deliberate shift in **Aspect**.
+
+1. **The Base Verb (Imperfective):** Verbs like **йти** (to walk) or **їхати** (to drive) describe the *process* of movement. They are like a continuous video stream. If you say "Я йшов," you are describing the act of moving your legs without telling us if you ever reached a destination or crossed a specific threshold. It is a state of being "in motion."
+2. **The Prefixed Verb (Perfective):** Adding a directional prefix such as **в-** or **ви-** does more than just add a vector; it flips the linguistic switch from "process" to "completion." These verbs are almost always **perfective**. They focus on the **boundary crossing** itself. You are either inside or outside. There is no middle ground in a perfective prefix; the moment you cross the line, the action is done and a new state is achieved.
+
+> [!important] The Perfective Power
+> A prefixed motion verb is a "result machine." If you use the word **вийшов** (exited), the listener immediately understands that you have successfully completed the act and are no longer in the room. This makes your communication much more efficient than in English, where you might need extra sentences or adverbs to prove you actually reached the outside and aren't still standing in the doorway.
+
+---
+
+## Spatial Mapping: Prepositions & Cases
+
+Directional prefixes are not solo players; they participate in a strict grammatical "agreement" with prepositions and cases. They act as signals for the noun (the destination) that follows, providing a triple-layered system of clarity.
+
+### 1. The Inbound Agreement (The "B" Path)
+Movement **into** something typically requires the preposition **в/на** followed by the **Accusative Case** (showing the target destination). This is the case of "Motion Toward."
+- **Ввійти в** кімнат**у** (Focus on the entry point into the enclosed room)
+- **В'їхати на** парковк**у** (Focus on the arrival on the open surface of the parking lot)
+
+### 2. The Exit Pattern (ВИ- + з/із + Genitive)
+Movement **out of** something requires the preposition **з/із** followed by the **Genitive Case** (showing the point of separation or origin). This is the case of "Movement From."
+- **Вийти з** кімнат**и** (The physical separation from the enclosed room)
+- **Виїхати з** парковк**и** (The departure from the open parking area)
+
+### The Harmonic Logic of Prepositions
+
+Ukrainian grammar is not a collection of random rules; it is a system of **harmonic logic**. The directional prefix acts as a "pre-signal" to the brain, preparing it for the specific preposition and case that will follow. This redundancy ensures that the meaning is clear even in noisy environments.
+
+| Vector | Prefix | Preposition | Case | Logic |
+| :--- | :--- | :--- | :--- | :--- |
+| **Inbound** | **В-** | **В / У** | Accusative | Movement into a container |
+| **Outbound** | **ВИ-** | **З / ІЗ** | Genitive | Movement out of a container |
+| **Onward** | **В'** | **НА** | Accusative | Movement onto a surface |
+| **Offward** | **ВИ-** | **З** | Genitive | Movement off a surface/area |
+
+> [!important] Case Hierarchy and Meta-Logic
+> Notice that for **ingress** (moving into), we use the **Accusative**, which is the case of direct impact and target. For **egress** (moving out), we use the **Genitive**, which is the case of origin and non-existence. Once you leave a room, you are "no longer of" that room. This logical alignment between prefix, preposition, and case is what gives Ukrainian its structural beauty and mathematical precision.
+
+### Which Preposition? Open vs. Enclosed Spaces
+
+A common challenge for learners is choosing between **В** and **На**. This distinction is often more psychological than physical in Ukrainian culture.
+- Use **В / З** for enclosed spaces like buildings, cities, countries, or forests. These are "vessels" you can be inside.
+- Use **На / З** for open spaces (the street, the square), events (concerts, meetings, work), or elevated surfaces (mountains, islands).
+- For people, we use **До / Від** (I go **to** Mom), as you cannot conceptually "enter" or "exit" a person's physical space with these prefixes without changing the fundamental meaning of the verbs.
+
+---
+
+## Anti-Propaganda Showcase: The Urban Complexity
+
+> [!myth] Myth: "Ukrainian is just a simple rural dialect of Russian or Polish."
+> **The Verdict: Absolute Fiction.**
 >
-> **YouTube:** [A little test on prefixed verbs of motion...](https://www.youtube.com/watch?v=UHdXnucAOxY) — Ukrainian grammar
+> **Linguistic Fact:** Ukrainian possesses a highly sophisticated and ancient system of motion prefixes that is far more nuanced than many dialects of other Slavic languages. This system allows for precise distinctions between "entering briefly" (**зайти**), "entering formally" (**увійти**), and "entering by transport" (**в'їхати**). This is the hallmark of a language developed for both complex rural logistics and high-level urban navigation.
 >
-> **Grammar Guide:** [Ukrainian Verb Prefixes](https://www.ukrainianlessons.com/ukrainian-verb-prefixes/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+> During the 19th and 20th centuries, imperial powers (both Tsarist and Soviet) attempted to marginalize Ukrainian as a "peasant language" by banning its use in urban science, engineering, and administration. However, the language's complex urban grammar—including its ability to describe intricate mechanical and logistical movements in a modern city like Kyiv—remained intact. When you ask a stranger, "**Як пройти до метро?**" (How to get to the metro?), you are using high-level prefix logic that proves the language's inherent status as a sophisticated urban and national tongue, capable of describing the most advanced modern infrastructure.
 
 ---
 
-## The Prefix Map
+## Narrative Context: The Great Departure
 
-Imagine a house. We will use the verb **йти** (to walk) as our base.
+**Read the story of a busy morning in Kyiv. Notice how every movement is defined by its boundary.**
 
-| Prefix | Meaning | Logic | Example |
-| :--- | :--- | :--- | :--- |
-| **В- | У-** | **In** | Entering a space | **У**війти в кімнату (Enter the room) |
-| **Ви-** | **Out** | Exiting a space | **Ви**йти з дому (Exit the house) |
-| **При-** | **Arrival** | Reaching a goal | **При**йти на роботу (Arrive at work) |
-| **Пі-** | **Departure** | Leaving for good | **Пі**ти додому (Leave for home) |
-| **Під-** | **Approach** | Getting close | **Під**ійти до вікна (Approach the window) |
-| **Від-** | **Away** | Stepping back | **Від**ійти від дверей (Step away from the door) |
-| **Пере-** | **Cross** | Crossing a line | **Пере**йти вулицю (Cross the street) |
-| **За-** | **Drop by** | Brief visit | Behind | **За**йти в магазин (Pop into the store) |
-| **Про-** | **Through** | Passing by/through | **Про**йти парк (Pass through the park) |
-| **Об-** | **Around** | Circumnavigating | **Об**ійти дім (Walk around the house) |
+Сьогодні вранці Марко прокинувся пізно. Він швидко **вмився** і **зібрався**. О восьмій годині він **вийшов** зі своєї квартири. Він хотів піти в парк, але згадав, що в нього немає кави. Тому він **зайшов** у маленьке кафе на розі. В Україні "зайти" в кафе — це короткий візит, часто просто на п'ять хвилин, щоб щось купити або дізнатися.
 
-> [!important] Grammar Note
-> When you add a prefix to **йти** (imperfective), it usually becomes **perfective** (a completed single action).
-> - Я **йду** (I am walking - process).
-> - Я **прийшов** (I arrived - result).
+— Добрий день! — сказав він баристі. — Мені, будь ласка, велике лате.
+— Звичайно! — відповів хлопець.
+
+Раптом на вулиці почався дощ. Марко подивився у вікно. Люди швидко **заходили** в магазини та аптеки, щоб не змокнути. Велика машина **в'їхала** на тротуар, і водій почав вивантажувати продукти. Марко чекав, поки дощ закінчиться.
+
+Коли небо стало світлим, Марко **вийшов** з кафе зі своєю кавою. Тепер йому треба було поспішати. Він **увійшов** у метро "Золоті ворота". Це дуже глибока станція, тому він довго **спускався** ескалатором. Коли він приїхав на свою зупинку, він **вийшов** з вагону і **піднявся** на вулицю. День нарешті почався по-справжньому.
+
+> [!cultural] History Bite: The Architecture of Entry
+> Many historical gates in Ukraine, like the **Golden Gate** (Золоті Ворота) in Kyiv, were designed not just for defense, but as symbolic points of **entry** for royalty and ambassadors. To **увійти** (enter) through these gates was a symbol of being accepted by the city's heart.
 
 ---
 
-## Story Time: The Lost Tourist
+## Need More Practice?
 
-Це історія про туриста, який гуляв Києвом.
-Його звали Джон, і він дуже любив пригоди.
-Спочатку він **вийшов** з готелю "Україна".
-Він хотів **прийти** на Майдан Незалежності, щоб зробити фото.
-Він **перейшов** дорогу, але зрозумів, що забув карту в номері.
-Він подумав: "Нічого, у мене є телефон".
-Але телефон не працював!
-Тому він **зайшов** у маленьке кафе, щоб запитати дорогу і випити кави.
-Бариста був дуже привітний. Він сказав:
-"**Вийдіть** з кафе, **пройдіть** прямо дві вулиці, потім **обійдіть** великий білий будинок."
-Турист подякував, допив каву і **пішов** далі.
-Він **дійшов** до метро "Хрещатик", але не **увійшов** всередину, тому що погода була чудова.
-Він побачив гарний парк і **підійшов** до фонтану, де грала музика.
-Там він несподівано зустрів свого старого друга Марка!
-Марк сказав: "Який сюрприз! Давай гуляти разом!"
-Вони разом **пішли** гуляти старим містом.
-Вони **обходили** всі історичні місця.
-Ввечері турист **прийшов** у готель. Він **втомився**, але був щасливий.
-
-> [!cultural] History Bite: The Chumak Way
-> Before trucks and trains, Ukrainians had **Chumaks** (Чумаки).
-> They were traders who drove wagons drawn by oxen to Crimea to buy salt.
-> Their journey (**шлях**) was dangerous and long.
-> They **виїжджали** (left) in spring and **приїжджали** (arrived back) in autumn.
-> The Milky Way galaxy in Ukrainian is called **Чумацький Шлях** (The Chumak Way), because they used stars to navigate.
-> This connection between movement and the cosmos is deep in Ukrainian culture.
+> [!resources] External Resources
+> - 📖 [Prefixes of Motion Guide](https://www.ukrainianlessons.com/prefixes-of-motion/) — Systematic tables for beginners.
+> - 🎙 [Ukrainian Lessons Podcast: Prefixes](https://www.ukrainianlessons.com/the-verbs-of-motion-with-prefixes/) — Audio examples and drills.
+> - 🎭 [Visual Motion Verbs](https://www.education-ukrainian.com/motion-verbs) — Diagrams of prefixes to help with spatial memory.
 
 ---
 
-## Deep Dive: The Logic of "Pro-" (Distance)
+# Activities
 
-We learned many prefixes, but let's look at **Про-**.
-It implies covering a distance or passing through.
+## match-up: Directional Pairs (Concept: Semantic Inversion) [stage: practice]
+Match the action to its logical opposite to master the В vs ВИ contrast in various linguistic contexts.
 
-- **Пройти** 5 кілометрів (To walk 5 km).
-- **Проїхати** зупинку (To miss/drive past a stop).
-- **Пройти** контроль (To pass through security).
+| Action | Opposite |
+|--------|----------|
+| Ввійти в будинок | Вийти з будинку |
+| В'їхати в гараж | Виїхати з гаража |
+| Увійти в ліфт | Вийти з ліфта |
+| В'їхати на міст | З'їхати з мосту |
+| Ввійти в метро | Вийти з метро |
+| Вставити ключ | Вийняти ключ |
+| Вдихнути повітря | Видихнути повітря |
+| Включити світло | Виключити світло |
+| Влити воду | Вилити воду |
+| Вантажити в авто | Вивантажити з авто |
+| Вписати слово | Виписати слово |
 
-Imagine an arrow going *through* a tube. That is **Про-**.
+## fill-in: Entry or Exit? (Concept: Contextual Logic) [stage: practice]
+Choose the correct prefix form based on the preposition (в/на vs. з/із) and the overall context of the sentence.
 
-> [!note] Sitting "On the Horse"
-> Before a long journey, Ukrainians have a tradition.
-> Before you **вийти** (exit) the house, everyone must sit down for a minute.
-> It is called "**посидіти на доріжку**" (sit for the road).
-> Historically, it was a moment to pray or remember forgotten items.
-> Even today, if you rush out, a Ukrainian might stop you: "Sit down! We need luck."
+1. Машина [___:1]їхала в гараж дуже повільно, щоб не вдарити стіну.
+   > [!answer] в
+   > [!options] в | ви | за | при
 
----
+2. Коли ми нарешті [___:2]йшли з кімнати, we turned off the light.
+   > [!answer] ви
+   > [!options] ви | у | за | під
 
-## Deep Dive: Where are you going? (B/HA + Accusative)
+3. Треба [___:3]війти в будівлю через головний вхід поруч з площею.
+   > [!answer] у
+   > [!options] у | ви | пере | від
 
-Motion verbs change the case of the destination!
-You are not "at" a place (Locative). You are going "into" a place (Accusative).
+4. Поїзд швидко [___:4]їхав з тунелю, і ми побачили сонце.
+   > [!answer] ви
+   > [!options] ви | в | за | під
 
-- **Location (Locative):** Я (де?) в парку | на роботі.
-- **Direction (Accusative):** Я йду (куди?) **в парк** | **на роботу**.
+5. Студенти дружно [___:5]йшли в аудиторію і сіли за свої столи.
+   > [!answer] уві
+   > [!options] уві | ви | за | при
 
-| Verb | Preposition | Case | Example |
-| :--- | :--- | :--- | :--- |
-| **Прийти** | **В | У** | Accusative | Я прийшов **у магазин**. |
-| **Вийти** | **З** | Genitive | Я вийшов **з магазину**. |
-| **Піти** | **На** | Accusative | Я пішов **на концерт**. |
-| **Поїхати** | **До** | Genitive | Я поїхав **до бабусі**. |
+6. Хлопець [___:6]йшов з аптеки з великою коробкою ліків для мами.
+   > [!answer] ви
+   > [!options] ви | у | за | від
 
-> [!tip] Which Preposition?
-> - Use **В/З** for enclosed spaces (buildings, cities, countries).
-> - Use **На/З** for open spaces, events, or islands (concert, work, street).
-> - Use **До/Від** for people (I go **to** Mom). You cannot go "inside" Mom!
+7. Ми [___:7]їхали на територію заводу о дев'ятій годині ранку.
+   > [!answer] в
+   > [!options] в | ви | об | про
 
----
+8. Хто останній [___:8]йде з офісу сьогодні ввечері перед вихідними?
+   > [!answer] ви
+   > [!options] ви | у | за | пере
 
-## Deep Dive: Figurative Motion
+## quiz: The Prefix Master (Concept: Morphological Awareness) [stage: practice]
+Test your core understanding of how в- and ви- logic functions in different Ukrainian contexts.
 
-Ukrainian loves to use motion verbs for abstract ideas.
-
-1.  **Вийти заміж** (To exit behind husband) = To marry (for women).
-    *   *Марія **вийшла** заміж.*
-2.  **Зійти з розуму** (To descend from mind) = To go crazy.
-    *   *Ти що, **зійшов** з розуму?*
-3.  **Прийти в голову** (To arrive into head) = To occur to someone.
-    *   *Мені **прийшла** в голову ідея.*
-4.  **Вийти** (To work out | succeed).
-    *   *У мене все **вийшло**!* (I succeeded | It worked out).
-
----
-
-## Deep Dive: Go vs. Drive (Йти vs. Їхати)
-
-The prefixes work exactly the same for vehicles!
-Just change the base.
-
-- **Йти** (Foot) -> **Прийти** (Arrive on foot)
-- **Їхати** (Vehicle) -> **Приїхати** (Arrive by car/bus/train)
-
-| English | On Foot | By Vehicle |
-| :--- | :--- | :--- |
-| **Arrive** | Прийти | Приїхати |
-| **Leave/Exit** | Вийти | Виїхати |
-| **Enter** | Увійти | В'їхати |
-| **Cross** | Перейти | Переїхати |
-
-**Example:**
-- Я **прийшов** додому. (I walked/arrived home).
-- Я **приїхав** додому. (I drove/arrived home).
-
-> [!tip] Pronunciation Tip: The Apostrophe
-> Note **В'їхати** (To drive in).
-> The apostrophe means a hard stop. Pronounce it like "V... Yikhaty".
+1. Що саме суттєво змінюється в дієслові руху, коли ми додаємо до нього префікс \"в-\" або \"ви-\"?
+- [x] Воно стає доконаного виду і показує результат певної дії
+- [ ] Воно стає недоконаного виду і показує тривалий процес руху
+- [ ] Воно змінює своє відмінювання з першої на другу дієвідміну
+- [ ] Воно завжди стає дієсловом, яке вживається тільки в минулому часі
 
 ---
 
-## Language in Action
-
-## Dialogue: The Taxi Ride
-
-**Driver:** Добрий день. Куди їдемо?
-**Passenger:** Добрий день. На вокзал, будь ласка.
-**Driver:** Добре. Ми **виїжджаємо** з парковки?
-**Passenger:** Так. Нам треба **переїхати** міст?
-**Driver:** Ні, міст не працює. Ми **об'їдемо** через центр.
-**Passenger:** Це довго? Я можу запізнитися.
-**Driver:** Не хвилюйтеся. Ми **доїдемо** за 20 хвилин.
-**Passenger:** О, я забув телефон! Можемо **заїхати** додому?
-**Driver:** Ні, тоді ми точно не встигнемо.
-**Passenger:** Добре, їдемо прямо.
-*(20 minutes later)*
-**Driver:** Ми **приїхали**. Це вхід на вокзал.
-**Passenger:** Дякую! Я **піду** швидко.
+2. Який прийменник ми обов'язково використовуємо з дієсловом \"вийти\" для позначення місця?
+- [x] Прийменник \"з\" (або \"із\") разом з формами родового відмінка
+- [ ] Прийменник \"в\" (або \"у\") разом з формами знахідного відмінка
+- [ ] Прийменник \"на\" разом зі знахідним відмінком мети руху
+- [ ] Прийменник \"під\" разом з орудним відмінком місця перебування
 
 ---
 
-## Deep Dive: Prefix Mathematics
-
-Here is a secret: Ukrainians are efficient.
-Instead of inventing completely new words for "enter", "exit", "arrive", "depart", they just recycle the same base verbs.
-If you know **йти** and **їхати**, and you learn 10 prefixes, you instantly know **20+ new words**!
-
-- **Йти** (1) x 10 Prefixes = 10 words
-- **Їхати** (1) x 10 Prefixes = 10 words
-- Plus the base forms = 22 total words.
-
-This is why Slavic languages are awesome. You don't memorize dictionary pages; you memorize logic blocks.
-Mastering prefixes is the biggest "hack" in the Ukrainian language.
+3. Як правильно написати дієслово \"їздити\" з префіксом \"в-\", щоб показати дію в'їзду кудись?
+- [x] Треба обов'язково поставити апостроф перед йотованою літерою: \"в'їхати\"
+- [ ] Треба написати префікс разом з коренем без жодних знаків: \"вїхати\"
+- [ ] Треба написати цей префікс через дефіс для зручності: \"в-їхати\"
+- [ ] Треба подвоїти першу літеру слова для кращої вимови: \"ввїхати\"
 
 ---
 
-## Anti-Propaganda Showcase
-
-> [!myth] Myth: "Ukrainian is just a rural dialect."
-> **Fact:** Ukrainian has a highly engineered system of motion verbs that precise distinguishing between "walking around", "walking through", and "dropping by".
-> Imperial Russia banned Ukrainian in cities (Valuev Circular 1863) to force it into villages, creating this myth.
-> Yet, the language survived with its complex urban grammar intact. When you ask "**Як пройти до метро?**" (How to get to the metro?), you are using high-level prefix grammar that proves the language belongs in the metropolis.
-
----
-
-## Summary
-
-1.  **Prefixes are GPS:** They tell you direction.
-2.  **При-** (Arrival) vs **Пі-** (Departure).
-3.  **В-** (In) vs **Ви-** (Out).
-4.  **Під-** (Approach) vs **Від-** (Retreat).
-5.  **Motion Rules:** Use **Йти** suffixes for feet, **Їхати** suffixes for wheels.
+4. Що означає відомий український фразеологізм \"вийти заміж\" у сучасному контексті?
+- [x] Це означає, що жінка офіційно створює нову сім'ю з чоловіком
+- [ ] Це означає, що жінка просто фізично вийшла зі свого будинку
+- [ ] Це означає, що жінка вирішила раптово купити собі нову сукню
+- [ ] Це означає, що жінка пішла на коротку прогулянку в парк
 
 ---
 
+5. Який з цих прикладів найкраще показує рух всередину закритого простору?
+- [x] Увійти в аудиторію для складання іспиту в університеті
+- [ ] Вийти на балкон, щоб подивитися на гарні вечірні зорі
+- [ ] Підійти до великого столу в біблітеці для читання книг
+- [ ] Перейти дорогу на зелене світло великого світлофора
 
+---
 
-> 💡 **Українське прислів'я**
->
-> «Куди йдеш — туди й прийдеш.» (Йти — процес, прийти — результат!)
->
-> *Translation: "Where you go — there you'll arrive."*
+6. Як сказати граматично правильно: \"Машина ... в гараж о сьомій годині вечора\"?
+- [x] Машина в'їхала в гараж о сьомій годині вечора після роботи
+- [ ] Машина ввійшла в гараж о сьомій годині вечора після роботи
+- [ ] Машина прийшла в гараж о сьомій годині вечора після роботи
+- [ ] Машина виїхала в гараж о сьомій годині вечора після роботи
 
-> 🇺🇦 **Дієслова руху — магія префіксів**
->
-> Українські дієслова руху дуже багаті на значення:
-> - **піти** — почати рух, піти кудись
-> - **прийти** — прибути, досягти мети
-> - **вийти** — вийти назовні, покинути приміщення
-> - **ввійти** — увійти всередину
-> - **пройти** — пройти повз щось
->
-> Кожен префікс змінює значення! Це як будівельні блоки мови.
+---
 
-## Activities
+7. Чому ми кажемо \"увійти в метро\", а не \"уйти в метро\" в українській мові?
+- [x] Для милозвучності між двома приголосними додається голосна літера \"і\"
+- [ ] Тому що це зовсім інше дієслово з абсолютно іншим значенням
+- [ ] Тому що це офіційний стиль мовлення в київському метрополітену
+- [ ] Тому що літера \"у\" — це завжди окремий префікс для руху вниз
 
-## match-up: Prefix Power
+---
 
-> Match the prefix to its GPS meaning.
+8. Що саме станеться з вами, якщо ви нарешті \"вийдете з маленької кімнати\"?
+- [x] Ви опинитеся ззовні цієї кімнати на коридорі або просто на вулиці
+- [ ] Ви все одно залишитеся всередині цієї закритої кімнати надовго
+- [ ] Ви просто підійдете трохи ближче до дверей цієї маленької кімнати
+- [ ] Ви будете стояти точно між великими дверима і стіною кімнати
 
-- При- :: Arrival (Destination reached)
-- Ви- :: Exit (Out of somewhere)
-- Під- :: Approach (Getting closer)
-- Пере- :: Cross (Over a line)
-- За- :: Drop by (Brief visit | Behind)
-- В- :: Enter (Into somewhere)
-- Від- :: Away (Distance increases)
-- Об- :: Around (Circle)
-- Про- :: Through (Passing distance)
-- До- :: Reach (Final limit)
+## unjumble: Building Complex Routes (Concept: Syntax Integrity) [stage: practice]
+Rearrange the words to describe specific movements using the directional logic learned today.
 
-## fill-in: The Tourist Map
+1. він / вийшов / з / машини / і / увійшов / у / магазин
+   > [!answer] Він вийшов з машини і увійшов у магазин
+ 
+2. ми / в'їхали / на / територію / великої / лікарні / вчора
+   > [!answer] Ми в'їхали на територію великої лікарні вчора
 
-> Complete the sentences with the correct verb form.
+3. вона / швидко / вийшла / з / будинку / на / вулицю / вранці
+   > [!answer] Вона швидко вийшла з будинку на вулицю вранці
 
-1. Я хочу ___ в магазин купити води. (Drop by - foot)
-   > [!answer] зайти
-   > [!options] зайти | вийти | підійти
+4. автобус / в'їхав / у / центр / нашого / маленького / міста
+   > [!answer] Автобус в’їхав у центр нашого маленького міста
 
-2. Турист ___ з готелю вранці. (Exited - foot - past)
-   > [!answer] вийшов
-   > [!options] вийшов | прийшов | зайшов
+5. ти / хочеш / увійти / в / цей / старий / замок / сьогодні
+   > [!answer] Ти хочеш увійти в цей старий замок сьогодні
 
-3. Ми ___ в Київ поїздом. (Arrived - vehicle - past)
-   > [!answer] приїхали
-   > [!options] приїхали | прийшли | пішли
+6. водій / виїхав / з / парковки / о / шостій / годині / вечора
+   > [!answer] Водій виїхав з парковки о шостій годині вечора
 
-4. Вам треба ___ вулицю на світлофорі. (Cross - foot)
-   > [!answer] перейти
-   > [!options] перейти | вийти | увійти
+## group-sort: Into vs. Out of (Concept: Directional Categorization) [stage: practice]
+Sort these situations based on whether the movement is inward or outward.
 
-5. Автобус ___ до зупинки. (Approached - vehicle - past)
-   > [!answer] під'їхав
-   > [!options] під'їхав | від'їхав | заїхав
+### Рух всередину
+- В'їхати на заправку
+- Увійти в кабінет
+- Внести стіл у кімнату
+- Влити молоко в чай
+- В'їхати в тунель
+- Увійти в ліфт
 
-6. Я ___ ключі додому? (Bring - foot - future simple)
-   > [!answer] принесу
-   > [!options] принесу | винесу | занесу
+### Рух назовні
+- Виїхати з міста
+- Винести сміття
+- Вийти з офісу
+- Вилити воду на землю
+- Виїхати з тупика
+- Вийти з вагона
 
+## true-false: Directional Logic (Concept: Concept Validation) [stage: practice]
+Validate your understanding of the В/ВИ prefixes and their morphological properties.
 
-7. Він ___ до школи. (motion to a place)
-   > [!error] motion to
-   > [!answer] пішов
-   > [!explanation] Motion with prefix по- indicates start of motion.
-   > [!options] ішов | пішов | прийшов
-
-8. Ми ___ додому. (arrived home)
-   > [!error] arrived
-   > [!answer] прийшли
-   > [!explanation] Prefix при- indicates arrival.
-   > [!options] йшли | пішли | прийшли
-7. Він ___ від мене, тому що образився. (Walked away - past)
-   > [!answer] відійшов
-   > [!options] відійшов | підійшов | увійшов
-
-8. Ми ___ весь світ. (Travel/Go around - vehicle)
-   > [!answer] об'їхали
-   > [!options] об'їхали | в'їхали | приїхали
-
-## group-sort: Foot vs. Wheel
-
-> Is this action usually done on foot or by vehicle?
-
-### On Foot (Йти bases)
-- Прийти
-- Вийти
-- Підійти
-- Зайти до кімнати
-- Перейти дорогу
-- Ввійти
-
-### By Vehicle (Їхати bases)
-- Приїхати
-- Виїхати
-- Під'їхати
-- Заїхати на заправку
-- Переїхати міст
-- В'їхати
-
-## quiz: Logic Check
-
-> Choose the most logical action.
-
-1. You are inside a room. You want to leave. You...
-   - [x] Виходите
-   - [ ] Входите
-   - [ ] Підходите
-
-2. You see a friend across the street. To meet him, you must...
-   - [x] Перейти вулицю
-   - [ ] Обійти вулицю
-   - [ ] Зайти вулицю
-
-3. The train is at the platform. It is ready to start the journey. It...
-   - [x] Відправляється | Від'їжджає
-   - [ ] Приїжджає
-   - [ ] Під'їжджає
-
-4. You want to give flowers to Mom. You...
-   - [x] Приносите квіти
-   - [ ] Виносите квіти
-   - [ ] Переносите квіти
-
-5. "Зайти" implies the visit is...
-   - [x] Short/Brief
-   - [ ] Permanent
-   - [ ] Dangerous
-
-6. "Чумаки" traveled to get...
-   - [x] Salt
-   - [ ] Gold
-   - [ ] Coffee
-
-7. If you "Проїхали" your stop, you went...
-   - [x] Too far (Past it)
-   - [ ] Not far enough
-   - [ ] Exactly there
-
-8. "Обйти" helps you avoid...
-   - [x] An obstacle
-   - [ ] A door
-   - [ ] A friend
-
-## true-false: Prefix Mystery
-
-1. "Вийти" means to enter.
+1. Префікс \"ви-\" завжди означає рух до певної далекої мети.
    - [ ] True
-   - [x] False (Exit)
+   - [x] False
+   > Він означає рух назовні або вихід з певного простору.
 
-2. "Приїхати" means to arrive by transport.
+2. Дієслово \"в'їхати\" обов'язково пишеться з апострофом після \"в\".
    - [x] True
    - [ ] False
+   > Правильно, це правило вживання апострофа після префіксів.
 
-3. "Перейти" involves crossing something (like a street).
+3. Фразеологізм \"вийти з себе\" означає раптово втратити спокій.
    - [x] True
    - [ ] False
+   > Це одне з багатьох фігуральних значень префікса **ви-**.
 
-4. "Підійти" implies increasing distance.
-   - [ ] True
-   - [x] False (Getting closer)
-
-5. "В'їхати" is pronounced with a pause inside.
+4. Після префікса \"в-\" we usually use the preposition \"v\".
    - [x] True
    - [ ] False
+   > Так, ця комбінація є найпоширенішою в українській мові.
 
-6. "Обйти" means to go straight through.
+5. Рух \"зійти з розуму\" за значенням підходить до слова \"помудрішати\".
    - [ ] True
-   - [x] False (Go around)
+   - [x] False
+   > Ні, це означає \"втратити глузд\" або просто \"збожеволіти\".
 
-7. "Відійти" means to move away from an object.
+6. \"Ввійти\" — це фонетична форма для дієслова \"йти\" з префіксом \"в\".
    - [x] True
    - [ ] False
+   > Звук \"і\" з'являється для полегшення вимови приголосних.
 
-8. "Зайти" means to leave forever.
+7. Дієслово \"виїхати\" завжди вимагає після себе знахідного відмінка.
    - [ ] True
-   - [x] False (Drop by)
+   - [x] False
+   > Ні, воно зазвичай вимагає Родового відмінка з прийменником **з**.
 
-## unjumble: Build the Sentence
+8. Префікси в- та ви- завжди роблять дієслово доконаним за видом.
+   - [x] True
+   - [ ] False
+   > Так, префіксація є головним способом творення доконаного виду.
 
-1. магазин | в | зайшов | він
-   > [!answer] Він зайшов в магазин
-2. з | вийшла | вона | дому
-   > [!answer] Вона вийшла з дому
-3. до | підійти | вікна
-   > [!answer] Підійти до вікна
-4. ми | міст | переїхали
-   > [!answer] Ми переїхали міст
-5. додому | я | прийшов
-   > [!answer] Я прийшов додому
-6. автобус | від | від'їхав | зупинки
-   > [!answer] Автобус від'їхав від зупинки
+## cloze: The Museum Visit (Concept: Narrative Coherence) [stage: production]
+Complete the narrative about a complex visit to the local museum by choosing the correct prefixed verbs.
 
-## mark-the-words: Find the Motion
+Ми приїхали в самий центр міста. Спочатку ми [___:1] з великого автобуса на зупинці поруч з музеєм. Потім ми повільно [___:2] до великих вхідних дверей. Нам треба було [___:3] всередину старої будівлі, але там була велика черга. Коли ми нарешті [___:4] в просторий хол, ми відразу побачили касу. Охоронець ввічливо [___:5] нас з натовпу і показав правильну дорогу. Ми [___:6] в першу залу і побачили там унікальні старі карти. Потім ми [___:7] в іншу кімнату. Через годину ми [___:8] з музею. На вулиці ми [___:9] в парк, щоб [___:10] свіжим повітрям. Ми [___:11] в машину і доїхали додому. Вечір [___:12] вдалим.
 
-Турист [вийшов](motion) з готелю. Він [побачив](perception) карту. Він [перейшов](motion) площу. Потім він [зайшов](motion) у музей. Там він [слухав](perception) гіда. Ввечері він [повернувся](motion) назад. Він [їв](action) вечерю і [спав](state).
+1. вийшли | увійшли | заїхали | підійшли
+> [!answer] вийшли
 
-## cloze: The Journey Home
+2. підійшли | вийти | увійти | в'їхали
+> [!answer] підійшли
 
-> Fill in the missing prefixes.
+3. увійти | вийти | підійти | проїхати
+> [!answer] увійти
 
-Я живу в Києві, але мої батьки у Львові.
-У п'ятницю я [___:1]їжджаю з Києва.
-Я [___:2]їжджаю на вокзал на таксі.
-Я [___:3]ходжу у вагон поїзда.
-Поїзд [___:4]їжджає рівно о 18:00.
-Вранці я [___:5]їжджаю у Львів.
-Тато [___:6]стрічає мене на пероні.
-Ми [___:7]їжджаємо додому машиною.
-Мама рада, що я [___:8]їхав.
+4. увійшли | вийшли | зайшли | прийшли
+> [!answer] увійшли
 
-1. ви | при | від
-> [!answer] ви
+5. вивів | ввів | навів | завів
+> [!answer] вивів
 
-2. при | ви | за
-> [!answer] при
+6. увійшли | вийшли | перейшли | обійшли
+> [!answer] увійшли
 
-3. за | ви | при
-> [!answer] за
+7. перейшли | вийшли | увійшли | заїхали
+> [!answer] перейшли
 
-4. від | при | ви
-> [!answer] від
+8. вийшли | увійшли | відійшли | заїхали
+> [!answer] вийшли
 
-5. при | ви | від
-> [!answer] при
+9. зайшли | вийшли | ввійшли | прийшли
+> [!answer] зайшли
 
-6. зу | при | ви
-> [!answer] зу
+10. подихати | вдихнути | видихнути | дихати
+> [!answer] подихати
 
-7. їд | при | від
-> [!answer] їд
+11. сіли | ввійшли | виїхали | прийшли
+> [!answer] сіли
 
-8. при | ви | від
-> [!answer] при
+12. вийшов | увійшов | зайшов | прийшов
+> [!answer] вийшов
 
-## dialogue-reorder: Asking Directions
+## select: Prefix Selection (Concept: Morphological Choice) [stage: production]
+Select the logically correct prefixed verb to complete the professional description of daily movements in a modern city like Kyiv.
 
-- Перепрошую, як пройти до опери?
-- Добрий день. Це недалеко.
-- Мені треба переходити вулицю?
-- Ні, не треба. Просто вийдіть з метро і йдіть прямо.
-- А потім?
-- Потім обійдіть пам'ятник Тарасу Шевченку.
-- І я побачу оперу?
-- Так, ви відразу її побачите.
+1. Кур'єр швидко [___] у будівлю, щоб доставити обід клієнту.
+   - [x] забіг
+   - [ ] вибіг
+   - [ ] перебіг
 
-> [!answer]
-> 1. Перепрошую, як пройти до опери?
-> 2. Добрий день. Це недалеко.
-> 3. Мені треба переходити вулицю?
-> 4. Ні, не треба. Просто вийдіть з метро і йдіть прямо.
-> 5. А потім?
-> 6. Потім обійдіть пам'ятник Тарасу Шевченку.
-> 7. І я побачу оперу?
-> 8. Так, ви відразу її побачите.
+2. Лікар [___] з кабінету і запросив наступного пацієнта на прийом.
+   - [x] вийшов
+   - [ ] увійшов
+   - [ ] відійшов
 
-## error-correction: Fix the Trips
+3. Машина швидкої допомоги швидко [___] у двір центральної лікарні нашого міста.
+   - [x] в'їхала
+   - [ ] виїхала
+   - [ ] переїхала
 
-1. Я **вийшов** в кімнату. (Logic: Exit into?)
+4. Вона мовчки [___] ключ у замок і відчинила старі двері.
+   - [x] вставила
+   - [ ] вийняла
+   - [ ] переставила
+
+5. Ми всі разом [___] з офісу рівно о шостій вечора сьогодні.
+   - [x] вийшли
+   - [ ] увійшли
+   - [ ] зайшли
+
+6. Хлопець випадково [___] всю воду зі склянки на зелені квіти.
+   - [x] вилив
+   - [ ] влив
+   - [ ] зазлив
+
+7. Вам потрібно уважно [___] у цю велику анкету своє прізвище.
+   - [x] вписати
+   - [ ] виписати
+   - [ ] переписати
+
+8. Коли ви нарешті [___] з поїзда, не забудьте свої речі.
+   - [x] виходите
+   - [ ] входите
+   - [ ] підходите
+
+## translate: Moving Borders (Concept: Cross-Linguistic Transfer) [stage: production]
+Translate these short English sentences into Ukrainian using the correct directional prefix (в- or ви-).
+
+1. He walked out of the house.
+   > [!answer] Він вийшов з будинку
+   > [!options] Він вийшов з будинку | Він увійшов у будинок | Він зайшов у будинок
+
+2. The car drove into the garage.
+   > [!answer] Машина в'їхала в гараж
+   > [!options] Машина в'їхала в гараж | Машина виїхала з гаража | Машина заїхала в гараж
+
+3. Please, walk into the room.
+   > [!answer] Будь ласка, увійдіть у кімнату
+   > [!options] Будь ласка, увійдіть у кімнату | Будь ласка, вийдіть з кімнати | Будь ласка, зайдіть у кімнату
+
+4. We are exiting the metro now.
+   > [!answer] Ми зараз виходимо з метро
+   > [!options] Ми зараз виходимо з метро | Ми зараз входимо в метро | Ми зараз заходимо в метро
+
+5. She walked into the store.
+   > [!answer] Вона зайшла в магазин
+   > [!options] Вона зайшла в магазин | Вона вийшла з магазину | Вона перейшла магазин
+
+6. The taxi drove out of the yard.
+   > [!answer] Таксі виїхало з двору
+   > [!options] Таксі виїхало з двору | Таксі в'їхало у двір | Таксі заїхало у двір
+
+7. They entered the building slowly.
+   > [!answer] Вони ввійшли в будівлю повільно
+   > [!options] Вони ввійшли в будівлю повільно | Вони вийшли з будівлі повільно | Вони зайшли в будівлю повільно
+
+8. I want to exit the car.
+   > [!answer] Я хочу вийти з машини
+   > [!options] Я хочу вийти з машини | Я хочу ввійти в машину | Я хочу заїхати в машину
+
+## error-correction: Directional Failures (Concept: Critical Proofreading) [stage: production]
+Find and fix the prefix or preposition errors in these sentences based on the directional logic of В/ВИ that we have discussed.
+
+1. Я **вийшов** в кімнату.
    > [!error] вийшов
    > [!answer] увійшов | зайшов
-   > [!explanation] Entering a room uses "увійти" or "зайти". "Вийти" means to exit.
+   > [!explanation] Entering a room typically uses the prefix \"уві-\" or \"за-\". \"Вийти\" means to exit.
    > [!options] увійшов | вийшов
 
-2. Машина **прийшла** в гараж. (Verb type)
+2. Машина **прийшла** в гараж.
    > [!error] прийшла
    > [!answer] приїхала | заїхала
-   > [!explanation] Cars rely on wheels (їхати), not feet (йти).
+   > [!explanation] Vehicles use the base \"їхати\" (wheels), while \"йти\" is for walking (feet).
    > [!options] заїхала | прийшла
 
-3. Він **перейшов** від мене. (Prefix meaning)
+3. Він **перейшов** від мене.
    > [!error] перейшов
    > [!answer] відійшов
-   > [!explanation] Moving away is "від-". "Пере-" is crossing.
+   > [!explanation] Prefix \"пере-\" means crossing. Moving away from someone requires \"від-\".
    > [!options] відійшов | перейшов
 
-4. Ми **приїхали** з дому на роботу. (Leaving context)
+4. Ми **приїхали** з дому на роботу.
    > [!error] приїхали
    > [!answer] виїхали
-   > [!explanation] Leaving a place is "ви-". Arriving is "при-".
+   > [!explanation] Leaving a starting point requires the prefix \"ви-\". \"Приїхали\" focuses on the arrival.
    > [!options] виїхали | приїхали
 
-5. Я **обійшов** вулицю. (Context: crossing)
+5. Я **обійшов** вулицю вчора на перехресті.
    > [!error] обійшов
    > [!answer] перейшов
-   > [!explanation] You cross a street, you don't usually walk around it (unless it's closed).
+   > [!explanation] In the context of a crossing, we use \"перейшов.\" \"Обійшов\" means to circle around.
    > [!options] перейшов | обійшов
 
-6. Поїзд **під'їхав** з Києва. (Arrival from city)
+6. Поїзд **під'їхав** з Києва сьогодні вранці.
    > [!error] під'їхав
    > [!answer] приїхав
-   > [!explanation] "Приїхав" is arrival from a distance. "Під'їхав" is approaching a specific spot near you.
+   > [!explanation] Arrival from another city is \"приїхати.\" \"Під'їхати\" is for short-range approach.
    > [!options] приїхав | під'їхав
 
----
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| прийти | /prɪjˈtɪ/ | to arrive (foot) | verb | — | pf |
+| ввійти | /uʋiˈjtɪ/ | to enter (foot) | verb | — | pf |
 | вийти | /ˈʋɪjtɪ/ | to exit (foot) | verb | — | pf |
-| увійти | /uʋiˈjtɪ/ | to enter (foot) | verb | — | pf |
-| зайти | /zɑjˈtɪ/ | to drop by (foot) | verb | — | pf |
-| перейти | /pɛrɛjˈtɪ/ | to cross (foot) | verb | — | pf |
-| відійти | /ʋidijˈtɪ/ | to move away (foot) | verb | — | pf |
-| підійти | /pidijˈtɪ/ | to approach (foot) | verb | — | pf |
-| обійти | /ɔbijˈtɪ/ | to go around (foot) | verb | — | pf |
-| пройти | /prɔjˈtɪ/ | to pass/cover distance | verb | — | pf |
-| розійтися | /rɔzijˈtɪsʲɑ/ | to disperse/part ways | verb | — | pf |
-| зійти | /zijˈtɪ/ | to descend/get off | verb | — | pf |
-| дійти | /dijˈtɪ/ | to reach/get to | verb | — | pf |
-| приїхати | /prɪˈjixɑtɪ/ | to arrive (vehicle) | verb | — | pf |
-| виїхати | /ˈʋɪjixɑtɪ/ | to exit (vehicle) | verb | — | pf |
 | в'їхати | /ˈʋjixɑtɪ/ | to enter (vehicle) | verb | — | pf |
-| заїхати | /zɑˈjixɑtɪ/ | to drive in/by | verb | — | pf |
-| переїхати | /pɛrɛˈjixɑtɪ/ | to cross/move house | verb | — | pf |
-| від'їхати | /ʋidˈjixɑtɪ/ | to drive away | verb | — | pf |
-| під'їхати | /pidˈjixɑtɪ/ | to drive up to | verb | — | pf |
-| об'їхати | /ɔbˈjixɑtɪ/ | to drive around | verb | — | pf |
-| проїхати | /prɔˈjixɑtɪ/ | to drive past | verb | — | pf |
-| роз'їхатися | /rɔzˈjixɑtɪsʲɑ/ | to disperse (vehicles) | verb | — | pf |
-| доїхати | /dɔˈjixɑtɪ/ | to reach (vehicle) | verb | — | pf |
-| принести | /prɪnɛsˈtɪ/ | to bring (carrying) | verb | — | pf |
-| винести | /ˈʋɪnɛstɪ/ | to carry out | verb | — | pf |
-| внести | /ʋnɛsˈtɪ/ | to carry in | verb | — | pf |
-| занести | /zɑnɛsˈtɪ/ | to bring in/drop off | verb | — | pf |
-| перенести | /pɛrɛnɛsˈtɪ/ | to move/carry across | verb | — | pf |
-| відвести | /ʋidʋɛsˈtɪ/ | to lead away (person) | verb | — | pf |
-| привести | /prɪʋɛsˈtɪ/ | to lead/bring (person) | verb | — | pf |
-| вивести | /ˈʋɪʋɛstɪ/ | to lead out | verb | — | pf |
-| відвезти | /ʋidʋɛzˈtɪ/ | to transport away | verb | — | pf |
-| привезти | /prɪʋɛzˈtɪ/ | to transport here | verb | — | pf |
-| йти | /jtɪ/ | to go (foot) | verb | — | impf |
-| їхати | /ˈjixɑtɪ/ | to go (vehicle) | verb | — | impf |
+| виїхати | /ˈʋɪjixɑtɪ/ | to exit (vehicle) | verb | — | pf |
+| увійти | /uʋiˈjtɪ/ | to enter (formal) | verb | — | pf |
+| гараж | /ɡɑˈrɑʒ/ | garage | noun | masc | — |
+| ескалатор | /ɛskɑˈlɑtɔr/ | escalator | noun | masc | — |
+| ліфт | /lift/ | elevator | noun | masc | — |
+| вагон | /ʋɑˈɦɔn/ | train car | noun | masc | — |
+| натовп | /ˈnɑtɔu̯p/ | crowd | noun | masc | — |
+| кабінет | /kɑbiˈnɛt/ | office/study | noun | masc | — |
+| вмитися | /ˈʋmɪtɪsʲɑ/ | to wash oneself | verb | — | pf |
+| зібратися | /ziˈbrɑtɪsʲɑ/ | to get ready | verb | — | pf |
+| глибокий | /ɦlɪˈbɔkɪj/ | deep | adj | — | — |
+| порожній | /pɔ/ | empty | adj | — | — |
+| повний | /pɔunɪj/ | full | adj | — | — |
+| межа | /mɛˈʒɑ/ | border/boundary | noun | fem | — |

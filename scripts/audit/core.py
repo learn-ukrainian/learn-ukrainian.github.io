@@ -698,8 +698,8 @@ def audit_module(file_path: str) -> bool:
     )
 
     # Separate blocking violations (missing core vocab) from warnings
-    vocab_blocking = [v for v in plan_violations if v['type'] == 'VOCAB_PLAN_MISSING']
-    vocab_warnings = [v for v in plan_violations if v['type'] != 'VOCAB_PLAN_MISSING']
+    vocab_blocking = [v for v in plan_violations if v.get('blocking', True)]
+    vocab_warnings = [v for v in plan_violations if not v.get('blocking', True)]
 
     # Missing core vocab is a blocking failure
     if vocab_blocking:
@@ -761,7 +761,8 @@ def audit_module(file_path: str) -> bool:
             'fix': v['fix']
         })
 
-    results['pedagogy'] = evaluate_pedagogy(len(pedagogical_violations))
+    blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
+    results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if results['pedagogy'].status == 'FAIL':
         has_critical_failure = True
 

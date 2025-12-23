@@ -361,99 +361,111 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 ## quiz: Motion or Location?
 
-1. Я йду в школу. What case is "школу"?
+1. In the sentence "Я йду в школу," which grammatical case is the word "школу" in?
 
 - [x] Accusative (motion)
 - [ ] Locative (location)
 - [ ] Genitive
-
----
-
-2. Він у школі. What case is "школі"?
-
-- [x] Locative (location)
-- [ ] Accusative (motion)
 - [ ] Instrumental
 
 ---
 
-3. Вона кладе книгу на стіл. What case is "стіл"?
+2. In the sentence "Він у школі," which grammatical case is the word "школі" in?
+
+- [x] Locative (location)
+- [ ] Accusative (motion)
+- [ ] Instrumental
+- [ ] Genitive
+
+---
+
+3. When someone places a book on a table, as in "Вона кладе книгу на стіл," which case is "стіл"?
 
 - [x] Accusative (motion)
 - [ ] Locative (location)
 - [ ] Genitive
-
----
-
-4. Книга лежить на столі. What case is "столі"?
-
-- [x] Locative (location)
-- [ ] Accusative (motion)
 - [ ] Instrumental
 
 ---
 
-5. Кіт біжить під стіл. What case is "стіл"?
+4. When a book is already lying on a table, as in "Книга лежить на столі," which case is "столі"?
 
-- [x] Accusative (motion)
-- [ ] Instrumental (location)
+- [x] Locative (location)
+- [ ] Accusative (motion)
+- [ ] Instrumental
 - [ ] Genitive
 
 ---
 
-6. Кіт спить під столом. What case is "столом"?
-
-- [x] Instrumental (location)
-- [ ] Accusative (motion)
-- [ ] Locative
-
----
-
-7. Вони йдуть за будинок. What case?
+5. When a cat runs under a table, as in "Кіт біжить під стіл," which case is "стіл"?
 
 - [x] Accusative (motion)
 - [ ] Instrumental (location)
 - [ ] Genitive
-
----
-
-8. Вони стоять за будинком. What case?
-
-- [x] Instrumental (location)
-- [ ] Accusative (motion)
 - [ ] Locative
 
 ---
 
-9. Which preposition always takes genitive?
+6. When a cat is sleeping under a table already, as in "Кіт спить під столом," which case is "столом"?
+
+- [x] Instrumental (location)
+- [ ] Accusative (motion)
+- [ ] Locative
+- [ ] Genitive
+
+---
+
+7. When someone goes behind a building for motion, as in "Вони йдуть за будинок," which case is used?
+
+- [x] Accusative (motion)
+- [ ] Instrumental (location)
+- [ ] Genitive
+- [ ] Locative
+
+---
+
+8. When someone is standing behind a building expressing location, as in "Вони стоять за будинком," which case?
+
+- [x] Instrumental (location)
+- [ ] Accusative (motion)
+- [ ] Locative
+- [ ] Genitive
+
+---
+
+9. In Ukrainian grammar, which preposition always requires the Genitive case regardless of context?
 
 - [x] без
 - [ ] над
 - [ ] про
+- [ ] на
 
 ---
 
-10. Which preposition always takes instrumental?
+10. In Ukrainian grammar, which preposition always requires the Instrumental case regardless of context?
 
 - [x] між
 - [ ] до
 - [ ] через
+- [ ] про
 
 ---
 
-11. "Про" takes which case?
+11. In Ukrainian, the preposition "про" (about) always requires which grammatical case to follow it?
 
 - [x] Accusative
 - [ ] Genitive
 - [ ] Instrumental
+- [ ] Locative
 
 ---
 
-12. "Для" takes which case?
+12. In Ukrainian, the preposition "для" (for) always requires which grammatical case to follow it?
 
 - [x] Genitive
 - [ ] Accusative
 - [ ] Dative
+- [ ] Instrumental
 
 ## true-false: Preposition Rules
 
@@ -522,53 +534,53 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 > Put the words in the correct order.
 
-1. я | йду | до | школи
-   > [!answer] Я йду до школи
-   > (I'm going to school.)
+1. я / йду / до / школи / щодня / о / восьмій / годині
+   > [!answer] Я йду до школи щодня о восьмій годині
+   > (I go to school every day at eight o'clock.)
 
-2. кава | без | цукру
-   > [!answer] Кава без цукру
-   > (Coffee without sugar.)
+2. кава / без / цукру / і / молока / будь / ласка / мені
+   > [!answer] Кава без цукру і молока будь ласка мені
+   > (Coffee without sugar and milk please for me.)
 
-3. лампа | над | столом
-   > [!answer] Лампа над столом
-   > (A lamp above the table.)
+3. лампа / над / столом / світить / яскраво / увечері / у / кімнаті
+   > [!answer] Лампа над столом світить яскраво увечері у кімнаті
+   > (The lamp above the table shines brightly in the evening in the room.)
 
-4. він | гуляє | з | друзями
-   > [!answer] Він гуляє з друзями
-   > (He's walking with friends.)
+4. він / гуляє / з / друзями / у / парку / після / роботи
+   > [!answer] Він гуляє з друзями у парку після роботи
+   > (He walks with friends in the park after work.)
 
-5. подарунок | для | мами
-   > [!answer] Подарунок для мами
-   > (A gift for mom.)
+5. подарунок / для / мами / лежить / на / столі / у / коробці
+   > [!answer] Подарунок для мами лежить на столі у коробці
+   > (A gift for mom lies on the table in a box.)
 
-6. ми | йдемо | через | парк
-   > [!answer] Ми йдемо через парк
-   > (We're going through the park.)
+6. ми / йдемо / через / парк / і / потім / до / магазину
+   > [!answer] Ми йдемо через парк і потім до магазину
+   > (We go through the park and then to the store.)
 
-7. вони | говорять | про | мене
-   > [!answer] Вони говорять про мене
-   > (They're talking about me.)
+7. вони / говорять / про / мене / і / моїх / друзів / часто
+   > [!answer] Вони говорять про мене і моїх друзів часто
+   > (They talk about me and my friends often.)
 
-8. кіт | спить | під | столом
-   > [!answer] Кіт спить під столом
-   > (The cat is sleeping under the table.)
+8. кіт / спить / під / столом / бо / там / тепло / завжди
+   > [!answer] Кіт спить під столом бо там тепло завжди
+   > (The cat sleeps under the table because it's always warm there.)
 
-9. стояти | перед | дверима
-   > [!answer] Стояти перед дверима
-   > (To stand in front of the door.)
+9. стояти / перед / дверима / і / чекати / на / друга / довго
+   > [!answer] Стояти перед дверима і чекати на друга довго
+   > (To stand in front of the door and wait for a friend long.)
 
-10. бути | за | будинком
-    > [!answer] Бути за будинком
-    > (To be behind the house.)
+10. бути / за / будинком / і / не / бачити / вулиці / звідти
+    > [!answer] Бути за будинком і не бачити вулиці звідти
+    > (To be behind the house and not see the street from there.)
 
-11. лист | від | брата
-    > [!answer] Лист від брата
-    > (A letter from brother.)
+11. лист / від / брата / прийшов / вчора / з / Німеччини / поштою
+    > [!answer] Лист від брата прийшов вчора з Німеччини поштою
+    > (A letter from brother arrived yesterday from Germany by mail.)
 
-12. після | роботи
-    > [!answer] Після роботи
-    > (After work.)
+12. після / роботи / ми / йдемо / до / кафе / на / каву
+    > [!answer] Після роботи ми йдемо до кафе на каву
+    > (After work we go to the cafe for coffee.)
 
 ## error-correction: Fix the Case
 
@@ -650,7 +662,7 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 > Fill in the blanks with the correct preposition + case form.
 
-Марія живе [___:1] Києві. Вранці вона йде [___:2] роботи. Вона працює [___:3] великому офісі. [___:4] роботи вона йде [___:5] магазину.
+Марія живе [___:1] Києві. Вранці вона йде [___:2] роботи. Вона працює [___:3] великому офісі. [___:4] роботи вона йде [___:5] магазину. Магазин знаходиться [___:6] станції метро.
 
 1. в/у + Loc | на + Acc | з + Gen
    > [!answer] в/у + Loc
@@ -667,9 +679,12 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 5. до + Gen | на + Acc | в + Acc
    > [!answer] до + Gen
 
+6. біля + Gen | між + Instr | над + Instr
+   > [!answer] біля + Gen
+
 ---
 
-Він живе [___:1] центрі міста. Його квартира [___:2] третьому поверсі. Лампа висить [___:3] столом. Кіт спить [___:4] ліжком.
+Він живе [___:1] центрі міста. Його квартира [___:2] третьому поверсі. Лампа висить [___:3] столом. Кіт спить [___:4] ліжком. Стіл стоїть [___:5] вікном. Книги лежать [___:6] столі.
 
 1. в/у + Loc | на + Acc | до + Gen
    > [!answer] в/у + Loc
@@ -682,6 +697,12 @@ Practice forming sentences with the correct preposition + case combinations. Sta
 
 4. під + Instr | над + Instr | за + Instr
    > [!answer] під + Instr
+
+5. перед + Instr | за + Instr | між + Instr
+   > [!answer] перед + Instr
+
+6. на + Loc | під + Instr | над + Instr
+   > [!answer] на + Loc
 
 ## dialogue-reorder: Asking for Directions
 
@@ -833,41 +854,13 @@ We're going through the park.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| в | /ʋ/ | in, into | prep | — | motion: + Acc, location: + Loc |
-| у | /u/ | in, into | prep | — | variant of в |
-| на | /nɑ/ | on, onto | prep | — | motion: + Acc, location: + Loc |
-| з | /z/ | from, with | prep | — | from: + Gen, with: + Instr |
-| із | /iz/ | from, with | prep | — | variant of з |
-| до | /dɔ/ | to, until | prep | — | + Gen |
-| від | /ʋid/ | from (person) | prep | — | + Gen |
-| для | /dlʲɑ/ | for | prep | — | + Gen |
-| без | /bɛz/ | without | prep | — | + Gen |
 | під | /pid/ | under | prep | — | + Acc (motion) or Instr (location) |
 | над | /nɑd/ | above | prep | — | + Instr |
-| перед | /ˈpɛrɛd/ | in front of | prep | — | + Instr |
-| за | /zɑ/ | behind | prep | — | + Acc (motion) or Instr (location) |
-| між | /miʒ/ | between | prep | — | + Instr |
-| через | /ˈt͡ʃɛrɛz/ | through, because | prep | — | + Acc |
 | про | /prɔ/ | about | prep | — | + Acc |
-| о | /ɔ/ | at (time) | prep | — | + Loc |
-| об | /ɔb/ | at (time) | prep | — | variant of о |
-| біля | /ˈbilʲɑ/ | near, by | prep | — | + Gen |
 | коло | /ˈkɔlɔ/ | near | prep | — | + Gen |
-| поруч | /ˈpɔrut͡ʃ/ | next to | adv | — | often with з + Instr |
 | навколо | /nɑʋˈkɔlɔ/ | around | prep | — | + Gen |
-| після | /ˈpislʲɑ/ | after | prep | — | + Gen |
 | замість | /ˈzɑmistʲ/ | instead of | prep | — | + Gen |
-| крім | /krim/ | except | prep | — | + Gen |
 | серед | /ˈsɛrɛd/ | among | prep | — | + Gen |
-| вздовж | /ʋzdɔʋʒ/ | along | prep | — | + Gen |
-| протягом | /prɔˈtʲɑɦɔm/ | during | prep | — | + Gen |
 | завдяки | /zɑʋˈdʲɑkɪ/ | thanks to | prep | — | + Dat |
-| куди | /kuˈdɪ/ | where to | adv | — | question word for motion |
-| де | /dɛ/ | where | adv | — | question word for location |
-| школа | /ˈʃkɔlɑ/ | school | noun | f | example noun |
-| стіл | /stil/ | table | noun | m | example noun |
-| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | grammar term |
-| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | grammar term |
-| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |
 
 ---

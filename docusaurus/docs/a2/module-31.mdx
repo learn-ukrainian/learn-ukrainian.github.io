@@ -39,14 +39,6 @@ In Ukrainian, "that/which/who" corresponds to one flexible word: **Який**.
 :::
 
 
-:::info[🔗 External Resources]
-
-**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-:::
-
-
 ---
 
 ## Presentation
@@ -71,23 +63,44 @@ Always put a comma before **який**!
 
 ## 2. The Case Detective
 
-This is the tricky part.
-Inside the relative clause, **який** acts like a noun adjective. Its case depends on its **role within the clause**.
+This is the tricky part, but it's also what makes Ukrainian relative clauses so precise and elegant.
+
+Inside the relative clause, **який** acts like a noun or adjective. Its case depends on its **role within the clause**, not on the main sentence.
+
+**Understanding the Logic:**
+
+When you use a relative clause, you're essentially embedding a mini-sentence inside your main sentence. The word **який** plays a role in that mini-sentence (subject, object, etc.), and its case reflects that role.
 
 **Scenario A: Subject (Nominative)**
-- *Я знаю хлопця, **який** любить мене.* (The boy loves me).
+- *Я знаю хлопця, **який** любить мене.* (I know a boy **who** loves me).
+- Analysis: In the relative clause "який любить мене," the word "який" is the subject (he loves). Therefore, it's in the Nominative case.
 
 **Scenario B: Object (Accusative)**
-- *Я знаю хлопця, **якого** люблю я.* (I love **whom**? The boy).
+- *Я знаю хлопця, **якого** люблю я.* (I know a boy **whom** I love).
+- Analysis: In the relative clause "якого люблю я," the word "якого" is the direct object (I love whom?). Therefore, it's in the Accusative case. Note that for animate masculine nouns, Accusative = Genitive form.
 
 **Scenario C: Prepositional (Locative)**
-- *Це будинок, **у якому** я живу.* (In which I live).
+- *Це будинок, **у якому** я живу.* (This is the house **in which** I live).
+- Analysis: The preposition "у" (in) requires the Locative case when indicating location. Therefore, "якому" is in the Locative case.
 
-**Think inside the box:**
-Look ONLY at the second part of the sentence to determine the case of *який*.
-1. *...я живу.* (I live).
-2. *...у будинку.* (In the house -> Locative).
-3. Result: *...у якому.*
+**Step-by-Step Strategy:**
+
+To determine the correct case of **який**, follow these steps:
+
+1. **Isolate the relative clause**: Look ONLY at the part after the comma.
+2. **Identify the role**: What role does "який" play in that clause? (subject, object, with a preposition, etc.)
+3. **Apply case rules**: Use the same case rules you already know for nouns.
+4. **Check agreement**: Make sure "який" agrees in gender and number with the antecedent (the word before the comma).
+
+**Example Walkthrough:**
+
+Sentence: *Це будинок, у якому я живу.*
+
+1. Isolate: "у якому я живу" (in which I live)
+2. Role: "якому" follows the preposition "у" indicating location
+3. Case: "у" + location = Locative case
+4. Agreement: "будинок" is masculine, so "який" → "якому" (masculine Locative)
+5. Result: "у якому" ✓
 
 ---
 
@@ -216,6 +229,14 @@ A detective interviews a witness about a robbery.
 Я хочу, **щоб** мої друзі приходили до мене в гості.
 Ми будемо пити чай і говорити про життя.
 
+:::info[🔗 External Resources]
+
+**Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+
+**Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+:::
+
+
 ---
 
 ## 📋 Summary
@@ -289,58 +310,68 @@ A detective interviews a witness about a robbery.
 
 <Quiz questions={[
   {
-    question: `In \"Людина, яку я бачу\", what is the case of \"яку\"?`,
+    question: `У реченні \"Людина, яку я бачу\", який відмінок має слово \"яку\" згідно з правилами?`,
     options: [
-      { text: `Accusative`, correct: true },
-      { text: `Nominative`, correct: false },
-      { text: `Genitive`, correct: false }
+      { text: `Accusative (знахідний відмінок)`, correct: true },
+      { text: `Nominative (називний відмінок)`, correct: false },
+      { text: `Genitive (родовий відмінок)`, correct: false },
+      { text: `Dative (давальний відмінок)`, correct: false }
     ]
   },  {
-    question: `In \"Людина, яка бачить мене\", what is the case of \"яка\"?`,
+    question: `У реченні \"Людина, яка бачить мене\", який відмінок має слово \"яка\" згідно з правилами?`,
     options: [
-      { text: `Nominative`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Dative`, correct: false }
+      { text: `Nominative (називний відмінок)`, correct: true },
+      { text: `Accusative (знахідний відмінок)`, correct: false },
+      { text: `Dative (давальний відмінок)`, correct: false },
+      { text: `Genitive (родовий відмінок)`, correct: false }
     ]
   },  {
-    question: `\"Який\" must agree in **gender** with:`,
+    question: `Слово \"який\" повинно узгоджуватися за родом з яким словом у реченні?`,
     options: [
-      { text: `The word before the comma (Antecedent)`, correct: true },
-      { text: `The verb after the comma`, correct: false },
-      { text: `The speaker`, correct: false }
+      { text: `The word before the comma (слово перед комою)`, correct: true },
+      { text: `The verb after the comma (дієслово після коми)`, correct: false },
+      { text: `The speaker (той хто говорить)`, correct: false },
+      { text: `The object of the sentence (додаток речення)`, correct: false }
     ]
   },  {
-    question: `Translate: \"The friends I live with\".`,
+    question: `Як перекласти англійською \"The friends I live with\" українською мовою правильно?`,
     options: [
-      { text: `Друзі, з якими я живу.`, correct: true },
-      { text: `Друзі, з які я живу.`, correct: false }
+      { text: `Друзі, з якими я живу`, correct: true },
+      { text: `Друзі, з які я живу`, correct: false },
+      { text: `Друзі, які я живу`, correct: false },
+      { text: `Друзі, з яких я живу`, correct: false }
     ]
   },  {
-    question: `\"Книгу\" is feminine. The relative pronoun starts as:`,
+    question: `Якщо слово \"книгу\" жіночого роду то відносний займенник починається як яка форма?`,
     options: [
-      { text: `Яка`, correct: true },
-      { text: `Який`, correct: false },
-      { text: `Яке`, correct: false }
+      { text: `Яка (жіночий рід)`, correct: true },
+      { text: `Який (чоловічий рід)`, correct: false },
+      { text: `Яке (середній рід)`, correct: false },
+      { text: `Які (множина)`, correct: false }
     ]
   },  {
-    question: `\"Про\" (about) usually triggers which case?`,
+    question: `Прийменник \"про\" зазвичай вимагає якого відмінка після себе в українській мові?`,
     options: [
-      { text: `Accusative`, correct: true },
-      { text: `Dative`, correct: false },
-      { text: `Instrumental`, correct: false }
+      { text: `Accusative (знахідний відмінок)`, correct: true },
+      { text: `Dative (давальний відмінок)`, correct: false },
+      { text: `Instrumental (орудний відмінок)`, correct: false },
+      { text: `Genitive (родовий відмінок)`, correct: false }
     ]
   },  {
-    question: `\"У/В\" (in) usually triggers which case for location?`,
+    question: `Прийменник \"у\" або \"в\" для позначення місця вимагає якого відмінка в українській?`,
     options: [
-      { text: `Locative`, correct: true },
-      { text: `Nominative`, correct: false },
-      { text: `Genitive`, correct: false }
+      { text: `Locative (місцевий відмінок)`, correct: true },
+      { text: `Nominative (називний відмінок)`, correct: false },
+      { text: `Genitive (родовий відмінок)`, correct: false },
+      { text: `Accusative (знахідний відмінок)`, correct: false }
     ]
   },  {
-    question: `Is \"який\" used for people?`,
+    question: `Чи використовується слово \"який\" для позначення людей в українській мові правильно?`,
     options: [
-      { text: `Yes, for everyone.`, correct: true },
-      { text: `No, only for things.`, correct: false }
+      { text: `Yes, for everyone (так для всіх)`, correct: true },
+      { text: `No, only for things (ні тільки для речей)`, correct: false },
+      { text: `Only for animals (тільки для тварин)`, correct: false },
+      { text: `Only in formal speech (тільки в офіційному мовленні)`, correct: false }
     ]
   }
 ]} />
@@ -348,12 +379,12 @@ A detective interviews a witness about a robbery.
 ### Building Bridges
 
 <Unjumble items={[
-  { jumbled: `це | чоловік | працює | який | тут`, answer: `Це чоловік, який тут працює` },
-  { jumbled: `книга | яку | я | читаю | цікава`, answer: `Книга, яку я читаю, цікава` },
-  { jumbled: `ми | місто | любимо | в | живемо | якому`, answer: `Ми любимо місто, в якому живемо` },
-  { jumbled: `дівчина | з | якою | я | говорив`, answer: `Дівчина, з якою я говорив` },
-  { jumbled: `люди | які | знають | все | тут`, answer: `Люди, які знають все, тут` },
-  { jumbled: `це | дім | який | я | купив`, answer: `Це дім, який я купив` }
+  { jumbled: `це / чоловік / який / тут / працює / дуже / добре / зараз`, answer: `Це чоловік, який тут працює дуже добре зараз` },
+  { jumbled: `книга / яку / я / читаю / зараз / дуже / цікава / справді`, answer: `Книга, яку я читаю зараз, дуже цікава справді` },
+  { jumbled: `ми / любимо / місто / в / якому / живемо / вже / давно`, answer: `Ми любимо місто, в якому живемо вже давно` },
+  { jumbled: `дівчина / з / якою / я / говорив / вчора / дуже / розумна`, answer: `Дівчина, з якою я говорив вчора, дуже розумна` },
+  { jumbled: `люди / які / знають / все / тут / живуть / дуже / давно`, answer: `Люди, які знають все, тут живуть дуже давно` },
+  { jumbled: `це / дім / який / я / купив / минулого / року / тут`, answer: `Це дім, який я купив минулого року тут` }
 ]} />
 
 ### Which Case?
@@ -367,67 +398,67 @@ A detective interviews a witness about a robbery.
 
 <TrueFalse items={[
   {
-    statement: `True`,
+    statement: `Правда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `False`,
+    statement: `Неправда`,
     isTrue: true,
     explanation: ``
   },  {
-    statement: `True`,
+    statement: `Правда`,
     isTrue: true,
     explanation: ``
   },  {
-    statement: `False`,
+    statement: `Неправда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `True`,
+    statement: `Правда`,
     isTrue: true,
     explanation: ``
   },  {
-    statement: `False`,
+    statement: `Неправда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `True`,
+    statement: `Правда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `She is the subject of singing -> Nominative.`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Usually both are \"Який\".`
-  },  {
-    statement: `True`,
-    isTrue: false,
-    explanation: ``
-  },  {
-    statement: `False`,
-    isTrue: true,
-    explanation: `Accusative.`
-  },  {
-    statement: `True`,
+    statement: `Неправда`,
     isTrue: true,
     explanation: ``
   },  {
-    statement: `False`,
+    statement: `Правда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `True`,
+    statement: `Неправда`,
+    isTrue: true,
+    explanation: ``
+  },  {
+    statement: `Правда`,
     isTrue: false,
     explanation: ``
   },  {
-    statement: `False`,
+    statement: `Неправда`,
+    isTrue: true,
+    explanation: ``
+  },  {
+    statement: `Правда`,
+    isTrue: true,
+    explanation: ``
+  },  {
+    statement: `Неправда`,
+    isTrue: false,
+    explanation: ``
+  },  {
+    statement: `Правда`,
+    isTrue: false,
+    explanation: ``
+  },  {
+    statement: `Неправда`,
     isTrue: true,
     explanation: ``
   }
@@ -442,8 +473,13 @@ A detective interviews a witness about a robbery.
 Це місце, [___:4] я буду щасливий.
 У мене буде пес, [___:5] буде гратися.
 І сусіди, [___:6] не шумлять.
-Це життя, про [___:7] я мріяв.`}
-  blanks={[{ index: 0, answer: `який`, options: [`який`, `яка`] }, { index: 1, answer: `який`, options: [`який`, `якому`] }, { index: 2, answer: `у якій`, options: [`у якій`, `яка`] }, { index: 3, answer: `де`, options: [`де`, `що`] }, { index: 4, answer: `який`, options: [`який`, `якого`] }, { index: 5, answer: `які`, options: [`які`, `яких`] }, { index: 6, answer: `яке`, options: [`яке`, `яким`] }]}
+Це життя, про [___:7] я мріяв.
+Я хочу сад, [___:8] ростуть квіти.
+Це буде будинок, [___:9] я завжди мріяв.
+Я знайду друзів, з [___:10] можна говорити.
+Це місто, [___:11] я хочу жити.
+І робота, [___:12] мені подобається.`}
+  blanks={[{ index: 0, answer: `який`, options: [`який`, `яка`] }, { index: 1, answer: `який`, options: [`який`, `якому`] }, { index: 2, answer: `у якій`, options: [`у якій`, `яка`] }, { index: 3, answer: `де`, options: [`де`, `що`] }, { index: 4, answer: `який`, options: [`який`, `якого`] }, { index: 5, answer: `які`, options: [`які`, `яких`] }, { index: 6, answer: `яке`, options: [`яке`, `яким`] }, { index: 7, answer: `у якому`, options: [`у якому`, `який`] }, { index: 8, answer: `про який`, options: [`про який`, `який`] }, { index: 9, answer: `якими`, options: [`якими`, `які`] }, { index: 10, answer: `у якому`, options: [`у якому`, `який`] }, { index: 11, answer: `яка`, options: [`яка`, `якій`] }]}
 />
 
 ### The Stranger
@@ -565,7 +601,6 @@ A detective interviews a witness about a robbery.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| який | /jɑˈkɪj/ | which/who (masc) | pron | m | base |
 | яка | /jɑˈkɑ/ | which/who (fem) | pron | f | form |
 | яке | /jɑˈkɛ/ | which/who (neut) | pron | n | form |
 | які | /jɑˈki/ | which/who (pl) | pron | pl | form |
@@ -577,16 +612,4 @@ A detective interviews a witness about a robbery.
 | якою | /jɑˈkɔju/ | whom/which (instr) | pron | f | declension |
 | якими | /jɑˈkɪmɪ/ | whom/which (instr pl) | pron | pl | declension |
 | котрий | /kɔtˈrɪj/ | which (out of selection) | pron | m | synonym |
-| що | /ʃt͡ʃɔ/ | that/which | pron | — | indeclinable |
-| де | /dɛ/ | where | adv | — | relative |
-| куди | /kuˈdɪ/ | where to | adv | — | relative |
-| звідки | /zˈʋidkɪ/ | where from | adv | — | relative |
-| коли | /kɔˈlɪ/ | when | adv | — | relative |
-| чий | /t͡ʃɪj/ | whose | pron | m | poss |
-| чия | /t͡ʃɪˈjɑ/ | whose | pron | f | poss |
-| чиє | /t͡ʃɪˈjɛ/ | whose | pron | n | poss |
-| людина | /lʲuˈdɪnɑ/ | person | noun | f | substantive |
-| річ | /rit͡ʃ/ | thing | noun | f | substantive |
 | місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |
-| час | /t͡ʃɑs/ | time | noun | m | substantive |
-| причина | /prɪˈt͡ʃɪnɑ/ | reason | noun | f | substantive |

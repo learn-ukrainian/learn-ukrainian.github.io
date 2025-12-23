@@ -20,66 +20,63 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 
-def extract_vocabulary(filepath: str) -> list[tuple[str, int]]:
+def extract_vocabulary(filepath: Path) -> list[tuple[str, int, str]]:
     """Extract vocabulary words from a module file."""
     words = []
 
-    # Extract module number from filename
-    match = re.search(r'module-(\d+)\.md$', filepath)
+    # Extract module number from filename (e.g., "01-title.md")
+    match = re.search(r'(\d+)', filepath.name)
     if not match:
         return words
     module_num = int(match.group(1))
+
+    # Level is the parent directory
+    level = filepath.parent.name.upper()
 
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
 
     # Find vocabulary section
+    # Matches: # Vocabulary ... table ... end
     vocab_match = re.search(
-        r'# Vocabulary\n\n\|.*?\n\|[-\|]+\n(.*?)(?=\n---|\n#|\Z)',
-        content,
+        r'# Vocabulary\n\n(.*?)(?=\n#|\Z)', 
+        content, 
         re.DOTALL
     )
 
     if not vocab_match:
         return words
 
-    vocab_section = vocab_match.group(1)
-    for line in vocab_section.strip().split('\n'):
-        if line.startswith('|'):
-            parts = line.split('|')
-            if len(parts) >= 2:
-                word = parts[1].strip()
-                # Check if word contains Cyrillic characters (for Ukrainian)
-                # or other non-ASCII for other languages
-                if word and re.search(r'[^\x00-\x7F]', word):
-                    words.append((word, module_num))
+    table_block = vocab_match.group(1)
+    
+    for line in table_block.strip().split('\n'):
+        if line.strip().startswith('|'):
+            parts = [p.strip() for p in line.split('|')]
+            # Drop empty start/end
+            if len(parts) > 2 and parts[0] == '' and parts[-1] == '':
+                 parts = parts[1:-1]
+            
+            if not parts: continue
+            
+            # Check header
+            if 'Word' in parts[0] or 'Слово' in parts[0] or '---' in parts[0]:
+                continue
+
+            word = parts[0].strip().replace('`', '')
+            # Check if word contains Cyrillic characters
+            if word and re.search(r'[А-ЯІЇЄҐа-яіїєґ]', word):
+                words.append((word, module_num, level))
 
     return words
-
-
-def get_level_from_module(module_num: int) -> str:
-    """Determine CEFR level from module number."""
-    if module_num <= 30:
-        return 'A1'
-    elif module_num <= 60:
-        return 'A2'
-    elif module_num <= 90:
-        return 'B1'
-    elif module_num <= 120:
-        return 'B2'
-    elif module_num <= 150:
-        return 'C1'
-    else:
-        return 'C2'
 
 
 def analyze_vocabulary(curriculum_path: str, target_level: str = None):
     """Analyze vocabulary for a curriculum."""
 
-    modules_path = Path(curriculum_path) / 'modules'
+    base_path = Path(curriculum_path)
 
-    if not modules_path.exists():
-        print(f"Error: Modules path not found: {modules_path}")
+    if not base_path.exists():
+        print(f"Error: Curriculum path not found: {base_path}")
         sys.exit(1)
 
     # Collect all vocabulary
@@ -87,23 +84,23 @@ def analyze_vocabulary(curriculum_path: str, target_level: str = None):
     module_counts = defaultdict(int)
     level_vocab = defaultdict(list)
 
-    module_files = sorted(modules_path.glob('module-*.md'))
+    # Recursively find all MD files that start with digits
+    module_files = sorted(base_path.glob("**/*.md"))
+    module_files = [f for f in module_files if "legacy" not in str(f) and f.name[0].isdigit()]
 
     if not module_files:
-        print(f"Error: No module files found in {modules_path}")
+        print(f"Error: No module files found in {base_path}")
         sys.exit(1)
 
     for filepath in module_files:
-        words = extract_vocabulary(str(filepath))
-        for word, module_num in words:
-            level = get_level_from_module(module_num)
-
+        words = extract_vocabulary(filepath)
+        for word, module_num, level in words:
             # Filter by target level if specified
             if target_level and level.lower() != target_level.lower():
                 continue
 
             all_vocab.append((word, module_num, level))
-            module_counts[module_num] += 1
+            module_counts[(level, module_num)] += 1
             level_vocab[level].append((word, module_num))
 
     if not all_vocab:
@@ -155,11 +152,10 @@ def analyze_vocabulary(curriculum_path: str, target_level: str = None):
     print("-" * 70)
     print("WORDS PER MODULE")
     print("-" * 70)
-    for module in sorted(module_counts.keys()):
-        level = get_level_from_module(module)
+    for (level, module) in sorted(module_counts.keys()):
         if target_level and level.lower() != target_level.lower():
             continue
-        print(f"  Module {module:02d} ({level}): {module_counts[module]} words")
+        print(f"  Module {module:02d} ({level}): {module_counts[(level, module)]} words")
     print()
 
     # Duplicate analysis

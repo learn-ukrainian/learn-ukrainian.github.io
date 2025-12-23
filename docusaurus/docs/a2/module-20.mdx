@@ -320,88 +320,100 @@ This module covered expressing preferences and making choices.
 
 <Quiz questions={[
   {
-    question: `\"Мені більше подобається\" means:`,
+    question: `In Ukrainian, which of the following phrases correctly translates the casual expression for \"I like (this) more\"?`,
     options: [
-      { text: `I like more`, correct: true },
-      { text: `I don't like`, correct: false },
-      { text: `I prefer (formal)`, correct: false }
+      { text: `Мені більше подобається`, correct: true },
+      { text: `Я більше люблю це`, correct: false },
+      { text: `Я віддаю перевагу цьому`, correct: false },
+      { text: `Мені дуже подобається`, correct: false }
     ]
   },  {
-    question: `\"Я віддаю перевагу\" requires:`,
+    question: `When using the formal reflexive expression \"Я віддаю перевагу,\" which grammatical case must the object be in?`,
     options: [
-      { text: `Dative case`, correct: true },
-      { text: `Accusative case`, correct: false },
-      { text: `Nominative case`, correct: false }
+      { text: `Давальний відмінок`, correct: true },
+      { text: `Знахідний відмінок`, correct: false },
+      { text: `Називний відмінок`, correct: false },
+      { text: `Орудний відмінок`, correct: false }
     ]
   },  {
-    question: `\"Легше сказати, ніж зробити\" means:`,
+    question: `What is the most accurate English equivalent for the common Ukrainian comparison \"Легше сказати, ніж зробити\"?`,
     options: [
       { text: `Easier said than done`, correct: true },
-      { text: `Harder to say`, correct: false },
-      { text: `Easy to do`, correct: false }
+      { text: `Harder to say than do`, correct: false },
+      { text: `Easy to do and say`, correct: false },
+      { text: `Always easier to speak`, correct: false }
     ]
   },  {
-    question: `Which is more formal?`,
+    question: `Which of these expressions would be considered the most formal way to state a preference in a business meeting?`,
     options: [
       { text: `Я віддаю перевагу`, correct: true },
       { text: `Мені більше подобається`, correct: false },
-      { text: `Краще`, correct: false }
+      { text: `Краще вибрати це`, correct: false },
+      { text: `Я люблю це більше`, correct: false }
     ]
   },  {
-    question: `\"Я б вибрав\" is:`,
+    question: `When a male speaker uses the conditional form \"Я б вибрав,\" what is he essentially expressing to the listener?`,
     options: [
-      { text: `I would choose (masculine)`, correct: true },
-      { text: `I would choose (feminine)`, correct: false },
-      { text: `I am choosing`, correct: false }
+      { text: `I would choose`, correct: true },
+      { text: `I am choosing now`, correct: false },
+      { text: `I have already chosen`, correct: false },
+      { text: `I must choose`, correct: false }
     ]
   },  {
-    question: `\"Цікавіше\" means:`,
+    question: `What is the specific functional meaning of the comparative adverb \"цікавіше\" when used in a Ukrainian sentence?`,
     options: [
       { text: `more interesting`, correct: true },
       { text: `less interesting`, correct: false },
-      { text: `most interesting`, correct: false }
+      { text: `most interesting`, correct: false },
+      { text: `not interesting`, correct: false }
     ]
   },  {
-    question: `\"Ніж\" in comparisons means:`,
+    question: `Within the context of a logical comparison, what does the Ukrainian conjunction \"ніж\" typically mean in English?`,
     options: [
       { text: `than`, correct: true },
       { text: `if`, correct: false },
-      { text: `because`, correct: false }
+      { text: `because`, correct: false },
+      { text: `although`, correct: false }
     ]
   },  {
-    question: `\"Важче робити\" means:`,
+    question: `When comparing two activities, what is the correct English translation for the Ukrainian phrase \"важче робити\"?`,
     options: [
       { text: `harder to do`, correct: true },
       { text: `easier to do`, correct: false },
+      { text: `faster to do`, correct: false },
       { text: `possible to do`, correct: false }
     ]
   },  {
-    question: `To express formal preference, use:`,
+    question: `To express a formal preference for something specific, which of the following grammatical structures should be utilized?`,
     options: [
       { text: `Я віддаю перевагу + Dative`, correct: true },
       { text: `Мені подобається + Nominative`, correct: false },
-      { text: `Я люблю + Accusative`, correct: false }
+      { text: `Я люблю + Accusative`, correct: false },
+      { text: `Я вибираю + Genitive`, correct: false }
     ]
   },  {
-    question: `\"Краще читати\" means:`,
+    question: `In a sentence comparing two different actions, what does the phrase \"краще читати\" specifically signify?`,
     options: [
       { text: `It's better to read`, correct: true },
-      { text: `Reading is worse`, correct: false },
-      { text: `I read better`, correct: false }
+      { text: `Reading is worse now`, correct: false },
+      { text: `I read better today`, correct: false },
+      { text: `I like reading only`, correct: false }
     ]
   },  {
-    question: `\"Я б вибрала\" is said by:`,
+    question: `If a woman is speaking and says \"Я б вибрала,\" which grammatical gender form is she correctly using?`,
     options: [
-      { text: `A woman`, correct: true },
-      { text: `A man`, correct: false },
-      { text: `Both`, correct: false }
+      { text: `Жіночий рід`, correct: true },
+      { text: `Чоловічий рід`, correct: false },
+      { text: `Середній рід`, correct: false },
+      { text: `Множина`, correct: false }
     ]
   },  {
-    question: `Making polite choices in Ukrainian uses:`,
+    question: `To make choices sound significantly more polite and less direct in Ukrainian, which particle is usually added?`,
     options: [
-      { text: `\"б\" (would) forms`, correct: true },
-      { text: `Imperative forms`, correct: false },
-      { text: `Past tense only`, correct: false }
+      { text: `\"б\" (conditional particle)`, correct: true },
+      { text: `\"же\" (emphatic particle)`, correct: false },
+      { text: `\"б'ю\" (verb ending)`, correct: false },
+      { text: `\"вже\" (adverb)`, correct: false }
     ]
   }
 ]} />
@@ -463,25 +475,25 @@ This module covered expressing preferences and making choices.
 ### Preference Expressions
 
 <GroupSort groups={{
-  "Casual": ["Мені більше подобається", "Краще", "Мені подобається", "(Мені) байдуже (I don't care)"],
-  "Formal": ["Я віддаю перевагу", "Я б вибрав/вибрала", "Мені б хотілося", "Мій вибір — це..."]
+  "Casual Preference": ["Мені більше подобається", "Краще", "Мені подобається", "(Мені) байдуже", "Тобі подобається?", "Я люблю більше"],
+  "Formal Preference": ["Я віддаю перевагу", "Я б вибрав/вибрала", "Мені б хотілося", "Мій вибір — це...", "Чи не могли б ви...", "Я волію (I'd rather)"]
 }} />
 
 ### Preference Sentences
 
 <Unjumble items={[
-  { jumbled: `мені | більше | подобається | кава`, answer: `Мені більше подобається кава` },
-  { jumbled: `краще | читати | ніж | дивитися | телевізор`, answer: `Краще читати, ніж дивитися телевізор` },
-  { jumbled: `я | віддаю | перевагу | книгам`, answer: `Я віддаю перевагу книгам` },
-  { jumbled: `легше | сказати | ніж | зробити`, answer: `Легше сказати, ніж зробити` },
-  { jumbled: `я | б | вибрав | зелений`, answer: `Я б вибрав зелений` },
-  { jumbled: `мені | більше | подобаються | книги`, answer: `Мені більше подобаються книги` },
-  { jumbled: `цікавіше | подорожувати`, answer: `Цікавіше подорожувати` },
-  { jumbled: `вона | б | вибрала | каву`, answer: `Вона б вибрала каву` },
-  { jumbled: `гірше | нічого | не | робити`, answer: `Гірше нічого не робити` },
-  { jumbled: `що | тобі | більше | подобається`, answer: `Що тобі більше подобається` },
-  { jumbled: `я | віддаю | перевагу | каві`, answer: `Я віддаю перевагу каві` },
-  { jumbled: `важче | робити | ніж | говорити`, answer: `Важче робити, ніж говорити` }
+  { jumbled: `сьогодні / мені / набагато / більше / подобається / ця / ароматна / гаряча / кава`, answer: `Сьогодні мені набагато більше подобається ця ароматна гаряча кава` },
+  { jumbled: `завжди / набагато / краще / читати / цікаву / книгу / ніж / дивитися / старий / телевізор`, answer: `Завжди набагато краще читати цікаву книгу ніж дивитися старий телевізор` },
+  { jumbled: `я / завжди / віддаю / перевагу / новим / та / дуже / корисним / книгам`, answer: `Я завжди віддаю перевагу новим та дуже корисним книгам` },
+  { jumbled: `іноді / набагато / легше / все / щиро / сказати / ніж / потім / це / зробити`, answer: `Іноді набагато легше все щиро сказати ніж потім це зробити` },
+  { jumbled: `сьогодні / я / б / вибрав / цей / красивий / зелений / великий / телефон`, answer: `Сьогодні я б вибрав цей красивий зелений великий телефон` },
+  { jumbled: `мені / завжди / набагато / більше / подобаються / ці / нові / цікаві / фантастичні / книги`, answer: `Мені завжди набагато більше подобаються ці нові цікаві книги` },
+  { jumbled: `зараз / набагато / цікавіше / подорожувати / у / нові / та / далекі / країни`, answer: `Зараз набагато цікавіше подорожувати у нові та далекі країни` },
+  { jumbled: `здається / вона / б / вибрала / цю / дуже / смачну / гарячу / чорну / каву`, answer: `Здається вона б вибрала цю дуже смачну гарячу чорну каву` },
+  { jumbled: `напевно / набагато / гірше / нічого / взагалі / не / робити / цілий / день`, answer: `Напевно набагато гірше нічого взагалі не робити цілий день` },
+  { jumbled: `що / саме / тобі / сьогодні / більше / подобається / робити / вдома`, answer: `Що саме тобі сьогодні більше подобається робити вдома` },
+  { jumbled: `я / зазвичай / віддаю / повну / перевагу / тільки / міцній / чорній / каві`, answer: `Я зазвичай віддаю повну перевагу тільки міцній чорній каві` },
+  { jumbled: `завжди / набагато / важче / робити / важку / справу / ніж / просто / говорити`, answer: `Завжди набагато важче робити важку справу ніж просто говорити` }
 ]} />
 
 ### Fix Preferences
@@ -536,11 +548,11 @@ This module covered expressing preferences and making choices.
 <Cloze
   passage={`— Що тобі [___:1] подобається: кава чи чай?
 — [___:2] більше подобається кава.
-— А що [___:3]?
+— А що [___:3] сьогодні в кафе?
 — Я б [___:4] каву з молоком.
-— [___:5] пити каву вранці.
+— [___:5] пити каву рано-вранці.
 — Так, [___:6] сказати, ніж зробити!`}
-  blanks={[{ index: 0, answer: `віддаю`, options: [`віддаю`, `дію`, `беру`] }, { index: 1, answer: `книгам`, options: [`книгам`, `книги`, `книгою`] }, { index: 2, answer: `цікавіше`, options: [`цікавіше`, `цікавий`, `цікаво`] }, { index: 3, answer: `вибрав`, options: [`вибрав`, `вибрала`, `вибираю`] }, { index: 4, answer: `більше`, options: [`більше`, `великий`, `багато`] }, { index: 5, answer: `легше`, options: [`легше`, `легкий`, `легко`] }]}
+  blanks={[{ index: 0, answer: `віддаю`, options: [`віддаю`, `дію`, `беру`] }, { index: 1, answer: `книгам`, options: [`книгам`, `книги`, `книгою`] }, { index: 2, answer: `цікавіше`, options: [`цікавіше`, `цікавий`, `цікаво`] }, { index: 3, answer: `вибрав`, options: [`вибрав`, `вибрала`, `вибираю`] }, { index: 4, answer: `більше`, options: [`більше`, `великий`, `багато`] }, { index: 5, answer: `маємо`, options: [`маємо`, `маєте`, `маєш`] }]}
 />
 
 ### Making Choices
@@ -628,11 +640,8 @@ This module covered expressing preferences and making choices.
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| подобатися | /pɔdɔˈbɑtɪsʲɑ/ | to like, to please | verb | — | + Dative subject |
 | віддавати | /ʋiddɑˈʋɑtɪ/ | to give (away) | verb | — | віддавати перевагу |
 | перевага | /pɛrɛˈʋɑɦɑ/ | preference, advantage | noun | f | Dative: перевазі |
-| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | imperfective |
-| вибрати | /ˈʋɪbrɑtɪ/ | to choose | verb | — | perfective |
 | волити | /ʋɔˈlɪtɪ/ | to prefer | verb | — | formal |
 | краще | /ˈkrɑʃt͡ʃɛ/ | better | adv | — | comparative adverb |
 | гірше | /ˈɦirʃɛ/ | worse | adv | — | comparative adverb |
@@ -649,9 +658,7 @@ This module covered expressing preferences and making choices.
 | ефективніше | /ɛfɛkˈtɪʋniʃɛ/ | more effective | adv | — | comparative adverb |
 | практичніше | /prɑkˈtɪt͡ʃniʃɛ/ | more practical | adv | — | comparative adverb |
 | варіант | /ʋɑriˈɑnt/ | option, variant | n | m | - |
-| можливість | /mɔʒˈlɪʋisʲtʲ/ | possibility, opportunity | n | f | - |
 | смак | /smɑk/ | taste | n | m | на смак (to taste) |
 | думка | /ˈdumkɑ/ | thought, opinion | n | f | на мою думку (in my opinion) |
-| радити | /ˈrɑdɪtɪ/ | to advise | v | impf | + Dative |
 
 ---

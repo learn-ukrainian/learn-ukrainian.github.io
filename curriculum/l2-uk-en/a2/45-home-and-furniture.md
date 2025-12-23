@@ -29,13 +29,8 @@ Whether you are looking for an apartment, describing your living situation, or s
 
 Ukrainian homes often differ from Western ones. Many Ukrainians live in apartments rather than houses. The concept of "дача" (country house) is also very important in Ukrainian culture.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+---
 
 ---
 
@@ -217,7 +212,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 
 ---
 
-## Summary
+# Summary
 
 **Кімнати:**
 - вітальня
@@ -265,9 +260,17 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 >
 > Український дім — це затишок, тепло та любов! Запрошуйте гостей: «Заходьте, будь ласка!»
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Furniture in Ukrainian - Lesson about Furniture in Ukrainian...](https://www.youtube.com/watch?v=pVknviJ4OOg) — Bright Kids Ukrainian Online School
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
-## Activities
+# Activities
 
 ## match-up: Home Words
 
@@ -322,47 +325,7 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
    > [!answer] пилососом
    > [!options] пральною машиною | посудомийкою | пилососом | чайником
 
-## quiz: Home & Furniture
 
-1. "Вітальня" is:
-   - [x] Living room
-   - [ ] Bedroom
-   - [ ] Kitchen
-
-2. "Спальня" is:
-   - [x] Bedroom
-   - [ ] Kitchen
-   - [ ] Bathroom
-
-3. "Диван" is:
-   - [x] Sofa
-   - [ ] Armchair
-   - [ ] Chair
-
-4. "Крісло" is:
-   - [x] Armchair
-   - [ ] Chair
-   - [ ] Sofa
-
-5. "Шафа" is:
-   - [x] Wardrobe
-   - [ ] Shelf
-   - [ ] Dresser
-
-6. "Ліжко" is:
-   - [x] Bed
-   - [ ] Sofa
-   - [ ] Armchair
-
-7. "Пилосос" is:
-   - [x] Vacuum
-   - [ ] Washing machine
-   - [ ] Iron
-
-8. "Балкон" is:
-   - [x] Balcony
-   - [ ] Hallway
-   - [ ] Storage room
 
 ## cloze: Story Comprehension
 
@@ -374,6 +337,12 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 Ольга любить пити каву на [___:4]. (balcony)
 Максим [___:5] килим у вітальні. (vacuums)
 Він застеляє [___:6] у спальні. (bed)
+Одяг висить у [___:7]. (wardrobe)
+Вони готують їжу на [___:8]. (kitchen)
+Там є чиста [___:9]. (bathroom)
+Він дивиться у [___:10]. (mirror)
+На кухні працює [___:11]. (dishwasher)
+Взуття стоїть у [___:12]. (hallway)
 
 1. квартиру | будинок | кімнату
    > [!answer] квартиру
@@ -393,24 +362,106 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 6. ліжко | диван | крісло
    > [!answer] ліжко
 
+7. шафі | коморі | столі
+   > [!answer] шафі
+
+8. кухні | спальні | вітальні
+   > [!answer] кухні
+
+9. ванна | кухня | спальня
+    > [!answer] ванна
+
+10. дзеркало | вікно | стіну
+    > [!answer] дзеркало
+
+11. посудомийка | пралка | плита
+    > [!answer] посудомийка
+
+12. коридорі | ванній | кімнаті
+    > [!answer] коридорі
+
+## quiz: Home & Furniture
+
+1. In which room do you typically sleep at night (**Спальня**)?
+   - [x] Спальня
+   - [ ] Вітальня
+   - [ ] Кухня
+   - [ ] Ванна
+
+---
+
+2. What appliance is used for cooking food in the kitchen (**Плита**)?
+   - [x] Плита
+   - [ ] Пралка
+   - [ ] Пилосос
+   - [ ] Лампа
+
+---
+
+3. Where do you usually store your clothes to keep them organized (**Шафа**)?
+   - [x] Шафа
+   - [ ] Стіл
+   - [ ] Ліжко
+   - [ ] Вікно
+
+---
+
+4. What covers the floor to make it soft and warm (**Килим**)?
+   - [x] Килим
+   - [ ] Стеля
+   - [ ] Стіна
+   - [ ] Двері
+
+---
+
+5. What object do you look into to see yourself clearly (**Дзеркало**)?
+   - [x] Дзеркало
+   - [ ] Вікно
+   - [ ] Картина
+   - [ ] Екран
+
+---
+
+6. Which appliance washes your dishes automatically for you (**Посудомийка**)?
+   - [x] Посудомийка
+   - [ ] Пральна машина
+   - [ ] Плита
+   - [ ] Духовка
+
+---
+
+7. Which regular appliance washes your clothes cleanly (**Пральна машина**)?
+   - [x] Пральна машина
+   - [ ] Посудомийка
+   - [ ] Холодильник
+   - [ ] Телевізор
+
+---
+
+8. Where do you typically receive guests in your home (**Вітальня**)?
+   - [x] Вітальня
+   - [ ] Спальня
+   - [ ] Ванна
+   - [ ] Коридор
+
 ## unjumble: Home Sentences
 
-1. сплю | спальні | Я | у
-   > [!answer] Я сплю у спальні
-2. на | Книга | столі
-   > [!answer] Книга на столі
-3. диван | на | Сідай
-   > [!answer] Сідай на диван
-4. квартиру | прибираю | Я
-   > [!answer] Я прибираю квартиру
-5. шафі | Одяг | у
-   > [!answer] Одяг у шафі
-6. полиці | на | Книги
-   > [!answer] Книги на полиці
-7. переїжджаю | Я | завтра
-   > [!answer] Я переїжджаю завтра
-8. чудова | Квартира | дуже
-   > [!answer] Квартира дуже чудова
+1. Кожного / вечора / я / міцно / сплю / у / своїй / спальні
+   > [!answer] Кожного вечора я міцно сплю у своїй спальні
+2. Ця / цікава / книга / лежить / на / великому / дерев'яному / столі
+   > [!answer] Ця цікава книга лежить на великому дерев'яному столі
+3. Будь / ласка / сідай / на / цей / зручний / м'який / диван
+   > [!answer] Будь ласка сідай на цей зручний м'який диван
+4. Сьогодні / я / ретельно / прибираю / всю / свою / велику / квартиру
+   > [!answer] Сьогодні я ретельно прибираю всю свою велику квартиру
+5. Мій / чистий / одяг / висить / у / великій / білій / шафі
+   > [!answer] Мій чистий одяг висить у великій білій шафі
+6. Всі / мої / книги / стоять / рівно / на / книжковій / полиці
+   > [!answer] Всі мої книги стоять рівно на книжковій полиці
+7. Я / нарешті / переїжджаю / у / нову / квартиру / вже / завтра
+   > [!answer] Я нарешті переїжджаю у нову квартиру вже завтра
+8. Ця / нова / квартира / виглядає / просто / чудова / та / світла
+   > [!answer] Ця нова квартира виглядає просто чудова та світла
 
 ## error-correction: Home Mistakes
 
@@ -550,37 +601,17 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| вітальня | /ʋiˈtɑlʲnʲɑ/ | living room | noun | f | room |
-| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | room |
-| кухня | /ˈkuxnʲɑ/ | kitchen | noun | f | room |
-| ванна | /ˈʋɑnnɑ/ | bathroom | noun | f | room |
-| кабінет | /kɑbiˈnɛt/ | office/study | noun | m | room |
-| коридор | /kɔrɪˈdɔr/ | hallway | noun | m | room |
 | комора | /kɔˈmɔrɑ/ | storage room | noun | f | room |
-| балкон | /bɑlˈkɔn/ | balcony | noun | m | area |
-| диван | /dɪˈʋɑn/ | sofa | noun | m | furniture |
-| крісло | /ˈkrʲislɔ/ | armchair | noun | n | furniture |
-| стіл | /stil/ | table | noun | m | furniture |
-| стілець | /stiˈlɛt͡sʲ/ | chair | noun | m | furniture |
-| шафа | /ˈʃɑfɑ/ | wardrobe | noun | f | furniture |
 | полиця | /pɔˈlɪt͡sʲɑ/ | shelf | noun | f | furniture |
 | комод | /kɔˈmɔd/ | dresser | noun | m | furniture |
-| ліжко | /ˈliʒkɔ/ | bed | noun | n | furniture |
 | килим | /kɪˈlɪm/ | carpet | noun | m | decor |
 | штори | /ˈʃtɔrɪ/ | curtains | noun | pl | decor |
-| лампа | /ˈlɑmpɑ/ | lamp | noun | f | lighting |
-| дзеркало | /ˈdzɛrkɑlɔ/ | mirror | noun | n | item |
 | пральна машина | /ˈprɑlʲnɑ mɑˈʃɪnɑ/ | washing machine | phrase | f | appliance |
 | посудомийка | /pɔsudɔˈmɪjkɑ/ | dishwasher | noun | f | appliance |
-| пилосос | /pɪlɔˈsɔs/ | vacuum | noun | m | appliance |
-| праска | /ˈprɑskɑ/ | iron | noun | f | appliance |
-| прибирати | /prɪbɪˈrɑtɪ/ | to clean | verb | — | action |
-| ремонтувати | /rɛmɔntuˈʋɑtɪ/ | to renovate | verb | — | action |
-| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | — | action |
-| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | — | action |
-| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | — | action |
-| власний | /ˈʋlɑsnɪj/ | own | adj | m | possession |
+| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | - | action |
+| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | - | action |
+| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | - | action |

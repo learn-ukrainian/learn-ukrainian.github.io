@@ -479,88 +479,100 @@ Master this word to practice all cases!
 
 <Quiz questions={[
   {
-    question: `Which case for the subject of a sentence?`,
+    question: `When identifying the grammatical function of a sentence's subject, which case is used?`,
     options: [
       { text: `Nominative`, correct: true },
       { text: `Accusative`, correct: false },
-      { text: `Genitive`, correct: false }
+      { text: `Genitive`, correct: false },
+      { text: `Dative`, correct: false }
     ]
   },  {
-    question: `\"Мені холодно\" uses which case for \"мені\"?`,
+    question: `In the expression \"Мені холодно\" the pronoun \"мені\" is in which grammatical case?`,
     options: [
       { text: `Dative`, correct: true },
       { text: `Accusative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `\"Працювати лікарем\" uses which case?`,
-    options: [
-      { text: `Instrumental`, correct: true },
-      { text: `Accusative`, correct: false },
-      { text: `Nominative`, correct: false }
-    ]
-  },  {
-    question: `\"До школи\" uses which case?`,
-    options: [
-      { text: `Genitive`, correct: true },
-      { text: `Accusative`, correct: false },
+      { text: `Genitive`, correct: false },
       { text: `Locative`, correct: false }
     ]
   },  {
-    question: `\"Про книгу\" uses which case?`,
-    options: [
-      { text: `Accusative`, correct: true },
-      { text: `Genitive`, correct: false },
-      { text: `Instrumental`, correct: false }
-    ]
-  },  {
-    question: `\"З другом\" uses which case?`,
+    question: `In the sentence \"Працювати лікарем,\" which grammatical case is used for the profession?`,
     options: [
       { text: `Instrumental`, correct: true },
-      { text: `Genitive`, correct: false },
-      { text: `Dative`, correct: false }
-    ]
-  },  {
-    question: `\"В школі\" uses which case?`,
-    options: [
-      { text: `Locative`, correct: true },
       { text: `Accusative`, correct: false },
+      { text: `Nominative`, correct: false },
       { text: `Genitive`, correct: false }
     ]
   },  {
-    question: `\"Немає часу\" uses which case?`,
+    question: `When using the preposition \"до\" as in \"до школи,\" which grammatical case follows?`,
     options: [
       { text: `Genitive`, correct: true },
-      { text: `Nominative`, correct: false },
+      { text: `Accusative`, correct: false },
+      { text: `Locative`, correct: false },
+      { text: `Dative`, correct: false }
+    ]
+  },  {
+    question: `When speaking about something, as in \"про книгу,\" which grammatical case follows \"про\"?`,
+    options: [
+      { text: `Accusative`, correct: true },
+      { text: `Genitive`, correct: false },
+      { text: `Instrumental`, correct: false },
+      { text: `Dative`, correct: false }
+    ]
+  },  {
+    question: `When expressing accompaniment \"with a friend\" as in \"з другом,\" which case is used?`,
+    options: [
+      { text: `Instrumental`, correct: true },
+      { text: `Genitive`, correct: false },
+      { text: `Dative`, correct: false },
       { text: `Accusative`, correct: false }
     ]
   },  {
-    question: `Which case for \"Мамо!\"?`,
+    question: `In the phrase \"в школі\" expressing location at school, which grammatical case is used?`,
+    options: [
+      { text: `Locative`, correct: true },
+      { text: `Accusative`, correct: false },
+      { text: `Genitive`, correct: false },
+      { text: `Instrumental`, correct: false }
+    ]
+  },  {
+    question: `In the expression \"Немає часу\" meaning there's no time, which grammatical case is used?`,
+    options: [
+      { text: `Genitive`, correct: true },
+      { text: `Nominative`, correct: false },
+      { text: `Accusative`, correct: false },
+      { text: `Dative`, correct: false }
+    ]
+  },  {
+    question: `When addressing someone directly, as in \"Мамо!\", which grammatical case is this example of?`,
     options: [
       { text: `Vocative`, correct: true },
       { text: `Nominative`, correct: false },
-      { text: `Dative`, correct: false }
+      { text: `Dative`, correct: false },
+      { text: `Accusative`, correct: false }
     ]
   },  {
-    question: `\"Я бачу маму\" — which case?`,
+    question: `In the sentence \"Я бачу маму,\" the word \"маму\" functions as what grammatical case?`,
     options: [
       { text: `Accusative`, correct: true },
       { text: `Nominative`, correct: false },
-      { text: `Genitive`, correct: false }
-    ]
-  },  {
-    question: `\"Платити карткою\" — which case?`,
-    options: [
-      { text: `Instrumental`, correct: true },
-      { text: `Accusative`, correct: false },
+      { text: `Genitive`, correct: false },
       { text: `Dative`, correct: false }
     ]
   },  {
-    question: `\"Допоможіть мені\" — which case?`,
+    question: `When paying by card, as in \"Платити карткою,\" which grammatical case expresses the method?`,
+    options: [
+      { text: `Instrumental`, correct: true },
+      { text: `Accusative`, correct: false },
+      { text: `Dative`, correct: false },
+      { text: `Genitive`, correct: false }
+    ]
+  },  {
+    question: `In the request \"Допоможіть мені,\" which grammatical case is the pronoun \"мені\" in?`,
     options: [
       { text: `Dative`, correct: true },
       { text: `Accusative`, correct: false },
-      { text: `Instrumental`, correct: false }
+      { text: `Instrumental`, correct: false },
+      { text: `Genitive`, correct: false }
     ]
   }
 ]} />
@@ -631,12 +643,12 @@ Master this word to practice all cases!
 ### Case Sentences
 
 <Unjumble items={[
-  { jumbled: `книгу | другові | Я | даю`, answer: `Я даю книгу другові` },
-  { jumbled: `лікарем | Він | працює`, answer: `Він працює лікарем` },
-  { jumbled: `школи | Я | до | йду`, answer: `Я йду до школи` },
-  { jumbled: `холодно | Мені`, answer: `Мені холодно` },
-  { jumbled: `цукру | без | Кава`, answer: `Кава без цукру` },
-  { jumbled: `столом | над | Лампа`, answer: `Лампа над столом` }
+  { jumbled: `книгу / другові / Я / даю / на / день / народження / сьогодні`, answer: `Я даю книгу другові на день народження сьогодні` },
+  { jumbled: `лікарем / Він / працює / в / лікарні / вже / три / роки`, answer: `Він працює лікарем в лікарні вже три роки` },
+  { jumbled: `школи / Я / до / йду / щодня / о / восьмій / годині`, answer: `Я йду до школи щодня о восьмій годині` },
+  { jumbled: `холодно / Мені / взимку / коли / я / виходжу / на / вулицю`, answer: `Мені холодно взимку коли я виходжу на вулицю` },
+  { jumbled: `цукру / без / Кава / і / молока / будь / ласка / мені`, answer: `Кава без цукру і молока будь ласка мені` },
+  { jumbled: `столом / над / Лампа / світить / яскраво / у / моїй / кімнаті`, answer: `Лампа над столом світить яскраво у моїй кімнаті` }
 ]} />
 
 ### Service Dialogue
@@ -648,7 +660,7 @@ Master this word to practice all cases!
 Скільки це коштує? Сто [___:4].
 Я плачу [___:5].
 Ось ваша [___:6].`}
-  blanks={[{ index: 0, answer: `листа`, options: [`листа`, `лист`, `листу`] }, { index: 1, answer: `мами`, options: [`мами`, `мама`, `мамі`] }, { index: 2, answer: `України`, options: [`України`, `Україна`, `Україну`] }, { index: 3, answer: `гривень`, options: [`гривень`, `гривні`, `гривнями`] }, { index: 4, answer: `карткою`, options: [`карткою`, `картку`, `картки`] }, { index: 5, answer: `квитанція`, options: [`квитанція`, `квитанцію`, `квитанції`] }]}
+  blanks={[{ index: 0, answer: `гроші`, options: [`гроші`, `грошей`, `грошам`] }, { index: 1, answer: `долари`, options: [`долари`, `доларів`, `доларами`] }, { index: 2, answer: `курс`, options: [`курс`, `курсу`, `курсом`] }, { index: 3, answer: `гривень`, options: [`гривень`, `гривні`, `гривнями`] }, { index: 4, answer: `рахунок`, options: [`рахунок`, `рахунку`, `рахунком`] }, { index: 5, answer: `картку`, options: [`картку`, `картка`, `карткою`] }]}
 />
 
 ### Case Usage in Context
@@ -736,30 +748,7 @@ Master this word to practice all cases!
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| відмінок | /ʋidˈminɔk/ | grammatical case | noun | m | grammar term |
-| називний | /nɑzɪʋˈnɪj/ | nominative | adj | m | case name |
-| родовий | /rɔdɔˈʋɪj/ | genitive | adj | m | case name |
-| давальний | /dɑˈʋɑlʲnɪj/ | dative | adj | m | case name |
-| знахідний | /znɑˈxidnɪj/ | accusative | adj | m | case name |
-| орудний | /ɔˈrudnɪj/ | instrumental | adj | m | case name |
-| місцевий | /misˈt͡sɛʋɪj/ | locative | adj | m | case name |
-| кличний | /ˈklɪt͡ʃnɪj/ | vocative | adj | m | case name |
 | прийменник | /prɪjˈmɛnnɪk/ | preposition | noun | m | grammar term |
 | закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |
-| пошта | /ˈpɔʃtɑ/ | post office | noun | f | service location |
-| банк | /bɑnk/ | bank | noun | m | service location |
-| лист | /lɪst/ | letter | noun | m | Acc: листа |
-| посилка | /pɔˈsɪlkɑ/ | package | noun | f | Acc: посилку |
-| рахунок | /ˈrɑxunɔk/ | account | noun | m | Acc: рахунок |
-| гроші | /ˈɦrɔʃi/ | money | noun | pl | Acc: гроші |
-| картка | /ˈkɑrtkɑ/ | card | noun | f | Acc: картку |
-| курс | /kurs/ | exchange rate | noun | m | banking term |
-| квитанція | /kʋɪˈtɑnt͡sʲijɑ/ | receipt | noun | f | Acc: квитанцію |
-| гривня | /ˈɦrɪʋnʲɑ/ | hryvnia | noun | f | Ukrainian currency |
-| час | /t͡ʃɑs/ | time | noun | m | Gen: часу |
-| адреса | /ɑˈdrɛsɑ/ | address | noun | f | Acc: адресу |
-| переказ | /pɛrɛˈkɑz/ | money transfer | noun | m | banking term |
 | послуга | /pɔsˈluɦɑ/ | service | noun | f | Acc: послугу |
 | оплата | /ɔpˈlɑtɑ/ | payment | noun | f | Acc: оплату |
-| валюта | /ʋɑˈlʲutɑ/ | currency | noun | f | banking term |
-| готівка | /ɦɔˈtiʋkɑ/ | cash | noun | f | no plural form |

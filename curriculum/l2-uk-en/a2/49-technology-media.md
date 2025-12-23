@@ -168,15 +168,9 @@ In the evening, he turns off the computer. His eyes are tired from the screen. H
 Галина швидко вчиться. Тепер вона має профіль у Фейсбуці. Вона **публікує** фото своїх пирогів. Сусіди пишуть їй гарні **коментарі**. Вона навіть слухає **подкаст** про садівництво!
 Інтернет — це цікаво, навіть якщо тобі 70 років.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Name tech: **комп'ютер**, **смартфон**, **планшет**, **ноутбук**
@@ -186,81 +180,65 @@ You learned to:
 
 Digital literacy is key in modern Ukrainian society. Use these words to stay connected!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [100 basic Ukrainian IT terms | Ukrainian vocabulary: IT, Technologies,...](https://www.youtube.com/watch?v=BAuSNnrkCKM) — Red Purple Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Tech Quiz
 
-1. What do you use to type?
+1. Which device do you primarily use to type text on a computer?
    - [x] клавіатура
    - [ ] мишка
    - [ ] екран
-   > Keyboard = клавіатура.
+   - [ ] стіл
 
-2. Where do you read articles?
+2. Where can you usually read the latest news articles online?
    - [x] на вебсайті
    - [ ] в навушниках
    - [ ] на мишці
-   > On a website = на вебсайті.
+   - [ ] під столом
 
-3. What fits in your pocket?
+3. What fits easily in your pocket and makes calls?
    - [x] смартфон
    - [ ] комп'ютер
    - [ ] телевізор
-   > Smartphone fits in a pocket.
+   - [ ] стіл
 
-4. What do you need to log in?
+4. What security code do you need to log in to an account?
    - [x] пароль
    - [ ] лайк
    - [ ] коментар
-   > Password = пароль.
+   - [ ] смайл
 
-5. Who writes a blog?
+5. Who is a person that writes articles or posts online regularly?
    - [x] блогер
    - [ ] лікар
    - [ ] водій
-   > Blogger writes a blog.
+   - [ ] продавець
 
-6. What is "to download"?
+6. Which action means transferring a file from the internet to your device?
    - [x] завантажувати
    - [ ] шукати
    - [ ] надсилати
-   > Завантажувати = download (or upload contextually).
+   - [ ] видаляти
 
-7. Where do you listen to music privately?
+7. How do you listen to music without disturbing other people?
    - [x] у навушниках
    - [ ] на екрані
    - [ ] в новинах
-   > In headphones = у навушниках.
+   - [ ] голосно
 
-8. What is a "link"?
+8. What do you click to go to another webpage?
    - [x] посилання
    - [ ] повідомлення
    - [ ] стаття
-   > Link = посилання.
-
-9. What do you do with a query in Google?
-   - [x] шукати
-   - [ ] публікувати
-   - [ ] купувати
-   > To search = шукати.
-
-10. Is Ukraine digitally advanced?
-    - [x] Yes, very (Дія app)
-    - [ ] No, paper only
-    - [ ] Only in Kyiv
-    > Ukraine is a leader in digital governance (Diia).
-
-11. What is "network"?
-    - [x] мережа
-    - [ ] павутина
-    - [ ] новина
-    > Network = мережа (social network = соціальна мережа).
-
-12. What action shows approval online?
-    - [x] лайк
-    - [ ] блок
-    - [ ] спам
-    > Like = лайк.
+   - [ ] книга
 
 ## match-up: Digital Terms
 
@@ -412,53 +390,37 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 
 ## unjumble: Digital Sentences
 
-1. Я | купив | новий | планшет
-   > [!answer] Я купив новий планшет
-   > I bought a new tablet.
+1. Я / хочу / купити / собі / новий / і / потужний / планшет
+   > [!answer] Я хочу купити собі новий і потужний планшет
+   > I want to buy myself a new and powerful tablet.
 
-2. Надішли | мені | посилання | в | Телеграм
-   > [!answer] Надішли мені посилання в Телеграм
-   > Send me the link in Telegram.
+2. Надішли / мені / будь ласка / це / цікаве / посилання / в / Телеграм
+   > [!answer] Надішли мені будь ласка це цікаве посилання в Телеграм
+   > Send me please this interesting link in Telegram.
 
-3. Вона | читає | новини | онлайн
-   > [!answer] Вона читає новини онлайн
-   > She reads news online.
+3. Вона / щодня / читає / свіжі / новини / онлайн / на / цьому / сайті
+   > [!answer] Вона щодня читає свіжі новини онлайн на цьому сайті
+   > She reads fresh news online every day on this website.
 
-4. Мій | комп'ютер | дуже | старий
-   > [!answer] Мій комп'ютер дуже старий
-   > My computer is very old.
+4. Мій / старий / домашній / комп'ютер / працює / дуже / повільно / сьогодні
+   > [!answer] Мій старий домашній комп'ютер працює дуже повільно сьогодні
+   > My old home computer works very slowly today.
 
-5. Я | не | пам'ятаю | пароль
-   > [!answer] Я не пам'ятаю пароль
-   > I don't remember the password.
+5. Я / нажаль / зовсім / не / пам'ятаю / свій / новий / складний / пароль
+   > [!answer] Я нажаль зовсім не пам'ятаю свій новий складний пароль
+   > Unfortunately I do not remember my new complex password at all.
 
-6. Ми | дивимося | смішне | відео
-   > [!answer] Ми дивимося смішне відео
-   > We are watching a funny video.
+6. Ми / зараз / дивимося / дуже / смішне / і / популярне / відео
+   > [!answer] Ми зараз дивимося дуже смішне і популярне відео
+   > We are currently watching a very funny and popular video.
 
-7. Він | пише | коментар | під | фото
-   > [!answer] Він пише коментар під фото
-   > He writes a comment under the photo.
+7. Він / часто / пише / негативний / коментар / під / кожним / новим / фото
+   > [!answer] Він часто пише негативний коментар під кожним новим фото
+   > He often writes a negative comment under every new photo.
 
-8. Бабуся | має | смартфон
-   > [!answer] Бабуся має смартфон
-   > Grandma has a smartphone.
-
-9. Тут | є | хороший | інтернет
-   > [!answer] Тут є хороший інтернет
-   > Is there good internet here? (Statement: Here is good internet).
-
-10. Я | шукаю | інформацію | про | Київ
-    > [!answer] Я шукаю інформацію про Київ
-    > I am searching for information about Kyiv.
-
-11. Блогер | знімає | нове | відео
-    > [!answer] Блогер знімає нове відео
-    > The blogger is filming a new video.
-
-12. Ввімкни | будь ласка | свій | екран
-    > [!answer] Ввімкни будь ласка свій екран
-    > Turn on your screen please.
+8. Моя / старенька / бабуся / тепер / має / сучасний / і / дорогий / смартфон
+   > [!answer] Моя старенька бабуся тепер має сучасний і дорогий смартфон
+   > My old grandma now has a modern and expensive smartphone.
 
 ## error-correction: Fix the Tech
 
@@ -542,6 +504,7 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 Мені подобається одна [___:6] про подорожі. Я ставлю [___:7].
 Потім я вмикаю [___:8] і починаю працювати [___:9].
 Сьогодні треба написати [___:10] для сайту.
+Ввечері я вимикаю [___:11] і лягаю спати. Без [___:12] ніяк.
 
 1. смартфона | книги | вікна
    > [!answer] смартфона
@@ -572,7 +535,13 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
    > [!answer] онлайн
 
 10. код | пісню | обід
-   > [!answer] код
+    > [!answer] код
+
+11. звук | світло | газ
+    > [!answer] звук
+
+12. інтернету | сну | їжі
+    > [!answer] інтернету
 
 ## dialogue-reorder: IT Support
 
@@ -657,11 +626,10 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
     - [ ] у лісі
     > Online.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| комп'ютер | /komˈpju.ter/ | computer | noun | m | |
 | смартфон | /smartˈfɔn/ | smartphone | noun | m | |
 | планшет | /planˈʃɛt/ | tablet | noun | m | |
 | ноутбук | /noutˈbuk/ | laptop | noun | m | |
@@ -670,7 +638,6 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 | клавіатура | /klavijaˈtura/ | keyboard | noun | f | |
 | мишка | /ˈmɪʃka/ | mouse | noun | f | |
 | навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |
-| інтернет | /interˈnɛt/ | internet | noun | m | |
 | вебсайт | /vɛbˈsajt/ | website | noun | m | |
 | посилання | /posɪˈlanʲːa/ | link | noun | n | |
 | пароль | /paˈrɔlʲ/ | password | noun | m | |
@@ -682,12 +649,8 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 | блог | /blɔh/ | blog | noun | m | |
 | блогер | /ˈblɔher/ | blogger | noun | m | |
 | подкаст | /podˈkast/ | podcast | noun | m | |
-| відео | /ˈvi.de.o/ | video | noun | n | indecl. |
 | коментар | /komenˈtar/ | comment | noun | m | |
 | лайк | /lajk/ | like | noun | m | slang |
 | повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |
-| шукати | /ʃuˈkatɪ/ | to search | verb | - | |
 | завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |
 | публікувати | /publikuˈvatɪ/ | to publish | verb | - | |
-| надсилати | /nadsɪˈlatɪ/ | to send | verb | - | |
-| коментувати | /komentuˈvatɪ/ | to comment | verb | - | |

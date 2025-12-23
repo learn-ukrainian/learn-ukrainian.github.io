@@ -43,14 +43,6 @@ In Ukrainian, you just click a LEGO piece (prefix) onto the verb!
 > - **До-** usually means "finish" (to the end).
 > - **За-** usually means "close" or "fix/record".
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
 ---
 
 ## The Meaning Map
@@ -99,7 +91,7 @@ Let's look at the most powerful "Transformers".
 
 ---
 
-## Deep Dive: Open and Close (Відкрити | Закрити)
+## Deep Dive - Open and Close (Відкрити | Закрити)
 
 These are the most useful practical verbs.
 Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
@@ -125,7 +117,7 @@ Unlike English ("turn on/off" vs "open/close"), Ukrainian logic is consistent.
 
 ---
 
-## Deep Dive: To Give (The "Give" Family)
+## Deep Dive - To Give (The "Give" Family)
 
 The verb **Дати** (to give) is a prefix magnet.
 
@@ -145,7 +137,7 @@ The verb **Дати** (to give) is a prefix magnet.
 
 ---
 
-## Deep Dive: Connect and Disconnect
+## Deep Dive - Connect and Disconnect
 
 In the age of technology, these are crucial.
 Base: **Єднати** (to unite).
@@ -214,7 +206,7 @@ If yes, you are ready for suffixes!
 
 ---
 
-## Deep Dive: The Logic of "Na-" (Accumulation)
+## Deep Dive - The Logic of "Na-" (Accumulation)
 
 The prefix **На-** often means "to put on" or "to accumulate/create a lot of".
 - **Писати** (write) -> **Написати** (create a written text).
@@ -225,7 +217,7 @@ The prefix **На-** often means "to put on" or "to accumulate/create a lot of".
 
 ---
 
-## Deep Dive: The "Za-" Trap
+## Deep Dive - The "Za-" Trap
 
 The prefix **За-** is the trickiest one. It has three opposite meanings!
 
@@ -261,7 +253,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-## Summary
+# Summary
 
 1.  **Prefixes transform meaning.** They act like modifiers (Re-, Sub-, Out-).
 2.  **Пере-** = Redo | Across.
@@ -271,9 +263,17 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 6.  **По-** = A bit | Start.
 7.  **На-** = Accumulate | Create.
 
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
 ---
 
-## Activities
+# Activities
 
 ## match-up: The Transformers
 
@@ -362,7 +362,7 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 
 ---
 
-## Deep Dive: Feel the Prefix
+## Deep Dive - Feel the Prefix
 
 Comparing suffixes (like in English *beauty-ful*) which are abstract, Ukrainian prefixes are **physical**.
 You can use your hands to memorize them!
@@ -402,45 +402,53 @@ When you speak, use these gestures. It helps your brain "feel" the grammar.
 
 > Choose the correct meaning.
 
-1. "Доробити" means to:
-   - [x] Finish doing
-   - [ ] Redo
-   - [ ] Do a little
+1. Яке значення має дієслово "доробити" в українській мові?
+   - [x] Finish doing (завершити дію)
+   - [ ] Redo (переробити знову)
+   - [ ] Do a little (трохи зробити)
+   - [ ] Start doing (почати робити)
 
-2. "Почитати" means to:
-   - [x] Read a little bit
-   - [ ] Finish reading
-   - [ ] Reread
+2. Що означає дієслово "почитати" з префіксом "по-" в контексті?
+   - [x] Read a little bit (трохи почитати)
+   - [ ] Finish reading (дочитати до кінця)
+   - [ ] Reread (перечитати знову)
+   - [ ] Start reading (почати читати)
 
-3. "Підписати" implies putting your name:
-   - [x] Under the text
-   - [ ] Over the text
-   - [ ] Inside the text
+3. Де саме ви ставите свій підпис коли "підписуєте" документ?
+   - [x] Under the text (під текстом)
+   - [ ] Over the text (над текстом)
+   - [ ] Inside the text (всередині тексту)
+   - [ ] Next to the text (поруч з текстом)
 
-4. "Переробити" implies the first attempt was:
-   - [x] Bad or wrong
-   - [ ] Perfect
-   - [ ] Non-existent
+4. Якою була перша спроба якщо ви вирішили щось "переробити"?
+   - [x] Bad or wrong (погана або неправильна)
+   - [ ] Perfect (ідеальна і бездоганна)
+   - [ ] Non-existent (її не було взагалі)
+   - [ ] Good enough (достатньо хороша)
 
-5. "Наробити" usually implies:
-   - [x] A large quantity
-   - [ ] A small quantity
-   - [ ] A specific quality
+5. Яку кількість зазвичай означає дієслово "наробити" з префіксом "на-"?
+   - [x] A large quantity (велика кількість)
+   - [ ] A small quantity (мала кількість)
+   - [ ] A specific quality (певна якість)
+   - [ ] Medium amount (середня кількість)
 
-6. "Відкрити" relates to which preposition logic?
-   - [x] Від: Away
-   - [ ] До: To
-   - [ ] В: In
+6. З якою логікою прийменника пов'язане дієслово "відкрити" в українській?
+   - [x] Від: Away (віддалення, відкриття)
+   - [ ] До: To (наближення до мети)
+   - [ ] В: In (входження всередину)
+   - [ ] На: On (розміщення на поверхні)
 
-7. "Здати" (to betray) literally means:
-   - [x] To give up/away
-   - [ ] To give in
-   - [ ] To give under
+7. Яке буквальне значення має дієслово "здати" в контексті зради?
+   - [x] To give up/away (віддати геть)
+   - [ ] To give in (піддатися тиску)
+   - [ ] To give under (віддати під щось)
+   - [ ] To give back (повернути назад)
 
-8. "Наїстися" means:
-   - [x] To eat until full
-   - [ ] To eat a little
-   - [ ] To start eating
+8. Що означає дієслово "наїстися" з префіксом "на-" для їжі?
+   - [x] To eat until full (наїстися досхочу)
+   - [ ] To eat a little (трохи поїсти)
+   - [ ] To start eating (почати їсти)
+   - [ ] To eat again (поїсти знову)
 
 ## true-false: Propaganda Check
 
@@ -489,6 +497,9 @@ When you speak, use these gestures. It helps your brain "feel" the grammar.
 Він [___:6]дав роботу професору.
 Професор [___:7]вірив і сказав: "Молодець!".
 Студент [___:8]дихнув з полегшенням.
+Потім він [___:9]йшов з аудиторії щасливий.
+Він [___:10]дзвонив батькам і [___:11]казав хороші новини.
+Вони були дуже раді і вирішили [___:12]святкувати його успіх.
 
 1. увій | зай
 > [!answer] увій
@@ -513,6 +524,18 @@ When you speak, use these gestures. It helps your brain "feel" the grammar.
 
 8. зіт
 > [!answer] зіт
+
+9. ви
+> [!answer] ви
+
+10. по
+> [!answer] по
+
+11. роз
+> [!answer] роз
+
+12. від
+> [!answer] від
 
 ## error-correction: Fix the Verb
 
@@ -567,38 +590,34 @@ When you speak, use these gestures. It helps your brain "feel" the grammar.
 
 ## unjumble: The Office
 
-1. документ | він | підписав
-   > [!answer] Він підписав документ
-2. звіт | ми | переробили
-   > [!answer] Ми переробили звіт
-3. двері | секретар | відкрив
-   > [!answer] Секретар відкрив двері
-4. картку | банк | видав
-   > [!answer] Банк видав картку
-5. книгу | я | дочитав
-   > [!answer] Я дочитав книгу
-6. інтернет | ми | під'єднали
-   > [!answer] Ми під'єднали інтернет
+1. документ / він / підписав / вчора / ввечері / в / офісі / дуже / швидко
+   > [!answer] Він підписав документ вчора ввечері в офісі дуже швидко
+2. звіт / ми / переробили / сьогодні / вранці / бо / він / був / поганий
+   > [!answer] Ми переробили звіт сьогодні вранці бо він був поганий
+3. двері / секретар / відкрив / ключем / коли / прийшов / на / роботу / рано
+   > [!answer] Секретар відкрив двері ключем коли прийшов на роботу рано
+4. картку / банк / видав / мені / нову / після / того / як / я / подав / заяву
+   > [!answer] Банк видав мені нову картку після того як я подав заяву
+5. книгу / я / дочитав / нарешті / вчора / ввечері / після / довгого / часу / читання
+   > [!answer] Я дочитав книгу нарешті вчора ввечері після довгого часу читання
+6. інтернет / ми / під'єднали / сьогодні / вранці / в / новому / офісі / успішно
+   > [!answer] Ми під'єднали інтернет сьогодні вранці в новому офісі успішно
 
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| написати | /nɑpɪˈsɑtɪ/ | to write (finish) | verb | — | pf |
 | переписати | /pɛrɛpɪˈsɑtɪ/ | to rewrite | verb | — | pf |
 | дописати | /dɔpɪˈsɑtɪ/ | to finish writing | verb | — | pf |
 | підписати | /pidpɪˈsɑtɪ/ | to sign | verb | — | pf |
 | записати | /zɑpɪˈsɑtɪ/ | to record/write down | verb | — | pf |
 | описати | /ɔpɪˈsɑtɪ/ | to describe | verb | — | pf |
 | виписати | /ʋɪpɪˈsɑtɪ/ | to check out/extract | verb | — | pf |
-| зробити | /zrɔˈbɪtɪ/ | to do/make | verb | — | pf |
 | переробити | /pɛrɛrɔˈbɪtɪ/ | to redo | verb | — | pf |
 | доробити | /dɔrɔˈbɪtɪ/ | to finish doing | verb | — | pf |
-| відкрити | /ʋidˈkrɪtɪ/ | to open | verb | — | pf |
-| закрити | /zɑˈkrɪtɪ/ | to close | verb | — | pf |
 | відчинити | /ʋidt͡ʃɪˈnɪtɪ/ | to open (door/window) | verb | — | pf |
 | зачинити | /zɑt͡ʃɪˈnɪtɪ/ | to close (door/window) | verb | — | pf |
 | роздати | /rɔzˈdɑtɪ/ | to distribute | verb | — | pf |

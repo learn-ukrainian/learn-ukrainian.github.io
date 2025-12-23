@@ -34,13 +34,7 @@ vocabulary_count: 25
 3. **Health & Body** - Can you discuss health and symptoms?
 4. **Shopping & Travel** - Can you handle transactions and trips?
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
----
 
 ## Skill 1: Daily Life
 
@@ -301,7 +295,7 @@ Read the story and answer the questions:
 
 ---
 
-## Summary
+# Summary
 
 | Skill | Key Pattern | Example |
 |-------|-------------|---------|
@@ -317,7 +311,13 @@ Read the story and answer the questions:
 
 ---
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## match-up: Vocabulary Categories
 
@@ -388,99 +388,77 @@ Read the story and answer the questions:
 
 ## quiz: A2 Vocabulary Quiz
 
-1. "Прокидатися" means:
+1. What is the meaning of the reflexive verb "прокидатися" in English?
+   - [x] To wake up
+   - [ ] To fall asleep
+   - [ ] To eat breakfast
+   - [ ] To get dressed
 
-- [x] To wake up
-- [ ] To fall asleep
-- [ ] To eat
+2. Which grammatical case is used in the phrase "працювати лікарем"?
+   - [x] Instrumental case
+   - [ ] Accusative case
+   - [ ] Nominative case
+   - [ ] Genitive case
 
----
+3. In the phrase "У мене болить голова", what is the grammatical role of "голова"?
+   - [x] Nominative (subject)
+   - [ ] Accusative (object)
+   - [ ] Genitive (possession)
+   - [ ] Dative (recipient)
 
-2. "Працювати лікарем" uses:
+4. In the phrase "Заплатити карткою", what case is "карткою" in?
+   - [x] Instrumental (means)
+   - [ ] Accusative
+   - [ ] Dative
+   - [ ] Locative
 
-- [x] Instrumental case
-- [ ] Accusative case
-- [ ] Nominative case
+5. What is the primary meaning of the verb "вчитися" in an educational context?
+   - [x] To study (as student)
+   - [ ] To teach a class
+   - [ ] To learn a subject
+   - [ ] To read a book
 
----
+6. What does the verb "вивчати" specifically mean when talking about education?
+   - [x] To learn (a subject)
+   - [ ] To be a student
+   - [ ] To teach
+   - [ ] To write
 
-3. "У мене болить голова" — голова is:
+7. What is the English translation of the travel word "квиток"?
+   - [x] Ticket
+   - [ ] Key
+   - [ ] Bag
+   - [ ] Map
 
-- [x] Nominative (subject)
-- [ ] Accusative (object)
-- [ ] Genitive
+8. What does the shopping word "знижка" mean in a store?
+   - [x] Discount
+   - [ ] Receipt
+   - [ ] Price
+   - [ ] Change
 
----
+9. What part of the body is "горло" in English?
+   - [x] Throat
+   - [ ] Head
+   - [ ] Leg
+   - [ ] Arm
 
-4. "Заплатити карткою" — карткою is:
+10. What is the correct translation for the word "подорож"?
+    - [x] Trip/journey
+    - [ ] Work/job
+    - [ ] Food/meal
+    - [ ] Rest/sleep
 
-- [x] Instrumental (means)
-- [ ] Accusative
-- [ ] Dative
+11. What kind of establishment is a "готель" for travelers?
+    - [x] Hotel
+    - [ ] House
+    - [ ] Restaurant
+    - [ ] Hospital
 
----
-
-5. "Вчитися" means:
-
-- [x] To study (as student)
-- [ ] To teach
-- [ ] To learn a subject
-
----
-
-6. "Вивчати" means:
-
-- [x] To learn (a subject)
-- [ ] To be a student
-- [ ] To teach
-
----
-
-7. "Квиток" means:
-
-- [x] Ticket
-- [ ] Key
-- [ ] Bag
-
----
-
-8. "Знижка" means:
-
-- [x] Discount
-- [ ] Receipt
-- [ ] Price
-
----
-
-9. "Горло" means:
-
-- [x] Throat
-- [ ] Head
-- [ ] Leg
-
----
-
-10. "Подорож" means:
-
-- [x] Trip/journey
-- [ ] Work
-- [ ] Food
-
----
-
-11. "Готель" means:
-
-- [x] Hotel
-- [ ] House
-- [ ] Restaurant
-
----
-
-12. "Вітальня" means:
-
-- [x] Living room
-- [ ] Bedroom
-- [ ] Kitchen
+12. Which room in the house is called "вітальня" in Ukrainian?
+    - [x] Living room
+    - [ ] Bedroom
+    - [ ] Kitchen
+    - [ ] Bathroom
 
 ## group-sort: Vocabulary Domains
 
@@ -557,6 +535,11 @@ Read the story and answer the questions:
 Я пішов до [___:5] і купив ліки.
 У вихідні я хочу поїхати в [___:6].
 Я вже купив [___:7] на поїзд.
+Я забронював [___:8] у центрі.
+Там я буду [___:9] і відпочивати.
+Ввечері я піду в [___:10] на вечерю.
+Я люблю [___:11] нові місця.
+Це буде чудова [___:12]!
 
 1. прокидаюся | засинаю | сплю
 > [!answer] прокидаюся
@@ -570,14 +553,29 @@ Read the story and answer the questions:
 4. голова | голову | голові
 > [!answer] голова
 
-5. лікаря | лікарем | лікар
-> [!answer] лікаря
+5. аптеки | аптека | аптеку
+> [!answer] аптеки
 
 6. подорож | роботу | аптеку
 > [!answer] подорож
 
 7. квитки | квиток | квитку
 > [!answer] квитки
+
+8. готель | парк | вокзал
+> [!answer] готель
+
+9. гуляти | працювати | хворіти
+> [!answer] гуляти
+
+10. ресторан | магазин | банк
+> [!answer] ресторан
+
+11. вивчати | забувати | втрачати
+> [!answer] вивчати
+
+12. поїздка | робота | хвороба
+> [!answer] поїздка
 
 ## dialogue-reorder: At the Store
 
@@ -615,23 +613,29 @@ Read the story and answer the questions:
 
 ## unjumble: Daily Routines
 
-1. прокидаюся | я | Вранці | о | 7:00
-   > [!answer] Вранці я прокидаюся о 7:00
+1. Вранці / я / завжди / прокидаюся / дуже / рано / о / сьомій
+   > [!answer] Вранці я завжди прокидаюся дуже рано о сьомій
+   > In the morning I always wake up very early at 7.
 
-2. програмістом | Він | працює
-   > [!answer] Він працює програмістом
+2. Мій / старший / брат / зараз / успішно / працює / програмістом
+   > [!answer] Мій старший брат зараз успішно працює програмістом
+   > My older brother is now working successfully as a programmer.
 
-3. голова | У | болить | мене
-   > [!answer] У мене болить голова
+3. Сьогодні / у / мене / дуже / сильно / болить / голова
+   > [!answer] Сьогодні у мене дуже сильно болить голова
+   > I have a very bad headache today.
 
-4. карткою | Можна | заплатити
-   > [!answer] Можна заплатити карткою
+4. Скажіть / будь ласка / чи / можна / тут / заплатити / карткою
+   > [!answer] Скажіть будь ласка чи можна тут заплатити карткою
+   > Tell me please, is it possible to pay by card here?
 
-5. університеті | вчиться | в | Вона
-   > [!answer] Вона вчиться в університеті
+5. Вона / зараз / дуже / старанно / вчиться / в / національному / університеті
+   > [!answer] Вона зараз дуже старанно вчиться в національному університеті
+   > She is now studying very diligently at the national university.
 
-6. де | аптека | тут | Де
-   > [!answer] Де тут аптека
+6. Вибачте / скажіть / де / тут / є / найближча / аптека
+   > [!answer] Вибачте скажіть де тут є найближча аптека
+   > Excuse me, tell me where the nearest pharmacy is here.
 
 ## mark-the-words: Find the Vocabulary
 
@@ -733,32 +737,8 @@ I want to go on a trip.
 
 ---
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| квартира | /kʋarˈtɪra/ | apartment | noun | f | home |
-| вітальня | /ʋiˈtalʲnʲa/ | living room | noun | f | home |
-| кухня | /ˈkuxnʲa/ | kitchen | noun | f | home |
-| прокидатися | /prɔkɪˈdatɪsʲa/ | to wake up | verb | — | reflexive |
-| засинати | /zasɪˈnatɪ/ | to fall asleep | verb | — | routine |
-| снідати | /ˈsnʲidatɪ/ | to have breakfast | verb | — | routine |
-| лікар | /ˈlʲikar/ | doctor | noun | m | profession |
-| програміст | /prɔɦraˈmist/ | programmer | noun | m | profession |
-| вчитися | /ʋt͡ʃɪˈtɪsʲa/ | to study | verb | — | reflexive |
-| вивчати | /ʋɪʋˈt͡ʃatɪ/ | to learn | verb | — | transitive |
-| голова | /ɦɔlɔˈʋa/ | head | noun | f | body |
-| горло | /ˈɦɔrlɔ/ | throat | noun | n | body |
-| живіт | /ʒɪˈʋit/ | stomach | noun | m | body |
-| температура | /tɛmpɛraˈtura/ | temperature | noun | f | health |
-| застуда | /zasˈtuda/ | cold | noun | f | health |
-| аптека | /apˈtɛka/ | pharmacy | noun | f | health |
-| гроші | /ˈɦrɔʃi/ | money | noun | pl | shopping |
-| картка | /ˈkartka/ | card | noun | f | shopping |
-| чек | /t͡ʃɛk/ | receipt | noun | m | shopping |
-| знижка | /ˈznɪʒka/ | discount | noun | f | shopping |
-| подорож | /ˈpɔdɔrɔʒ/ | trip | noun | f | travel |
-| квиток | /kʋɪˈtɔk/ | ticket | noun | m | travel |
-| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | travel |
 | поїзд | /ˈpɔjizd/ | train | noun | m | travel |
-| настрій | /ˈnastrij/ | mood | noun | m | emotion |

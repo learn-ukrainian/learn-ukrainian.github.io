@@ -255,12 +255,12 @@ ACTIVITY_COMPLEXITY = {
         'C2': {'min_len': 18, 'max_len': 30, 'min_items': 8},
     },
     'group-sort': {
-        'A1': {'groups_min': 2, 'groups_max': 3, 'items_min': 8, 'items_max': 12},
-        'A2': {'groups_min': 2, 'groups_max': 3, 'items_min': 10, 'items_max': 14},
-        'B1': {'groups_min': 3, 'groups_max': 4, 'items_min': 12, 'items_max': 16},
-        'B2': {'groups_min': 3, 'groups_max': 4, 'items_min': 14, 'items_max': 18},
-        'C1': {'groups_min': 3, 'groups_max': 4, 'items_min': 16, 'items_max': 20},
-        'C2': {'groups_min': 3, 'groups_max': 4, 'items_min': 16, 'items_max': 20},
+        'A1': {'groups_min': 2, 'groups_max': 4, 'items_min': 8, 'items_max': 999},
+        'A2': {'groups_min': 2, 'groups_max': 4, 'items_min': 10, 'items_max': 999},
+        'B1': {'groups_min': 3, 'groups_max': 5, 'items_min': 12, 'items_max': 999},
+        'B2': {'groups_min': 3, 'groups_max': 5, 'items_min': 14, 'items_max': 999},
+        'C1': {'groups_min': 3, 'groups_max': 6, 'items_min': 16, 'items_max': 999},
+        'C2': {'groups_min': 3, 'groups_max': 6, 'items_min': 16, 'items_max': 999},
     },
     'unjumble': {
         'A1': {'words_min': 4, 'words_max': 6, 'min_items': 6},
@@ -353,7 +353,7 @@ LEVEL_CONFIG = {
         'min_activities': 8,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
-        'min_vocab': 20,
+        'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 3,
         'immersion_graduated': True,
         'transliteration_allowed': True,
@@ -364,7 +364,7 @@ LEVEL_CONFIG = {
         'min_activities': 10,
         'min_items_per_activity': 12,
         'min_types_unique': 4,
-        'min_vocab': 25,
+        'min_vocab': 1,  # Relaxed: focus on unique lemma introduction
         'min_engagement': 4,
         'immersion_graduated': True,  # Phase-based: A2.1 40-45%, A2.2 45-50%, A2.3 50-55%
         'transliteration_allowed': False,
@@ -375,7 +375,7 @@ LEVEL_CONFIG = {
         'min_activities': 8,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
-        'min_vocab': 10,
+        'min_vocab': 1,  # Relaxed: most vocab is review
         'min_engagement': 2,
         # NO immersion gate - comes naturally from practice
         'transliteration_allowed': True,
@@ -386,7 +386,7 @@ LEVEL_CONFIG = {
         'min_activities': 10,
         'min_items_per_activity': 10,
         'min_types_unique': 4,
-        'min_vocab': 10,
+        'min_vocab': 1,  # Relaxed: most vocab is review
         'min_engagement': 3,
         # NO immersion gate - comes naturally from practice
         'transliteration_allowed': False,

@@ -195,15 +195,9 @@ After school, students pass **ZNO** (External Independent Evaluation) — a very
 > [!cultural] **Cultural Insight** Teachers' Day
 > On the first Sunday of October, Ukraine celebrates Teachers' Day. Students bring huge bouquets of flowers and chocolate to school. Sometimes senior students teach classes for the younger ones ("Self-Governance Day"). It's a fun and respectful tradition.
 
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
-## Summary
+
+# Summary
 
 You learned to:
 - Talk about school: **школа**, **урок**, **вчитель**, **оцінка**
@@ -213,81 +207,89 @@ You learned to:
 
 Keep learning! Education is the key to the future. Good luck on your path to fluency!
 
-## Activities
+> [!resources] 🔗 External Resources
+>
+> **YouTube:** [Most interesting Facts about Ukrainian Schools/ #ukraineeducation #ukr...](https://www.youtube.com/watch?v=m2KybmMH1pE) — Ukrainian Guy
+>
+> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
+>
+> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+
+# Activities
 
 ## quiz: Education Facts
 
-1. What implies studying a specific subject?
+1. Which verb specifically implies studying a specific subject?
    - [x] вивчати
    - [ ] вчитися
    - [ ] спати
-   > Subject requires "вивчати" + Acc.
+   - [ ] їсти
 
-2. A "зошит" is for...
+2. A "зошит" is primarily used for which activity?
    - [x] writing
    - [ ] reading only
    - [ ] sleeping
-   > Notebook (writing).
+   - [ ] running
 
-3. The best grade in Ukrainian schools is...
+3. What is the highest possible grade in Ukrainian schools?
    - [x] 12
    - [ ] 5
    - [ ] A
-   > 12-point scale.
+   - [ ] 100
 
-4. Who teaches at school?
+4. Who is the person that teaches students at school?
    - [x] вчитель
    - [ ] студент
    - [ ] лікар
-   > Teacher.
+   - [ ] інженер
 
-5. What happens at the end of a semester?
-   - [x] сесія | іспити
+5. What usually happens at the end of a university semester?
+   - [x] сесія / іспити
    - [ ] канікули
    - [ ] урок
-   > Session/Exams.
+   - [ ] свято
 
-6. "Вчитися" focuses on...
+6. The verb "вчитися" focuses primarily on what aspect?
    - [x] process or place
    - [ ] specific object
    - [ ] result only
-   > Process/Place.
+   - [ ] teaching others
 
-7. "Пара" in university slang refers to...
-   - [x] a double period lesson (lecture)
+7. In university slang, what does "пара" typically refer to?
+   - [x] a double period lesson
    - [ ] two students
    - [ ] bad grade
-   > A 90-min lecture is often called "пара" (pair).
+   - [ ] a couple dating
 
-8. First of September is...
+8. What holiday is celebrated on the First of September?
    - [x] Day of Knowledge
    - [ ] Independence Day
    - [ ] New Year
-   > День Знань.
+   - [ ] Christmas
 
-9. Kyiv-Mohyla Academy was founded in...
+9. When was the Kyiv-Mohyla Academy originally founded?
    - [x] 1615
    - [ ] 1917
    - [ ] 2000
-   > One of the oldest.
+   - [ ] 1800
 
-10. "Оцінка" implies...
+10. What does the Ukrainian word "оцінка" imply in education?
     - [x] grade/mark
     - [ ] price
     - [ ] teacher
-    > Grade.
+    - [ ] pencil
 
-11. "Складати іспит" means...
+11. What does the phrase "складати іспит" mean literally?
     - [x] to take an exam (process)
     - [ ] to fail an exam
     - [ ] to create an exam
-    > To take (literally "to compose/stack", imperfective). "Скласти" is to pass (perfective).
+    - [ ] to pass an exam (result)
 
-12. "Предмет" in school means...
+12. What does the word "предмет" generally mean in school?
     - [x] subject
     - [ ] object
     - [ ] furniture
-    > Subject (math, history).
+    - [ ] teacher
 
 ## match-up: School Vocab
 
@@ -439,53 +441,53 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
 
 ## unjumble: Education Syntax
 
-1. Я | вивчаю | українську | мову
-   > [!answer] Я вивчаю українську мову
-   > I study Ukrainian language.
+1. Я / зараз / старанно / вивчаю / українську / та / англійську / мову
+   > [!answer] Я зараз старанно вивчаю українську та англійську мову
+   > I am diligently studying Ukrainian and English language now.
 
-2. Мій | брат | вчиться | в | школі
-   > [!answer] Мій брат вчиться в школі
-   > My brother studies at school.
+2. Мій / молодший / брат / добре / вчиться / в / новій / школі
+   > [!answer] Мій молодший брат добре вчиться в новій школі
+   > My younger brother studies well at the new school.
 
-3. Завтра | буде | важкий | іспит
-   > [!answer] Завтра буде важкий іспит
-   > Tomorrow will be a hard exam.
+3. Завтра / у / нас / буде / дуже / важкий / і / важливий / іспит
+   > [!answer] Завтра у нас буде дуже важкий і важливий іспит
+   > Tomorrow we will have a very difficult and important exam.
 
-4. Студенти | слухають | цікаву | лекцію
-   > [!answer] Студенти слухають цікаву лекцію
-   > Students listen to an interesting lecture.
+4. Студенти / уважно / слухають / цікаву / лекцію / про / історію / України
+   > [!answer] Студенти уважно слухають цікаву лекцію про історію України
+   > Students are listening carefully to an interesting lecture about the history of Ukraine.
 
-5. Вчитель | пише | на | дошці
-   > [!answer] Вчитель пише на дошці
-   > Teacher writes on the board.
+5. Вчитель / швидко / пише / нові / слова / на / великій / дошці
+   > [!answer] Вчитель швидко пише нові слова на великій дошці
+   > The teacher writes new words quickly on the big board.
 
-6. Відкрийте | свої | зошити | будь ласка
-   > [!answer] Відкрийте свої зошити будь ласка
-   > Open your notebooks please.
+6. Відкрийте / свої / зошити / і / візьміть / сині / ручки / будь ласка
+   > [!answer] Відкрийте свої зошити і візьміть сині ручки будь ласка
+   > Open your notebooks and take blue pens please.
 
-7. У | мене | гарна | оцінка
-   > [!answer] У мене гарна оцінка
-   > I have a good grade.
+7. У / мене / сьогодні / дуже / гарна / оцінка / з / математики
+   > [!answer] У мене сьогодні дуже гарна оцінка з математики
+   > I have a very good grade in math today.
 
-8. Я | складаю | іспит | з | історії
-   > [!answer] Я складаю іспит з історії
-   > I am taking a history exam.
+8. Я / зараз / складаю / складний / іспит / з / історії / України
+   > [!answer] Я зараз складаю складний іспит з історії України
+   > I am taking a difficult exam on the history of Ukraine now.
 
-9. Знання — | це | велика | сила
-   > [!answer] Знання це велика сила
-   > Knowledge is great power.
+9. Знання — / це / справді / велика / і / важлива / сила / сьогодні
+   > [!answer] Знання це справді велика і важлива сила сьогодні
+   > Knowledge is truly a great and important power today.
 
-10. Ми | любимо | наш | факультет
-    > [!answer] Ми любимо наш факультет
-    > We love our faculty.
+10. Ми / всі / дуже / любимо / наш / дружній / університетський / факультет
+    > [!answer] Ми всі дуже любимо наш дружній університетський факультет
+    > We all really love our friendly university faculty.
 
-11. Де | твій | синій | олівець
-    > [!answer] Де твій синій олівець
-    > Where is your blue pencil?
+11. Де / лежить / твій / новий / синій / олівець / для / малювання
+    > [!answer] Де лежить твій новий синій олівець для малювання
+    > Where does your new blue pencil for drawing lie?
 
-12. Вона | пише | дипломну | роботу
-    > [!answer] Вона пише дипломну роботу
-    > She is writing a thesis/diploma work.
+12. Вона / зараз / пише / свою / складну / дипломну / роботу / вдома
+    > [!answer] Вона зараз пише свою складну дипломну роботу вдома
+    > She is currently writing her difficult thesis at home.
 
 ## error-correction: Grammar Fix
 
@@ -571,6 +573,7 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
 У червні у нас буде [___:5]. Я боюся складати [___:6].
 Треба багато [___:7]. Я беру [___:8] в бібліотеці.
 Мій друг каже: "Головне — це [___:9], а не оцінка".
+Ввечері я йду в [___:10] і лягаю [___:11] спати. Завтра знову [___:12].
 
 1. вчуся | вивчаю | сплю
    > [!answer] вчуся
@@ -598,6 +601,15 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
 
 9. знання | гроші | слава
    > [!answer] знання
+
+10. гуртожиток | парк | ліс
+    > [!answer] гуртожиток
+
+11. рано | пізно | завтра
+    > [!answer] рано
+
+12. вчитися | грати | співати
+    > [!answer] вчитися
 
 ## dialogue-reorder: Be Quiet Example
 
@@ -682,36 +694,24 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
     - [ ] Папір.
     > Diploma.
 
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| школа | /ˈʃkɔla/ | school | noun | f | |
 | клас | /klas/ | class/grade | noun | m | |
 | урок | /uˈrɔk/ | lesson | noun | m | |
-| вчитель | /ˈʋtʃɪtelʲ/ | teacher | noun | m | |
-| вчителька | /ˈʋtʃɪtelʲka/ | teacher (f) | noun | f | |
 | учень | /ˈutʃenʲ/ | pupil | noun | m | |
-| університет | /uniʋersɪˈtɛt/ | university | noun | m | |
 | факультет | /fakulʲˈtɛt/ | faculty | noun | m | |
 | лекція | /ˈlɛktsʲija/ | lecture | noun | f | |
 
 | семінар | /semiˈnar/ | seminar | noun | m | |
 | іспит | /ˈispɪt/ | exam | noun | m | |
 | залік | /ˈzalik/ | credit/test | noun | m | |
-| студент | /stuˈdɛnt/ | student | noun | m | |
 | диплом | /dɪˈplɔm/ | diploma | noun | m | |
 | підручник | /pidˈrutʃnɪk/ | textbook | noun | m | |
-| зошит | /ˈzɔʃɪt/ | notebook | noun | m | |
-| ручка | /ˈrutʃka/ | pen | noun | f | |
-| олівець | /oliˈʋɛtsʲ/ | pencil | noun | m | |
 | дошка | /ˈdɔʃka/ | board | noun | f | |
-| знання | /znanʲˈnʲa/ | knowledge | noun | n | |
 | предмет | /predˈmɛt/ | subject | noun | m | |
-| оцінка | /oˈtsʲinka/ | grade/mark | noun | f | |
 
-| вчитися | /ˈʋtʃɪtɪsʲa/ | to study (process) | verb | - | |
-| вивчати | /ʋɪʋˈtʃatɪ/ | to study (object) | verb | - | |
 | навчатися | /naʋˈtʃatɪsʲa/ | to learn/study | verb | - | |
 | складати | /sklaˈdatɪ/ | to take (exam) | verb | - | |
 | конспект | /konˈspɛkt/ | notes | noun | m | |

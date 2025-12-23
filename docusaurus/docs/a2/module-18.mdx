@@ -335,143 +335,113 @@ There are two ways to say "than" in Ukrainian:
 
 <Quiz questions={[
   {
-    question: `What's the comparative of \"добрий\"?`,
+    question: `Which of the following suffixes is primarily used to form the regular comparative degree of adjectives in Ukrainian?`,
+    options: [
+      { text: `-ший / -іший`, correct: true },
+      { text: `-ний / -івний`, correct: false },
+      { text: `-кий / -енний`, correct: false },
+      { text: `-чий / -ачий`, correct: false }
+    ]
+  },  {
+    question: `What is the correct comparative form of the Ukrainian adjective \"добрий\" when expressing that something is \"better\"?`,
     options: [
       { text: `кращий`, correct: true },
       { text: `добріший`, correct: false },
-      { text: `добрійший`, correct: false }
+      { text: `найкращий`, correct: false },
+      { text: `добрийший`, correct: false }
     ]
   },  {
-    question: `What's the comparative of \"великий\"?`,
+    question: `Which of the following comparative forms corresponds to the Ukrainian adjective \"поганий,\" meaning \"worse\"?`,
+    options: [
+      { text: `гірший`, correct: true },
+      { text: `поганіший`, correct: false },
+      { text: `найгірший`, correct: false },
+      { text: `гіршіший`, correct: false }
+    ]
+  },  {
+    question: `How is the comparative degree formed for the common Ukrainian adjective \"великий,\" meaning \"bigger\"?`,
     options: [
       { text: `більший`, correct: true },
       { text: `великіший`, correct: false },
-      { text: `великший`, correct: false }
+      { text: `великший`, correct: false },
+      { text: `найбільший`, correct: false }
     ]
   },  {
-    question: `\"Ніж\" is followed by:`,
+    question: `Which preposition is typically used in Ukrainian to express comparison without using the conjunction \"ніж\" (than)?`,
     options: [
-      { text: `Nominative case`, correct: true },
-      { text: `Accusative case`, correct: false },
-      { text: `Genitive case`, correct: false }
+      { text: `за`, correct: true },
+      { text: `на`, correct: false },
+      { text: `про`, correct: false },
+      { text: `під`, correct: false }
     ]
   },  {
-    question: `\"За\" in comparisons is followed by:`,
+    question: `What part of speech is usually used to intensify a comparative, such as in the phrase \"набагато кращий\" (much better)?`,
     options: [
-      { text: `Accusative case`, correct: true },
-      { text: `Nominative case`, correct: false },
-      { text: `Genitive case`, correct: false }
+      { text: `Прислівник`, correct: true },
+      { text: `Прийменник`, correct: false },
+      { text: `Сполучник`, correct: false },
+      { text: `Вигук`, correct: false }
     ]
   },  {
-    question: `\"He is taller than me\" translates as:`,
-    options: [
-      { text: `Він вищий за мене.`, correct: true },
-      { text: `Він високий за мене.`, correct: false },
-      { text: `Він вищий мене.`, correct: false }
-    ]
-  },  {
-    question: `What intensifies a comparative?`,
-    options: [
-      { text: `набагато — much`, correct: true },
-      { text: `ніж — than`, correct: false },
-      { text: `за — for`, correct: false }
-    ]
-  },  {
-    question: `\"Дорожчий\" means:`,
+    question: `What is the specific meaning of the Ukrainian comparative adjective \"дорожчий\" in a shopping context?`,
     options: [
       { text: `more expensive`, correct: true },
       { text: `cheaper`, correct: false },
-      { text: `most expensive`, correct: false }
+      { text: `most expensive`, correct: false },
+      { text: `very cheap`, correct: false }
     ]
   },  {
-    question: `\"Дешевший\" means:`,
+    question: `What is the specific meaning of the Ukrainian comparative adjective \"дешевший\" when comparing two prices?`,
     options: [
       { text: `cheaper`, correct: true },
       { text: `more expensive`, correct: false },
-      { text: `cheapest`, correct: false }
+      { text: `cheapest`, correct: false },
+      { text: `very expensive`, correct: false }
     ]
   },  {
-    question: `\"Гірший\" is the comparative of:`,
+    question: `The irregular Ukrainian comparative form \"гірший\" is derived from which of the following base adjectives?`,
     options: [
-      { text: `поганий — bad`, correct: true },
-      { text: `добрий — good`, correct: false },
-      { text: `гарний — nice`, correct: false }
+      { text: `поганий`, correct: true },
+      { text: `добрий`, correct: false },
+      { text: `гарний`, correct: false },
+      { text: `старий`, correct: false }
     ]
   },  {
-    question: `How do you say \"less interesting\"?`,
+    question: `Which of the following phrases is the' correct Ukrainian translation for the comparative expression \"less interesting\"?`,
     options: [
       { text: `менш цікавий`, correct: true },
       { text: `більш цікавий`, correct: false },
-      { text: `некращий`, correct: false }
+      { text: `нецікавіший`, correct: false },
+      { text: `найменш цікавий`, correct: false }
     ]
   },  {
-    question: `\"Старіший\" means:`,
+    question: `What is the English meaning of the Ukrainian comparative adjective \"старіший\" used to compare ages?`,
     options: [
       { text: `older`, correct: true },
       { text: `younger`, correct: false },
-      { text: `oldest`, correct: false }
+      { text: `oldest`, correct: false },
+      { text: `newborn`, correct: false }
     ]
   },  {
-    question: `Which is NOT irregular?`,
+    question: `Which of the following adjective transformations into a comparative form is considered a strictly regular formation in Ukrainian?`,
     options: [
       { text: `новий → новіший`, correct: true },
       { text: `добрий → кращий`, correct: false },
-      { text: `великий → більший`, correct: false }
+      { text: `великий → більший`, correct: false },
+      { text: `малий → менший`, correct: false },
+      { text: `Regular comparatives add -ший/-іший.`, correct: true },
+      { text: `\"Кращий\" means \"better.\"`, correct: true },
+      { text: `\"Добріший\" is the comparative of \"добрий.\"`, correct: false },
+      { text: `\"За\" takes accusative case.`, correct: true },
+      { text: `\"Ніж\" takes nominative case.`, correct: true },
+      { text: `All comparatives are formed the same way.`, correct: false },
+      { text: `\"Більший\" is the comparative of \"великий.\"`, correct: true },
+      { text: `\"Набагато\" intensifies comparatives.`, correct: true },
+      { text: `\"Гірший\" means \"better.\"`, correct: false },
+      { text: `Compound comparatives use більш/менш.`, correct: true },
+      { text: `\"Вищий\" means \"taller\" or \"higher.\"`, correct: true },
+      { text: `\"Дорожчий\" is a regular form.`, correct: false }
     ]
-  }
-]} />
-
-### Comparative Rules
-
-<TrueFalse items={[
-  {
-    statement: `Regular comparatives add -ший/-іший.`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Кращий\" means \"better.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Добріший\" is the comparative of \"добрий.\"`,
-    isTrue: false,
-    explanation: `The comparative is \"кращий\" (irregular).`
-  },  {
-    statement: `\"За\" takes accusative case.`,
-    isTrue: true,
-    explanation: `Correct! Вищий за мене.`
-  },  {
-    statement: `\"Ніж\" takes nominative case.`,
-    isTrue: true,
-    explanation: `Yes! Вищий ніж я.`
-  },  {
-    statement: `All comparatives are formed the same way.`,
-    isTrue: false,
-    explanation: `Common adjectives have irregular forms.`
-  },  {
-    statement: `\"Більший\" is the comparative of \"великий.\"`,
-    isTrue: true,
-    explanation: `Correct!`
-  },  {
-    statement: `\"Набагато\" intensifies comparatives.`,
-    isTrue: true,
-    explanation: `Yes! Набагато кращий = much better.`
-  },  {
-    statement: `\"Гірший\" means \"better.\"`,
-    isTrue: false,
-    explanation: `\"Гірший\" means \"worse.\"`
-  },  {
-    statement: `Compound comparatives use більш/менш.`,
-    isTrue: true,
-    explanation: `Correct! Більш важливий.`
-  },  {
-    statement: `\"Вищий\" means \"taller\" or \"higher.\"`,
-    isTrue: true,
-    explanation: `Yes!`
-  },  {
-    statement: `\"Дорожчий\" is a regular form.`,
-    isTrue: false,
-    explanation: `It's irregular: дорогий → дорожчий.`
   }
 ]} />
 
@@ -485,18 +455,18 @@ There are two ways to say "than" in Ukrainian:
 ### Comparison Sentences
 
 <Unjumble items={[
-  { jumbled: `він | старіший | за | мене`, answer: `Він старіший за мене` },
-  { jumbled: `ця | книга | цікавіша | ніж | та`, answer: `Ця книга цікавіша ніж та` },
-  { jumbled: `лев | більший | за | кота`, answer: `Лев більший за кота` },
-  { jumbled: `цей | телефон | кращий`, answer: `Цей телефон кращий` },
-  { jumbled: `вона | вища | за | нього`, answer: `Вона вища за нього` },
-  { jumbled: `ця | машина | дорожча`, answer: `Ця машина дорожча` },
-  { jumbled: `він | набагато | розумніший`, answer: `Він набагато розумніший` },
-  { jumbled: `зима | холодніша | за | літо`, answer: `Зима холодніша за літо` },
-  { jumbled: `ця | дорога | довша`, answer: `Ця дорога довша` },
-  { jumbled: `він | трохи | старіший`, answer: `Він трохи старіший` },
-  { jumbled: `ця | ідея | гірша`, answer: `Ця ідея гірша` },
-  { jumbled: `кава | гарячіша | ніж | чай`, answer: `Кава гарячіша ніж чай` }
+  { jumbled: `він / набагато / старіший / за / мене / на / п'ять / довгих / років`, answer: `Він набагато старіший за мене на п'ять років` },
+  { jumbled: `ця / нова / книга / набагато / цікавіша / ніж / та / стара / газета`, answer: `Ця нова книга набагато цікавіша ніж та стара газета` },
+  { jumbled: `великий / лев / набагато / більший / за / цього / маленького / кота`, answer: `Великий лев набагато більший за цього маленького кота` },
+  { jumbled: `цей / новий / телефон / набагато / кращий / за / мій / старий / прилад`, answer: `Цей новий телефон набагато кращий за мій старий прилад` },
+  { jumbled: `вона / значно / вища / за / нього / вже / на / цілу / голову`, answer: `Вона значно вища за нього вже на цілу голову` },
+  { jumbled: `ця / червона / машина / набагато / дорожча / ніж / той / старий / велосипед`, answer: `Ця червона машина набагато дорожча ніж той старий велосипед` },
+  { jumbled: `він / набагато / розумніший / ніж / всі / інші / студенти / у / групі`, answer: `Він набагато розумніший ніж всі інші студенти у групі` },
+  { jumbled: `зима / завжди / набагато / холодніша / за / тепле / та / сонячне / літо`, answer: `Зима завжди набагато холодніша за тепле та сонячне літо` },
+  { jumbled: `ця / довга / дорога / до / міста / набагато / довша / ніж / та`, answer: `Ця довга дорога до міста набагато довша ніж та` },
+  { jumbled: `він / трохи / старіший / за / свого / молодшого / рідного / брата`, answer: `Він трохи старіший за свого молодшого рідного брата` },
+  { jumbled: `ця / нова / ідея / набагато / гірша / за / нашу / першу / пропозицію`, answer: `Ця нова ідея набагато гірша за нашу першу пропозицію` },
+  { jumbled: `гаряча / кава / завжди / набагато / смачніша / ніж / холодний / гіркий / чай`, answer: `Гаряча кава завжди набагато смачніша ніж холодний гіркий чай` }
 ]} />
 
 ### Fix the Comparative
@@ -549,8 +519,8 @@ There are two ways to say "than" in Ukrainian:
 ### Comparisons in Context
 
 <Cloze
-  passage={`Цей ноутбук [___:1] за той. Він має [___:2] екран, але він [___:3]. Батарея працює [___:4], ніж у старої моделі. Загалом, цей ноутбук [___:5].`}
-  blanks={[{ index: 0, answer: `старіша`, options: [`старий → старіша`, `молодша`] }, { index: 1, answer: `вища`, options: [`високий → вища`, `нижча`] }, { index: 2, answer: `розумніша`, options: [`розумний → розумніша`, `дурніша`] }, { index: 3, answer: `молодший`, options: [`молодий → старіший`, `молодший`] }, { index: 4, answer: `кращі`, options: [`добрий → кращі`, `гірші`] }]}
+  passage={`Цей новий ноутбук [___:1] за той старий. Він має [___:2] екран, але він набагато [___:3]. Батарея працює [___:4], ніж у моєї старої моделі. Загалом, цей ноутбук значно [___:5]. Я дуже задоволений [___:6] покупкою.`}
+  blanks={[{ index: 0, answer: `старіша`, options: [`старий → старіша`, `молодша`] }, { index: 1, answer: `вища`, options: [`високий → вища`, `нижча`] }, { index: 2, answer: `розумніша`, options: [`розумний → розумніша`, `дурніша`] }, { index: 3, answer: `молодший`, options: [`молодий → старіший`, `молодший`] }, { index: 4, answer: `кращі`, options: [`добрий → кращі`, `гірші`] }, { index: 5, answer: `допомагаємо`, options: [`допомагати → допоможемо`, `допомагаємо`] }]}
 />
 
 ### Shopping Comparisons
@@ -651,13 +621,9 @@ There are two ways to say "than" in Ukrainian:
 | дорожчий | /dɔˈrɔʒt͡ʃɪj/ | more expensive | adj | m | comparative of дорогий |
 | дешевший | /dɛˈʃɛʋʃɪj/ | cheaper | adj | m | comparative of дешевий |
 | старіший | /stɑˈriʃɪj/ | older | adj | m | comparative of старий |
-| молодший | /mɔˈlɔdʃɪj/ | younger | adj | m | comparative of молодий |
 | швидший | /ˈʃʋɪdʃɪj/ | faster | adj | m | comparative of швидкий |
 | повільніший | /pɔˈʋilʲniʃɪj/ | slower | adj | m | comparative of повільний |
-| ніж | /niʒ/ | than | conj | — | + nominative |
-| за | /zɑ/ | than | prep | — | + accusative |
 | набагато | /nɑˈbɑɦɑtɔ/ | much | adv | — | intensifier |
-| трохи | /ˈtrɔxɪ/ | a little | adv | — | intensifier |
 | значно | /ˈznɑt͡ʃnɔ/ | significantly | adv | — | intensifier |
 | розумніший | /rɔˈzumniʃɪj/ | smarter | adj | m | comparative of розумний |
 | цікавіший | /t͡siˈkɑʋiʃɪj/ | more interesting | adj | m | comparative of цікавий |

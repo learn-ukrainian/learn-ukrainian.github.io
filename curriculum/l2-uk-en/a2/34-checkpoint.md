@@ -1,768 +1,563 @@
 ---
 module: a2-34
-title: "Checkpoint - Complex Ideas"
-subtitle: "Review of Modules 25-33"
-version: "2.0"
+title: Checkpoint - Complex Ideas
+subtitle: "Review of Narratives, Logic, and Health"
+version: "1.0"
 phase: "A2.3"
-focus: checkpoint
-pedagogy: "Review"
+pedagogy: "Consolidation"
 duration: "60 min"
 transliteration: none
 tags:
   - review
   - checkpoint
+  - health
   - logic
-  - storytelling
 grammar:
-  - review of connectors (тому що, хоча, щоб, який)
-  - review of reported speech
-  - review of time sequencing
+  - sequence (потім, нарешті)
+  - causal (тому що, бо)
+  - concessive (хоча, проте)
+  - purpose (щоб)
+  - relative (який)
+  - time clauses (коли, поки)
 objectives:
-  - "Learner can tell a complex story"
-  - "Learner can link ideas logically"
-  - "Learner can report speech correctly"
-vocabulary_count: 30
+  - "Learner can synthesize complex sentence structures"
+  - "Learner can express cause, purpose, and concession accurately"
+  - "Learner can use health-related vocabulary in dialogue"
+vocabulary_count: 25
 ---
 
-# Checkpoint - Complex Ideas
+# Summary
 
-**Вітаємо!** Ви завершили Фазу A2.3! You've moved from simple sentences to complex stories.
+## Overview
 
-**Skills tested:**
-1. **Logical Connectors** - Can you explain why, although, in order to?
-2. **Time Sequencing** - Can you tell a story in order?
-3. **Reported Speech** - Can you report what someone said?
-4. **Relative Clauses** - Can you describe nouns with який/що?
+> 🌍
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+This checkpoint reviews the essential skills from Modules 25-33. We have moved from simple statements to building complex, logical narratives. You can now connect ideas across time, cause, and intent. This module will diagnostic your ability to use these "bridge" structures effectively.
+
+> [!tip]
+> Think of conjunctions as the "glue" of the Ukrainian language. Without them, you are just naming blocks; with them, you are building a house.
+
+**The Skills we are checking:**
+- **Skill 1:** Sequencing events to tell a coherent story.
+- **Skill 2:** Using logical connectors like **тому що**, **хоча**, and **щоб**.
+- **Skill 3:** Building detail with relative clauses using **який**.
+- **Skill 4:** Communicating health symptoms and medical needs accurately.
 
 ---
 
-## Skill 1: Logical Connectors
+## Skill 1: Sequencing and Storytelling
 
-**Can you explain cause, contrast, and purpose?**
+The first major skill we developed in this block was the ability to lead a listener through a sequence of events. Instead of a list of facts, we now use temporal indicators to show how one action follows another. This is the foundation of effective storytelling in Ukrainian.
 
-### Model: The Three Types
+### Model: A Morning Routine
 
-> **Cause (Why?):** Я не пішов, **тому що** захворів.
-> *(I didn't go because I got sick.)*
+> **Спочатку** я прокинувся. **Потім** я прийняв душ. **Після того як** я поснідав, я пішов на роботу. **Нарешті** я зустрів свого колегу.
 
-> **Contrast (Despite):** Я пішов, **хоча** захворів.
-> *(I went although I was sick.)*
+In this model, notice how the markers create a logical flow. **Спочатку** sets the initial point, **Потім** moves the clock forward, **Після того як** establishes a specific link between two actions (finishing breakfast and leaving), and **Нарешті** provides a clear conclusion to the sequence.
 
-> **Purpose (In order to):** Я вчуся, **щоб** знати більше.
-> *(I study in order to know more.)*
+### Practice:
 
-**The Connector Map:**
-
-| Type | Ukrainian | English |
-|------|-----------|---------|
-| Cause | тому що, через те що | because, due to |
-| Contrast | хоча, але, однак | although, but, however |
-| Purpose | щоб, для того щоб | in order to, so that |
-
-### Practice: Choose the Connector
-
-1. Я не їм, ___ не голодний. (причина)
-> [!solution] Перевірити
-> тому що — explains the reason
-
-2. Я їм, ___ не голодний. (контраст)
-> [!solution] Перевірити
-> хоча — eating despite not being hungry
-
-3. Я вчуся, ___ здати екзамен. (purpose)
-> [!solution] Перевірити
-> щоб — in order to pass
+Reorder these events to create a logical morning at the office:
+1. Потім ми почали працювати над новим проектом.
+2. Спочатку ми зібралися в офісі о дев'ятій ранку.
+3. Нарешті ми здали готовий звіт нашому директору.
+4. Після того як ми обговорили ідеї, ми пішли на обід.
 
 ### Self-Check
 
-- Do you know the difference: тому що (причина) vs хоча (контраст)?
-- Can you use щоб for purpose ("in order to")?
-- Can you form logical complex sentences?
-
-> [!myth-buster] 🔍 Myth Buster
->
-> **Myth:** "Ukrainian 'borrowed' connectors from Russian."
->
-> **Truth:** Connectors like **тому що**, **хоча**, and **щоб** come from Old Ukrainian and Proto-Slavic. The form **щоб** preserved the original Slavic subjunctive particle that Russian changed. When you say "Щоб знати!", you're speaking authentic Ukrainian!
-
-> [!history-bite] 📜 History Bite
->
-> **Storytelling saved Ukrainian!** During the Valuev Circular (1863), oral storytelling kept complex sentence structures alive. Kobzars used **Спочатку... Потім... Нарешті...** to tell epic tales of Ukrainian heroes, preserving our narrative grammar despite the ban on printed Ukrainian.
+> [!solution] Перевірити
+> Правильна послідовність: 2 -> 1 -> 4 -> 3.
+> Ви визначили **Спочатку** як необхідний перший крок, а **Нарешті** — як кінцевий результат?
 
 ---
 
-## Skill 2: Time Sequencing
+## Skill 2: Expressing Logic and Intent
 
-**Can you tell a story in chronological order?**
+In Ukrainian grammar, there is a sharp distinction between a **reason** (why something happened) and a **purpose** (what goal you were trying to achieve). We also learned to express **concession**—showing that something happened even if conditions were difficult.
 
-### Model: The Story Structure
+### Model: The Rational Speaker
 
-> **Start:** Спочатку я встав.
-> **Middle:** Потім я поснідав.
-> **Simultaneous:** Поки я їв, я читав.
-> **After:** Після того як я поїв, я пішов.
-> **End:** Нарешті я прийшов.
+> Я вчу українську, **тому що** я люблю цю культуру. **Хоча** це важко, **проте** я роблю успіхи. Я слухаю подкасти, **щоб** розуміти живу мову.
 
-**Time Markers:**
+Connecting these ideas shows a high level of linguistic maturity. **Тому що** points backward to the cause (love for culture). **Хоча... проте...** creates a contrast between the difficulty and the success. **Щоб** points forward to the goal (understanding native speakers).
 
-| Marker | English | Function |
-|--------|---------|----------|
-| Спочатку | At first | Start |
-| Потім | Then | Sequence |
-| Поки | While | Simultaneous |
-| Після того як | After | Sequence |
-| Перед тим як | Before | Sequence |
-| Нарешті | Finally | End |
-| Як тільки | As soon as | Immediate |
+### Practice:
 
-### Practice: Order the Story
-
-1. ___, я встав. (first)
-> [!solution] Перевірити
-> Спочатку — starting the narrative
-
-2. ___ я снідав, телефон дзвонив. (одночасно)
-> [!solution] Перевірити
-> Поки — simultaneous actions
-
-3. ___, я вийшов з дому. (finally)
-> [!solution] Перевірити
-> Нарешті — ending the sequence
+Complete the sentences with **бо** (reason), **щоб** (purpose), or **хоча** (concession).
+1. Я пішов у магазин, ___ купити свіже молоко.
+2. Він не прийшов учора, ___ у нього болить голова.
+3. ___ ми дуже втомилися, ми продовжили працювати.
 
 ### Self-Check
 
-- Can you use Спочатку... Потім... Нарешті to structure a story?
-- Do you know the difference: Поки (одночасно) vs Після того як (послідовність)?
-- Can you tell your morning routine using time markers?
-
-> [!note] 📝 Time Marker Memory Aid
->
-> Think of your morning routine:
-> - **Спочатку** я встав... (First I got up...)
-> - **Потім** я поснідав... (Then I had breakfast...)
-> - **Нарешті** я пішов... (Finally I left...)
+> [!solution] Перевірити
+> 1. **щоб** — виражає мету походу в магазин.
+> 2. **бо** — пояснює причину, чому він не прийшов.
+> 3. **Хоча** — вказує на допуск, контраст із втомою.
 
 ---
 
-## Skill 3: Reported Speech
+## Skill 3: Building Detail with Relative Clauses
 
-**Can you report what someone said?**
+Relative clauses allow you to describe a noun without starting a new sentence. In Ukrainian, the pronoun **який** is a "chameleon"—it must change its gender and number to match the word it describes, and its case to match its role in its own clause.
 
-### Model: No Backshift in Ukrainian!
+### Model: Identifying Items
 
-> **Direct:** Він сказав: "Я зайнятий."
-> **Reported:** Він сказав, **що** він зайнятий.
+> Це будинок, **який** стоїть біля річки. Вона жінка, **яку** я бачив учора. Ми купили квитки, **які** були дуже дорогі.
 
-**The Golden Rule:** In Ukrainian, keep the original tense!
+Observe how **який** changes:
+- In the first sentence, it is masculine singular to match **будинок**.
+- In the second, it becomes **яку** (feminine Accusative) because it is the object of "saw".
+- In the third, it is **які** to match the plural **квитки**.
 
-| Original | English Report | Ukrainian Report |
-|----------|----------------|------------------|
-| "Я щасливий" | He said he **was** happy | Він сказав, що він **щасливий** |
-| "Я прийду" | He said he **would** come | Він сказав, що він **прийде** |
-| "Я зробив" | He said he **had done** | Він сказав, що він **зробив** |
+### Practice:
 
-**Opinion expressions:**
-- Я думаю, **що**... (I think that...)
-- Мені здається, **що**... (It seems to me that...)
-- На мою думку... (In my opinion...)
-
-### Practice: Report the Speech
-
-1. Лікар сказав: "Ви здоровий." → Лікар сказав, що я ___.
-> [!solution] Перевірити
-> здоровий — keep present tense
-
-2. Мама сказала: "Я прийду." → Мама сказала, що вона ___.
-> [!solution] Перевірити
-> прийде — keep future tense
-
-3. Друг сказав: "Я був там." → Друг сказав, що він ___ там.
-> [!solution] Перевірити
-> був — keep past tense
+Try to combine these two sentences using **який**:
+"Я бачу дівчину." + "Дівчина грає на скрипці."
 
 ### Self-Check
 
-- Do you remember: NO backshift in Ukrainian reported speech?
-- Can you use що to report facts and opinions?
-- Can you express opinions: Я думаю, що..., Мені здається, що...?
+> [!solution] Перевірити
+> Я бачу дівчину, **яка** грає на скрипці.
+> Since **дівчина** is feminine and the subject of the second part, we use the feminine Nominative form **яка**.
 
 ---
 
-## Skill 4: Relative Clauses
+## Skill 4: Communicating Health and State
 
-**Can you describe nouns with який/яка/яке/які?**
+Finally, we integrated these structures into a vital practical context: healthcare. Discussing symptoms requires precise vocabulary for body parts and the "impersonal state" construction (**Мені боляче**, **У мене болить**).
 
-### Model: Який Changes Like an Adjective
+### Model: At the Clinic
 
-> Це книга, **яку** я читаю. (Accusative — object of "read")
-> Це хлопець, **який** тут живе. (Nominative — subject of "lives")
-> Місто, **в якому** я живу. (Locative — "in which")
+> — Що вас турбує сьогодні?
+> — У мене дуже **болить голова** і є висока **температура**.
+> — Хоча у вас є невеликий кашель, **проте** легені зараз чисті.
 
-**Який agrees with the noun it describes:**
+The doctor uses **Що вас турбує?** (What bothers you?) as a standard opening. The patient uses the **болить** construction (Nominative subject) or **у мене є...** (I have...).
 
-| Gender | Nominative | Accusative | Locative |
-|--------|------------|------------|----------|
-| Masc | який | який/якого | якому |
-| Fem | яка | яку | якій |
-| Neut | яке | яке | якому |
-| Plural | які | які/яких | яких |
+### Practice:
 
-**Що vs Який:**
-- **Що** = сполучник: Я знаю, **що** ти тут.
-- **Який** = займенник: Хлопець, **який** тут.
-
-### Practice: Choose the Form
-
-1. Це фільм, ___ я люблю. (masc, accusative)
-> [!solution] Перевірити
-> який — masculine animate takes nominative form in accusative
-
-2. Це дівчина, ___ працює тут. (fem, nominative)
-> [!solution] Перевірити
-> яка — subject of "works"
-
-3. Місто, в ___ я народився. (neut, locative)
-> [!solution] Перевірити
-> якому — after preposition "в"
+Imagine you have a cold. How do you tell the doctor that your throat hurts?
 
 ### Self-Check
 
-- Can you choose the right form of який based on gender and case?
-- Do you know the difference: що (сполучник) vs який (займенник)?
-- Can you describe nouns: людина, яка..., книга, яку..., місто, в якому...?
-
-> [!warning] ⚠️ Common Mistake
->
-> Don't confuse:
-> - **Що** = that (fact): "Я знаю, **що** ти тут."
-> - **Щоб** = so that (purpose): "Я вчусь, **щоб** знати."
->
-> One letter makes a big difference!
+> [!solution] Перевірити
+> У мене **болить горло**.
+> Пам'ятайте, що **горло** — це середній рід, але дієслово **болить** залишається однаковим для всіх іменників в однині.
 
 ---
 
-## Integration Challenge
+## Integration Challenge: The Difficult Journey
 
-Read this story and identify the grammar points:
+**Read the text and answer the questions below to see how these skills blend together.**
 
-> **Спочатку** (1) Марко жив у селі, **де** (2) було тихо.
-> Він мріяв про місто, **тому що** (3) хотів знайти пригоди.
-> **Хоча** (4) батьки казали, **що** (5) це небезпечно, він поїхав.
-> Він зібрав речі, **які** (6) були йому потрібні.
-> **Коли** (7) він приїхав, він зустрів дівчину, **яка** (8) допомогла йому.
-> Вона сказала, **що** (9) знає готель.
-> **Нарешті** (10) Марко знайшов своє місце.
+> Спочатку ми планували поїхати в Карпати, **щоб** відпочити. **Після того як** ми купили квитки, погода несподівано змінилася. **Хоча** йшов сильний дощ, **проте** ми все одно вирішили поїхати в гори. Потім ми зустріли досвідченого гіда, **який** розповів нам багато цікавого про ці гори. У горах мені стало трохи погано, **тому що** там було дуже холодно. Тепер у мене болить горло, і **щоб** швидко одужати, я зараз п'ю теплі ліки.
 
-1. Спочатку — what type?
+1. Чому вони поїхали в гори?
+2. Яка була погода спочатку?
+3. Хто такий гід у цій історії?
+4. Що робить автор зараз?
+
+### Self-Check
+
 > [!solution] Перевірити
-> Time marker — starting the story
-
-2. де — what function?
-> [!solution] Перевірити
-> Relative pronoun — describes the village (where)
-
-3. тому що — what type?
-> [!solution] Перевірити
-> Cause connector — explains why
-
-4. Хоча — what type?
-> [!solution] Перевірити
-> Contrast connector — despite parents' words
-
-5. що — what function?
-> [!solution] Перевірити
-> Reported speech — what parents said
-
-6. які — what case?
-> [!solution] Перевірити
-> Nominative plural — subject of "were needed"
-
-7. Коли — what function?
-> [!solution] Перевірити
-> Time conjunction — when
-
-8. яка — what case?
-> [!solution] Перевірити
-> Nominative feminine — subject of "helped"
-
-9. що — what function?
-> [!solution] Перевірити
-> Reported speech — what she said
-
-10. Нарешті — what type?
-> [!solution] Перевірити
-> Time marker — ending the story
+> 1. Вони поїхали, **щоб відпочити**.
+> 2. Йшов **сильний дощ**.
+> 3. Це людина, **яка розповіла цікаве про гори**.
+> 4. Автор **п'є ліки**, **щоб одужати**.
 
 ---
 
-## Summary
+## Conclusion of this Block
 
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Connectors | Cause/Contrast/Purpose | тому що / хоча / щоб |
-| Sequencing | Time markers | Спочатку... Потім... Нарешті |
-| Reported Speech | Що + original tense | Він сказав, що він зайнятий |
-| Relative Clauses | Який agrees with noun | книга, яку я читаю |
+Mastering complex sentences is the most significant leap you have made since starting your Ukrainian journey. You are no longer just naming things or stating simple facts. You are now communicating logic, intent, and relationships between ideas. This ability to synthesize information is what makes your speech feel natural and purposeful.
 
-> 💡 **Українська мудрість**
->
-> «Повторення — мати навчання.»
-> *Translation: "Repetition is the mother of learning."*
+In the next block, we will explore Word Formation. You will learn how to "multiply" your vocabulary by understanding how prefixes and suffixes change the core meaning of roots. This will give you the power to guess the meaning of thousands of new words without a dictionary. We will also introduce very basic motion prefixes to describe directional movement with precision.
 
-> [!tip] 🎯 Pro Tip: Connector Practice
->
-> Practice connectors in pairs:
-> - **Тому що** ↔ **Хоча** (cause vs contrast)
-> - **Що** ↔ **Щоб** (fact vs purpose)
-> - **Поки** ↔ **Після того як** (during vs after)
->
-> Create your own sentences with each pair to master the differences!
+> 🎯
+
+> [!important]
+> Word formation is the key to reaching A2+ and B1 levels, as it reduces your reliance on pure rote memorization.
 
 ---
 
-## Activities
+## Need More Practice?
 
-## match-up: Logical Pairs
+> [!resources] External Resources
+> - 📖 [Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/)
+> - 📖 [Relative Pronouns (який)](https://www.talkukrainian.com/relative-pronouns-ukrainian/)
+> - 🎙️ [Something Hurts Podcast](https://www.ukrainianlessons.com/something-hurts/)
 
-> Match the start to the logical finish.
+# Activities
 
-- Я не пішов, :: тому що захворів.
-- Я пішов, :: хоча захворів.
-- Я дзвоню, :: щоб запитати.
-- Це лікар, :: який лікує мене.
-- Він сказав, :: що прийде.
-- Як тільки прийду, :: подзвоню.
-- Перед тим як їсти, :: мий руки.
-- Мені здається, :: що це правда.
-- Я радий, :: що ти тут.
-- Я думаю, :: що все буде добре.
-- Спочатку, :: я поснідав.
-- Нарешті, :: я прийшов.
+## match-up: Logic Pairing (Concept: Semantic Pairing)
+Match the connector to its grammatical logic.
 
-## fill-in: Connector Test
+| Connector | Grammatical Logic |
+|-----------|------------------|
+| Тому що | Пояснення причини певної дії |
+| Хоча | Допуск або певний контраст |
+| Щоб | Свідома мета певної особи |
+| Який | Відносне означення предмета |
+| Коли | Часова умова певної дії |
+| Потім | Наступна за часом дія |
+| Нарешті | Кінцевий результат процесу |
+| Бо | Проста причина певного факту |
+| Проте | Протиставлення двох ідей |
+| Поки | Одночасність різних подій |
+| Чи | Вираження непрямого питання |
 
-> Choose the correct connector.
+## fill-in: Synthesis Challenge (Concept: Contextual Selection)
+Complete the complex sentences with the right connector.
 
-1. Я хочу, ___ ти прийшов. (Purpose)
+1. Ми пішли в аптеку, [___:1] купити ліки для мами.
    > [!answer] щоб
-   > [!options] щоб | що | як
+   > [!options] щоб | бо | хоча | який
 
-2. Я знаю, ___ ти прийшов. (Fact)
-   > [!answer] що
-   > [!options] що | щоб | як
+2. [___:2] у нього болить живіт, він не хоче їсти обід.
+   > [!answer] Тому що
+   > [!options] Тому що | Хоча | Коли | Щоб
 
-3. Це парк, ___ ми гуляли. (Place)
-   > [!answer] де
-   > [!options] де | який | куди
-
-4. Це парк, ___ ми любимо. (Object)
+3. Я бачив фільм, [___:3] тобі дуже сподобався минулого тижня.
    > [!answer] який
-   > [!options] який | де | що
+   > [!options] який | яка | які | якого
 
-5. Ми пішли, ___ пішов дощ. (Cause)
-   > [!answer] тому що
-   > [!options] тому що | хоча | щоб
+4. [___:4] я лікар, я не можу зараз допомогти без інструментів.
+   > [!answer] Хоча
+   > [!options] Хоча | Бо | Коли | Який
 
-6. Ми пішли, ___ йшов дощ. (Contrast)
-   > [!answer] хоча
-   > [!options] хоча | тому що | як
+5. Треба почекати, [___:5] лікар звільниться і огляне вас.
+   > [!answer] поки
+   > [!options] поки | що | хоча | щоб
 
-7. ___ я їв, я мовчав. (Duration)
-   > [!answer] Поки
-   > [!options] Поки | Коли | Як тільки
+6. Він запитав, [___:6] я вже прийняв свої вітаміни сьогодні.
+   > [!answer] чи
+   > [!options] чи | що | щоб | як
 
-8. ___ я з'їв, я пішов. (Sequence)
-   > [!answer] Після того як
-   > [!options] Після того як | Поки | Хоча
+7. Я мрію, [___:7] ми поїхали до Києва наступного літа.
+   > [!answer] щоб
+   > [!options] щоб | що | коли | де
 
-9. ___, я встав. (Start)
-   > [!answer] Спочатку
-   > [!options] Спочатку | Нарешті | Потім
+8. Вона сказала, [___:8] вона почувається набагато краще.
+   > [!answer] що
+   > [!options] що | чи | щоб | бо
 
-10. Він сказав, ___ прийде. (Report)
-    > [!answer] що
-    > [!options] що | щоб | який
+## quiz: Checkpoint Master (Concept: Logical Deduction)
+Review of grammar and logic from M25-33.
 
-11. Це книга, ___ я читаю. (Object)
-    > [!answer] яку
-    > [!options] яку | яка | що
-
-12. ___, я прийшов додому. (End)
-    > [!answer] Нарешті
-    > [!options] Нарешті | Спочатку | Поки
-
-## quiz: Grammar Master
-
-1. "Тому що" means:
-
-- [x] Because
-- [ ] Although
-- [ ] In order to
+1. У якій саме граматичній ситуації ми обов'язково використовуємо неозначену форму дієслова після сполучника "щоб"?
+- [x] Коли підмет головної частини та підмет мети — це одна і та сама особа
+- [ ] Коли ми звертаємося до лікаря в офіційній обстановці в поліклініці
+- [ ] Коли ми хочемо висловити свою особисту думку про сучасну літературу
+- [ ] Коли ми використовуємо відносний займенник "який" на самому початку
 
 ---
 
-2. "Хоча" expresses:
-
-- [x] Contrast
-- [ ] Cause
-- [ ] Purpose
-
----
-
-3. "Щоб" introduces:
-
-- [x] Purpose
-- [ ] Reported speech
-- [ ] Cause
+2. Як правильно та ввічливо побудувати непряме питання про почуття іншої людини?
+- [x] Ви маєте запитати: "Чи ти добре почуваєшся сьогодні зранку?"
+- [ ] Ви маєте запитати: "Що ти добре почуваєшся сьогодні зранку?"
+- [ ] Ви маєте запитати: "Бо ти добре почуваєшся сьогодні зранку?"
+- [ ] Ви маєте запитати: "Хоча ти добре почуваєшся сьогодні зранку?"
 
 ---
 
-4. In reported speech, Ukrainian:
-
-- [x] Keeps original tense
-- [ ] Uses backshift
-- [ ] Changes to past
-
----
-
-5. "Який" is used for:
-
-- [x] Relative clauses (which)
-- [ ] Reported speech (that)
-- [ ] Cause (because)
+3. Яку саме граматичну форму змінить слово "який", якщо воно стосується слова "книга" у знахідному відмінку?
+- [x] Воно обов'язково змінить свою форму на жіночий рід: "яку"
+- [ ] Воно залишиться у початковій формі чоловічого роду: "який"
+- [ ] Воно автоматично прийме форму середнього роду: "яке"
+- [ ] Воно змінить закінчення на форму множини завжди: "які"
 
 ---
 
-6. "Спочатку" means:
-
-- [x] At first
-- [ ] Finally
-- [ ] While
-
----
-
-7. "Поки" is used for:
-
-- [x] Simultaneous actions (одночасні дії)
-- [ ] Sequence (after)
-- [ ] Purpose (in order to)
+4. Що означає поєднання "Хоча... проте..." для побудови правильної логіки у реченні?
+- [x] Це поєднання вказує на контраст між очікуваною причиною та реальним результатом
+- [ ] Це поєднання вказує на послідовність двох дуже приємних подій у часі
+- [ ] Це поєднання вказує на точну кількість предметів, які лежать на столі
+- [ ] Це поєднання вказує на мету, заради якої ми прийшли сьогодні в офіс
 
 ---
 
-8. "Після того як" means:
-
-- [x] After
-- [ ] While
-- [ ] Before
-
----
-
-9. "Мені здається" introduces:
-
-- [x] Opinions
-- [ ] Commands
-- [ ] Facts
+5. Який сполучник найкраще підходить для того, щоб процитувати чиїсь слова без змін?
+- [x] Для цього ми найчастіше використовуємо сполучник "що" після слова "сказав"
+- [ ] Для цього ми найчастіше використовуємо сполучник "бо" після слова "сказав"
+- [ ] Для цього ми найчастіше використовуємо сполучник "ніби" після слова "сказав"
+- [ ] Для цього ми найчастіше використовуємо сполучник "коли" після слова "сказав"
 
 ---
 
-10. "Книга, яку я читаю" — яку is:
-
-- [x] Accusative (object)
-- [ ] Nominative (subject)
-- [ ] Genitive
-
----
-
-11. "Нарешті" is used:
-
-- [x] At the end of a story
-- [ ] At the beginning
-- [ ] For contrast
+6. Що саме треба змінити у дієслові після "щоб", якщо підмети в реченні є різними?
+- [x] Треба використовувати форму минулого часу, яка узгоджується в роді та числі
+- [ ] Треба використовувати тільки інфінітивну форму дієслова без жодних змін
+- [ ] Треба використовувати форму майбутнього часу для опису наших планів на завтра
+- [ ] Треба змінити весь корінь дієслова на зовсім інший для кращої вимови
 
 ---
 
-12. "Що" can be:
+7. Як правильно пояснити причину того, що ви сьогодні запізнилися на важливу зустріч?
+- [x] Правильно буде сказати: "Я запізнився, тому що на вулиці були сильні затори"
+- [ ] Правильно буде сказати: "Я запізнився, щоб на вулиці були сильні затори зараз"
+- [ ] Правильно буде сказати: "Я запізнився, який на вулиці були сильні затори"
+- [ ] Правильно буде сказати: "Я запізнився, хоча на вулиці були сильні затори"
 
-- [x] Both conjunction (that) and pronoun (what)
-- [ ] Only a pronoun
-- [ ] Only a conjunction
+---
 
-## true-false: Concepts Review
+8. Як звучить найбільш ввічливе питання до пацієнта, який тільки що прийшов у лікарню?
+- [x] Ввічливе питання звучить так: "Що саме вас турбує сьогодні, пане?"
+- [ ] Ввічливе питання звучить так: "Як вас болить сьогодні вранці вдома?"
+- [ ] Ввічливе питання звучить так: "Навіщо ви сюди прийшли сьогодні в лікарню?"
+- [ ] Ввічливе питання звучить так: "Який ви хворий сьогодні у цьому кабінеті?"
 
-- [x] "Щоб" implies a goal or purpose.
-  > Correct! "Я вчуся, щоб знати."
+## unjumble: Constructing Complexity (Concept: Syntax Integrity)
+Rearrange the words to form correct complex sentences.
 
-- [x] "Що" links facts or reports.
-  > Yes! "Він сказав, що прийде."
+1. я / пішов / до / лікаря / тому / що / у / мене / сильно / болить / горло
+   > [!answer] Я пішов до лікаря, тому що у мене сильно болить горло
 
-- [x] "Який" changes by gender and case.
-  > Correct! який/яка/яке/які
+2. хоча / йшов / дощ / проте / ми / вирішили / піти / в / парк / гуляти
+   > [!answer] Хоча йшов дощ, проте ми вирішили піти в парк гуляти
 
-- [ ] Ukrainian uses backshift in reported speech.
-  > No! Keep the original tense.
+3. я / хочу / щоб / ви / написали / цей / звіт / до / ранку / понеділка
+   > [!answer] Я хочу, щоб ви написали цей звіт до ранку понеділка
 
-- [x] "Спочатку... Потім... Нарешті" structures a story.
-  > Yes! Traditional narrative sequence.
+4. він / купив / машину / яка / швидко / їздить / і / споживає / мало / палива
+   > [!answer] Він купив машину, яка швидко їздить і споживає мало палива
 
-- [ ] "Тому що" and "Хоча" mean the same thing.
-  > No! Тому що = cause, Хоча = contrast.
+5. після / обіду / я / подзвоню / тобі / щоб / ми / обговорили / плани
+   > [!answer] Після обіду я подзвоню тобі, щоб ми обговорили плани
 
-- [x] "Поки" is used for simultaneous actions.
-  > Correct! "Поки я їв, я читав."
+6. лікар / просить / щоб / я / приймав / ці / ліки / тричі / на / день
+   > [!answer] Лікар просить, щоб я приймав ці ліки тричі на день
 
-- [x] "Мені здається" expresses personal opinion.
-  > Yes! "It seems to me..."
+## group-sort: Connector Sorter | Логічне сортування
+Sort these connectors based on their meaning. Сортуйте сполучники за значенням.
 
-- [ ] "Який" never changes form.
-  > No! It changes: який/яка/яке/які and cases.
+### Cause & Concession (Причина та допуск)
+- Тому що я запізнився
+- Бо я був хворий
+- Оскільки була ніч
+- Через те що йшов дощ
+- Хоча було важко
+- Проте я працював
+- Дарма що ми втомилися
 
-- [x] "Після того як" introduces sequence.
-  > Correct! After something happened.
+### Purpose & Result (Мета та результат)
+- Щоб купити хліб
+- Для того щоб одужати
+- Аби знати правду
+- Задля нашої перемоги
+- Тому я пішов додому
+- Отже ми все зробили
+- Через це я радий
 
-- [x] "Для того щоб" is a longer form of "щоб".
-  > Yes! Both mean "in order to".
+### Time & Relation (Час та відношення)
+- Коли я прийшов
+- Поки ти спав
+- Щойно я побачив
+- Після того як я поїв
+- Який будинок стоїть
+- Яка дівчина грає
+- Котрий зараз час
 
-- [ ] "Де" and "Який" are interchangeable.
-  > No! Де = where, Який = which.
+## true-false: Checkpoint Quiz (Concept: Concept Validation)
+Validate your understanding of the topics covered in Modules 25-33.
 
-## group-sort: Connector Categories
+1. "Тому що" and "Бо" have the same meaning in Ukrainian.
+   - [x] True
+   - [ ] False
+   > Both express cause, though "бо" is a bit more informal.
 
-### Time (Коли)
-- Поки
-- Після того як
-- Перед тим як
-- Як тільки
-- Спочатку
-- Нарешті
+2. After "щоб", you must use the past tense if subjects are different.
+   - [x] True
+   - [ ] False
+   > Correct (**Він хоче, щоб ми знали**).
 
-### Logic (Чому)
-- Тому що
-- Через те що
-- Тому
-- Хоча
-- Однак
-- Щоб
+3. "Який" must always match the gender of the noun before it.
+   - [x] True
+   - [ ] False
+   > Yes (**Будинок, який...**; **Дівчина, яка...**).
 
-## unjumble: Complex Sentences
+4. "Мені боляче" is the noun form for "pain" in a medical context.
+   - [ ] True
+   - [x] False
+   > "Боляче" is an adverb; the noun is "**біль**".
 
-1. я | що | думаю | ти | правий
-   > [!answer] Я думаю, що ти правий
+5. "Хоча" introduces a reason that supports the main action.
+   - [ ] True
+   - [x] False
+   > It introduces a concession or contradiction.
 
-2. пішов | хоча | він | був | дощ
-   > [!answer] Він пішов, хоча був дощ
+6. In a sequence, "Нарешті" represents the starting point.
+   - [ ] True
+   - [x] False
+   > It represents the final step or conclusion.
 
-3. ми | вчимося | знати | щоб | більше
-   > [!answer] Ми вчимося, щоб знати більше
+7. Reporting what someone said requires the connector "що".
+   - [x] True
+   - [ ] False
+   > Correct (**Він сказав, що...**).
 
-4. це | місто | в | я | живу | якому
-   > [!answer] Це місто, в якому я живу
+8. "Що вас турбує?" is the standard "Why are you here?" for doctors.
+   - [x] True
+   - [ ] False
+   > It literally means "What bothers you?".
 
-5. того | після | як | встав | снідав | я
-   > [!answer] Після того як встав, я снідав
+## cloze: The Recovery (Concept: Contextual Application)
+Complete the story about someone getting better using logic connectors.
 
-6. сказав | лікар | що | здоровий | я
-   > [!answer] Лікар сказав, що я здоровий
+Минулого тижня Іван захворів, [___:1] він довго гуляв під дощем. У нього боліла [___:2] і була висока [___:3]. [___:4] він пив чай, [___:5] йому не ставало краще. Наступного дня він пішов до [___:6], [___:7] працює в нашій лікарні. Лікар оглянув його, [___:8] призначити правильне лікування. Він виписав [___:9], які треба привати тричі на день. Іван пішов в [___:10], яка була поруч з домом. [___:11] того як він почав приймати таблетки, йому стало краще. Тепер він знову здоровий, [___:12] він більше не гуляє без куртки. Нам важливо, [___:13] кожен [___:14] здоровим.
 
-## cloze: Storytelling
+1. тому що | щоб | хоча | який
+> [!answer] тому що
 
-> Fill in the blanks to complete the story.
+2. голова | рука | нога | спина
+> [!answer] голова
 
-[___:1] я встав рано.
-[___:2] я поснідав.
-[___:3] я снідав, я читав газету.
-[___:4] я поїв, я пішов на роботу.
-[___:5] я прийшов на зустріч.
-Я був радий, [___:6] встиг вчасно.
+3. температура | дорога | машина | погода
+> [!answer] температура
 
-1. Спочатку | Потім | Нарешті
-> [!answer] Спочатку
+4. Хоча | Тому що | Коли | Щоб
+> [!answer] Хоча
 
-2. Потім | Спочатку | Нарешті
-> [!answer] Потім
+5. проте | бо | щоб | де
+> [!answer] проте
 
-3. Поки | Після того як | Нарешті
-> [!answer] Поки
+6. лікаря | вчителя | водія | друга
+> [!answer] лікаря
 
-4. Після того як | Поки | Спочатку
-> [!answer] Після того як
+7. який | яка | які | якого
+> [!answer] який
 
-5. Нарешті | Спочатку | Потім
-> [!answer] Нарешті
+8. щоб | бо | але | чи
+> [!answer] щоб
 
-6. п'ятій | п'ять | п'ятою
-> [!answer] п'ятій
+9. ліки | плани | книги | квіти
+> [!answer] ліки
 
-## dialogue-reorder: At the Office
+10. аптеці | школі | банку | парку
+> [!answer] аптеці
 
-- Добрий день! Чому ви запізнилися?
-- Я запізнився, тому що був затор.
-- Зрозуміло. Хоча це не вперше.
-- Я знаю. Я прийду раніше завтра.
-- Добре. Він сказав, що зустріч о десятій.
-- Дякую! Я буду готовий.
+11. Після | Перед | Під | До
+> [!answer] Після
+
+12. проте | бо | щоб | коли
+> [!answer] проте
+
+13. щоб | що | як | чи
+> [!answer] щоб
+
+14. був | був би | є | бути
+> [!answer] був
+
+## dialogue-reorder: The Medical Report (Concept: Narrative Coherence)
+Order the conversation between a doctor and a patient.
+
+- Доброго дня, лікарю! Я почуваюся сьогодні дуже погано.
+- Що саме вас турбує? Де саме у вас сьогодні болить?
+- У мене дуже сильно болять і голова, і живіт.
+- Чи є у вас якась висока температура на цей момент?
+- Так, зранку я міряв, було майже тридтять дев'ять.
+- Ви пили якісь ліки перед тим, як прийти до мене?
+- Ні, я нічого не пив, бо хотів, щоб ви мене оглянули.
+- Це дуже правильне рішення. Лягайте, я буду вас оглядати.
+- Це щось дуже серйозне, лікарю? Я дуже сильно хвилююся.
+- Не хвилюйтеся так сильно, це просто звичайний грип.
+- Я випишу вам рецепт на ліки, які ви купите в аптеці.
+- Дякую, лікарю! Я буду робити все, щоб швидше одужати.
 
 > [!answer]
-> 1. Добрий день! Чому ви запізнилися?
-> 2. Я запізнився, тому що був затор.
-> 3. Зрозуміло. Хоча це не вперше.
-> 4. Я знаю. Я прийду раніше завтра.
-> 5. Добре. Він сказав, що зустріч о десятій.
-> 6. Дякую! Я буду готовий.
+> 1. Доброго дня, лікарю! Я почуваюся сьогодні дуже погано.
+> 2. Що саме вас турбує? Де саме у вас сьогодні болить?
+> 3. У мене дуже сильно болять і голова, і живіт.
+> 4. Чи є у вас якась висока температура на цей момент?
+> 5. Так, зранку я міряв, було майже тридтять дев'ять.
+> 6. Ви пили якісь ліки перед тим, як прийти до мене?
+> 7. Ні, я нічого не пив, бо хотів, щоб ви мене оглянули.
+> 8. Це дуже правильне рішення. Лягайте, я буду вас оглядати.
+> 9. Це щось дуже серйозне, лікарю? Я дуже сильно хвилююся.
+> 10. Не хвилюйтеся так сильно, це просто звичайний грип.
+> 11. Я випишу вам рецепт на ліки, які ви купите в аптеці.
+> 12. Дякую, лікарю! Я буду робити все, щоб швидше одужати.
 
----
 
-- Що сказав директор?
-- Він сказав, що потрібен звіт.
-- Коли?
-- До п'ятниці.
-- Я зроблю, хоча це багато роботи.
-- Дякую за розуміння!
+## mark-the-words: Find the Logic (Concept: Pattern Recognition)
+Identify the logical connector words in the text.
 
-> [!answer]
-> 1. Що сказав директор?
-> 2. Він сказав, що потрібен звіт.
-> 3. Коли?
-> 4. До п'ятниці.
-> 5. Я зроблю, хоча це багато роботи.
-> 6. Дякую за розуміння!
+Я вчуся, [щоб](correct) знати більше. Він прийшов, [тому що](correct) обіцяв. [Хоча](correct) йшов дощ, ми вийшли. Це людина, [яка](correct) нам допомогла. [Після того як](correct) ми поїли, ми пішли. Я знаю, [що](correct) ти правий. Скажи мені, [чи](correct) ти прийдеш.
 
-## mark-the-words: Grammar Spotting
+## error-correction: Logic Refinement (Concept: Critical Proofreading)
+Identify and fix errors in complex logical structures.
 
-Click on connectors and relative pronouns.
+1. Я хочу, щоб ти **прийдеш** завтра вранці.
+   > [!error] прийдеш
+   > [!answer] прийшов
+   > [!explanation] Different subjects require the past tense form after "щоб".
+   > [!options] прийшов | прийдеш
 
-Я не пішов, [тому що](correct) захворів. [Хоча](correct) я хотів, я не міг. Лікар, [який](correct) мене лікує, сказав, [що](correct) треба відпочивати.
+2. Це книга, **який** він прочитав минулого літа.
+   > [!error] який
+   > [!answer] яку
+   > [!explanation] "Книга" is feminine; in the relative clause it is the object (Accusative "яку").
+   > [!options] яку | який
 
----
+3. Він не прийшов, **щоб** у нього болить голова.
+   > [!error] щоб
+   > [!answer] бо
+   > [!explanation] Use "бо" or "тому що" for reasons, not "щоб".
+   > [!options] бо | щоб
 
-[Спочатку](correct) я поснідав. [Потім](correct) я пішов на роботу. [Поки](correct) я йшов, я думав про проект, [який](correct) треба закінчити.
+4. **Тому що** йшов дощ, ми вирішили піти гуляти.
+   > [!error] Тому що
+   > [!answer] Хоча
+   > [!explanation] Contrast check: Use "Хоча" (Although) to show contrast.
+   > [!options] Хоча | Тому що
 
----
+5. Ми відкрили двері, **бо** увійти в кімнату.
+   > [!error] бо
+   > [!answer] щоб
+   > [!explanation] Use "щоб" for purpose with an infinitive.
+   > [!options] щоб | бо
 
-[Нарешті](correct) я прийшов. Колега сказав, [що](correct) зустріч перенесли. Я радий, [тому що](correct) мав час підготуватися.
+6. Вона сказала, **чи** вона дуже сьогодні втомлена.
+   > [!error] чи
+   > [!answer] що
+   > [!explanation] Use "що" for direct statements in reported speech.
+   > [!options] що | чи
 
-## translate: English to Ukrainian
+## translate: English to Ukrainian (Concept: Cross-Linguistic Transfer)
 
-I know that you are smart.
+1. I studied a lot to pass the exam.
+- [x] Я багато вчився, щоб скласти іспит.
+- [ ] Я багато вчився, бо скласти іспит.
 
-- [x] Я знаю, що ти розумний.
-- [ ] Я знаю, щоб ти розумний.
+2. Although he is tired, he continues to work.
+- [x] Хоча він втомлений, проте він працює далі.
+- [ ] Тому що він втомлений, він працює далі.
 
----
+3. The doctor whom I know is very good.
+- [x] Лікар, якого я знаю, дуже хороший.
+- [ ] Лікар, який я знаю, дуже хороший.
 
-The car which I bought.
+4. I want you to tell me the truth.
+- [x] Я хочу, щоб ти сказав мені правду.
+- [ ] Я хочу, щоб ти кажеш мені правду.
 
-- [x] Машина, яку я купив.
-- [ ] Машина, яка я купив.
+5. After he ate, he felt better.
+- [x] Після того як він поїв, він почувався краще.
+- [ ] Коли він поїв, бо він почувався краще.
 
----
+6. What is bothering you today?
+- [x] Що вас турбує сьогодні?
+- [ ] Що вас болить сьогодні?
 
-Because I can.
-
-- [x] Тому що я можу.
-- [ ] Хоча я можу.
-
----
-
-Although it is raining.
-
-- [x] Хоча йде дощ.
-- [ ] Тому що йде дощ.
-
----
-
-First... Then... Finally...
-
-- [x] Спочатку... Потім... Нарешті...
-- [ ] Перший... Тоді... Кінець...
-
----
-
-He said that he loves her.
-
-- [x] Він сказав, що кохає її.
-- [ ] Він сказав, що кохав її.
-
----
-
-While I was eating.
-
-- [x] Поки я їв.
-- [ ] Після того як я їв.
-
----
-
-In order to learn.
-
-- [x] Щоб вчитися.
-- [ ] Що вчитися.
-
----
-
-The city in which I live.
-
-- [x] Місто, в якому я живу.
-- [ ] Місто, яке я живу.
-
----
-
-It seems to me that...
-
-- [x] Мені здається, що...
-- [ ] Я думаю, щоб...
-
----
-
-After I ate.
-
-- [x] Після того як я поїв.
-- [ ] Поки я поїв.
-
----
-
-In my opinion.
-
-- [x] На мою думку.
-- [ ] На моя думка.
-
----
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | cause |
-| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |
-| щоб | /ʃt͡ʃɔb/ | so that, in order to | conj | — | purpose |
-| який | /jɑˈkɪj/ | which, what kind | pron | m | relative |
-| що | /ʃt͡ʃɔ/ | that, what | conj | — | conjunction |
-| але | /ɑˈlɛ/ | but | conj | — | contrast |
-| однак | /ɔdˈnɑk/ | however | conj | — | contrast |
-| спочатку | /spɔˈt͡ʃɑtku/ | at first | adv | — | sequence |
-| потім | /ˈpɔtim/ | then, after that | adv | — | sequence |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | — | sequence |
-| поки | /pɔˈkɪ/ | while | conj | — | simultaneous |
-| після того як | /ˈpislʲɑ tɔˈɦɔ jɑk/ | after | phrase | — | sequence |
-| перед тим як | /ˈpɛrɛd tɪm jɑk/ | before | phrase | — | sequence |
-| як тільки | /jɑk ˈtilʲkɪ/ | as soon as | phrase | — | immediate |
-| думка | /ˈdumkɑ/ | thought, opinion | noun | f | mental |
-| здається | /zdɑˈjɛtʲsʲɑ/ | it seems | verb | — | opinion |
-| на мою думку | /nɑ mɔˈju ˈdumku/ | in my opinion | phrase | — | opinion |
-| головне | /ɦɔlɔʋˈnɛ/ | the main thing | noun | n | focus |
-| історія | /isˈtɔrʲijɑ/ | story, history | noun | f | narrative |
-| життя | /ʒɪtˈtʲɑ/ | life | noun | n | concept |
-| рік | /rik/ | year | noun | m | time |
-| минулий | /mɪˈnulɪj/ | past, last | adj | m | time |
-| майбутній | /mɑjˈbutnʲij/ | future | adj | m | time |
-| говорити | /ɦɔʋɔˈrɪtɪ/ | to speak | verb | — | communication |
-| сказати | /skɑˈzɑtɪ/ | to say | verb | — | communication |
-| розповідати | /rɔzpɔʋiˈdɑtɪ/ | to tell (story) | verb | — | narrative |
-| питати | /pɪˈtɑtɪ/ | to ask | verb | — | communication |
-| відповідати | /ʋidpɔʋiˈdɑtɪ/ | to answer | verb | — | communication |
-| розуміти | /rɔzuˈmitɪ/ | to understand | verb | — | mental |
-| план | /plɑn/ | plan | noun | m | concept |
+| боліти | /bɔˈlitɪ/ | to hurt | verb | — | symptom |
+| одужати | /ɔˈduʒɑtɪ/ | to recover | verb | — | perfective |
+| захворіти | /zɑxwɔˈritɪ/ | to fall ill | verb | — | perfective |
+| турбувати | /turbuˈʋɑtɪ/ | to bother | verb | — | symptom |
+| звіт | /zʋit/ | report | noun | masc | business |
+| затори | /zɑˈtɔrɪ/ | traffic jams | noun | — | pl |
+| рішення | /ˈriʃɛnʲːɑ/ | decision | noun | neut | logic |
+| надія | /nɑˈdijɑ/ | hope | noun | fem | emotion |

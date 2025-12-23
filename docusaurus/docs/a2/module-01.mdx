@@ -356,7 +356,10 @@ Try creating similar sentences about yourself before moving to the activities be
   { left: `ми`, right: `нам` },
   { left: `ви`, right: `вам` },
   { left: `вони`, right: `їм` },
-  { left: `воно`, right: `йому` }
+  { left: `воно`, right: `йому` },
+  { left: `подобатися (до кого?)`, right: `мені подобається` },
+  { left: `потрібно (кому?)`, right: `тобі потрібно` },
+  { left: `холодно (кому?)`, right: `йому холодно` }
 ]} />
 
 ### Pronoun Cases [stage: recognition]
@@ -479,7 +482,7 @@ Try creating similar sentences about yourself before moving to the activities be
 
 <Quiz questions={[
   {
-    question: `\"I like coffee\" in Ukrainian is:`,
+    question: `When you want to say \"I like coffee\" in Ukrainian, how do you express this sentiment?`,
     options: [
       { text: `Я подобаюся кава.`, correct: false },
       { text: `Мені подобається кава.`, correct: true },
@@ -487,7 +490,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Мене подобається кава.`, correct: false }
     ]
   },  {
-    question: `\"She needs to rest\" in Ukrainian is:`,
+    question: `If you want to tell someone \"She needs to rest\" in Ukrainian, which sentence is correct?`,
     options: [
       { text: `Вона потрібно відпочити.`, correct: false },
       { text: `Її потрібно відпочити.`, correct: false },
@@ -495,7 +498,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Вона потрібна відпочити.`, correct: false }
     ]
   },  {
-    question: `\"He is cold\" in Ukrainian is:`,
+    question: `When expressing that \"He is cold\" in Ukrainian, which construction should you use?`,
     options: [
       { text: `Він холодно.`, correct: false },
       { text: `Йому холодно.`, correct: true },
@@ -503,7 +506,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Він холодний.`, correct: false }
     ]
   },  {
-    question: `\"Do you like Kyiv?\" in Ukrainian is:`,
+    question: `To ask \"Do you like Kyiv?\" in Ukrainian, which sentence would a native speaker use?`,
     options: [
       { text: `Тобі подобається Київ?`, correct: true },
       { text: `Ти подобаєшся Київ?`, correct: false },
@@ -511,7 +514,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Тебе подобається Київ?`, correct: false }
     ]
   },  {
-    question: `\"We need help\" in Ukrainian is:`,
+    question: `When you want to say \"We need help\" in Ukrainian, which sentence is grammatically correct?`,
     options: [
       { text: `Ми потрібно допомога.`, correct: false },
       { text: `Ми потрібна допомога.`, correct: false },
@@ -519,7 +522,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Нас потрібна допомога.`, correct: false }
     ]
   },  {
-    question: `\"They find it interesting\" in Ukrainian is:`,
+    question: `To express that \"They find it interesting\" in Ukrainian, which sentence captures this meaning correctly?`,
     options: [
       { text: `Вони цікаво.`, correct: false },
       { text: `Їм цікаво.`, correct: true },
@@ -527,7 +530,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Вони цікаві.`, correct: false }
     ]
   },  {
-    question: `What does \"Мені здається\" mean?`,
+    question: `When a Ukrainian speaker says \"Мені здається\", what meaning are they trying to express?`,
     options: [
       { text: `I am seen`, correct: false },
       { text: `It seems to me`, correct: true },
@@ -535,7 +538,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `I am being`, correct: false }
     ]
   },  {
-    question: `What does \"Тобі добре?\" mean?`,
+    question: `If someone asks you \"Тобі добре?\" in Ukrainian, what are they inquiring about?`,
     options: [
       { text: `You are good?`, correct: false },
       { text: `Are you okay?`, correct: true },
@@ -543,7 +546,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Do you have good?`, correct: false }
     ]
   },  {
-    question: `Which pronoun means \"to her\"?`,
+    question: `When referring to a female recipient, which Ukrainian pronoun means \"to her\" in the Dative case?`,
     options: [
       { text: `її`, correct: false },
       { text: `їй`, correct: true },
@@ -551,7 +554,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `йому`, correct: false }
     ]
   },  {
-    question: `Which pronoun means \"to them\"?`,
+    question: `When referring to multiple people as recipients, which Ukrainian pronoun means \"to them\" in Dative?`,
     options: [
       { text: `вони`, correct: false },
       { text: `їх`, correct: false },
@@ -559,7 +562,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `вонам`, correct: false }
     ]
   },  {
-    question: `\"Дякую тобі\" means:`,
+    question: `When a Ukrainian speaker says \"Дякую тобі\", what are they expressing to the listener?`,
     options: [
       { text: `I thank you`, correct: true },
       { text: `You thank me`, correct: false },
@@ -567,7 +570,7 @@ Try creating similar sentences about yourself before moving to the activities be
       { text: `Your thanks`, correct: false }
     ]
   },  {
-    question: `In \"Вам каву?\", the speaker is:`,
+    question: `In the phrase \"Вам каву?\", what is the speaker doing or offering to the recipient?`,
     options: [
       { text: `Asking if you have coffee`, correct: false },
       { text: `Offering you coffee`, correct: true },
@@ -669,29 +672,31 @@ Try creating similar sentences about yourself before moving to the activities be
 ### Complete the Story [stage: controlled-production]
 
 <Cloze
-  passage={`Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело.
+  passage={`Марія і Петро в Одесі. [___:1] подобається море. [___:2] тепло і весело. Погода чудова!
 
 Офіціант запитує: «[___:3] каву?» Марія каже: «Так, [___:4] каву, будь ласка.» А Петро каже: «Ні, [___:5] не потрібно. [___:6] краще чай.»
 
-Увечері [___:7] холодно. Вони йдуть додому. [___:8] подобається Одеса!`}
-  blanks={[{ index: 0, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }, { index: 1, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }, { index: 2, answer: `Вам`, options: [`Вам`, `Вас`, `Ви`] }, { index: 3, answer: `мені`, options: [`мені`, `мене`, `я`] }, { index: 4, answer: `мені`, options: [`мені`, `мене`, `я`] }, { index: 5, answer: `Мені`, options: [`Мені`, `Мене`, `Я`] }, { index: 6, answer: `їм`, options: [`їм`, `їх`, `вони`] }, { index: 7, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }]}
+Марія телефонує подрузі: «[___:7] подобається тут!» Подруга відповідає: «[___:8] теж хочеться поїхати!»
+
+Увечері [___:9] холодно. Вони йдуть додому. На вулиці [___:10] весело. [___:11] подобається Одеса! [___:12] потрібно приїхати знову.`}
+  blanks={[{ index: 0, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }, { index: 1, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }, { index: 2, answer: `Вам`, options: [`Вам`, `Вас`, `Ви`] }, { index: 3, answer: `мені`, options: [`мені`, `мене`, `я`] }, { index: 4, answer: `мені`, options: [`мені`, `мене`, `я`] }, { index: 5, answer: `Мені`, options: [`Мені`, `Мене`, `Я`] }, { index: 6, answer: `Мені`, options: [`Мені`, `Мене`, `Я`] }, { index: 7, answer: `Мені`, options: [`Мені`, `Мене`, `Я`] }, { index: 8, answer: `їм`, options: [`їм`, `їх`, `вони`] }, { index: 9, answer: `їм`, options: [`їм`, `їх`, `вони`] }, { index: 10, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }, { index: 11, answer: `Їм`, options: [`Їм`, `Їх`, `Вони`] }]}
 />
 
 ### Dative Sentences [stage: free-production]
 
 <Unjumble items={[
-  { jumbled: `подобається | Мені | музика | українська`, answer: `Мені подобається українська музика` },
-  { jumbled: `потрібно | Тобі | відпочити`, answer: `Тобі потрібно відпочити` },
-  { jumbled: `холодно | Йому | тут`, answer: `Йому тут холодно` },
-  { jumbled: `подобається | їй | Київ | Чи`, answer: `Чи їй подобається Київ` },
-  { jumbled: `потрібна | Нам | допомога`, answer: `Нам потрібна допомога` },
-  { jumbled: `цікаво | Вам | тут`, answer: `Вам тут цікаво` },
-  { jumbled: `футбол | Їм | подобається`, answer: `Їм подобається футбол` },
-  { jumbled: `здається | Мені | це | що | правда`, answer: `Мені здається, що це правда` },
-  { jumbled: `тепло | Тобі | зараз`, answer: `Тобі зараз тепло` },
-  { jumbled: `весело | Нам | дуже | тут`, answer: `Нам тут дуже весело` },
-  { jumbled: `потрібно | Йому | працювати | більше`, answer: `Йому потрібно більше працювати` },
-  { jumbled: `подобаються | Їй | квіти`, answer: `Їй подобаються квіти` }
+  { jumbled: `подобається / Мені / музика / українська / і / народні / пісні / дуже`, answer: `Мені дуже подобається українська музика і народні пісні` },
+  { jumbled: `потрібно / Тобі / добре / відпочити / після / важкого / дня / сьогодні`, answer: `Тобі сьогодні потрібно добре відпочити після важкого дня` },
+  { jumbled: `холодно / Йому / тут / в / цій / великій / кімнаті / дуже`, answer: `Йому дуже холодно тут в цій великій кімнаті` },
+  { jumbled: `подобається / їй / Київ / Чи / як / столиця / України / взагалі`, answer: `Чи їй взагалі подобається Київ як столиця України` },
+  { jumbled: `потрібна / Нам / допомога / з / цим / складним / завданням / твоя`, answer: `Нам потрібна твоя допомога з цим складним завданням` },
+  { jumbled: `цікаво / Вам / тут / працювати / в / цій / компанії / Чи`, answer: `Чи вам цікаво працювати тут в цій компанії` },
+  { jumbled: `футбол / Їм / подобається / український / і / вони / дивляться / матчі`, answer: `Їм подобається український футбол і вони дивляться матчі` },
+  { jumbled: `здається / Мені / що / це / правда / і / я / вірю`, answer: `Мені здається, що це правда, і я вірю` },
+  { jumbled: `тепло / Тобі / зараз / в / цьому / новому / светрі / Чи`, answer: `Чи тобі зараз тепло в цьому новому светрі` },
+  { jumbled: `весело / Нам / дуже / тут / на / цій / вечірці / сьогодні`, answer: `Нам сьогодні дуже весело тут на цій вечірці` },
+  { jumbled: `потрібно / Йому / працювати / більше / щоб / заробити / гроші / гарні`, answer: `Йому потрібно більше працювати, щоб заробити гарні гроші` },
+  { jumbled: `подобаються / Їй / квіти / червоні / особливо / троянди / і / тюльпани`, answer: `Їй подобаються червоні квіти, особливо троянди і тюльпани` }
 ]} />
 
 ### At the Restaurant [stage: free-production]
@@ -819,22 +824,10 @@ Try creating similar sentences about yourself before moving to the activities be
 | їм | /jim/ | to them | pron | - | Dative of вони |
 | подобатися | /pɔdɔˈbɑtɪsʲɑ/ | to be liked, to please | verb | - | + Dative |
 | здаватися | /zdɑˈvɑtɪsʲɑ/ | to seem | verb | - | + Dative |
-| потрібно | /pɔˈtrʲibnɔ/ | needed, necessary | adv | - | + Dative + inf/noun |
-| необхідно | /nɛɔbˈxʲidnɔ/ | essential, necessary | adv | - | more formal than потрібно |
-| цікаво | /t͡sʲiˈkɑvɔ/ | interesting | adv | - | Мені цікаво. |
-| важко | /ˈvɑʒkɔ/ | difficult, hard | adv | - | Мені важко. |
-| легко | /ˈlɛɦkɔ/ | easy | adv | - | Мені легко. |
 | приємно | /prɪˈjɛmnɔ/ | pleasant | adv | - | Мені приємно. |
 | боляче | /bɔˈlʲɑt͡ʃɛ/ | painful | adv | - | Мені боляче. |
-| сумно | /ˈsumnɔ/ | sad | adv | - | Мені сумно. |
-| весело | /ˈvɛsɛlɔ/ | fun, merry | adv | - | Нам весело. |
-| гарно | /ˈɦɑrnɔ/ | beautiful, well | adv | - | Мені тут гарно. |
-| погано | /ˈpɔɦɑnɔ/ | bad | adv | - | Йому погано. |
-| холодно | /ˈxɔlɔdnɔ/ | cold | adv | - | Мені холодно. |
-| тепло | /ˈtɛplɔ/ | warm | adv | - | Тобі тепло? |
 | допомагати | /dɔpɔmɑˈɦɑtɪ/ | to help | verb | - | + Dative |
 | заважати | /zɑʋɑˈʒɑtɪ/ | to bother, disturb | verb | - | + Dative |
-| дякувати | /dʲɑˈkuʋɑtɪ/ | to thank | verb | - | + Dative |
 | зрозуміло | /zrɔzuˈmilɔ/ | clear, understood | adv | - | Вам зрозуміло? |
 | відмінок | /vidˈminɔk/ | grammatical case | noun | m | grammar term |
 | називний | /nɑzɪʋˈnɪj/ | Nominative (case) | adj | m | хто? що? |
@@ -844,4 +837,4 @@ Try creating similar sentences about yourself before moving to the activities be
 | родовий | /rɔdɔˈvɪj/ | Genitive (case) | adj | m | кого? чого? |
 | місцевий | /misˈt͡sɛvɪj/ | Locative (case) | adj | m | де? на чому? |
 | іменник | /iˈmɛnːɪk/ | noun | noun | m | grammar term |
-| час | /t͡ʃɑs/ | time | noun | m | Скільки часу? |
+| займенник | /zɑjˈmɛnːɪk/ | pronoun | noun | m | grammar term |

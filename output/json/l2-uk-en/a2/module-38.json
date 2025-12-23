@@ -12,34 +12,58 @@
     "phase": "A2.4",
     "moduleNumber": 38,
     "moduleType": "grammar",
-    "pedagogy": "Inquiry",
+    "pedagogy": "PPP",
     "immersionLevel": 0.4,
-    "title": "Noun Suffixes",
+    "title": "Word Formation — Adjective Suffixes",
     "titleUk": null,
-    "subtitle": "The Word Factory",
-    "description": "Learner can turn verbs into nouns (Reading -> Reader | Reading)",
+    "subtitle": "Painting the World with Nuance",
+    "description": "Learner can recognize and use relational adjective suffixes correctly",
     "objectives": [
-      "Learner can turn verbs into nouns (Reading -> Reader | Reading)",
-      "Learner can turn adjectives into nouns (Happy -> Happiness)",
-      "Learner can use diminutives for politeness and affection"
+      "Learner can recognize and use relational adjective suffixes correctly",
+      "Learner can express affection and softness using diminutive suffixes",
+      "Learner can amplify meanings using intensive suffixes for emphasis"
     ],
     "objectivesUk": null,
     "grammarFocus": [
-      "noun suffixes (-ння, -ття, -ість, -ач, -ець, -ник)",
-      "diminutives (-ок, -ик, -ка)"
+      "relational suffixes (-н-, -ськ-)",
+      "diminutive/subjective suffixes (-еньк-, -есеньк-)",
+      "intensifier suffixes (-енн-, -уч-)",
+      "adjectival patterns"
     ],
     "tags": [
       "grammar",
-      "nouns",
-      "suffixes",
-      "word-formation"
+      "word-formation",
+      "adjectives",
+      "suffixes"
     ],
     "totalDuration": "60 min",
     "transliterationMode": "none",
-    "sections": [],
-    "rawMarkdown": "---\nmodule: a2-38\ntitle: Noun Suffixes\nsubtitle: \"The Word Factory\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"Inquiry\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - nouns\n  - suffixes\n  - word-formation\ngrammar:\n  - noun suffixes (-ння, -ття, -ість, -ач, -ець, -ник)\n  - diminutives (-ок, -ик, -ка)\nobjectives:\n  - \"Learner can turn verbs into nouns (Reading -> Reader | Reading)\"\n  - \"Learner can turn adjectives into nouns (Happy -> Happiness)\"\n  - \"Learner can use diminutives for politeness and affection\"\nvocabulary_count: 35\n---\n\n## Warm-up\n\nWelcome to the **Word Factory**!\nIn the last module, we put prefixes on the *front* of words to change direction.\nNow, we put suffixes on the *end* of words to change their **class**.\n\nImagine a machine:\n1.  Input: **Чита-ти** [Verb: To read] -> [Machine] -> Output: **Чита-ч** [Noun: Reader].\n2.  Input: **Чита-ти** -> [Machine] -> Output: **Чита-ння** [Noun: Reading].\n3.  Input: **Добр-ий** [Adj: Good/Kind] -> [Machine] -> Output: **Добр-ота** [Noun: Kindness].\n\nThis is how you multiply your vocabulary instantly.\n\n> [!question] Think about it\n> English does this too:\n> - Teach -> Teach**er** (-er = Person)\n> - Teach -> Teach**ing** (-ing = Process)\n> - Kind -> Kind**ness** (-ness = Abstract Quality)\n> Ukrainian has the exact same logic!\n\n> [!resources] 🔗 External Resources\n>\n> **YouTube:** [Prefix з-/с-: Which one to use? ...](https://www.youtube.com/watch?v=fRv6h6nhPxQ) — Spell It Right! #Ukrainian\n>\n> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview\n>\n> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises\n\n---\n\n## The Suffix System\n\nLet's look at the three main machines in our factory.\n\n## Machine 1: The Person Maker (-ач | -ець | -ник)\n\nTurns an **Action** into a **Doer**.\n\n| Input (Verb) | Suffix | Output (Person) | Note |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти: Read | -ач | **Читач**: Reader | Also: Глядач: Viewer |\n| **Продава**ти: Sell | -ець | **Продавець**: Seller | Also: Співець: Singer |\n| **Писа**ти: Write | -ник | **Письменник**: Writer | Double 'н'! |\n| **Вчи**ти: Teach | -тель | **Вчитель**: Teacher | |\n\n## Machine 2: The Process Maker (-ння | -ття)\n\nTurns an **Action** into a **Thing/Process** (Gerund).\n*Usually requires double consonants.*\n\n| Input (Verb) | Suffix | Output (Process) | English |\n| :--- | :--- | :--- | :--- |\n| **Чита**ти | -ння | **Читання** | Reading |\n| **Писа**ти | -ння | **Писання** | Writing (Scripture) |\n| **Навча**ти | -ння | **Навчання** | Learning/Studies |\n| **Жи**ти | -ття | **Життя** | Life |\n| **Пита**ти | -ння | **Питання** | Question |\n| **Завдава**ти | -ння | **Завдання** | Task/Assignment |\n\n> [!tip] Spelling Rule: Double N\n> Notice that **Читання**, **Питання**, **Життя** all have double consonants (**нн**, **тт**).\n> This is typical for verbal nouns ending in -я.\n> Just remember: Double N = Process!\n\n## Machine 3: The Concept Maker (-ість)\n\nTurns a **Quality** (Adjective) into a **Concept**.\n*Equivalent to English -ness or -ity.*\n\n| Input (Adjective) | Suffix | Output (Abstract) | English |\n| :--- | :--- | :--- | :--- |\n| **Можлив**ий | -ість | **Можливість** | Possibility |\n| **Важлив**ий | -ість | **Важливість** | Importance |\n| **Рад**ий | -ість | **Радість** | Joy/Gladness |\n| **Молод**ий | -ість | **Молодість** | Youth |\n| **Стар**ий | -ість | **Старість** | Old age |\n| **Відповідальн**ий | -ість | **Відповідальність** | Responsibility |\n\n---\n\n## Cultural Insight: Last Names\n\nMany Ukrainian surnames tell you what an ancestor did for a living!\nThey use the exact suffixes we just learned.\n\n- **-ник**:\n    - **Мельник** (Miller) -> Melnyk\n    - **Олійник** (Oil manufacturer) -> Oliynyk\n- **-ець**:\n    - **Кравець** (Tailor) -> Kravets\n    - **Швець** (Shoemaker) -> Shvets\n- **-ач**:\n    - **Ткач** (Weaver) -> Tkach\n- **-ар**:\n    - **Коваль** (Blacksmith) -> Koval\n    - **Лікар** (Doctor) -> Likar\n\n> [!cultural] Cultural Note: Identity\n> If you meet a Ukrainian with the last name **Кравчук**, you know their ancestor was a Tailor (Кравець).\n> If **Коваленко**, they were a Blacksmith (Коваль).\n> Surnames preserve history.\n\n---\n\n## Deep Dive: The Logic of -ISTYH\n\nThe suffix **-ість** is the equivalent of English **-ness** or **-ity**.\nIt creates abstract nouns from adjectives.\nIt is almost always **Feminine** and ends in a soft sign (**ь**).\n\n- **Reality:** Реальн-ий -> Реальн-ість.\n- **Popularity:** Популярн-ий -> Популярн-ість.\n- **Activity:** Активн-ий -> Активн-ість.\n- **Quality:** Якісн-ий -> Як-ість.\n\n> [!tip] Soft Sign Magic\n> Don't forget the soft sign at the end!\n> It's not *радіст*, it's **радість**.\n> It sounds soft and gentle.\n\n---\n\n## Deep Dive: Feminitives (The Rise of -KA)\n\nUkrainian is a gendered language. In the past, many professions were used only in the masculine form (Лікар, Директор), even for women.\nBut in modern Ukrainian, we prefer **Feminitives**!\nThe magic machine for this is the suffix **-ка**.\n\n| Profession (Masc) | Feminitive (Fem) |\n| :--- | :--- |\n| **Вчитель** (Teacher) | **Вчителька** |\n| **Лікар** (Doctor) | **Лікарка** |\n| **Автор** (Author) | **Авторка** |\n| **Директор** (Director) | **Директорка** |\n| **Журналіст** (Journalist) | **Журналістка** |\n| **Письменник** (Writer) | **Письменниця** (Note: -ця) |\n\n> [!note] Why it matters\n> Using feminitives is respectful and precise.\n> Saying \"Вона — хороший лікар\" is grammatically okay, but \"Вона — хороша лікарка\" highlights her identity.\n> It validates women's visibility in professional roles.\n\n---\n\n## Deep Dive: The Crafter Suffix (-ар)\n\nAnother common suffix for professions is **-ар** (or -яр).\nIt usually indicates a skilled craftsman or worker.\n\n- **Лік-и** (Medicine) -> **Лік-ар** (Doctor).\n- **Кух-ня** (Kitchen) -> **Кух-ар** (Cook).\n- **Перук-а** (Wig) -> **Перук-ар** (Hairdresser).\n- **Кобз-а** (Instrument) -> **Кобз-ар** (Bard).\n\n> [!note] Stress Shift\n> Often the stress falls on the suffix: Перук**ар**, Кобз**ар**.\n> But: Л**і**кар, К**у**хар.\n\n---\n\n## Story Time: The Little House\n\nМи у \"Світі Зменшення\" (World of Diminutives). Тут усе маленьке і миле.\n\nУ лісі стоїть маленький **будиночок**.\nУ ньому живе маленький **котик**.\nКотика звати Мурчик.\nКожного ранку в віконце світить лагідне **сонечко**.\nМурчик п'є молочко і читає маленьку **книжечку**.\nОдного разу до нього прийшла маленька **дівчинка**.\nВона принесла йому **квіточку**.\n\"Яка **радість**!\" — сказав котик.\nВін взяв свою улюблену **ручечку** і записав цей момент у щоденник.\nЦе було просте, але щасливе **життя**.\n\n> [!cultural] Cultural Insight: Diminutives\n> Ukrainians LOVE diminutives. We use them not just for small things, but to show **affection** and **politeness**.\n> - Asking for tea: \"Можна мені **чайок**?\" (Can I have a generic-little-tea?)\n> - Calling a friend: \"Привіт, **сонечко**!\" (Hello, little sun!)\n> - Even slightly annoyed: \"Що це за **питаннячко**?\" (What kind of little question is that?)\n> It makes the language sound softer and warmer.\n\n---\n\n## Deep Dive: Diminutives Logic\n\nTo make things small or cute, we use suffixes:\n- Masc: **-ок**, **-ик** (Кіт -> Кот**ик**, Дім -> Будин**ок** -> Будин**очок**)\n- Fem: **-ка**, **-чка** (Книга -> Книж**ка** -> Книж**ечка**, Рука -> Руч**ка**)\n- Neut: **-ко**, **-чко** (Сонце -> Соне**чко**, Вікно -> Вікон**це**)\n\n> [!tip] Magic of K/CH\n> Notice how **К** often changes to **Ч** or **Ц**?\n> - Ру**к**а -> Ру**ч**ка.\n> - Сон**ц**е -> Соне**ч**ко.\n> This is sound mutation (palatalization). It makes words easier to pronounce softly.\n\n---\n\n## Story Time Part 2: The Factory Tour\n\nЛаскаво просимо на \"Фабрику Слів\".\nСьогодні ми побачимо, як працюють машини.\nНа вході стоїть **охоронець** (guard). Він перевіряє перепустки.\nУ цеху працює **керівник** (manager). Він дає **завдання**.\nРобітники виконують **складання** (assembling) деталей.\nЦе важке **завдання**, але вони мають **терпіння** (patience).\n**Якість** (quality) — це їхній пріоритет.\nУ кутку сидить **обліковець** (accountant). Він рахує цифри.\nНа стіні висить **оголошення** (announcement): \"Вітаємо з Днем Народження!\".\nТут панує **дружність** (friendliness) і **повага** (respect).\n**Керівництво** (management) дбає про людей.\nЦе хороше **підприємство** (enterprise).\n\n---\n\n## Language in Action\n\n## Dialogue: The Interview\n\n**Interviewer:** Добрий день. Дякую за ваш інтерес до нашої компанії.\n**Candidate:** Добрий день. Це велика **можливість** для мене.\n**Interviewer:** У вас є досвід?\n**Candidate:** Так, я працював як **продавець** і як **водій**.\n**Interviewer:** Чудово. Але ця робота — це велика **відповідальність**.\n**Candidate:** Я розумію **важливість** цієї ролі. Я люблю **навчання** і нові **завдання**.\n**Interviewer:** Добре. Ось ваше перше **завдання**: напишіть план.\n**Candidate:** У мене немає ручки.\n**Interviewer:** Візьміть мою **ручечку**.\n**Candidate:** Дякую! Яка мила **ручечка**.\n**Interviewer:** (Сміється) Ви прийняті! Нам потрібен такий позитивний **працівник**.\n\n## Monologue: The Philosopher\n\nЩо таке **щастя**? Це складне **питання**.\nУ **молодість** ми шукаємо пригод.\nУ **старість** ми шукаємо спокій.\nДля когось щастя — це **кохання**.\nДля когось — це **творчість** (creativity).\nЯ думаю, що щастя — це **розуміння**.\nКоли є **розуміння** між людьми, є і **радість**.\nЦе моя **мудрість** (wisdom).\n\n## Dialogue: The Construction Site\n\n**Foreman:** Де **будівельник**?\n**Worker:** Він пішов на обід.\n**Foreman:** У нас термінове **завдання**! Де **водій** крана?\n**Worker:** **Водій** захворів.\n**Foreman:** Яка безвідповідальність! **Керівництво** буде зле.\n**Worker:** Зате **електрик** тут. Він робить **підключення**.\n**Foreman:** Добре. **Безпека** (safety) — це головне. Перевірте все.\n**Worker:** Так, ми знаємо. **Відповідальність** понад усе.\n\n---\n\n## Summary\n\n1.  **Suffixes change the part of speech.**\n2.  **-ач | -ець | -ник** = Person (Doer).\n3.  **-ння | -ття** = Process (Verbal Noun).\n4.  **-ість** = Abstract Concept (Quality).\n5.  **-ок | -ик | -ка** = Diminutive (Small/Cute).\n\n---\n\n## Activities\n\n## match-up: The Factory\n\n> Match the Suffix to its Meaning.\n\n- -ість :: Abstract Concept\n- -ння :: Process (Verbal Noun)\n- -ач :: Person (Doer)\n- -ець :: Person (Doer)\n- -ник :: Person (Doer)\n- -тель :: Person (Doer)\n- -ок :: Diminutive (Small Masc)\n- -ик :: Diminutive (Small Masc)\n- -ка :: Diminutive (Small Fem)\n- -чка :: Diminutive (Small Fem)\n- -ко :: Diminutive (Small Neut)\n- -чко :: Diminutive (Small Neut)\n\n## group-sort: Suffix Sorter\n\n> Which category does this suffix belong to?\n\n### Person - Doer\n- Читач\n- Письменник\n- Вчитель\n- Продавець\n- Співець\n- Водій\n\n### Process - Verbal Noun\n- Читання\n- Писання\n- Життя\n- Навчання\n- Питання\n- Завдання\n\n### Abstract - Concept\n- Радість\n- Молодість\n- Старість\n- Важливість\n- Можливість\n- Відповідальність\n\n## fill-in: Verb to Noun\n\n> Turn the verb into a Noun. Use the hint.\n\n1. Читати -> ___\n   > [!answer] читання\n   > [!options] читання | читач | читка\n\n2. Жити -> ___\n   > [!answer] життя\n   > [!options] життя | житель | житло\n\n3. Питати -> ___\n   > [!answer] питання\n   > [!options] питання | питач | питка\n\n4. Завдавати -> ___\n   > [!answer] завдання\n   > [!options] завдання | завдач | завод\n\n5. Писати -> ___\n   > [!answer] писання\n   > [!options] писання | письменник | писка\n\n6. Навчати -> ___\n   > [!answer] навчання\n   > [!options] навчання | навчач | вчення\n\n7. Знати -> ___\n   > [!answer] знання\n   > [!options] знання | знач | знак\n\n8. Бажати -> ___\n   > [!answer] бажання\n   > [!options] бажання | бажач | бажок\n\n9. Кохати -> ___\n   > [!answer] кохання\n   > [!options] кохання | кохач | коханець\n\n10. Розуміти -> ___\n    > [!answer] розуміння\n    > [!options] розуміння | розумач | розум\n\n11. Володіти -> ___\n    > [!answer] володіння\n    > [!options] володіння | володар | влада\n\n12. Створити -> ___\n    > [!answer] створення\n    > [!options] створення | творець | твір\n\n## fill-in: Person Maker\n\n> Who does the action?\n\n1. Хто читає? Це ___.\n   > [!answer] читач\n   > [!options] читач | читання | читець\n\n2. Хто пише книги? Це ___.\n   > [!answer] письменник\n   > [!options] письменник | писач | писання\n\n3. Хто продає товари? Це ___.\n   > [!answer] продавець\n   > [!options] продавець | продаж | продажник\n\n4. Хто дивиться виставу? Це ___.\n   > [!answer] глядач\n   > [!options] глядач | глядіння | глядець\n\n5. Хто вчить дітей? Це ___.\n   > [!answer] вчитель\n   > [!options] вчитель | учень | вчення\n\n6. Хто водить машину? Це ___.\n   > [!answer] водій\n   > [!options] водій | водач | водник\n\n7. Хто співає? Це ___.\n   > [!answer] співець\n   > [!options] співець | спів | співка\n\n8. Хто бореться? Це ___.\n   > [!answer] борець\n   > [!options] борець | борня | боритель\n\n9. Хто будує? Це ___.\n   > [!answer] будівельник\n   > [!options] будівельник | будач | будова\n\n10. Хто перекладає? Це ___.\n    > [!answer] перекладач\n    > [!options] перекладач | переклад | кладач\n\n11. Хто слухає? Це ___.\n    > [!answer] слухач\n    > [!options] слухач | слух | слуга\n\n12. Хто грає? Це ___.\n    > [!answer] гравець\n    > [!options] гравець | грач | гральник\n\n## fill-in: Abstract Concepts\n\n> Turn adjective into Abstract Noun (-ість).\n\n1. Радий -> ___\n   > [!answer] радість\n   > [!options] радість | радист | радання\n\n2. Молодий -> ___\n   > [!answer] молодість\n   > [!options] молодість | молодець | молодь\n\n3. Старий -> ___\n   > [!answer] старість\n   > [!options] старість | старець | старина\n\n4. Важливий -> ___\n   > [!answer] важливість\n   > [!options] важливість | вага | важкість\n\n5. Можливий -> ___\n   > [!answer] можливість\n   > [!options] можливість | можна | може\n\n6. Відповідальний -> ___\n   > [!answer] відповідальність\n   > [!options] відповідальність | відповідь | відповідач\n\n7. Чесний -> ___\n   > [!answer] чесність\n   > [!options] чесність | честь | чесун\n\n8. Мужній -> ___\n   > [!answer] мужність\n   > [!options] мужність | муж | мужчина\n\n9. Щирий -> ___\n   > [!answer] щирість\n   > [!options] щирість | щир | щиро\n\n10. Сміливий -> ___\n    > [!answer] сміливість\n    > [!options] сміливість | сміло | смільчак\n\n11. Швидкий -> ___\n    > [!answer] швидкість\n    > [!options] швидкість | швидко | швид\n\n12. Якість -> Який -> ___\n    > [!answer] якість\n    > [!options] якість | як | якийсь\n\n## match-up: Cute Things\n\n> Match the normal word to its diminutive.\n\n- Кіт :: Котик\n- Дім :: Будиночок\n- Сонце :: Сонечко\n- Книга :: Книжечка\n- Рука :: Ручечка\n- Квітка :: Квіточка\n- Брат :: Братик\n- Син :: Синок\n- Вікно :: Віконце\n- Мама :: Матуся\n- Тато :: Татусь\n- Вода :: Водичка\n\n## unjumble: Soft Talk\n\n1. сонечко | світить | яскраве\n   > [!answer] Світить яскраве сонечко\n2. читає | дівчинка | книжечку\n   > [!answer] Дівчинка читає книжечку\n3. котик | молоко | п'є\n   > [!answer] Котик п'є молоко\n4. ручечка | моя | де\n   > [!answer] Де моя ручечка\n5. маленький | має | будиночок | він\n   > [!answer] Він має маленький будиночок\n6. красива | це | квіточка\n   > [!answer] Це красива квіточка\n7. у | братик | мене | є\n   > [!answer] У мене є братик\n8. водичку | п'є | пташка\n   > [!answer] Пташка п'є водичку\n9. матуся | моя | добра\n   > [!answer] Моя матуся добра\n10. тут | синок | мій\n    > [!answer] Тут мій синок\n11. віконце | відкрий | маленьке\n    > [!answer] Відкрий маленьке віконце\n12. сестричка | грається | мала\n    > [!answer] Мала сестричка грається\n\n## quiz: Logic Check\n\n1. Which suffix makes a verb into a **Process**?\n   - [x] -ння\n   - [ ] -ач\n   - [ ] -ість\n\n2. Which suffix makes an adjective into a **Concept**?\n   - [x] -ість\n   - [ ] -ець\n   - [ ] -ик\n\n3. \"Письменник\" means:\n   - [x] Writer (Person)\n   - [ ] Writing (Process)\n   - [ ] Little letter (Diminutive)\n\n4. \"Радість\" comes from which adjective?\n   - [x] Радий: Glad\n   - [ ] Радіо: Radio\n   - [ ] Рада: Council\n\n5. Which suffix creates a **Male Doer**?\n   - [x] -ач | -ець\n   - [ ] -ість\n   - [ ] -ння\n\n6. What is the diminutive of \"Сонце\"?\n   - [x] Сонечко\n   - [ ] Сончик\n   - [ ] Сонка\n\n7. \"Вчитель\" ends with which suffix?\n   - [x] -тель\n   - [ ] -ель\n   - [ ] -ль\n\n8. \"Життя\" means:\n   - [x] Life\n   - [ ] Living person\n   - [ ] Grain (Жито)\n\n## cloze: The Story Nouns\n\n> Fill in the missing nouns.\n\nУ мене є [___:1].\nЯке твоє [___:2]?\nМоя [___:3] була цікава.\nЯ любив [___:4].\nЯ хотів бути [___:5].\nАле [___:6] прийшла швидко.\nТепер я просто [___:7] в театрі.\nАле це велика [___:8].\nЦе моя [___:9].\nЦе складне [___:10].\nДе мій [___:11]?\nОсь твоя [___:12].\n\n1. питання | питач | питанок\n> [!answer] питання\n\n2. життя | жити | живий\n> [!answer] життя\n\n3. молодість | молодий | молодь\n> [!answer] молодість\n\n4. читання | читач | читка\n> [!answer] читання\n\n5. письменником | писання | писар\n> [!answer] письменником\n\n6. старість | старий | старина\n> [!answer] старість\n\n7. глядач | глядіння | гляд\n> [!answer] глядач\n\n8. радість | радий | радіння\n> [!answer] радість\n\n9. відповідальність | відповідальний | відповідь\n> [!answer] відповідальність\n\n10. завдання | завдавати | завда\n> [!answer] завдання\n\n11. котик | кіт | котяра\n> [!answer] котик\n\n12. книжечка | книга | книжок\n> [!answer] книжечка\n\n## error-correction: Wrong Suffix\n\n1. Я люблю **читач** книг. (Process needed)\n   > [!error] читач\n   > [!answer] читання\n   > [!explanation] \"I love reading\" is a process, not \"reader\" (person).\n   > [!options] читання | читач\n\n2. Це велика **важливий**. (Noun needed)\n   > [!error] важливий\n   > [!answer] важливість\n   > [!explanation] \"This is a great importance\", not \"important\".\n   > [!options] важливість | важливий\n\n3. Мій брат — **писання**. (Person needed)\n   > [!error] писання\n   > [!answer] письменник\n   > [!explanation] \"My brother is a writer\", not \"writing\".\n   > [!options] письменник | писання\n\n4. Де малий **кіт**? (Diminutive context)\n   > [!error] кіт\n   > [!answer] котик\n   > [!explanation] Little cat implies \"котик\".\n   > [!options] котик | кіт\n\n5. Це моя **відповідальний**. (Noun needed)\n   > [!error] відповідальний\n   > [!answer] відповідальність\n   > [!explanation] \"This is my responsibility\", not \"responsible\".\n   > [!options] відповідальність | відповідальний\n\n6. Він хороший **вчення**. (Person needed)\n   > [!error] вчення\n   > [!answer] вчитель\n   > [!explanation] \"He is a good teacher\", not \"teaching\".\n   > [!options] вчитель | вчення\n\n---\n\n## Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | neut | -ння |\n| писання | /pɪˈsɑnʲːɑ/ | writing | noun | neut | -ння |\n| навчання | /nɑfˈt͡ʃɑnʲːɑ/ | learning/studies | noun | neut | -ння |\n| життя | /ʒɪtˈtʲɑ/ | life | noun | neut | -ття |\n| питання | /pɪˈtɑnʲːɑ/ | question | noun | neut | -ння |\n| завдання | /zɑʋˈdɑnʲːɑ/ | task/assignment | noun | neut | -ння |\n| важливість | /ʋɑʒˈlɪʋisʲtʲ/ | importance | noun | fem | -ість |\n| можливість | /mɔʒˈlɪʋisʲtʲ/ | possibility | noun | fem | -ість |\n| відповідальність | /ʋidpɔʋiˈdɑlʲnisʲtʲ/ | responsibility | noun | fem | -ість |\n| радість | /rˈɑdisʲtʲ/ | joy | noun | fem | -ість |\n| молодість | /mɔˈlɔdisʲtʲ/ | youth | noun | fem | -ість |\n| старість | /stˈɑrisʲtʲ/ | old age | noun | fem | -ість |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | -ач |\n| письменник | /pɪsʲˈmɛnːɪk/ | writer | noun | masc | -ник |\n| вчитель | /ʋˈt͡ʃɪtɛlʲ/ | teacher | noun | masc | -тель |\n| водій | /ʋɔˈdij/ | driver | noun | masc | -ій |\n| продавець | /prɔdɑˈʋɛt͡sʲ/ | seller | noun | masc | -ець |\n| співець | /spiˈʋɛt͡sʲ/ | singer (poetic) | noun | masc | -ець |\n| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | -ець |\n| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | -ач |\n| домик | /ˈdɔmɪk/ | little house | noun | masc | -ик |\n| котик | /ˈkɔtɪk/ | kitty | noun | masc | -ик |\n| синок | /sɪˈnɔk/ | sonny | noun | masc | -ок |\n| братик | /ˈbrɑtɪk/ | little brother | noun | masc | -ик |\n| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | little sister | noun | fem | -чка |\n| книжечка | /ˈknɪʒɛt͡ʃkɑ/ | little book | noun | fem | -ечка |\n| ручечка | /ˈrut͡ʃɛt͡ʃkɑ/ | little pen/hand | noun | fem | -ечка |\n| квіточка | /ˈkʋitɔt͡ʃkɑ/ | little flower | noun | fem | -очка |\n| сонечко | /ˈsɔnɛt͡ʃkɔ/ | little sun | noun | neut | -чко |\n| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | little girl | noun | fem | -ка |\n",
-    "createdAt": "2025-12-22T00:08:35.738199Z",
-    "modifiedAt": "2025-12-22T00:08:35.738199Z",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "Summary",
+        "nameEn": null,
+        "type": "summary",
+        "content": "## The Palette of Description 🎨\n\n> 🧭\n\nIn our previous session, we learned how small blocks called suffixes can turn a simple action into a person (the \"Actor\"). Today, we explore how suffixes can transform a noun or a verb into a **Description**. Ukrainian is famous for its rich and expressive adjectival system, and most of that linguistic magic happens at the very end of the word stem. Suffixes are the tools that allow us to add color, texture, and emotional depth to our sentences.\n\nAdjective suffixes allow you to relate objects to locations, intensify feelings, or even add a layer of emotional \"softness\" to your speech. This modularity makes Ukrainian particularly well-suited for poetry, storytelling, and precise technical descriptions alike. By mastering just a few endings, you gain the ability to create hundreds of new descriptive words from roots you already know. This is the hallmark of a language built on systematic creativity and melodic precision. Every suffix is a deliberate brushstroke.\n\n### Core Adjective Suffixes: The Logic of Quality\n\n| Suffix | Function | Root | Derived Adjective | English |\n| :--- | :--- | :--- | :--- | :--- |\n| **-Н-** | Relational / General | зал- (hall) | **зальний** | hall-related |\n| **-СЬК-** | Origin / Belonging | Київ- (Kyiv) | **київський** | Kyiv-style |\n| **-ЕНЬК-** | Diminutive / Soft | мал- (small) | **маленький** | tiny/cute |\n| **-ЕНН-** | Intensive / Large | страх- (fear) | **страшенний** | terrifying |\n\n---\n\n## Subjective Evaluation: The Emotional Side of Grammar\n\nOne of the most unique and beautiful features of the Ukrainian language is its system of **Subjective Evaluation**. Unlike English, where you often need separate adverbs like \"very,\" \"super,\" or \"cute,\" Ukrainian embeds these complex feelings directly into the adjective using specific suffixes. This makes the language feel more intimate and deeply expressive.\n\n### 1. The Diminutive Touch (-еньк-, -есеньк-)\nWhen you want to show affection, softness, or simply indicate something is small and charming, you use **-еньк-**. This is the suffix of \"cradles and lullabies,\" but it is also used daily by adults to show friendliness or to make a request sound more polite to the listener.\n- Гарний → Гарн**еньк**ий\n- Веселий → Весел**еньк**ий\n- Чистий → Чист**есеньк**ий\n\n### 2. The Intensive Power (-енн-, -уч-)\nWhen a simple \"very\" isn't enough to capture the scale of something, Ukrainian stretches the word physically. The suffix **-енн-** (often with a doubled 'н') creates a sense of enormous scale, heavy weight, or overwhelming intensity.\n- Здоров_ий → Здоров**енн**ий\n- Висок_ий → Висок**есеньк**ий\n\n> [!important] The Sound of Intensity\n> Notice how the pronunciation shifts with these intensifiers. When you say **страшенний**, you should linger slightly on the double \"н,\" giving the word a physical weight that matches its dramatic meaning. This phonetic mirroring is a hallmark of expressive Ukrainian morphology and helps the listener feel the weight of your words and the depth of your emotions. It transforms a simple adjective into a physical presence.\n\n---\n\n## The Relational Bridge: From Noun to Adjective\n\nHow do we describe what something is \"made of\" or \"where it belongs\" in the geography of our lives? We use **Relational Suffixes** to build these social and physical bridges.\n\n### 1. The -Н- Universal\nThis is the most common bridge in the language. It connects houses to streets, products to seasons, and abstract ideas to concrete actions. It is the \"standard\" or \"neutral\" way to create a relationship between two concepts.\n- Сонце → Соняч**н**ий\n- Школа → Шкіль**н**ий\n- Питання → Питаль**н**ий\n\n### 2. The -СЬК- Identity\nThis suffix connects people to their homes, cities, and cultural identities. It is the suffix of geography and group belonging.\n- Україна → Україн**ськ**ий\n- Львів → Львів**ськ**ий\n- Студент → Студент**ськ**ий\n\n### Prefix-Suffix Synergy in Adjectives\nSometimes, an adjective requires both a prefix and a suffix to find its true meaning. For example, the adjective **не_за_бут_н_ій** (unforgettable) uses the negation prefix **не-**, the prepositional prefix **за-**, and the relational suffix **-н-**. This demonstrates the modular power of the Ukrainian word-formation system, where multiple small pieces combine to form highly specific technical or emotional terms. Every piece of the word carries a distinct logical weight and helps define the reality.\n\n> [!tip] Softening the -СЬК-\n> Remember that the sequence **-ськ-** is always soft in Ukrainian (hence the soft sign **ь**). This gives the language a melodic, flowing quality, especially when describing origins or national identities. Practice saying **український** with a very soft 's' and 'k' sound to capture the authentic, warm accent of a native speaker.\n\n---\n\n## Anti-Propaganda Showcase: The Language of Precision\n\n> [!myth] Myth: \"Ukrainian is a poetic but 'imprecise' language better suited for songs than science or electronics.\"\n> **The Verdict: Absolute Fiction.**\n>\n> **Linguistic Fact:** The Ukrainian adjectival system is one of the most structurally precise in Europe. The ability to distinguish between \"territorial\" (-ський), \"material\" (-яний), and \"relational\" (-ний) qualities with a single suffix allows for a technical density that many other languages can only achieve through long, clunky prepositional phrases. This prevents ambiguity in legal and technical documents.\n>\n> During the Soviet era, many precise Ukrainian technical adjectives were replaced by more generic imperial loanwords in scientific journals to make the language seem \"inferior.\" However, the internal logic of the suffixes remained alive in the people's speech. Today, Ukrainian scientists are restoring these \"lost\" adjectives to describe modern technologies like **напівпровідниковий** (semiconductor) or **високотехнологічний** (high-tech) with structural elegance and perfect clarity. Ukrainian is a language of science as much as it is a language of the soul and of the future.\n\n---\n\n## Narrative Context: The Village Fair 🌾\n\n**Read about Bohdan's weekend trip to a picturesque Ukrainian village. Look for the descriptive suffixes.**\n\nМинулого тижня Богдан поїхав у гості до своєї бабусі. Вона живе в **маленькому** будинку біля річки. Це був дуже **сонячний** день. Все навколо було **зелененьке** і свіже. \n\nНа площі проходив **сільський** ярмарок. Богдан побачив **величезний** кавун на одному зі столів. \n— Ого! — вигукнув він. — Який **здоровенний** овоч! Хоча, насправді, кавун — це велика ягода.\n\nПоруч продавали **львівську** каву та **солодке** печиво. Бабуся купила **гарненьку** хустку. Вона була **тоненька** і дуже м’яка на дотик. Повітря було **свіжесеньке**. Богдан відчув, що життя в селі — це **справжній** відпочинок для міського мешканця. Він був **щасливенький**, що нарешті змінив обстановку і побачив друзів. Кожна **українська** родина любить такі спокійні вихідні на природі. Навіть маленька **дівчинка** на вулиці посміхалася йому в цей день. Її **сонечко** в руках притягувало погляди.\n\n> [!cultural] History Bite: The Colors of Identity\n> Ukrainian adjectives for colors often have cultural depths. For instance, **блакитний** (sky blue) and **жовтий** (yellow) are not just labels; they are the colors of the national flag, representing the sky and the wheat fields. When you add suffixes like **-еньк-** to these colors in folk songs (e.g., **синесенький**), you are expressing a deep, protective love for the land itself.\n\n---\n\n## Need More Practice?\n\n> [!resources] External Resources\n> - 📖 [Ukrainian Adjective Suffixes Map](https://www.ukrainianlessons.com/adjectives/) — Visual guides to complex word formation.\n> - 🎙 [Podcast: Describing People and Places](https://www.ukrainianlessons.com/descriptions/) — Listen to suffixes in real action.\n> - 🎭 [Adjective Builder Tool](https://www.education-ukrainian.com/morphology) — Practice adding suffixes to noun stems.\n\n---"
+      },
+      {
+        "id": "section-2",
+        "name": "Activities",
+        "nameEn": null,
+        "type": "activities",
+        "content": "## group-sort: Adjective Categories (Concept: Suffix Function) [stage: practice]\nSort these adjectives based on whether they describe a Relation (where/what), an Intensity (large/very), or a Softness (small/cute).\n\n### Відносні (Relation/Origin)\n- Київський\n- Шкільний\n- Вечірній\n- Залізний\n- Морський\n- Студентський\n\n### Інтенсивні (Intensity/Large)\n- Величезний\n- Здоровенний\n- Височенний\n- Страшенний\n- Старезний\n- Багатенний\n\n### Суб'єктивні (Softness/Cute)\n- Маленький\n- Гарненький\n- Біленький\n- Чистесенький\n- Тоненький\n- Солодненький\n\n## match-up: Situations and Descriptions (Concept: Contextual Logic) [stage: practice]\nMatch the situation to the most appropriate expressive adjective form.\n\n| Situation | Description |\n| :--- | :--- |\n| A tiny sleeping puppy | Маленький |\n| A mountain that touches the clouds | Височенний |\n| A traditional souvenir from Lviv | Львівський |\n| A sunny morning after rain | Сонячний |\n| A blanket that is very soft to touch | Тоненька |\n| A monster in a scary movie | Страшенний |\n| A clean shirt for the first day of school | Шкільна |\n| A flag flying in the heart of Kyiv | Київський |\n| An ancient oak tree in the forest | Старезний |\n| A very healthy and strong athlete | Здоровенний |\n\n## fill-in: Building Descriptions (Concept: Suffix Derivation) [stage: practice]\nTurn the noun/stem in parentheses into the correct adjective form using the suffixes -н- or -ськ-.\n\n1. Це (Київ) [___:1] театр, він дуже старий.\n   > [!answer] київський\n   > [!options] київський | київний | київенький | київенний\n\n2. Сьогодні (сонце) [___:2] погода, ми йдемо гуляти.\n   > [!answer] сонячна\n   > [!options] сонячна | сонцева | сонцівська | сонцесенька\n\n3. (Студент) [___:3] життя завжди веселе і активне.\n   > [!answer] студентське\n   > [!options] студентське | студентне | студентеньке | студентинне\n\n4. (Залізо) [___:4] дорога — це важливий транспорт.\n   > [!answer] залізна\n   > [!options] залізна | залізська | залізненька | залізинна\n\n5. (Школа) [___:5] автобус приїхав о восьмій ранку.\n   > [!answer] шкільний\n   > [!options] шкільний | шкільський | шкільненький | шкілинний\n\n6. (Вечір) [___:6] Оdesa виглядає просто чарівно.\n   > [!answer] вечірня\n   > [!options] вечірня | вечірська | вечірненька | вечірина\n\n7. (Море) [___:7] берег був піщаний і дуже теплий.\n   > [!answer] морський\n   > [!options] морський | морний | морненький | моринний\n\n8. (Україна) [___:8] прапор має синій та жовтий кольори.\n   > [!answer] український\n   > [!options] український | україний | україненький | українинний\n\n## quiz: The Adjective Architect (Concept: Morphological Nuance) [stage: practice]\nTest your core understanding of how Ukrainian adjective suffixes alter the meaning and tone of your speech.\n\n1. Який саме суфікс ви обов'язково оберете, щоб сказати, що предмет дуже милий чи зовсім маленький?\n- [x] Спеціальний суфікс \"-еньк-\" (гарненький, біленький)\n- [ ] Технічний суфікс \"-ськ-\" (київський, морський)\n- [ ] Суфікс походження \"-н-\" (шкільний, вечірній)\n- [ ] Суфікс величезного розміру \"-енн-\" (здоровенний)\n\n---\n\n2. Що саме зазвичай суттєво змінюється в значенні слова, коли ми додаємо до нього суфікс \"-енн-\" сьогодні?\n- [x] Значення стає значно інтенсивнішим або позначає величезний розмір\n- [ ] Значення стає дуже пестливим, ніжним та надзвичайно приємним\n- [ ] Значення починає вказувати виключно на місце походження певного об'єкта\n- [ ] Слово автоматично перетворюється з якісного прикметника на дієслово\n\n---\n\n3. Який прикметник ми можемо утворити від назви столиці України за допомогою суфікса \"-ськ-\" у реченні?\n- [x] Це буде прикметник \"київський\"\n- [ ] Це буде прикметник \"київрада\"\n- [ ] Це буде прикметник \"київний\"\n- [ ] Це буде прикметник \"київін\"\n\n---\n\n4. Як саме в сучасній українській мові правильно написати професійний суфікс \"-ськ-\" після літери \"с\"?\n- [x] Його обов'язково треба писати з м'яким знаком перед закінченням\n- [ ] Його треба писати через короткий дефіс для кращого зв'язку з коренем\n- [ ] Його треба писати з великої літери, якщо це назва великого міста\n- [ ] Його треба писати разом з коренем без жодних додаткових знаків\n\n---\n\n5. Який із цих прикметників описує предмет, що є ідеально чистим та викликає значну симпатію?\n- [x] Спеціальне слово чистесенький\n- [ ] Просте слово чистий\n- [ ] Прислівник чистенько\n- [ ] Слово чистенний\n\n---\n\n6. Яка головна і базова функція суфікса \"-н-\" у творенні нових прикметників в сучасній Україні?\n- [x] Він утворює загальні відносні прикметники від різних іменників\n- [ ] Він використовується виключно для творення назв диких тварин\n- [ ] Він вказує лише на те, що дія вже повністю закінчилася в минулому\n- [ ] Він робить будь-яке слово дуже смішним для носія мови\n\n---\n\n7. Чому використання суфіксів оцінки \"-еньк-\" є таким надзвичайно важливим у розмовній мові кожної людини?\n- [x] Вони додають мовленню емоційності, теплоти та особливої ввічливості\n- [ ] Без них неможливо побудувати жодне складне наукове речення\n- [ ] Вони допомагають швидше вимовляти дуже довгі українські слова\n- [ ] Вони вказують на офіційний статус людини, з якою ми зараз розмовляємо\n\n---\n\n8. Як перетворити звичайне слово \"великий\" на слово, що означає щось по-справжньому гігантське зараз?\n- [x] Треба додати суфікс \"-езн-\" або \"-енн-\": величезний\n- [ ] Треба додати суфікс \"-еньк-\": величенький\n- [ ] Треба додати суфікс \"-ськ-\": велицький\n- [ ] Треба просто повторити це слово два рази поспіль\n\n## unjumble: Descriptive Sentences (Concept: Syntax Integrity) [stage: practice]\nRearrange the words to form expressive sentences using the adjective suffixes learned today.\n\n1. у / лісі / стоїть / старезний / дуб / біля / річки\n   > [!answer] У лісі стоїть старезний дуб біля річки\n \n2. вона / купила / гарненьку / сукню / у / львівському / магазині\n   > [!answer] Вона купила гарненьку сукню у львівському магазині\n\n3. вчора / був / страшенний / дощ / і / сильний / вітер / ввечері\n   > [!answer] Вчора був страшенний дощ і сильний вітер ввечері\n\n4. маленький / хлопчик / тримає / біленьку / квітку / в / руках / сьогодні\n   > [!answer] Маленький хлопчик тримає біленьку квітку в руках сьогодні\n\n5. український / борщ / — / це / дуже / смачна / страва / для / всієї / родини\n   > [!answer] Український борщ — це дуже смачна страва для всієї родини\n\n6. ми / побачили / величезний / корабель / у / морському / порту / вчора\n   > [!answer] Ми побачили величезний корабель у морському порту вчора\n\n## true-false: Descriptive Nuances (Concept: Concept Validation) [stage: practice]\nValidate your understanding of how adjective suffixes impact the emotional and logical weight of a sentence.\n\n1. Суфікс \"-еньк-\" робить будь-який прикметник більш офіційним і холодним.\n   - [ ] True\n   - [x] False\n   > Навпаки, він додає теплоти, ніжності та пестливості.\n\n2. Суфікс \"-ськ-\" завжди пишеться з м'яким знаком.\n   - [x] True\n   - [ ] False\n   > Так, це стандартне правило для цього суфікса (-ськ, -цьк, -зьк).\n\n3. Прикметник \"величезний\" означає те саме, що й \"маленький\".\n   - [ ] True\n   - [x] False\n   > Ні, він означає дуже великий, гігантський.\n\n4. Суфікс \"-н-\" допомагає утворити прикметник від іменника \"школа\".\n   - [x] True\n   - [ ] False\n   > Так, виходить слово \"шкільний\".\n\n5. Слово \"свіжесенький\" звучить приємніше, ніж просто слово \"свіжий\".\n   - [x] True\n   - [ ] False\n   > Так, це форма суб'єктивної оцінки з пестливим значенням.\n\n6. Прикметник \"київська\" має жіночий рід у цій формі.\n   - [x] True\n   - [ ] False\n   > Так, закінчення \"-а\" вказує на жіночий рід.\n\n7. Усі українські прикметники обов'язково повинні мати суфікс \"-еньк-\".\n   - [ ] True\n   - [x] False\n   > Ні, це лише додатковий суфікс для вираження емоцій та розміру.\n\n8. Суфікс \"-енн-\" у слові \"страшенний\" подвоює літеру \"н\".\n   - [x] True\n   - [ ] False\n   > Так, це характерна особливість цього інтенсивного суфікса.\n\n## cloze: The Cozy Morning (Concept: Narrative Coherence) [stage: production]\nComplete the cozy description of a morning in a Ukrainian village by choosing the most suitable expressive adjectives.\n\nСьогодні Марко прокинувся дуже рано. Повітря було [___:1]. Він підійшов до вікна і побачив [___:2] сонце. Небо було [___:3] і чисте. Його бабуся вже готувала [___:4] сніданок на кухні. Від неї пахло [___:5] печивом. На столі стояла [___:6] чашка з [___:7] кавою. Марко одягнув свій [___:8] светр, бо вранці було трохи прохолодно. Він вийшов на [___:9] ганок. Поруч бігав [___:10] рудий кіт. Вдалині було видно [___:11] гори, які здавалися [___:12] в ранковому тумані. День обіцяв бути просто чудовим.\n\n1. свіжесеньке | старезне | величезне | київське\n> [!answer] свіжесеньке\n\n2. лагідненьке | страшне | студентське | залізне\n> [!answer] лагідненьке\n\n3. блакитненьке | страшенне | сільське | солодке\n> [!answer] блакитненьке\n\n4. смачненький | величезний | морський | український\n> [!answer] смачненький\n\n5. домашнім | київським | морським | старезним\n> [!answer] домашнім\n\n6. маленька | довга | залізна | шкільна\n> [!answer] маленька\n\n7. гарячою | білою | сонячною | студентською\n> [!answer] гарячою\n\n8. вовняний | шкільний | львівський | величезний\n> [!answer] вовняний\n\n9. дерев'яний | старезний | страшенний | біленький\n> [!answer] дерев'яний\n\n10. пухкенький | величезний | морський | залізний\n> [!answer] пухкенький\n\n11. височенні | маленькі | солодкі | чисті\n> [!answer] височенні\n\n12. чарівними | страшними | шкільними | білими\n> [!answer] чарівними\n\n## select: Nuanced Qualities (Concept: Morphological Choice) [stage: production]\nSelect the adjective with the correct suffix to convey the specified tone (neutral, intensive, or diminutive).\n\n1. (Intensity) У Карпатах ми побачили [___] смереки.\n   - [x] височенні\n   - [ ] високі\n   - [ ] височенькі\n\n2. (Diminutive) Мама накрила стіл [___] скатертиною.\n   - [x] біленькою\n   - [ ] білою\n   - [ ] біленною\n\n3. (Origin) Ми дуже любимо справжній [___] шоколад.\n   - [x] львівський\n   - [ ] львівний\n   - [ ] львівенний\n\n4. (Intensity) Після походу я відчував [___] втому.\n   - [x] страшенну\n   - [ ] страшну\n   - [ ] страшненьку\n\n5. (Softness) На березі річки ріс [___] очерет.\n   - [x] тоненький\n   - [ ] товстий\n   - [ ] товстенний\n\n6. (Relation) Сьогодні у нас дуже важливий [___] іспит.\n   - [x] шкільний\n   - [ ] шкільський\n   - [ ] шкіленький\n\n7. (Diminutive) Бабуся дала мені [___] яблучко.\n   - [x] червоненьке\n   - [ ] червоне\n   - [ ] червоненне\n\n8. (Relation) Він купив собі новий [___] годинник.\n   - [x] залізний\n   - [ ] залізський\n   - [ ] залізненький\n\n## translate: Expressive World (Concept: Cross-Linguistic Transfer) [stage: production]\nTranslate these English phrases into Ukrainian using the correct expressive suffixes.\n\n1. A very large cat\n   > [!answer] Здоровенний кіт\n   > [!options] Здоровенний кіт | Маленький кіт | Гарний кіт\n\n2. A cute little house\n   > [!answer] Гарненький будиночок\n   > [!options] Гарненький будиночок | Величезний будинок | Старий будинок\n\n3. Kyiv streets (belonging to Kyiv)\n   > [!answer] Київські вулиці\n   > [!options] Київські вулиці | Київна вулиця | Києві вулиці\n\n4. Sparkling clean water\n   > [!answer] Чистесенька вода\n   > [!options] Чистесенька вода | Брудна вода | Морська вода\n\n5. A scary (terrifying) storm\n   > [!answer] Страшенна буря\n   > [!options] Страшенна буря | Маленька буря | Сонячна буря\n\n6. Thin slices of bread\n   > [!answer] Тоненькі скибочки хліба\n   > [!options] Тоненькі скибочки хліба | Грубі скибки хліба | Чорний хліб\n\n7. A sunny morning\n   > [!answer] Сонячний ранок\n   > [!options] Сонячний ранок | Вечірній ранок | Сільський ранок\n\n8. An old (ancient) forest\n   > [!answer] Старезний ліс\n   > [!options] Старезний ліс | Новий ліс | Зеленький ліс\n\n## error-correction: Suffix Fixes (Concept: Critical Proofreading) [stage: production]\nFind and fix the suffix errors based on the required emotional or logical tone in Ukrainian.\n\n1. Я бачу **київний** торт на столі.\n   > [!error] київний\n   > [!answer] київський\n   > [!explanation] Origin from a city requires the suffix \\\"-ськ-\\\".\n   > [!options] київський | київенький\n\n2. Дитина тримає **гарнист** ляльку.\n   > [!error] гарнист\n   > [!answer] гарненьку\n   > [!explanation] To show something is cute or small, use the diminutive suffix \\\"-еньк-\\\".\n   > [!options] гарненьку | гарну\n\n3. Це був **здоровенький** камінь, він важив тонну.\n   > [!error] здоровенький\n   > [!answer] здоровенний\n   > [!explanation] For massive size or intensity, use the suffix \\\"-енн-\\\" with double 'n'. \\\"Здоровенький\\\" means \\\"healthy.\\\"\n   > [!options] здоровенний | здоровий\n\n4. Ми пішли в **школьський** бібліотеку.\n   > [!error] школьський\n   > [!answer] шкільну\n   > [!explanation] Relation to an object like a school uses the suffix \\\"-н-\\\".\n   > [!options] шкільну | шкільненьку\n\n5. У неї **синенька** очі, як небо.\n   > [!error] синенька\n   > [!answer] синенькі\n   > [!explanation] Adjectives must agree in number with the plural noun \\\"очі\\\".\n   > [!options] синенькі | синеньку\n\n6. Це дуже **морсний** повітря сьогодні.\n   > [!error] морсний\n   > [!answer] морське\n   > [!explanation] Relation to the sea uses \\\"-ськ-\\\" and must match the neuter noun \\\"повітря\\\".\n   > [!options] морське | морський"
+      },
+      {
+        "id": "section-3",
+        "name": "Vocabulary",
+        "nameEn": null,
+        "type": "vocabulary",
+        "content": "| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| маленька | /mɑˈlɛnʲkɑ/ | tiny (f) | adj | fem | dim |\n| гарненький | /hɑrˈnɛnʲkɪj/ | cute/pretty | adj | masc | dim |\n| величезний | /ʋɛlɪˈt͡ʃɛznɪj/ | huge/gigantic | adj | masc | int |\n| здоровенний | /zdɔrɔˈʋɛnnɪj/ | enormous | adj | masc | int |\n| страшенний | /strɑˈʃɛnnɪj/ | terrifying | adj | masc | int |\n| київський | /ˈkɪjiu̯sʲkɪj/ | Kyiv (adj) | adj | masc | — |\n| львівський | /ˈlʲʋiu̯sʲkɪj/ | Lviv (adj) | adj | masc | — |\n| сільський | /silʲˈsʲkɪj/ | village/rural | adj | masc | — |\n| сонячний | /ˈsɔnʲɑt͡ʃnɪj/ | sunny | adj | masc | — |\n| шкільний | /ʃkʲilʲˈnɪj/ | school (adj) | adj | masc | — |\n| залізний | /zɑˈliznɪj/ | iron/rail | adj | masc | — |\n| вечірній | /ʋɛˈt͡ʃirnʲij/ | evening (adj) | adj | masc | — |\n| морський | /mɔrˈsʲkɪj/ | sea (adj) | adj | masc | — |\n| тоненький | /tɔˈnɛnʲkɪj/ | thin/slender | adj | masc | dim |\n| біленький | /biˈlɛnʲkɪj/ | white (clean) | adj | masc | dim |\n| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | masc | — |\n| чистесенький | /t͡ʃɪsˈtɛsɛnʲkɪj/ | sparkling clean | adj | masc | dim |\n| височенний | /ʋɪsɔˈt_͡ʃɛnnɪj/ | very high | adj | masc | int |\n| старезний | /stɑˈrɛznɪj/ | ancient/elderly | adj | masc | int |\n| пухкенький | /puxˈkɛnʲkɪj/ | fluffy/plump | adj | masc | dim |\n| справжній | /ˈsprɑu̯d͡ʒnʲij/ | real/true | adj | masc | — |\n| щасливенький | /ʃt_͡ʃɑsˈlɪʋɛnʲkɪj/ | happy (dim.) | adj | masc | dim |\n| мешканець | /ˈmɛʃkɑnɛt͡sʲ/ | inhabitant | noun | masc | — |\n| обстановка | /ɔbstɑˈnɔu̯kɑ/ | setting/env. | noun | fem | — |\n| барвистий | /bɑrˈʋɪstɪj/ | colorful | adj | masc | — |\n| дефіс | /dɛˈfis/ | hyphen | noun | masc | — |\n| милозвучність | /mɪlɔˈzʋut_͡ʃnistʲ/ | euphony | noun | fem | — |\n| походження | /pɔˈxɔd͡ʒɛnnʲɑ/ | origin | noun | neut | — |\n| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | girl | noun | fem | — |\n| питання | /pɪˈtɑnnʲɑ/ | question | noun | neut | — |\n| писання | /pɪˈsɑnnʲɑ/ | writing | noun | neut | — |\n| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | — |\n| сонечко | /ˈsɔnɛt_͡ʃkɔ/ | sun (dim.) | noun | neut | — |\n| співець | /spiˈʋɛt͡sʲ/ | singer/bard | noun | masc | — |\n| братик | /ˈbrɑtɪk/ | brother (dim.) | noun | masc | — |\n| відповідальність | /ʋidpɔʋiˈdɑlʲnistʲ/ | responsibility | noun | fem | — |\n| квіточка | /ˈkʋitɔt_͡ʃkɑ/ | flower (dim.) | noun | fem | — |\n| гордість | /ˈhɔrdistʲ/ | pride | noun | fem | — |\n| будівник | /budiu̯ˈnɪk/ | builder | noun | masc | — |\n| помічник | /pɔmit͡ʃˈnɪk/ | helper/asst | noun | masc | — |\n| студентство | /stuˈdɛntstʋɔ/ | students (coll) | noun | neut | — |\n| товариство | /tɔʋɑˈrɪstʋɔ/ | society/assoc | noun | neut | — |\n| людство | /ˈlʲudstʋɔ/ | humanity | noun | neut | — |\n| старість | /ˈstɑristʲ/ | old age | noun | fem | — |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | — |\n| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | sister (dim.) | noun | fem | — |\n| навчання | /nɑu̯ˈt͡ʃɑnnʲɑ/ | learning/study | noun | neut | — |\n| кохання | /kɔˈxɑnnʲɑ/ | love | noun | neut | — |\n| ворожість | /ʋɔrɔˈʒistʲ/ | hostility | noun | fem | — |\n| мужність | /ˈmuʒnistʲ/ | courage | noun | fem | — |\n| щирість | /ˈʃt͡ʃɪristʲ/ | sincerity | noun | fem | — |\n| мудрість | /ˈmudристʲ/ | wisdom | noun | fem | — |\n| вірність | /ˈʋirnistʲ/ | loyalty | noun | fem | — |\n| завдання | /zɑu̯ˈdɑnnʲɑ/ | task/assignment | noun | neut | — |\n| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | fem | — |\n| синок | /sɪˈnɔk/ | son (dim.) | noun | masc | — |\n| домик | /ˈdɔmɪk/ | house (dim.) | noun | masc | — |\n| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | — |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | masc | — |\n| творчість | /ˈtʋɔrt͡ʃnistʲ/ | creativity | noun | fem | — |\n| ніжність | /ˈniʒnistʲ/ | tenderness | noun | fem | — |\n| лагідність | /ˈlɑɦidnistʲ/ | gentleness | noun | fem | — |"
+      }
+    ],
+    "rawMarkdown": "---\nmodule: a2-38\ntitle: Word Formation — Adjective Suffixes\nsubtitle: \"Painting the World with Nuance\"\nversion: \"1.0\"\nphase: \"A2.4\"\npedagogy: \"PPP\"\nduration: \"60 min\"\ntransliteration: none\ntags:\n  - grammar\n  - word-formation\n  - adjectives\n  - suffixes\ngrammar:\n  - relational suffixes (-н-, -ськ-)\n  - diminutive/subjective suffixes (-еньк-, -есеньк-)\n  - intensifier suffixes (-енн-, -уч-)\n  - adjectival patterns\nobjectives:\n  - \"Learner can recognize and use relational adjective suffixes correctly\"\n  - \"Learner can express affection and softness using diminutive suffixes\"\n  - \"Learner can amplify meanings using intensive suffixes for emphasis\"\nvocabulary_count: 65\n---\n\n# Summary\n\n## The Palette of Description 🎨\n\n> 🧭\n\nIn our previous session, we learned how small blocks called suffixes can turn a simple action into a person (the \"Actor\"). Today, we explore how suffixes can transform a noun or a verb into a **Description**. Ukrainian is famous for its rich and expressive adjectival system, and most of that linguistic magic happens at the very end of the word stem. Suffixes are the tools that allow us to add color, texture, and emotional depth to our sentences.\n\nAdjective suffixes allow you to relate objects to locations, intensify feelings, or even add a layer of emotional \"softness\" to your speech. This modularity makes Ukrainian particularly well-suited for poetry, storytelling, and precise technical descriptions alike. By mastering just a few endings, you gain the ability to create hundreds of new descriptive words from roots you already know. This is the hallmark of a language built on systematic creativity and melodic precision. Every suffix is a deliberate brushstroke.\n\n### Core Adjective Suffixes: The Logic of Quality\n\n| Suffix | Function | Root | Derived Adjective | English |\n| :--- | :--- | :--- | :--- | :--- |\n| **-Н-** | Relational / General | зал- (hall) | **зальний** | hall-related |\n| **-СЬК-** | Origin / Belonging | Київ- (Kyiv) | **київський** | Kyiv-style |\n| **-ЕНЬК-** | Diminutive / Soft | мал- (small) | **маленький** | tiny/cute |\n| **-ЕНН-** | Intensive / Large | страх- (fear) | **страшенний** | terrifying |\n\n---\n\n## Subjective Evaluation: The Emotional Side of Grammar\n\nOne of the most unique and beautiful features of the Ukrainian language is its system of **Subjective Evaluation**. Unlike English, where you often need separate adverbs like \"very,\" \"super,\" or \"cute,\" Ukrainian embeds these complex feelings directly into the adjective using specific suffixes. This makes the language feel more intimate and deeply expressive.\n\n### 1. The Diminutive Touch (-еньк-, -есеньк-)\nWhen you want to show affection, softness, or simply indicate something is small and charming, you use **-еньк-**. This is the suffix of \"cradles and lullabies,\" but it is also used daily by adults to show friendliness or to make a request sound more polite to the listener.\n- Гарний → Гарн**еньк**ий\n- Веселий → Весел**еньк**ий\n- Чистий → Чист**есеньк**ий\n\n### 2. The Intensive Power (-енн-, -уч-)\nWhen a simple \"very\" isn't enough to capture the scale of something, Ukrainian stretches the word physically. The suffix **-енн-** (often with a doubled 'н') creates a sense of enormous scale, heavy weight, or overwhelming intensity.\n- Здоров_ий → Здоров**енн**ий\n- Висок_ий → Висок**есеньк**ий\n\n> [!important] The Sound of Intensity\n> Notice how the pronunciation shifts with these intensifiers. When you say **страшенний**, you should linger slightly on the double \"н,\" giving the word a physical weight that matches its dramatic meaning. This phonetic mirroring is a hallmark of expressive Ukrainian morphology and helps the listener feel the weight of your words and the depth of your emotions. It transforms a simple adjective into a physical presence.\n\n---\n\n## The Relational Bridge: From Noun to Adjective\n\nHow do we describe what something is \"made of\" or \"where it belongs\" in the geography of our lives? We use **Relational Suffixes** to build these social and physical bridges.\n\n### 1. The -Н- Universal\nThis is the most common bridge in the language. It connects houses to streets, products to seasons, and abstract ideas to concrete actions. It is the \"standard\" or \"neutral\" way to create a relationship between two concepts.\n- Сонце → Соняч**н**ий\n- Школа → Шкіль**н**ий\n- Питання → Питаль**н**ий\n\n### 2. The -СЬК- Identity\nThis suffix connects people to their homes, cities, and cultural identities. It is the suffix of geography and group belonging.\n- Україна → Україн**ськ**ий\n- Львів → Львів**ськ**ий\n- Студент → Студент**ськ**ий\n\n### Prefix-Suffix Synergy in Adjectives\nSometimes, an adjective requires both a prefix and a suffix to find its true meaning. For example, the adjective **не_за_бут_н_ій** (unforgettable) uses the negation prefix **не-**, the prepositional prefix **за-**, and the relational suffix **-н-**. This demonstrates the modular power of the Ukrainian word-formation system, where multiple small pieces combine to form highly specific technical or emotional terms. Every piece of the word carries a distinct logical weight and helps define the reality.\n\n> [!tip] Softening the -СЬК-\n> Remember that the sequence **-ськ-** is always soft in Ukrainian (hence the soft sign **ь**). This gives the language a melodic, flowing quality, especially when describing origins or national identities. Practice saying **український** with a very soft 's' and 'k' sound to capture the authentic, warm accent of a native speaker.\n\n---\n\n## Anti-Propaganda Showcase: The Language of Precision\n\n> [!myth] Myth: \"Ukrainian is a poetic but 'imprecise' language better suited for songs than science or electronics.\"\n> **The Verdict: Absolute Fiction.**\n>\n> **Linguistic Fact:** The Ukrainian adjectival system is one of the most structurally precise in Europe. The ability to distinguish between \"territorial\" (-ський), \"material\" (-яний), and \"relational\" (-ний) qualities with a single suffix allows for a technical density that many other languages can only achieve through long, clunky prepositional phrases. This prevents ambiguity in legal and technical documents.\n>\n> During the Soviet era, many precise Ukrainian technical adjectives were replaced by more generic imperial loanwords in scientific journals to make the language seem \"inferior.\" However, the internal logic of the suffixes remained alive in the people's speech. Today, Ukrainian scientists are restoring these \"lost\" adjectives to describe modern technologies like **напівпровідниковий** (semiconductor) or **високотехнологічний** (high-tech) with structural elegance and perfect clarity. Ukrainian is a language of science as much as it is a language of the soul and of the future.\n\n---\n\n## Narrative Context: The Village Fair 🌾\n\n**Read about Bohdan's weekend trip to a picturesque Ukrainian village. Look for the descriptive suffixes.**\n\nМинулого тижня Богдан поїхав у гості до своєї бабусі. Вона живе в **маленькому** будинку біля річки. Це був дуже **сонячний** день. Все навколо було **зелененьке** і свіже. \n\nНа площі проходив **сільський** ярмарок. Богдан побачив **величезний** кавун на одному зі столів. \n— Ого! — вигукнув він. — Який **здоровенний** овоч! Хоча, насправді, кавун — це велика ягода.\n\nПоруч продавали **львівську** каву та **солодке** печиво. Бабуся купила **гарненьку** хустку. Вона була **тоненька** і дуже м’яка на дотик. Повітря було **свіжесеньке**. Богдан відчув, що життя в селі — це **справжній** відпочинок для міського мешканця. Він був **щасливенький**, що нарешті змінив обстановку і побачив друзів. Кожна **українська** родина любить такі спокійні вихідні на природі. Навіть маленька **дівчинка** на вулиці посміхалася йому в цей день. Її **сонечко** в руках притягувало погляди.\n\n> [!cultural] History Bite: The Colors of Identity\n> Ukrainian adjectives for colors often have cultural depths. For instance, **блакитний** (sky blue) and **жовтий** (yellow) are not just labels; they are the colors of the national flag, representing the sky and the wheat fields. When you add suffixes like **-еньк-** to these colors in folk songs (e.g., **синесенький**), you are expressing a deep, protective love for the land itself.\n\n---\n\n## Need More Practice?\n\n> [!resources] External Resources\n> - 📖 [Ukrainian Adjective Suffixes Map](https://www.ukrainianlessons.com/adjectives/) — Visual guides to complex word formation.\n> - 🎙 [Podcast: Describing People and Places](https://www.ukrainianlessons.com/descriptions/) — Listen to suffixes in real action.\n> - 🎭 [Adjective Builder Tool](https://www.education-ukrainian.com/morphology) — Practice adding suffixes to noun stems.\n\n---\n\n# Activities\n\n## group-sort: Adjective Categories (Concept: Suffix Function) [stage: practice]\nSort these adjectives based on whether they describe a Relation (where/what), an Intensity (large/very), or a Softness (small/cute).\n\n### Відносні (Relation/Origin)\n- Київський\n- Шкільний\n- Вечірній\n- Залізний\n- Морський\n- Студентський\n\n### Інтенсивні (Intensity/Large)\n- Величезний\n- Здоровенний\n- Височенний\n- Страшенний\n- Старезний\n- Багатенний\n\n### Суб'єктивні (Softness/Cute)\n- Маленький\n- Гарненький\n- Біленький\n- Чистесенький\n- Тоненький\n- Солодненький\n\n## match-up: Situations and Descriptions (Concept: Contextual Logic) [stage: practice]\nMatch the situation to the most appropriate expressive adjective form.\n\n| Situation | Description |\n| :--- | :--- |\n| A tiny sleeping puppy | Маленький |\n| A mountain that touches the clouds | Височенний |\n| A traditional souvenir from Lviv | Львівський |\n| A sunny morning after rain | Сонячний |\n| A blanket that is very soft to touch | Тоненька |\n| A monster in a scary movie | Страшенний |\n| A clean shirt for the first day of school | Шкільна |\n| A flag flying in the heart of Kyiv | Київський |\n| An ancient oak tree in the forest | Старезний |\n| A very healthy and strong athlete | Здоровенний |\n\n## fill-in: Building Descriptions (Concept: Suffix Derivation) [stage: practice]\nTurn the noun/stem in parentheses into the correct adjective form using the suffixes -н- or -ськ-.\n\n1. Це (Київ) [___:1] театр, він дуже старий.\n   > [!answer] київський\n   > [!options] київський | київний | київенький | київенний\n\n2. Сьогодні (сонце) [___:2] погода, ми йдемо гуляти.\n   > [!answer] сонячна\n   > [!options] сонячна | сонцева | сонцівська | сонцесенька\n\n3. (Студент) [___:3] життя завжди веселе і активне.\n   > [!answer] студентське\n   > [!options] студентське | студентне | студентеньке | студентинне\n\n4. (Залізо) [___:4] дорога — це важливий транспорт.\n   > [!answer] залізна\n   > [!options] залізна | залізська | залізненька | залізинна\n\n5. (Школа) [___:5] автобус приїхав о восьмій ранку.\n   > [!answer] шкільний\n   > [!options] шкільний | шкільський | шкільненький | шкілинний\n\n6. (Вечір) [___:6] Оdesa виглядає просто чарівно.\n   > [!answer] вечірня\n   > [!options] вечірня | вечірська | вечірненька | вечірина\n\n7. (Море) [___:7] берег був піщаний і дуже теплий.\n   > [!answer] морський\n   > [!options] морський | морний | морненький | моринний\n\n8. (Україна) [___:8] прапор має синій та жовтий кольори.\n   > [!answer] український\n   > [!options] український | україний | україненький | українинний\n\n## quiz: The Adjective Architect (Concept: Morphological Nuance) [stage: practice]\nTest your core understanding of how Ukrainian adjective suffixes alter the meaning and tone of your speech.\n\n1. Який саме суфікс ви обов'язково оберете, щоб сказати, що предмет дуже милий чи зовсім маленький?\n- [x] Спеціальний суфікс \"-еньк-\" (гарненький, біленький)\n- [ ] Технічний суфікс \"-ськ-\" (київський, морський)\n- [ ] Суфікс походження \"-н-\" (шкільний, вечірній)\n- [ ] Суфікс величезного розміру \"-енн-\" (здоровенний)\n\n---\n\n2. Що саме зазвичай суттєво змінюється в значенні слова, коли ми додаємо до нього суфікс \"-енн-\" сьогодні?\n- [x] Значення стає значно інтенсивнішим або позначає величезний розмір\n- [ ] Значення стає дуже пестливим, ніжним та надзвичайно приємним\n- [ ] Значення починає вказувати виключно на місце походження певного об'єкта\n- [ ] Слово автоматично перетворюється з якісного прикметника на дієслово\n\n---\n\n3. Який прикметник ми можемо утворити від назви столиці України за допомогою суфікса \"-ськ-\" у реченні?\n- [x] Це буде прикметник \"київський\"\n- [ ] Це буде прикметник \"київрада\"\n- [ ] Це буде прикметник \"київний\"\n- [ ] Це буде прикметник \"київін\"\n\n---\n\n4. Як саме в сучасній українській мові правильно написати професійний суфікс \"-ськ-\" після літери \"с\"?\n- [x] Його обов'язково треба писати з м'яким знаком перед закінченням\n- [ ] Його треба писати через короткий дефіс для кращого зв'язку з коренем\n- [ ] Його треба писати з великої літери, якщо це назва великого міста\n- [ ] Його треба писати разом з коренем без жодних додаткових знаків\n\n---\n\n5. Який із цих прикметників описує предмет, що є ідеально чистим та викликає значну симпатію?\n- [x] Спеціальне слово чистесенький\n- [ ] Просте слово чистий\n- [ ] Прислівник чистенько\n- [ ] Слово чистенний\n\n---\n\n6. Яка головна і базова функція суфікса \"-н-\" у творенні нових прикметників в сучасній Україні?\n- [x] Він утворює загальні відносні прикметники від різних іменників\n- [ ] Він використовується виключно для творення назв диких тварин\n- [ ] Він вказує лише на те, що дія вже повністю закінчилася в минулому\n- [ ] Він робить будь-яке слово дуже смішним для носія мови\n\n---\n\n7. Чому використання суфіксів оцінки \"-еньк-\" є таким надзвичайно важливим у розмовній мові кожної людини?\n- [x] Вони додають мовленню емоційності, теплоти та особливої ввічливості\n- [ ] Без них неможливо побудувати жодне складне наукове речення\n- [ ] Вони допомагають швидше вимовляти дуже довгі українські слова\n- [ ] Вони вказують на офіційний статус людини, з якою ми зараз розмовляємо\n\n---\n\n8. Як перетворити звичайне слово \"великий\" на слово, що означає щось по-справжньому гігантське зараз?\n- [x] Треба додати суфікс \"-езн-\" або \"-енн-\": величезний\n- [ ] Треба додати суфікс \"-еньк-\": величенький\n- [ ] Треба додати суфікс \"-ськ-\": велицький\n- [ ] Треба просто повторити це слово два рази поспіль\n\n## unjumble: Descriptive Sentences (Concept: Syntax Integrity) [stage: practice]\nRearrange the words to form expressive sentences using the adjective suffixes learned today.\n\n1. у / лісі / стоїть / старезний / дуб / біля / річки\n   > [!answer] У лісі стоїть старезний дуб біля річки\n \n2. вона / купила / гарненьку / сукню / у / львівському / магазині\n   > [!answer] Вона купила гарненьку сукню у львівському магазині\n\n3. вчора / був / страшенний / дощ / і / сильний / вітер / ввечері\n   > [!answer] Вчора був страшенний дощ і сильний вітер ввечері\n\n4. маленький / хлопчик / тримає / біленьку / квітку / в / руках / сьогодні\n   > [!answer] Маленький хлопчик тримає біленьку квітку в руках сьогодні\n\n5. український / борщ / — / це / дуже / смачна / страва / для / всієї / родини\n   > [!answer] Український борщ — це дуже смачна страва для всієї родини\n\n6. ми / побачили / величезний / корабель / у / морському / порту / вчора\n   > [!answer] Ми побачили величезний корабель у морському порту вчора\n\n## true-false: Descriptive Nuances (Concept: Concept Validation) [stage: practice]\nValidate your understanding of how adjective suffixes impact the emotional and logical weight of a sentence.\n\n1. Суфікс \"-еньк-\" робить будь-який прикметник більш офіційним і холодним.\n   - [ ] True\n   - [x] False\n   > Навпаки, він додає теплоти, ніжності та пестливості.\n\n2. Суфікс \"-ськ-\" завжди пишеться з м'яким знаком.\n   - [x] True\n   - [ ] False\n   > Так, це стандартне правило для цього суфікса (-ськ, -цьк, -зьк).\n\n3. Прикметник \"величезний\" означає те саме, що й \"маленький\".\n   - [ ] True\n   - [x] False\n   > Ні, він означає дуже великий, гігантський.\n\n4. Суфікс \"-н-\" допомагає утворити прикметник від іменника \"школа\".\n   - [x] True\n   - [ ] False\n   > Так, виходить слово \"шкільний\".\n\n5. Слово \"свіжесенький\" звучить приємніше, ніж просто слово \"свіжий\".\n   - [x] True\n   - [ ] False\n   > Так, це форма суб'єктивної оцінки з пестливим значенням.\n\n6. Прикметник \"київська\" має жіночий рід у цій формі.\n   - [x] True\n   - [ ] False\n   > Так, закінчення \"-а\" вказує на жіночий рід.\n\n7. Усі українські прикметники обов'язково повинні мати суфікс \"-еньк-\".\n   - [ ] True\n   - [x] False\n   > Ні, це лише додатковий суфікс для вираження емоцій та розміру.\n\n8. Суфікс \"-енн-\" у слові \"страшенний\" подвоює літеру \"н\".\n   - [x] True\n   - [ ] False\n   > Так, це характерна особливість цього інтенсивного суфікса.\n\n## cloze: The Cozy Morning (Concept: Narrative Coherence) [stage: production]\nComplete the cozy description of a morning in a Ukrainian village by choosing the most suitable expressive adjectives.\n\nСьогодні Марко прокинувся дуже рано. Повітря було [___:1]. Він підійшов до вікна і побачив [___:2] сонце. Небо було [___:3] і чисте. Його бабуся вже готувала [___:4] сніданок на кухні. Від неї пахло [___:5] печивом. На столі стояла [___:6] чашка з [___:7] кавою. Марко одягнув свій [___:8] светр, бо вранці було трохи прохолодно. Він вийшов на [___:9] ганок. Поруч бігав [___:10] рудий кіт. Вдалині було видно [___:11] гори, які здавалися [___:12] в ранковому тумані. День обіцяв бути просто чудовим.\n\n1. свіжесеньке | старезне | величезне | київське\n> [!answer] свіжесеньке\n\n2. лагідненьке | страшне | студентське | залізне\n> [!answer] лагідненьке\n\n3. блакитненьке | страшенне | сільське | солодке\n> [!answer] блакитненьке\n\n4. смачненький | величезний | морський | український\n> [!answer] смачненький\n\n5. домашнім | київським | морським | старезним\n> [!answer] домашнім\n\n6. маленька | довга | залізна | шкільна\n> [!answer] маленька\n\n7. гарячою | білою | сонячною | студентською\n> [!answer] гарячою\n\n8. вовняний | шкільний | львівський | величезний\n> [!answer] вовняний\n\n9. дерев'яний | старезний | страшенний | біленький\n> [!answer] дерев'яний\n\n10. пухкенький | величезний | морський | залізний\n> [!answer] пухкенький\n\n11. височенні | маленькі | солодкі | чисті\n> [!answer] височенні\n\n12. чарівними | страшними | шкільними | білими\n> [!answer] чарівними\n\n## select: Nuanced Qualities (Concept: Morphological Choice) [stage: production]\nSelect the adjective with the correct suffix to convey the specified tone (neutral, intensive, or diminutive).\n\n1. (Intensity) У Карпатах ми побачили [___] смереки.\n   - [x] височенні\n   - [ ] високі\n   - [ ] височенькі\n\n2. (Diminutive) Мама накрила стіл [___] скатертиною.\n   - [x] біленькою\n   - [ ] білою\n   - [ ] біленною\n\n3. (Origin) Ми дуже любимо справжній [___] шоколад.\n   - [x] львівський\n   - [ ] львівний\n   - [ ] львівенний\n\n4. (Intensity) Після походу я відчував [___] втому.\n   - [x] страшенну\n   - [ ] страшну\n   - [ ] страшненьку\n\n5. (Softness) На березі річки ріс [___] очерет.\n   - [x] тоненький\n   - [ ] товстий\n   - [ ] товстенний\n\n6. (Relation) Сьогодні у нас дуже важливий [___] іспит.\n   - [x] шкільний\n   - [ ] шкільський\n   - [ ] шкіленький\n\n7. (Diminutive) Бабуся дала мені [___] яблучко.\n   - [x] червоненьке\n   - [ ] червоне\n   - [ ] червоненне\n\n8. (Relation) Він купив собі новий [___] годинник.\n   - [x] залізний\n   - [ ] залізський\n   - [ ] залізненький\n\n## translate: Expressive World (Concept: Cross-Linguistic Transfer) [stage: production]\nTranslate these English phrases into Ukrainian using the correct expressive suffixes.\n\n1. A very large cat\n   > [!answer] Здоровенний кіт\n   > [!options] Здоровенний кіт | Маленький кіт | Гарний кіт\n\n2. A cute little house\n   > [!answer] Гарненький будиночок\n   > [!options] Гарненький будиночок | Величезний будинок | Старий будинок\n\n3. Kyiv streets (belonging to Kyiv)\n   > [!answer] Київські вулиці\n   > [!options] Київські вулиці | Київна вулиця | Києві вулиці\n\n4. Sparkling clean water\n   > [!answer] Чистесенька вода\n   > [!options] Чистесенька вода | Брудна вода | Морська вода\n\n5. A scary (terrifying) storm\n   > [!answer] Страшенна буря\n   > [!options] Страшенна буря | Маленька буря | Сонячна буря\n\n6. Thin slices of bread\n   > [!answer] Тоненькі скибочки хліба\n   > [!options] Тоненькі скибочки хліба | Грубі скибки хліба | Чорний хліб\n\n7. A sunny morning\n   > [!answer] Сонячний ранок\n   > [!options] Сонячний ранок | Вечірній ранок | Сільський ранок\n\n8. An old (ancient) forest\n   > [!answer] Старезний ліс\n   > [!options] Старезний ліс | Новий ліс | Зеленький ліс\n\n## error-correction: Suffix Fixes (Concept: Critical Proofreading) [stage: production]\nFind and fix the suffix errors based on the required emotional or logical tone in Ukrainian.\n\n1. Я бачу **київний** торт на столі.\n   > [!error] київний\n   > [!answer] київський\n   > [!explanation] Origin from a city requires the suffix \\\"-ськ-\\\".\n   > [!options] київський | київенький\n\n2. Дитина тримає **гарнист** ляльку.\n   > [!error] гарнист\n   > [!answer] гарненьку\n   > [!explanation] To show something is cute or small, use the diminutive suffix \\\"-еньк-\\\".\n   > [!options] гарненьку | гарну\n\n3. Це був **здоровенький** камінь, він важив тонну.\n   > [!error] здоровенький\n   > [!answer] здоровенний\n   > [!explanation] For massive size or intensity, use the suffix \\\"-енн-\\\" with double 'n'. \\\"Здоровенький\\\" means \\\"healthy.\\\"\n   > [!options] здоровенний | здоровий\n\n4. Ми пішли в **школьський** бібліотеку.\n   > [!error] школьський\n   > [!answer] шкільну\n   > [!explanation] Relation to an object like a school uses the suffix \\\"-н-\\\".\n   > [!options] шкільну | шкільненьку\n\n5. У неї **синенька** очі, як небо.\n   > [!error] синенька\n   > [!answer] синенькі\n   > [!explanation] Adjectives must agree in number with the plural noun \\\"очі\\\".\n   > [!options] синенькі | синеньку\n\n6. Це дуже **морсний** повітря сьогодні.\n   > [!error] морсний\n   > [!answer] морське\n   > [!explanation] Relation to the sea uses \\\"-ськ-\\\" and must match the neuter noun \\\"повітря\\\".\n   > [!options] морське | морський\n\n# Vocabulary\n\n| Word | IPA | English | POS | Gender | Note |\n|------|-----|---------|-----|--------|------|\n| маленька | /mɑˈlɛnʲkɑ/ | tiny (f) | adj | fem | dim |\n| гарненький | /hɑrˈnɛnʲkɪj/ | cute/pretty | adj | masc | dim |\n| величезний | /ʋɛlɪˈt͡ʃɛznɪj/ | huge/gigantic | adj | masc | int |\n| здоровенний | /zdɔrɔˈʋɛnnɪj/ | enormous | adj | masc | int |\n| страшенний | /strɑˈʃɛnnɪj/ | terrifying | adj | masc | int |\n| київський | /ˈkɪjiu̯sʲkɪj/ | Kyiv (adj) | adj | masc | — |\n| львівський | /ˈlʲʋiu̯sʲkɪj/ | Lviv (adj) | adj | masc | — |\n| сільський | /silʲˈsʲkɪj/ | village/rural | adj | masc | — |\n| сонячний | /ˈsɔnʲɑt͡ʃnɪj/ | sunny | adj | masc | — |\n| шкільний | /ʃkʲilʲˈnɪj/ | school (adj) | adj | masc | — |\n| залізний | /zɑˈliznɪj/ | iron/rail | adj | masc | — |\n| вечірній | /ʋɛˈt͡ʃirnʲij/ | evening (adj) | adj | masc | — |\n| морський | /mɔrˈsʲkɪj/ | sea (adj) | adj | masc | — |\n| тоненький | /tɔˈnɛnʲkɪj/ | thin/slender | adj | masc | dim |\n| біленький | /biˈlɛnʲkɪj/ | white (clean) | adj | masc | dim |\n| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | masc | — |\n| чистесенький | /t͡ʃɪsˈtɛsɛnʲkɪj/ | sparkling clean | adj | masc | dim |\n| височенний | /ʋɪsɔˈt_͡ʃɛnnɪj/ | very high | adj | masc | int |\n| старезний | /stɑˈrɛznɪj/ | ancient/elderly | adj | masc | int |\n| пухкенький | /puxˈkɛnʲkɪj/ | fluffy/plump | adj | masc | dim |\n| справжній | /ˈsprɑu̯d͡ʒnʲij/ | real/true | adj | masc | — |\n| щасливенький | /ʃt_͡ʃɑsˈlɪʋɛnʲkɪj/ | happy (dim.) | adj | masc | dim |\n| мешканець | /ˈmɛʃkɑnɛt͡sʲ/ | inhabitant | noun | masc | — |\n| обстановка | /ɔbstɑˈnɔu̯kɑ/ | setting/env. | noun | fem | — |\n| барвистий | /bɑrˈʋɪstɪj/ | colorful | adj | masc | — |\n| дефіс | /dɛˈfis/ | hyphen | noun | masc | — |\n| милозвучність | /mɪlɔˈzʋut_͡ʃnistʲ/ | euphony | noun | fem | — |\n| походження | /pɔˈxɔd͡ʒɛnnʲɑ/ | origin | noun | neut | — |\n| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | girl | noun | fem | — |\n| питання | /pɪˈtɑnnʲɑ/ | question | noun | neut | — |\n| писання | /pɪˈsɑnnʲɑ/ | writing | noun | neut | — |\n| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | — |\n| сонечко | /ˈsɔnɛt_͡ʃkɔ/ | sun (dim.) | noun | neut | — |\n| співець | /spiˈʋɛt͡sʲ/ | singer/bard | noun | masc | — |\n| братик | /ˈbrɑtɪk/ | brother (dim.) | noun | masc | — |\n| відповідальність | /ʋidpɔʋiˈdɑlʲnistʲ/ | responsibility | noun | fem | — |\n| квіточка | /ˈkʋitɔt_͡ʃkɑ/ | flower (dim.) | noun | fem | — |\n| гордість | /ˈhɔrdistʲ/ | pride | noun | fem | — |\n| будівник | /budiu̯ˈnɪk/ | builder | noun | masc | — |\n| помічник | /pɔmit͡ʃˈnɪk/ | helper/asst | noun | masc | — |\n| студентство | /stuˈdɛntstʋɔ/ | students (coll) | noun | neut | — |\n| товариство | /tɔʋɑˈrɪstʋɔ/ | society/assoc | noun | neut | — |\n| людство | /ˈlʲudstʋɔ/ | humanity | noun | neut | — |\n| старість | /ˈstɑristʲ/ | old age | noun | fem | — |\n| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | — |\n| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | sister (dim.) | noun | fem | — |\n| навчання | /nɑu̯ˈt͡ʃɑnnʲɑ/ | learning/study | noun | neut | — |\n| кохання | /kɔˈxɑnnʲɑ/ | love | noun | neut | — |\n| ворожість | /ʋɔrɔˈʒistʲ/ | hostility | noun | fem | — |\n| мужність | /ˈmuʒnistʲ/ | courage | noun | fem | — |\n| щирість | /ˈʃt͡ʃɪristʲ/ | sincerity | noun | fem | — |\n| мудрість | /ˈmudристʲ/ | wisdom | noun | fem | — |\n| вірність | /ˈʋirnistʲ/ | loyalty | noun | fem | — |\n| завдання | /zɑu̯ˈdɑnnʲɑ/ | task/assignment | noun | neut | — |\n| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | fem | — |\n| синок | /sɪˈnɔk/ | son (dim.) | noun | masc | — |\n| домик | /ˈdɔmɪk/ | house (dim.) | noun | masc | — |\n| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | — |\n| слухач | /sluˈxɑt͡ʃ/ | listener | noun | masc | — |\n| творчість | /ˈtʋɔrt͡ʃnistʲ/ | creativity | noun | fem | — |\n| ніжність | /ˈniʒnistʲ/ | tenderness | noun | fem | — |\n| лагідність | /ˈlɑɦidnistʲ/ | gentleness | noun | fem | — |\n",
+    "createdAt": "2025-12-23T02:19:59.103918Z",
+    "modifiedAt": "2025-12-23T02:19:59.103918Z",
     "version": 2
   },
   "activities": [],
@@ -47,11 +71,570 @@
     "moduleId": "mod-uk-A2-38",
     "level": "A2",
     "phase": "A2.4",
-    "wordCount": 0,
-    "newWordCount": 0,
+    "wordCount": 62,
+    "newWordCount": 62,
     "reviewWordCount": 0,
     "transliterationMode": "none",
-    "words": [],
+    "words": [
+      {
+        "id": "vocab-1",
+        "uk": "маленька",
+        "ipa": "/mɑˈlɛnʲkɑ/",
+        "en": "tiny (f)",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-2",
+        "uk": "гарненький",
+        "ipa": "/hɑrˈnɛnʲkɪj/",
+        "en": "cute/pretty",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-3",
+        "uk": "величезний",
+        "ipa": "/ʋɛlɪˈt͡ʃɛznɪj/",
+        "en": "huge/gigantic",
+        "pos": "adj",
+        "gender": null,
+        "note": "int"
+      },
+      {
+        "id": "vocab-4",
+        "uk": "здоровенний",
+        "ipa": "/zdɔrɔˈʋɛnnɪj/",
+        "en": "enormous",
+        "pos": "adj",
+        "gender": null,
+        "note": "int"
+      },
+      {
+        "id": "vocab-5",
+        "uk": "страшенний",
+        "ipa": "/strɑˈʃɛnnɪj/",
+        "en": "terrifying",
+        "pos": "adj",
+        "gender": null,
+        "note": "int"
+      },
+      {
+        "id": "vocab-6",
+        "uk": "київський",
+        "ipa": "/ˈkɪjiu̯sʲkɪj/",
+        "en": "Kyiv (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-7",
+        "uk": "львівський",
+        "ipa": "/ˈlʲʋiu̯sʲkɪj/",
+        "en": "Lviv (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-8",
+        "uk": "сільський",
+        "ipa": "/silʲˈsʲkɪj/",
+        "en": "village/rural",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-9",
+        "uk": "сонячний",
+        "ipa": "/ˈsɔnʲɑt͡ʃnɪj/",
+        "en": "sunny",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-10",
+        "uk": "шкільний",
+        "ipa": "/ʃkʲilʲˈnɪj/",
+        "en": "school (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-11",
+        "uk": "залізний",
+        "ipa": "/zɑˈliznɪj/",
+        "en": "iron/rail",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-12",
+        "uk": "вечірній",
+        "ipa": "/ʋɛˈt͡ʃirnʲij/",
+        "en": "evening (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-13",
+        "uk": "морський",
+        "ipa": "/mɔrˈsʲkɪj/",
+        "en": "sea (adj)",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-14",
+        "uk": "тоненький",
+        "ipa": "/tɔˈnɛnʲkɪj/",
+        "en": "thin/slender",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-15",
+        "uk": "біленький",
+        "ipa": "/biˈlɛnʲkɪj/",
+        "en": "white (clean)",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-16",
+        "uk": "солодкий",
+        "ipa": "/sɔˈlɔdkɪj/",
+        "en": "sweet",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-17",
+        "uk": "чистесенький",
+        "ipa": "/t͡ʃɪsˈtɛsɛnʲkɪj/",
+        "en": "sparkling clean",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-18",
+        "uk": "височенний",
+        "ipa": "/ʋɪsɔˈt_͡ʃɛnnɪj/",
+        "en": "very high",
+        "pos": "adj",
+        "gender": null,
+        "note": "int"
+      },
+      {
+        "id": "vocab-19",
+        "uk": "старезний",
+        "ipa": "/stɑˈrɛznɪj/",
+        "en": "ancient/elderly",
+        "pos": "adj",
+        "gender": null,
+        "note": "int"
+      },
+      {
+        "id": "vocab-20",
+        "uk": "пухкенький",
+        "ipa": "/puxˈkɛnʲkɪj/",
+        "en": "fluffy/plump",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-21",
+        "uk": "справжній",
+        "ipa": "/ˈsprɑu̯d͡ʒnʲij/",
+        "en": "real/true",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-22",
+        "uk": "щасливенький",
+        "ipa": "/ʃt_͡ʃɑsˈlɪʋɛnʲkɪj/",
+        "en": "happy (dim.)",
+        "pos": "adj",
+        "gender": null,
+        "note": "dim"
+      },
+      {
+        "id": "vocab-23",
+        "uk": "мешканець",
+        "ipa": "/ˈmɛʃkɑnɛt͡sʲ/",
+        "en": "inhabitant",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-24",
+        "uk": "обстановка",
+        "ipa": "/ɔbstɑˈnɔu̯kɑ/",
+        "en": "setting/env.",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-25",
+        "uk": "барвистий",
+        "ipa": "/bɑrˈʋɪstɪj/",
+        "en": "colorful",
+        "pos": "adj",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-26",
+        "uk": "дефіс",
+        "ipa": "/dɛˈfis/",
+        "en": "hyphen",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-27",
+        "uk": "милозвучність",
+        "ipa": "/mɪlɔˈzʋut_͡ʃnistʲ/",
+        "en": "euphony",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-28",
+        "uk": "походження",
+        "ipa": "/pɔˈxɔd͡ʒɛnnʲɑ/",
+        "en": "origin",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-29",
+        "uk": "дівчинка",
+        "ipa": "/ˈdiʋt͡ʃɪnkɑ/",
+        "en": "girl",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-30",
+        "uk": "питання",
+        "ipa": "/pɪˈtɑnnʲɑ/",
+        "en": "question",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-31",
+        "uk": "писання",
+        "ipa": "/pɪˈsɑnnʲɑ/",
+        "en": "writing",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-32",
+        "uk": "борець",
+        "ipa": "/bɔˈrɛt͡sʲ/",
+        "en": "fighter/wrestler",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-33",
+        "uk": "сонечко",
+        "ipa": "/ˈsɔnɛt_͡ʃkɔ/",
+        "en": "sun (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-34",
+        "uk": "співець",
+        "ipa": "/spiˈʋɛt͡sʲ/",
+        "en": "singer/bard",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-35",
+        "uk": "братик",
+        "ipa": "/ˈbrɑtɪk/",
+        "en": "brother (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-36",
+        "uk": "відповідальність",
+        "ipa": "/ʋidpɔʋiˈdɑlʲnistʲ/",
+        "en": "responsibility",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-37",
+        "uk": "квіточка",
+        "ipa": "/ˈkʋitɔt_͡ʃkɑ/",
+        "en": "flower (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-38",
+        "uk": "гордість",
+        "ipa": "/ˈhɔrdistʲ/",
+        "en": "pride",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-39",
+        "uk": "будівник",
+        "ipa": "/budiu̯ˈnɪk/",
+        "en": "builder",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-40",
+        "uk": "помічник",
+        "ipa": "/pɔmit͡ʃˈnɪk/",
+        "en": "helper/asst",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-41",
+        "uk": "студентство",
+        "ipa": "/stuˈdɛntstʋɔ/",
+        "en": "students (coll)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-42",
+        "uk": "товариство",
+        "ipa": "/tɔʋɑˈrɪstʋɔ/",
+        "en": "society/assoc",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-43",
+        "uk": "людство",
+        "ipa": "/ˈlʲudstʋɔ/",
+        "en": "humanity",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-44",
+        "uk": "старість",
+        "ipa": "/ˈstɑristʲ/",
+        "en": "old age",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-45",
+        "uk": "читач",
+        "ipa": "/t͡ʃɪˈtɑt͡ʃ/",
+        "en": "reader",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-46",
+        "uk": "сестричка",
+        "ipa": "/sɛsˈtrɪt͡ʃkɑ/",
+        "en": "sister (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-47",
+        "uk": "навчання",
+        "ipa": "/nɑu̯ˈt͡ʃɑnnʲɑ/",
+        "en": "learning/study",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-48",
+        "uk": "кохання",
+        "ipa": "/kɔˈxɑnnʲɑ/",
+        "en": "love",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-49",
+        "uk": "ворожість",
+        "ipa": "/ʋɔrɔˈʒistʲ/",
+        "en": "hostility",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-50",
+        "uk": "мужність",
+        "ipa": "/ˈmuʒnistʲ/",
+        "en": "courage",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-51",
+        "uk": "щирість",
+        "ipa": "/ˈʃt͡ʃɪristʲ/",
+        "en": "sincerity",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-52",
+        "uk": "мудрість",
+        "ipa": "/ˈmudристʲ/",
+        "en": "wisdom",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-53",
+        "uk": "вірність",
+        "ipa": "/ˈʋirnistʲ/",
+        "en": "loyalty",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-54",
+        "uk": "завдання",
+        "ipa": "/zɑu̯ˈdɑnnʲɑ/",
+        "en": "task/assignment",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-55",
+        "uk": "важливість",
+        "ipa": "/ʋɑʒˈlɪʋistʲ/",
+        "en": "importance",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-56",
+        "uk": "синок",
+        "ipa": "/sɪˈnɔk/",
+        "en": "son (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-57",
+        "uk": "домик",
+        "ipa": "/ˈdɔmɪk/",
+        "en": "house (dim.)",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-58",
+        "uk": "глядач",
+        "ipa": "/ɦlʲɑˈdɑt͡ʃ/",
+        "en": "viewer/spectator",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-59",
+        "uk": "слухач",
+        "ipa": "/sluˈxɑt͡ʃ/",
+        "en": "listener",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-60",
+        "uk": "творчість",
+        "ipa": "/ˈtʋɔrt͡ʃnistʲ/",
+        "en": "creativity",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-61",
+        "uk": "ніжність",
+        "ipa": "/ˈniʒnistʲ/",
+        "en": "tenderness",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      },
+      {
+        "id": "vocab-62",
+        "uk": "лагідність",
+        "ipa": "/ˈlɑɦidnistʲ/",
+        "en": "gentleness",
+        "pos": "noun",
+        "gender": null,
+        "note": "—"
+      }
+    ],
     "reviewWords": []
   }
 }

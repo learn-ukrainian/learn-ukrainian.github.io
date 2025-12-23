@@ -303,91 +303,111 @@ In the following modules, you'll learn how perfective verbs work in future tense
 ## quiz: Aspect in Past Tense
 > Виберіть правильний вид у минулому часі. | Choose the correct aspect in past tense.
 
-1. "Я прочитав книгу" focuses on:
+1. In the Ukrainian sentence "Я прочитав книгу," which grammatical aspectual focus is emphasized?
 
 - [x] Completed result
 - [ ] Ongoing process
+- [ ] Future intent
+- [ ] Habitual action
 
 ---
 
-2. "Я читав книгу" focuses on:
+2. When a speaker says "Я читав книгу," what is the primary focus of the action?
 
 - [x] Process
 - [ ] Completed result
+- [ ] Single event
+- [ ] Future goal
 
 ---
 
-3. Which word signals perfective past?
+3. Which of the following Ukrainian words typically signals that the perfective past should be used?
 
-- [x] вже — already
-- [ ] довго (for a long time)
+- [x] вже
+- [ ] довго
+- [ ] часто
+- [ ] зазвичай
 
 ---
 
-4. "Вона писала три години" — aspect?
+4. In the sentence "Вона писала три години," what is the grammatical aspect of the verb used?
 
 - [x] Imperfective
 - [ ] Perfective
+- [ ] Future
+- [ ] Conditional
 
 ---
 
-5. "Він написав листа вчора" — aspect?
+5. In the sentence "Він написав листа вчора," what is the grammatical aspect of the verb used?
 
 - [x] Perfective
 - [ ] Imperfective
+- [ ] Present
+- [ ] Habitual
 
 ---
 
-6. Past tense endings are:
+6. Which statement best describes the past tense endings for perfective and imperfective verbs in Ukrainian?
 
 - [x] The same for both aspects
 - [ ] Different for each aspect
+- [ ] Only used for perfective
+- [ ] Only used for imperfective
 
 ---
 
-7. Masculine past ending:
+7. Which of the following options represents the correct masculine past tense ending for Ukrainian verbs?
 
 - [x] -в | -∅
 - [ ] -ла
 - [ ] -ли
+- [ ] -ло
 
 ---
 
-8. Feminine past ending:
+8. Which of the following options represents the correct feminine past tense ending for Ukrainian verbs?
 
 - [x] -ла
 - [ ] -в
 - [ ] -ли
+- [ ] -ло
 
 ---
 
-9. "Що ти робив?" uses:
+9. The common Ukrainian question "Що ти робив?" typically uses which grammatical aspect for inquiry?
 
 - [x] Imperfective (asking about activities)
 - [ ] Perfective
+- [ ] Future
+- [ ] Imperative
 
 ---
 
-10. "Ти зробив це?" uses:
+10. The common Ukrainian question "Ти зробив це?" typically uses which grammatical aspect for inquiry?
 
 - [x] Perfective (asking about completion)
 - [ ] Imperfective
+- [ ] Present
+- [ ] Habitual
 
 ---
 
-11. "Піти" past masculine:
+11. Which of the following represents the correct masculine past form of the perfective verb "піти"?
 
 - [x] пішов
 - [ ] пів
 - [ ] пишов
+- [ ] пішовла
 
 ---
 
-12. "Прийти" past masculine:
+12. Which of the following represents the correct masculine past form of the perfective verb "прийти"?
 
 - [x] прийшов
 - [ ] прийв
 - [ ] прив
+- [ ] прийшла
 
 ## true-false: Past Tense Rules
 
@@ -454,41 +474,41 @@ In the following modules, you'll learn how perfective verbs work in future tense
 
 > Put the words in the correct order.
 
-1. він | прочитав | книгу | вчора
-   > [!answer] Він прочитав книгу вчора
+1. він / прочитав / цю / нову / цікаву / книгу / вчора / ввечері
+   > [!answer] Він прочитав цю нову цікаву книгу вчора ввечері
 
-2. вона | писала | три | години
-   > [!answer] Вона писала три години
+2. вона / писала / цього / довгого / листа / додому / три / години
+   > [!answer] Вона писала цього довгого листа додому три години
 
-3. я | вже | зробив | це
-   > [!answer] Я вже зробив це
+3. я / вже / зробив / це / складне / домашнє / завдання / сьогодні
+   > [!answer] Я вже зробив це складне домашнє завдання сьогодні
 
-4. ми | нарешті | приїхали
-   > [!answer] Ми нарешті приїхали
+4. ми / нарешті / приїхали / до / Києва / дуже / пізно / вчора
+   > [!answer] Ми нарешті приїхали до Києва дуже пізно вчора
 
-5. він | сказав | правду
-   > [!answer] Він сказав правду
+5. він / сказав / мені / всю / щиру / правду / про / це
+   > [!answer] Він сказав мені всю щиру правду про це
 
-6. вона | довго | говорила
-   > [!answer] Вона довго говорила
+6. вона / довго / говорила / по / телефону / зі / своєю / мамою
+   > [!answer] Вона довго говорила по телефону зі своєю мамою
 
-7. ти | прочитав | статтю
-   > [!answer] Ти прочитав статтю
+7. ти / прочитав / ту / велику / статтю / в / новій / газеті
+   > [!answer] Ти прочитав ту велику статтю в новій газеті
 
-8. він | пішов | додому
-   > [!answer] Він пішов додому
+8. він / пішов / додому / відразу / після / нашої / цікавої / роботи
+   > [!answer] Він пішов додому відразу після нашої цікавої роботи
 
-9. вона | побачила | море
-   > [!answer] Вона побачила море
+9. вона / побачила / прекрасне / синє / море / вперше / у / житті
+   > [!answer] Вона побачила прекрасне синє море вперше у житті
 
-10. ми | закінчили | роботу
-    > [!answer] Ми закінчили роботу
+10. ми / закінчили / нашу / важку / роботу / о / восьмій / годині
+    > [!answer] Ми закінчили нашу важку роботу о восьмій годині
 
-11. він | раптом | почув | шум
-    > [!answer] Він раптом почув шум
+11. він / раптом / почув / якийсь / дивний / шум / на / вулиці
+    > [!answer] Він раптом почув якийсь дивний шум на вулиці
 
-12. я | взяв | книгу
-    > [!answer] Я взяв книгу
+12. я / взяв / свою / стару / книгу / зі / шкоди / вчора
+    > [!answer] Я взяв свою стару книгу зі шкоди вчора
 
 ## error-correction: Choose Correct Aspect
 
@@ -733,16 +753,11 @@ Did you finish? (asking about completion)
 | забув | /zɑˈbuʋ/ | forgot | verb | m | perf. past masc. |
 | знайшов | /znɑjˈʃɔʋ/ | found | verb | m | perf. past masc. |
 | загубив | /zɑɦuˈbɪʋ/ | lost | verb | m | perf. past masc. |
-| вже | /ʋʒɛ/ | already | adv | — | signals completion |
-| нарешті | /nɑˈrɛʃti/ | finally | adv | — | signals completion |
 | раптом | /ˈrɑptɔm/ | suddenly | adv | — | signals sudden action |
 | купив | /kuˈpɪʋ/ | bought | verb | m | perf. past masc. |
 | продав | /prɔˈdɑʋ/ | sold | verb | m | perf. past masc. |
 | відкрив | /ʋidˈkrɪʋ/ | opened | verb | m | perf. past masc. |
 | закрив | /zɑˈkrɪʋ/ | closed | verb | m | perf. past masc. |
-| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |
-| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |
-| вид | /ʋid/ | aspect, type | noun | m | grammar term |
 
 ---
 

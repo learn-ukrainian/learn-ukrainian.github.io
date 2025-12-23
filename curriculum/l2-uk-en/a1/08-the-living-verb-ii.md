@@ -662,7 +662,6 @@ With Class I and Class II verbs combined, you can now express hundreds of action
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
 | говорити | /ɦɔvɔˈrɪtɪ/ | to speak | verb | - | Class II: говорю, говориш, говорить |
-| робити | /ˈrɔbɪtɪ/ | to do, to make | verb | - | Class II: роблю, робиш, робить |
 | бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | - | Class II: бачу, бачиш, бачить |
 | дивитися | /dɪˈvɪtɪsʲɑ/ | to watch, to look | verb | - | Reflexive: дивлюся, дивишся |
 | ходити | /xɔˈdɪtɪ/ | to walk, to go (on foot) | verb | - | Class II: ходжу, ходиш, ходить |

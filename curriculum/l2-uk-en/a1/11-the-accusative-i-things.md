@@ -649,7 +649,6 @@ In this module, you learned:
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| бачити | /ˈbɑt͡ʃɪtɪ/ | to see | verb | - | бачу, бачиш |
 | чути | /ˈt͡ʃutɪ/ | to hear | verb | - | чую, чуєш |
 | брати | /ˈbrɑtɪ/ | to take | verb | - | беру, береш |
 | давати | /dɑˈvɑtɪ/ | to give | verb | - | даю, даєш |
@@ -669,8 +668,6 @@ In this module, you learned:
 | посилка | /poˈsɪlkɑ/ | parcel | noun | f | - |
 | подарунок | /podɑˈrunok/ | gift | noun | m | - |
 | квиток | /kvɪˈtok/ | ticket | noun | m | - |
-| паспорт | /ˈpɑsport/ | passport | noun | m | - |
 | документ | /dokuˈmɛnt/ | document | noun | m | - |
-| сумка | /ˈsumkɑ/ | bag | noun | f | - |
 | валіза | /vɑˈlizɑ/ | suitcase | noun | f | - |
 | коробка | /koˈrobkɑ/ | box | noun | f | - |

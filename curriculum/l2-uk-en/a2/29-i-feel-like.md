@@ -1,652 +1,585 @@
 ---
 module: a2-29
 title: I Feel Like...
-subtitle: "Expressing Emotions and States"
+subtitle: "Expressing Feelings and Needs"
 version: "1.0"
 phase: "A2.3"
-pedagogy: "Expressive"
+pedagogy: "Communicative"
 duration: "60 min"
 transliteration: none
 tags:
-  - emotions
   - feelings
-  - dative
+  - emotions
+  - state
 grammar:
-  - impersonal dative
-  - reflexive verbs
-  - adjectives vs adverbs
+  - impersonal constructions
+  - dative of experience
+  - emotional adjectives
 objectives:
-  - "Learner can express how they feel"
-  - "Learner understands Dative states (Мені сумно)"
-  - "Learner can ask about others' feelings"
+  - "Learner can express basic physical and emotional states"
+  - "Learner can use the dative case for personal feelings"
+  - "Learner can distinguish between states and adjectives"
 vocabulary_count: 25
 ---
 
+# Summary
+
 ## Warm-up
 
-"How are you?"
-Usually, you say "Normalno". But sometimes, you want to scream, cry, or laugh.
-In Ukrainian, feelings are often things that *happen to you*.
-- English: I am sad. (I = Subject)
-- Ukrainian: **Мені сумно.** (To me [it is] sad.)
+How do you feel today? Are you tired? Happy? Cold? In Ukrainian, expressing how you feel often uses a different logical structure than English. Instead of saying "I am cold," we often say "To me [is] cold." This module focuses on these "impersonal" constructions and the vocabulary of emotions. We will learn how to describe our physical state, our emotional reaction to events, and how to express deep feelings with friends.
 
-You are the receiver of the emotion.
+**In this lesson, we will cover:**
+- **The Dative of Experience:** Мені холодно, йому весело.
+- **Physical States:** Голодний, втомлений, хворий.
+- **Emotional States:** Радий, сумний, злий.
+- **Verbs of Feeling:** Боятися, хвилюватися, радіти.
+- **Reporting Feelings:** Я почуваюся...
 
-**We will cover:**
-- **The Dative State:** Мені весело | Мені страшно.
-- **The Reflexive Action:** Я почуваюся...
-- **The Strong Emotion:** Я ненавиджу | Я обожнюю.
-
-> [!note] Cultural Insight
-> Ukrainians are emotional but private. We might look serious on the street (the "Slavic Face"), but with friends, we pour our hearts out. Sharing sadness is a sign of deep friendship.
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [How do you really feel? (Ukrainian)...](https://www.youtube.com/watch?v=Mn_MOEThvCI) — EMOTIONS AND FEELINGS VOCABULARY
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
+> 💡 **Logic Shift: The Dative Case**
+> In English, you are the *subject* of the feeling (I am cold). 
+> In Ukrainian, you are often the *recipient* of the feeling (To me [it is] cold). This is why the **Dative case** is so crucial for emotions! By using the dative, you describe how the world "happens" to you rather than how you "are".
 
 ---
 
 ## Presentation
 
-## 1. The Dative Construction (Impersonal)
+## 1. Impersonal States (The Dative construction)
 
-This is the most common way to describe physical and emotional states.
-**Structure:** [Dative Case] + [Adverb (o-ending)].
+When expressing physical or environmental sensations, Ukrainian uses the Dative case (мені, тобі, йому...) + an adverbial state word. These words don't change for gender or number because they are describing the *situation* around the person, not the person directly.
 
-| English | Ukrainian | Literal |
-|---------|-----------|---------|
-| I am cold | **Мені холодно** | To me [it is] cold |
-| I am sad | **Мені сумно** | To me [it is] sad |
-| I am fun/having fun | **Мені весело** | To me [it is] fun |
-| I am scared | **Мені страшно** | To me [it is] scary |
-| I am bored | **Мені нудно** | To me [it is] boring |
-| I am interesting | **Мені цікаво** | To me [it is] interesting |
+| Ukrainian | Literal English | Natural English |
+|-----------|-----------------|-----------------|
+| **Мені холодно.** | To me [is] cold. | I am cold. |
+| **Йому жарко.** | To him [is] hot. | He is hot. |
+| **Нам сумно.** | To us [is] sad. | We are sad. |
+| **Вам весело.** | To you [is] fun. | You are having fun / happy. |
+| **Їм нудно.** | To them [is] boring. | They are bored. |
+| **Тобі страшно?** | To you [is] scary? | Are you scared? |
+| **Мені приємно.** | To me [is] pleasant. | It's my pleasure / I'm glad. |
 
-**Examples:**
-- *Вам зручно?* (Are you comfortable? | To you comfortable?)
-- *Їй погано.* (She feels bad/sick. | To her bad.)
+> [!important] No "to be" in Present
+> Just like other present tense sentences in Ukrainian, we don't use a verb for "is" here. 
+> *Мені страшно.* (I am scared.) 
+> In the past, we use **було**: *Мені було холодно.* (I was cold.)
 
-## 2. Nominative Adjectives (Personality)
+## 2. Adjectival Feelings (Direct Description)
 
-Be careful! If you use "Я" + Adjective, you describe your **character**, not your current state.
+Some feelings are expressed as adjectives. These describe the person's own condition and MUST agree in gender and number with the person speaking or being spoken about.
 
-- **Мені нудно.** (I am bored - right now.)
-- **Я нудний.** (I am a boring person.)
-- **Мені весело.** (I am having fun.)
-- **Я веселий.** (I am a cheerful person.)
+- **Я голодний.** (I am hungry - masc)
+- **Я голодна.** (I am hungry - fem)
+- **Я втомлена.** (I am tired - fem)
+- **Він задоволений.** (He is satisfied/pleased.)
+- **Ми щасливі.** (We are happy.)
+- **Вона здивована.** (She is surprised.)
+- **Вони розчаровані.** (They are disappointed.)
 
-> [!warning] The "Cold" Trap
-> - *Мені холодно.* (I feel cold.)
-> - *Я холодний.* (I am a cold-hearted person | I am a corpse.)
+## 3. Emotional Verbs (Process and Action)
 
-## 3. Active Emotional Verbs
+When feelings are not just states but processes or actions directed at something, we use verbs. Many of these are reflexive (ending in **-ся**) or require specific cases.
 
-Some emotions are active verbs.
-
-### Loving and Hating
-- **Любити** (To love)
-- **Ненавидіти** (To hate)
-- **Обожнювати** (To adore)
-- **Зневажати** (To despise)
-
-### Reflexive States
-- **Хвилюватися** (To worry)
-- **Радіти** (To rejoice | be happy)
-- **Дивуватися** (To be surprised)
-- **Сподіватися** (To hope)
-- **Боятися** (To be afraid of + Genitive)
-
-### "To Feel"
-- **Почуватися** (To feel oneself): Describes general well-being.
-  - *Як ти почуваєшся?* (How do you feel?)
-  - *Я почуваюся добре | погано.* (Adverb!)
-- **Відчувати** (To feel something): Senses.
-  - *Я відчуваю біль.* (I feel pain.)
-  - *Я відчуваю радість.* (I feel joy.)
+- **Радіти** (to rejoice / be glad). *Я радію за тебе.* (I'm happy for you.)
+- **Боятися** (to fear / be afraid). *Я боюся собак.* (I'm afraid of dogs - requires Genitive).
+- **Хвилюватися** (to worry / be excited). *Не хвилюйся!* (Don't worry!)
+- **Дивуватися** (to be surprised). *Вона дивується результату.* (She is surprised at the result.)
 
 ---
 
-## Deep Dive: Active vs Passive Emotions
+## The Nuance of Sincerity
 
-In English, you usually "are" something (I am happy, I am sad). In Ukrainian, you have three choices, and they change the nuance.
-
-## 1. The State (Dative) - "It is happening to me"
-**Мені сумно.** (To me [it is] sad.)
-This is your internal atmosphere. It just IS. You are the vessel of this feeling.
-- *Мені прикро.* (I feel pity/regret - It is a pity to me.)
-- *Мені радісно.* (I feel joyful - To me it is joyful.)
-- *Мені страшно.* (I am scared - To me it is scary.)
-
-## 2. The Quality (Adjective) - "I am that kind of person | current look"
-**Я сумний.** (I am sad.)
-Use this when describing appearance or character.
-- *Він сьогодні сумний.* (He looks sad today.)
-- *Він сумна людина.* (He is a melancholic person.)
-- *Я щасливий!* (I am happy! - Describing my whole being, not just a fleeting sensation.)
-
-## 3. The Action (Verb) - "I am doing feeling"
-**Я сумую.** (I am missing someone | being sad.)
-This is active. You are engaging with the emotion.
-- *Я боюся.* (I fear.)
-- *Я дивувася.* (I marvel/am surprised.)
-- *Я хвилююся.* (I worry/agitate myself.)
-
-> [!important] "Шкода"
-> **Шкода** (Pity/Sorry) is a very common impersonal word.
-> - *Мені шкода.* (I am sorry.)
-> - *Шкода, що ти не прийшов.* (It's a pity that you didn't come.)
+In many Western cultures, asking "How are you?" is just a social ritual with a standard "Good, thanks" answer. In Ukraine, the question **"Як ти?"** or **"Як почуваєшся?"** is often seen as a genuine invitation to share your state of mind. If someone is tired or worried about work, they will likely tell you. This emotional honesty is considered a sign of a "real" (справжній) person and a loyal friend. Sharing a bit of "журба" (sorrow) or "радість" (joy) over tea is the foundation of many Ukrainian friendships, creating a space where people can be vulnerable and supported by their community.
 
 ---
 
-## Myth Buster: The "Cold" Slavs?
+> [!cultural] History Bite: The Spirit of Resilience
+> Ukrainians have a unique concept of "cheerful resilience." Even in the darkest times of history, from the famine to the current war, the ability to find humor (**гумор**) and maintain a positive spirit is seen as a weapon of resistance. The phrase "Сміємося — отже, не здаємося" (We are laughing — therefore, we are not giving up) captures this essential national feeling.
 
-> [!myth] "Ukrainians are cold and unemotional."
-> **FALSE.**
-> **The Truth:** Ukrainians distinguish between "public face" and "private face". On the street, a neutral or serious expression is considered polite—you don't impose your emotions on strangers. This is sometimes called the "peach vs coconut" culture theory. Americans are "peaches" (soft outside, hard inside). Ukrainians are "coconuts" (hard shell, but soft and sweet inside).
-> Once you are a friend, Ukrainians are incredibly emotional, warm, and open. We share problems, joys, and "pour out the soul" (**виливати душу**). If a Ukrainian is "cold" to you, it just means you are still a stranger.
+> [!tip] Softening with "Трохи"
+> If a feeling is not overwhelming, use **трохи** (a little).
+> *Мені трохи холодно.* (I'm a little cold.)
+> *Я трохи засмучений сьогодні.* (I'm a little upset today.)
+
+---
+
+## Expressing Needs and Desires
+
+Often, feelings are linked to needs. In Ukrainian, these are also frequently expressed with the Dative case + an impersonal verb or particle. This grammatical structure reflects a cultural tendency to view humans as being acted upon by internal and external forces, rather than purely as autonomous agents of their own will.
+
+- **Мені хочеться...** (I feel like... / I want... - reflexive impersonal)
+- **Мені потрібно...** (I need... - impersonal)
+- **Мені шкода.** (I'm sorry / It's a pity.)
+- **Мені прикро.** (I'm annoyed / It's a pity.)
+
+By using the Dative, you soften the ego. Instead of "I want," you say "It is wanted to me," which sounds less demanding and more like a natural state of being. This nuance is part of the linguistic "politeness" built into the Ukrainian case system, allowing speakers to express desire without coming across as overly pushy or self-centered. It is a subtle way of maintaining social harmony while still being honest about your needs.
+
+---
+
+## Emotions in the Ukrainian Heartland
+
+Ukrainian literature and folk songs are famous for their emotional depth. The concept of **"Туга"** (a deep, soulful longing) is something you will encounter often. It is not exactly sadness, but rather a profound yearning for home, for a loved one, or for freedom. When you learn these words, you are unlocking the emotional history of a nation that has always used its feelings as a way to connect and survive. Whether it's the epic poems of Taras Shevchenko or modern pop lyrics, the "prosecutor's voice" of emotional clarity is always present.
 
 ---
 
 ## Language in Action
 
-## Dialogue: The Horror Movie
+## Dialogue: After a Long Week
 
-Oleh and Katya are watching a film.
+**Олена:** Привіт, Іване! Як ти почуваєшся після цього важкого тижня?
+**Іван:** Чесно кажучи, я дуже втомлений. Мені хочеться просто спати.
+**Олена:** Тобі не нудно було в офісі сьогодні з цими звітами?
+**Іван:** Ні, було занадто багато роботи, тому мені було трохи страшно не встигнути.
+**Олена:** Зрозуміло. А мені дуже радісно, бо я нарешті купила нову книгу!
+**Іван:** Я справді радий за тебе. Ти завжди така щаслива, коли читаєш.
+**Олена:** Це правда. Хоча я теж хвилююся через іспити, але книга допомагає.
+**Іван:** Не турбуйся, ти все знаєш. Давай просто підемо пити чай.
 
-**Oleh:** Тобі страшно?
-**Katya:** Ні, мені нудно. Цей монстр смішний.
-**Oleh:** А мені цікаво. Я хвилююся за героя.
-**Katya:** Я сподіваюся, що його з'їдять. Він дурний.
-**Oleh:** Ти жорстока!
-**Katya:** Я просто чесна. О, дивись! Кров!
-**Oleh:** Фу, мені погано. Я ненавиджу кров.
-**Katya:** А мені весело! Я обожнюю жахи.
-**Oleh:** Тобі весело, а мені соромно, що я боюся.
-**Katya:** Не переживай. Ти сміливий, бо сидиш тут зі мною.
-
-### Analysis
-1.  **Мені нудно** vs **Мені цікаво**: Dative states.
-2.  **Я хвилююся**: Reflexive active verb.
-3.  **Мені погано**: Physical reaction (nausea/faintness).
-4.  **Тобі весело**: Contrast.
-
-## Dialogue: After the Exam
-
-**Student 1:** Ну як ти почуваєшся?
-**Student 2:** Я щасливий! Я склав іспит!
-**Student 1:** Я радий за тебе. А мені сумно.
-**Student 2:** Чому? Тобі було важко?
-**Student 1:** Так, мені було дуже страшно. Я забув усе.
-**Student 2:** Не хвилюйся. Все буде добре.
-**Student 1:** Сподіваюся. Але зараз я хочу спати. Мені лінь йти додому.
-
-> [!tip] "Meni Lin'"
-> **Мені лінь** (To me [it is] laziness) means "I can't be bothered" or "I am too lazy to do it". Very common!
+### Analysis of the Conversation
+1.  **Я дуже втомлений**: Adjective (Masc) describing his physical condition.
+2.  **Мені було страшно**: Dative + adverbial state in the past tense.
+3.  **Мені радісно**: Adverbial state ("It is joyful to me").
+4.  **Я хвилююся**: Verb process of being anxious or excited.
+5.  **Не турбуйся**: Imperative of the verb "to worry/bother".
 
 ---
 
-## Summary
-
-To express feelings:
-1.  **Impersonal (State):** *Мені + Adverb* (Мені холодно, мені сумно, мені прикро).
-2.  **Personal (Character):** *Я + Adjective* (Я веселий - I am a cheerful guy).
-3.  **Active:** *Я люблю, я ненавиджу, я боюся.*
-
-Listen to your **душа**!
+> [!important] Myth Buster: The "Frozen Face"
+> **Myth:** Ukrainians are cold and emotionless because they don't smile at strangers.
+> **Reality:** A smile in Ukraine is usually earned and reserved for those we know or have an actual reason to interact with. We don't use "polite smiles" for strangers in the street, but once a conversation starts, Ukrainians are among the most emotionally expressive and warm people in Europe. Our language is rich with diminutive forms (сонечко, матінко) that express deep affection and familial warmth. This distinction between public reserve and private warmth is a key part of the Ukrainian social code.
 
 ---
 
-## Deep Dive: The Color of Emotion
+> [!resources] 🔗 External Resources
+> - **YouTube:** [Feelings and Emotions in Ukrainian](https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary) — Slow Ukrainian with Yevhen
+> - **Article:** [How to express emotions in Ukrainian](https://www.ukrainianlessons.com/emotions/) — Ukrainian Lessons
+> - **Audio:** [Pronunciation of Ukrainian Emotions](https://forvo.com/languages/uk/) — Forvo Database
 
-Ukrainians associate colors with emotions, just like English speakers, but there are some unique nuances.
+# Activities
 
-## 1. Black (Чорний)
-**Чорний день** (Black day) is a very bad, tragic day.
-- *Мені чорно на душі.* (It is black on my soul - Deep depression.)
+## match-up: Feelings Pairs (Concept: Semantic Pairing)
+Match the Ukrainian state to the English translation.
 
-## 2. White (Білий)
-**Біла заздрість** (White envy). This is a unique cultural concept.
-- *Я тобі заздрю білою заздрістю.* (I envy you with white envy.)
-- Meaning: "I am happy for you, I wish I had what you have, but I have no bad feelings."
-- **Чорна заздрість** (Black envy) is when you want the other person to lose their success.
+| Ukrainian | English |
+|-----------|---------|
+| Мені холодно | I am cold |
+| Мені жарко | I am hot |
+| Мені нудно | I am bored |
+| Мені весело | I am having fun |
+| Я втомлений | I am tired |
+| Я голодний | I am hungry |
+| Я щасливий | I am happy |
+| Я радий | I am glad |
+| Мені страшно | I am scared |
+| Я задоволений | I am satisfied |
+| Мені приємно | It is pleasant to me |
 
-## 3. Green (Зелений)
-**Зелений** often means "young and inexperienced" or "sickly".
-- *Ти ще зелений.* (You are still green/young.)
-- *Він позеленів від злості.* (He turned green from anger.)
+## fill-in: Which Form? (Concept: Contextual Selection)
+Complete the sentences with the correct word. Pay attention to case and gender!
 
-## 4. Rose (Рожевий)
-**Дивитися крізь рожеві окуляри** (To look through rose-colored glasses).
-- *Зніми рожеві окуляри!* (Take off rose glasses! Be realistic!)
+1. [___:1] дуже холодно на вулиці сьогодні. (To me)
+   > [!answer] Мені
+   > [!options] Мені | Я | Мене | Мною
 
-## 5. Gray (Сірий)
-**Сірі будні** (Gray weekdays) - boring routine.
-- *Моє життя сіре.* (My life is gray.)
+2. Ганна сьогодні дуже [___:2] після тренування. (tired - fem)
+   > [!answer] втомлена
+   > [!options] втомлена | втомлений | втомлене | втомлені
 
----
-
-## Pro-Tip: How to Ask "How Are You?"
-
-Don't just say "**Як справи?**" (How are things?). That is for casual acquaintances.
-To ask about *feelings*, use:
-
-1.  **Як ти почуваєшся?** (How do you feel? - Health/Well-being)
-2.  **Що в тебе на душі?** (What is on your soul? - Deep, personal)
-3.  **Який у тебе настрій?** (What is your mood?)
-
-**Answers:**
-- **Чудовий!** (Wonderful!)
-- **Так собі.** (So-so.)
-- **Краще не питај.** (Better not ask.)
-- **Все як завжди.** (Everything as always | Same old.)
-
-> [!dialogue] Small Talk
-> **A:** Привіт! Як настрій?
-> **B:** Та, сірий. Осінь, дощ... Мені сумно.
-> **A:** Розумію. А в мене -- біла смуга! (White stripe | Good streak).
-> **B:** Радий за тебе. Сподіваюся, моя чорна смуга скоро закінчиться.
-
----
-
-## Activities
-
-## match-up: Feelings Pairs
-
-> Match the Dative phrase to the translation.
-
-- Мені холодно :: I am cold
-- Мені жарко :: I am hot
-- Мені сумно :: I am sad
-- Мені весело :: I am having fun
-- Мені нудно :: I am bored
-- Мені цікаво :: I am interested
-- Мені страшно :: I am scared
-- Мені видно :: I can see (To me visible)
-
-## fill-in: Which Form?
-
-> Choose the correct form (Impersonal vs Personal).
-
-1. Цей клоун ___. (cheerful - Adjective)
-   > [!answer] веселий
-   > [!options] веселий | весело | весела | веселі
-
-2. На вечірці нам було ___. (fun - Adverb)
-   > [!answer] весело
-   > [!options] весело | веселі | веселий | весела
-
-3. Йому ___ на роботі. (boring)
+3. Дітям ніколи не буває [___:3] в аквапарку. (boring)
    > [!answer] нудно
    > [!options] нудно | нудний | нудна | нудні
 
-4. Ця лекція ___. (boring - Adjective)
-   > [!answer] нудна
-   > [!options] нудна | нудно | нудний | нудні
+4. Ми дуже [___:4], що ви прийшли до нас. (glad)
+   > [!answer] раді
+   > [!options] раді | радий | рада | радо
 
-5. Мені ___. (cold)
-   > [!answer] холодно
-   > [!options] холодно | холодний | холодна | холодні
+5. Тобі [___:5] чи приємно це чути? (painful)
+   > [!answer] боляче
+   > [!options] боляче | біль | болить | хворий
 
-6. Суп ___. (cold - Adjective)
-   > [!answer] холодний
-   > [!options] холодний | холодно | холодна | холодні
+6. Я почуваюся [___:6], дякую за допомогу. (better)
+   > [!answer] краще
+   > [!options] краще | добре | погано | гірше
 
-7. Їй ___. (sad)
+7. Йому [___:7], бо він забув телефон дома. (sad)
    > [!answer] сумно
-   > [!options] сумно | сумна | сумний | сумні
+   > [!options] сумно | сумний | сумна | сумні
 
-8. Вона ___. (sad person | currently looking sad)
-   > [!answer] сумна
-   > [!options] сумна | сумно | сумний | сумні
+8. Вибачте, я дуже [___:8], хочу пообідати. (hungry - masc)
+   > [!answer] голодний
+   > [!options] голодний | голодна | голодні | голодне
 
-9. Мені ___ знати правду. (interesting)
-   > [!answer] цікаво
-   > [!options] цікаво | цікавий | цікава | цікаві
+## quiz: Emotional IQ (Concept: Logical Deduction)
+Answer questions about expressing feelings in Ukrainian.
 
-10. Книга ___. (interesting)
-    > [!answer] цікава
-    > [!options] цікава | цікаво | цікавий | цікаві
+1. Як саме правильно та ввічливо сказати "I am bored" українською мовою, використовуючи давальний відмінок?
+- [x] Потрібно сказати фразу "Мені нудно" своєму співрозмовнику під час розмови
+- [ ] Потрібно сказати "Я є нудний" як свою постійну негативну характеристику
+- [ ] Потрібно дуже голосно кричати слово "Допоможіть" на вулиці серед людей
+- [ ] Потрібно просто мовчати і нічого не говорити своєму другові цілу годину
 
-## quiz: Emotional IQ
+---
 
-1. "Мені погано" implies:
-   - [x] I feel sick | unwell
-   - [ ] I am a bad person
-   - [ ] I behave badly
+2. Що саме ви маєте на увазі в розмові, коли кажете "Я почуваюся набагато краще сьогодні"?
+- [x] Ви описуєте процес покращення вашого загального стану здоров'я або настрою
+- [ ] Ви кажете, що ви несподівано знайшли дуже велику суму грошей на дорозі
+- [ ] Ви просите свого колегу негайно принести вам гарячу каву з молоком
+- [ ] Ви кажете, що зараз на вулиці йде дуже сильний і холодний зимовий дощ
 
-2. How do you say "I am hot"?
-   - [x] Мені жарко
-   - [ ] Я жаркий
-   - [ ] Я гарячий
+---
 
-3. "Переживати" means:
-   - [x] To worry | experience emotional pain
-   - [ ] To chew food excessively
-   - [ ] To live forever
+3. Яка саме граматична форма прикметника "Втомлений" (Tired) є правильною для жінки?
+- [x] Жінка має обов'язково використовувати форму прикметника "Я втомлена" з -а
+- [ ] Жінка має використовувати форму прикметника "Я втомлений" з нульовим закінченням
+- [ ] Жінка має використовувати форму прикметника "Я втомлене" з закінченням -е
+- [ ] Жінка має використовувати форму іменника "Втома" в називному відмінку однини
 
-4. "Мені лінь" means:
-   - [x] I can't be bothered | I'm lazy right now
-   - [ ] I am a lazy person forever
-   - [ ] I am tired
+---
 
-5. To say you are scared:
-   - [x] Мені страшно | Я боюся
-   - [ ] Я страшний
-   - [ ] Я страх
+4. Чому ми зазвичай використовуємо Давальний відмінок (Мені, Тобі) для вираження відчуттів у мові?
+- [x] Бо в українській логіці людина є реципієнтом (отримувачем) певного стану
+- [ ] Бо це найскладніший відмінок, який придумали спеціально для всіх іноземців
+- [ ] Бо так набагато легше писати великі красиві вірші про кохання та природу
+- [ ] Бо це офіційна вимога чинного законодавства нашої країни для всіх громадян
 
-6. "Хвилюватися" is similar to:
-   - [x] Переживати
-   - [ ] Радіти
-   - [ ] Спати
+---
 
-7. "Я відчуваю..." is usually followed by:
-   - [x] A noun (pain, joy, heat)
-   - [ ] An adverb
-   - [ ] A preposition
+5. Що саме означає українське поняття "Журба" в контексті нашої національної культури?
+- [x] Це глибоке почуття суму, тривалої туги або меланхолії в серці людини
+- [ ] Це назва дуже популярної української страви з м'ясом та свіжими овочами
+- [ ] Це вид сучасного спортивного змагання для молодих і сильних людей у місті
+- [ ] Це спеціальний старий інструмент для швидкого будівництва дерев'яних будинків
 
-8. "Я почуваюся..." is usually followed by:
-   - [x] An adverb (well, bad)
-   - [ ] A noun
-   - [ ] A verb
+---
 
-9. "Обожнювати" is stronger than "Любити".
+6. Як найкраще та найбільш природно пом'якшити вираження негативного почуття в розмові?
+- [x] Потрібно додати слово-пом'якшувач "трохи", наприклад: "Мені трохи сумно"
+- [ ] Потрібно додати слово "дуже", щоб максимально підкреслити силу вашого болю
+- [ ] Потрібно почати енергійно танцювати і співати веселі пісні без зупинки
+- [ ] Потрібно заплющити очі і уявити, що ви вже на теплому березі моря
+
+---
+
+7. Яке слово є прямим антонімом (протилежним за значенням) до українського слова "Радий"?
+- [x] Українське слово "Сумний" є найбільш протилежним за своїм значенням
+- [ ] Українське слово "Веселий" є найбільш протилежним за своїм значенням
+- [ ] Українське слово "Щасливий" є найбільш протилежним за своїм значенням
+- [ ] Українське слово "Добрий" є найбільш протилежним за своїм значенням
+
+---
+
+8. Що саме ви хочете повідомити другу, коли вживаєте в розмові фразу "Мені весело"?
+- [x] Ви повідомляєте, що вам зараз цікаво і ви отримуєте велике задоволення
+- [ ] Ви просите свого друга негайно вимкнути цю стару і дуже неприємну музику
+- [ ] Ви кажете, що ви дуже хочете терміново купити собі новий теплий светр
+- [ ] Ви повідомляєте, що вам зараз дуже холодно і ви хочете швидко піти додому
+
+---
+
+9. У якій саме життєвій ситуації найбільш доречно вживати прикметник "Вдячний" (Grateful)?
+- [x] Коли ви щиро хочете висловити подяку за надану вам допомогу або пораду
+- [ ] Коли ви хочете замовити собі велику порцію гарячого борщу в ресторані
+- [ ] Коли ви безнадійно спізнюєтеся на дуже важливу зустріч у своєму офісі
+- [ ] Коли ви наполегливо шукаєте ключі від своєї квартири в маленькій сумці
+
+---
+
+10. Як правильно та ввічливо запитати перехожого "Are you cold?" українською мовою?
+- [x] Найбільш правильно буде запитати: "Вам холодно?" у невідомої людини
+- [ ] Найбільш правильно буде запитати: "Ви є холодно?" у невідомої людини
+- [ ] Найбільш правильно буде запитати: "Де є холод?" у невідомої людини
+- [ ] Найбільш правильно буде запитати: "Хто є холод?" у невідомої людини
+
+## true-false: True or False? (Concept: Concept Validation)
+Validate your understanding of Ukrainian feelings and emotions.
+
+1. "Мені холодно" directly translates to "I am cold."
    - [x] True
    - [ ] False
+   > While the meaning is the same, the logic is "To me [is] cold."
 
-10. "Зневажати" means:
-    - [x] To despise | scorn
-    - [ ] To respect
-    - [ ] To ignore
+2. Adjectives of feeling like "втомлений" must agree with the subject's gender.
+   - [x] True
+   - [ ] False
+   > Yes, men say "втомлений", women say "втомлена".
 
-## unjumble: Express Yourself
+3. The verb "почуватися" requires the Accusative case for the subject.
+   - [ ] True
+   - [x] False
+   > It uses the Nominative case: "Я почуваюся..."
 
-1. мені | сьогодні | дуже | сумно
-   > [!answer] Мені сьогодні дуже сумно
+4. In the present tense, you must use the verb "є" for feelings.
+   - [ ] True
+   - [x] False
+   > We omit "є" in the present tense: "Мені нудно."
 
-2. я | за | тебе | хвилююся
-   > [!answer] Я хвилююся за тебе
+5. Adding "трохи" makes a feeling sound stronger.
+   - [ ] True
+   - [x] False
+   > It acts as a softener, meaning "a little."
 
-3. нам | фільм | не | цікаво | дивитися
-   > [!answer] Нам не цікаво дивитися фільм
+6. "Мені погано" can mean both physical illness and emotional distress.
+   - [x] True
+   - [ ] False
+   > It is a general term for feeling bad.
 
-4. почуваюся | я | чудово | зараз
-   > [!answer] Я почуваюся чудово зараз
+7. "Радий" is used for temporary states of being glad.
+   - [x] True
+   - [ ] False
+   > Correct.
 
-5. ти | чого | боїшся
-   > [!answer] Чого ти боїшся
+8. Ukrainians are culturally expected to hide their true feelings.
+   - [ ] True
+   - [x] False
+   > Emotional sincerity is highly valued in Ukraine.
 
-6. ми | на | сподіваємося | краще
-   > [!answer] Ми сподіваємося на краще
+## group-sort: Positive vs Negative (Позитивні чи Негативні) (Concept: Semantic Categorization)
+Sort these states and adjectives based on their emotional value.
 
-## group-sort: Positive vs Negative
-
-### Positive (Good)
-- Радіти
-- Обожнювати
-- Сподіватися
-- Цікаво
+### Positive (Позитивні)
 - Весело
-- Приємно
 - Щасливий
-- Задоволений
-- Радісний
-- Добре
+- Радий
+- Приємно
+- Тепло
+- Вдячний
+- Спокійний
+- Цікаво
 
-### Negative (Bad)
-- Ненавидіти
-- Боятися
-- Хвилюватися
+### Negative (Негативні)
 - Сумно
+- Холодно
 - Нудно
 - Страшно
 - Злий
-- Прикро
-- Погано
-- Засмучений
-- Розчарований
-- Переляканий
+- Втомлений
+- Голодний
+- Боляче
 
-## true-false: True or False?
+### Neutral or Physical (Нейтральні / Фізичні)
+- Нормально
+- Спекотно
+- Сонний
+- Вчорашній
+- Звичайний
+- Тихий
 
-1. "Я нудний" means "I am bored".
-   - [ ] True
-   - [x] False
+## unjumble: Express Yourself (Concept: Syntax Integrity)
+Rearrange the words to form correct sentences about feelings.
 
-2. "Мені жарко" refers to temperature.
-   - [x] True
-   - [ ] False
+1. мені / сьогодні / дуже / сумно / бо / мій / найкращий / друг / поїхав / за / кордон
+   > [!answer] Мені сьогодні дуже сумно, бо мій найкращий друг поїхав за кордон
 
-3. "Радіти" takes the Dative case directly.
-   - [ ] True
-   - [x] False
+2. я / почуваюся / набагато / краще / після / того / як / трохи / поспав / удень
+   > [!answer] Я почуваюся набагато краще після того як трохи поспав удень
 
-4. Ukrainians smile at everyone on the street.
-   - [ ] True
-   - [x] False
+3. чи / тобі / не / було / страшно / вчора / ввечері / в / цьому / темному / лісі
+   > [!answer] Чи тобі не було страшно вчора ввечері в цьому темному лісі
 
-5. "Сподіватися" means "To Hate".
-   - [ ] True
-   - [x] False
+4. вона / завжди / дуже / щаслива / коли / бачить / своїх / маленьких / і / гарних / дітей
+   > [!answer] Вона завжди дуже щаслива, коли бачить своїх маленьких і гарних дітей
 
-6. "Вам зручно?" is a polite way to ask "Are you comfortable?".
-   - [x] True
-   - [ ] False
+5. нам / було / надзвичайно / весело / на / цьому / новому / великому / і / гучному / концерті
+   > [!answer] Нам було надзвичайно весело на цьому новому великому і гучному концерті
 
-7. "Я почуваюся щастя" is correct.
-   - [ ] True
-   - [x] False
+6. ви / виглядаєте / дуже / втомленими / після / цієї / довгої / і / справді / важкої / дороги
+   > [!answer] Ви виглядаєте дуже втомленими після цієї довгої і справді важкої дороги
 
-8. "Душа болить" means you have a heart attack.
-   - [ ] True
-   - [x] False
+## error-correction: Fix the Feelings (Concept: Critical Proofreading)
+Identify and correct errors in these emotional expressions.
 
-9. "Обожнювати" is for God only.
-   - [ ] True
-   - [x] False
-
-10. "Мені лінь" implies laziness.
-    - [x] True
-    - [ ] False
-
-## cloze: Emotional Story
-
-> Fill in the gaps.
-
-Учора був жахливий день. Мені було [___:1] і самотньо.
-Я [___:2], що дощ ніколи не закінчиться.
-Але сьогодні сонце! Я [___:3] щасливо.
-Мені [___:4] йти в парк. Я [___:5] морозиво.
-Я [___:6], що зустріну друга. Це [___:7], що ми друзі.
-
-1. сумно | весело
-> [!answer] сумно
-
-2. боявся | радів
-> [!answer] боявся
-
-3. почуваюся | відчуваю
-> [!answer] почуваюся
-
-4. весело | сумно
-> [!answer] весело
-
-5. обожнюю | ненавиджу
-> [!answer] обожнюю
-
-6. сподіваюся | боюся
-> [!answer] сподіваюся
-
-7. добре | погано
-> [!answer] добре
-
-## dialogue-reorder: The Date
-
-- Ти хвилюєшся?
-- Трохи. Мені страшно, що я їй не сподобаюся.
-- Не бійся. Ти цікавий хлопець.
-- Думаєш? Мені здається, я нудний.
-- Це неправда. Ти веселий і розумний.
-- Дякую. Мені приємно це чути.
-- Просто будь собою.
-- Я спробую. Сподіваюся, все буде добре.
-
-> [!answer]
-> 1. Ти хвилюєшся?
-> 2. Трохи. Мені страшно, що я їй не сподобаюся.
-> 3. Не бійся. Ти цікавий хлопець.
-> 4. Думаєш? Мені здається, я нудний.
-> 5. Це неправда. Ти веселий і розумний.
-> 6. Дякую. Мені приємно це чути.
-> 7. Просто будь собою.
-> 8. Я спробую. Сподіваюся, все буде добре.
-
-## mark-the-words: ImpersonalExpressions
-
-[Мені сумно](correct), коли йде дощ. Але [тобі весело](correct), бо ти любиш воду. [Нам холодно](correct) взимку. [Їм страшно](correct) у темряві. [Вам зручно](correct) сидіти? [Мені прикро](correct), що ти йдеш. [Їй радісно](correct) сьогодні.
-
----
-
-[Я веселий](incorrect) хлопець. [Вона сумна](incorrect) дівчина. [Ми щасливі](incorrect).
-
-## error-correction: Fix the Feelings
-
-1. Я холодно.
+1. **Я** холодно в цій кімнаті.
    > [!error] Я
    > [!answer] Мені
-   > [!explanation] "I feel cold" is "Мені холодно".
+   > [!explanation] Impersonal feelings use the Dative "Мені".
    > [!options] Мені | Я
 
-2. Мені сумний.
-   > [!error] сумний
-   > [!answer] сумно
-   > [!explanation] Impersonal structures use Adverbs (-о).
-   > [!options] сумно | сумний
+2. Вона сьогодні дуже **втомлений**.
+   > [!error] втомлений
+   > [!answer] втомлена
+   > [!explanation] Adjectives must agree with the feminine subject.
+   > [!options] втомлена | втомлений
 
-3. Я почуваюся біль.
-   > [!error] почуваюся
-   > [!answer] відчуваю
-   > [!explanation] "Відчувати" is for sensations/objects.
-   > [!options] відчуваю | почуваюся
+3. Мені **нудний** дивитися цей фільм.
+   > [!error] нудний
+   > [!answer] нудно
+   > [!explanation] Use the adverbial form "нудно" for states.
+   > [!options] нудно | нудний
 
-4. Вона боїться павука.
-   > [!error] павука
-   > [!answer] павуків
-   > [!explanation] "Fear of spiders" (plural genitive).
-   > [!options] павуків | павука
+4. Ти **почуваєш** краще зараз?
+   > [!error] почуваєш
+   > [!answer] почуваєшся
+   > [!explanation] The verb "почуватися" is reflexive and needs -ся.
+   > [!options] почуваєшся | почуваєш
 
-5. Ми надія.
-   > [!error] надія
-   > [!answer] надіємося
-   > [!explanation] We need a verb here.
-   > [!options] надіємося | надія
+5. Ми були дуже **рада** вас бачити.
+   > [!error] рада
+   > [!answer] раді
+   > [!explanation] "Ми" (We) requires the plural form "раді".
+   > [!options] раді | рада
 
-6. Тобі веселий?
-   > [!error] веселий
-   > [!answer] весело
-   > [!explanation] Dative state -> Adverb.
-   > [!options] весело | веселий
+6. Йому **бути** жарко вчора на пляжі.
+   > [!error] бути
+   > [!answer] було
+   > [!explanation] Use the past tense neuter form "було" for impersonal states.
+   > [!options] було | бути
 
-## translate: English to Ukrainian
+## cloze: Emotional Story (Concept: Contextual Application)
+Complete this story about Taras's day in the city.
+
+Сьогодні Тарас прокинувся рано. Надворі була зима, тому йому було дуже [___:1]. Він випив гарячий чай і почувався [___:2]. Потім він пішов на роботу. В офісі було дуже багато справ, і Тарасові стало [___:3]. Він працював вісім годин і став дуже [___:4]. Коли він повернувся додому, він був дуже [___:5], тому він одразу приготував вечерю. Після вечері йому стало [___:6], і він вирішив подивитися фільм. Але фільм був нецікавий, і Тарасові було [___:7]. Раптом йому зателефонував друг. Тарас був дуже [___:8] почути друга. Йому більше не було [___:9], тепер йому було [___:10]. Хоча він був [___:11], він вирішив піти в гості. Друзі довго розмовляли, і Тарасові було дуже [___:12] з другом. Йому було [___:13] йти додому, але вже була пізня ніч. Він ліг спати і був дуже [___:14].
+
+1. холодно | весело | жарко | приємно
+> [!answer] холодно
+
+2. краще | гірше | нудно | страшно
+> [!answer] краще
+
+3. важко | легко | приємно | смачно
+> [!answer] важко
+
+4. втомлений | щасливий | здоровий | новий
+> [!answer] втомлений
+
+5. голодний | вдячний | спокійний | швидкий
+> [!answer] голодний
+
+6. добре | погано | боляче | сердито
+> [!answer] добре
+
+7. нудно | весело | жарко | холодно
+> [!answer] нудно
+
+8. радий | сумний | сердитий | хворий
+> [!answer] радий
+
+9. важко | сумно | весело | страшно
+> [!answer] важко
+
+10. весело | нудно | важко | страшно
+> [!answer] весело
+
+11. втомлений | щасливий | злий | голодний
+> [!answer] втомлений
+
+12. приємно | боляче | страшно | холодно
+> [!answer] приємно
+
+13. шкода | добре | легко | смачно
+> [!answer] шкода
+
+14. щасливий | злий | голодний | нудний
+> [!answer] щасливий
+
+## dialogue-reorder: The Date (Concept: Narrative Coherence)
+Order the conversation between Maria and her husband.
+
+- Як пройшов твій день, коханий?
+- Чесно? Мені було дуже важко сьогодні.
+- Що сталося? Тобі було нудно на нараді?
+- Ні, на нараді було цікаво, але я просто втомлений.
+- Я розумію. А мені було дуже сумно без тебе.
+- Мені теж було сумно. Давай зараз відпочинемо.
+- Ти голодний? Я можу приготувати щось смачне.
+- О так, я дуже голодний! Буду вдячний за вечерю.
+- Тоді йди в душ, тобі стане краще.
+- Дякую, Маріє. Мені приємно, що ти піклуєшся про мене.
+- Я завжди рада тобі допомогти.
+- Тепер я почуваюся набагато щасливішим!
+
+> [!answer]
+> 1. Як пройшов твій день, коханий?
+> 2. Чесно? Мені було дуже важко сьогодні.
+> 3. Що сталося? Тобі було нудно на нараді?
+> 4. Ні, на нараді було цікаво, але я просто втомлений.
+> 5. Я розумію. А мені було дуже сумно без тебе.
+> 6. Мені теж було сумно. Давай зараз відпочинемо.
+> 7. Ти голодний? Я можу приготувати щось смачне.
+> 8. О так, я дуже голодний! Буду вдячний за вечерю.
+> 9. Тоді йди в душ, тобі стане краще.
+> 10. Дякую, Маріє. Мені приємно, що ти піклуєшся про мене.
+> 11. Я завжди рада тобі допомогти.
+> 12. Тепер я почуваюся набагато щасливішим!
+
+## mark-the-words: Finding Feelings (Concept: Pattern Recognition)
+Identify the words and phrases that express feelings or states.
+
+Сьогодні мені [холодно](correct). Я дуже [втомлений](correct) після роботи. Ганні стало [нудно](correct) вдома. Ми були [раді](correct) вас бачити. Йому було [весело](correct) на святі. Вона почувається [щасливою](correct). Мені [приємно](correct) це чути. Вам [жарко](correct) тут?
+
+## translate: English to Ukrainian (Concept: Cross-Linguistic Transfer)
 
 1. I am cold.
-   - [x] Мені холодно.
-   - [ ] Я холодний.
+- [x] Мені холодно.
+- [ ] Я є холодний.
 
-2. She is sad (person).
-   - [x] Вона сумна.
-   - [ ] Їй сумно.
+2. She is tired.
+- [x] Вона втомлена.
+- [ ] Вона втомлений.
 
-3. She feels sad (right now).
-   - [x] Їй сумно.
-   - [ ] Вона сумна.
+3. We are happy.
+- [x] Ми щасливі.
+- [ ] Ми щаслива.
 
-4. We are bored.
-   - [x] Нам нудно.
-   - [ ] Ми нудні.
+4. They are having fun.
+- [x] Їм весело.
+- [ ] Вони весело.
 
-5. I hate rain.
-   - [x] Я ненавиджу дощ.
-   - [ ] Мені дощ.
+5. I feel better.
+- [x] Я почуваюся краще.
+- [ ] Я почуваюся добре.
 
-6. Don't worry!
-   - [x] Не хвилюйся!
-   - [ ] Не бійся!
+6. Are you bored?
+- [x] Тобі нудно?
+- [ ] Ти нудно?
 
-7. I hope (so).
-   - [x] Сподіваюся.
-   - [ ] Радію.
+7. He is hungry.
+- [x] Він голодний.
+- [ ] Він голодна.
 
-8. He is holding on well (feels well).
-   - [x] Він почувається добре.
-   - [ ] Він відчуває добре.
+8. I am glad to see you.
+- [x] Я радий вас бачити.
+- [ ] Мені радий вас бачити.
 
-9. I am scared.
-   - [x] Мені страшно.
-   - [ ] Я страшний.
+9. It is painful.
+- [x] Це боляче.
+- [ ] Це болить.
 
-10. Are you comfortable?
-    - [x] Тобі зручно?
-    - [ ] Ти зручний?
+10. Why are you sad?
+- [x] Чому тобі сумно?
+- [ ] Чому ти сумно?
 
-11. To my soul it is pleasant.
-    - [x] Мені приємно на душі.
-    - [ ] Мені приємно в голові.
+11. I am not sure.
+- [x] Я не певний.
+- [ ] Я не радий.
 
-12. I adore you.
-    - [x] Я тебе обожнюю.
-    - [ ] Я тебе люблю.
+12. It seems to me.
+- [x] Мені здається.
+- [ ] Я здаюся.
 
----
-
-## Vocabulary
+# Vocabulary
 
 | Word | IPA | English | POS | Gender | Note |
 |------|-----|---------|-----|--------|------|
-| відчувати | /ʋidt͡ʃuˈʋɑtɪ/ | to feel (sense) | verb | — | transitive |
-| почуватися | /pɔt͡ʃuˈʋɑtɪsʲɑ/ | to feel (state) | verb | — | reflexive |
-| любити | /lʲuˈbɪtɪ/ | to love | verb | — | emotion |
-| ненавидіти | /nɛnɑˈʋiditɪ/ | to hate | verb | — | emotion |
-| подобатися | /pɔˈdɔbɑtɪsʲɑ/ | to like | verb | — | dative subject |
-| боятися | /bɔˈjɑtɪsʲɑ/ | to be afraid | verb | — | + genitive |
-| радіти | /rɑˈditɪ/ | to rejoice | verb | — | happiness |
-| сумувати | /sumuˈʋɑtɪ/ | to be sad | miss | verb | — | sadness |
-| дивуватися | /dɪʋuˈʋɑtɪsʲɑ/ | to be surprised | verb | — | wonder |
-| хвилюватися | /xʋɪlʲuuˈʋɑtɪsʲɑ/ | to worry | verb | — | anxiety |
-| надіятися | /nɑˈdijɑtɪsʲɑ/ | to hope/rely | verb | — | hope |
-| сподіватися | /spɔdiˈʋɑtɪsʲɑ/ | to hope/expect | verb | — | hope |
-| щасливий | /ʃt͡ʃɑsˈlɪʋɪj/ | happy | adj | m | character |
-| сумний | /sumˈnɪj/ | sad | adj | m | character |
-| злий | /zlɪj/ | angry | evil | adj | m | character |
-| страшний | /strɑʃˈnɪj/ | scary | terrible | adj | m | character |
-| цікавий | /t͡siˈkɑʋɪj/ | interesting | adj | m | quality |
-| нудний | /nudˈnɪj/ | boring | adj | m | quality |
-| приємний | /prɪˈjɛmnɪj/ | pleasant | adj | m | quality |
-| вдячний | /ˈʋdʲɑt͡ʃnɪj/ | grateful | adj | m | quality |
-| душа | /duˈʃɑ/ | soul | noun | f | concept |
-| настрій | /ˈnɑstrij/ | mood | noun | m | state |
-| емоція | /ɛˈmɔt͡sʲijɑ/ | emotion | noun | f | concept |
-| сміливий | /smiˈlɪʋɪj/ | brave | adj | m | character |
-| жах | /ʒɑx/ | horror | terror | noun | m | strong fear |
-| радий | /ˈrɑdɪj/ | glad | adj | m | state |
-| рада | /ˈrɑdɑ/ | glad (f) | adj | f | state |
-| задоволений | /zɑdɔˈʋɔlɛnɪj/ | satisfied | adj | m | state |
-| засмучений | /zɑsˈmut͡ʃɛnɪj/ | upset | adj | m | state |
-| здивований | /zdɪˈʋɔʋɑnɪj/ | surprised | adj | m | state |
-| переляканий | /pɛrɛˈlʲɑkɑnɪj/ | frightened | adj | m | state |
-| розчарований | /rɔzt͡ʃɑˈrɔʋɑnɪj/ | disappointed | adj | m | state |
-| турбуватися | /turbuˈʋɑtɪsʲɑ/ | to worry/care | verb | — | anxiety |
-| шкода | /ˈʃkɔdɑ/ | pity/sorry | adv | — | impersonal |
-| добре | /ˈdɔbrɛ/ | good/well | adv | — | impersonal |
-| погано | /pɔˈɦɑnɔ/ | bad/poorly | adv | — | impersonal |
-| прикро | /ˈprɪkrɔ/ | pity/vexing | adv | — | impersonal |
+| страшно | /ˈstrɑʃnɔ/ | scary | adv | — | impersonal |
+| втомлений | /ˈʋtɔmlɛnɪj/ | tired | adj | masc | state |
+| голодний | /ɦɔˈlɔdnɪj/ | hungry | adj | masc | state |
+| задоволений | /zɑdɔˈʋɔlɛnɪj/ | satisfied | adj | masc | state |
+| засмучений | /zɑˈsmut͡ʃɛnɪj/ | upset | adj | masc | state |
+| здивований | /zdɪˈʋɔʋɑnɪj/ | surprised | adj | masc | state |
+| розчарований | /rɔzt͡ʃɑˈrɔʋɑnɪj/ | disappointed | adj | masc | state |
+| радий | /ˈrɑdɪj/ | glad | adj | masc | temporary |
+| вдячний | /ˈʋdʲɑt͡ʃnɪj/ | grateful | adj | masc | state |
+| спокійний | /spɔˈkіjnɪj/ | calm | adj | masc | personality |
+| сонний | /ˈsɔnnɪj/ | sleepy | adj | masc | physical |
+| почуватися | /pɔt͡ʃuˈʋɑtɪsʲɑ/ | to feel | verb | — | reflexive |
+| радіти | /rɑˈditɪ/ | to rejoice | verb | — | emotion |
+| сумувати | /sumuˈʋɑtɪ/ | to be sad | verb | — | emotion |
+| хвилюватися | /xʋɪlʲuˈʋɑtɪsʲɑ/ | to worry | verb | — | emotion |
+| турбуватися | /turbuˈʋɑtɪsʲɑ/ | to worry/care | verb | — | emotion |
+| боятися | /bɔˈjɑtɪsʲɑ/ | to fear | verb | — | emotion |
+| дивуватися | /dɪʋuˈʋɑtɪsʲɑ/ | to be surprised | verb | — | emotion |
+| журба | /ʒurˈbɑ/ | sorrow, grief | noun | fem | cultural |
+| втома | /ˈʋtɔmɑ/ | fatigue, tiredness | noun | fem | physical |
+| прикро | /ˈprɪkrɔ/ | a pity, annoying | adv | — | impersonal |
 | радісно | /ˈrɑdisnɔ/ | joyfully | adv | — | impersonal |
+| шкода | /ˈʃkɔdɑ/ | a pity, sorry | adv | — | impersonal |
 | щасливо | /ʃt͡ʃɑsˈlɪʋɔ/ | happily | adv | — | impersonal |
-| сумно | /ˈsumnɔ/ | sadly | adv | — | impersonal |
-| нудно | /ˈnudnɔ/ | boringly | adv | — | impersonal |
-| цікаво | /t͡siˈkɑʋɔ/ | interestingly | adv | — | impersonal |
-| приємно | /prɪˈjɛmnɔ/ | pleasantly | adv | — | impersonal |
-| страшно | /ˈstrɑʃnɔ/ | scarily | adv | — | impersonal |
+| рада | /ˈrɑdɑ/ | glad (fem) | adj | fem | temporary |
