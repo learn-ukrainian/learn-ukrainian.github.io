@@ -1,12 +1,12 @@
 # C2 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** 📝 PLANNED
-**Modules:** 01-80 (80 modules)
-**Vocabulary Target:** ~2,000 new words (~25/module)
-**Cumulative Target:** ~11,000 words after C2
+**Modules:** 01-100 (100 modules)
+**Vocabulary Target:** ~2,500 new words (~25/module)
+**Cumulative Target:** ~12,280 words after C2
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
-> **Note:** C2 represents native-like mastery with focus on stylistic perfection, literary creation, and professional specialization.
+> **Note:** C2 represents native-like mastery with focus on stylistic perfection, literary creation, and professional specialization. Expanded from 80 to 100 modules as part of B2/C1/C2 rebalancing.
 
 ---
 
@@ -258,7 +258,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ---
 
-## Phase C2.1: Stylistic Perfection (Modules 01-20)
+## Phase C2.1: Stylistic Perfection (Modules 01-25)
 
 ### Learning Goals
 - Master all 7 Ukrainian functional styles
@@ -273,7 +273,8 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
-|--------|--------------|-----------|---------|
+|--------|--------------|-----------|---------
+|
 | 01 | C1 Bridge & Assessment | C1 complete | C2 foundation |
 | 02 | Milozвучність Complete | C1 phonetics | Perfect euphony |
 | 03 | Науковий стиль Mastery | C1 academic | Research publication |
@@ -294,6 +295,11 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 | 18 | C2.1 Practice II | M01-16 | Transformation exercises |
 | 19 | C2.1 Review | M01-18 | Consolidation |
 | 20 | C2.1 Checkpoint | M01-19 | Assessment |
+| 26 | Stylistic Devices Mastery | M12-13 | Metaphor, metonymy, synecdoche |
+| 27 | Rhythm & Prosody | M02 | Prose rhythm control |
+| 28 | Intertextuality | M06 | Allusion, quotation, parody |
+| 29 | Style Blending | M03-09 | Hybrid registers |
+| 30 | C2.1 Final Checkpoint | M01-24 | Complete stylistic mastery |
 
 ### Module Content Specifications C2.1
 
@@ -788,7 +794,114 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ---
 
-## Phase C2.2: Literary Mastery (Modules 21-40)
+#### Module 21: Stylistic Devices Mastery
+**Grammar:** Advanced figurative language and rhetorical devices
+
+**Stylistic Devices:**
+- Метафора (metaphor): extended and dead metaphors
+- Метонімія (metonymy): part-whole relationships
+- Синекдоха (synecdoche): species-genus substitution
+- Персоніфікація (personification): attribution of human qualities
+- Алегорія (allegory): symbolic narrative
+
+**Vocabulary (25 words):**
+троп, фігура, образність, переносне значення, пряме значення, метафора, метонімія, синекдоха, персоніфікація, алегорія, символ, порівняння, епітет, гіпербола, літота, оксюморон, антитеза, градація, паралелізм, повтор, анафора, епіфора, риторичне питання, риторичний оклик, інверсія
+
+**Signature Activity Concepts:**
+1. Analysis: Identify devices in literary texts
+2. Production: Create original examples
+3. Transformation: Literal → figurative
+
+---
+
+#### Module 22: Rhythm & Prosody in Prose
+**Grammar:** Controlling rhythm and sound patterns in prose writing
+
+**Prosodic Elements:**
+- Ритм прози (prose rhythm): sentence length variation
+- Інтонаційні періоди (intonational periods): rise and fall
+- Звукопис (sound painting): alliteration, assonance
+- Евфонія (euphony): pleasant sound combinations
+- Какофонія (cacophony): deliberate harshness
+
+**Vocabulary (25 words):**
+ритм, проза, інтонація, період, звукопис, алітерація, асонанс, евфонія, какофонія, благозвучність, милозвучність, наголос, пауза, темп, мелодика, каденція, клаузула, такт, фраза, коло, синтагма, інтонема, тон, модуляція, гармонія
+
+**Signature Activity Concepts:**
+1. Analysis: Identify rhythm patterns
+2. Rewrite: Adjust rhythm for effect
+3. Create: Euphonic vs. cacophonic passages
+
+---
+
+#### Module 23: Intertextuality
+**Grammar:** Allusion, quotation, and intertextual references
+
+**Intertextual Techniques:**
+- Алюзія (allusion): indirect reference
+- Цитата (quotation): direct quotation
+- Ремінісценція (reminiscence): echo of another text
+- Пародія (parody): humorous imitation
+- Стилізація (stylization): imitation of style
+
+**Vocabulary (30 words):**
+інтертекстуальність, алюзія, цитата, ремінісценція, пародія, стилізація, наслідування, запозичення, відсилання, натяк, джерело, прототекст, метатекст, інтертекст, діалог, полілог, інтерпретація, рецепція, традиція, новаторство, епігонство, оригінальність, вторинність, трансформація, переосмислення, деконструкція, постмодернізм, центон, колаж, монтаж
+
+**Signature Activity Concepts:**
+1. Identify: Trace allusions in texts
+2. Create: Write with deliberate intertextuality
+3. Analysis: Discuss intertextual layers
+
+---
+
+#### Module 24: Style Blending & Hybrid Registers
+**Grammar:** Creating hybrid styles for specific effects
+
+**Hybrid Techniques:**
+- Науково-популярний (popular science): academic + accessible
+- Офіційно-діловий з елементами публіцистики (official + journalistic)
+- Художньо-публіцистичний (literary journalism)
+- Розмовно-художній (colloquial literary)
+- Епістолярно-есеїстичний (epistolary essay)
+
+**Vocabulary (25 words):**
+гібрид, змішування, поєднання, синтез, злиття, перехід, градація, контраст, баланс, пропорція, домінанта, акцент, нюанс, відтінок, тональність, модальність, експресія, нейтральність, формальність, неформальність, офіційність, інтимність, публічність, приватність, універсальність
+
+**Signature Activity Concepts:**
+1. Analysis: Identify style mixing in texts
+2. Create: Write in hybrid register
+3. Evaluate: Assess appropriateness of blending
+
+---
+
+#### Module 25: C2.1 Final Checkpoint
+**Covers:** M01-24 (Complete C2.1 Stylistic Perfection)
+
+**Required Skill Groups:**
+1. All 7 Functional Styles (M03-09) - complete mastery
+2. Style Transformation (M10-11) - fluent register shifting
+3. Stylistic Analysis (M12-13) - lexical & syntactic
+4. Individual Voice (M14-15) - distinctive personal style
+5. Advanced Devices (M26-24) - figurative language, rhythm, intertextuality, blending
+
+**Comprehensive Assessment:**
+- Written Portfolio: 7 texts in 7 different styles
+- Style Transformation: Transform single text across 3 registers
+- Creative Writing: Original text with deliberate stylistic choices
+- Oral Defense: Explain stylistic decisions
+
+**Vocabulary (15 words - assessment):**
+майстерність, досконалість, вправність, володіння, компетентність, експертиза, професіоналізм, віртуозність, довершеність, бездоганність, витонченість, елегантність, точність, влучність, переконливість
+
+**Signature Activity Concepts:**
+1. Written exam: Comprehensive style analysis (90 min)
+2. Creative portfolio: 7 styles demonstrated
+3. Oral exam: Style transformation on demand
+4. Self-assessment: C2.1 mastery checklist
+
+---
+
+## Phase C2.2: Literary Mastery (Modules 26-45)
 
 ### Learning Goals
 - Master literary analysis at scholar level
@@ -804,26 +917,26 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 21 | Literary Theory | C1 literature | Scholar-level analysis |
-| 22 | Narratology | M21 | Narrative analysis |
-| 23 | Поетика: Verse Analysis | M21-22 | Poetry mastery |
-| 24 | Поетика: Prose Analysis | M21-22 | Prose mastery |
-| 25 | Intertextuality | M23-24 | Literary connections |
-| 26 | Literary Criticism Methods | M21-25 | Critical approaches |
-| 27 | Writing Literary Essays | M26 | Publication-ready criticism |
-| 28 | Translation Theory | C1 | Understanding translation |
-| 29 | Literary Translation I | M28 | Poetry translation |
-| 30 | Literary Translation II | M28-29 | Prose translation |
-| 31 | Creative Writing: Poetry | M23, M28-30 | Original poetry |
-| 32 | Creative Writing: Prose | M24, M28-30 | Original prose |
-| 33 | Contemporary Literature | C1.6 | Current literary scene |
-| 34 | Digital Literature | M33 | New forms |
-| 35 | Literary Prizes & Canon | M33-34 | Cultural context |
-| 36 | Literary Community | M35 | Professional engagement |
-| 37 | C2.2 Practice I | M21-36 | Literary portfolio |
-| 38 | C2.2 Practice II | M21-36 | Creative portfolio |
-| 39 | C2.2 Review | M21-38 | Consolidation |
-| 40 | C2.2 Checkpoint | M21-39 | Assessment |
+| 26 | Literary Theory | C1 literature | Scholar-level analysis |
+| 27 | Narratology | M21 | Narrative analysis |
+| 28 | Поетика: Verse Analysis | M26-22 | Poetry mastery |
+| 29 | Поетика: Prose Analysis | M26-22 | Prose mastery |
+| 30 | Intertextuality | M23-24 | Literary connections |
+| 31 | Literary Criticism Methods | M26-25 | Critical approaches |
+| 32 | Writing Literary Essays | M26 | Publication-ready criticism |
+| 33 | Translation Theory | C1 | Understanding translation |
+| 34 | Literary Translation I | M28 | Poetry translation |
+| 35 | Literary Translation II | M28-29 | Prose translation |
+| 36 | Creative Writing: Poetry | M23, M28-30 | Original poetry |
+| 37 | Creative Writing: Prose | M24, M28-30 | Original prose |
+| 38 | Contemporary Literature | C1.6 | Current literary scene |
+| 39 | Digital Literature | M33 | New forms |
+| 40 | Literary Prizes & Canon | M33-34 | Cultural context |
+| 46 | Literary Community | M35 | Professional engagement |
+| 47 | C2.2 Practice I | M26-36 | Literary portfolio |
+| 48 | C2.2 Practice II | M26-36 | Creative portfolio |
+| 49 | C2.2 Review | M26-38 | Consolidation |
+| 50 | C2.2 Checkpoint | M26-39 | Assessment |
 
 ### Vocabulary Plan C2.2 (~500 words)
 - Literary theory: наратологія, фокалізація, інтертекстуальність, деконструкція
@@ -834,7 +947,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ---
 
-## Phase C2.3: Preparation for Professional Specialization (Modules 41-60)
+## Phase C2.3: Professional Specialization (Modules 46-75)
 
 > **Ukrainian State Standard 2024 Compliance:** The standard requires C2 learners to handle "лекції і презентації на загальні чи професійні теми" (lectures and presentations on general or professional topics), "неадаптовані тексти зі сфери особистих і професійних зацікавлень" (unadapted texts from personal and professional interests), and produce "реферат, доповідь, повідомлення на теми зі сфери професійних чи особистих зацікавлень" (abstracts, reports, messages on professional topics). The standard does NOT prescribe specific professional domains — learners must be able to handle ANY professional field.
 
@@ -868,26 +981,36 @@ This approach:
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 41 | Professional Language Overview | C2.1-2 | Understanding specialization |
-| 42 | Terminology Acquisition I | M41 | Learning new terms systematically |
-| 43 | Terminology Acquisition II | M42 | Building personal glossaries |
-| 44 | Reading Professional Texts I | M43 | Comprehending specialized texts |
-| 45 | Reading Professional Texts II | M44 | Critical analysis of professional content |
-| 46 | Professional Document Types | M45 | Understanding document conventions |
-| 47 | Writing Professional Documents I | M46 | Reports, abstracts, summaries |
-| 48 | Writing Professional Documents II | M47 | Proposals, presentations |
-| 49 | Professional Oral Communication | M48 | Presentations, meetings, conferences |
-| 50 | C2.3 Midpoint Checkpoint | M41-49 | Skills assessment |
-| 51 | Professional Correspondence | M50 | Emails, letters, formal requests |
-| 52 | Professional Discussions | M51 | Debates, negotiations, consultations |
-| 53 | Cross-Domain Communication | M52 | Explaining to non-specialists |
-| 54 | Professional Research Skills | M53 | Finding and evaluating sources |
-| 55 | Building Domain Expertise | M54 | Self-directed specialization |
-| 56 | Professional Portfolio I | M55 | Demonstrating competence |
-| 57 | Professional Portfolio II | M56 | Multi-format evidence |
-| 58 | Professional Identity | M57 | Personal brand in Ukrainian |
-| 59 | C2.3 Review | M41-58 | Consolidation |
-| 60 | C2.3 Checkpoint | M41-59 | Assessment |
+| 46 | Professional Language Overview | C2.1-2 | Understanding specialization |
+| 47 | Terminology Acquisition I | M46 | Learning new terms systematically |
+| 48 | Terminology Acquisition II | M47 | Building personal glossaries |
+| 49 | Reading Professional Texts I | M48 | Comprehending specialized texts |
+| 50 | Reading Professional Texts II | M49 | Critical analysis of professional content |
+| 51 | Professional Document Types | M50 | Understanding document conventions |
+| 52 | Writing Professional Documents I | M51 | Reports, abstracts, summaries |
+| 53 | Writing Professional Documents II | M52 | Proposals, presentations |
+| 54 | Professional Oral Communication | M53 | Presentations, meetings, conferences |
+| 55 | C2.3 Midpoint Checkpoint | M46-54 | Skills assessment |
+| 56 | Professional Correspondence | M55 | Emails, letters, formal requests |
+| 57 | Professional Discussions | M56 | Debates, negotiations, consultations |
+| 58 | Cross-Domain Communication | M57 | Explaining to non-specialists |
+| 59 | Professional Research Skills | M58 | Finding and evaluating sources |
+| 60 | Building Domain Expertise | M59 | Self-directed specialization |
+| 61 | Legal Ukrainian I | M60 | Legal terminology basics |
+| 62 | Legal Ukrainian II | M61 | Contracts and agreements |
+| 63 | Legal Ukrainian III | M62 | Court procedures |
+| 64 | Legal Ukrainian IV | M63 | Legal writing |
+| 65 | Legal Ukrainian V | M64 | Case analysis |
+| 66 | Medical Ukrainian I | M60 | Medical terminology basics |
+| 67 | Medical Ukrainian II | M66 | Patient communication |
+| 68 | Medical Ukrainian III | M67 | Medical documentation |
+| 69 | Medical Ukrainian IV | M68 | Clinical scenarios |
+| 70 | Medical Ukrainian V | M69 | Medical research |
+| 71 | Professional Portfolio I | M65, M70 | Demonstrating competence |
+| 72 | Professional Portfolio II | M71 | Multi-format evidence |
+| 73 | Professional Identity | M72 | Personal brand in Ukrainian |
+| 74 | C2.3 Review | M46-73 | Consolidation |
+| 75 | C2.3 Checkpoint | M46-74 | Assessment |
 
 ### Module Content Highlights
 
@@ -960,7 +1083,7 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 
 ---
 
-## Phase C2.4: Mastery & Capstone (Modules 61-80)
+## Phase C2.4: Meta-Skills & Capstone (Modules 76-100)
 
 ### Learning Goals
 - Demonstrate complete mastery
@@ -975,27 +1098,33 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
-|--------|--------------|-----------|---------|
-| 61 | Complete Grammar Review | All previous | Full mastery verification |
-| 62 | Rare/Archaic Forms | M61 | Historical text access |
-| 63 | Regional Varieties | M62 | Full dialectal awareness |
-| 64 | Sociolinguistic Mastery | M63 | Complete social navigation |
-| 65 | Error Analysis | M61-64 | Self-correction |
-| 66 | Native-Like Fluency | M65 | Natural production |
-| 67 | Capstone: Topic Selection | All | Project start |
-| 68 | Capstone: Research | M67 | Data gathering |
-| 69 | Capstone: Drafting | M68 | Initial writing |
-| 70 | Capstone: Revision | M69 | Improvement |
-| 71 | Capstone: Polish | M70 | Final version |
-| 72 | Capstone: Defense | M71 | Oral presentation |
-| 73 | Final Review I | All | Grammar consolidation |
-| 74 | Final Review II | All | Vocabulary consolidation |
-| 75 | Final Review III | All | Skills consolidation |
-| 76 | Final Exam: Reading | All | Comprehension test |
-| 77 | Final Exam: Writing | All | Production test |
-| 78 | Final Exam: Speaking | All | Oral test |
-| 79 | Final Exam: Listening | All | Comprehension test |
-| 80 | C2 РІВЕНЬ ЗАВЕРШЕНО | All | Certification |
+|--------|--------------|-----------|---------
+|
+| 76 | Complete Grammar Review | All previous | Full mastery verification |
+| 77 | Rare/Archaic Forms | M76 | Historical text access |
+| 78 | Regional Varieties | M77 | Full dialectal awareness |
+| 79 | Sociolinguistic Mastery | M78 | Complete social navigation |
+| 80 | Error Analysis | M76-79 | Self-correction |
+| 81 | Native-Like Fluency | M80 | Natural production |
+| 82 | Teaching Ukrainian I | M81 | Pedagogical awareness |
+| 83 | Teaching Ukrainian II | M82 | Lesson planning |
+| 84 | Teaching Ukrainian III | M83 | Materials development |
+| 85 | Translation Theory | C2.2 | Understanding translation |
+| 86 | Translation Practice I | M85 | Literary translation |
+| 87 | Translation Practice II | M86 | Technical translation |
+| 88 | Interpretation Basics | M85-87 | Oral translation |
+| 89 | Capstone: Topic Selection | All | Project start |
+| 90 | Capstone: Research | M89 | Data gathering |
+| 91 | Capstone: Drafting | M90 | Initial writing |
+| 92 | Capstone: Revision | M91 | Improvement |
+| 93 | Capstone: Polish | M92 | Final version |
+| 94 | Capstone: Defense | M93 | Oral presentation |
+| 95 | Final Review I | All | Grammar consolidation |
+| 96 | Final Review II | All | Vocabulary consolidation |
+| 97 | Final Review III | All | Skills consolidation |
+| 98 | Final Exam: Integrated Skills | All | Comprehensive test |
+| 99 | C2 Certification Preparation | All | Exam readiness |
+| 100 | C2 РІВЕНЬ ЗАВЕРШЕНО | All | Certification |
 
 ### Capstone Project Requirements
 
@@ -1025,21 +1154,21 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 
 | Phase | Modules | Count | Type |
 |-------|---------|-------|------|
-| C2.1 | 01-20 | 20 | Stylistic Perfection |
-| C2.2 | 21-40 | 20 | Literary Mastery |
-| C2.3 | 41-60 | 20 | Preparation for Specialization |
-| C2.4 | 61-80 | 20 | Mastery & Capstone |
-| **TOTAL** | **01-80** | **80** | |
+| C2.1 | 01-25 | 30 | Stylistic Perfection |
+| C2.2 | 26-45 | 20 | Literary Mastery |
+| C2.3 | 46-75 | 35 | Professional Specialization |
+| C2.4 | 76-100 | 30 | Meta-Skills & Capstone |
+| **TOTAL** | **01-100** | **100** | |
 
 ### Vocabulary Summary
 
 | Phase | Target Words | Cumulative |
 |-------|--------------|------------|
-| C2.1 | ~500 | 500 |
-| C2.2 | ~500 | 1,000 |
-| C2.3 | ~500 | 1,500 |
-| C2.4 | ~500 | 2,000 |
-| **Total C2** | **~2,000** | **~11,000 cumulative** |
+| C2.1 | ~625 | 625 |
+| C2.2 | ~500 | 1,125 |
+| C2.3 | ~750 | 1,875 |
+| C2.4 | ~625 | 2,500 |
+| **Total C2** | **~2,500** | **~12,280 cumulative** |
 
 ---
 
@@ -1099,19 +1228,19 @@ graph TD
 
     %% Phase C2.4: Capstone
     subgraph C2_4 [Phase C2.4: Capstone]
-        M61[M61 Review] --> M66[M66 Fluency]
-        M67[M67 Topic] --> M68[M68 Research]
-        M68 --> M69[M69 Draft]
-        M69 --> M70[M70 Revision]
-        M70 --> M71[M71 Polish]
-        M71 --> M72[M72 Defense]
-        M72 --> M80[M80 Certification]
+        M76[M76 Review] --> M81[M81 Fluency]
+        M82[M82 Topic] --> M83[M83 Research]
+        M83 --> M84[M84 Draft]
+        M84 --> M85[M85 Revision]
+        M85 --> M86[M86 Polish]
+        M86 --> M87[M87 Defense]
+        M87 --> M95[M95 Certification]
     end
 
     %% Connections
     M16 --> M21
     M32 --> M41
-    M60 --> M61
+    M60 --> M76
 ```
 
 ---

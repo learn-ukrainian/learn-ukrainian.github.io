@@ -1,8 +1,8 @@
 # C1 Improvement Plan
 
 **Status:** Ready for Implementation
-**Updated:** 2025-12-22
-**Modules:** 115
+**Updated:** 2025-12-23 (Rebalanced)
+**Modules:** 160
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Modules | 115 |
+| Total Modules | 160 |
 | Built | 0 |
-| Remaining | 115 |
+| Remaining | 160 |
 | Immersion | 100% (full Ukrainian) |
 
 **Note:** All previous C1 content was deleted during restructure. Starting fresh.
@@ -28,16 +28,18 @@ All C1 modules use full immersion. English appears ONLY in:
 
 All instructions, explanations, content body, and activity feedback are in Ukrainian.
 
-### Module Structure (115 modules)
+### Module Structure (160 modules)
 
 | Phase | Modules | Content |
 |-------|---------|---------|
 | C1.1 | M01-20 | Academic Foundation |
 | C1.2 | M21-35 | Professional & Social |
-| C1.3 | M36-55 | Stylistics & Rhetoric |
-| C1.4 | M56-80 | Folk Culture & Arts |
-| C1.5 | M81-95 | Literature - Classics |
-| C1.6 | M96-115 | Literature - Modern & Capstone |
+| C1.3 | M36-100 | Biographies (65 modules) |
+| C1.4 | M101-120 | Advanced Stylistics & Rhetoric |
+| C1.5 | M121-145 | Folk Culture & Arts |
+| C1.6 | M146-160 | Literature - Complete |
+
+**Note:** Biographies and Folk Culture moved from B2 to C1 for better pedagogical progression.
 
 ### Activity Requirements
 
@@ -52,8 +54,8 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 ### Vocabulary
 
-- Target: ~2,800 new words (level)
-- Cumulative: ~9,000 words (A1-C1)
+- Target: ~3,840 new words (level)
+- Cumulative: ~9,780 words (A1-C1)
 - Per module: 24 words average
 
 ---
@@ -64,10 +66,10 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 |--------|-----------|--------|
 | M20 | Academic Checkpoint | M01-19 |
 | M35 | Professional Checkpoint | M21-34 |
-| M55 | Stylistics Checkpoint | M36-54 |
-| M80 | Folk Culture Checkpoint | M56-79 |
-| M95 | Literature Classics Checkpoint | M81-94 |
-| M115 | C1 Final Exam | Full C1 assessment |
+| M100 | Biographies Checkpoint | M36-99 |
+| M120 | Stylistics Checkpoint | M101-119 |
+| M145 | Folk Culture Checkpoint | M121-144 |
+| M160 | C1 Final Exam | Full C1 assessment |
 
 ---
 
@@ -113,7 +115,7 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 Before marking C1 complete:
 
-- [ ] All 115 modules pass audit
+- [ ] All 160 modules pass audit
 - [ ] All modules pass pipeline (lint → generate → validate)
 - [ ] Vocabulary database rebuilt
 - [ ] All checkpoints in place

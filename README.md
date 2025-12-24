@@ -25,9 +25,9 @@ A complete Ukrainian language curriculum for English speakers:
 | [**A1 Beginner**](https://learn-ukrainian.github.io/docs/a1/) | Cyrillic alphabet, basic phrases, simple grammar | ✅ Complete (34 lessons) |
 | [**A2 Elementary**](https://learn-ukrainian.github.io/docs/a2/) | All 7 cases, verb aspects, comparisons | ✅ Complete (57 lessons) |
 | [**B1 Intermediate**](https://learn-ukrainian.github.io/docs/b1/) | Complex sentences, motion verbs, participles | 🔍 In QA (85 lessons) |
-| [**B2 Upper-Intermediate**](https://learn-ukrainian.github.io/docs/b2/) | Literature, academic writing, professional topics | 📋 Planned (135 lessons) |
-| [**C1 Advanced**](https://learn-ukrainian.github.io/docs/c1/) | Stylistics, registers, nuanced expression | 📋 Planned (115 lessons) |
-| [**C2 Mastery**](https://learn-ukrainian.github.io/docs/c2/) | Native-level proficiency, literary analysis | 📋 Planned (80 lessons) |
+| [**B2 Upper-Intermediate**](https://learn-ukrainian.github.io/docs/b2/) | Grammar mastery, phraseology, Ukrainian history | 📋 Planned (110 lessons) |
+| [**C1 Advanced**](https://learn-ukrainian.github.io/docs/c1/) | Biographies, stylistics, folk culture, literature | 📋 Planned (160 lessons) |
+| [**C2 Mastery**](https://learn-ukrainian.github.io/docs/c2/) | Native-level proficiency, professional specialization | 📋 Planned (100 lessons) |
 
 ## Why Learn Ukrainian?
 

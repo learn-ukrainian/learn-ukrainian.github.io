@@ -1,12 +1,12 @@
 # B2 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** 📝 PLANNED (Updated per State Standard 2024)
-**Modules:** 01-135 (135 modules)
-**Vocabulary Target:** ~2,900 new words (~22/module)
-**Cumulative Target:** ~6,200 words after B2
+**Status:** 📝 PLANNED (Updated per State Standard 2024 - Rebalanced 2025)
+**Modules:** 01-110 (110 modules)
+**Vocabulary Target:** ~2,640 new words (~24/module)
+**Cumulative Target:** ~5,940 words after B2
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
-> **Note:** Folk Culture & Arts (25 modules) moved to C1 for better vocabulary balance.
+> **Note:** Folk Culture & Arts (25 modules) and Biographies (65 modules) moved to C1 for better pedagogical fit and curriculum balance.
 
 ---
 
@@ -2400,60 +2400,7 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.4: Biographies (Modules 96-120)
-
-### Learning Goals
-- Know iconic Ukrainian figures (women and men)
-- Understand their historical contexts
-- Build biographical vocabulary
-- Appreciate diverse contributions
-
-**PEDAGOGICAL REQUIREMENT:**
-- **Full Immersion (100%):** Biographical narratives must be native-level complexity (adapted B2). No English scaffolding for content. English is allowed ONLY in vocabulary table translations.
-
-### Module Specifications
-
-**Women (Modules 96-108):**
-| # | Title | Years | Focus |
-|---|-------|-------|-------|
-| 96 | Роксолана | 1502-1558 | Sultana, power |
-| 97 | Ганна Барвінок | 1828-1911 | First female writer |
-| 98 | Софія Окуневська | 1865-1926 | First female doctor |
-| 99 | Леся Українка | 1871-1913 | National icon |
-| 100 | Соломія Крушельницька | 1872-1952 | Opera legend |
-| 101 | Ольга Басараб | 1889-1924 | Spy, fighter |
-| 102 | Берта Рапопорт | 1891-1979 | Ship captain |
-| 103 | Олена Степанів | 1892-1963 | First female officer |
-| 104 | Віра Холодна | 1893-1919 | Silent cinema queen |
-| 105 | Катерина Білокур | 1900-1961 | Folk artist |
-| 106 | Марія Примаченко | 1909-1997 | Folk artist |
-| 107 | Ліна Костенко | 1930- | Poet |
-| 108 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice |
-
-**Men (Modules 109-119):**
-| # | Title | Years | Focus |
-|---|-------|-------|-------|
-| 109 | Григорій Сковорода | 1722-1794 | Philosopher |
-| 110 | Тарас Шевченко | 1814-1861 | The Prophet |
-| 111 | Іван Франко | 1856-1916 | The Titan |
-| 112 | Михайло Грушевський | 1866-1934 | Historian, statesman |
-| 113 | Богдан Хмельницький | 1595-1657 | The Hetman |
-| 114 | Іван Мазепа | 1639-1709 | The Patron |
-| 115 | Микола Хвильовий | 1893-1933 | "Away from Moscow" |
-| 116 | Василь Стус | 1938-1985 | Dissident poet |
-| 117 | В'ячеслав Чорновіл | 1937-1999 | Independence leader |
-| 118 | Леонід Каденюк | 1951-2018 | First astronaut |
-| 119 | Валерій Залужний | 1973- | Defense strategy |
-| 120 | B2.4 Checkpoint | Review | Assessment |
-
-### Vocabulary Plan B2.4 (~600 words)
-- Biography terms: народився, виріс, навчався, працював, створив, помер
-- Achievement vocabulary: досягнення, внесок, спадщина, вплив
-- Historical context vocabulary from each era
-
----
-
-## Phase B2.5: Advanced Skills & Capstone (Modules 121-135)
+## Phase B2.4: Skills & Capstone (Modules 96-110)
 
 ### Learning Goals
 - Build advanced domain vocabulary
@@ -2468,23 +2415,23 @@ Participles agree with noun in gender, number, case:
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 121 | Medicine Advanced | Vocabulary | Diagnosis, anatomy |
-| 122 | Technology & AI | Vocabulary | Software, data |
-| 123 | Science & Research | Vocabulary | Hypothesis, theory |
-| 124 | Arts & Literature | Vocabulary | Genre, metaphor |
-| 125 | Psychology & Mind | Vocabulary | Consciousness |
-| 126 | Ukrainian Mentality | Culture | Cordocentrism |
-| 127 | Diaspora | Culture | Communities abroad |
-| 128 | Religion in Ukraine | Culture | Orthodox, Greek Catholic |
-| 129 | Academic Writing | Skills | Essays, citations |
-| 130 | Text Analysis | Skills | Literature, speeches |
-| 131 | Capstone: Project | Project | Research |
-| 132 | Capstone: Presentation | Project | Defense |
-| 133 | B2 Review I | Review | Grammar, vocabulary |
-| 134 | B2 Review II | Review | History, culture |
-| 135 | **B2 FINAL EXAM** | Exam | Certification |
+| 96 | Medicine Advanced | Vocabulary | Diagnosis, anatomy |
+| 97 | Technology & AI | Vocabulary | Software, data |
+| 98 | Science & Research | Vocabulary | Hypothesis, theory |
+| 99 | Arts & Literature | Vocabulary | Genre, metaphor |
+| 100 | Psychology & Mind | Vocabulary | Consciousness |
+| 101 | Ukrainian Mentality | Culture | Cordocentrism |
+| 102 | Diaspora | Culture | Communities abroad |
+| 103 | Religion in Ukraine | Culture | Orthodox, Greek Catholic |
+| 104 | Academic Writing | Skills | Essays, citations |
+| 105 | Text Analysis | Skills | Literature, speeches |
+| 106 | Capstone: Project | Project | Research |
+| 107 | Capstone: Presentation | Project | Defense |
+| 108 | B2 Review I | Review | Grammar, vocabulary |
+| 109 | B2 Review II | Review | History, culture |
+| 110 | **B2 FINAL EXAM** | Exam | Certification |
 
-### Vocabulary Plan B2.5 (~250 words)
+### Vocabulary Plan B2.4 (~360 words)
 - Domain: діагноз, алгоритм, гіпотеза, метафора, свідомість
 - Culture: ментальність, діаспора, православ'я, греко-католицизм
 - Academic: тема, теза, аргумент, висновок, джерело, цитата
@@ -2501,23 +2448,21 @@ Participles agree with noun in gender, number, case:
 | B2.1b | 31-40 | 10 | Numerals, Word Formation, Pronouns |
 | B2.2 | 41-70 | 30 | Phraseology & Synonymy |
 | B2.3 | 71-95 | 25 | Ukrainian History |
-| B2.4 | 96-120 | 25 | Biographies |
-| B2.5 | 121-135 | 15 | Skills & Capstone |
-| **TOTAL** | **01-135** | **135** | |
+| B2.4 | 96-110 | 15 | Skills & Capstone |
+| **TOTAL** | **01-110** | **110** | |
 
-> **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words)
+> **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words) + Biographies (65 modules, ~1,560 words)
 
 ### Vocabulary Summary
 
 | Phase | Target Words | Cumulative |
 |-------|--------------|------------|
-| B2.1a | ~700 | 700 |
-| B2.1b | ~250 | 950 |
-| B2.2 | ~750 | 1,700 |
-| B2.3 | ~600 | 2,300 |
-| B2.4 | ~600 | 2,900 |
-| B2.5 | ~250 | 3,150 |
-| **Total B2** | **~3,150** | **~6,450 cumulative** |
+| B2.1a | ~720 | 720 |
+| B2.1b | ~240 | 960 |
+| B2.2 | ~720 | 1,680 |
+| B2.3 | ~600 | 2,280 |
+| B2.4 | ~360 | 2,640 |
+| **Total B2** | **~2,640** | **~5,940 cumulative** |
 
 ---
 

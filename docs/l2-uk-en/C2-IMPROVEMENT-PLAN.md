@@ -1,8 +1,8 @@
 # C2 Improvement Plan
 
 **Status:** Ready for Implementation
-**Updated:** 2025-12-22
-**Modules:** 80
+**Updated:** 2025-12-23 (Rebalanced)
+**Modules:** 100
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Modules | 80 |
+| Total Modules | 100 |
 | Built | 0 |
-| Remaining | 80 |
+| Remaining | 100 |
 | Immersion | 100% (full Ukrainian) |
 
 **Note:** C2 has the best-structured curriculum plan. Focus is purely on implementation.
@@ -28,14 +28,16 @@ All C2 modules use full immersion. English appears ONLY in:
 
 All instructions, explanations, content body, and activity feedback are in Ukrainian. At C2, learners have mastered all grammatical and academic terminology from prior levels.
 
-### Module Structure (80 modules)
+### Module Structure (100 modules)
 
 | Phase | Modules | Content |
 |-------|---------|---------|
-| C2.1 | M01-20 | Stylistic Mastery (7 functional styles) |
-| C2.2 | M21-40 | Literary Mastery |
-| C2.3 | M41-60 | Professional Meta-Skills |
-| C2.4 | M61-80 | Capstone & Specialization |
+| C2.1 | M01-25 | Stylistic Perfection (7 functional styles + advanced devices) |
+| C2.2 | M26-45 | Literary Mastery |
+| C2.3 | M46-75 | Professional Specialization (includes Legal & Medical tracks) |
+| C2.4 | M76-100 | Meta-Skills & Capstone (Teaching, Translation, Certification) |
+
+**Note:** Expanded from 80 to 100 modules to include professional specializations and meta-skills.
 
 ### Activity Requirements
 
@@ -51,8 +53,8 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 ### Vocabulary
 
-- Target: ~2,000 new words (level)
-- Cumulative: ~11,000 words (A1-C2)
+- Target: ~2,500 new words (level)
+- Cumulative: ~12,280 words (A1-C2)
 - Per module: 25 words average
 
 ---
@@ -61,10 +63,10 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 | Module | Checkpoint | Covers |
 |--------|-----------|--------|
-| M20 | Stylistic Checkpoint | M01-19 |
-| M40 | Literary Checkpoint | M21-39 |
-| M60 | Professional Checkpoint | M41-59 |
-| M80 | C2 Final Exam | Full C2 assessment + Capstone defense |
+| M25 | Stylistic Checkpoint | M01-24 |
+| M45 | Literary Checkpoint | M26-44 |
+| M75 | Professional Checkpoint | M46-74 |
+| M100 | C2 Final Exam | Full C2 assessment + Capstone defense |
 
 ---
 
@@ -121,7 +123,7 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 Before marking C2 complete:
 
-- [ ] All 80 modules pass audit
+- [ ] All 100 modules pass audit
 - [ ] All modules pass pipeline (lint → generate → validate)
 - [ ] Vocabulary database rebuilt
 - [ ] All 7 functional styles covered (including religious, epistolary)

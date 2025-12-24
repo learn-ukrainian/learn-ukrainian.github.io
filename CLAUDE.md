@@ -213,9 +213,9 @@ curricula-opus/
 │   ├── a1/               # A1 modules (34 modules)
 │   ├── a2/               # A2 modules (50 modules)
 │   ├── b1/               # B1 modules (85 modules)
-│   ├── b2/               # B2 modules (125 modules)
-│   ├── c1/               # C1 modules (115 modules)
-│   ├── c2/               # C2 modules (80 modules)
+│   ├── b2/               # B2 modules (110 modules)
+│   ├── c1/               # C1 modules (160 modules)
+│   ├── c2/               # C2 modules (100 modules)
 │   ├── vocabulary.db     # Master vocabulary database (SQLite)
 │   └── module-mapping.json  # Old→new path mapping reference
 ├── scripts/              # Generator code
@@ -243,17 +243,17 @@ Level and module number are derived from the file path, not frontmatter.
 | A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
 | A2 | `a2/` | 50 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
 | B1 | `b1/` | 85 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
-| B2 | `b2/` | 135 | ~2,900 | Advanced - Literature, academic, professional |
-| C1 | `c1/` | 115 | ~2,800 | Proficient - Full complexity, specialized topics |
-| C2 | `c2/` | 80 | ~2,000 | Mastery - Native-level proficiency |
+| B2 | `b2/` | 110 | ~2,640 | Advanced - Grammar mastery, phraseology, Ukrainian history |
+| C1 | `c1/` | 160 | ~3,840 | Proficient - Biographies, stylistics, folk culture, literature |
+| C2 | `c2/` | 100 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
 
 **Vocabulary Progression:**
 - A1: ~750 cumulative
 - A2: ~1,800 cumulative
 - B1: ~3,300 cumulative
-- B2: ~6,200 cumulative
-- C1: ~9,000 cumulative
-- C2: ~11,000 cumulative
+- B2: ~5,940 cumulative
+- C1: ~9,780 cumulative
+- C2: ~12,280 cumulative
 
 ## Transliteration Strategy
 
@@ -336,9 +336,9 @@ npm run claude:deploy
 | A1 | 34/34 | ✅ Complete | ✅ All pass | Ready |
 | A2 | 5/50 | ⏳ In progress | ⏳ | Continue enrichment |
 | B1 | 5/85 | ⏳ In progress | ⏳ | Waiting for A2 |
-| B2 | 0/125 | ❌ Not started | ❌ | Waiting for B1 |
-| C1 | 0/115 | ❌ Not started | ❌ | Waiting for B2 |
-| C2 | 0/80 | ❌ Not started | ❌ | Waiting for C1 |
+| B2 | 0/110 | ❌ Not started | ❌ | Waiting for B1 |
+| C1 | 0/160 | ❌ Not started | ❌ | Waiting for B2 |
+| C2 | 0/100 | ❌ Not started | ❌ | Waiting for C1 |
 
 **Per-level workflow:**
 1. Build all modules (stages 1-3)

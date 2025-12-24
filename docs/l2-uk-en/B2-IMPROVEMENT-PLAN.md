@@ -1,8 +1,8 @@
 # B2 Improvement Plan
 
 **Status:** Ready for Implementation
-**Updated:** 2025-12-22
-**Modules:** 135
+**Updated:** 2025-12-23 (Rebalanced)
+**Modules:** 110
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Modules | 135 |
+| Total Modules | 110 |
 | Built | 0 |
-| Remaining | 135 |
+| Remaining | 110 |
 | Immersion | 100% (full Ukrainian) |
 
 ---
@@ -26,16 +26,17 @@ All B2 modules use full immersion. English appears ONLY in:
 
 All instructions, explanations, content body, and activity feedback are in Ukrainian. Students learned all grammatical terminology at B1 and can understand metalinguistic explanations in Ukrainian.
 
-### Module Structure (135 modules)
+### Module Structure (110 modules)
 
 | Phase | Modules | Content |
 |-------|---------|---------|
 | B2.1a | M01-30 | Grammar & Register |
-| B2.1b | M31-40 | Grammar Completion (Numerals, Word Formation) |
+| B2.1b | M31-40 | Grammar Completion (Numerals, Word Formation, Pronouns) |
 | B2.2 | M41-70 | Phraseology & Synonymy |
 | B2.3 | M71-95 | Ukrainian History |
-| B2.4 | M96-120 | Biographies |
-| B2.5 | M121-135 | Advanced Skills & Capstone |
+| B2.4 | M96-110 | Advanced Skills & Capstone |
+
+**Note:** Biographies (65 modules) and Folk Culture & Arts (25 modules) moved to C1 for better pedagogical progression.
 
 ### Activity Requirements
 
@@ -50,9 +51,9 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 ### Vocabulary
 
-- Target: ~2,900 new words (level)
-- Cumulative: ~6,200 words (A1+A2+B1+B2)
-- Per module: 20-25 words average
+- Target: ~2,640 new words (level)
+- Cumulative: ~5,940 words (A1+A2+B1+B2)
+- Per module: 24 words average
 
 ---
 
@@ -61,11 +62,10 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 | Module | Checkpoint | Covers |
 |--------|-----------|--------|
 | M30 | Grammar Checkpoint | Passive, participles, syntax (M01-29) |
-| M40 | Grammar Completion Check | Numerals, word formation (M31-39) |
+| M40 | Grammar Completion Check | Numerals, word formation, pronouns (M31-39) |
 | M70 | Phraseology Checkpoint | Idioms, proverbs, synonyms (M41-69) |
 | M95 | History Checkpoint | Ukrainian history (M71-94) |
-| M120 | Biography Checkpoint | 24 biographical modules (M96-119) |
-| M135 | B2 Final Exam | Full B2 assessment |
+| M110 | B2 Final Exam | Full B2 assessment |
 
 ---
 
@@ -111,7 +111,7 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 Before marking B2 complete:
 
-- [ ] All 135 modules pass audit
+- [ ] All 110 modules pass audit
 - [ ] All modules pass pipeline (lint → generate → validate)
 - [ ] Vocabulary database rebuilt
 - [ ] All checkpoints in place

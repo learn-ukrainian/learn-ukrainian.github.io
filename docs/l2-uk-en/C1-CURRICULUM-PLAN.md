@@ -1,12 +1,12 @@
 # C1 Curriculum Plan: Ukrainian for English Speakers
 
-**Status:** 📝 PLANNED (Upgraded to A1 Quality)
-**Modules:** 01-115 (115 modules)
-**Vocabulary Target:** ~2,800 new words (~24/module)
-**Cumulative Target:** ~9,000 words after C1
+**Status:** 📝 PLANNED (Upgraded to A1 Quality - Rebalanced 2025)
+**Modules:** 01-160 (160 modules)
+**Vocabulary Target:** ~3,840 new words (~24/module)
+**Cumulative Target:** ~9,780 words after C1
 **Immersion:** 100% Ukrainian (full immersion — English only in vocabulary translations)
 
-> **Note:** Folk Culture & Arts (25 modules) moved from B2 for better vocabulary balance.
+> **Note:** Folk Culture & Arts (25 modules) and Biographies (65 modules) moved from B2 for better pedagogical fit and curriculum balance.
 
 ---
 
@@ -1088,7 +1088,101 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.3: Advanced Stylistics & Rhetoric (Modules 36-55)
+
+## Phase C1.3: Biographies (Modules 36-100)
+
+### Learning Goals
+- Understand iconic Ukrainian figures across all eras
+- Analyze biographical narratives at C1 level
+- Build biographical and historical vocabulary
+- Appreciate diverse contributions to Ukrainian culture
+- Connect biographies with historical context from B2
+
+**PEDAGOGICAL REQUIREMENT:**
+- **Full Immersion (100%):** Biographical narratives at C1 complexity. Deep analysis of historical significance, cultural impact, and legacy. English only in vocabulary table translations.
+
+### Module Specifications
+
+**All 65 Biographies Ordered by Birth Year:**
+
+| # | Name | Years | Focus |
+|---|------|-------|-------|
+| 36 | Княгиня Ольга (Olha) | ~890-969 | First Christian ruler, regent, reformer |
+| 37 | Князь Святослав | ~942-972 | Warrior prince, expanded Kyivan Rus' |
+| 38 | Князь Володимир Великий | ~958-1015 | Christianized Kyivan Rus', state builder |
+| 39 | Князь Ярослав Мудрий | ~978-1054 | Golden age, lawgiver, Ruska Pravda |
+| 40 | Княжна Анна Ярославна | ~1030-1075 | Queen of France, literate diplomat |
+| 41 | Михайло Чернігівський | ?-1246 | Prince, martyr, Mongol resistance |
+| 42 | Роксолана | 1502-1558 | Ottoman sultana, power and influence |
+| 43 | Іов Борецький | 1550-1631 | Metropolitan, Orthodox defender |
+| 44 | Сильвестр Косів | 1576-1657 | Metropolitan, church leader |
+| 45 | Богдан Хмельницький | 1595-1657 | Hetman, Cossack uprising leader |
+| 46 | Юрій Немирич | 1612-1659 | Diplomat, statesman |
+| 47 | Іван Мазепа | 1639-1709 | Hetman, patron of arts, European alliance |
+| 48 | Кость Гордієнко | 1660-1733 | Cossack leader, Mazepa ally |
+| 49 | Пилип Орлик | 1672-1742 | Hetman, first Ukrainian constitution |
+| 50 | Петро Калнишевський | 1691-1803 | Last Zaporozhian Hetman |
+| 51 | Григорій Сковорода | 1722-1794 | Philosopher, wandering sage |
+| 52 | Тарас Шевченко | 1814-1861 | National poet, "The Prophet" |
+| 53 | Ганна Барвінок | 1828-1911 | First female writer, folklorist |
+| 54 | Михайло Драгоманов | 1841-1895 | Political theorist, federalist |
+| 55 | Олена Пчілка | 1849-1930 | Writer, feminist, first woman academician |
+| 56 | Наталія Кобринська | 1851-1920 | Socialist feminist, women's movement founder |
+| 57 | Марія Заньковецька | 1854-1934 | Theater legend, dramatic arts |
+| 58 | Марія Павлова | 1854-1938 | Paleontologist, VUAN academician |
+| 59 | Іван Франко | 1856-1916 | "The Titan" - writer, scholar, activist |
+| 60 | Євген Чикаленко | 1861-1929 | Patron, publisher, cultural supporter |
+| 61 | Борис Грінченко | 1863-1910 | Writer, lexicographer, educator |
+| 62 | Ольга Кобилянська | 1863-1942 | Modernist writer, feminist |
+| 63 | Кирило Трильовський | 1864-1940 | Composer, musical heritage |
+| 64 | Софія Окуневська | 1865-1926 | First female doctor in Austria-Hungary |
+| 65 | Іван Липа | 1865-1923 | Writer, mystic, symbolist |
+| 66 | Михайло Грушевський | 1866-1934 | Historian, UNR president, "History of Ukraine" |
+| 67 | Микола Василенко | 1866-1935 | Historian, jurist, legal scholar |
+| 68 | Марія Вояковська | 1868-1940 | Feminist, educator, women's rights |
+| 69 | Людмила Старицька | 1868-1941 | Theater director, cultural figure |
+| 70 | Юліан Бачинський | 1870-1940 | Politician, Western Ukrainian activism |
+| 71 | Леся Українка | 1871-1913 | National icon, poet, dramatist |
+| 72 | Соломія Крушельницька | 1872-1952 | Opera legend, world-renowned soprano |
+| 73 | Микола Міхновський | 1873-1924 | Independence ideologist, "Ukraine for Ukrainians" |
+| 74 | Симон Петлюра | 1879-1926 | UNR leader, independence struggle |
+| 75 | Олександр Греків | 1879-1955 | Composer, musical tradition |
+| 76 | В'ячеслав Липинський | 1882-1931 | Historian, political theorist, conservatism |
+| 77 | Дмитро Донцов | 1883-1973 | Nationalist ideologist, integral nationalism |
+| 78 | Петро Болбочан | 1883-1959 | Military commander, UNR army |
+| 79 | Наталія Полонська-Василенко | 1884-1973 | Historian, first woman PhD in history |
+| 80 | Валентина Радзимовська | 1886-1953 | Biologist, biochemist, repressed scientist |
+| 81 | Василь Вишиваний | 1888-1946 | Military commander, UPA leader |
+| 82 | Ольга Басараб | 1889-1924 | Spy, fighter, women in resistance |
+| 83 | Берта Рапопорт | 1891-1979 | Ship captain, maritime pioneer |
+| 84 | Олена Степанів | 1892-1963 | First female military officer |
+| 85 | Віра Холодна | 1893-1919 | Silent cinema queen, film icon |
+| 86 | Микола Хвильовий | 1893-1933 | Writer, "Away from Moscow" advocate |
+| 87 | Клавдія Латишева | 1897-1956 | Mathematician, first woman PhD in mathematics |
+| 88 | Катерина Білокур | 1900-1961 | Folk artist, floral paintings |
+| 89 | Олена Теліга | 1906-1942 | Poet, resistance fighter, Babyn Yar martyr |
+| 90 | Марія Примаченко | 1909-1997 | Folk artist, naive art master |
+| 91 | Катерина Ющенко | 1919-2001 | Computer scientist, programming pioneer |
+| 92 | Левко Лук'яненко | 1928-2018 | Dissident, independence advocate |
+| 93 | Алла Горська | 1929-1970 | Dissident artist, murdered by KGB |
+| 94 | Ліна Костенко | 1930- | Poet, Sixtiers generation |
+| 95 | В'ячеслав Чорновіл | 1937-1999 | Independence leader, journalist |
+| 96 | Василь Стус | 1938-1985 | Dissident poet, died in Gulag |
+| 97 | Леонід Каденюк | 1951-2018 | First Ukrainian astronaut |
+| 98 | Квітка Цісик | 1953-1998 | Ukrainian diaspora voice, singer |
+| 99 | Валерій Залужний | 1973- | Military commander, defense strategist |
+| 100 | C1.3 Checkpoint | Review | Biographical analysis assessment |
+
+### Vocabulary Plan C1.3 (~1,560 words)
+- Biographical terms: народження, дитинство, юність, освіта, кар'єра, досягнення, спадщина, вплив, значення
+- Historical context: епоха, доба, період, умови, обставини, виклики
+- Analysis vocabulary: внесок, роль, місце в історії, оцінка сучасників, переоцінка
+- Legacy terms: пам'ять, вшанування, увічнення, традиція, продовження справи
+
+---
+
+## Phase C1.4: Advanced Stylistics & Rhetoric (Modules 101-120)
+
 
 ### Learning Goals
 - Master rhetorical devices
@@ -1104,32 +1198,32 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 36 | Metaphor & Simile | B2 phraseology | Literary reading |
-| 37 | Irony & Sarcasm | M36 | Tone detection |
-| 38 | Hyperbole & Litotes | M36-37 | Emphasis control |
-| 39 | Euphemism & Taboo | M38 | Social navigation |
-| 40 | Rhetorical Questions | M36-39 | Persuasion |
-| 41 | Degrees of Certainty | C1.1 hedging | Precise modality |
-| 42 | Politeness Strategies | M41 | Face-saving |
-| 43 | Indirectness | M41-42 | Implicit meaning |
-| 44 | Ukrainian Humor | M36-43 | Cultural fluency |
-| 45 | Wordplay & Puns | M44 | Linguistic creativity |
-| 46 | Anecdotes & Jokes | M44-45 | Social integration |
-| 47 | Archaic Verb Forms | B2 verbs | Historical texts |
-| 48 | Literary Syntax | M47 | Poetic reading |
-| 49 | Church Slavonicisms | M47-48 | Religious/formal texts |
-| 50 | Archaic Pronouns | M47-49 | Old texts |
-| 51 | High Formal Register | M47-50 | Official documents |
-| 52 | Intimate Register | All above | Close relationships |
-| 53 | Slang & Youth Language | M52 | Informal contexts |
-| 54 | C1.3 Review | M36-53 | Consolidation |
-| 55 | C1.3 Checkpoint | M36-54 | Assessment |
+| 101 | Metaphor & Simile | B2 phraseology | Literary reading |
+| 102 | Irony & Sarcasm | M101 | Tone detection |
+| 103 | Hyperbole & Litotes | M101-102 | Emphasis control |
+| 104 | Euphemism & Taboo | M103 | Social navigation |
+| 105 | Rhetorical Questions | M101-104 | Persuasion |
+| 106 | Degrees of Certainty | C1.1 hedging | Precise modality |
+| 107 | Politeness Strategies | M106 | Face-saving |
+| 108 | Indirectness | M106-107 | Implicit meaning |
+| 109 | Ukrainian Humor | M101-108 | Cultural fluency |
+| 110 | Wordplay & Puns | M109 | Linguistic creativity |
+| 111 | Anecdotes & Jokes | M109-110 | Social integration |
+| 112 | Archaic Verb Forms | B2 verbs | Historical texts |
+| 113 | Literary Syntax | M112 | Poetic reading |
+| 114 | Church Slavonicisms | M112-113 | Religious/formal texts |
+| 115 | Archaic Pronouns | M112-114 | Old texts |
+| 116 | High Formal Register | M112-115 | Official documents |
+| 117 | Intimate Register | All above | Close relationships |
+| 118 | Slang & Youth Language | M117 | Informal contexts |
+| 119 | C1.4 Review | M101-118 | Consolidation |
+| 120 | C1.4 Checkpoint | M101-119 | Assessment |
 
-### Module Content Specifications C1.3
+### Module Content Specifications C1.4
 
 ---
 
-#### Module 36: Metaphor & Simile
+#### Module 101: Metaphor & Simile
 **Grammar:** Understanding and using figurative language
 
 **Metaphor Types:**
@@ -1150,7 +1244,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 37: Irony & Sarcasm
+#### Module 102: Irony & Sarcasm
 **Grammar:** Detecting and producing ironic utterances
 
 **Irony Markers:**
@@ -1174,7 +1268,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 38: Hyperbole & Litotes
+#### Module 103: Hyperbole & Litotes
 **Grammar:** Exaggeration and understatement
 
 **Hyperbole (Гіпербола):**
@@ -1195,7 +1289,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 39: Euphemism & Taboo
+#### Module 104: Euphemism & Taboo
 **Grammar:** Navigating sensitive topics
 
 **Euphemism Areas:**
@@ -1219,7 +1313,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 40: Rhetorical Questions
+#### Module 105: Rhetorical Questions
 **Grammar:** Questions not expecting answers
 
 **Functions:**
@@ -1241,7 +1335,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 41: Degrees of Certainty
+#### Module 106: Degrees of Certainty
 **Grammar:** Precise expression of probability
 
 **Certainty Scale:**
@@ -1261,7 +1355,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 42: Politeness Strategies
+#### Module 107: Politeness Strategies
 **Grammar:** Face-saving in Ukrainian communication
 
 **Positive Politeness:**
@@ -1284,7 +1378,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 43: Indirectness
+#### Module 108: Indirectness
 **Grammar:** Reading between the lines
 
 **Indirect Speech Acts:**
@@ -1303,7 +1397,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 44: Ukrainian Humor Traditions
+#### Module 109: Ukrainian Humor Traditions
 **Grammar:** Understanding cultural humor patterns
 
 **Humor Types:**
@@ -1327,7 +1421,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 45: Wordplay & Puns
+#### Module 110: Wordplay & Puns
 **Grammar:** Linguistic creativity and double meanings
 
 **Wordplay Types:**
@@ -1346,7 +1440,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 46: Anecdotes & Jokes
+#### Module 111: Anecdotes & Jokes
 **Grammar:** Structure and delivery of Ukrainian jokes
 
 **Joke Structure:**
@@ -1370,7 +1464,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 47: Archaic Verb Forms
+#### Module 112: Archaic Verb Forms
 **Grammar:** Historical verb forms in literature
 
 **Archaic Forms:**
@@ -1389,7 +1483,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 48: Literary Syntax
+#### Module 113: Literary Syntax
 **Grammar:** Poetic word order and sentence structure
 
 **Literary Devices:**
@@ -1409,7 +1503,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 49: Church Slavonicisms
+#### Module 114: Church Slavonicisms
 **Grammar:** Religious and high-style vocabulary
 
 **Church Slavonic Features:**
@@ -1433,7 +1527,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 50: Archaic Pronouns
+#### Module 115: Archaic Pronouns
 **Grammar:** Old pronoun forms in texts
 
 **Archaic Pronouns:**
@@ -1457,7 +1551,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 51: High Formal Register
+#### Module 116: High Formal Register
 **Grammar:** Official document language
 
 **Official Document Types:**
@@ -1482,7 +1576,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 52: Intimate Register
+#### Module 117: Intimate Register
 **Grammar:** Language of close relationships
 
 **Intimate Features:**
@@ -1501,7 +1595,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 53: Slang & Youth Language
+#### Module 118: Slang & Youth Language
 **Grammar:** Informal and youth vocabulary
 
 **Slang Categories:**
@@ -1522,7 +1616,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 54: C1.3 Review
+#### Module 119: C1.3 Review
 **Grammar:** Consolidation of stylistics and rhetoric
 
 **Review Areas:**
@@ -1542,7 +1636,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 55: C1.3 Checkpoint
+#### Module 120: C1.3 Checkpoint
 **Covers:** M36-54
 
 **Required Skill Groups:**
@@ -1562,7 +1656,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.4: Folk Culture & Arts (Modules 56-80)
+## Phase C1.5: Folk Culture & Arts (Modules 121-145)
 
 > **Moved from B2** for better vocabulary balance across levels.
 
@@ -1580,37 +1674,37 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 56 | Кобзарі та бандура | Folk Music | Epic tradition, blind bards |
-| 57 | Обрядові пісні | Folk Music | Колядки, щедрівки, веснянки |
-| 58 | Колискові та думи | Folk Music | Lullabies, epic ballads |
-| 59 | Гопак і козачок | Folk Dance | Traditional Cossack dances |
-| 60 | Регіональні танці | Folk Dance | Гуцульський аркан, полісські |
-| 61 | Писанки | Folk Crafts | Easter egg symbolism |
-| 62 | Вишиванка | Folk Crafts | Regional embroidery patterns |
-| 63 | Гончарство та різьбярство | Folk Crafts | Опішне, гуцульська різьба |
-| 64 | Народна міфологія | Folk Beliefs | Мавка, домовик, лісовик |
-| 65 | Народна медицина | Folk Beliefs | Herbs, healing traditions |
-| 66 | Козацькі легенди | Folk Tales | Hero tales, Cossack myths |
-| 67 | Казки та притчі | Folk Tales | Magic tales, moral stories |
-| 68 | Зимові обряди | Calendar | Коляда, Маланка, Водохреща |
-| 69 | Весна та літо | Calendar | Великдень, Зелені свята, Купала |
-| 70 | Хрестини та весілля | Life Rituals | Birth and marriage customs |
-| 71 | Поминальні обряди | Life Rituals | Провід, поминки, memorial |
-| 72 | Галичина | Regional | Western Ukrainian traditions |
-| 73 | Слобожанщина | Regional | Eastern Ukrainian traditions |
-| 74 | Полісся | Regional | Forest region traditions |
-| 75 | Поділля та Волинь | Regional | Central-West traditions |
-| 76 | Класичні композитори | Music | Лисенко, Скорик, Сильвестров |
-| 77 | Сучасна музика | Music | Rock, pop, Eurovision |
-| 78 | Українське кіно | Arts | Довженко to contemporary |
-| 79 | Спортивні герої | Culture | Champions, national pride |
-| 80 | C1.4 Checkpoint | Review | Folk culture assessment |
+| 121 | Кобзарі та бандура | Folk Music | Epic tradition, blind bards |
+| 122 | Обрядові пісні | Folk Music | Колядки, щедрівки, веснянки |
+| 123 | Колискові та думи | Folk Music | Lullabies, epic ballads |
+| 124 | Гопак і козачок | Folk Dance | Traditional Cossack dances |
+| 125 | Регіональні танці | Folk Dance | Гуцульський аркан, полісські |
+| 126 | Писанки | Folk Crafts | Easter egg symbolism |
+| 127 | Вишиванка | Folk Crafts | Regional embroidery patterns |
+| 128 | Гончарство та різьбярство | Folk Crafts | Опішне, гуцульська різьба |
+| 129 | Народна міфологія | Folk Beliefs | Мавка, домовик, лісовик |
+| 130 | Народна медицина | Folk Beliefs | Herbs, healing traditions |
+| 131 | Козацькі легенди | Folk Tales | Hero tales, Cossack myths |
+| 132 | Казки та притчі | Folk Tales | Magic tales, moral stories |
+| 133 | Зимові обряди | Calendar | Коляда, Маланка, Водохреща |
+| 134 | Весна та літо | Calendar | Великдень, Зелені свята, Купала |
+| 135 | Хрестини та весілля | Life Rituals | Birth and marriage customs |
+| 136 | Поминальні обряди | Life Rituals | Провід, поминки, memorial |
+| 137 | Галичина | Regional | Western Ukrainian traditions |
+| 138 | Слобожанщина | Regional | Eastern Ukrainian traditions |
+| 139 | Полісся | Regional | Forest region traditions |
+| 140 | Поділля та Волинь | Regional | Central-West traditions |
+| 141 | Класичні композитори | Music | Лисенко, Скорик, Сильвестров |
+| 142 | Сучасна музика | Music | Rock, pop, Eurovision |
+| 143 | Українське кіно | Arts | Довженко to contemporary |
+| 144 | Спортивні герої | Culture | Champions, national pride |
+| 145 | C1.5 Checkpoint | Review | Folk culture assessment |
 
-### Module Content Specifications C1.4
+### Module Content Specifications C1.5
 
 ---
 
-#### Module 56: Кобзарі та бандура
+#### Module 121: Кобзарі та бандура
 **Focus:** Ukrainian epic musical tradition and blind bards
 
 **Content Areas:**
@@ -1630,7 +1724,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 57: Обрядові пісні
+#### Module 122: Обрядові пісні
 **Focus:** Ritual songs through the calendar year
 
 **Content Areas:**
@@ -1650,7 +1744,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 58: Колискові та думи
+#### Module 123: Колискові та думи
 **Focus:** Lullabies and epic historical ballads
 
 **Content Areas:**
@@ -1670,7 +1764,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 59: Гопак і козачок
+#### Module 124: Гопак і козачок
 **Focus:** Traditional Cossack dances
 
 **Content Areas:**
@@ -1690,7 +1784,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 60: Регіональні танці
+#### Module 125: Регіональні танці
 **Focus:** Regional dance traditions across Ukraine
 
 **Content Areas:**
@@ -1710,7 +1804,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 61: Писанки
+#### Module 126: Писанки
 **Focus:** Easter egg art and symbolism
 
 **Content Areas:**
@@ -1730,7 +1824,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 62: Вишиванка
+#### Module 127: Вишиванка
 **Focus:** Traditional embroidered shirts and regional patterns
 
 **Content Areas:**
@@ -1750,7 +1844,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 63: Гончарство та різьбярство
+#### Module 128: Гончарство та різьбярство
 **Focus:** Pottery and woodcarving traditions
 
 **Content Areas:**
@@ -1770,7 +1864,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 64: Народна міфологія
+#### Module 129: Народна міфологія
 **Focus:** Ukrainian folk mythology and supernatural beings
 
 **Content Areas:**
@@ -1791,7 +1885,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 65: Народна медицина
+#### Module 130: Народна медицина
 **Focus:** Traditional Ukrainian healing practices
 
 **Content Areas:**
@@ -1811,7 +1905,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 66: Козацькі легенди
+#### Module 131: Козацькі легенди
 **Focus:** Cossack hero tales and historical myths
 
 **Content Areas:**
@@ -1831,7 +1925,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 67: Казки та притчі
+#### Module 132: Казки та притчі
 **Focus:** Ukrainian folk tales and moral stories
 
 **Content Areas:**
@@ -1851,7 +1945,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 68: Зимові обряди
+#### Module 133: Зимові обряди
 **Focus:** Winter calendar rituals
 
 **Content Areas:**
@@ -1871,7 +1965,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 69: Весна та літо
+#### Module 134: Весна та літо
 **Focus:** Spring and summer calendar rituals
 
 **Content Areas:**
@@ -1891,7 +1985,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 70: Хрестини та весілля
+#### Module 135: Хрестини та весілля
 **Focus:** Birth and marriage life cycle rituals
 
 **Content Areas:**
@@ -1911,7 +2005,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 71: Поминальні обряди
+#### Module 136: Поминальні обряди
 **Focus:** Death and memorial traditions
 
 **Content Areas:**
@@ -1931,7 +2025,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 72: Галичина
+#### Module 137: Галичина
 **Focus:** Western Ukrainian (Galician) folk traditions
 
 **Content Areas:**
@@ -1951,7 +2045,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 73: Слобожанщина
+#### Module 138: Слобожанщина
 **Focus:** Eastern Ukrainian (Sloboda) folk traditions
 
 **Content Areas:**
@@ -1971,7 +2065,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 74: Полісся
+#### Module 139: Полісся
 **Focus:** Northern (Polissia) forest region traditions
 
 **Content Areas:**
@@ -1991,7 +2085,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 75: Поділля та Волинь
+#### Module 140: Поділля та Волинь
 **Focus:** Central-Western Ukrainian regional traditions
 
 **Content Areas:**
@@ -2011,7 +2105,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 76: Класичні композитори
+#### Module 141: Класичні композитори
 **Focus:** Ukrainian classical music composers
 
 **Content Areas:**
@@ -2031,7 +2125,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 77: Сучасна музика
+#### Module 142: Сучасна музика
 **Focus:** Contemporary Ukrainian popular music
 
 **Content Areas:**
@@ -2051,7 +2145,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 78: Українське кіно
+#### Module 143: Українське кіно
 **Focus:** Ukrainian cinema history and contemporary
 
 **Content Areas:**
@@ -2071,7 +2165,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 79: Спортивні герої
+#### Module 144: Спортивні герої
 **Focus:** Ukrainian sports champions and national pride
 
 **Content Areas:**
@@ -2091,7 +2185,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 80: C1.4 Checkpoint
+#### Module 145: C1.4 Checkpoint
 **Covers:** M56-79
 
 **Required Skill Groups:**
@@ -2115,7 +2209,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.5: Literature I - Classics (Modules 81-95)
+## Phase C1.6: Literature - Complete (Modules 146-160)
 
 ### Learning Goals
 - Know major Ukrainian literary figures
@@ -2131,27 +2225,27 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 | # | Title | Type | Focus |
 |---|-------|------|-------|
-| 81 | Історія української літератури | Literature | Periods and movements |
-| 82 | Котляревський: Енеїда | Literature | Burlesque, national revival |
-| 83 | Шевченко: Життя | Literature | Biography, context |
-| 84 | Шевченко: Поезія | Literature | Major poems analysis |
-| 85 | Шевченко: Спадщина | Literature | Legacy, influence |
-| 86 | Франко: Життя і поезія | Literature | Каменярі, lyrics |
-| 87 | Франко: Проза | Literature | Захар Беркут excerpts |
-| 88 | Леся Українка: Поезія | Literature | Contra Spem Spero |
-| 89 | Леся Українка: Драма | Literature | Лісова пісня |
-| 90 | Вовчок та Мирний | Literature | Social realism |
-| 91 | Коцюбинський | Literature | Тіні забутих предків |
-| 92 | Літературознавча термінологія | Vocabulary | Plot, theme, motif |
-| 93 | Аналіз поезії | Skills | Meter, rhyme, imagery |
-| 94 | C1.5 Review | Review | 19th century literature |
-| 95 | C1.5 Checkpoint | Review | Assessment |
+| 146 | Історія української літератури | Literature | Periods and movements |
+| 147 | Котляревський: Енеїда | Literature | Burlesque, national revival |
+| 148 | Шевченко: Життя | Literature | Biography, context |
+| 149 | Шевченко: Поезія | Literature | Major poems analysis |
+| 150 | Шевченко: Спадщина | Literature | Legacy, influence |
+| 151 | Франко: Життя і поезія | Literature | Каменярі, lyrics |
+| 152 | Франко: Проза | Literature | Захар Беркут excerpts |
+| 153 | Леся Українка: Поезія | Literature | Contra Spem Spero |
+| 154 | Леся Українка: Драма | Literature | Лісова пісня |
+| 155 | Вовчок та Мирний | Literature | Social realism |
+| 156 | Коцюбинський | Literature | Тіні забутих предків |
+| 157 | Літературознавча термінологія | Vocabulary | Plot, theme, motif |
+| 158 | Аналіз поезії | Skills | Meter, rhyme, imagery |
+| 159 | C1.6 Review | Review | 19th century literature |
+| 160 | C1.6 Checkpoint | Review | Assessment |
 
-### Module Content Specifications C1.5
+### Module Content Specifications C1.6
 
 ---
 
-#### Module 81: Історія української літератури
+#### Module 146: Історія української літератури
 **Focus:** Overview of Ukrainian literary periods and movements
 
 **Content Areas:**
@@ -2172,7 +2266,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 82: Котляревський: Енеїда
+#### Module 147: Котляревський: Енеїда
 **Focus:** Ivan Kotlyarevsky and the birth of modern Ukrainian literature
 
 **Content Areas:**
@@ -2192,7 +2286,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 83: Шевченко: Життя
+#### Module 148: Шевченко: Життя
 **Focus:** Taras Shevchenko's biography and historical context
 
 **Content Areas:**
@@ -2212,7 +2306,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 84: Шевченко: Поезія
+#### Module 149: Шевченко: Поезія
 **Focus:** Analysis of Shevchenko's major poetic works
 
 **Content Areas:**
@@ -2232,7 +2326,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 85: Шевченко: Спадщина
+#### Module 150: Шевченко: Спадщина
 **Focus:** Shevchenko's influence and cultural legacy
 
 **Content Areas:**
@@ -2252,7 +2346,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 86: Франко: Життя і поезія
+#### Module 151: Франко: Життя і поезія
 **Focus:** Ivan Franko's life and lyric poetry
 
 **Content Areas:**
@@ -2272,7 +2366,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 87: Франко: Проза
+#### Module 152: Франко: Проза
 **Focus:** Ivan Franko's prose works
 
 **Content Areas:**
@@ -2292,7 +2386,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 88: Леся Українка: Поезія
+#### Module 153: Леся Українка: Поезія
 **Focus:** Lesya Ukrainka's lyric and philosophical poetry
 
 **Content Areas:**
@@ -2312,7 +2406,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 89: Леся Українка: Драма
+#### Module 154: Леся Українка: Драма
 **Focus:** Lesya Ukrainka's dramatic works
 
 **Content Areas:**
@@ -2332,7 +2426,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 90: Вовчок та Мирний
+#### Module 155: Вовчок та Мирний
 **Focus:** Marko Vovchok and Panas Myrny - social realism
 
 **Content Areas:**
@@ -2352,7 +2446,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 91: Коцюбинський
+#### Module 156: Коцюбинський
 **Focus:** Mykhailo Kotsiubynsky and impressionist prose
 
 **Content Areas:**
@@ -2372,7 +2466,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 92: Літературознавча термінологія
+#### Module 157: Літературознавча термінологія
 **Focus:** Literary analysis vocabulary and concepts
 
 **Content Areas:**
@@ -2392,7 +2486,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 93: Аналіз поезії
+#### Module 158: Аналіз поезії
 **Focus:** Poetry analysis skills and terminology
 
 **Content Areas:**
@@ -2412,7 +2506,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 94: C1.5 Review
+#### Module 159: C1.5 Review
 **Focus:** 19th century Ukrainian literature comprehensive review
 
 **Review Areas:**
@@ -2433,7 +2527,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 95: C1.5 Checkpoint
+#### Module 160: C1.5 Checkpoint
 **Covers:** M81-94
 
 **Required Skill Groups:**
@@ -2455,525 +2549,6 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-## Phase C1.6: Literature II - Modern & Capstone (Modules 96-115)
-
-### Learning Goals
-- Understand 20th century tragedy
-- Know contemporary authors
-- Complete capstone project
-- Achieve C1 certification
-- Prepare for C2
-
-**PEDAGOGICAL REQUIREMENT:**
-- **Capstone Immersion (95-100%):** Capstone projects must be researched, written, and defended entirely in Ukrainian.
-
-### Module Specifications Overview
-
-| # | Title | Type | Focus |
-|---|-------|------|-------|
-| 96 | Модернізм | Literature | Early 20th century |
-| 97 | Розстріляне відродження | Literature | Хвильовий, Зеров, Підмогильний |
-| 98 | Тичина та Рильський | Literature | Кларнети сонця |
-| 99 | Радянський період | Literature | Симоненко, Драч |
-| 100 | Ліна Костенко | Literature | Маруся Чурай |
-| 101 | Василь Стус | Literature | Палімпсести |
-| 102 | Діаспорна література | Literature | Багряний та інші |
-| 103 | Незалежність | Literature | 1990s explosion |
-| 104 | Андрухович | Literature | Станіславський феномен |
-| 105 | Забужко | Literature | Польові дослідження |
-| 106 | Жадан | Literature | Ворошиловград |
-| 107 | Воєнна література | Literature | 2014-present |
-| 108 | Літературна критика | Skills | Reviews, analysis |
-| 109 | C1.6 Review | Review | Modern literature |
-| 110 | C1.6 Integration | Practice | Essay on literature |
-| 111 | Капстон: Проєкт | Project | Research paper |
-| 112 | Капстон: Захист | Project | Oral defense |
-| 113 | C1 Фінал: Читання | Exam | Reading comprehension |
-| 114 | C1 Фінал: Письмо | Exam | Timed essay |
-| 115 | C1 РІВЕНЬ ЗАВЕРШЕНО | Milestone | Certification |
-
-### Module Content Specifications C1.6
-
----
-
-#### Module 96: Модернізм
-**Focus:** Ukrainian literary modernism (early 20th century)
-
-**Content Areas:**
-- Молода Муза: Львів symbolist group
-- Українська хата: Kyiv modernists
-- Symbolism, impressionism, expressionism influences
-- Key figures: Ольга Кобилянська, Василь Стефаник
-- European context and Ukrainian specificity
-
-**Vocabulary (24 words):**
-модернізм, символізм, імпресіонізм, експресіонізм, декаданс, авангард, естетика, краса, форма, експеримент, новаторство, напрям, течія, група, маніфест, стиль, образ, символ, настрій, суб'єктивізм, індивідуалізм, мистецтво, література, Європа
-
-**Signature Activity Concepts:**
-1. Match-up: Modernist movement → key characteristics
-2. Quiz: Identify modernist writers and works
-3. Cloze: Modernist manifesto excerpts
-
----
-
-#### Module 97: Розстріляне відродження
-**Focus:** The Executed Renaissance - 1920s-30s literary tragedy
-
-**Content Areas:**
-- Культурне відродження 1920-х: explosion of creativity
-- Сталінські репресії: destruction of a generation
-- Микола Хвильовий: Я (Романтика), psychological prose
-- Микола Зеров: neoclassicist poetry, translations
-- Валер'ян Підмогильний: Місто, urban novel
-- Memory and rehabilitation
-
-**Vocabulary (24 words):**
-розстріляне відродження, репресії, терор, арешт, розстріл, табір, заслання, жертва, трагедія, втрата, покоління, творчість, талант, геній, українізація, культура, знищення, пам'ять, реабілітація, спадщина, відновлення, Хвильовий, Зеров, Підмогильний
-
-**Signature Activity Concepts:**
-1. Quiz: Authors and their fates
-2. Cloze: Excerpts from Khvylovy and Pidmohylny
-3. Essay: Impact of repressions on Ukrainian literature
-
----
-
-#### Module 98: Тичина та Рильський
-**Focus:** Major Soviet-era Ukrainian poets
-
-**Content Areas:**
-- Павло Тичина: early genius, Сонячні кларнети
-- Compromise with Soviet power: tragic trajectory
-- Максим Рильський: neoclassicism, translations
-- Socialist realism pressures
-- Literary survival strategies under totalitarianism
-
-**Vocabulary (24 words):**
-Тичина, Рильський, поезія, кларнети, сонце, музика, ритм, образ, символ, неокласицизм, соцреалізм, компроміс, тиск, цензура, виживання, творчість, талант, трагедія, еволюція, раннє, пізнє, переклад, спадщина, оцінка
-
-**Signature Activity Concepts:**
-1. Cloze: Famous Tychyna poems (early period)
-2. Match-up: Poet → work → period
-3. Quiz: Contrast early and late works
-
----
-
-#### Module 99: Радянський період
-**Focus:** Ukrainian literature under Soviet rule (1960s-80s)
-
-**Content Areas:**
-- Шістдесятники: Симоненко, Драч, Вінграновський
-- Дисидентський рух: underground literature
-- Самвидав: self-published resistance texts
-- Censorship and self-censorship
-- Hidden meanings and Aesopian language
-
-**Vocabulary (24 words):**
-шістдесятники, дисидент, самвидав, підпілля, цензура, заборона, арешт, переслідування, спротив, свобода, правда, совість, покоління, відлига, застій, Симоненко, Драч, Вінграновський, поезія, метафора, езопова мова, символ, протест, надія
-
-**Signature Activity Concepts:**
-1. Quiz: Identify шістдесятники and their works
-2. Match-up: Historical period → literary characteristics
-3. Cloze: Symonenko's famous poems
-
----
-
-#### Module 100: Ліна Костенко
-**Focus:** Lina Kostenko - living classic of Ukrainian poetry
-
-**Content Areas:**
-- Біографія: silence years, principled stance
-- Маруся Чурай: historical novel in verse
-- Ліричні збірки: Над берегами вічної ріки
-- Poetic philosophy: history, memory, identity
-- Contemporary relevance and public role
-
-**Vocabulary (24 words):**
-Костенко, Маруся Чурай, роман у віршах, історія, пам'ять, ідентичність, нація, доля, любов, трагедія, краса, мудрість, совість, голос, мовчання, принципи, мужність, класик, сучасність, актуальність, вплив, покоління, учитель, легенда
-
-**Signature Activity Concepts:**
-1. Cloze: Famous Kostenko poems
-2. Quiz: Marusya Churay plot and themes
-3. Essay: Kostenko's role in Ukrainian culture
-
----
-
-#### Module 101: Василь Стус
-**Focus:** Vasyl Stus - poet-martyr of Ukrainian literature
-
-**Content Areas:**
-- Біографія: persecution, imprisonment, death in Gulag
-- Палімпсести: poems written in prison
-- Philosophical depth: existentialism, spirituality
-- Translation work: Goethe, Rilke
-- Symbol of resistance and national conscience
-
-**Vocabulary (24 words):**
-Стус, Палімпсести, в'язниця, табір, смерть, мученик, жертва, спротив, совість, свобода, дух, душа, екзистенція, філософія, глибина, краса, трагедія, величність, переклад, Гете, Рільке, пам'ять, символ, вічність
-
-**Signature Activity Concepts:**
-1. Cloze: Poems from Palimpsests
-2. Quiz: Stus biography and significance
-3. Match-up: Philosophical themes → poetic images
-
----
-
-#### Module 102: Діаспорна література
-**Focus:** Ukrainian diaspora literature (20th century)
-
-**Content Areas:**
-- Еміграція хвилі: 1920s, post-WWII, Cold War
-- Іван Багряний: Тигролови, adventure novel
-- Нью-Йоркська група: avant-garde poetry
-- Еммі Андрієвська, Юрій Тарнавський: experimental prose
-- Diaspora role in preserving Ukrainian culture
-
-**Vocabulary (24 words):**
-діаспора, еміграція, вигнання, біженець, хвиля, покоління, Нью-Йорк, Мюнхен, Париж, збереження, культура, мова, традиція, Багряний, Тигролови, пригоди, авангард, експеримент, група, поет, прозаїк, спадщина, зв'язок, повернення
-
-**Signature Activity Concepts:**
-1. Match-up: Diaspora author → work → location
-2. Quiz: Diaspora literary movements
-3. Cloze: Excerpts from Bahryanyi
-
----
-
-#### Module 103: Незалежність
-**Focus:** Ukrainian literature after 1991
-
-**Content Areas:**
-- 1990s explosion: freedom of expression
-- Бу-Ба-Бу: Andrukhovych, Irvanets, Neborak
-- Станіславський феномен: Ivano-Frankivsk school
-- New publishers, journals, literary prizes
-- Search for new identity and themes
-
-**Vocabulary (24 words):**
-незалежність, свобода, вибух, творчість, експеримент, постмодернізм, карнавал, гра, іронія, пародія, Бу-Ба-Бу, Станіслав, феномен, видавництво, журнал, премія, критика, дискусія, ідентичність, нова хвиля, покоління, пошук, оновлення, традиція
-
-**Signature Activity Concepts:**
-1. Quiz: Post-independence literary movements
-2. Match-up: Author → literary group → style
-3. Fill-in: Text about 1990s literary explosion
-
----
-
-#### Module 104: Андрухович
-**Focus:** Yuri Andrukhovych - postmodern prose master
-
-**Content Areas:**
-- Біографія: Бу-Ба-Бу founding, international recognition
-- Рекреації: carnival, performance, Ukrainian identity
-- Московіада: satirical journey
-- Perverzion: European and Ukrainian themes
-- Essays and public intellectual role
-
-**Vocabulary (24 words):**
-Андрухович, Рекреації, Московіада, Perverzion, постмодернізм, карнавал, свято, гра, іронія, сатира, пародія, ідентичність, Україна, Європа, есей, публіцистика, інтелектуал, голос, роман, стиль, мова, гумор, провокація, експеримент
-
-**Signature Activity Concepts:**
-1. Quiz: Andrukhovych's novels and themes
-2. Cloze: Excerpts showing postmodern techniques
-3. Essay: Andrukhovych's view of Ukrainian identity
-
----
-
-#### Module 105: Забужко
-**Focus:** Oksana Zabuzhko - feminist voice in Ukrainian literature
-
-**Content Areas:**
-- Біографія: academic and literary career
-- Польові дослідження з українського сексу: breakthrough novel
-- Музей покинутих секретів: historical saga
-- Feminist perspective and national trauma
-- Public intellectual and cultural critic
-
-**Vocabulary (24 words):**
-Забужко, Польові дослідження, Музей покинутих секретів, фемінізм, жінка, тіло, сексуальність, травма, історія, пам'ять, ідентичність, нація, колоніалізм, деколонізація, інтелектуал, критика, аналіз, есей, роман, публіцистика, голос, провокація, дискусія, вплив
-
-**Signature Activity Concepts:**
-1. Quiz: Zabuzhko's major works and themes
-2. Cloze: Excerpts from Field Research
-3. Essay: Feminist themes in Ukrainian literature
-
----
-
-#### Module 106: Жадан
-**Focus:** Serhiy Zhadan - voice of Eastern Ukraine
-
-**Content Areas:**
-- Біографія: Харків, rock music, activism
-- Ворошиловград: post-Soviet Donbas
-- Інтернат: war novel
-- Poetry: urban landscapes, social issues
-- War-era activism and humanitarian work
-
-**Vocabulary (24 words):**
-Жадан, Ворошиловград, Інтернат, Харків, Донбас, схід, місто, індустріальний, постсовок, війна, окупація, біженець, волонтер, активізм, рок, музика, поезія, проза, реалізм, соціальний, людина, біль, надія, солідарність
-
-**Signature Activity Concepts:**
-1. Quiz: Zhadan's works and Eastern Ukraine themes
-2. Cloze: Excerpts from Internat
-3. Match-up: Work → setting → theme
-
----
-
-#### Module 107: Воєнна література
-**Focus:** Ukrainian war literature (2014-present)
-
-**Content Areas:**
-- 2014 as watershed: new literary generation
-- Фронтова поезія: soldier-poets
-- Документальна проза: memoirs, reportage
-- Trauma and resilience narratives
-- International recognition and translation
-
-**Vocabulary (24 words):**
-війна, фронт, солдат, доброволець, оборона, окупація, агресія, травма, біль, втрата, смерть, пам'ять, спротив, мужність, героїзм, жертва, виживання, надія, відновлення, свідчення, документ, правда, голос, покоління
-
-**Signature Activity Concepts:**
-1. Quiz: War literature authors and works
-2. Cloze: Poetry from the front
-3. Essay: Literature as witness to war
-
----
-
-#### Module 108: Літературна критика
-**Focus:** Literary criticism and review writing skills
-
-**Content Areas:**
-- Критична стаття: structure and conventions
-- Рецензія: book review format
-- Аналітичний есей: argument development
-- Критичний словник: evaluation vocabulary
-- Ukrainian literary journals and platforms
-
-**Vocabulary (24 words):**
-критика, рецензія, огляд, аналіз, оцінка, аргумент, теза, доказ, приклад, цитата, інтерпретація, висновок, стиль, форма, зміст, достоїнства, недоліки, рекомендація, видання, журнал, платформа, дискусія, полеміка, традиція
-
-**Signature Activity Concepts:**
-1. Fill-in: Review structure template
-2. Quiz: Critical vocabulary usage
-3. Production: Write a book review (with model answer)
-
----
-
-#### Module 109: C1.6 Review
-**Focus:** 20th-21st century Ukrainian literature review
-
-**Review Areas:**
-- Modernism to postmodernism trajectory
-- Soviet period and resistance
-- Independence and new voices
-- War literature emergence
-- Critical analysis skills
-
-**Vocabulary (20 words - review):**
-модернізм, постмодернізм, репресії, дисидент, незалежність, війна, травма, ідентичність, деколонізація, спадщина, традиція, новаторство, голос, покоління, критика, аналіз, інтерпретація, значення, актуальність, майбутнє
-
-**Review Components:**
-1. Comprehensive quiz: 20th-21st century literature
-2. Comparative essay: Two contemporary authors
-3. Critical review: Analyze a modern work
-4. Discussion: Ukrainian literature today
-
----
-
-#### Module 110: C1.6 Integration
-**Focus:** Literary essay integration practice
-
-**Essay Practice Areas:**
-- Тематичний есей: cross-period theme analysis
-- Порівняльний есей: author/work comparison
-- Критичний есей: evaluation with evidence
-- Дослідницький есей: research integration
-- Capstone preparation
-
-**Vocabulary (15 words - essay focus):**
-есей, теза, аргумент, доказ, приклад, цитата, структура, вступ, висновок, порівняння, аналіз, оцінка, дослідження, джерело, бібліографія
-
-**Integration Components:**
-1. Timed essay: Literary topic (with rubric)
-2. Peer review: Exchange and critique
-3. Revision: Improve based on feedback
-4. Model answers: Study exemplary essays
-
----
-
-#### Module 111: Капстон: Проєкт
-**Focus:** C1 Capstone Research Paper
-
-**Project Requirements:**
-- **Length:** 2,000-3,000 words in Ukrainian
-- **Register:** Academic throughout
-- **Sources:** Minimum 5 Ukrainian-language sources
-- **Citation:** ДСТУ format
-
-**Topic Options:**
-1. Literary analysis (author, period, or theme)
-2. Cultural study (tradition, region, or practice)
-3. Sociolinguistic research (dialects, Surzhyk, language policy)
-4. Current affairs analysis (post-2014 Ukraine)
-
-**Structure:**
-- Вступ (Introduction with thesis): 200-300 words
-- Огляд літератури (Literature review): 400-500 words
-- Основна частина (Analysis/argument): 1,000-1,500 words
-- Висновки (Conclusions): 200-300 words
-- Література (References): ДСТУ format
-
-**Vocabulary (25 words):**
-дослідження, тема, теза, гіпотеза, метод, аналіз, джерело, література, цитата, посилання, аргумент, доказ, приклад, структура, вступ, огляд, частина, висновок, бібліографія, формат, академічний, науковий, оригінальний, внесок, значення
-
-**Model Answer:** Full 2,500-word example paper provided with annotations
-
-**Assessment Rubric:**
-| Criterion | Points | Description |
-|-----------|--------|-------------|
-| Thesis clarity | 20 | Clear, arguable, specific thesis |
-| Evidence quality | 25 | Relevant sources, proper citations |
-| Argument logic | 20 | Coherent structure, valid reasoning |
-| Academic register | 20 | Consistent Ukrainian academic style |
-| Language accuracy | 15 | Grammar, vocabulary, spelling |
-
----
-
-#### Module 112: Капстон: Захист
-**Focus:** C1 Capstone Oral Defense
-
-**Defense Format:**
-- **Presentation:** 10-15 minutes in Ukrainian
-- **Visual aids:** Optional slides (in Ukrainian)
-- **Q&A:** 5-10 minutes (simulated)
-
-**Presentation Structure:**
-1. Вступ: Topic, thesis, significance (2 min)
-2. Методологія: Approach, sources (2 min)
-3. Основні результати: Key findings (6-8 min)
-4. Висновки: Conclusions, implications (2-3 min)
-
-**Vocabulary (20 words):**
-захист, презентація, доповідь, слайд, аудиторія, питання, відповідь, аргумент, результат, висновок, значення, внесок, обмеження, перспектива, дискусія, уточнення, пояснення, обґрунтування, переконливість, впевненість
-
-**Q&A Simulation Topics:**
-- Why did you choose this topic?
-- What are the limitations of your research?
-- How does this contribute to the field?
-- What further research would you suggest?
-
-**Assessment Rubric:**
-| Criterion | Points |
-|-----------|--------|
-| Content accuracy & depth | 25 |
-| Academic register mastery | 25 |
-| Argument structure & logic | 20 |
-| Pronunciation & fluency | 15 |
-| Response to questions | 15 |
-
-**Model Defense:** Transcript and audio example provided
-
----
-
-#### Module 113: C1 Фінал: Читання
-**Focus:** C1 Final Reading Comprehension Exam
-
-**Exam Format:**
-- **Duration:** 90 minutes
-- **Texts:** 3-4 authentic Ukrainian texts
-- **Length:** 2,500-3,500 total words
-- **Question types:** Multiple choice, short answer, summary
-
-**Text Types:**
-- Academic article excerpt
-- Literary criticism
-- News analysis
-- Cultural essay
-
-**Skills Assessed:**
-- Main idea identification
-- Detail comprehension
-- Inference and implication
-- Author's purpose and tone
-- Vocabulary in context
-
-**Vocabulary (15 words - exam focus):**
-текст, розуміння, аналіз, питання, відповідь, деталь, головна думка, висновок, тон, мета, контекст, значення, синонім, парафраз, резюме
-
-**Sample Exam:** Full practice exam with answer key provided
-
----
-
-#### Module 114: C1 Фінал: Письмо
-**Focus:** C1 Final Timed Essay Exam
-
-**Exam Format:**
-- **Duration:** 90 minutes
-- **Length:** 500-700 words
-- **Essay type:** Argumentative or analytical
-
-**Prompt Types:**
-- Literary analysis question
-- Cultural commentary topic
-- Sociolinguistic issue
-- Current affairs argument
-
-**Assessment Criteria:**
-| Criterion | Points |
-|-----------|--------|
-| Task response | 25 |
-| Coherence & cohesion | 25 |
-| Lexical resource | 25 |
-| Grammatical range & accuracy | 25 |
-
-**Vocabulary (15 words - essay exam focus):**
-есей, аргумент, теза, структура, вступ, основна частина, висновок, зв'язок, перехід, лексика, граматика, точність, стиль, регістр, час
-
-**Sample Prompts and Model Answers:** 3 complete examples provided
-
----
-
-#### Module 115: C1 РІВЕНЬ ЗАВЕРШЕНО
-**Focus:** C1 Level Completion and Certification
-
-**Completion Requirements:**
-- [ ] All 114 modules completed
-- [ ] C1.1-C1.6 checkpoints passed
-- [ ] Capstone research paper submitted (2,000+ words)
-- [ ] Capstone oral defense completed
-- [ ] Final reading exam passed (70%+)
-- [ ] Final writing exam passed (70%+)
-
-**CEFR C1 Can-Do Statements:**
-- Розуміти широкий спектр вимогливих, довгих текстів і розпізнавати приховане значення
-- Висловлюватися швидко і спонтанно без помітних труднощів у доборі слів
-- Гнучко й ефективно використовувати мову в соціальних, академічних і професійних цілях
-- Створювати чіткі, добре структуровані, детальні тексти на складні теми
-
-**Certificate Content:**
-- Level: C1 (Рівень вільного володіння)
-- Skills verified: Reading, Writing, Listening, Speaking
-- Capstone topic completed
-- Date of completion
-
-**Transition to C2:**
-- C2 focuses on native-like proficiency
-- 7 functional styles mastery
-- Literary creativity
-- Professional specialization tracks
-
----
-
-## Media Content Assignments
-
-See separate document: **[C1-MEDIA-ASSIGNMENT.md](./C1-MEDIA-ASSIGNMENT.md)**
-
-This document contains:
-- Phase-by-phase media requirements for all 115 modules
-- Video/Audio source tables with permission tracking
-- Self-created content needs
-- Quality standards for C1 immersion (100% Ukrainian)
-
----
-
 ## Content Summary
 
 ### Phase Distribution
@@ -2982,11 +2557,11 @@ This document contains:
 |-------|---------|-------|------|
 | C1.1 | 01-20 | 20 | Academic Foundation |
 | C1.2 | 21-35 | 15 | Professional & Social |
-| C1.3 | 36-55 | 20 | Stylistics & Rhetoric |
-| C1.4 | 56-80 | 25 | Folk Culture & Arts |
-| C1.5 | 81-95 | 15 | Literature - Classics |
-| C1.6 | 96-115 | 20 | Literature - Modern & Capstone |
-| **TOTAL** | **01-115** | **115** | |
+| C1.3 | 36-100 | 65 | Biographies |
+| C1.4 | 101-120 | 20 | Advanced Stylistics & Rhetoric |
+| C1.5 | 121-145 | 25 | Folk Culture & Arts |
+| C1.6 | 146-160 | 15 | Literature - Complete |
+| **TOTAL** | **01-160** | **160** | |
 
 ### Vocabulary Summary
 
@@ -2994,11 +2569,11 @@ This document contains:
 |-------|--------------|------------|
 | C1.1 | ~500 | 500 |
 | C1.2 | ~450 | 950 |
-| C1.3 | ~500 | 1,450 |
-| C1.4 | ~600 | 2,050 |
-| C1.5 | ~400 | 2,450 |
-| C1.6 | ~350 | 2,800 |
-| **Total C1** | **~2,800** | **~9,000 cumulative** |
+| C1.3 | ~1,560 | 2,510 |
+| C1.4 | ~480 | 2,990 |
+| C1.5 | ~600 | 3,590 |
+| C1.6 | ~250 | 3,840 |
+| **Total C1** | **~3,840** | **~9,780 cumulative** |
 
 ---
 
