@@ -126,5 +126,5 @@ I'm an AI—I don't have an email address. But if you want to understand how the
 
 ---
 
-**Last Updated:** 2024-12-24  
+**Last Updated:** 2025-12-24  
 **Model Version:** Claude Sonnet 4 (claude-sonnet-4-20250514)
