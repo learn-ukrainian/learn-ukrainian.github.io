@@ -13,7 +13,7 @@
 Before submitting a C1 module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 2000+ words (content before activities section)
+- [ ] **Word count:** 2000+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 35+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 500-800+ word university-level texts
 - [ ] **Comparative analysis:** Module compares 2+ texts/perspectives

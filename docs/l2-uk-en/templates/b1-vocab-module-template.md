@@ -20,7 +20,7 @@
 
 Before submitting a B1 vocabulary module, verify:
 
-- [ ] **Word count:** 1500+ words (content before activities section)
+- [ ] **Word count:** 1500+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 25-30 items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Thematic organization:** Vocabulary grouped by semantic field or function
 - [ ] **Key patterns:** 6-10 usage patterns with authentic examples

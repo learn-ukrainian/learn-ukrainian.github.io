@@ -35,7 +35,7 @@
 Before submitting a B1 metalanguage module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 1200+ words (content before activities section)
+- [ ] **Word count:** 1200+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, tables)
 - [ ] **Vocabulary:** 25-45 items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Terminology coverage:** All target terms introduced with Ukrainian + English
 - [ ] **Usage examples:** Each term shown in context (sample sentences)

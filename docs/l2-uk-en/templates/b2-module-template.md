@@ -13,7 +13,7 @@
 Before submitting a B2 module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 1800+ words (content before activities section)
+- [ ] **Word count:** 1800+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 30+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 300-500+ word authentic-style reading passages
 - [ ] **Writing support:** ALL writing tasks include Model Answers

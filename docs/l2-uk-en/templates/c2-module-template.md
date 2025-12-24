@@ -13,7 +13,7 @@
 Before submitting a C2 module, verify:
 
 ### Content Requirements
-- [ ] **Word count:** 2200+ words (content before activities section)
+- [ ] **Word count:** 2200+ words (core prose: explanations, examples, engagement boxes — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 40+ items in 3-column format (Слово | Переклад | Примітки)
 - [ ] **Text passages:** 600-1000+ word native-level texts
 - [ ] **Creative/productive tasks:** Original writing, translation, or transformation
@@ -32,7 +32,7 @@ Before submitting a C2 module, verify:
   - Translation analysis: Compare translations, discuss choices
 
 ### Immersion & Quality
-- [ ] **Immersion:** 98-100% Ukrainian (English ONLY in vocabulary translations)
+- [ ] **Immersion:** 100% Ukrainian (English ONLY in vocabulary translations)
 - [ ] **Native-level texts:** No simplification
 - [ ] **Creative production:** Original writing required
 - [ ] **Stylistic precision:** Nuanced register/style control

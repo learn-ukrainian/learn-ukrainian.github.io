@@ -12,7 +12,7 @@
 
 Before submitting a B1 grammar module, verify:
 
-- [ ] **Word count:** 1500+ words (content before activities section)
+- [ ] **Word count:** 1500+ words (core prose: explanations, examples, engagement boxes, reading passages — excludes vocabulary section, activities section, and tables)
 - [ ] **Vocabulary:** 25+ items in 5-column format (Слово | Вимова | Переклад | ЧМ | Примітка)
 - [ ] **Activities:** 12+ with all activity types represented
 - [ ] **Activity density:**
