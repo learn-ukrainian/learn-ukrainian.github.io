@@ -66,5 +66,5 @@ I am a system process. I speak in exit codes, log files, and pull requests. If y
 
 ---
 
-**Last Updated:** 2024-12-24
-**Model Version:** Gemini 2.0 Flash
+**Last Updated:** 2025-12-24
+**Model Version:** Gemini 3.0 Pro
