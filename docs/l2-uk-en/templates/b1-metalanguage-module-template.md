@@ -16,7 +16,7 @@
 
 | Aspect | Metalanguage (M01-05) | Grammar (M06-85) |
 |--------|----------------------|------------------|
-| **Immersion** | Flexible (no strict %) | 90-95% Ukrainian |
+| **Immersion** | Flexible (no strict %) | 90-100% Ukrainian |
 | **Goal** | Teach terminology | Teach grammar concepts |
 | **Scaffolding** | Bilingual tables, explicit translations | Minimal English (vocab only) |
 | **Pedagogy** | PPP (terminology acquisition) | TTT (concept discovery) |

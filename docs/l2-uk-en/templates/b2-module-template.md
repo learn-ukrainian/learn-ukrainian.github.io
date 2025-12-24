@@ -382,7 +382,7 @@ register: "науковий"  # Options: офіційно-діловий, нау
 | Unjumble words/sentence | 12-16 | 15-20 |
 | Cloze blanks | 14+ | 16+ |
 | Passages | 200-300 words | 300-500+ words |
-| Immersion | 90-95% | 100% |
+| Immersion | 90-100% | 100% |
 
 ---
 

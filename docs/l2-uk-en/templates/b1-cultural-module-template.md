@@ -17,7 +17,7 @@ Before submitting your cultural module, verify:
 - [ ] **Unjumble sentences:** 12-16 words each
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ (focus on real-world cultural references)
-- [ ] **Immersion:** 90-95% Ukrainian
+- [ ] **Immersion:** 90-100% Ukrainian
 - [ ] **Resources section:** Links to authentic Ukrainian materials (news, videos, websites)
 - [ ] **Cultural accuracy:** All facts verified, no stereotypes
 - [ ] **Regional balance:** Neutral presentation of all Ukrainian regions
@@ -442,7 +442,7 @@ Before running the audit script, manually verify:
 - [ ] **Unjumble sentences:** 12-16 words each (check manually)
 - [ ] **Cloze passages:** 14+ blanks (check manually)
 - [ ] **Engagement boxes:** 5+ boxes
-- [ ] **Immersion:** 90-95% Ukrainian (audit script checks)
+- [ ] **Immersion:** 90-100% Ukrainian (audit script checks)
 
 ### Activity Mix:
 - [ ] **High comprehension focus:** quiz (10+), true-false (10+), match-up (12+), cloze (14+)

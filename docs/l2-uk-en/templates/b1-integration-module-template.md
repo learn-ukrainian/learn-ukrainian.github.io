@@ -17,7 +17,7 @@ Before submitting your integration module, verify:
 - [ ] **Unjumble sentences:** 12-16 words each
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ (focus on learning strategies)
-- [ ] **Immersion:** 90-95% Ukrainian
+- [ ] **Immersion:** 90-100% Ukrainian
 - [ ] **Resources section:** Extensive links to authentic materials (news sites, podcasts, YouTube channels)
 - [ ] **Meta-level guidance:** Explicit instruction on HOW to read/listen/integrate
 - [ ] **B2 readiness check:** Explicitly prepares for next level
@@ -864,7 +864,7 @@ Before running the audit script, manually verify:
 - [ ] **Unjumble sentences:** 12-16 words each (14-18 for M85)
 - [ ] **Cloze passages:** 14+ blanks
 - [ ] **Engagement boxes:** 5+ boxes
-- [ ] **Immersion:** 90-95% Ukrainian (95-100% for M85)
+- [ ] **Immersion:** 90-100% Ukrainian (95-100% for M85)
 
 ---
 

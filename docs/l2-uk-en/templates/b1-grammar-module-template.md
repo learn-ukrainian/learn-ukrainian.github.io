@@ -23,7 +23,7 @@ Before submitting a B1 grammar module, verify:
   - Group-sort: 14+ items
   - Error-correction: 6+ items with all 4 callouts
 - [ ] **Engagement boxes:** 5+ boxes with pedagogical value
-- [ ] **Immersion:** 90-95% Ukrainian (grammar explanations in Ukrainian)
+- [ ] **Immersion:** 90-100% Ukrainian (grammar explanations in Ukrainian)
 - [ ] **Pedagogy:** Level-appropriate complexity, no violations
 - [ ] **Structure:** TTT or Presentation-Practice-Production
 
@@ -510,7 +510,7 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/b1/XX-your-module.md
 ✅ Density: All > minimums
 ✅ Vocab: 25/25
 ✅ Pedagogy: Level-appropriate
-✅ Immersion: 90-95%
+✅ Immersion: 90-100%
 ✅ AUDIT PASSED.
 ```
 

@@ -33,7 +33,7 @@ Before submitting a B1 vocabulary module, verify:
   - Fill-in (contextual usage)
 - [ ] **Reading passages:** 2-3 authentic texts using target vocabulary
 - [ ] **Engagement boxes:** 5+ boxes with real-world usage
-- [ ] **Immersion:** 90-95% Ukrainian (vocabulary taught in context)
+- [ ] **Immersion:** 90-100% Ukrainian (vocabulary taught in context)
 - [ ] **Pedagogy:** Level-appropriate complexity
 
 ---
@@ -616,7 +616,7 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/b1/XX-your-module.md
 ✅ Density: All > minimums
 ✅ Vocab: 25-30/25
 ✅ Pedagogy: Level-appropriate
-✅ Immersion: 90-95%
+✅ Immersion: 90-100%
 ✅ AUDIT PASSED.
 ```
 
