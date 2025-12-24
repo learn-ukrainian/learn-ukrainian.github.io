@@ -10,6 +10,32 @@
 
 ---
 
+## ⚠️ BEFORE WRITING: Check Reference Modules!
+
+**CRITICAL:** Before creating any new LIT module, consult the archived reference modules for research material:
+
+📂 **Location:** `curriculum/l2-uk-en/lit/reference/`
+
+**Available reference modules:**
+- `module-LIT-001.md` - Kotliarevsky biography (~54k words)
+- `module-LIT-002.md` - Eneida Part I (~52k words)
+- `module-LIT-003.md` - Eneida vocabulary analysis (~49k words)
+- `module-LIT-004.md` - Eneida military terms (~47k words)
+- `module-LIT-005.md` - Natalka Poltavka (~48k words)
+- `module-LIT-006.md` - Kvitka-Osnovianenko (~51k words)
+
+**Use these for:**
+1. ✅ **Historical facts** - Pre-researched biographical details, dates, events
+2. ✅ **Vocabulary lists** - Literary and historical terms already compiled
+3. ✅ **Essay topics** - Analytical questions and model answers
+4. ✅ **Engagement box ideas** - Interesting facts and cultural insights
+5. ✅ **Reading recommendations** - Primary sources and scholarly articles
+6. ✅ **Content inspiration** - Structure, tone, analytical depth
+
+**DO NOT copy-paste verbatim** - use as research reference and adapt to this template structure.
+
+---
+
 ## Quick Reference Checklist
 
 Before submitting a LIT module, verify:

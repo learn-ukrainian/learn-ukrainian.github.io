@@ -23,6 +23,7 @@ Fill the skeleton with rich instructional content.
 
 **LIT Track (Post-C1):**
 - **LIT-001 to LIT-030:** `docs/l2-uk-en/templates/lit-module-template.md`
+  - **⚠️ IMPORTANT:** For LIT modules, ALSO check archived reference modules in `curriculum/l2-uk-en/lit/reference/` for research material, vocabulary, and content inspiration before writing!
 
 **Why templates matter:**
 - They define EXACT structure and required sections
