@@ -2655,7 +2655,7 @@ Before generating any B1 module:
 
 ## Transition to B2
 
-With ~3,430 words after B1, learners are prepared for B2 which focuses on:
+With ~3,300 words after B1, learners are prepared for B2 which focuses on:
 - Advanced literary and academic texts
 - Historical and political discourse
 - Professional communication

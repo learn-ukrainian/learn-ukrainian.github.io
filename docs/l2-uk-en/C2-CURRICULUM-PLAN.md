@@ -1154,10 +1154,10 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 
 | Phase | Modules | Count | Type |
 |-------|---------|-------|------|
-| C2.1 | 01-25 | 30 | Stylistic Perfection |
+| C2.1 | 01-25 | 25 | Stylistic Perfection |
 | C2.2 | 26-45 | 20 | Literary Mastery |
-| C2.3 | 46-75 | 35 | Professional Specialization |
-| C2.4 | 76-100 | 30 | Meta-Skills & Capstone |
+| C2.3 | 46-75 | 30 | Professional Specialization |
+| C2.4 | 76-100 | 25 | Meta-Skills & Capstone |
 | **TOTAL** | **01-100** | **100** | |
 
 ### Vocabulary Summary

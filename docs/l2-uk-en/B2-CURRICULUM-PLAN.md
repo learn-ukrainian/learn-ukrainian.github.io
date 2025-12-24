@@ -208,7 +208,7 @@ Before starting B2, learners have completed:
 > Can understand the main ideas of complex text on both concrete and abstract topics, including technical discussions in their field of specialisation. Can interact with a degree of fluency and spontaneity that makes regular interaction with native speakers quite possible without strain for either party. Can produce clear, detailed text on a wide range of subjects and explain a viewpoint on a topical issue giving the advantages and disadvantages of various options.
 
 ### Learning Outcomes
-By module 125, learners can:
+By module 110, learners can:
 
 **Understanding (Listening/Reading)**
 - [ ] Understand extended speech and lectures, follow complex arguments
@@ -2432,9 +2432,21 @@ Participles agree with noun in gender, number, case:
 | 110 | **B2 FINAL EXAM** | Exam | Certification |
 
 ### Vocabulary Plan B2.4 (~360 words)
-- Domain: діагноз, алгоритм, гіпотеза, метафора, свідомість
-- Culture: ментальність, діаспора, православ'я, греко-католицизм
-- Academic: тема, теза, аргумент, висновок, джерело, цитата
+
+**Domain Vocabulary (M96-100):**
+- Medicine: діагноз, симптом, рецепт, обстеження, лікування, терапія
+- Technology: алгоритм, програма, дані, штучний інтелект, мережа
+- Science: гіпотеза, теорія, експеримент, дослідження, результати
+- Arts: жанр, метафора, стиль, образ, критика
+- Psychology: свідомість, підсвідомість, мотивація, поведінка
+
+**State Standard Thematic Vocabulary (embedded across B2):**
+- **Спорт (Sport):** чемпіонат, змагання, перемога, поразка, рекорд, тренер, спортсмен, олімпіада, футбол, бокс, гімнастика, плавання *(B1.7 expansion + B2 idioms)*
+- **Економіка (Economy):** бюджет, інфляція, ВВП, податок, дохід, видатки, борг, інвестиція, ринок, біржа, курс валют, криза *(integrated in B2.3 history + B2.4 domain)*
+- **Здоров'я (Health):** діагноз, симптом, лікування, профілактика, вакцинація, реабілітація, медичне страхування *(M96 + lexical expansion)*
+
+**Culture (M101-103):** ментальність, діаспора, православ'я, греко-католицизм, кордоцентризм
+**Academic (M104-105):** тема, теза, аргумент, висновок, джерело, цитата, аналіз
 
 ---
 
@@ -2493,7 +2505,7 @@ These modules explicitly address Russian historical narratives:
 4. Production: Rewrite in different register
 5. Quiz: Phraseology meaning
 
-### H-Modules (History/Biography: M71-119)
+### H-Modules (History: M71-95)
 1. Quiz: Fact checking (reading comprehension)
 2. Match-up: Event to date/person
 3. Production: Summarize historical event
