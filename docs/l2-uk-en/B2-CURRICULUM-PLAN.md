@@ -2594,25 +2594,23 @@ Before generating any B2 module:
 
 | Phase | Modules | Status |
 |-------|---------|--------|
-| B2.1 | 01-40 | 📝 Planned |
+| B2.1a | 01-30 | 📝 Planned |
+| B2.1b | 31-40 | 📝 Planned |
 | B2.2 | 41-70 | 📝 Planned |
 | B2.3 | 71-95 | 📝 Planned |
-| B2.4 | 96-120 | 📝 Planned |
-| B2.5 | 121-135 | 📝 Planned |
+| B2.4 | 96-110 | 📝 Planned |
 
 ---
 
 ## Notes
 
-1. **125 modules** provides comprehensive B2 coverage focused on grammar, phraseology, history, and biographies.
+1. **110 modules** provides comprehensive B2 coverage focused on grammar, phraseology, and Ukrainian history.
 
-2. **Biographies** include 13 women and 11 men, emphasizing often-overlooked female figures.
+2. **Biographies and Folk Culture** moved to C1 (2025-12 rebalancing) for better pedagogical fit and curriculum balance.
 
-3. **Folk Culture** moved to C1 for vocabulary balance—allows deeper engagement with advanced language skills.
+3. **Decolonization** is embedded throughout, not as political content but as accurate historical interpretation.
 
-4. **Decolonization** is embedded throughout, not as political content but as accurate historical interpretation.
-
-5. **Module numbering** uses level-relative format (01-125) per Ukrainian State Standard 2024.
+4. **Module numbering** uses level-relative format (01-110) per Ukrainian State Standard 2024.
 
 ---
 
@@ -2627,7 +2625,7 @@ Before generating any B2 module:
 
 ## Changelog
 
+- **2025-12-23:** Rebalanced: reduced to 110 modules (Biographies and Folk Culture moved to C1)
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables
 - **2025-12-05:** Moved Folk Culture (25 modules) to C1 for vocabulary balance
 - **2025-12-05:** Restored from commit b4d3d6e^ and upgraded with detailed module specifications
-- **Previous:** Reduced to 80 modules (lost Folk Culture, Biographies, detailed history)

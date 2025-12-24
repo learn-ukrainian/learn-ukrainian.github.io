@@ -1296,28 +1296,30 @@ Before generating any C2 module:
 
 | Phase | Modules | Status |
 |-------|---------|--------|
-| C2.1 | 01-20 | 📝 Detailed specs (partial) |
-| C2.2 | 21-40 | 📝 Summary specs |
-| C2.3 | 41-60 | 📝 Summary specs |
-| C2.4 | 61-80 | 📝 Summary specs |
+| C2.1 | 01-25 | 📝 Stylistic Perfection |
+| C2.2 | 26-45 | 📝 Literary Mastery |
+| C2.3 | 46-75 | 📝 Professional Specialization |
+| C2.4 | 76-100 | 📝 Meta-Skills & Capstone |
 
 ---
 
 ## Notes
 
-1. **80 modules** provides comprehensive C2 coverage aligned with CEFR and Ukrainian State Standard 2024.
+1. **100 modules** provides comprehensive C2 coverage aligned with CEFR and Ukrainian State Standard 2024.
 
-2. **Level-relative numbering** (01-80) consistent with other levels.
+2. **Level-relative numbering** (01-100) consistent with other levels.
 
-3. **Professional specialization tracks** (C2.3) allow learners to focus on their field.
+3. **Professional specialization** (C2.3) includes Legal and Medical tracks.
 
-4. **Capstone project** (modules 67-72) is a major undertaking demonstrating mastery.
+4. **Meta-skills** (C2.4) includes Teaching Ukrainian and Translation/Interpretation.
 
-5. **Literary mastery** (C2.2) includes both analysis and creation.
+5. **Capstone project** (modules 89-94) is a major undertaking demonstrating mastery.
 
-6. **98% immersion** — minimal English, native-like experience.
+6. **Literary mastery** (C2.2) includes both analysis and creation.
 
-7. **Vocabulary target** of ~11,000 cumulative words matches educated native speakers' active vocabulary for general topics.
+7. **100% immersion** — native-like experience throughout.
+
+8. **Vocabulary target** of ~12,280 cumulative words matches educated native speakers' active vocabulary.
 
 ---
 
@@ -1333,5 +1335,6 @@ Before generating any C2 module:
 
 ## Changelog
 
-- **2025-12-05:** Updated C2.3 to "Preparation for Specialization" — teaches meta-skills for any professional domain per State Standard requirement; specialization tracks moved to optional extensions
+- **2025-12-23:** Rebalanced: expanded to 100 modules (added Legal/Medical tracks, Teaching, Translation modules)
+- **2025-12-05:** Updated C2.3 to "Preparation for Specialization" — teaches meta-skills for any professional domain
 - **2025-12-05:** Initial creation with full State Standard alignment

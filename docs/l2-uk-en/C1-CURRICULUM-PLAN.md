@@ -2722,28 +2722,28 @@ Before generating any C1 module:
 |-------|---------|--------|
 | C1.1 | 01-20 | ✅ Detailed specs complete |
 | C1.2 | 21-35 | ✅ Detailed specs complete |
-| C1.3 | 36-55 | ✅ Detailed specs complete |
-| C1.4 | 56-80 | ✅ Detailed specs complete |
-| C1.5 | 81-95 | ✅ Detailed specs complete |
-| C1.6 | 96-115 | ✅ Detailed specs complete (incl. capstone rubrics)
+| C1.3 | 36-100 | ✅ Biographies (65 modules) |
+| C1.4 | 101-120 | ✅ Advanced Stylistics |
+| C1.5 | 121-145 | ✅ Folk Culture & Arts |
+| C1.6 | 146-160 | ✅ Literature (incl. capstone) |
 
 ---
 
 ## Notes
 
-1. **115 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
+1. **160 modules** provides comprehensive C1 coverage aligned with CEFR and Ukrainian State Standard 2024.
 
-2. **Level-relative numbering** (01-115) replaces old global numbering (311-400).
+2. **Level-relative numbering** (01-160) replaces old global numbering.
 
-3. **Folk Culture & Arts** (C1.4) moved from B2 to balance vocabulary distribution across levels.
+3. **Biographies** (C1.3, 65 modules) moved from B2 as part of 2025-12 rebalancing.
 
-4. **Literature** sections (C1.5-C1.6) cover major Ukrainian authors from 18th century to present, including war literature.
+4. **Folk Culture & Arts** (C1.5, 25 modules) moved from B2 for vocabulary balance.
 
-5. **Sociolinguistic awareness** (dialects, Surzhyk, language policy) is essential C1 content.
+5. **Literature** sections (C1.6) cover major Ukrainian authors from 18th century to present.
 
-6. **Capstone project** (modules 111-115) requires substantial research paper and oral defense.
+6. **Sociolinguistic awareness** (dialects, Surzhyk, language policy) is essential C1 content.
 
-7. **Specialization tracks** (Law, IT, Medicine) remain separate from core C1.
+7. **Capstone project** (modules 156-160) requires substantial research paper and oral defense.
 
 ---
 
@@ -2759,7 +2759,7 @@ Before generating any C1 module:
 
 ## Changelog
 
+- **2025-12-23:** Rebalanced: expanded to 160 modules (Biographies from B2 added as C1.3, renumbered all subsequent phases)
 - **2025-12-05:** Expanded State Standard alignment with full grammar tables
-- **2025-12-05:** Restructured: added C1.4 Folk Culture (25 modules from B2), renumbered C1.5-C1.6, now 115 modules total
+- **2025-12-05:** Restructured: added C1.4 Folk Culture (25 modules from B2)
 - **2025-12-05:** Upgraded with detailed module specifications
-- **Previous:** Basic structure only (90 modules, old numbering)
