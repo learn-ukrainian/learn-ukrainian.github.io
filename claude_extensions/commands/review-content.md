@@ -39,6 +39,31 @@ Parse arguments: $ARGUMENTS
 
 ### Evaluate Quality
 
+**Step 0: Template Compliance Check**
+
+Before scoring, verify the module follows the appropriate template:
+
+**Template Selection by Level and Type:**
+- **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
+- **B1 M06-50 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- **B1 M51-70 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- **B1 M71-80 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+- **B1 M81-85 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
+- **B1 Checkpoints (M10, M20, M35, M45, M55, M65, M75, M80):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- **B2:** `docs/l2-uk-en/templates/b2-module-template.md`
+- **C1:** `docs/l2-uk-en/templates/c1-module-template.md`
+- **C2:** `docs/l2-uk-en/templates/c2-module-template.md`
+- **LIT:** `docs/l2-uk-en/templates/lit-module-template.md`
+
+**Verify:**
+- [ ] Module structure matches template sections
+- [ ] Word count meets template minimum (core prose only, excludes vocabulary/activities/tables)
+- [ ] Activity count and types match template requirements
+- [ ] Vocabulary count meets template specification
+- [ ] Pedagogy (PPP/TTT/TBL/CBI) matches template
+
+**If template compliance fails, flag as ❌ REWRITE regardless of other scores.**
+
 Score each criterion 1-5:
 
 **1. Coherence**
@@ -152,6 +177,7 @@ For each module, output:
 ```
 ## Module {num}: {title}
 
+**Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
 **Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | **Overall {X}/5**
 **Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
 
@@ -220,8 +246,10 @@ After reviewing all modules in scope:
 ## Detailed Module: {module_number} - {title}
 
 **Overall Score:** {X}/5 {stars}
+**Template:** {template_name} | **Compliance:** ✅ PASS / ❌ FAIL
 
 ### Scores Breakdown
+- Template Compliance: ✅ PASS / ❌ FAIL {reason}
 - Coherence: {X}/5 {reason}
 - Relevance: {X}/5 {reason}
 - Educational: {X}/5 {reason}
@@ -365,6 +393,7 @@ Reviewing A1...
 ## Red Flags (Auto-fail)
 
 These trigger automatic REWRITE recommendation:
+- ❌ **Template compliance failure:** Module doesn't follow appropriate template structure
 - ❌ Word salad detected
 - ❌ Overall score < 2/5
 - ❌ Teaching wrong grammar for level

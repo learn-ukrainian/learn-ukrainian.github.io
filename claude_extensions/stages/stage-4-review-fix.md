@@ -40,35 +40,52 @@ Review the module, fix violations, repeat until PASS.
 
 ## Review Checklist
 
-### 1. Structural Audit
+### 1. Template Compliance
+- [ ] **Read the appropriate template** for this module type:
+  - **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
+  - **B1 M06-50 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+  - **B1 M51-70 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+  - **B1 M71-80 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+  - **B1 M81-85 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
+  - **B1 Checkpoints (M10, M20, M35, M45, M55, M65, M75, M80):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+  - **B2:** `docs/l2-uk-en/templates/b2-module-template.md`
+  - **C1:** `docs/l2-uk-en/templates/c1-module-template.md`
+  - **C2:** `docs/l2-uk-en/templates/c2-module-template.md`
+  - **LIT:** `docs/l2-uk-en/templates/lit-module-template.md`
+- [ ] Module structure matches template sections
+- [ ] Word count meets template minimum
+- [ ] Activity count and types match template requirements
+- [ ] Vocabulary count meets template specification
+
+### 2. Structural Audit
 - [ ] Frontmatter complete (module, title, pedagogy, objectives)
 - [ ] All required sections present
 - [ ] Vocabulary table at end
 
-### 2. Grammar Constraints
+### 3. Grammar Constraints
 - [ ] Only uses grammar allowed at this level
 - [ ] See `{LEVEL}-CURRICULUM-PLAN.md` Каталог В
 
-### 3. Vocabulary Constraints
+### 4. Vocabulary Constraints
 - [ ] Vocabulary table present with required columns
 - [ ] IPA present for all vocabulary (A1-B1)
 - [ ] Uses vocabulary from curriculum plan
 - **Note:** Cross-module vocab validation deferred to `npm run vocab:rebuild`
 
-### 4. Activity Constraints
+### 5. Activity Constraints
 - [ ] Count meets minimum (8-16+ by level)
 - [ ] Items per activity meets minimum (12-18+ by level)
 - [ ] Type variety (4-5+ types)
 - [ ] Correct syntax (fill-in `___`, unjumble ` / `, etc.)
 - [ ] All answers correct
 
-### 5. Richness Constraints
+### 6. Richness Constraints
 - [ ] Word count meets target
 - [ ] Example sentences meet minimum
 - [ ] Engagement boxes meet minimum
 - [ ] Mini-dialogues present
 
-### 6. Linguistic Purity
+### 7. Linguistic Purity
 - [ ] No Surzhyk or "Ghost Words" (Verify spelling is Ukrainian, not Russian). See LINGUISTIC-PURITY-GUIDE.md
 - [ ] No AI contamination ("wait", "actually", "let me")
 - [ ] Correct Ukrainian spelling and grammar
