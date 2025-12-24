@@ -1014,7 +1014,7 @@ This approach:
 
 ### Module Content Highlights
 
-#### Module 42: Terminology Acquisition I
+#### Module 47: Terminology Acquisition I
 **Skills:**
 - Identifying word formation patterns (prefixes, suffixes, roots)
 - Using context to infer meaning
@@ -1023,7 +1023,7 @@ This approach:
 
 **Practice Domain:** General science/technology (accessible to all learners)
 
-#### Module 44: Reading Professional Texts I
+#### Module 49: Reading Professional Texts I
 **Skills:**
 - Skimming for structure
 - Scanning for specific information
@@ -1032,7 +1032,7 @@ This approach:
 
 **Text Types:** Research abstracts, technical manuals, professional articles
 
-#### Module 47: Writing Professional Documents I
+#### Module 52: Writing Professional Documents I
 **Document Types:**
 - Реферат (Abstract/Summary)
 - Доповідь (Report)
@@ -1041,7 +1041,7 @@ This approach:
 
 **Focus:** Structure, register, conventions that apply across domains
 
-#### Module 49: Professional Oral Communication
+#### Module 54: Professional Oral Communication
 **Skills:**
 - Delivering presentations (PowerPoint culture in Ukrainian)
 - Participating in meetings (turn-taking, interrupting politely)
