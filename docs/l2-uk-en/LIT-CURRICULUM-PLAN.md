@@ -6,6 +6,19 @@
 **Prerequisite:** C1 Core (Strict)
 **Immersion:** 100% Ukrainian (No English)
 
+---
+
+## 🔄 Restructure Note (2024-12-24)
+
+All LIT modules are being recreated from scratch using the standardized template (`docs/l2-uk-en/templates/lit-module-template.md`).
+
+- **Original modules (LIT-001 to LIT-006):** Archived in `curriculum/l2-uk-en/lit/reference/` for research reference
+- **Template created:** Comprehensive 617-line template ensuring structural consistency
+- **New modules:** Will follow exact template structure for all 30 modules
+- **Benefit:** 100% template compliance, uniform quality, easier maintenance
+
+---
+
 ## Track Overview
 
 This track is designed for **Advanced (C1)** learners who want to move from being a "reader" to a "scholar". It focuses on the "Golden Age" of Ukrainian literature (19th century) and the evolution of the modern standard language.
