@@ -32,6 +32,8 @@ from .activities import (
     check_activity_ukrainian_content,
     check_resources_placement,
     check_resources_required,
+    check_unjumble_word_match,
+    check_activity_header_format,
     count_items,
 )
 from .pedagogy import (
@@ -87,6 +89,8 @@ __all__ = [
     'check_activity_ukrainian_content',
     'check_resources_placement',
     'check_resources_required',
+    'check_unjumble_word_match',
+    'check_activity_header_format',
     'count_items',
     # Pedagogy
     'run_pedagogical_checks',

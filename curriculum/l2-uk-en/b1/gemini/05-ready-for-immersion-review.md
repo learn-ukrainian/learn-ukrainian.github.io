@@ -14,7 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 82.4% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 83.1% (B1.1 Aspect)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (24 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -36,8 +42,8 @@
 | **quiz: Комплексний тест — Інструкції вправ** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Комплексний тест — Аналітичні терміни** | 🎮 | 8 | Activity (8 items, min 8) |
 | **quiz: Комплексний тест — Стиль і регістр** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Комплексний огляд — Частини мови** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Комплексний огляд — Відмінки і речення** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Комплексний огляд — Частини мови** | 🎮 | 11 | Activity (11 items, min 8) |
+| **match-up: Комплексний огляд — Відмінки і речення** | 🎮 | 11 | Activity (11 items, min 8) |
 | **fill-in: Комплексний тест** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Нові терміни з М02 і М03** | 🎮 | 12 | Activity (12 items, min 8) |
 | **fill-in: Граматичні категорії** | 🎮 | 14 | Activity (14 items, min 8) |

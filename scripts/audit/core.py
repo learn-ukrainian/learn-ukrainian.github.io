@@ -39,7 +39,9 @@ from .checks import (
     check_activity_ukrainian_content,
     check_resources_placement,
     check_resources_required,
+    check_unjumble_word_match,
     check_content_quality,
+    check_activity_header_format,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -771,6 +773,26 @@ def audit_module(file_path: str) -> bool:
         pedagogical_violations.append({
             'type': v['type'],
             'severity': 'warning',
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 4. Check if unjumble activities have matching words (jumbled words = answer words)
+    unjumble_violations = check_unjumble_word_match(content)
+    for v in unjumble_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'error',  # Blocking - unsolvable activities are critical
+            'issue': v['issue'],
+            'fix': v['fix']
+        })
+
+    # 5. Check activity header format (must use "## type: Title" format for MDX generation)
+    header_violations = check_activity_header_format(content)
+    for v in header_violations:
+        pedagogical_violations.append({
+            'type': v['type'],
+            'severity': 'error',  # Blocking - activities will be silently skipped
             'issue': v['issue'],
             'fix': v['fix']
         })

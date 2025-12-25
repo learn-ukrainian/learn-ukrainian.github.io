@@ -6,7 +6,7 @@ Validates activity sequencing, structure, variety, and level restrictions.
 
 import re
 from collections import Counter
-from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY
+from ..config import STAGE_ORDER, ACTIVITY_RESTRICTIONS, ACTIVITY_COMPLEXITY, VALID_ACTIVITY_TYPES
 
 def check_activity_complexity(content: str, level_code: str, module_num: int = 1) -> list[dict]:
     """
@@ -51,14 +51,49 @@ def check_activity_complexity(content: str, level_code: str, module_num: int = 1
             elif act_type == 'fill-in':
                 rules['min_items'] = 6
 
-        # Apply B1 Bridge Relaxations (M01-M05 teach terminology, not complex grammar)
+        # Apply B1 Bridge Relaxations (M01-M05 use A2 complexity exactly)
+        # True bridge: A2 difficulty for content, B1 topics (grammar terminology)
         if is_b1_bridge:
             if act_type == 'quiz':
-                rules['min_len'] = 6  # Shorter prompts for terminology questions
+                rules['min_len'] = 8
                 rules['max_len'] = 15
             elif act_type == 'unjumble':
-                rules['words_min'] = 8  # Shorter sentences acceptable
-                rules['words_max'] = 14
+                rules['words_min'] = 8
+                rules['words_max'] = 10  # A2 exact
+            elif act_type == 'match-up':
+                rules['pairs_min'] = 10
+                rules['pairs_max'] = 12  # A2 exact
+            elif act_type == 'fill-in':
+                rules['sent_min'] = 6
+                rules['sent_max'] = 8   # A2 exact
+            elif act_type == 'true-false':
+                rules['min_len'] = 6
+                rules['max_len'] = 12   # A2 exact
+            elif act_type == 'group-sort':
+                rules['groups_min'] = 2
+                rules['groups_max'] = 4
+                rules['items_min'] = 10  # A2 exact
+            elif act_type == 'error-correction':
+                rules['errors'] = 1      # A2: 1 error per sentence
+                rules['min_len'] = 6
+                rules['max_len'] = 10   # A2 exact
+            elif act_type == 'cloze':
+                rules['sentences'] = [3, 4, 5]
+                rules['blanks'] = [3, 4]  # A2 exact
+            elif act_type == 'mark-the-words':
+                rules['min_len'] = 8
+                rules['max_len'] = 12
+                rules['marks'] = [2, 3, 4]  # A2 exact
+            elif act_type == 'dialogue-reorder':
+                rules['lines'] = [4, 5, 6]  # A2 exact
+            elif act_type == 'select':
+                rules['min_len'] = 6
+                rules['max_len'] = 10
+                rules['options'] = [4, 5]
+                rules['correct'] = [2, 3]  # A2 exact
+            elif act_type == 'translate':
+                rules['min_len'] = 4
+                rules['max_len'] = 8   # A2 exact
         
         # --- Check Item Count ---
         
@@ -441,10 +476,17 @@ def check_activity_level_restrictions(content: str, level_code: str, module_num:
 
 
 def check_activity_focus_alignment(content: str, level_code: str, module_num: int, frontmatter_str: str) -> list[dict]:
-    """Check if activities align with grammar vs vocabulary focus (B1/B2)."""
+    """Check if activities align with grammar vs vocabulary focus (B1/B2).
+    
+    Checkpoints are exempt - they use quiz-heavy activity mix for comprehensive testing.
+    """
     violations = []
 
     if level_code not in ['B1', 'B2']:
+        return violations
+    
+    # Skip checkpoint modules - they legitimately use more quiz activities for assessment
+    if 'checkpoint' in frontmatter_str.lower() or 'контрольна точка' in frontmatter_str.lower():
         return violations
 
     # Determine focus
@@ -582,6 +624,72 @@ def check_anagram_min_letters(content: str) -> list[dict]:
     return violations
 
 
+def check_unjumble_word_match(content: str) -> list[dict]:
+    """
+    Check if unjumble jumbled words match answer words exactly.
+
+    An unjumble activity is only solvable if the jumbled words are exactly
+    the same words as in the answer (just reordered). This check catches:
+    - Words in answer that aren't in the jumbled set
+    - Words in jumbled set that aren't in the answer
+    - Word count mismatches (e.g., "поняття" appearing twice in answer but once in jumbled)
+
+    Punctuation (—, commas, periods, colons) is ignored since it's not part of the puzzle.
+    """
+    violations = []
+
+    # Find all unjumble activities
+    unjumble_pattern = r'##\s*unjumble:\s*([^\n]+)\n(.*?)(?=\n##\s|\n#\s|\Z)'
+    unjumbles = re.findall(unjumble_pattern, content, re.DOTALL | re.IGNORECASE)
+
+    for title, body in unjumbles:
+        # Find numbered items with their answers
+        # Pattern: "1. word / word / word" followed by "> [!answer] Answer sentence"
+        item_pattern = r'(\d+)\.\s*([^\n>]+)\n\s*>\s*\[!answer\]\s*([^\n]+)'
+        items = re.findall(item_pattern, body)
+
+        for item_num, jumbled_text, answer_text in items:
+            # Extract jumbled words (split by /)
+            jumbled_words = [w.strip().lower() for w in jumbled_text.split('/') if w.strip()]
+
+            # Extract answer words (split by whitespace, remove punctuation)
+            # Keep apostrophes for words like "зв'язок", "пов'язаний"
+            answer_clean = re.sub(r'[—\-,.:;!?()«»"]', ' ', answer_text)
+            answer_words = [w.strip().lower() for w in answer_clean.split() if w.strip()]
+
+            # Also clean jumbled words of any stray punctuation (but keep apostrophes)
+            jumbled_words = [re.sub(r'[—\-,.:;!?()«»"]', '', w) for w in jumbled_words]
+            jumbled_words = [w for w in jumbled_words if w]  # Remove empty strings
+
+            # Compare as multisets
+            jumbled_counter = Counter(jumbled_words)
+            answer_counter = Counter(answer_words)
+
+            # Find mismatches
+            missing_from_jumbled = answer_counter - jumbled_counter  # Words in answer but not enough in jumbled
+            extra_in_jumbled = jumbled_counter - answer_counter      # Words in jumbled but not enough in answer
+
+            if missing_from_jumbled:
+                missing_list = [f"{word}(×{count})" if count > 1 else word
+                               for word, count in missing_from_jumbled.items()]
+                violations.append({
+                    'type': 'UNJUMBLE_WORD_MISMATCH',
+                    'issue': f"Unjumble '{title.strip()}' item {item_num}: answer has words not in jumbled set: {', '.join(missing_list)}",
+                    'fix': "Add missing words to the jumbled set, or fix the answer. Jumbled words must exactly match answer words."
+                })
+
+            if extra_in_jumbled:
+                extra_list = [f"{word}(×{count})" if count > 1 else word
+                             for word, count in extra_in_jumbled.items()]
+                violations.append({
+                    'type': 'UNJUMBLE_WORD_MISMATCH',
+                    'issue': f"Unjumble '{title.strip()}' item {item_num}: jumbled set has extra words not in answer: {', '.join(extra_list)}",
+                    'fix': "Remove extra words from jumbled set, or fix the answer. Jumbled words must exactly match answer words."
+                })
+
+    return violations
+
+
 def check_activity_ukrainian_content(content: str, level_code: str = 'A1', module_num: int = 1) -> list[dict]:
     """
     Check if activities contain Ukrainian content (not just English).
@@ -612,8 +720,14 @@ def check_activity_ukrainian_content(content: str, level_code: str = 'A1', modul
         min_cyrillic_ratio = 0.20  # Higher levels need more Ukrainian
     
     for act_type, title, body in activities:
+        act_type_lower = act_type.lower()
+
+        # Skip non-activity sections (content sections with colon in title)
+        if act_type_lower not in VALID_ACTIVITY_TYPES:
+            continue
+
         # Skip anagram activities (they're supposed to be letters only)
-        if act_type.lower() == 'anagram':
+        if act_type_lower == 'anagram':
             continue
             
         # Count Cyrillic vs total characters (excluding markdown/punctuation)
@@ -698,11 +812,11 @@ def check_resources_placement(content: str) -> list[dict]:
 def check_resources_required(content: str) -> list[dict]:
     """
     Check if [!resources] callout exists in the module.
-    
+
     All modules should have external resources for further learning.
     """
     violations = []
-    
+
     # Check if any [!resources] callout exists
     if not re.search(r'>\s*\[!resources\]', content, re.IGNORECASE):
         violations.append({
@@ -710,6 +824,48 @@ def check_resources_required(content: str) -> list[dict]:
             'issue': "Module is missing [!resources] callout with external learning resources",
             'fix': "Add a [!resources] section with links to Ukrainian Lessons, YouTube videos, or other quality Ukrainian learning resources."
         })
-    
+
+    return violations
+
+
+def check_activity_header_format(content: str) -> list[dict]:
+    """
+    Check if activity headers use the required format: ## activity-type: Title
+
+    The MDX generator requires the colon+title format. Headers like "## quiz"
+    (without colon) will be silently ignored during generation, causing missing
+    activities in the output.
+
+    Correct: ## quiz: Визначення виду
+    Wrong:   ## quiz
+    """
+    violations = []
+
+    # Find all potential activity headers (with or without colon)
+    # Pattern: ## followed by known activity type, optionally followed by colon
+    activity_types_pattern = '|'.join(VALID_ACTIVITY_TYPES)
+
+    # Find headers WITHOUT colon (malformed)
+    malformed_pattern = rf'^##\s*({activity_types_pattern})\s*$'
+    malformed_matches = re.findall(malformed_pattern, content, re.MULTILINE | re.IGNORECASE)
+
+    for act_type in malformed_matches:
+        violations.append({
+            'type': 'MALFORMED_ACTIVITY_HEADER',
+            'issue': f"Activity header '## {act_type}' missing required ': Title' suffix",
+            'fix': f"Change to '## {act_type}: Descriptive Title' format. Without the colon and title, the MDX generator will skip this activity entirely."
+        })
+
+    # Also check for headers with colon but no title
+    empty_title_pattern = rf'^##\s*({activity_types_pattern}):\s*$'
+    empty_title_matches = re.findall(empty_title_pattern, content, re.MULTILINE | re.IGNORECASE)
+
+    for act_type in empty_title_matches:
+        violations.append({
+            'type': 'MALFORMED_ACTIVITY_HEADER',
+            'issue': f"Activity header '## {act_type}:' has empty title",
+            'fix': f"Add a descriptive Ukrainian title after the colon: '## {act_type}: Назва вправи'"
+        })
+
     return violations
 

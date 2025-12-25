@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 73.6% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 73.9% (B1.1 Aspect)
 
 ## MDX VALIDATION
 ✅ No issues found
@@ -36,8 +36,8 @@
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Члени речення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Види речень** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up: Члени речення** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Синтаксис і пунктуація** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Члени речення** | 🎮 | 11 | Activity (11 items, min 8) |
+| **match-up: Синтаксис і пунктуація** | 🎮 | 11 | Activity (11 items, min 8) |
 | **fill-in: Члени речення** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Види речень** | 🎮 | 14 | Activity (14 items, min 8) |
 | **true-false: Синтаксична термінологія** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -14,7 +14,7 @@ Create a complete module through all 4 stages.
 
 ## 🚀 Fast Path (Gemini / Limited Context)
 **Action:** Run the full pipeline in one sequence.
-1. **Analyze:** Read `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` (grep module) & **appropriate template** from `docs/l2-uk-en/templates/`.
+1. **Analyze:** Read `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` (grep module), `docs/MARKDOWN-FORMAT.md`, & **appropriate template** from `docs/l2-uk-en/templates/`.
 2. **Draft:** Create module file with full content **following template structure**.
 3. **Audit:** `python3 scripts/audit_module.py ...`
 4. **Fix:** Loop until PASS.
@@ -39,7 +39,8 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 1. Read curriculum plan
 2. **Read appropriate template** (see template selection in `/module-stage-1`)
 3. Extract module section (title, vocabulary, grammar scope)
-4. Create file with frontmatter + headers + vocabulary table **following template structure**
+4. Read `docs/MARKDOWN-FORMAT.md` for strict syntax requirements
+5. Create file with frontmatter + headers + vocabulary table **following template structure**
 
 **Stage 2: Content**
 1. Load skeleton from Stage 1

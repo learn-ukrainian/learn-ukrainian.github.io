@@ -260,6 +260,8 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ## Phase C2.1: Stylistic Perfection (Modules 01-25)
 
+> **Checkpoints:** M20 (7 Styles) tests M01-19; M25 (Complete Mastery) tests M21-24. See `c2-checkpoint-module-template.md`.
+
 ### Learning Goals
 - Master all 7 Ukrainian functional styles
 - Control stylistic transformation
@@ -268,7 +270,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Develop individual writing voice
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Native Immersion (98-100%):** Stylistic analysis must be conducted directly in Ukrainian. English is restricted to specific metalinguistic contrasts (e.g., comparing "subject" vs. "підмет").
+- **Full Immersion (100%):** Stylistic analysis must be conducted directly in Ukrainian. English only in vocabulary translations.
 
 ### Grammar Progression
 
@@ -882,7 +884,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 2. Style Transformation (M10-11) - fluent register shifting
 3. Stylistic Analysis (M12-13) - lexical & syntactic
 4. Individual Voice (M14-15) - distinctive personal style
-5. Advanced Devices (M26-24) - figurative language, rhythm, intertextuality, blending
+5. Advanced Devices (M21-24) - figurative language, rhythm, intertextuality, blending
 
 **Comprehensive Assessment:**
 - Written Portfolio: 7 texts in 7 different styles
@@ -901,7 +903,9 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ---
 
-## Phase C2.2: Literary Mastery (Modules 26-45)
+## Phase C2.2: Literary Mastery (Modules 26-40)
+
+> **Checkpoint:** M40 tests M26-39 skill groups. See `c2-checkpoint-module-template.md`.
 
 ### Learning Goals
 - Master literary analysis at scholar level
@@ -911,7 +915,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Write publishable literary essays
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Native Immersion (98-100%):** Literary analysis must use Ukrainian critical terminology. No English summaries, translations, or explanations of texts are permitted.
+- **Full Immersion (100%):** Literary analysis must use Ukrainian critical terminology. English only in vocabulary translations.
 
 ### Grammar Progression
 
@@ -936,7 +940,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 | 47 | C2.2 Practice I | M26-36 | Literary portfolio |
 | 48 | C2.2 Practice II | M26-36 | Creative portfolio |
 | 49 | C2.2 Review | M26-38 | Consolidation |
-| 50 | C2.2 Checkpoint | M26-39 | Assessment |
+| 50 | C2.2 Checkpoint | M26-M49 | Assessment |
 
 ### Vocabulary Plan C2.2 (~500 words)
 - Literary theory: наратологія, фокалізація, інтертекстуальність, деконструкція
@@ -947,7 +951,9 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 
 ---
 
-## Phase C2.3: Professional Specialization (Modules 46-75)
+## Phase C2.3: Professional Specialization (Modules 41-75)
+
+> **Checkpoints:** M55 (Midpoint) tests M41-54; M75 (Complete) tests M56-74. See `c2-checkpoint-module-template.md`.
 
 > **Ukrainian State Standard 2024 Compliance:** The standard requires C2 learners to handle "лекції і презентації на загальні чи професійні теми" (lectures and presentations on general or professional topics), "неадаптовані тексти зі сфери особистих і професійних зацікавлень" (unadapted texts from personal and professional interests), and produce "реферат, доповідь, повідомлення на теми зі сфери професійних чи особистих зацікавлень" (abstracts, reports, messages on professional topics). The standard does NOT prescribe specific professional domains — learners must be able to handle ANY professional field.
 
@@ -959,7 +965,7 @@ The C2 curriculum represents **mastery** — operating at native-speaker level w
 - Prepare foundation for optional specialization tracks (added separately)
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Professional Immersion (98-100%):** Professional scenarios must be fully immersive. English is allowed only for translating specific professional terminology where no direct equivalent exists (contrastive analysis).
+- **Full Immersion (100%):** Professional scenarios must be fully immersive. English only in vocabulary translations.
 
 ### Rationale
 
@@ -1085,6 +1091,8 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 
 ## Phase C2.4: Meta-Skills & Capstone (Modules 76-100)
 
+> **Checkpoint:** M100 (Final Certification) tests M76-99 + all C2 skills. See `c2-checkpoint-module-template.md`.
+
 ### Learning Goals
 - Demonstrate complete mastery
 - Complete capstone project
@@ -1093,7 +1101,7 @@ These tracks will be separate documents (e.g., `C2-TRACK-LEGAL.md`) with ~20-30 
 - Plan continued growth
 
 **PEDAGOGICAL REQUIREMENT:**
-- **Capstone Immersion (98-100%):** Capstone projects must be researched, written, and defended entirely in Ukrainian. Use of English is disallowed except as a subject of analysis (e.g., in a translation project).
+- **Full Immersion (100%):** Capstone projects must be researched, written, and defended entirely in Ukrainian. English only in vocabulary translations.
 
 ### Grammar Progression
 

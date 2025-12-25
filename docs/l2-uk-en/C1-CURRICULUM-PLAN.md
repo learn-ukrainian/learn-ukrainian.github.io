@@ -1636,15 +1636,17 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 120: C1.3 Checkpoint
-**Covers:** M36-54
+#### Module 120: C1.4 Checkpoint
+**Covers:** M101-M119
 
 **Required Skill Groups:**
-1. Rhetorical Devices (M36-40) - metaphor, irony, hyperbole, euphemism, rhetorical questions
-2. Modality & Politeness (M41-43) - certainty, strategies, indirectness
-3. Ukrainian Humor (M44-46) - humor, wordplay, anecdotes
-4. Archaic Forms (M47-50) - verb forms, literary syntax, Church Slavonicisms, pronouns
-5. Register Control (M51-53) - high formal, intimate, slang
+1. Figurative Language (M101-103) - metaphor, simile, irony, sarcasm, hyperbole, litotes
+2. Euphemism & Rhetoric (M104-105) - taboo language, rhetorical questions
+3. Modality & Politeness (M106-108) - degrees of certainty, politeness strategies, indirectness
+4. Ukrainian Humor (M109-111) - humor traditions, wordplay, anecdotes
+5. Archaic Forms (M112-115) - archaic verbs, literary syntax, Church Slavonicisms, pronouns
+6. Register Control (M116-118) - high formal, intimate, slang/youth language
+7. Integration Practice (M119) - C1.3 review and synthesis
 
 **Vocabulary (10 words - assessment):**
 оцінювання, тестування, перевірка, контроль, екзамен, залік, бал, оцінка, критерій, результат
@@ -2185,18 +2187,19 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 145: C1.4 Checkpoint
-**Covers:** M56-79
+#### Module 145: C1.5 Checkpoint
+**Covers:** M121-M144
 
 **Required Skill Groups:**
-1. Folk Music (M56-58) - kobzar tradition, ritual songs, lullabies
-2. Folk Dance (M59-60) - hopak, regional dances
-3. Folk Crafts (M61-63) - pysanky, vyshyvanka, pottery
-4. Folk Beliefs (M64-65) - mythology, folk medicine
-5. Folk Tales (M66-67) - Cossack legends, kazky
-6. Calendar Rituals (M68-69) - winter, spring/summer
-7. Life Rituals (M70-71) - birth, death customs
-8. Regional Identity (M72-79) - Halychyna, Slobozhanschyna, Polissya, diaspora
+1. Folk Music (M121-123) - kobzari, bandura, ritual songs, lullabies, dumy
+2. Folk Dance (M124-125) - hopak, kozachok, regional dances
+3. Folk Crafts (M126-128) - pysanky, vyshyvanka, pottery, carving
+4. Folk Beliefs (M129-130) - mythology, folk medicine
+5. Folk Tales (M131-132) - Cossack legends, kazky, proverbs
+6. Calendar Rituals (M133-134) - winter, spring, summer traditions
+7. Life Rituals (M135-136) - christenings, weddings, memorial customs
+8. Regional Identity (M137-140) - Halychyna, Slobozhanschyna, Polissya, Podillya, Volyn
+9. Contemporary Culture (M141-144) - classical composers, modern music, cinema, sports heroes
 
 **Vocabulary (15 words - review):**
 традиція, спадщина, обряд, символ, регіон, музика, танець, ремесло, віра, легенда, пісня, свято, ідентичність, збереження, відродження
@@ -2527,16 +2530,18 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 160: C1.5 Checkpoint
-**Covers:** M81-94
+#### Module 160: C1.6 Checkpoint
+**Covers:** M146-M159
 
 **Required Skill Groups:**
-1. Literary History (M81) - periods and movements
-2. Shevchenko (M83-85) - life, poetry, legacy
-3. Franko & Lesia Ukrainka (M86-89) - poetry, prose, drama
-4. Other Classics (M82, M90-91) - Kotlyarevsky, Vovchok, Myrny, Kotsyubynsky
-5. Literary Terminology (M92) - plot, theme, motif analysis
-6. Practice Integration (M93-94) - poetry analysis, comparative essays
+1. Literary History (M146) - Ukrainian literary periods and movements
+2. Early Classics (M147) - Kotlyarevsky, Eneida
+3. Shevchenko (M148-150) - life, poetry, legacy
+4. Franko (M151-152) - poetry and prose
+5. Lesia Ukrainka (M153-154) - poetry and drama
+6. Other Classics (M155-156) - Vovchok, Myrny, Kotsyubynsky
+7. Literary Terminology (M157) - literary analysis vocabulary
+8. Practice Integration (M158-159) - poetry analysis, review
 
 **Vocabulary (15 words - assessment focus):**
 література, період, автор, твір, жанр, стиль, тема, образ, символ, аналіз, критика, інтерпретація, вплив, спадщина, традиція

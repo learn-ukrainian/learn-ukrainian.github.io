@@ -408,12 +408,11 @@ Each module should include review items from previous module(s) to reinforce ret
 
 | Type | Modules | Words | Vocab | Immersion | Focus |
 |------|---------|-------|-------|-----------|-------|
-| `B2-grammar` | 01-40 | 1750+ | 25+ | 100% | Passive voice, participles, register, word formation |
-| `B2-vocab` | 41-70 | 1750+ | 35+ | 100% | Phraseology: proverbs, idioms, synonyms |
-| `B2-history` | 71-95 | 1400+ | 20+ | 100% | Ukrainian history narratives |
-| `B2-biography` | 96-120 | 1400+ | 20+ | 100% | Biographical narratives (24 notable Ukrainians) |
-| `B2-checkpoint` | 30, 40, 70, 95, 120 | 1000+ | 10+ | 100% | Phase review & assessment |
-| `B2-capstone` | 121-135 | 1200+ | 10 | 100% | Research project & oral defense |
+| `B2-grammar` | 01-09, 11-24, 26-39 | 1800+ | 20+ | 100% | Passive voice, participles, register system, domain vocab |
+| `B2-phraseology` | 41-69 | 1800+ | 25+ | 100% | Phraseology: proverbs, idioms, synonyms |
+| `B2-history` | 71-94 | 1800+ | 25+ | 100% | Ukrainian history narratives |
+| `B2-integration` | 96-109 | 1800+ | 20+ | 100% | Skills integration & capstone projects |
+| `B2-checkpoint` | 10, 25, 40, 70, 95, 110 | 1500+ | 40-50 | 100% | Phase review & assessment |
 
 **Note:** B2 achieves FULL immersion — ALL body text in Ukrainian. English ONLY in vocabulary table translations.
 

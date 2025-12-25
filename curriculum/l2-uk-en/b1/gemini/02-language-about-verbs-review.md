@@ -14,7 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 70.1% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 70.0% (B1.1 Aspect)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -32,8 +38,8 @@
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Вид дієслова** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Час дієслова** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up: Терміни виду** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Терміни часу та способу** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Терміни виду** | 🎮 | 10 | Activity (10 items, min 8) |
+| **match-up: Терміни часу та способу** | 🎮 | 10 | Activity (10 items, min 8) |
 | **fill-in: Визначення виду** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Визначення часу** | 🎮 | 14 | Activity (14 items, min 8) |
 | **true-false: Термінологія дієслова** | 🎮 | 14 | Activity (14 items, min 8) |

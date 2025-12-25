@@ -14,15 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 95.3% (target 85-98% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 95.3% (target 85-100% (B1.1 Aspect))
 
 ## MDX VALIDATION
-### Warnings
-- ⚠️ Some Ukrainian content may be missing (236/878 words)
+✅ No issues found
 
 ## HTML VALIDATION
-### Warnings
-- ⚠️ No Activities section found
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -48,16 +46,16 @@
 | **Практична порада** | ⚪️ | 24 | Skipped |
 | **Самоперевірка** | ⚪️ | 170 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort** | 🎮 | 16 | Activity (16 items, min 14) |
-| **unjumble** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze** | 🎮 | 14 | Activity (14 items, min 14) |
-| **mark-the-words** | 🎮 | 8 | Activity (8 items, min 6) |
-| **dialogue-reorder** | 🎮 | 6 | Activity (6 items, min 4) |
-| **select** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate** | 🎮 | 6 | Activity (6 items, min 6) |
+| **quiz: Форми майбутнього часу** | 🎮 | 14 | Activity (14 items, min 8) |
+| **match-up: Переклад форм майбутнього** | 🎮 | 8 | Activity (8 items, min 8) |
+| **fill-in: Вибір форми майбутнього** | 🎮 | 10 | Activity (10 items, min 8) |
+| **true-false: Правда чи неправда про майбутнє** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Маркери виду в майбутньому** | 🎮 | 18 | Activity (18 items, min 14) |
+| **unjumble: Речення про майбутнє** | 🎮 | 8 | Activity (8 items, min 6) |
+| **error-correction: Виправлення помилок майбутнього** | 🎮 | 8 | Activity (8 items, min 6) |
+| **cloze: Плани на майбутнє** | 🎮 | 14 | Activity (14 items, min 14) |
+| **mark-the-words: Маркери майбутнього часу** | 🎮 | 8 | Activity (8 items, min 6) |
+| **dialogue-reorder: Розмова про плани** | 🎮 | 6 | Activity (6 items, min 4) |
+| **select: Множинний вибір — майбутній час** | 🎮 | 6 | Activity (6 items, min 6) |
+| **translate: Переклад — майбутній час** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Словник** | ⚪️ | 0 | Skipped |

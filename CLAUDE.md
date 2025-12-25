@@ -63,7 +63,7 @@ These were all documented requirements that were ignored during creation.
 <critical>
 **EVERY time you write or rewrite a module:**
 
-1. **READ `.agent/quick-ref/{LEVEL}.md`** - Level-specific targets, activity mix, critical requirements.
+1. **READ `claude_extensions/quick-ref/{LEVEL}.md`** - Level-specific targets, activity mix, critical requirements.
 2. **READ `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`** - Extract the EXACT vocabulary list and grammar scope for this module.
 3. **READ `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`** - Activity counts, sentence complexity, engagement boxes.
 4. **READ `docs/l2-uk-en/templates/{level}-{type}-module-template.md`** - **MANDATORY** structural guide for this module type.
@@ -71,11 +71,11 @@ These were all documented requirements that were ignored during creation.
 6. **VERIFY** before delivering - check against template checklist AND vocabulary matches plan exactly.
 
 **Which Template to Use:**
-- **Grammar modules** (M06-45: Aspect, Motion, Complex Sentences, Participles) → `b1-grammar-module-template.md`
-- **Vocabulary modules** (M51-65: Abstract concepts, Opinions, Discourse markers) → `b1-vocab-module-template.md`
-- **Checkpoint modules** (M10, M20, M35, M45, M55, M65, M75, M80) → `b1-checkpoint-module-template.md`
-- **Cultural modules** (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine) → `b1-cultural-module-template.md`
-- **Integration modules** (M81-85: Skills, Grammar/Vocab review, Capstone) → `b1-integration-module-template.md`
+- **Grammar modules** (M06-51: Aspect, Motion, Complex Sentences, Advanced Grammar) → `b1-grammar-module-template.md`
+- **Vocabulary modules** (M52-71: Abstract concepts, Opinions, Discourse markers) → `b1-vocab-module-template.md`
+- **Checkpoint modules** (M15, M25, M34, M41, M51 — grammar phases only) → `b1-checkpoint-module-template.md`
+- **Cultural modules** (M72-81: Regions, Music, Cinema, Tech, Sports, Festivals) → `b1-cultural-module-template.md`
+- **Integration modules** (M82-86: News, Podcasts, Grammar/Vocab review, Capstone) → `b1-integration-module-template.md`
 
 **DO NOT:**
 - Write from memory

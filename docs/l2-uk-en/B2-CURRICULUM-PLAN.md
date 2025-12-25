@@ -245,7 +245,33 @@ The B2 curriculum bridges "competence" and "fluency". It shifts focus from *lear
 
 ---
 
-## Phase B2.1: Grammar & Register (Modules 01-30)
+## Phase B2.1a: Passive Voice System (Modules 01-10)
+
+> **Checkpoint:** M10 tests M01-09 skill groups. See `b2-checkpoint-module-template.md`.
+
+### B2.1a Content: Modules 01-09 (Passive Voice) + M10 Checkpoint
+
+---
+
+## Phase B2.1b: Participles & Register Intro (Modules 11-25)
+
+> **Checkpoint:** M25 tests M11-24 skill groups. See `b2-checkpoint-module-template.md`.
+
+### B2.1b Content: Modules 11-24 + M25 Checkpoint
+
+---
+
+## Phase B2.1c: Register System & Domain Vocabulary (Modules 26-40)
+
+> **Checkpoint:** M40 tests M26-39 skill groups. See `b2-checkpoint-module-template.md`.
+
+### B2.1c Content: Modules 26-39 + M40 Checkpoint
+
+---
+
+## (LEGACY - See B2.1a/b/c above) Phase B2.1: Grammar & Register (Modules 01-30)
+
+> **Note:** This section preserved for reference. Content has been reorganized into B2.1a/b/c phases above.
 
 ### Learning Goals
 - Master all 4 Ukrainian passive forms
@@ -1162,8 +1188,9 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-## Phase B2.1b: Grammar Completion (Modules 31-40)
+## (LEGACY - Now part of B2.1c) Phase B2.1b: Grammar Completion (Modules 31-40)
 
+> **Note:** This content is now part of Phase B2.1c (M26-40). Preserved for reference.
 > **NEW:** Added per Ukrainian State Standard 2024 cross-reference. Addresses gaps in numerals, word formation, one-member sentences, and register coverage.
 
 ### Learning Goals
@@ -1512,6 +1539,8 @@ Participles agree with noun in gender, number, case:
 ---
 
 ## Phase B2.2: Phraseology & Synonymy (Modules 41-70)
+
+> **Checkpoint:** M70 tests M41-69 skill groups. See `b2-checkpoint-module-template.md`.
 
 ### Learning Goals
 - Master Ukrainian proverbs for cultural literacy
@@ -2328,14 +2357,24 @@ Participles agree with noun in gender, number, case:
 ---
 
 #### Module 70: B2.2 Checkpoint
-**Covers:** M41-69
+**Covers:** M31-M69
 
 **Required Skill Groups:**
-1. Proverb Categories (M41-50) - wisdom, work, nature, family, animal, body
-2. Set Expressions (M51-55) - idioms, collocations, phrasal units
-3. Synonym & Nuance (M56-60) - semantic fields, register variation
-4. Advanced Conjunctions (M61-65) - causal, concessive, complex
-5. Phraseological Integration (M66-69) - natural use in context
+1. Numeral Declension (M31-32) - time, dates, compound numbers
+2. Word Formation (M33-37) - person suffixes, abstract nouns, adjectives, adverbs
+3. One-member Sentences (M38) - односкладні речення
+4. Register - Religious & Epistolary (M39) - church language, letter styles
+5. Advanced Pronoun Declension (M40) - indefinite, negative, defining
+6. Aspect Nuances (M41-42) - secondary imperfectivization, imperative/infinitive
+7. Correlative Constructions (M43) - співвідносні
+8. Complex Syntax (M44) - ellipsis, parcelling
+9. Proverbs (M45-46) - wisdom, work, nature, time, caution
+10. Set Expressions (M47-48) - body, animals, objects, abstract
+11. Idioms (M49-50) - body parts (head, hands, legs)
+12. Idioms Advanced (M51-55) - heart, senses, food, numbers, colors
+13. Synonymy (M56-60) - verbs of motion, speaking, thinking, feeling
+14. Advanced Conjunctions (M61-65) - causal, concessive, temporal, etc.
+15. Phraseological Integration (M66-69) - proverbs, idioms, set expressions in context
 
 **Assessment Format:**
 1. Quiz: Complete proverbs/idioms
@@ -2346,6 +2385,8 @@ Participles agree with noun in gender, number, case:
 ---
 
 ## Phase B2.3: Ukrainian History (Modules 71-95)
+
+> **Checkpoint:** M95 tests M71-94 skill groups. See `b2-checkpoint-module-template.md`.
 
 ### Learning Goals
 - Understand Ukrainian history from origins to present
@@ -2383,8 +2424,8 @@ Participles agree with noun in gender, number, case:
 | 91 | Chornobyl | History | 1986 disaster | катастрофа, радіація |
 | 92 | Independence 1991 | History | Referendum, new state | референдум, незалежність |
 | 93 | Orange Revolution | History | 2004 democracy | революція, демократія |
-| 94 | Euromaidan ⚠️ | History | 2013-14 dignity | гідність, революція |
-| 95 | Russia's War ⚠️ | History | 2014-present | агресія, спротив, перемога |
+| 94 | Euromaidan & Russia's War ⚠️ | History | 2013-present: Dignity to Victory | гідність, агресія, спротив, перемога |
+| 95 | **B2.3 Checkpoint** | Assessment | History M71-94 review | — |
 
 ### Vocabulary Plan B2.3 (~600 words)
 
@@ -2401,6 +2442,8 @@ Participles agree with noun in gender, number, case:
 ---
 
 ## Phase B2.4: Skills & Capstone (Modules 96-110)
+
+> **Checkpoint:** M110 (Final Exam) tests M96-109 + all B2 skills. See `b2-checkpoint-module-template.md`.
 
 ### Learning Goals
 - Build advanced domain vocabulary
@@ -2454,14 +2497,17 @@ Participles agree with noun in gender, number, case:
 
 ### Phase Distribution
 
-| Phase | Modules | Count | Type |
-|-------|---------|-------|------|
-| B2.1a | 01-30 | 30 | Grammar & Register |
-| B2.1b | 31-40 | 10 | Numerals, Word Formation, Pronouns |
-| B2.2 | 41-70 | 30 | Phraseology & Synonymy |
-| B2.3 | 71-95 | 25 | Ukrainian History |
-| B2.4 | 96-110 | 15 | Skills & Capstone |
-| **TOTAL** | **01-110** | **110** | |
+| Phase | Modules | Count | Type | Checkpoint |
+|-------|---------|-------|------|------------|
+| B2.1a | 01-10 | 10 | Passive Voice System | **M10** |
+| B2.1b | 11-25 | 15 | Participles & Register Intro | **M25** |
+| B2.1c | 26-40 | 15 | Register System & Domain Vocab | **M40** |
+| B2.2 | 41-70 | 30 | Phraseology & Synonymy | **M70** |
+| B2.3 | 71-95 | 25 | Ukrainian History | **M95** |
+| B2.4 | 96-110 | 15 | Skills & Capstone | **M110** |
+| **TOTAL** | **01-110** | **110** | | **6 checkpoints** |
+
+> **Note:** Phase structure updated 2025-12-25 to match checkpoint template. See `docs/l2-uk-en/templates/b2-checkpoint-module-template.md` for skill groups.
 
 > **Moved to C1:** Folk Culture & Arts (25 modules, ~600 words) + Biographies (65 modules, ~1,560 words)
 
@@ -2469,11 +2515,12 @@ Participles agree with noun in gender, number, case:
 
 | Phase | Target Words | Cumulative |
 |-------|--------------|------------|
-| B2.1a | ~720 | 720 |
-| B2.1b | ~240 | 960 |
-| B2.2 | ~720 | 1,680 |
-| B2.3 | ~600 | 2,280 |
-| B2.4 | ~360 | 2,640 |
+| B2.1a (M01-10) | ~240 | 240 |
+| B2.1b (M11-25) | ~360 | 600 |
+| B2.1c (M26-40) | ~360 | 960 |
+| B2.2 (M41-70) | ~720 | 1,680 |
+| B2.3 (M71-95) | ~600 | 2,280 |
+| B2.4 (M96-110) | ~360 | 2,640 |
 | **Total B2** | **~2,640** | **~5,940 cumulative** |
 
 ---
@@ -2482,10 +2529,9 @@ Participles agree with noun in gender, number, case:
 
 These modules explicitly address Russian historical narratives:
 
-1. **Module 68: Pereiaslav & Its MYTHS** - 1654 was not "reunification"
-2. **Module 77: Holodomor** - 1932-33 genocide recognition
-3. **Module 84: Euromaidan** - Revolution of Dignity, not "coup"
-4. **Module 85: Russia's War** - 2014-present invasion and resistance
+1. **Module 78: Pereiaslav & Its MYTHS** - 1654 was not "reunification"
+2. **Module 87: Holodomor** - 1932-33 genocide recognition
+3. **Module 94: Euromaidan & Russia's War** - Revolution of Dignity (2013-14), invasion and resistance (2014-present)
 
 ---
 
@@ -2604,13 +2650,14 @@ Before generating any B2 module:
 
 ## Implementation Status
 
-| Phase | Modules | Status |
-|-------|---------|--------|
-| B2.1a | 01-30 | 📝 Planned |
-| B2.1b | 31-40 | 📝 Planned |
-| B2.2 | 41-70 | 📝 Planned |
-| B2.3 | 71-95 | 📝 Planned |
-| B2.4 | 96-110 | 📝 Planned |
+| Phase | Modules | Checkpoint | Status |
+|-------|---------|------------|--------|
+| B2.1a | 01-10 | M10 | 📝 Planned |
+| B2.1b | 11-25 | M25 | 📝 Planned |
+| B2.1c | 26-40 | M40 | 📝 Planned |
+| B2.2 | 41-70 | M70 | 📝 Planned |
+| B2.3 | 71-95 | M95 | 📝 Planned |
+| B2.4 | 96-110 | M110 | 📝 Planned |
 
 ---
 

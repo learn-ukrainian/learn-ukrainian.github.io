@@ -14,7 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 62.8% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 63.3% (B1.1 Aspect)
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -33,8 +39,8 @@
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Пояснювальні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Словотвір** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up: Пояснювальні конструкції** | 🎮 | 12 | Activity (12 items, min 8) |
-| **match-up: Словотвір і порівняння** | 🎮 | 12 | Activity (12 items, min 8) |
+| **match-up: Пояснювальні конструкції** | 🎮 | 10 | Activity (10 items, min 8) |
+| **match-up: Словотвір і порівняння** | 🎮 | 10 | Activity (10 items, min 8) |
 | **fill-in: Пояснювальні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |
 | **fill-in: Частини слова** | 🎮 | 14 | Activity (14 items, min 8) |
 | **true-false: Граматичні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |

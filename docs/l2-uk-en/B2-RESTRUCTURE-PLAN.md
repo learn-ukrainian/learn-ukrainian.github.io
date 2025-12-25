@@ -1,18 +1,21 @@
 # B2 Restructure Plan - Implementation Strategy
 
 ## Goal
-Establish a robust implementation strategy for the B2 Curriculum (Modules 01-135) to achieve independent fluency.
+Establish a robust implementation strategy for the B2 Curriculum (Modules 01-110) to achieve independent fluency.
 
-**Status Assessment (2025-12-15):**
-- **Existing Modules**: M01 (`01-passive-voice-complete-system.md`).
-- **Missing Modules**: M02-135.
-- **Quality**: M01 is compliant.
-- **Restructure Need**: **None**. This is a massive **Greenfield Project**.
+**Status Assessment (2025-12-25):**
+- **Total Modules**: 110 (104 content + 6 checkpoints)
+- **Existing Modules**: M01 (`01-passive-voice-complete-system.md`)
+- **Missing Modules**: M02-110
+- **Quality**: M01 is compliant
+- **Restructure**: Complete. Biographies (65 modules) moved to C1 for better pedagogical fit.
+
+> **Note:** Original 135-module plan reduced to 110 modules. Folk Culture & Arts + Biographies moved to C1.
 
 ## Proposed Changes
 
 ### 1. Implementation Strategy: Greenfield Creation
-For Modules 02-135, we will follow the **"Create"** strategy with strict adherence to the 6-phase curriculum structure.
+For Modules 02-110, we will follow the **"Create"** strategy with strict adherence to the 6-phase curriculum structure.
 
 1.  **Pedagogy**: **Content-Based Instruction (CBI)**.
     *   *Motto*: "Reading to Learn".
@@ -46,25 +49,25 @@ The B2 plan has been updated (Issue 117). Critical requirements to implement:
 
 ## Phase Tracking (Aligned with B2-CURRICULUM-PLAN.md)
 
-| Phase | Modules | Theme | Count | Status |
-|-------|---------|-------|-------|--------|
-| **B2.1** | M01-M30 | Grammar & Register | 30 | M01 Done, M02-30 Planned |
-| **B2.1b** | M31-M40 | Grammar Completion (Word Formation) | 10 | Planned |
-| **B2.2** | M41-M70 | Phraseology & Synonymy | 30 | Planned |
-| **B2.3** | M71-M95 | Ukrainian History | 25 | Planned |
-| **B2.4** | M96-M120 | Biographies (Famous Ukrainians) | 25 | Planned |
-| **B2.5** | M121-M135 | Advanced Skills & Capstone | 15 | Planned |
+| Phase | Modules | Theme | Count | Checkpoint | Status |
+|-------|---------|-------|-------|------------|--------|
+| **B2.1a** | M01-M10 | Passive Voice System | 10 | **M10** | M01 Done, M02-10 Planned |
+| **B2.1b** | M11-M25 | Participles & Register Intro | 15 | **M25** | Planned |
+| **B2.1c** | M26-M40 | Register System & Domain Vocab | 15 | **M40** | Planned |
+| **B2.2** | M41-M70 | Phraseology & Synonymy | 30 | **M70** | Planned |
+| **B2.3** | M71-M95 | Ukrainian History | 25 | **M95** | Planned |
+| **B2.4** | M96-M110 | Skills & Capstone | 15 | **M110** | Planned |
 
-**Total: 135 modules** (1 complete, 134 to create)
+**Total: 110 modules** (104 content + 6 checkpoints)
 
 ## GitHub Tracking
 Issues to be created when implementation begins:
 
 | Phase | Issue Title | Modules |
 |-------|-------------|---------|
-| B2.1 | Implement B2.1 Grammar & Register (M02-M30) | 29 modules |
-| B2.1b | Implement B2.1b Grammar Completion (M31-M40) | 10 modules |
-| B2.2 | Implement B2.2 Phraseology & Synonymy (M41-M70) | 30 modules |
-| B2.3 | Implement B2.3 Ukrainian History (M71-M95) | 25 modules |
-| B2.4 | Implement B2.4 Biographies (M96-M120) | 25 modules |
-| B2.5 | Implement B2.5 Advanced Skills & Capstone (M121-135) | 15 modules |
+| B2.1a | Implement B2.1a Passive Voice (M02-M10) | 9 content + 1 checkpoint |
+| B2.1b | Implement B2.1b Participles & Register (M11-M25) | 14 content + 1 checkpoint |
+| B2.1c | Implement B2.1c Register & Domain Vocab (M26-M40) | 14 content + 1 checkpoint |
+| B2.2 | Implement B2.2 Phraseology & Synonymy (M41-M70) | 29 content + 1 checkpoint |
+| B2.3 | Implement B2.3 Ukrainian History (M71-M95) | 24 content + 1 checkpoint |
+| B2.4 | Implement B2.4 Skills & Capstone (M96-M110) | 14 content + 1 checkpoint |

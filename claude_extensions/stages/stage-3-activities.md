@@ -61,124 +61,23 @@ match-up → group-sort → quiz → true-false → fill-in → anagram/unjumble
 ```
 
 ## Syntax Reference
-
-### Fill-in (CRITICAL)
-```markdown
-## fill-in: Title
-
-___ я завжди читаю книгу.
-
-> [!options]
-> - Вранці
-> - Книгу
-> - Столом
-
-> [!answer]
-> Вранці
-```
-
-- Placeholder: EXACTLY `___` (three underscores)
-- NO hints in parentheses
-- Options and answer blocks MANDATORY
-
-### Match-up
-```markdown
-## match-up: Title
-
-- книга :: book
-- стіл :: table
-- вікно :: window
-```
-
-### Unjumble
-```markdown
-## unjumble: Title
-
-я / завжди / читаю / книгу / вранці
-
-> [!answer]
-> Я завжди читаю книгу вранці.
-```
-
-- Separator: SLASHES with spaces ` / `
-- Minimum 5-8 words per sentence
-
-### Anagram (A1 M01-10 only)
-```markdown
-## anagram: Title
-
-К Н И Г А
-
-> [!answer]
-> книга
-```
-
-- Separator: SPACES (not slashes)
-
-### Cloze
-```markdown
-## cloze: Title
-
-Марія ___(1)___ до магазину. Вона ___(2)___ хліб.
-
-> [!options]
-> 1: йде, їде, біжить
-> 2: купує, продає, готує
-
-> [!answer]
-> 1: йде
-> 2: купує
-```
-
-### Quiz (MUST be numbered)
-```markdown
-## quiz: Title
-
-1. Яке слово означає "book"?
-   - [ ] стіл
-   - [x] книга
-   - [ ] вікно
-   > книга = book
-
-2. Яке слово означає "table"?
-   - [x] стіл
-   - [ ] книга
-   - [ ] вікно
-   > стіл = table
-```
-
-- **Questions MUST be numbered** (1., 2., 3., etc.)
-- Each question needs explanation after options
-
-### Error-correction (A2+ REQUIRED FORMAT)
-```markdown
-## error-correction: Title
-
-1. Я читаю книгу на стіл.
-   > [!error] стіл
-   > [!answer] столі
-   > [!options] стіл | столі | столу | столом
-   > [!explanation] Locative case required after "на" for location. стіл → столі.
-
-2. Вона читав книгу вчора.
-   > [!error] читав
-   > [!answer] читала
-   > [!options] читав | читала | читало | читали
-   > [!explanation] Past tense agrees with subject gender. Feminine subject → -ла ending.
-```
-
-- **MUST include all 4 callouts**: `[!error]`, `[!answer]`, `[!options]`, `[!explanation]`
-- `[!explanation]` tells learners WHY - without it, audit fails
-
-### Group-sort
-```markdown
-## group-sort: Title
-
-Masculine :: стіл, олівець, зошит
-Feminine :: книга, ручка, лампа
-Neuter :: вікно, місто, море
-```
-
+> [!IMPORTANT]
+> **Single Source of Truth:**
+>
+> You MUST follow the strict markdown syntax defined in:
+> `docs/MARKDOWN-FORMAT.md`
+>
+> Read that file to see the correct format for:
+> - `match-up` (Markdown Table)
+> - `fill-in` (Block format)
+> - `quiz` (Numbered list)
+> - `translate` (Checkbox format)
+> - `select` (Checkbox format)
+> - `error-correction` (4-callout block)
+> - `group-sort` (Category headers)
+>
+> Do NOT invent new formats. Do NOT use `::` for match-up.
+>
 ## Vocabulary Constraint (CRITICAL)
 
 Activities MUST use ONLY:
@@ -194,10 +93,7 @@ NEVER use words not taught yet.
 - [ ] Items per activity meets minimum
 - [ ] Activity variety (4-5+ types)
 - [ ] Proper sequencing (easy → hard)
-- [ ] Correct syntax (see reference above)
-- [ ] Fill-in uses `___` placeholder
-- [ ] Unjumble uses ` / ` separator
-- [ ] Anagram uses spaces (A1 M01-10 only)
+- [ ] **Correct syntax validated against `docs/MARKDOWN-FORMAT.md`**
 - [ ] All answers are correct
 - [ ] Uses ONLY vocabulary from table + prior modules
 - [ ] **Quiz questions are numbered** (1., 2., 3., etc.)
@@ -210,3 +106,4 @@ NEVER use words not taught yet.
 - Use wrong separators (slashes in anagram, spaces in unjumble)
 - Skip options/answer blocks in fill-in
 - Create activities with fewer than 12 items (A1-A2) or 14+ (B1+)
+

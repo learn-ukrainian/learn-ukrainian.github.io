@@ -36,6 +36,34 @@
 
 ---
 
+## 🆘 SYNTHESIS GUIDE: What if there is NO reference module?
+
+If you are compelled to create a module from scratch (e.g., Kvitka-Osnovianenko modules 07-10) without a direct 50k-word reference source:
+
+### 1. The "Bulk Content" Strategy (Crucial for Word Count)
+*   **Problem:** It is extremely difficult to generate 3500+ words of *pure analysis* from scratch without hallucinating.
+*   **Solution:** You MUST include large blocks of the **original public domain text** (from UkrLib) directly in the `Reading Hall` or `Analysis` sections.
+*   **Quantity:** Include at least **3-4 full pages (1000-1500 words)** of the original text as indented blockquotes (`> text`) or within the `🏛️ Читальна Зала` section.
+*   **Format:** Present these as "Key Excerpts for Analysis" and intersperse them with your philological commentary.
+
+### 2. Strict Transliteration/Latin Prohibition
+*   The audit script has **ZERO TOLERANCE** for Latin characters in LIT modules.
+*   **Forbidden:** `(Diminutives)`, `(Sehnsucht)`, `(humility)`, `(Innapyt)`.
+*   **Allowed:** ONLY specialized linguistic terms if absolutely necessary (e.g., `*cor*` in Latin), but better to avoid entirely.
+*   **Check:** Run `grep -P "[a-zA-Z]"` before submitting.
+
+### 3. Header Hierarchy
+*   **H1 (`#`)**: ONLY for:
+    *   Module Title (`# LIT-00X: ...`)
+    *   `# Summary`
+    *   `# Словник`
+    *   `# 🏛️ Читальна Зала`
+    *   `# ✍️ Аналітичний Практикум`
+*   **H2 (`##`)**: For ALL content sections (`## Частина I`, `## Частина II`).
+*   **Failure to follow this triggers an immediate audit fail.**
+
+---
+
 ## Quick Reference Checklist
 
 Before submitting a LIT module, verify:

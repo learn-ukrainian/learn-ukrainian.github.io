@@ -1,7 +1,7 @@
 # B1 Curriculum Plan: Ukrainian for English Speakers
 
 **Status:** ✅ COMPLETE (Aligned with Ukrainian State Standard 2024)
-**Modules:** 01-85 (85 modules, including 5 metalanguage bridge modules)
+**Modules:** 01-86 (86 modules, including 5 metalanguage bridge modules)
 **Vocabulary Target:** ~1,500 words (level), ~3,300 cumulative
 
 ---
@@ -9,14 +9,14 @@
 ## 📋 Templates & Resources
 
 **Before creating B1 modules, consult these templates:**
-- [Grammar modules (M06-50: Aspect, Motion, Complex Sentences, Advanced Grammar)](templates/b1-grammar-module-template.md)
-- [Vocabulary modules (M51-70: Abstract concepts, Opinions, Discourse markers)](templates/b1-vocab-module-template.md)
-- [Checkpoint modules (M15, M25, M40, M50, M60, M70, M80)](templates/b1-checkpoint-module-template.md)
-- [Cultural modules (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine)](templates/b1-cultural-module-template.md)
-- [Integration modules (M81-85: News reading, Podcasts, Grammar/Vocab integration, Capstone)](templates/b1-integration-module-template.md)
+- [Grammar modules (M06-51: Aspect, Motion, Complex Sentences, Advanced Grammar)](templates/b1-grammar-module-template.md)
+- [Vocabulary modules (M52-71: Abstract concepts, Opinions, Discourse markers)](templates/b1-vocab-module-template.md)
+- [Checkpoint modules (M15, M25, M34, M41, M51) — grammar phases only](templates/b1-checkpoint-module-template.md)
+- [Cultural modules (M72-81: Regions, Music, Cinema, Tech, Sports, Cuisine)](templates/b1-cultural-module-template.md)
+- [Integration modules (M82-86: News reading, Podcasts, Grammar/Vocab integration, Capstone)](templates/b1-integration-module-template.md)
 
 **Quick Reference:**
-- Level requirements: `.agent/quick-ref/b1.md`
+- Level requirements: `claude_extensions/quick-ref/b1.md`
 - Module richness guidelines: `MODULE-RICHNESS-GUIDELINES-v2.md`
 
 ---
@@ -33,16 +33,20 @@
 | Phase | Modules | Immersion | Content Focus |
 |-------|---------|-----------|---------------|
 | **B1.0** | M01-05 | **No limit** | Metalanguage bridge — teaches grammar terms in Ukrainian |
-| **B1.1** | M06-15 | **90-95%** | Aspect mastery — grammar IN Ukrainian |
-| **B1.2** | M16-25 | **90-95%** | Motion verbs with prefixes — grammar IN Ukrainian |
-| **B1.3-4** | M26-50 | **90-95%** | Complex sentences, participles — full immersion |
-| **B1.5-6** | M51-70 | **90-95%** | Vocabulary expansion — thematic content in Ukrainian |
-| **B1.7-8** | M71-85 | **90-95%** | Cultural content, skills — B2 runway |
+| **B1.1** | M06-15 | **100%** | Aspect mastery — grammar IN Ukrainian |
+| **B1.2** | M16-25 | **100%** | Motion verbs with prefixes — grammar IN Ukrainian |
+| **B1.3a** | M26-34 | **100%** | Complex sentences Part 1 — relatives, purpose, conditionals |
+| **B1.3b** | M35-41 | **100%** | Complex sentences Part 2 — concessive, temporal, reported speech |
+| **B1.4** | M42-51 | **100%** | Advanced grammar — participles, passive, diminutives |
+| **B1.5** | M52-61 | **100%** | Vocabulary expansion I — abstract concepts, discourse |
+| **B1.6** | M62-71 | **100%** | Vocabulary expansion II — professional, emotional |
+| **B1.7** | M72-81 | **100%** | Contemporary Ukraine — regions, culture, media |
+| **B1.8** | M82-86 | **100%** | Skills & integration — news, podcasts, capstone |
 
 **Transition continuity:**
 - A2.3 ends at 50-55% → B1.0 bridge prepares students for the jump
-- B1.0 ends with integration checkpoint → B1.1+ at full 90-95% immersion
-- B1.7-8 ends at 90-95% → B2 continues at 95%
+- B1.0 ends with integration checkpoint → B1.1+ at full 100% immersion
+- B1.8 ends at 100% → B2 continues at 100%
 
 B1 modules use a **Ukrainian-first approach** for all grammar concepts:
 - **Ukrainian:** Grammar explanations, terminology, examples, dialogues, narratives, cultural boxes
@@ -698,17 +702,19 @@ Students must demonstrate they can:
 ---
 
 #### Module 15: Checkpoint - Aspect Mastery
-**Covers:** M01-09
+**Covers:** M06-M14
 **Type:** B1-checkpoint
 
 **Required Skill Groups:**
-1. Aspect Concept (M01) - perfective vs imperfective core meaning
-2. Aspect in Past: Result vs Process (M02-03) - зробив vs робив
-3. Aspect in Future: Completion vs Plan (M04) - зроблю vs буду робити
-4. Negation Patterns (M05) - ще не vs ніколи не
-5. Imperative Aspect (M06) - invitations vs commands
-6. Aspect Pairs (M07-08) - 40+ pairs recognition
-7. Aspect in Narratives (M09) - extended text with aspect decisions
+1. Aspect Complete System (M06) - perfective vs imperfective core meaning
+2. Aspect in Past: Single vs Repeated (M07) - одного разу vs щодня
+3. Aspect in Past: Result vs Process (M08) - зробив vs робив
+4. Aspect in Future (M09) - зроблю vs буду робити
+5. Aspect in Negation (M10) - ще не vs ніколи не
+6. Aspect in Imperatives (M11) - invitations vs commands
+7. Aspect Pairs Essential 40 (M12) - 40+ pairs recognition
+8. Aspect in Action (M13) - real-world application
+9. Aspect Integration (M14) - extended text with aspect decisions
 
 **CEFR Can-Do Targets (from this phase):**
 - [ ] Can distinguish perfective/imperfective in past tense contexts
@@ -997,18 +1003,19 @@ Students must demonstrate they can:
 ---
 
 #### Module 25: Checkpoint - Motion Verbs
-**Covers:** M11-19
+**Covers:** M16-M24
 **Type:** B1-checkpoint
 
 **Required Skill Groups:**
-1. Motion Verb Pairs (M11) - uni- vs multidirectional (іти/ходити, їхати/їздити)
-2. Motion Verb System (M12) - all 14 pairs
-3. Arrival/Departure Prefixes (M13) - при-, ви-, в-/у-
-4. Direction Prefixes (M14) - пере-, об-, про-
-5. Prefix Integration (M15) - combining prefixes with all verbs
-6. Figurative Uses (M16) - йти в ногу, прийшла ідея
-7. Direction Description (M17-18) - giving complex directions
-8. Integration (M19) - motion in complex narratives
+1. Motion Verb Full System (M16) - uni- vs multidirectional (іти/ходити, їхати/їздити)
+2. Coming & Going (M17) - при-, ви-, в-/у- prefixes
+3. Passing & Crossing (M18) - пере-, об-, про- prefixes
+4. Starting & Returning (M19) - по-, за-, повер- prefixes
+5. Approaching & Departing (M20) - під-, від- prefixes
+6. Figurative Uses (M21) - йти в ногу, прийшла ідея
+7. Full Prefix Integration (M22) - combining prefixes with all verbs
+8. Motion Patterns in Other Verbs (M23) - носити/нести, возити/везти
+9. Motion Practice & Integration (M24) - motion in complex narratives
 
 **CEFR Can-Do Targets (from this phase):**
 
@@ -1042,33 +1049,26 @@ Students must demonstrate they can:
 
 ---
 
-## Phase B1.3: Complex Sentences Deep Dive (Modules 26-40)
+## Phase B1.3a: Complex Sentences Part 1 (Modules 26-34)
 
 ### Learning Goals
 - Master relative clauses (який, де, коли, куди)
 - Use purpose clauses correctly (щоб + infinitive, щоб + past)
-- Handle all conditional types
-- Navigate concessive and causal constructions
+- Handle all conditional types (real and unreal)
 
 ### Grammar Progression
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 21 | Relative Clauses: який Review | A2 який basics | All case forms |
-| 22 | Relative Clauses: де, куди, звідки | M21 | Place relatives |
-| 23 | Relative Clauses: коли, що | M22 | Time/fact relatives |
-| 24 | Purpose: щоб + Infinitive | M21-23 | Same-subject purpose |
-| 25 | Purpose: щоб + Past Form | M24 | Different-subject purpose |
-| 26 | Conditionals: Real (якщо) Review | A2 conditionals | Real conditions |
-| 27 | Conditionals: Unreal (якби) Review | M26 | Unreal conditions |
-| 28 | Conditionals: Mixed & Complex | M26-27 | Complex conditions |
-| 29 | Concessive Clauses | M21-28 | Contrast expressions |
-| 30 | Causal & Result Clauses | M29 | Cause/effect |
-| 31 | Temporal Clauses Deep Dive | M30 | Time relationships |
-| 32 | Complex Sentence Integration | M21-31 | Multiple clause types |
-| 33 | Reported Statements | M32 | Indirect speech |
-| 34 | Reported Questions & Commands | M33 | Complete reported speech |
-| 35 | Checkpoint: Complex Sentences | M21-34 | Review |
+| 26 | Relative Clauses: який Review | A2 який basics | All case forms |
+| 27 | Relative Clauses: де, куди, звідки | M26 | Place relatives |
+| 28 | Relative Clauses: коли, що | M27 | Time/fact relatives |
+| 29 | Purpose: щоб + Infinitive | M26-28 | Same-subject purpose |
+| 30 | Purpose: щоб + Past Form | M29 | Different-subject purpose |
+| 31 | Conditionals: Real (якщо) Review | A2 conditionals | Real conditions |
+| 32 | Conditionals: Unreal (якби) Review | M31 | Unreal conditions |
+| 33 | Conditionals: Mixed & Complex | M31-32 | Complex conditions |
+| 34 | **Checkpoint: Complex Sentences Part 1** | M26-33 | Review |
 
 ### Module Content Specifications B1.3
 
@@ -1228,7 +1228,80 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 34: Concessive Clauses
+#### Module 34: Checkpoint - Complex Sentences Part 1
+**Covers:** M26-M33
+**Type:** B1-checkpoint
+
+**Required Skill Groups:**
+1. Relative Clauses - який Review (M26) - який in all cases
+2. Relative Clauses - де, куди, звідки (M27) - place relatives
+3. Relative Clauses - коли, що (M28) - time/general relatives
+4. Purpose Clauses Infinitive (M29) - щоб + infinitive
+5. Purpose Clauses Past Form (M30) - щоб + past
+6. Conditionals Real (M31) - якщо review
+7. Conditionals Unreal (M32) - якби review
+8. Conditionals Mixed & Complex (M33) - combined conditions
+
+**CEFR Can-Do Targets (from this phase):**
+- [ ] Can form relative clauses with який in all cases
+- [ ] Can use place relatives (де, куди, звідки)
+- [ ] Can construct purpose clauses with correct subject agreement
+- [ ] Can distinguish real and unreal conditionals
+
+**Self-Assessment Rubric:**
+
+| Skill | Not Yet (1) | Developing (2) | Achieved (3) |
+|-------|-------------|----------------|--------------|
+| Relative clauses | Only use який | Use 2-3 connectors | All connectors fluent |
+| Purpose clauses | Confused by щоб forms | Usually correct | Apply rules consistently |
+| Conditionals | Mix real/unreal | Know difference, some errors | Use both naturally |
+
+**Vocabulary (15 words):** Key conjunctions and connectors requiring review
+
+**Required Activities (minimum 10):**
+1. **Diagnostic quiz** - 20 items covering all clause types
+2. **Clause identification** - Label clause types in authentic text
+3. **Sentence combining** - Join simple sentences with appropriate connectors
+4. **Error correction** - 8 common complex sentence mistakes
+5. **Conditional matching** - Match situations to conditional types
+6. **Writing task** - 100+ words using at least 3 clause types
+7. **Self-reflection** - What I can do / What I need to review
+8. **Gap-fill passage** - Connectors and conjunctions
+9. **Purpose clause formation** - Same vs different subject
+10. **Mixed review** - Random complex sentence challenges
+
+**Remediation Guidance:**
+- Score <60%: Review M26-28 (relative clauses) and M31-32 (conditionals)
+- Score 60-79%: Focus on M29-30 (purpose clauses)
+- Score 80%+: Ready for Phase B1.3b (Complex Sentences Part 2)
+
+---
+
+## Phase B1.3b: Complex Sentences Part 2 (Modules 35-41)
+
+### Learning Goals
+- Navigate concessive and causal constructions
+- Master temporal clause relationships
+- Handle reported speech in all forms
+- Integrate all complex sentence types
+
+### Grammar Progression
+
+| Module | Grammar Point | Builds On | Enables |
+|--------|--------------|-----------|---------|
+| 35 | Concessive Clauses | M26-34 | Contrast expressions |
+| 36 | Causal & Result Clauses | M35 | Cause/effect |
+| 37 | Temporal Clauses Deep Dive | M36 | Time relationships |
+| 38 | Complex Sentence Integration | M35-37 | Multiple clause types |
+| 39 | Reported Statements | M38 | Indirect speech |
+| 40 | Reported Questions & Commands | M39 | Complete reported speech |
+| 41 | **Checkpoint: Complex Sentences Part 2** | M35-40 | Review |
+
+### Module Content Specifications B1.3b
+
+---
+
+#### Module 35: Concessive Clauses
 **Grammar:** Хоча, незважаючи на те що
 
 **Key Patterns:**
@@ -1246,7 +1319,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 35: Causal & Result Clauses
+#### Module 36: Causal & Result Clauses
 **Grammar:** тому що, через те що, завдяки, отже
 
 **Key Patterns:**
@@ -1265,7 +1338,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 36: Temporal Clauses Deep Dive
+#### Module 37: Temporal Clauses Deep Dive
 **Grammar:** коли, після того як, поки, перш ніж, як тільки
 
 **Key Patterns:**
@@ -1285,7 +1358,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 37: Complex Sentence Integration & One-Member Sentences
+#### Module 38: Complex Sentence Integration & One-Member Sentences
 **Grammar:** Multiple clause types together + односкладні речення
 
 **Practice combining:**
@@ -1320,7 +1393,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 38: Reported Statements
+#### Module 39: Reported Statements
 **Grammar:** Він сказав, що...
 
 **Key Patterns:**
@@ -1338,7 +1411,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 39: Reported Questions & Commands
+#### Module 40: Reported Questions & Commands
 **Grammar:** Він запитав, чи/що... Він попросив, щоб...
 
 **Key Patterns:**
@@ -1357,54 +1430,55 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 40: Checkpoint - Complex Sentences
-**Covers:** M21-34
+#### Module 41: Checkpoint - Complex Sentences Part 2
+**Covers:** M35-M40
 **Type:** B1-checkpoint
 
 **Required Skill Groups:**
-1. Relative Clauses (M21-23) - який, де, коли, що, куди
-2. Purpose Clauses (M24) - щоб + infinitive, щоб + past
-3. Conditional Types (M25-27) - real (якщо) vs unreal (якби)
-4. Concessive Clauses (M28-29) - хоча, проте, незважаючи на
-5. Causal & Result Clauses (M30) - тому що, бо, оскільки
-6. Temporal Clauses (M31) - коли, поки, після того як
-7. Reported Speech: Statements (M32-33) - сказав, що...
-8. Reported Speech: Questions & Commands (M34) - запитав, чи...; попросив, щоб...
+1. Concessive Clauses (M35) - хоча, проте, незважаючи на
+2. Causal & Result Clauses (M36) - тому що, бо, оскільки
+3. Temporal Clauses Deep Dive (M37) - коли, поки, після того як
+4. Complex Sentence Integration (M38) - combined clause types + one-member sentences
+5. Reported Statements (M39) - сказав, що...
+6. Reported Questions & Commands (M40) - запитав, чи...; попросив, щоб...
 
 **CEFR Can-Do Targets (from this phase):**
+- [ ] Can use concessive clauses naturally (хоча, попри)
+- [ ] Can express cause/effect relationships
+- [ ] Can use temporal clauses for complex narration
+- [ ] Can convert direct speech to reported speech
 
 **Self-Assessment Rubric:**
 
 | Skill | Not Yet (1) | Developing (2) | Achieved (3) |
 |-------|-------------|----------------|--------------|
-| Relative clauses | Only use який | Use 2-3 connectors | All connectors fluent |
-| Purpose clauses | Confused by щоб forms | Usually correct | Apply rules consistently |
-| Conditionals | Mix real/unreal | Know difference, some errors | Use both naturally |
-| Other clauses | Simple sentences only | Attempt with errors | Complex sentences fluent |
+| Concessive clauses | Only use "але" | Use хоча/проте | All connectors fluent |
+| Causal/result | Mix cause and effect | Usually correct | Express precisely |
+| Temporal clauses | Simple "коли" only | Use several connectors | Complex narration |
 | Reported speech | Can't convert | Convert with mistakes | Convert accurately |
 
 **Vocabulary (15 words):** Key conjunctions and connectors requiring review
 
 **Required Activities (minimum 10):**
-1. **Diagnostic quiz** - 25 items covering all clause types
+1. **Diagnostic quiz** - 20 items covering all clause types in phase
 2. **Clause identification** - Label clause types in authentic text
 3. **Sentence combining** - Join simple sentences with appropriate connectors
-4. **Error correction** - 10 common complex sentence mistakes
-5. **Reported speech conversion** - Direct → indirect
-6. **Conditional matching** - Match situations to conditional types
-7. **Writing task** - 150+ words using at least 4 clause types
+4. **Error correction** - 8 common complex sentence mistakes
+5. **Reported speech conversion** - Direct → indirect (statements, questions, commands)
+6. **Causal chain** - Express multi-step cause and effect
+7. **Writing task** - 120+ words using at least 4 clause types
 8. **Self-reflection** - What I can do / What I need to review
 9. **Gap-fill passage** - Connectors and conjunctions
 10. **Mixed review** - Random complex sentence challenges
 
 **Remediation Guidance:**
-- Score <60%: Review M21-23 (relative clauses) and M25-27 (conditionals)
-- Score 60-79%: Focus on M30-31 (causal/temporal) and M33-34 (reported speech)
+- Score <60%: Review M35-36 (concessive/causal) and M39-40 (reported speech)
+- Score 60-79%: Focus on M37-38 (temporal/integration)
 - Score 80%+: Ready for Phase B1.4 (Advanced Grammar)
 
 ---
 
-## Phase B1.4: Advanced Grammar (Modules 41-50)
+## Phase B1.4: Advanced Grammar (Modules 42-51)
 
 ### Learning Goals
 - Form and use passive participles
@@ -1416,22 +1490,22 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 36 | Adverbial Participles: Imperfective | M01-10 aspect | Simultaneous action |
-| 37 | Adverbial Participles: Perfective | M36 | Prior completed action |
-| 38 | Active Participles & Phrases | M36-37 | Formal/Academic recognition |
-| 39 | Past Passive Participles I | M36-38 | -ний/-тий forms |
-| 40 | Past Passive Participles II | M39 | -но/-то forms |
-| 41 | Passive Constructions | M39-40 | Complete passive system |
-| 42 | Diminutives: Master Class | A2 word formation | Emotional expression |
-| 43 | Numerals: Collectives & Fractions | A2 numbers | Advanced numerals |
-| 44 | Integrated Grammar Lab | M36-43 | Synthesis & Practice |
-| 45 | Checkpoint: Advanced Grammar | M36-44 | Review |
+| 42 | Adverbial Participles: Imperfective | M06-15 aspect | Simultaneous action |
+| 43 | Adverbial Participles: Perfective | M42 | Prior completed action |
+| 44 | Active Participles & Phrases | M42-43 | Formal/Academic recognition |
+| 45 | Past Passive Participles I | M42-44 | -ний/-тий forms |
+| 46 | Past Passive Participles II | M45 | -но/-то forms |
+| 47 | Passive Constructions | M45-46 | Complete passive system |
+| 48 | Diminutives: Master Class | A2 word formation | Emotional expression |
+| 49 | Numerals: Collectives & Fractions | A2 numbers | Advanced numerals |
+| 50 | Integrated Grammar Lab | M42-49 | Synthesis & Practice |
+| 51 | **Checkpoint: Advanced Grammar** | M42-50 | Review |
 
 ### Module Content Specifications B1.4
 
 ---
 
-#### Module 41: Adverbial Participles - Imperfective
+#### Module 42: Adverbial Participles - Imperfective
 **Grammar:** -ючи/-ачи forms (simultaneous action)
 
 **Formation:**
@@ -1453,7 +1527,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 42: Adverbial Participles - Perfective
+#### Module 43: Adverbial Participles - Perfective
 **Grammar:** -вши/-ши forms (prior completed action)
 
 **Formation:**
@@ -1475,7 +1549,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 43: Active Participles & Phrases
+#### Module 44: Active Participles & Phrases
 **Grammar:** Active Participles (читаючий, посивілий)
 **Focus:** Recognition & Stylistics (Passive Competence)
 
@@ -1499,7 +1573,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 44: Past Passive Participles I
+#### Module 45: Past Passive Participles I
 **Grammar:** Full form (-ний/-тий)
 
 **Formation:**
@@ -1523,7 +1597,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 45: Past Passive Participles II
+#### Module 46: Past Passive Participles II
 **Grammar:** Short form (-но/-то)
 
 **Formation:**
@@ -1546,7 +1620,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 46: Passive Constructions
+#### Module 47: Passive Constructions
 **Grammar:** Complete passive system
 
 **Passive Types:**
@@ -1569,7 +1643,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 47: Diminutives: Master Class
+#### Module 48: Diminutives: Master Class
 **Grammar:** Forms, Usage, and Nuance (Merged)
 
 **Forms:** -ик, -ок, -очок, -еньк-, -оньк-, -ечк-
@@ -1592,8 +1666,8 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 48: Numerals: Collectives & Fractions
-**Grammar:** Collective numerals and fractions (Shifted from M44)
+#### Module 49: Numerals: Collectives & Fractions
+**Grammar:** Collective numerals and fractions
 
 **Collective Numerals:**
 - двоє, троє, четверо... (two, three, four...)
@@ -1612,7 +1686,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 49: Integrated Grammar Lab
+#### Module 50: Integrated Grammar Lab
 **Grammar:** Synthesis of B1.4 concepts
 **Focus:** Participles + Passive + Numbers + Diminutives together.
 
@@ -1632,18 +1706,20 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 50: Checkpoint - Advanced Grammar
-**Covers:** M36-44
+#### Module 51: Checkpoint - Advanced Grammar
+**Covers:** M42-M50
 **Type:** B1-checkpoint
 
 **Required Skill Groups:**
-1. Adverbial Participles Impf (M36) - читаючи, говорячи ('while doing')
-2. Adverbial Participles Pf (M37) - прочитавши, зробивши ('having done')
-3. Mixed Participles (M38) - integration and practice
-4. Passive Participles (M39-40) - -ний/-тий forms and short -но/-то
-5. Passive Constructions (M41) - бути + participle, agent with ким
-6. Diminutives (M42-43) - affection, size, dismissiveness
-7. Collective Numerals & Fractions (M44) - двоє, троє; третина, чверть
+1. Adverbial Participles Impf (M42) - читаючи, говорячи ('while doing')
+2. Adverbial Participles Pf (M43) - прочитавши, зробивши ('having done')
+3. Active Participles & Phrases (M44) - читаючий, посивілий (recognition)
+4. Past Passive Participles I (M45) - -ний/-тий full forms
+5. Past Passive Participles II (M46) - -но/-то short forms
+6. Passive Constructions (M47) - complete passive system
+7. Diminutives: Master Class (M48) - forms, usage, and nuance
+8. Numerals: Collectives & Fractions (M49) - двоє, троє; третина, чверть
+9. Integrated Grammar Lab (M50) - synthesis of B1.4 concepts
 
 **CEFR Can-Do Targets (from this phase):**
 
@@ -1672,13 +1748,13 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 10. **Mixed review** - Random advanced grammar challenges
 
 **Remediation Guidance:**
-- Score <60%: Review M36-38 (adverbial participles) and M39-40 (passive participles)
-- Score 60-79%: Focus on M41 (passive constructions) and M42-43 (diminutives)
+- Score <60%: Review M42-43 (adverbial participles) and M45-46 (passive participles)
+- Score 60-79%: Focus on M47 (passive constructions) and M48-49 (diminutives, numerals)
 - Score 80%+: Ready for Phase B1.5 (Vocabulary Expansion)
 
 ---
 
-## Phase B1.5: Vocabulary Expansion I (Modules 51-60)
+## Phase B1.5: Vocabulary Expansion I (Modules 52-61)
 
 ### Learning Goals
 - Build abstract concept vocabulary
@@ -1692,22 +1768,22 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 | Module | Grammar Point | Builds On | Enables |
 |--------|--------------|-----------|---------|
-| 46 | Abstract Concepts I: Ideas | All B1 grammar | Intellectual discussion |
-| 47 | Abstract Concepts II: Processes | M46 | Process description |
-| 48 | Expressing Opinions | M46-47 | Opinion statements |
-| 49 | Agreement & Disagreement | M48 | Discussion skills |
-| 50 | Discourse Markers I | M48-49 | Text cohesion |
-| 51 | Discourse Markers II | M50 | Advanced connectors |
-| 52 | Describing Changes | M50-51 | Process narration |
-| 53 | Media & News | M46-52 | Current affairs |
-| 54 | Society & Politics | M53 | Civic vocabulary |
-| 55 | Checkpoint: Vocabulary I | M46-54 | Review |
+| 52 | Abstract Concepts I: Ideas | All B1 grammar | Intellectual discussion |
+| 53 | Abstract Concepts II: Processes | M52 | Process description |
+| 54 | Expressing Opinions | M52-53 | Opinion statements |
+| 55 | Agreement & Disagreement | M54 | Discussion skills |
+| 56 | Discourse Markers I | M54-55 | Text cohesion |
+| 57 | Discourse Markers II | M56 | Advanced connectors |
+| 58 | Describing Changes | M56-57 | Process narration |
+| 59 | Media & News | M52-58 | Current affairs |
+| 60 | Society & Politics | M59 | Civic vocabulary |
+| 61 | Professional Communication | M52-60 | Workplace language |
 
 ### Module Content Specifications B1.5
 
 ---
 
-#### Module 51: Abstract Concepts I - Ideas
+#### Module 52: Abstract Concepts I - Ideas
 **Focus:** Ideas, thoughts, problems, solutions
 
 **Vocabulary (30 words):**
@@ -1726,7 +1802,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 52: Abstract Concepts II - Processes
+#### Module 53: Abstract Concepts II - Processes
 **Focus:** Processes, changes, development
 
 **Vocabulary (30 words):**
@@ -1744,7 +1820,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 53: Expressing Opinions
+#### Module 54: Expressing Opinions
 **Focus:** Opinion expression vocabulary
 
 **Vocabulary (25 words):**
@@ -1763,7 +1839,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 54: Agreement & Disagreement
+#### Module 55: Agreement & Disagreement
 **Focus:** Discussion and debate vocabulary
 
 **Vocabulary (25 words):**
@@ -1783,7 +1859,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 55: Discourse Markers I - Basic Connectors
+#### Module 56: Discourse Markers I - Basic Connectors
 **Focus:** Text cohesion connectors
 
 **Vocabulary (25 words):**
@@ -1802,7 +1878,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 56: Discourse Markers II - Advanced
+#### Module 57: Discourse Markers II - Advanced
 **Focus:** Complex text organization
 
 **Vocabulary (25 words):**
@@ -1820,7 +1896,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 57: Describing Changes
+#### Module 58: Describing Changes
 **Focus:** Verbs and expressions of change
 
 **Vocabulary (25 words):**
@@ -1838,7 +1914,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 58: Media & News
+#### Module 59: Media & News
 **Focus:** Media and journalism vocabulary
 
 **Vocabulary (30 words):**
@@ -1856,7 +1932,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 59: Society & Politics
+#### Module 60: Society & Politics
 **Focus:** Civic and political vocabulary
 
 **Vocabulary (30 words):**
@@ -1874,51 +1950,27 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 60: Checkpoint - Vocabulary Expansion I
-**Covers:** M46-54
-**Type:** B1-checkpoint
+#### Module 61: Professional Communication
+**Focus:** Workplace and professional vocabulary
 
-**Required Skill Groups:**
-1. Abstract Concepts (M46-47) - справедливість, свобода, прогрес
-2. Opinion Expression (M48) - на мою думку, вважаю, що
-3. Agreement/Disagreement (M49) - degrees and politeness markers
-4. Discourse Markers (M50-51) - connecting and organizing ideas
-5. Media Vocabulary (M52-53) - ЗМІ, суспільство, культура
-6. Politics & Current Events (M54) - уряд, парламент, вибори
+**Vocabulary (30 words):**
+колега, керівник, підлеглий, співробітник, команда, відділ, офіс, нарада, зустріч, звіт, презентація, дедлайн, проєкт, завдання, відповідальність, ефективність, продуктивність, кар'єра, підвищення, зарплата, премія, відпустка, лікарняний, резюме, співбесіда, кваліфікація, досвід, навички, компетенція, професіоналізм
 
-**CEFR Can-Do Targets (from this phase):**
+**Key Patterns:**
+- Маю досвід роботи в... (I have work experience in...)
+- Відповідаю за... (I am responsible for...)
+- Готовий до співбесіди. (Ready for the interview.)
+- Працюю в команді. (I work in a team.)
 
-**Self-Assessment Rubric:**
-
-| Skill | Not Yet (1) | Developing (2) | Achieved (3) |
-|-------|-------------|----------------|--------------|
-| Abstract concepts | Only concrete vocabulary | Know some abstracts | Use abstracts naturally |
-| Opinion expression | "I think" only | Several phrases | Full range of markers |
-| Agreement/disagreement | Yes/no only | Polite forms | Degrees of agreement |
-| Discourse markers | Don't use | Basic connectors | Sophisticated linking |
-
-**Vocabulary (15 words):** High-frequency vocabulary requiring review
-
-**Required Activities (minimum 10):**
-1. **Vocabulary quiz** - 25 items covering all domains
-2. **Opinion matching** - Match expressions to formality level
-3. **Discourse marker gap-fill** - Complete paragraphs
-4. **Reading comprehension** - Media text with vocabulary focus
-5. **Writing task** - Opinion essay (150+ words) with discourse markers
-6. **Self-reflection** - What I can do / What I need to review
-7. **Collocation matching** - Abstract noun + verb combinations
-8. **Discussion simulation** - Agree/disagree with statements
-9. **Error correction** - 10 vocabulary/expression mistakes
-10. **Mixed review** - Random vocabulary challenges
-
-**Remediation Guidance:**
-- Score <60%: Review M46-48 (abstract concepts, opinions)
-- Score 60-79%: Focus on M51-53 (discourse markers, media)
-- Score 80%+: Ready for Phase B1.6 (Vocabulary Expansion II)
+**Signature Activity Concepts:**
+1. Match: Professional terms and definitions
+2. Role-play: Job interview simulation
+3. Writing: Professional email/resume
+4. Gap-fill: Workplace situations
 
 ---
 
-## Phase B1.6: Vocabulary Expansion II (Modules 61-70)
+## Phase B1.6: Vocabulary Expansion II (Modules 62-71)
 
 ### Learning Goals
 - Develop environment and health vocabulary
@@ -1934,7 +1986,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 61: Environment & Ecology
+#### Module 62: Environment & Ecology
 **Focus:** Environmental vocabulary
 
 **Vocabulary (30 words):**
@@ -1947,7 +1999,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 62: Health & Wellness
+#### Module 63: Health & Wellness
 **Focus:** Health and well-being vocabulary
 
 **Vocabulary (30 words):**
@@ -1960,7 +2012,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 63: Emotions - Deep Dive
+#### Module 64: Emotions - Deep Dive
 **Focus:** Advanced emotional vocabulary
 
 **Vocabulary (30 words):**
@@ -1973,7 +2025,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 64: Relationships
+#### Module 65: Relationships
 **Focus:** Social relationship vocabulary
 
 **Vocabulary (25 words):**
@@ -1986,7 +2038,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 65: Business Basics
+#### Module 66: Business Basics
 **Focus:** Professional and business vocabulary
 
 **Vocabulary (30 words):**
@@ -1999,7 +2051,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 66: Travel & Geography
+#### Module 67: Travel & Geography
 **Focus:** Travel and geographical vocabulary
 
 **Vocabulary (30 words):**
@@ -2012,7 +2064,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 67: Synonymy I - Thinking Verbs
+#### Module 68: Synonymy I - Thinking Verbs
 **Focus:** Thinking verb distinctions
 
 **Vocabulary (20 words):**
@@ -2031,7 +2083,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 68: Synonymy II - Speaking Verbs
+#### Module 69: Synonymy II - Speaking Verbs
 **Focus:** Speaking verb distinctions
 
 **Vocabulary (20 words):**
@@ -2050,7 +2102,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 69: Collocations & Expressions
+#### Module 70: Collocations & Expressions
 **Focus:** Common verb-noun and adj-noun patterns
 
 **Vocabulary (25 words):**
@@ -2063,52 +2115,27 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 70: Checkpoint - Vocabulary Expansion II
-**Covers:** M56-64
-**Type:** B1-checkpoint
+#### Module 71: Emotional Intelligence & Interpersonal Skills
+**Focus:** Emotional and interpersonal vocabulary for mature communication
 
-**Required Skill Groups:**
-1. Environment Vocabulary (M56-57) - екологія, забруднення, клімат
-2. Health & Wellness (M58) - здоров'я, лікування, профілактика
-3. Business & Professional (M59-60) - бізнес, угода, переговори
-4. Travel & Geography (M60) - подорож, маршрут, регіон
-5. Emotions Deep Dive (M61-62) - емоції, почуття, стосунки
-6. Synonyms & Nuance (M63) - choosing precise words
-7. Collocations (M64) - natural word combinations
+**Vocabulary (30 words):**
+емпатія, співчуття, розуміння, терпіння, терпимість, толерантність, повага, ввічливість, тактовність, делікатність, щирість, відвертість, чесність, порядність, відповідальність, зобов'язання, обіцянка, вибачення, пробачення, примирення, компроміс, порозуміння, взаєморозуміння, підтримка, заохочення, похвала, критика, зауваження, порада, рекомендація
 
-**CEFR Can-Do Targets (from this phase):**
+**Key Patterns:**
+- Я розумію, як ви себе почуваєте. (I understand how you feel.)
+- Дозвольте вибачитися за... (Allow me to apologize for...)
+- Давайте знайдемо компроміс. (Let's find a compromise.)
+- Я ціную вашу підтримку. (I appreciate your support.)
 
-**Self-Assessment Rubric:**
-
-| Skill | Not Yet (1) | Developing (2) | Achieved (3) |
-|-------|-------------|----------------|--------------|
-| Environment/health | Basic words only | Know topic vocabulary | Discuss fluently |
-| Business/travel | Limited terms | Handle common situations | Professional level |
-| Emotions/relationships | Simple feelings | Express nuances | Full emotional range |
-| Collocations | Don't use | Know common ones | Use naturally |
-
-**Vocabulary (15 words):** High-frequency vocabulary requiring review
-
-**Required Activities (minimum 10):**
-1. **Vocabulary quiz** - 25 items covering all B1.6 domains
-2. **Topic matching** - Sort vocabulary by domain
-3. **Synonym selection** - Choose appropriate synonym for context
-4. **Collocation completion** - Fill in missing parts
-5. **Reading comprehension** - Business or health text
-6. **Writing task** - Email or report (150+ words)
-7. **Self-reflection** - What I can do / What I need to review
-8. **Error correction** - 10 vocabulary mistakes
-9. **Speaking simulation** - Role-play business or health scenario
-10. **Mixed review** - Random vocabulary challenges
-
-**Remediation Guidance:**
-- Score <60%: Review M56-58 (environment/health) and M59-60 (business/travel)
-- Score 60-79%: Focus on M61-62 (emotions) and M63-64 (synonyms/collocations)
-- Score 80%+: Ready for Phase B1.7 (Contemporary Ukraine)
+**Signature Activity Concepts:**
+1. Match: Emotional intelligence terms and definitions
+2. Dialogue: Conflict resolution conversation
+3. Writing: Apology or appreciation letter
+4. Gap-fill: Interpersonal communication scenarios
 
 ---
 
-## Phase B1.7: Contemporary Ukraine (Modules 71-80)
+## Phase B1.7: Contemporary Ukraine (Modules 72-81)
 
 ### Learning Goals
 - Explore Ukrainian regional diversity
@@ -2123,7 +2150,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 71: Українські регіони - Захід
+#### Module 72: Українські регіони - Захід
 **Focus:** Western Ukraine
 
 **Vocabulary (25 words):**
@@ -2141,7 +2168,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 72: Українські регіони - Схід
+#### Module 73: Українські регіони - Схід
 **Focus:** Eastern Ukraine
 
 **Vocabulary (25 words):**
@@ -2159,7 +2186,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 73: Українські регіони - Південь
+#### Module 74: Українські регіони - Південь
 **Focus:** Southern Ukraine
 
 **Vocabulary (25 words):**
@@ -2177,7 +2204,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 74: Українські регіони - Центр
+#### Module 75: Українські регіони - Центр
 **Focus:** Central Ukraine
 
 **Vocabulary (25 words):**
@@ -2195,7 +2222,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 75: Українська музика сьогодні
+#### Module 76: Українська музика сьогодні
 **Focus:** Contemporary Ukrainian music
 
 **Vocabulary (25 words):**
@@ -2214,7 +2241,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 76: Українське кіно та серіали
+#### Module 77: Українське кіно та серіали
 **Focus:** Ukrainian film and television
 
 **Vocabulary (25 words):**
@@ -2233,7 +2260,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 77: Технології та стартапи
+#### Module 78: Технології та стартапи
 **Focus:** Tech industry in Ukraine
 
 **Vocabulary (25 words):**
@@ -2252,7 +2279,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 78: Спорт в Україні
+#### Module 79: Спорт в Україні
 **Focus:** Sports culture
 
 **Vocabulary (25 words):**
@@ -2271,7 +2298,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 79: Українська кухня
+#### Module 80: Українська кухня
 **Focus:** Regional cuisines
 
 **Vocabulary (25 words):**
@@ -2290,51 +2317,33 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 80: Checkpoint - Contemporary Ukraine
-**Covers:** M66-74
-**Type:** B1-checkpoint
+#### Module 81: Українські свята та фестивалі
+**Focus:** Festivals and celebrations throughout the year
 
-**Required Skill Groups:**
-1. Ukrainian Regions (M66-69) - West, East, South, Center characteristics
-2. Contemporary Culture (M70) - modern Ukrainian arts, media
-3. Ukrainian Music (M71) - traditional and contemporary
-4. Traditions & Customs (M72-73) - holidays, rituals
-5. Ukrainian Cuisine (M74) - regional dishes, food culture
-6. Authentic Text Comprehension - reading Ukrainian sources
+**Vocabulary (30 words):**
+свято, фестиваль, святкування, традиція, обряд, звичай, Різдво, Великдень, Івана Купала, День Незалежності, Масляна, вечір, застілля, гість, подарунок, побажання, привітання, колядка, щедрівка, вертеп, крашанка, пасхальний, різдвяний, народний, автентичний, відроджений, сучасний, масовий, міський, сільський
 
-**CEFR Can-Do Targets (from this phase):**
+**Key Patterns:**
+- Вітаю вас із святом! (Happy holiday to you!)
+- Бажаю вам... (I wish you...)
+- На святах ми зазвичай... (During holidays we usually...)
+- Ця традиція походить з... (This tradition comes from...)
 
-**Self-Assessment Rubric:**
+**Cultural Content:**
+- Religious holidays (Різдво, Великдень)
+- National celebrations (День Незалежності, День Соборності)
+- Folk festivals (Івана Купала, Масляна)
+- Modern festivals (Atlas Weekend, Koktebel Jazz)
 
-| Skill | Not Yet (1) | Developing (2) | Achieved (3) |
-|-------|-------------|----------------|--------------|
-| Regions | Know 1-2 regions | Know major regions | All regions familiar |
-| Culture | Basic facts only | Understand traditions | Discuss in depth |
-| Contemporary | Struggle with topics | Follow main points | Engage confidently |
-| Authentic texts | Need much support | Understand main ideas | Comprehend well |
-
-**Vocabulary (15 words):** High-frequency cultural vocabulary requiring review
-
-**Required Activities (minimum 10):**
-1. **Cultural quiz** - 25 items covering all B1.7 topics
-2. **Map activity** - Match regions to characteristics
-3. **Reading comprehension** - Authentic Ukrainian text
-4. **Tradition matching** - Holidays to customs
-5. **Writing task** - Describe Ukrainian region or tradition (150+ words)
-6. **Self-reflection** - What I can do / What I need to review
-7. **Cuisine vocabulary** - Match dishes to regions
-8. **Contemporary culture** - Identify modern Ukrainian artists/writers
-9. **Error correction** - 10 cultural/vocabulary mistakes
-10. **Mixed review** - Random contemporary Ukraine challenges
-
-**Remediation Guidance:**
-- Score <60%: Review M66-69 (regions, history) and M72-74 (traditions, cuisine)
-- Score 60-79%: Focus on M70-71 (contemporary culture)
-- Score 80%+: Ready for Phase B1.8 (Skills & Integration)
+**Signature Activity Concepts:**
+1. Match: Holidays and traditions
+2. Reading: Festival descriptions
+3. Writing: Holiday celebration essay
+4. Gap-fill: Holiday vocabulary in context
 
 ---
 
-## Phase B1.8: Skills & Integration (Modules 81-85)
+## Phase B1.8: Skills & Integration (Modules 82-86)
 
 ### Learning Goals
 - Develop authentic text comprehension skills
@@ -2346,7 +2355,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 81: Новини - як читати
+#### Module 82: Новини - як читати
 **Focus:** News literacy and reading skills
 
 **Vocabulary (20 words):**
@@ -2365,7 +2374,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 82: Інтерв'ю та подкасти
+#### Module 83: Інтерв'ю та подкасти
 **Focus:** Audio comprehension skills
 
 **Vocabulary (20 words):**
@@ -2384,7 +2393,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 83: B1 Grammar Integration
+#### Module 84: B1 Grammar Integration
 **Focus:** Comprehensive grammar review
 
 **Review Areas:**
@@ -2403,7 +2412,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 84: B1 Vocabulary Integration
+#### Module 85: B1 Vocabulary Integration
 **Focus:** Comprehensive vocabulary review
 
 **Review Domains:**
@@ -2422,7 +2431,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 ---
 
-#### Module 85: B1 Capstone
+#### Module 86: B1 Capstone
 **Focus:** Comprehensive assessment
 
 **Can-Do Assessment:**
@@ -2449,17 +2458,19 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 
 | Phase | Modules | New Words | Focus |
 |-------|---------|-----------|-------|
-| B1.1 Aspect | 01-10 | ~180 | Aspect contexts, verb pairs |
-| B1.2 Motion | 11-20 | ~200 | Motion verbs, prefixes |
-| B1.3 Complex Sentences | 21-35 | ~280 | Clauses, reported speech |
-| B1.4 Advanced Grammar | 36-45 | ~180 | Participles, diminutives |
-| B1.5 Vocabulary I | 46-55 | ~235 | Abstract, discourse |
-| B1.6 Vocabulary II | 56-65 | ~245 | Professional, emotional |
-| B1.7 Contemporary Ukraine | 66-75 | ~230 | Culture, regions |
-| B1.8 Skills | 76-80 | ~80 | Integration |
-| **Total** | **80** | **~1,630** | |
+| B1.0 Metalanguage | 01-05 | ~100 | Grammar terms in Ukrainian |
+| B1.1 Aspect | 06-15 | ~180 | Aspect contexts, verb pairs |
+| B1.2 Motion | 16-25 | ~200 | Motion verbs, prefixes |
+| B1.3a Complex I | 26-34 | ~160 | Relatives, purpose, conditionals |
+| B1.3b Complex II | 35-41 | ~120 | Concessive, temporal, reported |
+| B1.4 Advanced Grammar | 42-51 | ~180 | Participles, diminutives |
+| B1.5 Vocabulary I | 52-61 | ~270 | Abstract, discourse, professional |
+| B1.6 Vocabulary II | 62-71 | ~270 | Health, emotions, synonymy |
+| B1.7 Contemporary Ukraine | 72-81 | ~275 | Culture, regions, festivals |
+| B1.8 Skills | 82-86 | ~80 | Integration |
+| **Total** | **86** | **~1,835** | |
 
-**Cumulative after B1:** ~3,430 words
+**Cumulative after B1:** ~3,635 words
 
 ---
 
@@ -2492,7 +2503,7 @@ When subjects differ, use щоб + past tense form (NOT infinitive):
 - [ ] Ukrainian regions and their characteristics
 - [ ] Contemporary Ukrainian culture
 
-### M80 Scoring Rubrics
+### M86 Scoring Rubrics
 
 #### Reading Comprehension (25 points)
 

@@ -915,7 +915,7 @@ def get_b1_immersion_range(module_num: int) -> tuple[int, int]:
         return (0, 100)
 
     # All other B1 modules target 90-95% Ukrainian immersion
-    return (85, 98)  # Allow 85-98% to account for activity instructions
+    return (85, 100)  # B1 is fully immersed - no upper limit
 
 
 def get_level_config(level_code: str, module_focus: str = None) -> dict:

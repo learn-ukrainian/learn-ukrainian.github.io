@@ -535,7 +535,7 @@ See `curriculum/l2-uk-en/b1/06-aspect-complete-system.md` for a complete example
 
 - [B1 Curriculum Plan](../B1-CURRICULUM-PLAN.md) - Full B1 module specifications
 - [Module Richness Guidelines](../MODULE-RICHNESS-GUIDELINES-v2.md) - Quality standards
-- [Quick Reference: B1](.agent/quick-ref/b1.md) - B1 requirements summary
+- [Quick Reference: B1](claude_extensions/quick-ref/b1.md) - B1 requirements summary
 - [Activity Markdown Reference](../ACTIVITY-MARKDOWN-REFERENCE.md) - Activity syntax patterns
 
 ---

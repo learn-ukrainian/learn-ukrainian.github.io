@@ -14,15 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 93.4% (target 85-98% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 93.2% (target 85-100% (B1.1 Aspect))
 
 ## MDX VALIDATION
-### Warnings
-- ⚠️ Some Ukrainian content may be missing (320/894 words)
+✅ No issues found
 
 ## HTML VALIDATION
-### Warnings
-- ⚠️ No Activities section found
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,16 +32,16 @@
 | **Діалоги** | ✅ | 341 | Included in Core |
 | **Підсумок** | ✅ | 232 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort** | 🎮 | 16 | Activity (16 items, min 14) |
-| **unjumble** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze** | 🎮 | 16 | Activity (16 items, min 14) |
-| **mark-the-words** | 🎮 | 6 | Activity (6 items, min 6) |
-| **dialogue-reorder** | 🎮 | 6 | Activity (6 items, min 4) |
-| **select** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate** | 🎮 | 6 | Activity (6 items, min 6) |
+| **quiz: Результат чи процес?** | 🎮 | 14 | Activity (14 items, min 8) |
+| **match-up: Маркери результату та процесу** | 🎮 | 8 | Activity (8 items, min 8) |
+| **fill-in: Вибір виду — результат чи процес** | 🎮 | 10 | Activity (10 items, min 8) |
+| **true-false: Правда чи неправда про вид** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Результат чи процес?** | 🎮 | 18 | Activity (18 items, min 14) |
+| **unjumble: Речення про результат і процес** | 🎮 | 8 | Activity (8 items, min 6) |
+| **error-correction: Виправлення помилок виду** | 🎮 | 8 | Activity (8 items, min 6) |
+| **cloze: Вид у контексті** | 🎮 | 16 | Activity (16 items, min 14) |
+| **mark-the-words: Маркери результату** | 🎮 | 6 | Activity (6 items, min 6) |
+| **dialogue-reorder: Розмова про досягнення** | 🎮 | 6 | Activity (6 items, min 4) |
+| **select: Множинний вибір — результат і процес** | 🎮 | 6 | Activity (6 items, min 6) |
+| **translate: Переклад — результат чи процес** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Словник** | ⚪️ | 0 | Skipped |

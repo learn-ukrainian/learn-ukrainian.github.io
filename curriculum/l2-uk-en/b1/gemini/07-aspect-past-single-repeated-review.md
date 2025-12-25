@@ -14,15 +14,13 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 95.7% (target 85-98% (B1.1 Aspect))
+- **Immersion:** 🇺🇦 95.5% (target 85-100% (B1.1 Aspect))
 
 ## MDX VALIDATION
-### Warnings
-- ⚠️ Some Ukrainian content may be missing (405/949 words)
+✅ No issues found
 
 ## HTML VALIDATION
-### Warnings
-- ⚠️ No Activities section found
+✅ Renders correctly (11 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -34,16 +32,16 @@
 | **Діалоги** | ✅ | 337 | Included in Core |
 | **Підсумок** | ✅ | 226 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort** | 🎮 | 16 | Activity (16 items, min 14) |
-| **unjumble** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze** | 🎮 | 16 | Activity (16 items, min 14) |
-| **mark-the-words** | 🎮 | 6 | Activity (6 items, min 6) |
-| **dialogue-reorder** | 🎮 | 6 | Activity (6 items, min 4) |
-| **select** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate** | 🎮 | 6 | Activity (6 items, min 6) |
+| **quiz: Одноразові та повторювані дії** | 🎮 | 14 | Activity (14 items, min 8) |
+| **match-up: Маркери та вид** | 🎮 | 8 | Activity (8 items, min 8) |
+| **fill-in: Вибір виду в минулому** | 🎮 | 10 | Activity (10 items, min 8) |
+| **true-false: Правда чи неправда про вид** | 🎮 | 8 | Activity (8 items, min 8) |
+| **group-sort: Одного разу чи щодня?** | 🎮 | 18 | Activity (18 items, min 14) |
+| **unjumble: Речення про минуле** | 🎮 | 8 | Activity (8 items, min 6) |
+| **error-correction: Виправлення помилок виду** | 🎮 | 8 | Activity (8 items, min 6) |
+| **cloze: Вид у контексті** | 🎮 | 16 | Activity (16 items, min 14) |
+| **mark-the-words: Маркери доконаного виду** | 🎮 | 6 | Activity (6 items, min 6) |
+| **dialogue-reorder: Розмова про минуле** | 🎮 | 6 | Activity (6 items, min 4) |
+| **select: Множинний вибір — минуле** | 🎮 | 6 | Activity (6 items, min 6) |
+| **translate: Переклад — вид у минулому** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Словник** | ⚪️ | 0 | Skipped |
