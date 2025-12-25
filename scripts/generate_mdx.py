@@ -1240,7 +1240,7 @@ def main():
     print(f'Output: docusaurus/docs/\n', flush=True)
 
     curriculum_path = CURRICULUM_DIR / lang_pair
-    levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
+    levels = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'lit']
 
     for level in levels:
         if target_level and level != target_level:
