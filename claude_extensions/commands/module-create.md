@@ -104,6 +104,17 @@ Before writing, confirm from quick-ref:
 - [ ] External Resources (YouTube/Blogs) planned?
 - [ ] **If checkpoint:** Read `docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md`
 
+### ⚠️ CRITICAL CONSTRAINTS (Apply DURING Writing, Not After)
+
+**Quiz Prompts:**
+- Each quiz question prompt MUST be **12-20 words** (audit fails below 12)
+- Count words BEFORE writing each question
+
+**100% Ukrainian Immersion (B1+):**
+- **FORBIDDEN:** English annotations in parentheses e.g. `(Before)`, `(While...)`, `(As soon as)`
+- **ALLOWED:** English ONLY in vocabulary table translations
+- All grammar explanations must be in Ukrainian with Ukrainian examples
+
 ### Stage Instructions (if needed)
 
 Only read stage docs for complex cases:
