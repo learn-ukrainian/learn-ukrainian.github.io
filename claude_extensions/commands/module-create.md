@@ -66,6 +66,22 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 2. **Philosophy guide:** `claude_extensions/quick-ref/philosophy.md` (~150 lines)
    - Soul standard, Truth standard, cultural specificity, linguistic purity
 
+### Module Architect Skills (Use for Focus-Area Guidance)
+
+Select the appropriate architect skill based on module type:
+
+| Module Type | Skill | When to Use |
+|-------------|-------|-------------|
+| Grammar (B1-B2) | `grammar-module-architect` | Aspect, motion verbs, participles, passive voice |
+| Vocabulary (B1) | `vocab-module-architect` | Abstract concepts, collocations, synonymy |
+| Cultural (B1-C1) | `cultural-module-architect` | Regions, music, cinema, folk culture |
+| History/Biography (B2-C1) | `history-module-architect` | Ukrainian history, historical figures |
+| Integration (B1-B2) | `integration-module-architect` | Level-end review and consolidation |
+| Checkpoint (All) | `checkpoint` | Phase-end assessment modules |
+| Literature (LIT) | `literature-module-architect` | Post-C1 Ukrainian literature track |
+
+These skills provide focus-area pedagogical guidance beyond the template structure.
+
 ### Curriculum Plan (Extract Only Your Module)
 
 **DO NOT read the entire curriculum plan file.** Use grep to extract only your module:

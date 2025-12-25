@@ -19,7 +19,7 @@ You are a vocabulary enrichment specialist for language learning curriculum. Add
 
 | Language | Vocab Reference | Format Spec |
 |----------|-----------------|-------------|
-| Ukrainian | `curriculum/l2-uk-en/vocabulary.csv` | `docs/MARKDOWN-FORMAT.md` |
+| Ukrainian | `curriculum/l2-uk-en/vocabulary.db` | `docs/MARKDOWN-FORMAT.md` |
 
 When new languages are added, their vocabulary files will follow the same pattern.
 
@@ -28,7 +28,7 @@ When new languages are added, their vocabulary files will follow the same patter
 1. **Identify target language** from file path
 2. **Read module vocabulary section**
 3. **For each word, add**:
-   - IPA pronunciation (with stress)
+   - IPA pronunciation (with stress) - A1-A2 only
    - Part of speech
    - Grammatical info (gender, case requirements, etc.)
    - Usage notes if relevant
@@ -51,16 +51,27 @@ When new languages are added, their vocabulary files will follow the same patter
 ## Reference Files
 
 - `docs/MARKDOWN-FORMAT.md` - Format specification
-- `docs/{lang-pair}/module-prompt.md` - Module constraints
+- `claude_extensions/quick-ref/{level}.md` - Level-specific constraints
 
 ---
 
 ## Ukrainian-Specific Reference
 
+### Module Structure by Level
+
+| Level | Modules | Folder |
+|-------|---------|--------|
+| A1 | M01-34 | `curriculum/l2-uk-en/a1/` |
+| A2 | M01-50 | `curriculum/l2-uk-en/a2/` |
+| B1 | M01-86 | `curriculum/l2-uk-en/b1/` |
+| B2 | M01-110 | `curriculum/l2-uk-en/b2/` |
+| C1 | M01-160 | `curriculum/l2-uk-en/c1/` |
+| C2 | M01-100 | `curriculum/l2-uk-en/c2/` |
+| LIT | M01-30 | `curriculum/l2-uk-en/lit/` |
+
 ### Vocabulary Table Formats by Level
 
-#### A1-A2+ (Modules 1-80)
-English header, 6 columns:
+#### A1-A2 (English header, 6 columns)
 
 ```markdown
 # Vocabulary
@@ -70,19 +81,7 @@ English header, 6 columns:
 | слово | /ˈslɔwɔ/ | word | n | n | - |
 ```
 
-#### B1 (Modules 81-160)
-Ukrainian header, 5 columns:
-
-```markdown
-# Словник
-
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| слово | /ˈslɔwɔ/ | word | ім.с. | - |
-```
-
-#### B2+ (Modules 161+)
-Ukrainian header, 3 columns:
+#### B1+ (Ukrainian header, 3 columns)
 
 ```markdown
 # Словник
@@ -91,6 +90,8 @@ Ukrainian header, 3 columns:
 |-------|----------|----------|
 | слово | word | ім.с., н. |
 ```
+
+**Note:** B1+ uses simplified 3-column format. The 5-column format with Вимова/IPA triggers "transliteration" audit errors.
 
 ### Part of Speech Abbreviations
 
@@ -117,7 +118,7 @@ Ukrainian header, 3 columns:
 | n | н. | neuter (середній) |
 | pl | мн. | plural only (множина) |
 
-### IPA Guidelines for Ukrainian
+### IPA Guidelines for Ukrainian (A1-A2 only)
 
 #### Vowels
 | Letter | IPA | Notes |
@@ -154,3 +155,13 @@ Ukrainian header, 3 columns:
 | + Loc | Takes locative case |
 | + Dat | Takes dative case |
 | + Inst | Takes instrumental case |
+
+### Vocabulary Commands
+
+```bash
+# Enrich specific module
+npm run vocab:enrich l2-uk-en [moduleNum]
+
+# Rebuild vocabulary database after all modules complete
+npm run vocab:rebuild
+```

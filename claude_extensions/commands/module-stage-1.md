@@ -43,11 +43,12 @@ Extract:
 **MANDATORY:** Read the template for this module type.
 
 **For B1 modules:**
-- Grammar (M06-50: Aspect, Motion, Complex Sentences, Advanced Grammar) → `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-- Vocabulary (M51-70: Abstract concepts, Opinions, Discourse markers) → `docs/l2-uk-en/templates/b1-vocab-module-template.md`
-- Checkpoint (M15, M25, M40, M50, M60, M70, M80) → `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
-- Cultural (M71-80: Regions, Music, Cinema, Tech, Sports, Cuisine) → `docs/l2-uk-en/templates/b1-cultural-module-template.md`
-- Integration (M81-85: Skills, Grammar/Vocab review, Capstone) → `docs/l2-uk-en/templates/b1-integration-module-template.md`
+- Metalanguage (M01-05: Grammar terms in Ukrainian) → `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
+- Grammar (M06-51: Aspect, Motion, Complex Sentences, Advanced Grammar) → `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- Checkpoint (M15, M25, M34, M41, M51 — grammar phases only) → `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- Vocabulary (M52-71: Abstract concepts, Opinions, Discourse markers) → `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- Cultural (M72-81: Regions, Music, Cinema, Tech, Sports, Cuisine) → `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+- Integration (M82-86: Skills, Grammar/Vocab review, Capstone) → `docs/l2-uk-en/templates/b1-integration-module-template.md`
 
 **For other levels:** Check curriculum plan for template references (B2+, C1+, C2+ templates will be available in Phase 3).
 
@@ -57,7 +58,23 @@ The template provides:
 - Pre-submission checklist
 - Audit validation examples
 
-### Step 2c: Detect Checkpoint
+### Step 2c: Use Module Architect Skill (Recommended)
+
+For focus-area guidance beyond the template, use the appropriate architect skill:
+
+| Module Type | Skill |
+|-------------|-------|
+| Grammar (B1-B2) | `grammar-module-architect` |
+| Vocabulary (B1) | `vocab-module-architect` |
+| Cultural (B1-C1) | `cultural-module-architect` |
+| History/Biography (B2-C1) | `history-module-architect` |
+| Integration (B1-B2) | `integration-module-architect` |
+| Checkpoint (All) | `checkpoint` |
+| Literature (LIT) | `literature-module-architect` |
+
+These skills provide pedagogical guidance, activity priorities, and common mistakes to avoid.
+
+### Step 2d: Detect Checkpoint
 
 Check if module is a checkpoint:
 - Curriculum plan says "Checkpoint"

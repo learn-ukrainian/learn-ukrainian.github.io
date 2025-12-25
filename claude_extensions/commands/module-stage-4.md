@@ -40,11 +40,23 @@ Capture all violations.
 **IF VIOLATIONS:**
 
 Count violations by category:
-- Grammar violations
+- Grammar violations (use `grammar-check` skill for verification)
 - Vocabulary violations
 - Activity syntax issues
 - Richness failures
 - Linguistic purity issues
+
+**Use architect skills for fix guidance:**
+
+| Module Type | Skill for Fixes |
+|-------------|-----------------|
+| Grammar (B1-B2) | `grammar-module-architect` |
+| Vocabulary (B1) | `vocab-module-architect` |
+| Cultural (B1-C1) | `cultural-module-architect` |
+| History/Biography (B2-C1) | `history-module-architect` |
+| Integration (B1-B2) | `integration-module-architect` |
+| Checkpoint (All) | `checkpoint` |
+| Literature (LIT) | `literature-module-architect` |
 
 **Decision Matrix:**
 

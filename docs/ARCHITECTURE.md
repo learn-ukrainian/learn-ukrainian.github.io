@@ -48,12 +48,13 @@ Curricula-Opus (CO) is a content factory that generates Ukrainian language learn
 curricula-opus/
 ├── curriculum/                    # SOURCE OF TRUTH
 │   └── l2-uk-en/
-│       ├── a1/                    # A1 modules (30)
+│       ├── a1/                    # A1 modules (34)
 │       ├── a2/                    # A2 modules (50)
-│       ├── b1/                    # B1 modules (80)
-│       ├── b2/                    # B2 modules (125)
-│       ├── c1/                    # C1 modules (115)
-│       ├── c2/                    # C2 modules (80)
+│       ├── b1/                    # B1 modules (86)
+│       ├── b2/                    # B2 modules (110)
+│       ├── c1/                    # C1 modules (160)
+│       ├── c2/                    # C2 modules (100)
+│       ├── lit/                   # LIT modules (30) - post-C1 track
 │       ├── vocabulary.db          # SQLite vocabulary database
 │       └── *-CURRICULUM-PLAN.md   # Level planning docs
 │
@@ -89,11 +90,129 @@ curricula-opus/
 │       ├── a1/module-01.json
 │       └── ...
 │
-└── docs/                          # DOCUMENTATION
-    ├── ARCHITECTURE.md            # This file
-    ├── MARKDOWN-FORMAT.md         # Markdown syntax spec
-    └── SCRIPTS.md                 # Scripts reference
+├── docs/                          # DOCUMENTATION
+│   ├── ARCHITECTURE.md            # This file
+│   ├── MARKDOWN-FORMAT.md         # Markdown syntax spec
+│   └── SCRIPTS.md                 # Scripts reference
+│
+└── claude_extensions/             # CLAUDE CODE EXTENSIONS
+    ├── commands/                  # Slash commands (/module, /module-stage-1, etc.)
+    ├── skills/                    # Skills (grammar-check, vocab-enrichment, etc.)
+    ├── stages/                    # Module creation workflow stages (1-4)
+    └── quick-ref/                 # Level-specific quick references (a1.md, b1.md, etc.)
 ```
+
+## Claude Extensions Architecture
+
+The `claude_extensions/` directory contains configuration for Claude Code, organized into four layers:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER COMMANDS                             │
+│    /module b1 10     /checkpoint b2 25     /review-content       │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    COMMANDS (Orchestration)                      │
+│                                                                 │
+│   claude_extensions/commands/                                   │
+│   - module.md              → Routes to correct stage            │
+│   - module-stage-1.md      → Skeleton creation                  │
+│   - module-stage-2.md      → Content writing                    │
+│   - module-stage-3.md      → Activity creation                  │
+│   - module-stage-4.md      → Review & fix                       │
+│   - review-content.md      → Content quality review             │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+                ┌───────────────┴───────────────┐
+                ▼                               ▼
+┌─────────────────────────┐     ┌─────────────────────────┐
+│   TEMPLATES (Structure)  │     │   QUICK-REFS (Context)  │
+│                         │     │                         │
+│ docs/l2-uk-en/templates/│     │ claude_extensions/      │
+│ - b1-grammar-template   │     │ quick-ref/              │
+│ - b2-checkpoint-template│     │ - a1.md, a2.md          │
+│ - lit-module-template   │     │ - b1.md, b2.md          │
+│ - [26 total templates]  │     │ - c1.md, c2.md          │
+└─────────────────────────┘     └─────────────────────────┘
+                │                               │
+                └───────────────┬───────────────┘
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                   SKILLS (Cross-Cutting Utilities)               │
+│                                                                 │
+│   claude_extensions/skills/                                     │
+│                                                                 │
+│   UTILITY SKILLS:                                               │
+│   - grammar-check           → CEFR grammar validation           │
+│   - vocab-enrichment        → IPA, POS, usage notes             │
+│   - prompt-engineering      → AI documentation optimization     │
+│                                                                 │
+│   MODULE ARCHITECT SKILLS:                                      │
+│   - grammar-module-architect    → B1-B2 grammar modules         │
+│   - vocab-module-architect      → B1 vocabulary expansion       │
+│   - cultural-module-architect   → B1-C1 cultural modules        │
+│   - history-module-architect    → B2 history, C1 biography      │
+│   - integration-module-architect→ B1-B2 integration modules     │
+│   - checkpoint                  → All levels checkpoint modules │
+│   - literature-module-architect → LIT track modules             │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Layer Responsibilities
+
+| Layer | Purpose | Location | Invocation |
+|-------|---------|----------|------------|
+| **Commands** | Orchestrate multi-step workflows | `claude_extensions/commands/` | `/module`, `/checkpoint` |
+| **Templates** | Define authoritative module structure | `docs/l2-uk-en/templates/` | Read by commands/stages |
+| **Quick-Refs** | Provide level-specific constraints | `claude_extensions/quick-ref/` | Read by commands/skills |
+| **Skills** | Handle cross-cutting concerns | `claude_extensions/skills/` | `/grammar-check`, `/vocab-enrichment` |
+
+### Design Decisions
+
+**Two types of skills:**
+
+1. **Utility Skills** (cross-cutting concerns):
+   - `grammar-check` — Validate grammar against CEFR level
+   - `vocab-enrichment` — Add IPA, POS, usage notes
+   - `prompt-engineering` — Optimize AI documentation
+
+2. **Module Architect Skills** (focus-area guidance):
+   - `grammar-module-architect` — B1-B2 grammar modules
+   - `vocab-module-architect` — B1 vocabulary expansion modules
+   - `cultural-module-architect` — B1-C1 cultural modules
+   - `history-module-architect` — B2 history, C1 biography modules
+   - `integration-module-architect` — B1-B2 integration modules
+   - `checkpoint` — All levels checkpoint modules
+   - `literature-module-architect` — LIT track modules
+
+**Skill vs Command vs Template:**
+- **Skill**: Either utility (validation, enrichment) or module architect (focus-area guidance)
+- **Command**: Multi-step workflow orchestration (`/module` runs stages 1-4)
+- **Template**: Authoritative structure for a module type (always read first)
+
+### Current Skills
+
+**Utility Skills:**
+
+| Skill | Purpose | Status |
+|-------|---------|--------|
+| `grammar-check` | CEFR grammar validation | ✅ Active |
+| `vocab-enrichment` | IPA, POS, usage notes | ✅ Active |
+| `prompt-engineering` | AI documentation optimization | ✅ Active |
+
+**Module Architect Skills:**
+
+| Skill | Focus Area | Levels | Status |
+|-------|------------|--------|--------|
+| `grammar-module-architect` | Grammar (aspect, motion, participles) | B1-B2 | ✅ Active |
+| `vocab-module-architect` | Vocabulary expansion (collocations, synonymy) | B1 | ✅ Active |
+| `cultural-module-architect` | Cultural modules (regions, music, cinema) | B1-C1 | ✅ Active |
+| `history-module-architect` | History & biography modules | B2-C1 | ✅ Active |
+| `integration-module-architect` | Integration & review modules | B1-B2 | ✅ Active |
+| `checkpoint` | Checkpoint modules (phase-end assessment) | All | ✅ Active |
+| `literature-module-architect` | LIT track (post-C1 literature) | LIT | ✅ Active |
 
 ## Module Types
 
@@ -158,16 +277,17 @@ curricula-opus/
 
 ### Immersion Levels by CEFR
 
-| Level | Modules | Immersion | English % | Ukrainian % |
-|-------|---------|-----------|-----------|-------------|
-| A1 | 1-30 | 0.30 | 70% | 30% |
-| A2 | 31-60 | 0.40 | 60% | 40% |
-| A2+ | 61-80 | 0.50 | 50% | 50% |
-| B1 | 81-120 | 0.60 | 40% | 60% |
-| B1+ | 121-160 | 0.70 | 30% | 70% |
-| B2 | 161-200 | 0.85 | 15% | 85% |
-| B2+ | 201-240 | 0.90 | 10% | 90% |
-| C1 | 241+ | 0.95 | 5% | 95% |
+| Level | Modules | Folder | Immersion |
+|-------|---------|--------|-----------|
+| A1 | M01-34 | `a1/` | 10-40% (graduated) |
+| A2 | M01-50 | `a2/` | 40-50% |
+| B1 | M01-86 | `b1/` | **100%** |
+| B2 | M01-110 | `b2/` | **100%** |
+| C1 | M01-160 | `c1/` | **100%** |
+| C2 | M01-100 | `c2/` | **100%** |
+| LIT | M01-30 | `lit/` | **100%** |
+
+**Note:** B1+ levels use 100% Ukrainian immersion. English is only allowed in vocabulary table translations.
 
 ## Docusaurus Web Output
 
@@ -316,16 +436,15 @@ When rewriting modules, apply these standards:
 
 ### Immersion Levels by Level
 
-| Level | Modules | EN % | UK % | Notes |
-|-------|---------|------|------|-------|
-| A1 | 1-30 | 70% | 30% | Transliteration in early modules |
-| A2 | 31-60 | 60% | 40% | Bilingual headers |
-| A2+ | 61-80 | 50% | 50% | Transition phase |
-| B1 | 81-120 | 40% | 60% | Ukrainian headers, some Ukrainian instructions |
-| B1+ | 121-160 | 30% | 70% | More Ukrainian, English for complex grammar |
-| B2 | 161-200 | 0% | 100% | Full immersion |
-| B2+ | 201-240 | 0% | 100% | Full immersion |
-| C1 | 241+ | 0% | 100% | Full immersion (native) |
+| Level | Modules | UK % | Notes |
+|-------|---------|------|-------|
+| A1 | M01-34 | 10-40% | Transliteration graduated (full → first-only) |
+| A2 | M01-50 | 40-50% | Bilingual explanations |
+| B1 | M01-86 | **100%** | Full immersion (English only in vocab translations) |
+| B2 | M01-110 | **100%** | Full immersion |
+| C1 | M01-160 | **100%** | Full immersion |
+| C2 | M01-100 | **100%** | Full immersion |
+| LIT | M01-30 | **100%** | Post-C1 literature track |
 
 ## Vibe Integration
 

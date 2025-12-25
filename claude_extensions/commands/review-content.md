@@ -45,15 +45,29 @@ Before scoring, verify the module follows the appropriate template:
 
 **Template Selection by Level and Type:**
 - **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
-- **B1 M06-50 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-- **B1 M51-70 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
-- **B1 M71-80 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
-- **B1 M81-85 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
-- **B1 Checkpoints (M10, M20, M35, M45, M55, M65, M75, M80):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- **B1 M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- **B1 Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- **B1 M52-71 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- **B1 M72-81 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+- **B1 M82-86 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
 - **B2:** `docs/l2-uk-en/templates/b2-module-template.md`
 - **C1:** `docs/l2-uk-en/templates/c1-module-template.md`
 - **C2:** `docs/l2-uk-en/templates/c2-module-template.md`
 - **LIT:** `docs/l2-uk-en/templates/lit-module-template.md`
+
+**Use Module Architect Skills for Focus-Area Review:**
+
+| Module Type | Skill | Review Focus |
+|-------------|-------|--------------|
+| Grammar (B1-B2) | `grammar-module-architect` | TTT pedagogy, aspect/motion verb teaching |
+| Vocabulary (B1) | `vocab-module-architect` | Collocations, synonymy, register |
+| Cultural (B1-C1) | `cultural-module-architect` | Authentic materials, regional balance |
+| History/Biography (B2-C1) | `history-module-architect` | Decolonization, primary sources |
+| Integration (B1-B2) | `integration-module-architect` | Skill coverage, no new content |
+| Checkpoint (All) | `checkpoint` | All skill groups tested, 16+ activities |
+| Literature (LIT) | `literature-module-architect` | 100% immersion, essays not drills |
+
+**Also use `grammar-check` skill** to verify Ukrainian grammar complies with Ukrainian State Standard 2024.
 
 **Verify:**
 - [ ] Module structure matches template sections
@@ -61,6 +75,7 @@ Before scoring, verify the module follows the appropriate template:
 - [ ] Activity count and types match template requirements
 - [ ] Vocabulary count meets template specification
 - [ ] Pedagogy (PPP/TTT/TBL/CBI) matches template
+- [ ] Focus-area requirements from architect skill met
 
 **If template compliance fails, flag as ❌ REWRITE regardless of other scores.**
 

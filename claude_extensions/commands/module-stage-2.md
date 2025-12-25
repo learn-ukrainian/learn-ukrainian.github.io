@@ -40,6 +40,18 @@ From the level, identify:
 
 **Follow the template structure** from Stage 1 (Step 2b).
 
+**Use the appropriate architect skill** for focus-area guidance:
+
+| Module Type | Skill |
+|-------------|-------|
+| Grammar (B1-B2) | `grammar-module-architect` |
+| Vocabulary (B1) | `vocab-module-architect` |
+| Cultural (B1-C1) | `cultural-module-architect` |
+| History/Biography (B2-C1) | `history-module-architect` |
+| Integration (B1-B2) | `integration-module-architect` |
+| Checkpoint (All) | `checkpoint` |
+| Literature (LIT) | `literature-module-architect` |
+
 Replace `[placeholder]` markers with rich content following template guidance:
 
 1. **Warm-up/Diagnostic**: Connect to prior knowledge, leading question

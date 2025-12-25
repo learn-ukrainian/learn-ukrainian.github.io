@@ -40,6 +40,18 @@ From the level:
 - Required activity types
 - Sequencing rules
 
+**Use the appropriate architect skill** for activity priorities:
+
+| Module Type | Skill | Activity Focus |
+|-------------|-------|----------------|
+| Grammar (B1-B2) | `grammar-module-architect` | fill-in, error-correction, cloze |
+| Vocabulary (B1) | `vocab-module-architect` | match-up, group-sort, select |
+| Cultural (B1-C1) | `cultural-module-architect` | quiz, true-false, cloze |
+| History/Biography (B2-C1) | `history-module-architect` | comprehension, primary source analysis |
+| Integration (B1-B2) | `integration-module-architect` | comprehensive review activities |
+| Checkpoint (All) | `checkpoint` | 16+ skill-targeted activities |
+| Literature (LIT) | `literature-module-architect` | essays, deep reading (no drills) |
+
 ### Step 5: Write Activities Section
 
 Add `# Activities` section with:

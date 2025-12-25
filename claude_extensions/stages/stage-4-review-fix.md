@@ -43,11 +43,11 @@ Review the module, fix violations, repeat until PASS.
 ### 1. Template Compliance
 - [ ] **Read the appropriate template** for this module type:
   - **B1 M01-05 (Metalanguage):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
-  - **B1 M06-50 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-  - **B1 M51-70 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
-  - **B1 M71-80 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
-  - **B1 M81-85 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
-  - **B1 Checkpoints (M10, M20, M35, M45, M55, M65, M75, M80):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+  - **B1 M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+  - **B1 Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+  - **B1 M52-71 (Vocabulary):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+  - **B1 M72-81 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+  - **B1 M82-86 (Integration):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
   - **B2:** `docs/l2-uk-en/templates/b2-module-template.md`
   - **C1:** `docs/l2-uk-en/templates/c1-module-template.md`
   - **C2:** `docs/l2-uk-en/templates/c2-module-template.md`

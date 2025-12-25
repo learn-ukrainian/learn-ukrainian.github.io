@@ -10,11 +10,11 @@ Fill the skeleton with rich instructional content.
 
 **B1 Modules:**
 - **M01-05 (Metalanguage/Grammar Terms):** `docs/l2-uk-en/templates/b1-metalanguage-module-template.md`
-- **M06-50 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
-- **M51-70 (Vocabulary Expansion):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
-- **M71-80 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
-- **M81-85 (Integration/Skills):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
-- **Checkpoint Modules (M10, M20, M35, M45, M55, M65, M75, M80):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md` (if exists)
+- **M06-51 (Grammar):** `docs/l2-uk-en/templates/b1-grammar-module-template.md`
+- **Checkpoints (M15, M25, M34, M41, M51 — grammar phases only):** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+- **M52-71 (Vocabulary Expansion):** `docs/l2-uk-en/templates/b1-vocab-module-template.md`
+- **M72-81 (Cultural):** `docs/l2-uk-en/templates/b1-cultural-module-template.md`
+- **M82-86 (Integration/Skills):** `docs/l2-uk-en/templates/b1-integration-module-template.md`
 
 **B2+ Modules:**
 - **B2 (All types):** `docs/l2-uk-en/templates/b2-module-template.md`
@@ -70,8 +70,8 @@ Write ONLY the instructional content sections. Do NOT write activities.
 | A1 M01-15 | 15% |
 | A1 M16-34 | 30% |
 | A2 | 40-55% |
-| B1 (M01-85) | 90-100% (Ukrainian Only) |
-| B2 (M01-135) | 100% (Ukrainian Only) |
+| B1 (M01-86) | 90-100% (Ukrainian Only) |
+| B2 (M01-110) | 100% (Ukrainian Only) |
 | C1 (M01-160) | 100% (Ukrainian Only) |
 | C2 (M01-100) | 100% (Ukrainian Only) |
 | LIT (M01-30) | 100% (Ukrainian Only) |
