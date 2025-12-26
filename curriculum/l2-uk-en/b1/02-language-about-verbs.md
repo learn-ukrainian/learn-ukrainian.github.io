@@ -38,7 +38,11 @@ vocabulary_count: 34
 
 Ukrainian verbs have two fundamental properties that grammarians discuss constantly. The first is **час** (tense) — whether an action happens in the past, present, or future. The second is **вид** (aspect) — whether an action is viewed as complete or ongoing.
 
+Ukrainians have a proverb: **«Без діла слабіє сила.»** — "Without action, strength weakens." The word **діло** (deed, action) sits at the heart of Ukrainian thinking about verbs. Every дієслово expresses a діло — and how you express it matters.
+
 English speakers know tense well. You shift between "I eat" (present), "I ate" (past), and "I will eat" (future). Ukrainian has the same three tenses. But aspect is different — it's a category English handles through context or extra words, while Ukrainian builds it directly into the verb.
+
+Consider these two sentences: **Вчора я читав книгу.** vs. **Вчора я прочитав книгу.** Both are past tense. But the first says "I was reading" (process), while the second says "I finished reading" (result). That difference is вид.
 
 > 💡 **Did You Know?**
 >
@@ -59,6 +63,8 @@ Every Ukrainian verb belongs to one of two aspects:
 | **недоконаний вид** | imperfective aspect | Views action as process |
 
 When a grammar book says "дієслово недоконаного виду," it means an imperfective verb. When it says "поставте у доконаному виді," it means "put in the perfective aspect."
+
+Here's the practical difference: **Я писав листа цілий вечір.** (I was writing the letter all evening — process, no endpoint) vs. **Я написав листа за годину.** (I wrote the letter in an hour — completed, done). The imperfective **писав** stretches across time; the perfective **написав** captures a finished result.
 
 > 🌍 **Real World: Grammar Textbooks**
 >
@@ -81,9 +87,19 @@ The imperfective and perfective aren't just grammar labels — they convey diffe
 
 When a textbook explains "недоконаний вид виражає тривалість дії," it means "the imperfective aspect expresses the duration of an action."
 
+Let's see these concepts in sentences:
+
+**Вона готувала обід дві години.** (тривалість — duration: she was cooking for two hours)
+**Він повторював слова щодня.** (повторення — repetition: he repeated words every day)
+**Вони нарешті закінчили проект.** (завершення — completion: they finally finished)
+**Фільм почався о восьмій.** (початок — beginning: the film started at eight)
+**Дощ продовжувався до вечора.** (продовження — continuation: the rain continued until evening)
+
 > 🎬 **Pop Culture Moment: Video Game Localization**
 >
 > In Ukrainian game localizations, aspect creates nuance. "Ти вбив дракона" (perfective) means "You killed the dragon" — mission complete. "Ти вбивав дракона" (imperfective) means "You were killing the dragon" — the process, maybe interrupted.
+>
+> Even in the hit game S.T.A.L.K.E.R., developed in Kyiv (Київ), Ukrainian aspect matters. When characters give missions, they use perfective for completed objectives and imperfective for ongoing tasks.
 
 ---
 
@@ -101,6 +117,14 @@ Ukrainian has three tenses, and you need their Ukrainian names:
 | **майбутній час** | future tense | читатиму, напишу |
 
 When grammar says "поставте дієслово в минулому часі," you need to put the verb in past tense.
+
+Each tense tells a different story about when the action happens:
+
+**Зараз студенти складають іспит у Києві.** (теперішній час — right now, they're taking the exam)
+**Минулого року вона працювала в Одесі.** (минулий час — last year, she worked)
+**Наступного літа вони поїдуть до Львова.** (майбутній час — next summer, they will go)
+
+Why these cities? Київ is the capital where major universities set national exams. Одеса is famous for its vibrant cultural scene and work opportunities. Львів draws tourists and students every summer with its coffee culture and festivals.
 
 > 💡 **Did You Know?**
 >
@@ -122,6 +146,13 @@ Grammarians use these terms when discussing verb forms:
 | **спосіб** | mood | Category: indicative, imperative, conditional |
 | **стан** | voice | Active vs passive |
 | **активний стан** | active voice | Subject does action |
+
+Here's how these terms work in practice:
+
+**Читай уважно!** (наказовий спосіб — imperative: a command)
+**Якби я мав час, я б прочитав цю книгу.** (умовний спосіб — conditional: "if I had time, I would read")
+**Лист був написаний учора.** (пасивний стан — passive voice: the letter was written)
+**Письменник написав роман за рік.** (активний стан — active voice: the writer wrote)
 
 ---
 

@@ -36,6 +36,8 @@ vocabulary_count: 39
 
 ### The Language of Grammar Explanations
 
+Ukrainians have a proverb: **«Без правил і мова — не мова.»** — "Without rules, even language isn't language." This captures why Ukrainians value grammar so highly. To learn from their textbooks, you need to speak the language *of* grammar.
+
 When you open a Ukrainian grammar book, you see patterns like:
 
 - *"X використовується, коли..."* (X is used when...)

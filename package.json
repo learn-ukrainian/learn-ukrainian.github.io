@@ -7,6 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
+    "test": ".venv/bin/python -m pytest tests/ -v",
+    "test:activities": ".venv/bin/python -m pytest tests/test_activities.py -v",
+    "test:vocabulary": ".venv/bin/python -m pytest tests/test_vocabulary.py -v",
+    "test:pedagogy": ".venv/bin/python -m pytest tests/test_pedagogy.py -v",
     "generate": ".venv/bin/python scripts/generate_mdx.py",
     "generate:validated": ".venv/bin/python scripts/generate_mdx.py --validate",
     "generate:json": ".venv/bin/python scripts/generate_json.py",

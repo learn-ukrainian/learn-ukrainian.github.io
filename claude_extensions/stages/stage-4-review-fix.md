@@ -79,13 +79,128 @@ Review the module, fix violations, repeat until PASS.
 - [ ] Correct syntax (fill-in `___`, unjumble ` / `, etc.)
 - [ ] All answers correct
 
-### 6. Richness Constraints
+### 6. Richness Constraints (Counts)
 - [ ] Word count meets target
 - [ ] Example sentences meet minimum
 - [ ] Engagement boxes meet minimum
 - [ ] Mini-dialogues present
 
-### 7. Linguistic Purity
+### 7. Content Richness Quality (B1+ Critical)
+
+**This is not about counts. This is about whether the content is ALIVE or DEAD.**
+
+Check each section for these quality indicators:
+
+#### 7a. Engagement Quality
+
+**DRY (robot wrote this):**
+```markdown
+Доконаний вид показує завершену дію.
+Недоконаний вид показує незавершену дію.
+Дивіться таблицю нижче.
+```
+
+**RICH (learner will remember this):**
+```markdown
+Уявіть: ви читаєте книгу весь вечір — це процес, недоконаний вид.
+Але ось ви закрили книгу — готово! Результат. Доконаний вид.
+
+Це як різниця між «я йшов додому» (може, ще йду) і «я прийшов» (точка, фініш).
+
+💡 **Чому це важливо?**
+Українці чують цю різницю одразу. Неправильний вид —
+і речення звучить... дивно. Як фальшива нота в пісні.
+```
+
+#### 7b. Variety Check
+
+**Count unique sentence starters in each section.** If >50% of sentences start the same way, flag as DRY.
+
+❌ DRY pattern:
+```markdown
+Доконаний вид означає...
+Доконаний вид використовується...
+Доконаний вид показує...
+Доконаний вид має...
+```
+
+✅ RICH pattern:
+```markdown
+Коли дія завершена — це доконаний вид.
+Українці кажуть «я прочитав книгу», бо книга закінчена.
+А якщо ще читаю? Тоді «читаю» — без результату.
+Порівняйте: «він писав лист» vs «він написав лист».
+```
+
+#### 7c. Emotional Hooks
+
+**Each major section needs at least one of:**
+- Metaphor or analogy (як фальшива нота, як різниця між X і Y)
+- Real-world scenario (уявіть: ви на співбесіді...)
+- Cultural connection (українці кажуть так, бо...)
+- Surprise or contrast (але тут є сюрприз!)
+- Question to reader (а що якщо...? чому так?)
+
+❌ No hooks = textbook voice = learner falls asleep
+
+✅ Has hooks = conversation voice = learner stays engaged
+
+#### 7d. Cultural Depth (B1+)
+
+**Each module should include:**
+- [ ] At least 1 named Ukrainian place (Львів, Карпати, Дніпро)
+- [ ] At least 1 cultural reference (traditional, historical, or contemporary)
+- [ ] Real-world context showing WHY this grammar/vocab matters
+
+❌ Generic: "Людина купує хліб у магазині."
+✅ Specific: "Оксана купує паляницю на Бесарабському ринку в Києві."
+
+#### 7e. Proverbs & Idioms (B1+)
+
+**Each grammar module should include 1-2 proverbs or idioms that:**
+- Naturally demonstrate the grammar point
+- Are woven into content, not just listed
+- Have cultural context explained
+
+Example for aspect:
+```markdown
+Українці кажуть: «Не кажи гоп, поки не перескочиш».
+Зверніть увагу: **перескочиш** — доконаний вид.
+Чому? Бо йдеться про результат: перестрибнув чи ні.
+```
+
+#### 7f. Richness Score Calculation
+
+For each section, mentally score:
+
+| Criterion | 0 | 1 | 2 |
+|-----------|---|---|---|
+| Engagement | Textbook voice | Some personality | Conversational, memorable |
+| Variety | Repetitive starters | Mixed | Varied, rhythmic |
+| Hooks | None | 1-2 | 3+ per section |
+| Cultural depth | Generic examples | Some specifics | Rich, placed content |
+| Proverbs/idioms | None | 1 (forced) | 1-2 (natural) |
+
+**Total 0-4:** ❌ REWRITE section
+**Total 5-7:** ⚠️ ENRICH section
+**Total 8-10:** ✅ PASS
+
+#### 7g. Quick Dryness Flags
+
+Flag content as DRY if ANY of these are true:
+
+| Flag | Pattern |
+|------|---------|
+| TEXTBOOK_VOICE | No questions, metaphors, or emotional hooks in 300+ words |
+| REPETITIVE | Same sentence structure >5 times in section |
+| GENERIC_EXAMPLES | No named people, places, or specific scenarios |
+| LIST_DUMP | Explanation is just a list without narrative flow |
+| NO_CULTURAL_ANCHOR | Grammar taught without Ukrainian cultural context |
+| ENGAGEMENT_BOX_FILLER | 💡 boxes just restate what was already said |
+
+**If 2+ flags: Section needs REWRITE, not just fix.**
+
+### 8. Linguistic Purity
 - [ ] No Surzhyk or "Ghost Words" (Verify spelling is Ukrainian, not Russian). See LINGUISTIC-PURITY-GUIDE.md
 - [ ] No AI contamination ("wait", "actually", "let me")
 - [ ] Correct Ukrainian spelling and grammar

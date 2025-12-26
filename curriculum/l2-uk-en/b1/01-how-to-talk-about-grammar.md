@@ -37,6 +37,8 @@ Think about how you learned grammar in school. Someone taught you terms like "no
 
 If you don't know that **іменник** means "noun," **родовий відмінок** means "genitive case," and **прийменник** means "preposition," you're lost. This module solves that problem.
 
+Ukrainians have a saying: **«Хто мови не знає, той і граматики не розуміє.»** — "Who doesn't know the language, doesn't understand grammar either." The terms you'll learn here are the keys that unlock every Ukrainian grammar resource.
+
 ### Why Ukrainians Learn This Too
 
 Every Ukrainian schoolchild learns these terms in school. When a Ukrainian teacher says "Поставте дієслово в минулому часі," students know they need to put the verb in past tense. These aren't foreign concepts — they're just new words for ideas you already understand.
@@ -66,6 +68,10 @@ These are the words that carry meaning:
 | **займенник** | pronoun | я, ти, він, вона |
 | **числівник** | numeral | один, два, перший |
 
+Let's see these in action. **Студентка читає цікаву книгу.** Here, **студентка** is the іменник (who's reading?), **читає** is the дієслово (what's she doing?), and **цікаву** is the прикметник (what kind of book?).
+
+Or consider: **Він швидко біжить до зупинки.** The word **він** is a займенник replacing someone's name, **швидко** is a прислівник telling us how he runs, and **біжить** is the дієслово — the action itself.
+
 > 🌍 **Real World: Grammar Discussions**
 >
 > When Ukrainians discuss language on forums or social media, they use these terms freely. You might see: "Тут треба вжити дієслово доконаного виду" (Here you need to use a perfective verb). Without knowing **дієслово** and **вид**, you'd miss the point entirely.
@@ -82,6 +88,10 @@ These words don't carry meaning on their own — they connect and modify. Think 
 | **сполучник** | conjunction | і, але, бо, що |
 | **частка** | particle | не, ні, хай, би |
 | **вигук** | interjection | ой, ах, гей |
+
+Watch how these work: **Книга лежить на столі.** The word **на** is a прийменник — it connects the book to the table and tells us where. **Я хочу піти, але не маю часу.** Here **але** is a сполучник joining two ideas. **Вона не прийде сьогодні.** The tiny word **не** is a частка — it flips the meaning from "she will come" to "she won't come."
+
+And when you stub your toe? **Ой, як боляче!** That **ой** is a вигук — pure emotion, no grammar required.
 
 ### The Master Category
 
@@ -108,6 +118,16 @@ Each case has a specific function and a specific set of question words that help
 | 5 | **орудний** | instrumental | ким? чим? | книгою |
 | 6 | **місцевий** | locative | на кому? на чому? | на книзі |
 | 7 | **кличний** | vocative | — | книго! |
+
+Let's trace one noun through all seven cases. Take **сестра** — sister:
+
+**Сестра прийшла.** (називний — who came?)
+**Немає сестри.** (родовий — there's no whom?)
+**Дав сестрі подарунок.** (давальний — gave to whom?)
+**Бачу сестру.** (знахідний — I see whom?)
+**Розмовляю з сестрою.** (орудний — talking with whom?)
+**Думаю про сестру.** (місцевий after "про" — thinking about whom?)
+**Сестро, допоможи!** (кличний — calling out to her)
 
 > 💡 **Did You Know?**
 >
@@ -145,6 +165,12 @@ The concept of рід is fundamental to Ukrainian grammar. Every noun has a gend
 | **особа** | person | перша, друга, третя |
 | **закінчення** | ending | -а, -ою, -і |
 
+See how these work together: **Новий студент прийшов.** vs. **Нова студентка прийшла.** The adjective **новий/нова** and the past tense verb **прийшов/прийшла** both change based on the рід of the noun.
+
+For число: **Студент читає.** (однина — one student) vs. **Студенти читають.** (множина — multiple students). Both the noun ending and the verb ending change.
+
+And особа? Watch: **Я читаю.** (перша особа — I), **Ти читаєш.** (друга особа — you), **Він читає.** (третя особа — he). The закінчення of the verb tells you who's doing the action.
+
 > 🎬 **Pop Culture Moment: Language Learning in Ukraine**
 >
 > In Ukrainian schools, grammar is taught rigorously. A typical exercise might say: "Визначте відмінок іменників у реченні" (Determine the case of the nouns in the sentence). Ukrainian students do this from around age 8. Now you're learning what they learned as children — but you're doing it faster because you already understand the concepts in English.
@@ -152,6 +178,10 @@ The concept of рід is fundamental to Ukrainian grammar. Every noun has a gend
 ### Why Grammar Terminology Matters for Self-Study
 
 When you study independently using Ukrainian resources, you'll encounter instructions like "Утворіть форму орудного відмінка" (Form the instrumental case). Without knowing that орудний means instrumental and відмінок means case, you can't complete the exercise. Similarly, online forums where Ukrainians discuss language learning use these terms constantly. If someone writes "Тут потрібен давальний" (Here you need dative), you need to know what давальний means.
+
+Imagine you're watching a grammar video from Kyiv and the teacher says: **«Зверніть увагу на закінчення дієслова в третій особі.»** If you know the terms, you hear: "Pay attention to the verb ending in third person." If you don't, it's just noise.
+
+Or you're reading a forum post from Львів: **«У цьому реченні підмет стоїть після присудка.»** Now you understand: "In this sentence, the subject comes after the predicate."
 
 The good news is that once you learn these twenty-five terms, they unlock an entire world of Ukrainian-language learning resources. Grammar textbooks written for native speakers become accessible. YouTube explanations in Ukrainian make sense. Even the error messages in language learning apps that explain why your answer was wrong — those become comprehensible when you know the terminology.
 

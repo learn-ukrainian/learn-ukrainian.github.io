@@ -94,6 +94,15 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 | `validate_html.py` | Validate browser rendering | `npm run validate:html l2-uk-en a1 5` |
 | `audit_module.py` | Module quality checker | `python3 scripts/audit_module.py <file>` |
 
+### Staged Generation (Python)
+
+| Script | Purpose | Command |
+|--------|---------|---------|
+| `generate_skeleton.py` | Generate module skeleton | `python3 scripts/generate_skeleton.py l2-uk-en b1 43` |
+| `check_gate.py` | Hard gate checker | `python3 scripts/check_gate.py <stage> <file>` |
+| `calculate_richness.py` | Richness score (0-100) | `python3 scripts/calculate_richness.py <file>` |
+| `extract_for_activities.py` | Extract content for activities | `python3 scripts/extract_for_activities.py <file>` |
+
 ### Vocabulary (Python)
 
 | Script | Purpose | Command |
@@ -265,6 +274,178 @@ python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
 - **INFO (Consider):** Optional improvements
 
 ---
+
+## Staged Generation Scripts
+
+These scripts support the staged module generation workflow where modules are built incrementally with hard gates between stages.
+
+### Workflow Overview
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│  SKELETON    │ ──▶ │  CONTENT     │ ──▶ │  ACTIVITIES  │ ──▶ │  AUDIT       │ ──▶ │  OUTPUT      │
+│  Stage 1     │     │  Stage 2     │     │  Stage 3     │     │  Stage 4     │     │  Stage 5     │
+└──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘     └──────────────┘
+       │                    │                    │
+       ▼                    ▼                    ▼
+  check_gate.py        check_gate.py        check_gate.py
+   skeleton             content              activities
+```
+
+Each gate returns exit code 0 (PASS) or 1 (FAIL). Agent has NO discretion to override FAIL.
+
+---
+
+### generate_skeleton.py
+
+**Purpose:** Generate module skeleton from curriculum plan and template.
+
+**Usage:**
+```bash
+python3 scripts/generate_skeleton.py l2-uk-en b1 43
+```
+
+**Inputs:**
+- `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` - Extracts title, focus, grammar, vocab
+- `docs/l2-uk-en/templates/{level}-{type}-module-template.md` - Structure guide
+
+**Output:** `curriculum/l2-uk-en/{level}/{NN}-skeleton.md`
+
+**Features:**
+- Determines module type based on level and number
+- Generates frontmatter with pedagogy, phase, word targets
+- Creates section headers from template
+- Adds activity placeholders with specs
+- Includes vocabulary table structure
+
+---
+
+### check_gate.py
+
+**Purpose:** Hard gate checker for staged generation. Returns exit codes for CI/automation.
+
+**Usage:**
+```bash
+python3 scripts/check_gate.py skeleton curriculum/l2-uk-en/b1/43-*.md
+python3 scripts/check_gate.py content curriculum/l2-uk-en/b1/43-*.md
+python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
+```
+
+**Gate Checks:**
+
+| Stage | Checks |
+|-------|--------|
+| `skeleton` | Frontmatter present, required sections, vocabulary section |
+| `content` | Word count, engagement boxes, examples, dialogues, immersion, vocabulary count |
+| `activities` | Activity count, type variety, priority types, item counts |
+
+**Exit Codes:**
+- `0` - PASS
+- `1` - FAIL (with failure reasons printed)
+
+---
+
+### calculate_richness.py
+
+**Purpose:** Calculate 10-component richness score (0-100) for content quality.
+
+**Usage:**
+```bash
+python3 scripts/calculate_richness.py curriculum/l2-uk-en/b1/43-*.md
+```
+
+**Components (Weighted):**
+
+| Component | Weight | What It Measures |
+|-----------|--------|------------------|
+| Engagement | 15% | 💡🎬🌍🎯🎮 boxes |
+| Examples | 20% | Ukrainian example sentences |
+| Dialogues | 15% | А:/Б: or speaker patterns |
+| Variety | 10% | Sentence starter diversity |
+| Cultural | 10% | Cultural references |
+| Real-world | 10% | Practical usage scenarios |
+| Questions | 5% | Rhetorical questions |
+| Proverbs | 5% | Ukrainian sayings |
+| Visual | 5% | Tables and formatting |
+| Paragraph variation | 5% | Length diversity |
+
+**Dryness Flags:**
+- `NO_ENGAGEMENT` - Zero engagement boxes
+- `WALL_OF_TEXT` - All paragraphs similar length
+- `REPETITIVE_STARTERS` - Same sentence beginnings
+
+**Output:**
+```
+Richness: 87/100 (threshold: 70)
+Components: engagement=12/15, examples=18/20, ...
+Flags: []
+```
+
+---
+
+### extract_for_activities.py
+
+**Purpose:** Extract content elements for activity generation.
+
+**Usage:**
+```bash
+python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md
+python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md output.json
+```
+
+**Extracts:**
+
+| Element | Description |
+|---------|-------------|
+| `vocabulary` | Ukrainian-English pairs from vocabulary table |
+| `sentences` | Example sentences from content |
+| `dialogues` | А/Б dialogue pairs |
+| `paragraphs` | Content paragraphs for cloze/comprehension |
+| `proverbs` | Ukrainian sayings and proverbs |
+| `tables` | Grammar tables for reference |
+
+**Output Format (JSON):**
+```json
+{
+  "module": "b1-43",
+  "title": "...",
+  "vocabulary": [{"uk": "слово", "en": "word", "ipa": "/.../"}, ...],
+  "sentences": ["Це речення.", ...],
+  "dialogues": [{"a": "Привіт!", "b": "Вітаю!"}, ...],
+  "paragraphs": ["...", ...],
+  "stats": {
+    "vocabulary_count": 25,
+    "sentence_count": 60,
+    ...
+  }
+}
+```
+
+---
+
+### Staged Generation Quick Reference
+
+```bash
+# Stage 1: Generate skeleton
+python3 scripts/generate_skeleton.py l2-uk-en b1 43
+python3 scripts/check_gate.py skeleton curriculum/l2-uk-en/b1/43-skeleton.md
+
+# Stage 2: Fill content (agent fills in skeleton)
+python3 scripts/check_gate.py content curriculum/l2-uk-en/b1/43-*.md
+python3 scripts/calculate_richness.py curriculum/l2-uk-en/b1/43-*.md
+
+# Stage 3: Generate activities
+python3 scripts/extract_for_activities.py curriculum/l2-uk-en/b1/43-*.md
+# (agent generates activities from extracted content)
+python3 scripts/check_gate.py activities curriculum/l2-uk-en/b1/43-*.md
+
+# Stage 4: Full audit
+python3 scripts/audit_module.py curriculum/l2-uk-en/b1/43-*.md
+
+# Stage 5: Pipeline output
+npm run pipeline l2-uk-en b1 43
+```
+
 ---
 
 ## Vocabulary Pipeline

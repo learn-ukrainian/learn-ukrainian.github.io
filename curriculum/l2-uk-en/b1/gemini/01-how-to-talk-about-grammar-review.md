@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1543/1200
+- **Words:** ✅ 1952/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -14,22 +14,19 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 67.5% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 65.1% (B1.1 Aspect)
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Як говорити про граматику** | ⚪️ | 78 | Skipped |
-| **Presentation** | ✅ | 151 | Included in Core |
-| **The Parts of Speech: Частини мови** | ⚪️ | 320 | Skipped |
-| **The Seven Cases: Сім відмінків** | ⚪️ | 243 | Skipped |
-| **Basic Sentence Terms** | ⚪️ | 285 | Skipped |
+| **Presentation** | ✅ | 188 | Included in Core |
+| **The Parts of Speech: Частини мови** | ⚪️ | 471 | Skipped |
+| **The Seven Cases: Сім відмінків** | ⚪️ | 309 | Skipped |
+| **Basic Sentence Terms** | ⚪️ | 440 | Skipped |
 | **Practice** | ⚪️ | 120 | Skipped |
 | **Mini-Dialogues** | ✅ | 205 | Included in Core |
 | **Підсумок** | ✅ | 141 | Included in Core |

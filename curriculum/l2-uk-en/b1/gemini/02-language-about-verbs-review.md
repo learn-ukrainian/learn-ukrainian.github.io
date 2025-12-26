@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1445/1200
+- **Words:** ✅ 1817/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -14,21 +14,18 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 70.0% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 66.4% (B1.1 Aspect)
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Мова про дієслова** | ⚪️ | 55 | Skipped |
-| **Presentation** | ✅ | 135 | Included in Core |
-| **The Aspect Terms: Вид** | ⚪️ | 155 | Skipped |
-| **The Tense Terms: Час** | ⚪️ | 80 | Skipped |
+| **Presentation** | ✅ | 211 | Included in Core |
+| **The Aspect Terms: Вид** | ⚪️ | 300 | Skipped |
+| **The Tense Terms: Час** | ⚪️ | 231 | Skipped |
 | **Negation Terminology** | ⚪️ | 108 | Skipped |
 | **Verb Forms** | ⚪️ | 101 | Skipped |
 | **Understanding Aspect Pairs** | ⚪️ | 174 | Skipped |

@@ -145,17 +145,99 @@ Flag if:
 - **False Friends:** Using high-level grammar (cases) in A1 without explanation.
 - **Russianisms/Surzhik:** Any detection of mixed Ukrainian-Russian forms (unless explicitly teaching *about* Surzhik).
 
-**Step 3: Generate Summary Report**
+**Step 3: Generate Deep Dive Review**
 
-For each module, output:
+For each module, YOU MUST use the **Detailed Deep-Dive Format**.
+Concise summaries are **FORBIDDEN**.
 
-```
-## Module {num}: {title}
+**Template:**
 
-**Scores:** Coherence {X}/5 | Relevance {X}/5 | Educational {X}/5 | Language {X}/5 | Pedagogy {X}/5 | Immersion {X}/5 | Activities {X}/5 | **Overall {X}/5**
+```markdown
+# Content Quality Review: Module {num} - {title}
+
+**Level:** {level}
+**Module:** {num}
+**Title:** {title}
+**Reviewed:** {date}
 **Status:** ✅ PASS / ⚠️ NEEDS WORK / ❌ REWRITE
 
-{If not PASS, list 2-3 main issues}
+---
+
+## Overall Score: {X}/5 ⭐⭐⭐⭐⭐
+
+**Recommendation:** {Summary of pass/fail decision}
+
+---
+
+## Scores Breakdown
+
+| Criterion | Score | Assessment |
+|-----------|-------|------------|
+| **Coherence** | {X}/5 | {Specific rationale} |
+| **Relevance** | {X}/5 | {Specific rationale} |
+| **Educational** | {X}/5 | {Specific rationale} |
+| **Language** | {X}/5 | {Specific rationale} |
+| **Pedagogy** | {X}/5 | {Specific rationale} |
+| **Immersion** | {X}/5 | {Specific rationale} |
+| **Activity Quality** | {X}/5 | {Specific rationale} |
+| **Word Salad** | ✅ NO / ⚠️ YES | {Assessment} |
+| **Red Flags** | ✅ NONE / ⚠️ FOUND | {Assessment} |
+
+---
+
+## Strengths
+
+### 1. **{Strength Title}**
+{Explanation of why this is a strength}
+> "{Quote from text}" (Line {X})
+
+### 2. **{Strength Title}**
+{Explanation}
+
+### 3. **{Strength Title}**
+{Explanation}
+
+---
+
+## Analysis by Section
+
+### {Section Name}
+**Score: {X}/5**. {Analysis}
+
+### {Section Name}
+**Score: {X}/5**. {Analysis}
+
+---
+
+## Issues Found
+- **[Category]** {Description}
+- **[Category]** {Description}
+
+---
+
+## Pedagogical Analysis
+- **Scaffolding:** {Analysis}
+- **Cognitive Load:** {Analysis}
+
+---
+
+## Vocabulary Analysis
+**Count:** {X} terms.
+**Quality:** {Assessment}
+
+---
+
+## Activity Critique
+**Volume:** {X} Activities.
+**Variety:** {List types}.
+**Quality:** {Assessment}
+
+---
+
+## Final Assessment
+**Status:** {Pass/Fail}
+
+**Recommendation:** {Final verdict}
 ```
 
 **Step 4: Apply Safe Fixes**
