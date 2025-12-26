@@ -1,5 +1,8 @@
 # Stage 4: Review & Fix Loop
 
+> **⚠️ CRITICAL: Always use `.venv/bin/python` for ALL Python scripts.**
+> Never use `python3` or `python` directly - dependencies are in the venv.
+
 Review the module, fix violations, repeat until PASS.
 
 ## Input

@@ -1,5 +1,7 @@
 # Module Create (Full Pipeline)
 
+> **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
+
 Create a complete module through all 4 stages.
 
 ## Usage
@@ -16,7 +18,7 @@ Create a complete module through all 4 stages.
 **Action:** Run the full pipeline in one sequence.
 1. **Analyze:** Read `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` (grep module), `docs/MARKDOWN-FORMAT.md`, & **appropriate template** from `docs/l2-uk-en/templates/`.
 2. **Draft:** Create module file with full content **following template structure**.
-3. **Audit:** `python3 scripts/audit_module.py ...`
+3. **Audit:** `.venv/bin/python scripts/audit_module.py ...`
 4. **Fix:** Loop until PASS.
 5. **Review:** `/review-content l2-uk-en {LEVEL} {MODULE_NUM}` (Quality Gate: 5/5).
 6. **Finalize:** `npm run pipeline l2-uk-en {LEVEL} {MODULE_NUM}` && `npm run generate:json l2-uk-en {LEVEL} {MODULE_NUM}`
@@ -53,7 +55,7 @@ Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT
 3. Verify counts, types, syntax
 
 **Stage 4: Review & Fix**
-1. Run audit: `python3 scripts/audit_module.py curriculum/l2-uk-en/{LEVEL}/module-{MODULE_NUM}.md`
+1. Run audit: `.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{LEVEL}/module-{MODULE_NUM}.md`
 2. Fix violations until PASS
 3. Run content review: `/review-content l2-uk-en {LEVEL} {MODULE_NUM}`
 4. Fix quality issues until PASS (Score: 5/5)

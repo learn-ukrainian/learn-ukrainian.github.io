@@ -1,5 +1,7 @@
 # Review Content Quality
 
+> **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
+
 Evaluate module content for educational quality, coherence, and pedagogical soundness.
 
 ## Usage
@@ -333,7 +335,7 @@ For each module with action items, categorize fixes:
 
 For safe fixes:
 1. Apply the fix to the module file
-2. Run `python3 scripts/audit_module.py {file_path}` to verify still passes
+2. Run `.venv/bin/python scripts/audit_module.py {file_path}` to verify still passes
 3. If audit fails, revert the fix
 4. Mark fix status in review: ✅ FIXED or ❌ SKIPPED
 
@@ -520,7 +522,7 @@ Reviewing A1...
 5. **Check both languages** - Ukrainian examples AND English explanations
 6. **Context matters** - what's good at A1 may be weak at C1
 7. **Auto-fix safe issues** - apply safe fixes, run audit, verify pass
-8. **Save to review/ folder** - don't append to gemini/ folder anymore
+8. **Save to review/ folder** - don't append to audit/ folder (that's for automated audit reports)
 
 ## Red Flags (Auto-fail)
 

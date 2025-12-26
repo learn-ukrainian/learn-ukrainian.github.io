@@ -1,5 +1,7 @@
 # Module Stage 4: Review & Fix
 
+> **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
+
 Review module, fix violations, loop until PASS.
 
 ## Usage
@@ -18,7 +20,7 @@ Parse arguments: $ARGUMENTS
 
 ### Step 1: Read Stage Instructions
 
-Read: `.claude/stages/stage-4-review-fix.md`
+Read: `claude_extensions/stages/stage-4-review-fix.md`
 
 ### Step 2: Load Module
 
@@ -28,7 +30,7 @@ Read the module file:
 ### Step 3: Run Initial Audit
 
 ```bash
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 ```
 
 Capture all violations.
