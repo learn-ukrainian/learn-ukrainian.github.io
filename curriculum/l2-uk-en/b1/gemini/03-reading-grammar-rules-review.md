@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1724/1200
+- **Words:** ⚠️ 2358/1200 (>2200 may be too long)
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -14,24 +14,21 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 63.3% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
+- **Immersion:** 🇺🇦 59.0% (B1.1 Aspect)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Читаємо граматичні правила** | ⚪️ | 58 | Skipped |
-| **Presentation** | ✅ | 85 | Included in Core |
-| **Explanation Patterns: Пояснювальні конструкції** | ✅ | 75 | Included in Core |
-| **Instruction Patterns: Інструкції** | ✅ | 52 | Included in Core |
-| **Word Formation Terms: Словотвір** | ⚪️ | 52 | Skipped |
-| **Activity Instruction Verbs: Інструкції для вправ** | ➖ | 105 | Excluded Type |
-| **Analytical Terms: Аналітична лексика** | ⚪️ | 97 | Skipped |
-| **Style and Register: Стиль і регістр** | ⚪️ | 104 | Skipped |
-| **Practice** | ⚪️ | 395 | Skipped |
-| **Mini-Dialogues** | ✅ | 301 | Included in Core |
+| **Presentation** | ✅ | 184 | Included in Core |
+| **Explanation Patterns: Пояснювальні конструкції** | ✅ | 181 | Included in Core |
+| **Instruction Patterns: Інструкції** | ✅ | 154 | Included in Core |
+| **Word Formation Terms: Словотвір** | ⚪️ | 123 | Skipped |
+| **Activity Instruction Verbs: Інструкції для вправ** | ➖ | 176 | Excluded Type |
+| **Analytical Terms: Аналітична лексика** | ⚪️ | 176 | Skipped |
+| **Style and Register: Стиль і регістр** | ⚪️ | 161 | Skipped |
+| **Practice** | ⚪️ | 408 | Skipped |
+| **Mini-Dialogues** | ✅ | 337 | Included in Core |
 | **Підсумок** | ✅ | 400 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Пояснювальні конструкції** | 🎮 | 14 | Activity (14 items, min 8) |

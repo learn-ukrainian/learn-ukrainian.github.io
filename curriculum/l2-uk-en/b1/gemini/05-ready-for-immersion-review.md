@@ -3,31 +3,28 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1255/1200
+- **Words:** ✅ 1653/1200
 - **Activities:** ✅ 25/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
-- **Engagement:** ✅ 4/4
+- **Engagement:** ✅ 5/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 48/20
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 83.1% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
+- **Immersion:** 🇺🇦 79.3% (B1.1 Aspect)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
-| **Готові до занурення** | ✅ | 52 | Included in Core |
-| **Діагностика** | ✅ | 155 | Included in Core |
-| **Аналіз** | ✅ | 260 | Included in Core |
-| **Поглиблення** | ⚪️ | 153 | Skipped |
-| **Практика** | ⚪️ | 169 | Skipped |
-| **Mini-Dialogues** | ✅ | 207 | Included in Core |
+| **Готові до занурення** | ✅ | 141 | Included in Core |
+| **Діагностика** | ✅ | 208 | Included in Core |
+| **Аналіз** | ✅ | 353 | Included in Core |
+| **Поглиблення** | ⚪️ | 220 | Skipped |
+| **Практика** | ⚪️ | 211 | Skipped |
+| **Mini-Dialogues** | ✅ | 261 | Included in Core |
 | **Підсумок** | ✅ | 259 | Included in Core |
 | **Вправи** | ⚪️ | 0 | Skipped |
 | **quiz: Комплексний тест — Частини мови** | 🎮 | 14 | Activity (14 items, min 8) |

@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1206/1200
+- **Words:** ✅ 1634/1200
 - **Activities:** ✅ 16/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
@@ -14,19 +14,16 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 73.9% (B1.1 Aspect)
-
-## MDX VALIDATION
-✅ No issues found
+- **Immersion:** 🇺🇦 70.0% (B1.1 Aspect)
 
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
 | **Структура речення** | ⚪️ | 47 | Skipped |
-| **Presentation** | ✅ | 87 | Included in Core |
-| **Sentence Parts: Члени речення** | ⚪️ | 267 | Skipped |
-| **Clause Types: Види речень** | ⚪️ | 45 | Skipped |
-| **Punctuation: Пунктуація** | ⚪️ | 36 | Skipped |
+| **Presentation** | ✅ | 174 | Included in Core |
+| **Sentence Parts: Члени речення** | ⚪️ | 413 | Skipped |
+| **Clause Types: Види речень** | ⚪️ | 168 | Skipped |
+| **Punctuation: Пунктуація** | ⚪️ | 108 | Skipped |
 | **Practice** | ⚪️ | 163 | Skipped |
 | **Mini-Dialogues** | ✅ | 278 | Included in Core |
 | **Підсумок** | ✅ | 283 | Included in Core |

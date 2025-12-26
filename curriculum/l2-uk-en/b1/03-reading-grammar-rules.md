@@ -46,6 +46,8 @@ When you open a Ukrainian grammar book, you see patterns like:
 
 These aren't random — they're standard patterns that every grammar book uses. Learn them once, understand them everywhere.
 
+Where do Ukrainians learn these patterns? Київ is home to the National Academy of Sciences, which publishes authoritative grammar references. Львів has the Ivan Franko University with its renowned philology department. Одеса universities train thousands of teachers who use these exact phrases in classrooms across the country. The grammar terminology you learn here is the same from Харків to Чернівці.
+
 > 💡 **Did You Know?**
 >
 > Ukrainian grammar textbooks follow a consistent style developed over centuries. The patterns you learn here work for 19th-century grammar books, modern textbooks, and online resources alike. It's like learning the "grammar of grammar."
@@ -65,6 +67,12 @@ The most common pattern explains when to use a grammatical form:
 
 When you see "X використовується, коли..." or "X вживається для...", the grammar is telling you *when* to use X.
 
+**Родовий відмінок використовується після прийменника "без".** (The genitive is used after the preposition "without.")
+
+**Недоконаний вид вживається для повторюваних дій.** (Imperfective is used for repeated actions.)
+
+**Знахідний відмінок використовується для прямого об'єкта.** (Accusative is used for direct objects.)
+
 ### "Means / Shows / Expresses"
 
 These patterns explain *what* a form means:
@@ -76,9 +84,15 @@ These patterns explain *what* a form means:
 | **виражає** | expresses | "Давальний відмінок виражає адресата." |
 | **вказує на** | indicates | "Закінчення -а вказує на жіночий рід." |
 
+**Доконаний вид означає завершену дію з результатом.** (Perfective means a completed action with result.)
+
+**Давальний відмінок виражає адресата повідомлення.** (Dative expresses the addressee of a message.)
+
+**Закінчення -а вказує на жіночий рід іменника.** (The ending -а indicates feminine gender of a noun.)
+
 > 🌍 **Real World: Online Forums**
 >
-> On Ukrainian language forums, native speakers use these exact patterns to explain grammar: "Тут використовується знахідний відмінок, бо..." (Here the accusative is used because...). Now you can follow these explanations!
+> On Ukrainian language forums, native speakers use these exact patterns to explain grammar. For example, "Тут використовується знахідний відмінок, бо..." (Here the accusative is used because...). Such explanations appear constantly. For instance, when someone asks about case usage, they might get "Родовий використовується тут, бо..." (Genitive is used here because...). Now you can follow these explanations!
 
 ---
 
@@ -97,9 +111,15 @@ Grammar exercises use imperative forms. Learn these instruction verbs:
 | **отже** | therefore, so | "Отже, цей іменник жіночого роду." |
 | **таким чином** | thus, in this way | "Таким чином утворюється множина." |
 
+**Порівняйте ці два речення і знайдіть відмінності.** (Compare these two sentences and find the differences.)
+
+**Зверніть увагу на закінчення іменника в кожному відмінку.** (Pay attention to the noun ending in each case.)
+
+**Отже, це дієслово вимагає родового відмінка.** (Therefore, this verb requires the genitive case.)
+
 > 🎬 **Pop Culture Moment: Language Apps**
 >
-> Apps like Duolingo use simplified instructions. But advanced resources — Ukrainian grammar sites, native textbooks — use these exact phrases. Master them and you unlock the next level of learning.
+> Apps like Duolingo use simplified instructions. But advanced resources — such as Ukrainian grammar sites, native textbooks, and academic materials — use these exact phrases. For example, a Ukrainian textbook might say "Порівняйте ці форми" while Duolingo just shows you the answer. Master these instructions and you unlock the next level of learning.
 
 ### Comparison and Contrast
 
@@ -109,6 +129,10 @@ Grammar often compares forms:
 |---------|---------|---------|
 | **на відміну від** | in contrast to | "На відміну від англійської, українська має сім відмінків." |
 | **подібно до** | similar to | "Подібно до російської, українська має вид." |
+
+**На відміну від англійської, українська має сім відмінків.** (In contrast to English, Ukrainian has seven cases.)
+
+**Подібно до інших слов'янських мов, українська розрізняє вид дієслова.** (Similar to other Slavic languages, Ukrainian distinguishes verb aspect.)
 
 ---
 
@@ -128,9 +152,15 @@ To understand how words are built, you need these terms:
 | **суфікс** | suffix | "Суфікс -ок означає зменшення." |
 | **префікс** | prefix | "Префікс при- означає наближення." |
 
+**Основа слова "написати" складається з префікса і кореня.** (The stem of "napisaty" consists of prefix and root.)
+
+**Корінь "пис-" є спільним для слів писати, письмо, письменник.** (The root "pys-" is common to pisaty, pysmo, pysmennyk.)
+
+**Суфікс "-ок" утворює зменшувальні форми іменників.** (The suffix "-ok" forms diminutive noun forms.)
+
 > 💡 **Did You Know?**
 >
-> The word **корінь** literally means "root" — like a plant's root. The root is the deepest, most basic part of the word, and everything else grows from it. This botanical metaphor exists in English too!
+> The word **корінь** literally means "root" — like a plant's root. The root is the deepest, most basic part of the word, and everything else grows from it. For example, the root "пис-" appears in писати, письмо, письменник. This botanical metaphor exists in English too! Such as "the root of the problem" or "getting to the root cause."
 
 ---
 
@@ -149,6 +179,12 @@ When you work with grammar exercises, you'll see these specific instruction verb
 | **перекладіть** | translate | Translation tasks |
 | **складіть** | compose, create | Writing tasks |
 
+**Виберіть правильну форму дієслова з варіантів.** (Choose the correct verb form from the options.)
+
+**Знайдіть помилку в цьому реченні і виправте її.** (Find the error in this sentence and correct it.)
+
+**З'єднайте українські слова з їхніми англійськими відповідниками.** (Match Ukrainian words with their English equivalents.)
+
 **Examples in exercises:**
 - "**Виберіть** правильну форму дієслова." (Choose the correct verb form.)
 - "**Знайдіть** помилку в реченні." (Find the error in the sentence.)
@@ -158,7 +194,7 @@ When you work with grammar exercises, you'll see these specific instruction verb
 
 > 🎮 **Gamer's Corner**
 >
-> Interactive language apps use these exact verbs! When you see "**Натисніть** на правильну відповідь" (Click the correct answer) in a Ukrainian learning game, you know exactly what to do.
+> Interactive language apps use these exact verbs! For example, when you see "**Натисніть** на правильну відповідь" (Click the correct answer) in a Ukrainian learning game, you know exactly what to do. For instance, mobile apps like LinguaLeo or Memrise use "Виберіть правильний варіант" (Choose the correct option). Such instructions appear in every Ukrainian language game.
 
 ---
 
@@ -173,6 +209,12 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 | **частота** | frequency | How often something occurs |
 | **аспектуальна пара** | aspectual pair | Pair of imperfective/perfective verbs |
 
+**У цьому контексті доречно використовувати доконаний вид.** (In this context, it is appropriate to use perfective aspect.)
+
+**Слово "вже" є маркером завершеності дії.** (The word "vzhe" is a marker of action completion.)
+
+**Частота вживання цієї форми в розмовній мові дуже висока.** (The frequency of this form's usage in colloquial speech is very high.)
+
 **Examples in grammar texts:**
 - "У цьому **контексті** використовується доконаний вид." (In this context, perfective is used.)
 - "Слово 'вже' є **маркером** результату." ('Вже' is a marker of result.)
@@ -181,7 +223,7 @@ Grammar discussions use these analytical terms to describe linguistic concepts:
 
 > 🌍 **Real World: Linguistics**
 >
-> If you read Ukrainian linguistics articles or advanced grammar books, these terms appear constantly. **Контекст** and **маркер** are core concepts in aspect theory!
+> If you read Ukrainian linguistics articles or advanced grammar books, these terms appear constantly. For example, **контекст** and **маркер** are core concepts in aspect theory! For instance, an article might state "У цьому контексті маркером результату є слово 'вже'." Such terminology appears in every scholarly discussion of Ukrainian grammar.
 
 ---
 
@@ -198,6 +240,12 @@ Grammar books discuss different language styles:
 | **формальна мова** | formal language | Official, academic contexts |
 | **нейтральна мова** | neutral language | Neither formal nor informal |
 
+**Це слово належить до розмовної мови.** (This word belongs to colloquial language.)
+
+**У літературній мові вживають "так", а не "да".** (In literary language, one uses "tak", not "da".)
+
+**Формальна мова вимагає повних форм дієслів.** (Formal language requires full verb forms.)
+
 **Examples:**
 - "Це слово належить до **розмовної мови**." (This word belongs to colloquial language.)
 - "У **літературній мові** вживають 'так', а не 'да'." (In literary language, use 'так', not 'да'.)
@@ -206,7 +254,7 @@ Grammar books discuss different language styles:
 
 > 💡 **Did You Know?**
 >
-> Ukrainian linguists distinguish strictly between **літературна мова** (standard) and **розмовна мова** (colloquial). When grammar books say a form is "літературна," they mean it's correct in writing. "Розмовна" means it's OK in speech but avoid in essays!
+> Ukrainian linguists distinguish strictly between **літературна мова** (standard) and **розмовна мова** (colloquial). For example, when grammar books say a form is "літературна," they mean it's correct in writing. For instance, "так" is standard while "да" is colloquial. "Розмовна" means it's OK in speech but avoid in essays! Such distinctions appear throughout academic discussions.
 
 ---
 
@@ -254,7 +302,7 @@ Look at how Ukrainian grammar books explain word formation:
 
 > 🎯 **Fun Fact: Ukrainian Prefixes**
 >
-> Ukrainian has over 20 verbal prefixes. Each one changes meaning precisely: "в-" (into), "ви-" (out), "за-" (behind, begin), "на-" (on, complete), "пере-" (across, re-). This prefix system is so productive that linguists call it "word engineering."
+> Ukrainian has over 20 verbal prefixes. Each one changes meaning precisely. For example: "в-" (into), "ви-" (out), "за-" (behind, begin). For instance, "писати" + "на-" = "написати" (complete). Such prefixes as "пере-" (across, re-) are highly productive. This prefix system is so productive that linguists call it "word engineering."
 
 ### The Logic of Grammar Explanations
 
@@ -326,7 +374,7 @@ When you see these words, you know the grammar is signaling a logical step. "О�
 
 > 💡 **Did You Know?**
 >
-> Ukrainian has dozens of verbal prefixes that change meaning. The prefix system is so rich that linguists call it "aspectual and directional engineering." Each prefix adds precise nuance!
+> Ukrainian has dozens of verbal prefixes that change meaning. For example, "за-" can mean beginning (заспівати — start singing) or going behind (заховати — hide behind). For instance, "при-" means approaching (приїхати — arrive). Such precision is why linguists call it "aspectual and directional engineering." Each prefix adds precise nuance!
 
 ---
 
@@ -358,7 +406,7 @@ When you see these words, you know the grammar is signaling a logical step. "О�
 
 > 🌍 **Real World: Academic Ukrainian**
 >
-> University-level Ukrainian courses use these exact patterns. When you read academic grammar, you see "вживається для вираження," "показує залежність," "виражає відношення" everywhere. Master these phrases and you unlock scholarly materials.
+> University-level Ukrainian courses use these exact patterns. For example, when you read academic grammar, you see "вживається для вираження." For instance, a textbook might state "Родовий відмінок показує залежність." Such phrases as "виражає відношення" appear everywhere. Master these phrases and you unlock scholarly materials.
 
 ---
 
