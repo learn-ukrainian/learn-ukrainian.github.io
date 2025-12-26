@@ -103,6 +103,22 @@ def evaluate_pedagogy(violation_count: int) -> GateResult:
     return GateResult('FAIL', '❌', f"{violation_count} violations")
 
 
+def evaluate_richness(
+    score: int,
+    threshold: int,
+    module_type: str,
+    flags: list
+) -> GateResult:
+    """Evaluate richness score gate."""
+    if score >= threshold:
+        if flags:
+            return GateResult('WARN', '⚠️', f"{score}/{threshold} ({module_type}) - {len(flags)} flags")
+        return GateResult('PASS', '✅', f"{score}/{threshold} ({module_type})")
+    if len(flags) >= 2:
+        return GateResult('FAIL', '❌', f"{score}/{threshold} ({module_type}) - REWRITE needed")
+    return GateResult('FAIL', '❌', f"{score}/{threshold} ({module_type})")
+
+
 def evaluate_immersion(
     score: float,
     min_imm: int,

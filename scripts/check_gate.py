@@ -119,6 +119,7 @@ def count_dialogues(content: str) -> int:
         r'^[АБВ]:\s',
         r'^\*\*[АБВ]:\*\*\s',
         r'^—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue
+        r'^>\s*—\s*[А-ЯІЇЄҐа-яіїєґ]',  # Em-dash dialogue inside blockquote
         r'^\*\*[А-ЯІЇЄҐа-яіїєґ]+:\*\*\s',  # **Speaker:** format
         r'^[А-ЯІЇЄҐа-яіїєґ]+:\s+[А-ЯІЇЄҐа-яіїєґ]',  # Speaker: text format
     ]

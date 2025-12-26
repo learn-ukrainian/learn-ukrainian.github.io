@@ -66,8 +66,15 @@ from .gates import (
     evaluate_lint,
     evaluate_pedagogy,
     evaluate_immersion,
+    evaluate_richness,
     compute_recommendation,
 )
+
+# Import richness calculation
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from calculate_richness import calculate_richness_score, detect_dryness_flags
 from .report import (
     generate_report,
     save_report,
@@ -851,6 +858,26 @@ def audit_module(file_path: str) -> bool:
     if immersion_score < 10.0 and module_num > 5:
         has_critical_failure = True
 
+    # Richness evaluation (B1+ only)
+    if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        richness_result = calculate_richness_score(content, level_code, file_path)
+        print(f"DEBUG RICHNESS: {richness_result}")
+        richness_flags = detect_dryness_flags(content, level_code, file_path)
+        results['richness'] = evaluate_richness(
+            richness_result['score'],
+            richness_result['threshold'],
+            richness_result.get('module_type', 'grammar'),
+            richness_flags,
+        )
+        if results['richness'].status == 'FAIL':
+            # Richness is a HARD gate - fail the audit
+            has_critical_failure = True
+            print(f"\n⚠️  Richness below threshold ({richness_result['score']}/{richness_result['threshold']})")
+            if richness_flags:
+                print("   Dryness flags:")
+                for flag in richness_flags:
+                    print(f"     - {flag}")
+
     # Transliteration policy
     if not transliteration_allowed:
         if not re.search(r'transliteration:\s*["\']?none["\']?', frontmatter_str):
@@ -897,12 +924,22 @@ def audit_module(file_path: str) -> bool:
 
     # Generate and save report (include all violations)
     all_violations_for_report = pedagogical_violations + vocab_blocking + vocab_warnings
+
+    # Get richness data for report (if available)
+    richness_data = None
+    richness_flags_for_report = None
+    if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        richness_data = calculate_richness_score(content, level_code, file_path)
+        richness_flags_for_report = detect_dryness_flags(content, level_code, file_path)
+
     report_content = generate_report(
         file_path, phase, level_code, pedagogy, target,
         has_critical_failure, results, table_rows,
         lint_errors, all_violations_for_report,
         recommendation, reasons, severity,
-        low_density_activities
+        low_density_activities,
+        richness_data=richness_data,
+        richness_flags=richness_flags_for_report
     )
     report_path = save_report(file_path, report_content)
     print(f"\nReport: {report_path}")

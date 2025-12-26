@@ -22,7 +22,9 @@ def generate_report(
     recommendation: str,
     reasons: list[str],
     severity: int,
-    low_density_activities: list[dict] = None
+    low_density_activities: list[dict] = None,
+    richness_data: dict = None,
+    richness_flags: list = None
 ) -> str:
     """Generate markdown report content."""
     report_lines = []
@@ -56,7 +58,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'immersion']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'immersion', 'richness']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -64,6 +66,164 @@ def generate_report(
                 report_lines.append(f"- **{k.capitalize()}:** {r.icon} {r.msg}")
             else:  # dict
                 report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
+
+    # Add richness details section
+    if richness_data:
+        report_lines.append("")
+        report_lines.append("## Richness Details")
+        report_lines.append(f"**Score:** {richness_data.get('score', 0)}/{richness_data.get('threshold', 95)}")
+        report_lines.append(f"**Module Type:** {richness_data.get('module_type', 'unknown')}")
+        report_lines.append("")
+        report_lines.append("### Score Breakdown")
+        raw_counts = richness_data.get('raw', {})
+        normalized = richness_data.get('normalized', {})
+        targets = richness_data.get('targets', {})
+        weights = richness_data.get('weights', {})
+        if raw_counts:
+            report_lines.append("| Metric | Count | Target | Score | Weight | Contribution |")
+            report_lines.append("|--------|-------|--------|-------|--------|--------------|")
+            total_contribution = 0
+            for metric, count in raw_counts.items():
+                target = targets.get(metric, '-')
+                norm_score = normalized.get(metric, 0)
+                weight = weights.get(metric, 0.05)
+                contribution = norm_score * weight * 100
+                total_contribution += contribution
+                # Format values for readability
+                if isinstance(count, float):
+                    count_str = f"{count:.2f}"
+                else:
+                    count_str = str(count)
+                target_str = str(target) if target != 0 else '-'
+                report_lines.append(f"| {metric} | {count_str} | {target_str} | {norm_score:.0%} | {weight:.0%} | {contribution:.1f}% |")
+            report_lines.append(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
+        if richness_flags:
+            report_lines.append("")
+            report_lines.append("### Dryness Flags & Fixes")
+            flag_fixes = {
+                'NO_ENGAGEMENT': '''Add 2+ engagement boxes. Use this exact format:
+
+> 💡 **Чи знали ви?**
+>
+> [Interesting fact about the grammar/vocabulary topic in Ukrainian]
+
+> 🇺🇦 **Культурний момент**
+>
+> [Cultural context connecting grammar to Ukrainian life/places]
+
+> 🌍 **У реальному житті**
+>
+> [Practical scenario where this grammar is used]''',
+
+                'WALL_OF_TEXT': 'Break paragraphs > 500 words. Insert headers (##), bullet lists, or callout boxes every 200-300 words.',
+
+                'REPETITIVE_STARTERS': 'Vary sentence starters. Instead of repeating "Доконаний вид...", use: "Коли...", "Якщо...", "Зверніть увагу:", "Порівняйте:", questions, examples.',
+
+                'NO_DIALOGUE': '''Add 4+ mini-dialogues. Use this exact format:
+
+**Діалог: [Location in Ukraine]**
+
+> — [Speaker 1 line with **bolded** grammar examples]
+> — [Speaker 2 response with **bolded** grammar examples]
+> — [Speaker 1 continuation]
+> — [Speaker 2 conclusion]
+
+Example locations: На Бесарабському ринку, У львівській кав'ярні, В одеському трамваї, На Подолі''',
+
+                'LOW_DIALOGUE': '''Add more mini-dialogues (need 4+ total). Use this exact format:
+
+**Діалог: [Location in Ukraine]**
+
+> — [Speaker 1 line with **bolded** grammar examples]
+> — [Speaker 2 response with **bolded** grammar examples]
+> — [Speaker 1 continuation]
+> — [Speaker 2 conclusion]''',
+
+                'NO_EXAMPLES': 'Add 24+ example sentences. Each grammar point needs 3-4 examples showing the pattern in context.',
+
+                'ABSTRACT_ONLY': '''Add 3+ real-world boxes. Use this exact format:
+
+> 🌍 **У реальному житті**
+>
+> [Specific scenario: "На співбесіді...", "У магазині...", "На вокзалі..."]
+> [Example sentence showing grammar in that context]''',
+
+                'NO_COLLOCATIONS': 'Add 5+ collocations in format: **слово** + noun/verb (e.g., **важка** робота, **приймати** рішення)',
+
+                'NO_REGISTER_NOTES': 'Add register notes: Mark words as (розм.) for colloquial, (офіц.) for formal, (книжн.) for literary.',
+
+                'NO_PRIMARY_SOURCES': '''Add 2+ primary source quotes. Use this format:
+
+> «[Exact quote from historical document]»
+> — *[Source name], [year]*''',
+
+                'NO_TIMELINE': 'Add 5+ timeline markers: specific years (1876, 1918), periods (XVIII ст.), sequences (спочатку... потім... нарешті).',
+
+                'NO_DECOLONIZATION_PERSPECTIVE': 'Add Ukrainian perspective on historical events. Avoid Russocentric framing. Use Ukrainian names for cities/people.',
+
+                'NO_QUOTES': '''Add 2+ direct quotes from the subject. Use this format:
+
+> «[Exact quote from the person]»
+> — *[Person name], [context/year]*''',
+
+                'NO_LEGACY': 'Add a "Спадщина" or "Вплив" section discussing lasting influence on Ukrainian culture/literature/language.',
+
+                'NO_ANALYSIS': '''Add 3+ analysis section headers. Use keywords in headers:
+
+## 1. Аналіз [topic]: [subtitle]
+## 2. Інтерпретація [aspect]: [subtitle]
+## 3. Символіка [element]: [subtitle]''',
+
+                'NO_LITERARY_CITATIONS': '''Add 3+ literary citations. Use this exact format:
+
+«[Quote from the literary work, minimum 20 characters]»
+
+Example: «Зібравши троянців в остатки / І швидше прийнявши присягу»''',
+
+                'NO_RESOURCES': '''Add 2+ resource blocks. Use this format:
+
+> [!resources] Додаткові ресурси
+>
+> - [Resource 1 with link or description]
+> - [Resource 2 with link or description]''',
+
+                'NO_EXEMPLAR_TEXTS': '''Add 2+ exemplar text excerpts. Use this format:
+
+**Зразок [style type]:**
+
+> «[Extended quote showing the style, 50+ words]»
+> — *[Source]*''',
+
+                'NO_REGISTER_ANALYSIS': 'Add 3+ register analysis notes explaining when to use formal vs informal, written vs spoken variants.',
+
+                'NO_CULTURAL_ANCHOR': '''Add 3+ cultural references. Use this exact format:
+
+> 🇺🇦 **Культурний момент**
+>
+> [Reference to Ukrainian place (Київ, Львів, Одеса, Карпати), tradition, or custom]
+> [How it connects to the grammar/vocabulary being taught]
+> [Example sentence using the grammar with cultural context]''',
+
+                'LOW_CULTURAL_ANCHOR': '''Add more cultural references (need 3+ total). Include:
+- Named Ukrainian places (Поділ, Бесарабський ринок, Острозька академія)
+- Ukrainian traditions or customs
+- Contemporary Ukrainian life examples''',
+
+                'NO_PROVERBS': '''Add 1+ Ukrainian proverb. Use this format:
+
+Українці кажу|ть: «[Proverb in Ukrainian]»
+
+Зверніть увагу: **[word]** — [aspect] вид, бо [explanation why this aspect is used].
+
+Example: «Не кажи гоп, поки не перескочиш» — **перескочиш** is perfective because it's about the result.''',
+            }
+            for flag in richness_flags:
+                fix = flag_fixes.get(flag, 'Address this issue to improve richness score')
+                report_lines.append(f"- ❌ **{flag}**")
+                report_lines.append(f"  - FIX:")
+                # Format multi-line fixes properly
+                for line in fix.split('\n'):
+                    report_lines.append(f"    {line}")
 
     # Add low density activities section if any
     if low_density_activities:
@@ -92,7 +252,7 @@ def generate_report(
 
 def save_report(file_path: str, report_content: str) -> str:
     """
-    Save report to gemini/ subdirectory.
+    Save report to audit/ subdirectory.
 
     Returns the report file path.
     """
@@ -100,8 +260,8 @@ def save_report(file_path: str, report_content: str) -> str:
     file_name = os.path.basename(file_path)
     base_name = os.path.splitext(file_name)[0]
 
-    if not file_dir.endswith('gemini'):
-        target_dir = os.path.join(file_dir, 'gemini')
+    if not file_dir.endswith('audit'):
+        target_dir = os.path.join(file_dir, 'audit')
     else:
         target_dir = file_dir
 
@@ -148,6 +308,13 @@ def print_gates(results: dict, level_code: str) -> None:
             print(f"Immersion    {imm.icon} {imm.msg}")
         else:
             print(f"Immersion    {imm['icon']} {imm['msg']}")
+
+    richness = results.get('richness')
+    if richness:
+        if hasattr(richness, 'icon'):
+            print(f"Richness     {richness.icon} {richness.msg}")
+        else:
+            print(f"Richness     {richness['icon']} {richness['msg']}")
 
 
 def print_lint_errors(errors: list[str]) -> None:
@@ -288,8 +455,8 @@ def append_mdx_errors_to_report(
     file_name = os.path.basename(md_file_path)
     base_name = os.path.splitext(file_name)[0]
 
-    if not file_dir.endswith('gemini'):
-        target_dir = os.path.join(file_dir, 'gemini')
+    if not file_dir.endswith('audit'):
+        target_dir = os.path.join(file_dir, 'audit')
     else:
         target_dir = file_dir
 
@@ -382,8 +549,8 @@ def append_html_errors_to_report(
     file_name = os.path.basename(md_file_path)
     base_name = os.path.splitext(file_name)[0]
 
-    if not file_dir.endswith('gemini'):
-        target_dir = os.path.join(file_dir, 'gemini')
+    if not file_dir.endswith('audit'):
+        target_dir = os.path.join(file_dir, 'audit')
     else:
         target_dir = file_dir
 
