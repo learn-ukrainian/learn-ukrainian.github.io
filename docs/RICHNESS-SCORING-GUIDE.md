@@ -48,15 +48,15 @@ Module type is detected from `pedagogy:` frontmatter field.
 | paragraph_var | - | 5% |
 
 #### Checkpoint (Assessment)
-| Metric | Weight |
-|--------|--------|
-| variety | 20% |
-| questions | 20% |
-| visual | 15% |
-| examples | 15% |
-| engagement | 10% |
-| cultural | 10% |
-| paragraph_var | 10% |
+| Metric | Target | Weight |
+|--------|--------|--------|
+| activity_types | 8 | 25% |
+| review_sections | 3 | 20% |
+| variety | - | 15% |
+| engagement | 3 | 10% |
+| cultural | 0 | 10% |
+| visual | 3 | 10% |
+| paragraph_var | - | 10% |
 
 #### Cultural
 | Metric | Weight |

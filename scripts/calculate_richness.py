@@ -165,14 +165,14 @@ MODULE_TYPE_TARGETS = {
         'essays': 2,
         'resources': 3,
         'visual': 3,
-        'threshold': 95,
+        'threshold': 90,  # Literature has different metrics, lower threshold
     },
     'checkpoint': {
         'engagement': 3,
         'activity_types': 8,
         'review_sections': 3,
         'visual': 3,
-        'threshold': 95,
+        'threshold': 85,  # Checkpoints focus on variety, lower threshold
     },
     'content': {  # Generic CBI fallback
         'engagement': 5,
@@ -259,13 +259,13 @@ MODULE_TYPE_WEIGHTS = {
         'paragraph_var': 0.05,
     },
     'checkpoint': {
-        # Checkpoint modules are assessments - less emphasis on content richness
+        # Checkpoint modules are assessments - emphasis on activity variety
         'engagement': 0.10,
-        'examples': 0.15,
-        'variety': 0.20,  # Activity variety is key
+        'activity_types': 0.25,  # Variety of activity types is key
+        'variety': 0.15,  # Sentence variety in review sections
         'cultural': 0.10,
-        'visual': 0.15,
-        'questions': 0.20,
+        'visual': 0.10,
+        'review_sections': 0.20,  # Comprehensive review coverage
         'paragraph_var': 0.10,
     },
     'phraseology': {
@@ -462,6 +462,12 @@ def extract_module_type(content: str, file_path: Path) -> str:
             try:
                 fm = yaml.safe_load(parts[1])
                 if fm:
+                    # Check focus field FIRST (highest priority)
+                    focus = str(fm.get('focus', '')).lower().strip()
+                    if focus in MODULE_TYPE_MAP:
+                        return MODULE_TYPE_MAP[focus]
+
+                    # Then check pedagogy field
                     pedagogy = str(fm.get('pedagogy', '')).lower().strip()
                     if pedagogy in MODULE_TYPE_MAP:
                         return MODULE_TYPE_MAP[pedagogy]
@@ -877,8 +883,9 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None) -
             'resources': count_resources(prose),
         })
     elif module_type == 'checkpoint':
+        # Use full content for activity_types since prose strips the Activities section
         raw.update({
-            'activity_types': len(set(re.findall(r'^##\s*(quiz|match-up|fill-in|unjumble|cloze|error-correction|translate|mark-the-words|group-sort|true-false|select|dialogue-reorder)', prose, re.MULTILINE))),
+            'activity_types': len(set(re.findall(r'^##\s*(quiz|match-up|fill-in|unjumble|cloze|error-correction|translate|mark-the-words|group-sort|true-false|select|dialogue-reorder)', content, re.MULTILINE))),
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),
         })
     else:  # 'content' or 'cultural' - generic fallback
