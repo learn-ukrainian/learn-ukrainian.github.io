@@ -80,10 +80,15 @@ Review the module, fix violations, repeat until PASS.
 - [ ] All answers correct
 
 ### 6. Richness Constraints (Counts)
+
+**CRITICAL: Read `docs/RICHNESS-SCORING-GUIDE.md` for scoring details and fix templates.**
+
 - [ ] Word count meets target
 - [ ] Example sentences meet minimum
 - [ ] Engagement boxes meet minimum
 - [ ] Mini-dialogues present
+
+When richness fails, check the audit report for **Dryness Flags** and use the exact fix templates from the guide.
 
 ### 7. Content Richness Quality (B1+ Critical)
 
@@ -231,7 +236,7 @@ Rebuild from Stage 1:
 ## Running the Audit
 
 ```bash
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 ```
 
 Audit output categories:
