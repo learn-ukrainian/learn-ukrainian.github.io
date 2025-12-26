@@ -18,7 +18,7 @@ Parse arguments: $ARGUMENTS
 
 ### Step 1: Read Stage Instructions
 
-Read: `.claude/stages/stage-1-skeleton.md`
+Read: `claude_extensions/stages/stage-1-skeleton.md`
 
 ### Step 2: Extract Module Plan
 

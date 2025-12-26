@@ -1,5 +1,46 @@
 # CLAUDE.md - Project Instructions
 
+<critical>
+## ALWAYS Work in `claude_extensions/` First
+
+**NEVER edit files directly in `.claude/` or `.agent/` directories.**
+
+These are DEPLOYMENT targets, not source files:
+- `.claude/` ← deployed FROM `claude_extensions/`
+- `.agent/` ← deprecated, do not use
+
+**Workflow:**
+1. Edit files in `claude_extensions/` (commands, skills, stages, quick-ref)
+2. Run `npm run claude:deploy` to copy to `.claude/`
+3. Changes take effect after deploy
+
+**Structure:**
+```
+claude_extensions/
+├── commands/     ← Skill definitions (/module-create, /module-stage-*, etc.)
+├── skills/       ← Domain expertise (architect skills)
+├── stages/       ← Stage instruction docs (referenced by commands)
+└── quick-ref/    ← Level-specific quick references
+```
+
+## ALWAYS Use Python venv
+
+**NEVER use `python3` or `python` directly.** Use the project's virtual environment:
+
+```bash
+# Correct
+.venv/bin/python scripts/audit_module.py ...
+.venv/bin/python scripts/pipeline.py ...
+
+# WRONG - will use system Python, missing dependencies
+python3 scripts/audit_module.py ...
+```
+
+**Why:** Project dependencies (pyyaml, etc.) are installed in `.venv/`, not system Python.
+</critical>
+
+---
+
 ## Current Work
 **A1 COMPLETE.** All 34 modules pass audit, MDX validation, and HTML validation.
 

@@ -81,7 +81,7 @@ Example for B1 M15 (Aspect Mastery):
 2. Verify all skill groups are tested
 3. Verify 16+ activities
 4. Verify 100% Ukrainian immersion
-5. Run audit: `python3 scripts/audit_module.py {file_path}`
+5. Run audit: `.venv/bin/python scripts/audit_module.py {file_path}`
 
 ### Step 5: Checkpoint-Specific Validation
 

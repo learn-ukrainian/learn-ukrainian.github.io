@@ -15,6 +15,31 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 59.0% (B1.1 Aspect)
+- **Richness:** ✅ 99/95 (grammar)
+
+## Richness Details
+**Score:** 99/95
+**Module Type:** grammar
+
+### Raw Counts
+| Metric | Count |
+|--------|-------|
+| engagement | 11 |
+| variety | 0.9097472924187726 |
+| cultural | 5 |
+| visual | 10 |
+| paragraph_var | 1.0 |
+| examples | 24 |
+| dialogues | 14 |
+| realworld | 20 |
+| questions | 25 |
+| proverbs | 1 |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -18,7 +18,7 @@ Parse arguments: $ARGUMENTS
 
 ### Step 1: Read Stage Instructions
 
-Read: `.claude/stages/stage-3-activities.md`
+Read: `claude_extensions/stages/stage-3-activities.md`
 
 ### Step 2: Load Module
 
@@ -77,7 +77,7 @@ Use ONLY vocabulary from:
 ### Step 7: Run Audit
 
 ```bash
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 ```
 
 ### Step 8: Generate Output

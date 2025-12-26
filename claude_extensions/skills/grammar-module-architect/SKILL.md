@@ -101,7 +101,7 @@ Before submitting a grammar module:
 ## Validation
 
 ```bash
-python3 scripts/audit_module.py curriculum/l2-uk-en/{level}/{module-file}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{module-file}.md
 ```
 
 ---

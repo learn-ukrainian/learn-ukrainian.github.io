@@ -18,7 +18,7 @@ Parse arguments: $ARGUMENTS
 
 ### Step 1: Read Stage Instructions
 
-Read: `.claude/stages/stage-2-content.md`
+Read: `claude_extensions/stages/stage-2-content.md`
 
 ### Step 2: Load Existing Module
 
@@ -81,7 +81,7 @@ Replace `[placeholder]` markers with rich content following template guidance:
 ### Step 6: Run Audit
 
 ```bash
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 ```
 
 ### Output

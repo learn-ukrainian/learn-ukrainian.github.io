@@ -118,7 +118,7 @@ Before submitting a vocabulary module:
 ## Validation
 
 ```bash
-python3 scripts/audit_module.py curriculum/l2-uk-en/b1/{module-file}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/{module-file}.md
 ```
 
 ---
