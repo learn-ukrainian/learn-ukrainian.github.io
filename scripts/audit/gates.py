@@ -18,13 +18,26 @@ class GateResult:
 
 
 def evaluate_word_count(total_words: int, target: int) -> GateResult:
-    """Evaluate word count gate."""
+    """Evaluate word count gate.
+
+    - PASS: at or above target (up to target + 1000)
+    - WARN: below target but within 100 words
+    - FAIL: 100+ words below target
+    """
     max_words = target + 1000  # Allow up to 1000 words over target for rich content
+    min_words = target - 100   # Hard fail threshold
+
     if total_words >= target:
         if total_words > max_words:
             return GateResult('WARN', '⚠️', f"{total_words}/{target} (>{max_words} may be too long)")
         return GateResult('PASS', '✅', f"{total_words}/{target}")
-    return GateResult('FAIL', '❌', f"{total_words}/{target}")
+    elif total_words >= min_words:
+        # Within 100 words of target - warn but don't fail
+        shortfall = target - total_words
+        return GateResult('WARN', '⚠️', f"{total_words}/{target} ({shortfall} short)")
+    else:
+        # More than 100 words short - fail
+        return GateResult('FAIL', '❌', f"{total_words}/{target}")
 
 
 def evaluate_activity_count(count: int, target: int) -> GateResult:
@@ -112,11 +125,11 @@ def evaluate_richness(
     """Evaluate richness score gate."""
     if score >= threshold:
         if flags:
-            return GateResult('WARN', '⚠️', f"{score}/{threshold} ({module_type}) - {len(flags)} flags")
-        return GateResult('PASS', '✅', f"{score}/{threshold} ({module_type})")
+            return GateResult('WARN', '⚠️', f"{score}% ({module_type}) - {len(flags)} flags")
+        return GateResult('PASS', '✅', f"{score}% ({module_type})")
     if len(flags) >= 2:
-        return GateResult('FAIL', '❌', f"{score}/{threshold} ({module_type}) - REWRITE needed")
-    return GateResult('FAIL', '❌', f"{score}/{threshold} ({module_type})")
+        return GateResult('FAIL', '❌', f"{score}% < {threshold}% min ({module_type}) - REWRITE needed")
+    return GateResult('FAIL', '❌', f"{score}% < {threshold}% min ({module_type})")
 
 
 def evaluate_immersion(

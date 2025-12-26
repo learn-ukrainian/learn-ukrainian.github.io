@@ -67,11 +67,13 @@ def generate_report(
             else:  # dict
                 report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
 
-    # Add richness details section
-    if richness_data:
+    # Add richness details section (only if there are flags to fix or score is below threshold)
+    if richness_data and richness_flags:
         report_lines.append("")
         report_lines.append("## Richness Details")
-        report_lines.append(f"**Score:** {richness_data.get('score', 0)}/{richness_data.get('threshold', 95)}")
+        score = richness_data.get('score', 0)
+        threshold = richness_data.get('threshold', 95)
+        report_lines.append(f"**Score:** {score}% (minimum: {threshold}%)")
         report_lines.append(f"**Module Type:** {richness_data.get('module_type', 'unknown')}")
         report_lines.append("")
         report_lines.append("### Score Breakdown")

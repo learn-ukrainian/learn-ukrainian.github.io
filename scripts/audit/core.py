@@ -958,7 +958,6 @@ def audit_module(file_path: str) -> bool:
     # Richness evaluation (B1+ only)
     if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
         richness_result = calculate_richness_score(content, level_code, file_path)
-        print(f"DEBUG RICHNESS: {richness_result}")
         richness_flags = detect_dryness_flags(content, level_code, file_path)
         results['richness'] = evaluate_richness(
             richness_result['score'],
@@ -969,7 +968,7 @@ def audit_module(file_path: str) -> bool:
         if results['richness'].status == 'FAIL':
             # Richness is a HARD gate - fail the audit
             has_critical_failure = True
-            print(f"\n⚠️  Richness below threshold ({richness_result['score']}/{richness_result['threshold']})")
+            print(f"\n⚠️  Richness below threshold ({richness_result['score']}% < {richness_result['threshold']}% min)")
             if richness_flags:
                 print("   Dryness flags:")
                 for flag in richness_flags:
