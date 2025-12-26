@@ -1,0 +1,372 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/schemas/activities-b1.schema.json",
+  "title": "B1+ Module Activities",
+  "description": "Activity schema for B1, B2, C1, C2 level modules. All 12 activity types (no anagram). Higher minimum item counts.",
+
+  "type": "array",
+  "minItems": 12,
+  "items": {
+    "oneOf": [
+      { "$ref": "#/definitions/quiz-b1" },
+      { "$ref": "#/definitions/match-up-b1" },
+      { "$ref": "#/definitions/fill-in-b1" },
+      { "$ref": "#/definitions/group-sort-b1" },
+      { "$ref": "#/definitions/unjumble-b1" },
+      { "$ref": "#/definitions/true-false-b1" },
+      { "$ref": "#/definitions/cloze-b1" },
+      { "$ref": "#/definitions/error-correction-b1" },
+      { "$ref": "#/definitions/mark-the-words-b1" },
+      { "$ref": "#/definitions/dialogue-reorder-b1" },
+      { "$ref": "#/definitions/select-b1" },
+      { "$ref": "#/definitions/translate-b1" }
+    ]
+  },
+
+  "definitions": {
+    "quiz-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "quiz" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["question", "options"],
+            "additionalProperties": false,
+            "properties": {
+              "question": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "correct"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1 },
+                    "correct": { "type": "boolean" }
+                  }
+                }
+              },
+              "explanation": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "match-up-b1": {
+      "type": "object",
+      "required": ["type", "title", "pairs"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "match-up" },
+        "title": { "type": "string", "minLength": 1 },
+        "pairs": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["left", "right"],
+            "additionalProperties": false,
+            "properties": {
+              "left": { "type": "string", "minLength": 1 },
+              "right": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+
+    "fill-in-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "fill-in" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["sentence", "answer", "options"],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": { "type": "string", "minLength": 1 },
+              "answer": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "explanation": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "group-sort-b1": {
+      "type": "object",
+      "required": ["type", "title", "groups"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "group-sort" },
+        "title": { "type": "string", "minLength": 1 },
+        "groups": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": ["name", "items"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "items": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "unjumble-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "unjumble" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["words", "answer"],
+            "additionalProperties": false,
+            "properties": {
+              "words": {
+                "type": "array",
+                "minItems": 3,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "answer": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+
+    "true-false-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "true-false" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 8,
+          "items": {
+            "type": "object",
+            "required": ["statement", "correct"],
+            "additionalProperties": false,
+            "properties": {
+              "statement": { "type": "string", "minLength": 1 },
+              "correct": { "type": "boolean" },
+              "explanation": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "cloze-b1": {
+      "type": "object",
+      "required": ["type", "title", "passage", "blanks"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "cloze" },
+        "title": { "type": "string", "minLength": 1 },
+        "passage": { "type": "string", "minLength": 1 },
+        "blanks": {
+          "type": "array",
+          "minItems": 14,
+          "items": {
+            "type": "object",
+            "required": ["id", "answer", "options"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "integer", "minimum": 1 },
+              "answer": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "error-correction-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "error-correction" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["sentence", "error", "answer", "options", "explanation"],
+            "additionalProperties": false,
+            "properties": {
+              "sentence": { "type": "string", "minLength": 1 },
+              "error": { "type": "string", "minLength": 1 },
+              "answer": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": { "type": "string", "minLength": 1 }
+              },
+              "explanation": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+
+    "mark-the-words-b1": {
+      "type": "object",
+      "required": ["type", "title", "instruction", "passage", "correct_words"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "mark-the-words" },
+        "title": { "type": "string", "minLength": 1 },
+        "instruction": { "type": "string", "minLength": 1 },
+        "passage": { "type": "string", "minLength": 1 },
+        "correct_words": {
+          "type": "array",
+          "minItems": 6,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+
+    "dialogue-reorder-b1": {
+      "type": "object",
+      "required": ["type", "title", "lines"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "dialogue-reorder" },
+        "title": { "type": "string", "minLength": 1 },
+        "lines": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["order", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "order": { "type": "integer", "minimum": 1 },
+              "speaker": { "type": "string" },
+              "text": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+
+    "select-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "select" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["question", "options"],
+            "additionalProperties": false,
+            "properties": {
+              "question": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "correct"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1 },
+                    "correct": { "type": "boolean" }
+                  }
+                }
+              },
+              "min_correct": { "type": "integer", "minimum": 2 },
+              "explanation": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "translate-b1": {
+      "type": "object",
+      "required": ["type", "title", "items"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "translate" },
+        "title": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["source", "options"],
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 4,
+                "items": {
+                  "type": "object",
+                  "required": ["text", "correct"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "text": { "type": "string", "minLength": 1 },
+                    "correct": { "type": "boolean" }
+                  }
+                }
+              },
+              "explanation": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

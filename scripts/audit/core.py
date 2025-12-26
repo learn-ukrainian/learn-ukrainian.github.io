@@ -8,6 +8,7 @@ and produces the final audit report.
 import os
 import re
 import sys
+import yaml
 
 from .config import (
     LEVEL_CONFIG,
@@ -93,6 +94,62 @@ def parse_frontmatter(content: str) -> tuple[str, str]:
     if not match:
         return "", content
     return match.group(1), match.group(2)
+
+
+def load_yaml_activities(md_file_path: str) -> list[dict] | None:
+    """
+    Load activities from YAML file if it exists.
+
+    Args:
+        md_file_path: Path to the markdown file
+
+    Returns:
+        List of activity dicts if YAML file exists and is valid, None otherwise
+    """
+    from pathlib import Path
+
+    md_path = Path(md_file_path)
+    yaml_path = md_path.parent / (md_path.stem + '.activities.yaml')
+
+    if not yaml_path.exists():
+        return None
+
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            activities = yaml.safe_load(f)
+        if isinstance(activities, list):
+            return activities
+        return None
+    except (yaml.YAMLError, IOError) as e:
+        print(f"  ⚠️ Error loading YAML activities: {e}")
+        return None
+
+
+def count_yaml_activity_items(activity: dict) -> int:
+    """Count items in a YAML activity based on its type."""
+    act_type = activity.get('type', '').lower()
+
+    if act_type in ('quiz', 'fill-in', 'true-false', 'unjumble', 'error-correction', 'select', 'translate'):
+        return len(activity.get('items', []))
+    elif act_type == 'match-up':
+        return len(activity.get('pairs', []))
+    elif act_type == 'group-sort':
+        total = 0
+        for group in activity.get('groups', []):
+            total += len(group.get('items', []))
+        return total
+    elif act_type == 'cloze':
+        # Count blanks in passage: {word|opt1|opt2|opt3}
+        passage = activity.get('passage', '')
+        return len(re.findall(r'\{[^}]+\}', passage))
+    elif act_type == 'mark-the-words':
+        # Count marked words: *word*
+        text = activity.get('text', '')
+        return len(re.findall(r'\*[^*]+\*', text))
+    elif act_type == 'dialogue-reorder':
+        return len(activity.get('lines', []))
+
+    return 0
 
 
 def validate_required_metadata(frontmatter_str: str) -> list[str]:
@@ -568,6 +625,39 @@ def audit_module(file_path: str) -> bool:
 
     print(f"\nAuditing {file_path} (Target: {target})...\n")
 
+    # Check for YAML activities file
+    yaml_activities = load_yaml_activities(file_path)
+    use_yaml_activities = yaml_activities is not None
+
+    if use_yaml_activities:
+        print(f"  📋 Found YAML activities file ({len(yaml_activities)} activities)")
+        # Process YAML activities
+        for activity in yaml_activities:
+            act_type = activity.get('type', '').lower()
+            if act_type in VALID_ACTIVITY_TYPES or act_type.replace('-', '') in [t.replace('-', '') for t in VALID_ACTIVITY_TYPES]:
+                activity_count += 1
+                total_activities += 1
+                found_activity_types.append(act_type)
+
+                items = count_yaml_activity_items(activity)
+                density_target = config['min_items_per_activity']
+                if act_type in ACTIVITY_COMPLEXITY:
+                    complexity_rules = ACTIVITY_COMPLEXITY[act_type].get(level_code, {})
+                    if 'min_items' in complexity_rules:
+                        density_target = complexity_rules['min_items']
+
+                if items >= density_target:
+                    valid_density_count += 1
+                else:
+                    low_density_activities.append({
+                        'title': activity.get('title', act_type),
+                        'type': act_type,
+                        'items': items,
+                        'target': density_target
+                    })
+
+                print(f"  > {activity.get('title', act_type)}: {items} items (min {density_target})")
+
     for title, text in section_map.items():
         title_lower = title.lower()
 
@@ -604,7 +694,8 @@ def audit_module(file_path: str) -> bool:
         status_icon = "⚪️"
         note = "Skipped"
 
-        if is_activity:
+        if is_activity and not use_yaml_activities:
+            # Only count embedded MD activities if no YAML file
             activity_count += 1
             total_activities += 1
 
@@ -631,6 +722,12 @@ def audit_module(file_path: str) -> bool:
             note = f"Activity ({items} items, min {density_target})"
             print(f"  > {title}: {items} items (min {density_target})")
             display_count = items
+
+        elif is_activity and use_yaml_activities:
+            # Skip embedded activities when using YAML
+            status_icon = "⚪️"
+            note = "Skipped (using YAML)"
+            display_count = 0
 
         elif is_core and not is_excluded:
             status_icon = "✅"

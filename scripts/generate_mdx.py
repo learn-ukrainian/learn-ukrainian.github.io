@@ -151,6 +151,333 @@ def parse_frontmatter(content: str) -> tuple[dict, str]:
 
     return fm, body
 
+# =============================================================================
+# YAML ACTIVITY SUPPORT
+# =============================================================================
+
+def load_yaml_activities(yaml_path: Path) -> list[dict] | None:
+    """Load activities from YAML file if it exists."""
+    if not yaml_path.exists():
+        return None
+    try:
+        with open(yaml_path, 'r', encoding='utf-8') as f:
+            activities = yaml.safe_load(f)
+        return activities if isinstance(activities, list) else None
+    except (yaml.YAMLError, IOError) as e:
+        print(f"  ⚠️ Error loading YAML activities: {e}")
+        return None
+
+def yaml_activities_to_jsx(activities: list[dict]) -> str:
+    """Convert YAML activities to JSX components."""
+    jsx_parts = []
+
+    for activity in activities:
+        activity_type = activity.get('type', '')
+        title = activity.get('title', 'Activity')
+        jsx = ''
+
+        if activity_type == 'quiz':
+            jsx = _yaml_quiz_to_jsx(activity, title)
+        elif activity_type == 'match-up':
+            jsx = _yaml_match_up_to_jsx(activity, title)
+        elif activity_type == 'fill-in':
+            jsx = _yaml_fill_in_to_jsx(activity, title)
+        elif activity_type == 'true-false':
+            jsx = _yaml_true_false_to_jsx(activity, title)
+        elif activity_type == 'group-sort':
+            jsx = _yaml_group_sort_to_jsx(activity, title)
+        elif activity_type == 'unjumble':
+            jsx = _yaml_unjumble_to_jsx(activity, title)
+        elif activity_type == 'cloze':
+            jsx = _yaml_cloze_to_jsx(activity, title)
+        elif activity_type == 'error-correction':
+            jsx = _yaml_error_correction_to_jsx(activity, title)
+        elif activity_type == 'select':
+            jsx = _yaml_select_to_jsx(activity, title)
+        elif activity_type == 'translate':
+            jsx = _yaml_translate_to_jsx(activity, title)
+        elif activity_type == 'dialogue-reorder':
+            jsx = _yaml_dialogue_reorder_to_jsx(activity, title)
+        elif activity_type == 'mark-the-words':
+            jsx = _yaml_mark_the_words_to_jsx(activity, title)
+        elif activity_type == 'anagram':
+            jsx = _yaml_anagram_to_jsx(activity, title)
+
+        if jsx:
+            jsx_parts.append(jsx)
+
+    return '\n\n'.join(jsx_parts)
+
+def _yaml_quiz_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML quiz to JSX."""
+    items = activity.get('items', [])
+    questions_json = []
+    for item in items:
+        q = {
+            "question": escape_jsx(item.get('question', '')),
+            "options": [
+                {"text": escape_jsx(opt.get('text', '')), "correct": opt.get('correct', False)}
+                for opt in item.get('options', [])
+            ]
+        }
+        questions_json.append(q)
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Quiz
+  title="{escape_jsx(title)}"
+  questions={{JSON.parse(`{json.dumps(questions_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_match_up_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML match-up to JSX."""
+    pairs = activity.get('pairs', [])
+    pairs_json = [
+        {"left": escape_jsx(p.get('left', '')), "right": escape_jsx(p.get('right', ''))}
+        for p in pairs
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<MatchUp
+  title="{escape_jsx(title)}"
+  pairs={{JSON.parse(`{json.dumps(pairs_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_fill_in_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML fill-in to JSX."""
+    items = activity.get('items', [])
+    items_json = [
+        {
+            "sentence": escape_jsx(item.get('sentence', '')),
+            "answer": escape_jsx(item.get('answer', '')),
+            "options": [escape_jsx(opt) for opt in item.get('options', [])]
+        }
+        for item in items
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<FillIn
+  title="{escape_jsx(title)}"
+  items={{JSON.parse(`{json.dumps(items_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_true_false_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML true-false to JSX."""
+    items = activity.get('items', [])
+    items_json = [
+        {
+            "statement": escape_jsx(item.get('statement', '')),
+            "isTrue": item.get('correct', False),
+            "explanation": escape_jsx(item.get('explanation', ''))
+        }
+        for item in items
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<TrueFalse
+  title="{escape_jsx(title)}"
+  items={{JSON.parse(`{json.dumps(items_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_group_sort_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML group-sort to JSX."""
+    groups = activity.get('groups', [])
+    groups_dict = {}
+    for group in groups:
+        name = group.get('name', '')
+        items = [escape_jsx(item) for item in group.get('items', [])]
+        groups_dict[name] = items
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<GroupSort
+  title="{escape_jsx(title)}"
+  groups={{JSON.parse(`{json.dumps(groups_dict, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_unjumble_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML unjumble to JSX."""
+    items = activity.get('items', [])
+    items_json = [
+        {
+            "jumbled": escape_jsx(item.get('scrambled', '')),
+            "answer": escape_jsx(item.get('answer', ''))
+        }
+        for item in items
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Unjumble
+  title="{escape_jsx(title)}"
+  items={{JSON.parse(`{json.dumps(items_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_cloze_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML cloze to JSX."""
+    passage = activity.get('passage', '')
+
+    # Parse blanks from passage: {answer|opt1|opt2|opt3}
+    blanks = []
+    blank_pattern = r'\{([^}]+)\}'
+
+    def replace_blank(match):
+        parts = match.group(1).split('|')
+        answer = parts[0] if parts else ''
+        options = parts[1:] if len(parts) > 1 else [answer]
+        # Ensure answer is in options
+        if answer not in options:
+            options.insert(0, answer)
+        blanks.append({
+            "answer": escape_jsx(answer),
+            "options": [escape_jsx(opt) for opt in options]
+        })
+        return '___'
+
+    clean_passage = re.sub(blank_pattern, replace_blank, passage)
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Cloze
+  title="{escape_jsx(title)}"
+  passage="{escape_jsx(clean_passage)}"
+  blanks={{JSON.parse(`{json.dumps(blanks, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_error_correction_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML error-correction to JSX."""
+    items = activity.get('items', [])
+    jsx_items = []
+
+    for item in items:
+        jsx_items.append(f'''  <ErrorCorrectionItem
+    sentence="{escape_jsx(item.get('sentence', ''))}"
+    errorWord="{escape_jsx(item.get('error', ''))}"
+    correctForm="{escape_jsx(item.get('answer', ''))}"
+    options={{[{', '.join(f'"{escape_jsx(opt)}"' for opt in item.get('options', []))}]}}
+    explanation="{escape_jsx(item.get('explanation', ''))}"
+  />''')
+
+    return f'''### {escape_jsx(title)}
+
+<ErrorCorrection title="{escape_jsx(title)}">
+{chr(10).join(jsx_items)}
+</ErrorCorrection>'''
+
+def _yaml_select_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML select to JSX."""
+    items = activity.get('items', [])
+    questions_json = []
+    for item in items:
+        q = {
+            "question": escape_jsx(item.get('question', '')),
+            "options": [
+                {"text": escape_jsx(opt.get('text', '')), "correct": opt.get('correct', False)}
+                for opt in item.get('options', [])
+            ]
+        }
+        questions_json.append(q)
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Select
+  title="{escape_jsx(title)}"
+  questions={{JSON.parse(`{json.dumps(questions_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_translate_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML translate to JSX."""
+    items = activity.get('items', [])
+    questions_json = []
+    for item in items:
+        q = {
+            "source": escape_jsx(item.get('source', '')),
+            "options": [
+                {"text": escape_jsx(opt.get('text', '')), "correct": opt.get('correct', False)}
+                for opt in item.get('options', [])
+            ]
+        }
+        questions_json.append(q)
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Translate
+  title="{escape_jsx(title)}"
+  questions={{JSON.parse(`{json.dumps(questions_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_dialogue_reorder_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML dialogue-reorder to JSX."""
+    lines = activity.get('lines', [])
+    lines_json = [
+        {
+            "text": escape_jsx(line.get('text', '')),
+            "order": line.get('order', 0),
+            "speaker": escape_jsx(line.get('speaker', ''))
+        }
+        for line in lines
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<DialogueReorder
+  title="{escape_jsx(title)}"
+  lines={{JSON.parse(`{json.dumps(lines_json, ensure_ascii=False)}`)}}
+/>'''
+
+def _yaml_mark_the_words_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML mark-the-words to JSX."""
+    instruction = activity.get('instruction', 'Click the correct words.')
+    text = activity.get('text', '')
+
+    # Extract correct words (marked with *word*)
+    correct_words = re.findall(r'\*([^*]+)\*', text)
+    clean_text = re.sub(r'\*([^*]+)\*', r'\1', text)
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<MarkTheWords>
+  <MarkTheWordsActivity
+    instruction="{escape_jsx(instruction)}"
+    text="{escape_jsx(clean_text)}"
+    correctWords={{JSON.parse(`{json.dumps(correct_words, ensure_ascii=False)}`)}}
+  />
+</MarkTheWords>'''
+
+def _yaml_anagram_to_jsx(activity: dict, title: str) -> str:
+    """Convert YAML anagram to JSX."""
+    items = activity.get('items', [])
+    items_json = [
+        {
+            "scrambled": escape_jsx(item.get('scrambled', '')),
+            "answer": escape_jsx(item.get('answer', '')),
+            "hint": escape_jsx(item.get('hint', ''))
+        }
+        for item in items
+    ]
+
+    import json
+    return f'''### {escape_jsx(title)}
+
+<Anagram
+  title="{escape_jsx(title)}"
+  items={{JSON.parse(`{json.dumps(items_json, ensure_ascii=False)}`)}}
+/>'''
+
 def extract_instruction(content: str) -> tuple[str, str]:
     """Extract instruction blockquote from activity content."""
     lines = content.split('\n')
@@ -1163,8 +1490,14 @@ def process_dialogues(content: str) -> str:
 # MDX GENERATOR
 # =============================================================================
 
-def generate_mdx(md_content: str, module_num: int) -> str:
-    """Convert markdown content to MDX."""
+def generate_mdx(md_content: str, module_num: int, yaml_activities: list[dict] | None = None) -> str:
+    """Convert markdown content to MDX.
+
+    Args:
+        md_content: Markdown content
+        module_num: Module number for sidebar
+        yaml_activities: Optional list of activities from YAML file (takes precedence over embedded)
+    """
     fm, body = parse_frontmatter(md_content)
 
     # Component imports
@@ -1191,8 +1524,27 @@ description: "{escape_jsx(fm.get('subtitle', ''))}"
 ---
 '''
 
-    # Process activities (in-place, preserving document order)
-    processed = process_activities(body)
+    # Process activities
+    if yaml_activities:
+        # Use YAML activities - inject them into the body
+        activities_jsx = '## 🎯 Activities\n\n' + yaml_activities_to_jsx(yaml_activities)
+        # Remove any existing Activities section from body
+        body = re.sub(
+            r'(^#{1,2}\s+(?:Activities|Вправи(?:\s*\(Activities\))?))\n([\s\S]*?)(?=\n#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок|Self-Assessment|Самооцінка|External|Зовнішні)|\Z)',
+            '',
+            body,
+            flags=re.MULTILINE
+        )
+        # Find where to inject activities (before Vocabulary/Словник or Summary/Підсумок)
+        inject_match = re.search(r'\n(#{1,2}\s+(?:Vocabulary|Словник|Summary|Підсумок))', body)
+        if inject_match:
+            processed = body[:inject_match.start()] + '\n\n' + activities_jsx + '\n' + body[inject_match.start():]
+        else:
+            # Append at end if no Vocabulary/Summary section
+            processed = body + '\n\n' + activities_jsx
+    else:
+        # Process embedded activities (original behavior)
+        processed = process_activities(body)
 
     # Convert callouts
     processed = convert_callouts(processed)
@@ -1274,7 +1626,14 @@ def main():
 
             # Read and convert
             md_content = md_file.read_text(encoding='utf-8')
-            mdx_content = generate_mdx(md_content, module_num)
+
+            # Check for YAML activities file (e.g., 52-abstract.md -> 52-abstract.activities.yaml)
+            yaml_file = md_file.parent / (md_file.stem + '.activities.yaml')
+            yaml_activities = load_yaml_activities(yaml_file)
+            if yaml_activities:
+                print(f'    📋 Loading {len(yaml_activities)} activities from YAML')
+
+            mdx_content = generate_mdx(md_content, module_num, yaml_activities)
 
             # Write output
             output_file = output_dir / f'module-{str(module_num).zfill(2)}.mdx'
