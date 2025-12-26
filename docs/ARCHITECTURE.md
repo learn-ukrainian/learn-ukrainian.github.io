@@ -18,8 +18,8 @@ Curricula-Opus (CO) is a content factory that generates Ukrainian language learn
               ┌───────────────┴───────────────┐
               ▼                               ▼
 ┌─────────────────────────┐     ┌─────────────────────────┐
-│   generate-mdx.ts       │     │   generate_json.py      │
-│   (TypeScript)          │     │   (Python 3.12)         │
+│   generate_mdx.py       │     │   generate_json.py      │
+│   (Python 3.12)         │     │   (Python 3.12)         │
 └───────────┬─────────────┘     └───────────┬─────────────┘
             ▼                               ▼
 ┌─────────────────────────┐     ┌─────────────────────────┐
@@ -50,7 +50,7 @@ curricula-opus/
 │   └── l2-uk-en/
 │       ├── a1/                    # A1 modules (34)
 │       ├── a2/                    # A2 modules (50)
-│       ├── b1/                    # B1 modules (86)
+│       ├── b1/                    # B1 modules (85)
 │       ├── b2/                    # B2 modules (110)
 │       ├── c1/                    # C1 modules (160)
 │       ├── c2/                    # C2 modules (100)
@@ -59,21 +59,17 @@ curricula-opus/
 │       └── *-CURRICULUM-PLAN.md   # Level planning docs
 │
 ├── scripts/                       # GENERATOR CODE
-│   ├── generate-mdx.ts            # MDX generator (Docusaurus)
+│   ├── generate_mdx.py            # MDX generator (Python)
 │   ├── generate_json.py           # JSON generator (Python)
-│   ├── module-audit.ts            # Module quality checker
-│   ├── vocab-*.ts                 # Vocabulary scripts
-│   └── lib/
-│       ├── parsers/               # Markdown parsing
-│       │   ├── frontmatter.ts
-│       │   ├── sections.ts
-│       │   ├── vocabulary.ts
-│       │   └── activities/
-│       ├── renderers/
-│       │   └── json.ts            # JSON renderer (legacy TS)
-│       ├── utils/
-│       │   └── markdown.ts
-│       └── types.ts
+│   ├── audit_module.py            # Module quality checker
+│   ├── calculate_richness.py      # Content richness scoring
+│   ├── pipeline.py                # Full pipeline (lint → generate → validate)
+│   ├── validate_mdx.py            # MDX content validation
+│   ├── validate_html.py           # HTML rendering validation
+│   └── audit/                     # Audit module components
+│       ├── checks/                # Individual check modules
+│       ├── cleaners.py            # Text preprocessing
+│       └── report.py              # Report generation
 │
 ├── docusaurus/                    # DOCUSAURUS PROJECT
 │   ├── docs/                      # Generated MDX files
@@ -281,13 +277,13 @@ The `claude_extensions/` directory contains configuration for Claude Code, organ
 |-------|---------|--------|-----------|
 | A1 | M01-34 | `a1/` | 10-40% (graduated) |
 | A2 | M01-50 | `a2/` | 40-50% |
-| B1 | M01-86 | `b1/` | **100%** |
+| B1 | M01-85 | `b1/` | 65% (M01-05) → **100%** (M06+) |
 | B2 | M01-110 | `b2/` | **100%** |
 | C1 | M01-160 | `c1/` | **100%** |
 | C2 | M01-100 | `c2/` | **100%** |
 | LIT | M01-30 | `lit/` | **100%** |
 
-**Note:** B1+ levels use 100% Ukrainian immersion. English is only allowed in vocabulary table translations.
+**Note:** B1 M01-05 are transitional "Bridge" modules (~65% immersion) that teach grammar metalanguage. B1 M06+ and all B2/C1/C2 use 100% Ukrainian immersion. English is only allowed in vocabulary table translations.
 
 ## Docusaurus Web Output
 
@@ -440,7 +436,7 @@ When rewriting modules, apply these standards:
 |-------|---------|------|-------|
 | A1 | M01-34 | 10-40% | Transliteration graduated (full → first-only) |
 | A2 | M01-50 | 40-50% | Bilingual explanations |
-| B1 | M01-86 | **100%** | Full immersion (English only in vocab translations) |
+| B1 | M01-85 | 65% → **100%** | M01-05 bridge (~65%), M06+ full immersion |
 | B2 | M01-110 | **100%** | Full immersion |
 | C1 | M01-160 | **100%** | Full immersion |
 | C2 | M01-100 | **100%** | Full immersion |
