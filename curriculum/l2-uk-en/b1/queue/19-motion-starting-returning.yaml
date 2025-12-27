@@ -1,0 +1,157 @@
+module: 19-motion-starting-returning
+level: B1
+file: curriculum/l2-uk-en/b1/19-motion-starting-returning.md
+generated: '2025-12-27T17:29:17.690795'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Після концерту люди поїхали по домівках у різні сторони.
+  error: поїхали
+  answer: роз'їхалися
+  sentence_corrected: Після концерту люди роз'їхалися по домівках у різні сторони.
+  options:
+  - поїхали
+  - роз'їхалися
+  - заїхали
+  - приїхали
+  original_explanation: Роз- потрібен для розсіювання групи в різні місця, а по- означає
+    початок руху в одному напрямку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Я розійдуся до тебе завтра на каву.
+  error: розійдуся
+  answer: зайду
+  sentence_corrected: Я зайду до тебе завтра на каву.
+  options:
+  - розійдуся
+  - зайду
+  - піду
+  - прийду
+  original_explanation: За- потрібен для короткого візиту, а роз- означає розсіювання
+    групи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Кур'єр поніс листи всім клієнтам у різні квартали міста.
+  error: поніс
+  answer: розніс
+  sentence_corrected: Кур'єр розніс листи всім клієнтам у різні квартали міста.
+  options:
+  - поніс
+  - розніс
+  - заніс
+  - приніс
+  original_explanation: Роз- потрібен для доставки в різні місця, а по- означає початок
+    переносу в одному напрямку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Вона зайшла до магазину й провела там дві години, вибираючи
+    подарунки.
+  error: зайшла
+  answer: пішла
+  sentence_corrected: Вона пішла до магазину й провела там дві години, вибираючи подарунки.
+  options:
+  - зайшла
+  - пішла
+  - розійшлася
+  - прийшла
+  original_explanation: За- означає короткий візит, а для тривалого перебування потрібен
+    інший префікс, наприклад по-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Ми роз'їхалися на дачу в суботу вранці й залишилися там до
+    вечора неділі.
+  error: роз'їхалися
+  answer: поїхали
+  sentence_corrected: Ми поїхали на дачу в суботу вранці й залишилися там до вечора
+    неділі.
+  options:
+  - роз'їхалися
+  - поїхали
+  - заїхали
+  - приїхали
+  original_explanation: По- потрібен для початку подорожі, а роз- означає розсіювання
+    групи в різні місця.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Він пішов до друга на хвилинку, щоб повернути книжку.
+  error: пішов
+  answer: зайшов
+  sentence_corrected: Він зайшов до друга на хвилинку, щоб повернути книжку.
+  options:
+  - пішов
+  - зайшов
+  - розійшовся
+  - прийшов
+  original_explanation: За- потрібен для короткого візиту "на хвилинку", а по- означає
+    початок руху без акценту на короткочасності.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Таксі завезло всіх пасажирів додому в різні частини міста після
+    святкування.
+  error: завезло
+  answer: розвезло
+  sentence_corrected: Таксі розвезло всіх пасажирів додому в різні частини міста після
+    святкування.
+  options:
+  - завезло
+  - розвезло
+  - повезло
+  - привезло
+  original_explanation: Роз- потрібен для розподілу по різних місцях, а за- означає
+    короткий заїзд в одне місце.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Птахи зайшли в гніздо на зиму й залишилися там до весни.
+  error: зайшли
+  answer: пішли
+  sentence_corrected: Птахи пішли в гніздо на зиму й залишилися там до весни.
+  options:
+  - зайшли
+  - пішли
+  - розійшлися
+  - прийшли
+  original_explanation: За- означає короткий візит, а для тривалого перебування потрібен
+    інший префікс.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

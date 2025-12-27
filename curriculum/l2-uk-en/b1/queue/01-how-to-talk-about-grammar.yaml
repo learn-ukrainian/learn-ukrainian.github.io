@@ -1,0 +1,246 @@
+module: 01-how-to-talk-about-grammar
+level: B1
+file: curriculum/l2-uk-en/b1/01-how-to-talk-about-grammar.md
+generated: '2025-12-27T17:29:17.227237'
+phase: 1
+scope: error-correction
+item_count: 14
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Книга" — це дієслово.'
+  error: дієслово
+  answer: іменник
+  sentence_corrected: '"Книга" — це іменник.'
+  options:
+  - дієслово
+  - іменник
+  - прикметник
+  - прислівник
+  original_explanation: '"Книга" — іменник, не дієслово.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Прислівник означає "noun".
+  error: Прислівник
+  answer: Іменник
+  sentence_corrected: Іменник означає "noun".
+  options:
+  - Прислівник
+  - Іменник
+  - Дієслово
+  - Прикметник
+  original_explanation: Іменник означає "noun", прислівник — "adverb".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Називний — другий відмінок.
+  error: другий
+  answer: перший
+  sentence_corrected: Називний — перший відмінок.
+  options:
+  - другий
+  - перший
+  - третій
+  - четвертий
+  original_explanation: Називний — перший відмінок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Швидко" — це прикметник.'
+  error: прикметник
+  answer: прислівник
+  sentence_corrected: '"Швидко" — це прислівник.'
+  options:
+  - прикметник
+  - прислівник
+  - іменник
+  - дієслово
+  original_explanation: '"Швидко" — прислівник, "швидкий" — прикметник.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Сполучник — це preposition.
+  error: preposition
+  answer: conjunction
+  sentence_corrected: Сполучник — це conjunction.
+  options:
+  - preposition
+  - conjunction
+  - particle
+  - interjection
+  original_explanation: Сполучник — conjunction, preposition — прийменник.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: В українській мові шість відмінків.
+  error: шість
+  answer: сім
+  sentence_corrected: В українській мові сім відмінків.
+  options:
+  - шість
+  - сім
+  - п'ять
+  - вісім
+  original_explanation: В українській мові сім відмінків.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Орудний — шостий відмінок.
+  error: шостий
+  answer: п'ятий
+  sentence_corrected: Орудний — п'ятий відмінок.
+  options:
+  - шостий
+  - п'ятий
+  - четвертий
+  - сьомий
+  original_explanation: Орудний — п'ятий, місцевий — шостий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Він" — це числівник.'
+  error: числівник
+  answer: займенник
+  sentence_corrected: '"Він" — це займенник.'
+  options:
+  - числівник
+  - займенник
+  - іменник
+  - прислівник
+  original_explanation: '"Він" — займенник, не числівник.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Давальний відповідає на "кого?"
+  error: кого
+  answer: кому
+  sentence_corrected: Давальний відповідає на "кому?"
+  options:
+  - кого
+  - кому
+  - ким
+  - чим
+  original_explanation: Давальний — "кому? чому?", "кого?" — родовий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"І" — це прийменник.'
+  error: прийменник
+  answer: сполучник
+  sentence_corrected: '"І" — це сполучник.'
+  options:
+  - прийменник
+  - сполучник
+  - частка
+  - вигук
+  original_explanation: '"І" — сполучник.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Місцевий — сьомий відмінок.
+  error: сьомий
+  answer: шостий
+  sentence_corrected: Місцевий — шостий відмінок.
+  options:
+  - сьомий
+  - шостий
+  - п'ятий
+  - четвертий
+  original_explanation: Місцевий — шостий, кличний — сьомий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Гарний" — це прислівник.'
+  error: прислівник
+  answer: прикметник
+  sentence_corrected: '"Гарний" — це прикметник.'
+  options:
+  - прислівник
+  - прикметник
+  - іменник
+  - дієслово
+  original_explanation: '"Гарний" — прикметник, "гарно" — прислівник.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Займенник означає "numeral".
+  error: numeral
+  answer: pronoun
+  sentence_corrected: Займенник означає "pronoun".
+  options:
+  - numeral
+  - pronoun
+  - noun
+  - verb
+  original_explanation: Займенник — pronoun, числівник — numeral.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Кличний — шостий відмінок.
+  error: шостий
+  answer: сьомий
+  sentence_corrected: Кличний — сьомий відмінок.
+  options:
+  - шостий
+  - сьомий
+  - п'ятий
+  - четвертий
+  original_explanation: Кличний — сьомий (останній) відмінок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

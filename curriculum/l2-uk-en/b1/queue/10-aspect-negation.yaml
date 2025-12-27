@@ -1,0 +1,151 @@
+module: 10-aspect-negation
+level: B1
+file: curriculum/l2-uk-en/b1/10-aspect-negation.md
+generated: '2025-12-27T17:29:17.487573'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я не прочитав цієї книги взагалі ніколи.
+  error: не прочитав
+  answer: не читав
+  sentence_corrected: Я не читав цієї книги взагалі ніколи.
+  options:
+  - не прочитав
+  - не читав
+  - ще не прочитав
+  - ще не читав
+  original_explanation: 'Для загального заперечення (взагалі ніколи) використовується
+    НДВ: "не читав". ДВ "не прочитав" можна тільки з "ще не".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я ще не писав звіт, але напишу завтра.
+  error: ще не писав
+  answer: ще не написав
+  sentence_corrected: Я ще не написав звіт, але напишу завтра.
+  options:
+  - ще не писав
+  - ще не написав
+  - не писав
+  - не написав
+  original_explanation: 'Після "ще не" з очікуванням завершення використовується ДВ:
+    "ще не написав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не читай випадково фінал книги!
+  error: читай
+  answer: прочитай
+  sentence_corrected: Не прочитай випадково фінал книги!
+  options:
+  - читай
+  - прочитай
+  - читати
+  - прочитати
+  original_explanation: 'Конкретне попередження проти одноразової дії вимагає ДВ:
+    "Не прочитай!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не прочитай погані книги взагалі!
+  error: прочитай
+  answer: читай
+  sentence_corrected: Не читай погані книги взагалі!
+  options:
+  - прочитай
+  - читай
+  - прочитати
+  - читати
+  original_explanation: 'Загальна заборона вимагає НДВ: "Не читай!" ДВ тільки для
+    конкретних попереджень.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Він ще не робив домашнє завдання.
+  error: ще не робив
+  answer: ще не зробив
+  sentence_corrected: Він ще не зробив домашнє завдання.
+  options:
+  - ще не робив
+  - ще не зробив
+  - не робив
+  - не зробив
+  original_explanation: 'Після "ще не" використовується ДВ, якщо дія очікується: "ще
+    не зробив".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я ніколи не спізнився на заняття.
+  error: не спізнився
+  answer: не запізнювався
+  sentence_corrected: Я ніколи не запізнювався на заняття.
+  options:
+  - не спізнився
+  - не запізнювався
+  - ще не спізнився
+  - ще не запізнювався
+  original_explanation: 'Постійна якість або звичка в запереченні вимагає НДВ: "ніколи
+    не запізнювався".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не забудьте ключі вдома завжди!
+  error: Не забудьте
+  answer: Не забувайте
+  sentence_corrected: Не забувайте ключі вдома завжди!
+  options:
+  - Не забудьте
+  - Не забувайте
+  - Не забути
+  - Не забувати
+  original_explanation: 'Загальна порада (завжди) вимагає НДВ: "Не забувайте". ДВ
+    "Не забудьте" тільки для конкретних нагадувань.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не забувай взяти парасольку сьогодні!
+  error: Не забувай
+  answer: Не забудь
+  sentence_corrected: Не забудь взяти парасольку сьогодні!
+  options:
+  - Не забувай
+  - Не забудь
+  - Не забувати
+  - Не забути
+  original_explanation: 'Конкретне нагадування (сьогодні) вимагає ДВ: "Не забудь!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

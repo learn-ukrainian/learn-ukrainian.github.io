@@ -1,0 +1,116 @@
+module: 22-motion-full-prefix-integration
+level: B1
+file: curriculum/l2-uk-en/b1/22-motion-full-prefix-integration.md
+generated: '2025-12-27T17:29:17.751091'
+phase: 1
+scope: error-correction
+item_count: 6
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я вчора приходжу до бібліотеки і там працював дві години.
+  error: приходжу
+  answer: прийшов
+  sentence_corrected: Я вчора прийшов до бібліотеки і там працював дві години.
+  options:
+  - приходжу
+  - прийшов
+  - приходив
+  - прийду
+  original_explanation: Потрібен доконаний вид (прийшов) для одноразової завершеної
+    дії в минулому.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ми вийдемо через річку по новому мосту завтра вранці.
+  error: вийдемо
+  answer: перейдемо
+  sentence_corrected: Ми перейдемо через річку по новому мосту завтра вранці.
+  options:
+  - вийдемо
+  - перейдемо
+  - прийдемо
+  - зайдемо
+  original_explanation: Ви- = назовні. Для перетину простору потрібен префікс пере-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Студенти сьогодні прийшли з університету о п'ятій годині після
+    лекцій.
+  error: прийшли
+  answer: вийшли
+  sentence_corrected: Студенти сьогодні вийшли з університету о п'ятій годині після
+    лекцій.
+  options:
+  - прийшли
+  - вийшли
+  - зайшли
+  - підійшли
+  original_explanation: При- = прибуття до мети. Для виходу назовні потрібен префікс
+    ви-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ми вчора зайшли до вершини гори після важкого підйому.
+  error: зайшли
+  answer: дійшли
+  sentence_corrected: Ми вчора дійшли до вершини гори після важкого підйому.
+  options:
+  - зайшли
+  - дійшли
+  - прийшли
+  - підійшли
+  original_explanation: За- = короткий візит. Для досягнення межі потрібен префікс
+    до-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Таксі щодня приїжджає повз наш будинок о восьмій ранку.
+  error: приїжджає
+  answer: проїжджає
+  sentence_corrected: Таксі щодня проїжджає повз наш будинок о восьмій ранку.
+  options:
+  - приїжджає
+  - проїжджає
+  - переїжджає
+  - заїжджає
+  original_explanation: При- = прибуття. Для руху повз щось потрібен префікс про-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Турист підійшов до міста на потязі з іншої країни.
+  error: підійшов
+  answer: приїхав
+  sentence_corrected: Турист приїхав до міста на потязі з іншої країни.
+  options:
+  - підійшов
+  - приїхав
+  - доїхав
+  - заїхав
+  original_explanation: Під- вживається з "йти" для наближення. З "їхати" для прибуття
+    потрібен префікс при-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

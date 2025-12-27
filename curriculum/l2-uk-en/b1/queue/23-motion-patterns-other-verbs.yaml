@@ -1,0 +1,110 @@
+module: 23-motion-patterns-other-verbs
+level: B1
+file: curriculum/l2-uk-en/b1/23-motion-patterns-other-verbs.md
+generated: '2025-12-27T17:29:17.770165'
+phase: 1
+scope: error-correction
+item_count: 6
+items:
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Шеф попросив мене приробити звіт, бо там були грубі помилки.
+  error: приробити
+  answer: переробити
+  sentence_corrected: Шеф попросив мене переробити звіт, бо там були грубі помилки.
+  options:
+  - приробити
+  - переробити
+  - виробити
+  - заробити
+  original_explanation: Якщо треба зробити знову або виправити, використовуємо ПЕРЕ-.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Я хочу відказати цю статтю з англійської мови на українську.
+  error: відказати
+  answer: перекласти
+  sentence_corrected: Я хочу перекласти цю статтю з англійської мови на українську.
+  options:
+  - відказати
+  - перекласти
+  - викласти
+  - закласти
+  original_explanation: Translate = перекладати (змінювати мову).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Він не хотів слухати і підмовився виконувати це завдання.
+  error: підмовився
+  answer: відмовився
+  sentence_corrected: Він не хотів слухати і відмовився виконувати це завдання.
+  options:
+  - підмовився
+  - відмовився
+  - замовився
+  - примовився
+  original_explanation: Refuse = відмовитися (рух від, заперечення).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Коли вона почула жарт, вона голосно пересміялася.
+  error: пересміялася
+  answer: засміялася
+  sentence_corrected: Коли вона почула жарт, вона голосно засміялася.
+  options:
+  - пересміялася
+  - засміялася
+  - висміялася
+  - підсміялася
+  original_explanation: Start laughing = засміятися (ЗА- як початок).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Ми притримуємо ваше рішення і допоможемо вам у всьому.
+  error: притримуємо
+  answer: підтримуємо
+  sentence_corrected: Ми підтримуємо ваше рішення і допоможемо вам у всьому.
+  options:
+  - притримуємо
+  - підтримуємо
+  - відтримуємо
+  - затримуємо
+  original_explanation: Support = підтримувати (тримати знизу).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте префікс
+  sentence_with_error: Завод заробляє тисячу автомобілів щомісяця для продажу.
+  error: заробляє
+  answer: виробляє
+  sentence_corrected: Завод виробляє тисячу автомобілів щомісяця для продажу.
+  options:
+  - заробляє
+  - виробляє
+  - переробляє
+  - приробляє
+  original_explanation: Manufacture = виробляти. Заробляти = earn money.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

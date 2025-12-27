@@ -1,0 +1,134 @@
+module: 20-motion-approaching-departing
+level: B1
+file: curriculum/l2-uk-en/b1/20-motion-approaching-departing.md
+generated: '2025-12-27T17:29:17.711818'
+phase: 1
+scope: error-correction
+item_count: 7
+items:
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Я відійшов до школи після довгої прогулянки по місту.
+  error: відійшов
+  answer: дійшов
+  sentence_corrected: Я дійшов до школи після довгої прогулянки по місту.
+  options:
+  - відійшов
+  - дійшов
+  - підійшов
+  - прийшов
+  original_explanation: 'Відійти означає віддалитися від чогось. Для досягнення мети
+    використовуємо дійти: дійшов до школи.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Таксі підїхало до аеропорту і висадило пасажирів.
+  error: підїхало
+  answer: під'їхало
+  sentence_corrected: Таксі під'їхало до аеропорту і висадило пасажирів.
+  options:
+  - підїхало
+  - під'їхало
+  - доїхало
+  - приїхало
+  original_explanation: 'Після префікса під- перед голосною ї обов''язковий апостроф:
+    під''їхало, а не підїхало.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Ми підійшли до Києва після п'яти годин в дорозі транспортом.
+  error: підійшли
+  answer: доїхали
+  sentence_corrected: Ми доїхали до Києва після п'яти годин в дорозі транспортом.
+  options:
+  - підійшли
+  - доїхали
+  - від'їхали
+  - приїхали
+  original_explanation: Підійти використовується для пішого наближення. Для досягнення
+    мети транспортом використовуємо доїхати.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Кур'єр підніс пакунок на пошту за три кілометри від складу.
+  error: підніс
+  answer: відніс
+  sentence_corrected: Кур'єр відніс пакунок на пошту за три кілометри від складу.
+  options:
+  - підніс
+  - відніс
+  - доніс
+  - приніс
+  original_explanation: Піднести означає принести до близької точки. Для доставки
+    на відстань використовуємо віднести або донести.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Автобус доїхав до зупинки і відчинив двері для нових пасажирів.
+  error: доїхав
+  answer: під'їхав
+  sentence_corrected: Автобус під'їхав до зупинки і відчинив двері для нових пасажирів.
+  options:
+  - доїхав
+  - під'їхав
+  - від'їхав
+  - приїхав
+  original_explanation: Доїхати означає досягти кінцевої точки. Для наближення до
+    зупинки використовуємо під'їхати.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Він дійшов від столу після розмови і повернувся на своє місце.
+  error: дійшов
+  answer: відійшов
+  sentence_corrected: Він відійшов від столу після розмови і повернувся на своє місце.
+  options:
+  - дійшов
+  - відійшов
+  - підійшов
+  - прийшов
+  original_explanation: 'Дійти означає досягти мети. Для віддалення від точки використовуємо
+    відійти: відійшов від столу.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Літак відїхав від терміналу і полетів до Нью-Йорка.
+  error: відїхав
+  answer: відлетів
+  sentence_corrected: Літак відлетів від терміналу і полетів до Нью-Йорка.
+  options:
+  - відїхав
+  - відлетів
+  - долетів
+  - прилетів
+  original_explanation: 'Їхати стосується наземного транспорту. Для повітряного руху
+    використовуємо летіти: літак відлетів.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

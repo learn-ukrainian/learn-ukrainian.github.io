@@ -1644,8 +1644,12 @@ def main():
             # Read and convert
             md_content = md_file.read_text(encoding='utf-8')
 
-            # Check for YAML activities file (e.g., 52-abstract.md -> 52-abstract.activities.yaml)
-            yaml_file = md_file.parent / (md_file.stem + '.activities.yaml')
+            # Check for YAML activities file
+            # New structure: activities/{module}.yaml
+            # Legacy: {module}.activities.yaml
+            yaml_file = md_file.parent / 'activities' / (md_file.stem + '.yaml')
+            if not yaml_file.exists():
+                yaml_file = md_file.parent / (md_file.stem + '.activities.yaml')
             yaml_activities = load_yaml_activities(yaml_file)
             if yaml_activities:
                 print(f'    📋 Loading {len(yaml_activities)} activities from YAML')

@@ -1,0 +1,180 @@
+module: 15-checkpoint-aspect-mastery
+level: B1
+file: curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md
+generated: '2025-12-27T17:29:17.611644'
+phase: 1
+scope: error-correction
+item_count: 10
+items:
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Він щодня прочитав газету.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Він щодня читав газету.
+  options:
+  - прочитав
+  - читав
+  - прочитає
+  - читатиме
+  original_explanation: Регулярна дія ("щодня") вимагає недоконаного виду — "читав".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Вона нарешті писала звіт.
+  error: писала
+  answer: написала
+  sentence_corrected: Вона нарешті написала звіт.
+  options:
+  - писала
+  - написала
+  - пише
+  - напише
+  original_explanation: '"Нарешті" показує завершення — потрібен доконаний вид "написала".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Я ніколи не прочитав цю книгу.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Я ніколи не читав цю книгу.
+  options:
+  - прочитав
+  - читав
+  - прочитаю
+  - читатиму
+  original_explanation: '"Ніколи не" вимагає недоконаного виду — "не читав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Він ще не читав цю статтю.
+  error: читав
+  answer: прочитав
+  sentence_corrected: Він ще не прочитав цю статтю.
+  options:
+  - читав
+  - прочитав
+  - читає
+  - прочитає
+  original_explanation: '"Ще не" вимагає доконаного виду — "ще не прочитав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Прочитай книгу, будь ласка!
+  error: Прочитай
+  answer: Читай
+  sentence_corrected: Читай книгу, будь ласка!
+  options:
+  - Прочитай
+  - Читай
+  - Прочитаєш
+  - Читатимеш
+  original_explanation: Загальне запрошення вимагає недоконаного виду — "Читай!".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Читай цей документ до завтра!
+  error: Читай
+  answer: Прочитай
+  sentence_corrected: Прочитай цей документ до завтра!
+  options:
+  - Читай
+  - Прочитай
+  - Читатимеш
+  - Прочитаєш
+  original_explanation: Конкретне завдання вимагає доконаного виду — "Прочитай!".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Завтра я читатиму цей звіт о третій.
+  error: читатиму
+  answer: прочитаю
+  sentence_corrected: Завтра я прочитаю цей звіт о третій.
+  options:
+  - читатиму
+  - прочитаю
+  - буду читати
+  - читав
+  original_explanation: Конкретний момент завершення вимагає доконаного виду — "прочитаю".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Він раптом вставав і виходив.
+  error: вставав
+  answer: встав
+  sentence_corrected: Він раптом встав і виходив.
+  options:
+  - вставав
+  - встав
+  - встає
+  - встане
+  original_explanation: '"Раптом" показує одноразову дію — потрібен доконаний вид
+    "встав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Я увесь день зробив цю роботу.
+  error: зробив
+  answer: робив
+  sentence_corrected: Я увесь день робив цю роботу.
+  options:
+  - зробив
+  - робив
+  - зроблю
+  - робитиму
+  original_explanation: '"Увесь день" показує тривалий процес — потрібен недоконаний
+    вид "робив".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Не торкнися цього!
+  error: торкнися
+  answer: торкайся
+  sentence_corrected: Не торкайся цього!
+  options:
+  - торкнися
+  - торкайся
+  - торкнешся
+  - торкатимешся
+  original_explanation: Заборона ("Не...!") вимагає недоконаного виду — "Не торкайся!".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

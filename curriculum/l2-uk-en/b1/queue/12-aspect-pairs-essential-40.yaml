@@ -1,0 +1,152 @@
+module: 12-aspect-pairs-essential-40
+level: B1
+file: curriculum/l2-uk-en/b1/12-aspect-pairs-essential-40.md
+generated: '2025-12-27T17:29:17.537589'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Я прочитав книгу три години вчора ввечері.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Я читав книгу три години вчора ввечері.
+  options:
+  - прочитав
+  - читав
+  - читаю
+  - буду читати
+  original_explanation: Тривалість "три години" вимагає недоконаного виду "читав",
+    бо акцент на процесі, а не на результаті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Вона написала листа цілий день, але не закінчила.
+  error: написала
+  answer: писала
+  sentence_corrected: Вона писала листа цілий день, але не закінчила.
+  options:
+  - написала
+  - писала
+  - пише
+  - буде писати
+  original_explanation: Фраза "не закінчила" показує незавершеність, тому потрібен
+    недоконаний вид "писала" для процесу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Ми робили домашнє завдання і вже здали його викладачу.
+  error: робили
+  answer: зробили
+  sentence_corrected: Ми зробили домашнє завдання і вже здали його викладачу.
+  options:
+  - робили
+  - зробили
+  - робимо
+  - будемо робити
+  original_explanation: Слово "вже" та "здали" сигналізують про завершеність, потрібен
+    доконаний вид "зробили".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Він готував вечерю за годину і всі смачно поїли.
+  error: готував
+  answer: приготував
+  sentence_corrected: Він приготував вечерю за годину і всі смачно поїли.
+  options:
+  - готував
+  - приготував
+  - готує
+  - буде готувати
+  original_explanation: Вираз "за годину" та наслідок "всі поїли" вказують на результат,
+    потрібен доконаний вид "приготував".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Я купував хліб вчора і приніс його додому.
+  error: купував
+  answer: купив
+  sentence_corrected: Я купив хліб вчора і приніс його додому.
+  options:
+  - купував
+  - купив
+  - купую
+  - буду купувати
+  original_explanation: Одноразова завершена дія з результатом "приніс" вимагає доконаного
+    виду "купив".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Вони шукали ключі і нарешті знаходили їх під столом.
+  error: знаходили
+  answer: знайшли
+  sentence_corrected: Вони шукали ключі і нарешті знайшли їх під столом.
+  options:
+  - знаходили
+  - знайшли
+  - знаходять
+  - будуть знаходити
+  original_explanation: Слово "нарешті" вказує на успішне завершення пошуку, потрібен
+    доконаний вид "знайшли".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Викладач пояснив це правило кілька разів упродовж семестру.
+  error: пояснив
+  answer: пояснював
+  sentence_corrected: Викладач пояснював це правило кілька разів упродовж семестру.
+  options:
+  - пояснив
+  - пояснював
+  - пояснює
+  - буде пояснювати
+  original_explanation: Фраза "кілька разів" вказує на повторювану дію, потрібен недоконаний
+    вид "пояснював".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Студенти вивчали нові слова вчора і вивчали їх всі до контрольної.
+  error: вивчали (друге)
+  answer: вивчили
+  sentence_corrected: Студенти вивчали нові слова вчора і вивчали їх всі до контрольної.
+  options:
+  - вивчали
+  - вивчили
+  - вивчають
+  - будуть вивчати
+  original_explanation: Друге дієслово описує результат "всі до контрольної", потрібен
+    доконаний вид "вивчили".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

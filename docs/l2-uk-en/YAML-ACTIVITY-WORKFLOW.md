@@ -11,8 +11,11 @@ Instead of embedding activities in markdown, we split modules into:
 
 ```
 curriculum/l2-uk-en/b1/
-├── 52-abstract-concepts-ideas.md           # Prose content (no activities)
-└── 52-abstract-concepts-ideas.activities.yaml  # Activities in YAML
+├── 52-abstract-concepts-ideas.md    # Prose content (no activities)
+├── activities/                       # YAML activity files
+│   └── 52-abstract-concepts-ideas.yaml
+└── queue/                            # Grammar validation queues
+    └── 52-abstract-concepts-ideas.yaml
 ```
 
 **Benefits:**
@@ -38,12 +41,12 @@ Contains everything EXCEPT activities:
 
 **Does NOT contain:** `## quiz:`, `## match-up:`, etc.
 
-### Activities File (`.activities.yaml`)
+### Activities File (`activities/{module}.yaml`)
 
 Contains all activities in YAML format:
 
 ```yaml
-# 52-abstract-concepts-ideas.activities.yaml
+# activities/52-abstract-concepts-ideas.yaml
 
 - type: quiz
   title: Розуміння абстрактних концепцій
@@ -118,7 +121,7 @@ title: "Абстрактні концепції: ідеї та думки"
 
 ### Step 2: Write Activities in YAML
 
-Create the `.activities.yaml` file:
+Create the activity file in the `activities/` subfolder:
 
 ```yaml
 # Activities for Module 52: Abstract Concepts I
@@ -154,10 +157,10 @@ Create the `.activities.yaml` file:
 
 ```bash
 # Validate YAML structure
-npm run validate:yaml curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.activities.yaml
+npm run validate:yaml curriculum/l2-uk-en/b1/activities/52-abstract-concepts-ideas.yaml
 
 # Run module audit
-python3 scripts/audit_module.py curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.md
 ```
 
 ### Step 4: Generate
@@ -370,19 +373,19 @@ With VS Code + YAML extension:
 
 ```bash
 # Single file
-npm run validate:yaml path/to/file.activities.yaml
+npm run validate:yaml path/to/activities/file.yaml
 
 # All YAML files
 npm run validate:yaml --all
 
 # Specific level
-npm run validate:yaml --dir curriculum/l2-uk-en/b1 --level b1
+npm run validate:yaml --dir curriculum/l2-uk-en/b1/activities --level b1
 ```
 
 ### Audit Validation
 
-The audit script will be updated to check:
-1. `.activities.yaml` file exists
+The audit script checks:
+1. Activity file exists in `activities/` subfolder
 2. YAML parses correctly
 3. Meets level requirements (12+ activities, correct item counts)
 
@@ -404,9 +407,9 @@ npm run convert:md-to-yaml path/to/module.md
 
 ## Generator Integration
 
-The MDX generator will:
+The MDX generator:
 1. Read prose from `.md` file
-2. Read activities from `.activities.yaml` file (if exists)
+2. Read activities from `activities/{module}.yaml` file (if exists)
 3. Fall back to embedded activities if no YAML file
 4. Merge and generate MDX output
 

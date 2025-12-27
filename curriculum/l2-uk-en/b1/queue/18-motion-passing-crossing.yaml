@@ -1,0 +1,149 @@
+module: 18-motion-passing-crossing
+level: B1
+file: curriculum/l2-uk-en/b1/18-motion-passing-crossing.md
+generated: '2025-12-27T17:29:17.670983'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Я перейшов повз кінотеатр і не зайшов на сеанс.
+  error: перейшов
+  answer: пройшов
+  sentence_corrected: Я пройшов повз кінотеатр і не зайшов на сеанс.
+  options:
+  - перейшов
+  - пройшов
+  - обійшов
+  - зайшов
+  original_explanation: Прийменник **повз** вимагає префікса **про-**, а не **пере-**.
+    Пере- використовується з прийменником **через**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Водій проїхав затор на головній вулиці боковими шляхами.
+  error: проїхав
+  answer: об'їхав
+  sentence_corrected: Водій об'їхав затор на головній вулиці боковими шляхами.
+  options:
+  - проїхав
+  - об'їхав
+  - переїхав
+  - виїхав
+  original_explanation: Обхід затору = **об'їхати**, а не **проїхати**. Проїхати =
+    pass by/through, а не around.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Пішоходи переходять навколо будівлі щодня.
+  error: переходять
+  answer: обходять
+  sentence_corrected: Пішоходи обходять навколо будівлі щодня.
+  options:
+  - переходять
+  - обходять
+  - проходять
+  - заходять
+  original_explanation: Прийменник **навколо** вимагає префікса **об-**, а не **пере-**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Ми обїхали до Львова з Києва минулого місяця.
+  error: обїхали
+  answer: переїхали
+  sentence_corrected: Ми переїхали до Львова з Києва минулого місяця.
+  options:
+  - обїхали
+  - переїхали
+  - проїхали
+  - виїхали
+  original_explanation: Переїзд до іншого міста = **переїхати**, а не **об'їхати**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Літак проїхав навколо грозової хмари зліва.
+  error: проїхав
+  answer: облетів
+  sentence_corrected: Літак облетів навколо грозової хмари зліва.
+  options:
+  - проїхав
+  - облетів
+  - перелетів
+  - пролетів
+  original_explanation: Літак літає (**летіти**), а не їздить (**їхати**). Обхід навколо
+    = **облетіти**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Я обйшов через парк до університету пішки.
+  error: обйшов
+  answer: пройшов
+  sentence_corrected: Я пройшов через парк до університету пішки.
+  options:
+  - обйшов
+  - пройшов
+  - перейшов
+  - зайшов
+  original_explanation: Прийменник **через** (крізь) вимагає префікса **про-** або
+    **пере-**. У цьому контексті — **пройшов через**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Автобус переїхав повз мою зупинку без зупинки.
+  error: переїхав
+  answer: проїхав
+  sentence_corrected: Автобус проїхав повз мою зупинку без зупинки.
+  options:
+  - переїхав
+  - проїхав
+  - об'їхав
+  - виїхав
+  original_explanation: Прийменник **повз** вимагає префікса **про-**, а не **пере-**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Робітники пронесли паркан навколо будівлі за тиждень.
+  error: пронесли
+  answer: обнесли
+  sentence_corrected: Робітники обнесли паркан навколо будівлі за тиждень.
+  options:
+  - пронесли
+  - обнесли
+  - перенесли
+  - знесли
+  original_explanation: Поставити паркан **навколо** = **обнести**, а не **пронести**.
+    Обнести = enclose around.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

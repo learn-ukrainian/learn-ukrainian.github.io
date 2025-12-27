@@ -1,0 +1,152 @@
+module: 16-motion-verbs-full-system
+level: B1
+file: curriculum/l2-uk-en/b1/16-motion-verbs-full-system.md
+generated: '2025-12-27T17:29:17.633933'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я іду до роботи на автобусі щодня вже десять років.
+  error: іду
+  answer: їжджу
+  sentence_corrected: Я їжджу до роботи на автобусі щодня вже десять років.
+  options:
+  - іду
+  - їжджу
+  - ходжу
+  - їхав
+  original_explanation: '"Щодня" вказує на регулярність, а "на автобусі" — на транспорт,
+    тому правильно "їздити" (різноспрямоване).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Літак літає до Лондона зараз і приземлиться через дві години.
+  error: літає
+  answer: летить
+  sentence_corrected: Літак летить до Лондона зараз і приземлиться через дві години.
+  options:
+  - літає
+  - летить
+  - літав
+  - буде літати
+  original_explanation: '"Зараз" вказує на конкретний рух у цей момент, тому потрібне
+    односпрямоване дієслово "летіти".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він несе товари на вантажівці до магазину кожного тижня.
+  error: несе
+  answer: возить
+  sentence_corrected: Він возить товари на вантажівці до магазину кожного тижня.
+  options:
+  - несе
+  - возить
+  - носить
+  - віз
+  original_explanation: Для перевезення транспортом регулярно використовуємо "возити"
+    (різноспрямоване), не "нести".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Діти лізуть на дерево зараз, подивись як високо вони піднялися!
+  error: лізуть
+  answer: лізуть
+  sentence_corrected: Діти лізуть на дерево зараз, подивись як високо вони піднялися!
+  options:
+  - лізуть
+  - лазять
+  - ліз
+  - будуть лазити
+  original_explanation: Помилки немає — "лізти" правильне для конкретної дії зараз.
+    (Тренувальне питання)
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Мама водить мене до школи зараз, бо я запізнююся.
+  error: водить
+  answer: веде
+  sentence_corrected: Мама веде мене до школи зараз, бо я запізнююся.
+  options:
+  - водить
+  - веде
+  - водила
+  - буде водити
+  original_explanation: '"Зараз" вказує на конкретну дію, тому потрібне односпрямоване
+    дієслово "вести".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я ходжу в магазин зараз, повернуся через пів години.
+  error: ходжу
+  answer: іду
+  sentence_corrected: Я іду в магазин зараз, повернуся через пів години.
+  options:
+  - ходжу
+  - іду
+  - ходив
+  - піду
+  original_explanation: '"Зараз" вказує на конкретний рух у цей момент, тому потрібне
+    односпрямоване дієслово "іти".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Черепаха повзає до води прямо зараз, дивись як повільно!
+  error: повзає
+  answer: повзе
+  sentence_corrected: Черепаха повзе до води прямо зараз, дивись як повільно!
+  options:
+  - повзає
+  - повзе
+  - повз
+  - буде повзати
+  original_explanation: '"Прямо зараз" вказує на конкретний рух зараз, тому потрібне
+    односпрямоване дієслово "повзти".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вони тягнуть важкі сумки з магазину кожного дня після роботи.
+  error: тягнуть
+  answer: тягають
+  sentence_corrected: Вони тягають важкі сумки з магазину кожного дня після роботи.
+  options:
+  - тягнуть
+  - тягають
+  - тягли
+  - будуть тягти
+  original_explanation: '"Кожного дня" вказує на регулярність, тому потрібне різноспрямоване
+    дієслово "тягати".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

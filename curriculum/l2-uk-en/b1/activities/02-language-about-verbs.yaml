@@ -1,0 +1,1318 @@
+# B1 Module 02: Мова про дієслова
+# Activities extracted from embedded markdown format
+
+- type: quiz
+  title: Вид дієслова
+  instruction: Оберіть правильну відповідь про вид.
+  items:
+    - question: Коли граматика каже «дієслово доконаного виду», яку характеристику дії вона описує — завершену чи незавершену?
+      options:
+        - text: завершену дію
+          correct: true
+        - text: незавершену дію
+          correct: false
+        - text: тривалу дію
+          correct: false
+        - text: повторювану дію
+          correct: false
+      explanation: Доконаний вид описує завершену дію з результатом.
+
+    - question: Підручник пояснює «недоконаний вид виражає процес» — яким терміном описують цей вид дієслова?
+      options:
+        - text: доконаний вид
+          correct: false
+        - text: недоконаний вид
+          correct: true
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: Недоконаний вид виражає процес, тривалість, повторення.
+
+    - question: Якщо вправа каже «визначте вид дієслова», що саме вона просить вас визначити для кожного дієслова?
+      options:
+        - text: час дієслова
+          correct: false
+        - text: вид дієслова
+          correct: true
+        - text: особу дієслова
+          correct: false
+        - text: число дієслова
+          correct: false
+      explanation: 'Вид — категорія: доконаний чи недоконаний.'
+
+    - question: Коли граматика каже «дія завершена з результатом», який вид дієслова вона описує?
+      options:
+        - text: доконаний вид
+          correct: true
+        - text: недоконаний вид
+          correct: false
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: Доконаний вид — завершення, результат.
+
+    - question: Дієслово «читати» описує процес читання — яким видом воно є?
+      options:
+        - text: доконаний вид
+          correct: false
+        - text: недоконаний вид
+          correct: true
+        - text: майбутній час
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: «Читати» — недоконаний вид, процес.
+
+    - question: Коли скорочення «ДВ» з'являється у словнику біля дієслова, що воно означає?
+      options:
+        - text: доконаний вид
+          correct: true
+        - text: недоконаний вид
+          correct: false
+        - text: давальний відмінок
+          correct: false
+        - text: дієвідміна
+          correct: false
+      explanation: ДВ = доконаний вид.
+
+    - question: Якщо вправа каже «утворіть доконаний вид від дієслова «писати»», яку форму ви напишете?
+      options:
+        - text: писав
+          correct: false
+        - text: пишу
+          correct: false
+        - text: написати
+          correct: true
+        - text: писатиму
+          correct: false
+      explanation: «Написати» — доконаний вид від «писати».
+
+    - question: Коли граматика пояснює «недоконаний вид виражає тривалість», яким терміном вона називає тривання дії?
+      options:
+        - text: результат
+          correct: false
+        - text: завершення
+          correct: false
+        - text: тривалість
+          correct: true
+        - text: початок
+          correct: false
+      explanation: Тривалість — скільки часу триває дія.
+
+    - question: Дієслово виражає повторювану дію, що відбувається регулярно — яким видом воно є?
+      options:
+        - text: доконаний вид
+          correct: false
+        - text: недоконаний вид
+          correct: true
+        - text: теперішній час
+          correct: false
+        - text: наказовий спосіб
+          correct: false
+      explanation: Повторення — функція недоконаного виду.
+
+    - question: Скорочення «НДВ» у підручнику означає який вид дієслова?
+      options:
+        - text: доконаний вид
+          correct: false
+        - text: недоконаний вид
+          correct: true
+        - text: називний відмінок
+          correct: false
+        - text: наказовий спосіб
+          correct: false
+      explanation: НДВ = недоконаний вид.
+
+    - question: Коли граматист каже «ця дія має результат», який вид дієслова він описує?
+      options:
+        - text: доконаний вид
+          correct: true
+        - text: недоконаний вид
+          correct: false
+        - text: інфінітив
+          correct: false
+        - text: умовний спосіб
+          correct: false
+      explanation: Результат — ознака доконаного виду.
+
+    - question: Якщо вправа просить «знайдіть усі дієслова недоконаного виду», які дієслова ви шукатимете?
+      options:
+        - text: дієслова з результатом
+          correct: false
+        - text: дієслова з процесом або повторенням
+          correct: true
+        - text: дієслова в минулому часі
+          correct: false
+        - text: дієслова в наказовому способі
+          correct: false
+      explanation: НДВ — процес, тривалість, повторення.
+
+    - question: Термін «вид» у граматиці дієслова означає яку категорію?
+      options:
+        - text: час дієслова
+          correct: false
+        - text: аспект дієслова
+          correct: true
+        - text: особу дієслова
+          correct: false
+        - text: рід дієслова
+          correct: false
+      explanation: Вид = aspect.
+
+    - question: Коли граматика пояснює різницю між «читати» і «прочитати», яку категорію вона порівнює?
+      options:
+        - text: час
+          correct: false
+        - text: вид
+          correct: true
+        - text: особу
+          correct: false
+        - text: число
+          correct: false
+      explanation: «Читати» НДВ, «прочитати» ДВ — різниця у виді.
+
+- type: quiz
+  title: Час дієслова
+  instruction: Оберіть правильну відповідь про час.
+  items:
+    - question: Коли граматика каже «поставте дієслово в минулому часі», яку форму вона просить утворити?
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: true
+        - text: майбутній час
+          correct: false
+        - text: наказовий спосіб
+          correct: false
+      explanation: Минулий час — дія відбулася в минулому.
+
+    - question: Форма дієслова «читаю» належить до якого часу в українській мові?
+      options:
+        - text: теперішній час
+          correct: true
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: false
+        - text: інфінітив
+          correct: false
+      explanation: «Читаю» — теперішній час.
+
+    - question: Якщо вправа каже «утворіть форму майбутнього часу», яку часову форму ви напишете?
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: true
+        - text: умовний спосіб
+          correct: false
+      explanation: Майбутній час — дія відбудеться.
+
+    - question: Термін «час» у граматиці дієслова означає яку категорію англійською?
+      options:
+        - text: tense
+          correct: true
+        - text: aspect
+          correct: false
+        - text: mood
+          correct: false
+        - text: voice
+          correct: false
+      explanation: Час = tense.
+
+    - question: Форма дієслова «писав» належить до якого часу в українській мові?
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: true
+        - text: майбутній час
+          correct: false
+        - text: інфінітив
+          correct: false
+      explanation: «Писав» — минулий час.
+
+    - question: Коли граматика каже «теперішній час виражає дію зараз», якою є ця дія за часом?
+      options:
+        - text: теперішній час
+          correct: true
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: false
+        - text: умовний спосіб
+          correct: false
+      explanation: Теперішній = зараз.
+
+    - question: Скільки основних часів має дієслово в українській мові?
+      options:
+        - text: два часи
+          correct: false
+        - text: три часи
+          correct: true
+        - text: чотири часи
+          correct: false
+        - text: п'ять часів
+          correct: false
+      explanation: Три — теперішній, минулий, майбутній.
+
+    - question: Термін «минулий час» відповідає якому англійському граматичному терміну?
+      options:
+        - text: present tense
+          correct: false
+        - text: past tense
+          correct: true
+        - text: future tense
+          correct: false
+        - text: infinitive
+          correct: false
+      explanation: Минулий час = past tense.
+
+    - question: Коли інструкція каже «змініть час дієслова», що саме вона просить змінити?
+      options:
+        - text: часову форму дієслова
+          correct: true
+        - text: вид дієслова
+          correct: false
+        - text: особу дієслова
+          correct: false
+        - text: стан дієслова
+          correct: false
+      explanation: Змінити час = змінити past/present/future.
+
+    - question: Форма «читатиму» або «буду читати» належить до якого часу?
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: true
+        - text: інфінітив
+          correct: false
+      explanation: «Читатиму» — майбутній час.
+
+    - question: Термін «майбутній час» відповідає якому англійському граматичному терміну?
+      options:
+        - text: present tense
+          correct: false
+        - text: past tense
+          correct: false
+        - text: future tense
+          correct: true
+        - text: imperative
+          correct: false
+      explanation: Майбутній час = future tense.
+
+    - question: Коли підручник пояснює «дієслово змінюється за часами», що це означає?
+      options:
+        - text: дієслово має форми теперішнього, минулого, майбутнього часу
+          correct: true
+        - text: дієслово має доконаний і недоконаний вид
+          correct: false
+        - text: дієслово має особові закінчення
+          correct: false
+        - text: дієслово має активний і пасивний стан
+          correct: false
+      explanation: Змінюватися за часами = мати різні часові форми.
+
+    - question: Термін «теперішній час» відповідає якому англійському граматичному терміну?
+      options:
+        - text: present tense
+          correct: true
+        - text: past tense
+          correct: false
+        - text: future tense
+          correct: false
+        - text: perfect tense
+          correct: false
+      explanation: Теперішній час = present tense.
+
+    - question: Якщо граматика каже «дієслово в теперішньому часі», коли відбувається ця дія?
+      options:
+        - text: зараз
+          correct: true
+        - text: учора
+          correct: false
+        - text: завтра
+          correct: false
+        - text: ніколи
+          correct: false
+      explanation: Теперішній = зараз, у цей момент.
+
+- type: match-up
+  title: Терміни виду
+  instruction: З'єднайте український термін з англійським.
+  pairs:
+    - left: вид
+      right: aspect
+    - left: доконаний вид
+      right: perfective aspect
+    - left: недоконаний вид
+      right: imperfective aspect
+    - left: дія
+      right: action
+    - left: процес
+      right: process
+    - left: результат
+      right: result
+    - left: тривалість
+      right: duration
+    - left: повторення
+      right: repetition
+    - left: завершення
+      right: completion
+    - left: продовження
+      right: continuation
+
+- type: match-up
+  title: Терміни часу та способу
+  instruction: З'єднайте український термін з англійським.
+  pairs:
+    - left: час
+      right: tense
+    - left: теперішній час
+      right: present tense
+    - left: минулий час
+      right: past tense
+    - left: майбутній час
+      right: future tense
+    - left: дієвідміна
+      right: conjugation
+    - left: особові закінчення
+      right: personal endings
+    - left: інфінітив
+      right: infinitive
+    - left: наказовий спосіб
+      right: imperative mood
+    - left: умовний спосіб
+      right: conditional mood
+    - left: спосіб
+      right: mood
+
+- type: fill-in
+  title: Визначення виду
+  instruction: Заповніть пропуски правильним терміном.
+  items:
+    - sentence: Доконаний вид виражає _____ дії.
+      answer: результат
+      options:
+        - результат
+        - процес
+        - тривалість
+        - повторення
+
+    - sentence: Недоконаний вид виражає _____ дії.
+      answer: процес
+      options:
+        - результат
+        - процес
+        - завершення
+        - початок
+
+    - sentence: Категорія «вид» англійською — _____.
+      answer: aspect
+      options:
+        - aspect
+        - tense
+        - mood
+        - voice
+
+    - sentence: Дієслово «писати» — _____ виду.
+      answer: недоконаного
+      options:
+        - недоконаного
+        - доконаного
+        - теперішнього
+        - минулого
+
+    - sentence: Дієслово «написати» — _____ виду.
+      answer: доконаного
+      options:
+        - недоконаного
+        - доконаного
+        - теперішнього
+        - минулого
+
+    - sentence: НДВ означає _____ вид.
+      answer: недоконаний
+      options:
+        - недоконаний
+        - доконаний
+        - наказовий
+        - умовний
+
+    - sentence: ДВ означає _____ вид.
+      answer: доконаний
+      options:
+        - недоконаний
+        - доконаний
+        - називний
+        - давальний
+
+    - sentence: Тривалість дії виражає _____ вид.
+      answer: недоконаний
+      options:
+        - недоконаний
+        - доконаний
+        - минулий
+        - теперішній
+
+    - sentence: Повторення дії виражає _____ вид.
+      answer: недоконаний
+      options:
+        - недоконаний
+        - доконаний
+        - минулий
+        - майбутній
+
+    - sentence: Завершення дії виражає _____ вид.
+      answer: доконаний
+      options:
+        - недоконаний
+        - доконаний
+        - теперішній
+        - інфінітив
+
+    - sentence: Слово для «action» — _____.
+      answer: дія
+      options:
+        - дія
+        - вид
+        - час
+        - спосіб
+
+    - sentence: Слово для «duration» — _____.
+      answer: тривалість
+      options:
+        - тривалість
+        - повторення
+        - результат
+        - процес
+
+    - sentence: Слово для «result» — _____.
+      answer: результат
+      options:
+        - тривалість
+        - повторення
+        - результат
+        - процес
+
+    - sentence: Слово для «repetition» — _____.
+      answer: повторення
+      options:
+        - тривалість
+        - повторення
+        - результат
+        - завершення
+
+- type: fill-in
+  title: Визначення часу
+  instruction: Заповніть пропуски правильним терміном.
+  items:
+    - sentence: «Читаю» — це _____ час.
+      answer: теперішній
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - умовний
+
+    - sentence: «Читав» — це _____ час.
+      answer: минулий
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - умовний
+
+    - sentence: «Читатиму» — це _____ час.
+      answer: майбутній
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - умовний
+
+    - sentence: Present tense — це _____ час.
+      answer: теперішній
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - наказовий
+
+    - sentence: Past tense — це _____ час.
+      answer: минулий
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - наказовий
+
+    - sentence: Future tense — це _____ час.
+      answer: майбутній
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - наказовий
+
+    - sentence: Базова форма «читати» — це _____.
+      answer: інфінітив
+      options:
+        - інфінітив
+        - теперішній
+        - минулий
+        - майбутній
+
+    - sentence: Форма «читай!» — це _____ спосіб.
+      answer: наказовий
+      options:
+        - наказовий
+        - умовний
+        - дійсний
+        - інфінітив
+
+    - sentence: Форма «читав би» — це _____ спосіб.
+      answer: умовний
+      options:
+        - наказовий
+        - умовний
+        - дійсний
+        - інфінітив
+
+    - sentence: Категорія «час» англійською — _____.
+      answer: tense
+      options:
+        - tense
+        - aspect
+        - mood
+        - voice
+
+    - sentence: Категорія «спосіб» англійською — _____.
+      answer: mood
+      options:
+        - tense
+        - aspect
+        - mood
+        - voice
+
+    - sentence: Закінчення -у, -еш, -е — це _____ закінчення.
+      answer: особові
+      options:
+        - особові
+        - родові
+        - відмінкові
+        - часові
+
+    - sentence: Imperative — це _____ спосіб.
+      answer: наказовий
+      options:
+        - наказовий
+        - умовний
+        - дійсний
+        - пасивний
+
+    - sentence: Conditional — це _____ спосіб.
+      answer: умовний
+      options:
+        - наказовий
+        - умовний
+        - дійсний
+        - пасивний
+
+- type: true-false
+  title: Термінологія дієслова
+  instruction: Визначте, чи правильне твердження.
+  items:
+    - statement: «Вид» означає «aspect».
+      correct: true
+      explanation: Правильно! Вид = aspect.
+
+    - statement: Доконаний вид виражає процес.
+      correct: false
+      explanation: Неправильно! Доконаний вид виражає результат, недоконаний — процес.
+
+    - statement: В українській мові три часи.
+      correct: true
+      explanation: Правильно! Теперішній, минулий, майбутній.
+
+    - statement: «Читати» — доконаний вид.
+      correct: false
+      explanation: Неправильно! «Читати» — недоконаний, «прочитати» — доконаний.
+
+    - statement: Недоконаний вид виражає тривалість.
+      correct: true
+      explanation: Правильно! Тривалість — функція НДВ.
+
+    - statement: «Інфінітив» означає «past tense».
+      correct: false
+      explanation: Неправильно! Інфінітив — infinitive, базова форма.
+
+    - statement: НДВ — скорочення для недоконаного виду.
+      correct: true
+      explanation: Правильно! НДВ = недоконаний вид.
+
+    - statement: «Час» означає «aspect».
+      correct: false
+      explanation: Неправильно! Час = tense, вид = aspect.
+
+    - statement: Наказовий спосіб — для команд.
+      correct: true
+      explanation: Правильно! Imperative mood — команди.
+
+    - statement: Доконаний вид виражає повторення.
+      correct: false
+      explanation: Неправильно! Повторення — функція недоконаного виду.
+
+    - statement: «Минулий час» означає «past tense».
+      correct: true
+      explanation: Правильно! Минулий = past.
+
+    - statement: «Написати» — недоконаний вид.
+      correct: false
+      explanation: Неправильно! «Написати» — доконаний вид.
+
+    - statement: Умовний спосіб виражає «would».
+      correct: true
+      explanation: Правильно! Conditional mood — would, could.
+
+    - statement: В українській мові чотири часи.
+      correct: false
+      explanation: Неправильно! Три часи — теперішній, минулий, майбутній.
+
+- type: group-sort
+  title: Терміни за категоріями
+  instruction: Розподіліть терміни за категоріями.
+  groups:
+    - name: Вид
+      items:
+        - вид
+        - доконаний вид
+        - недоконаний вид
+        - процес
+    - name: Час
+      items:
+        - час
+        - теперішній час
+        - минулий час
+        - майбутній час
+    - name: Спосіб
+      items:
+        - спосіб
+        - наказовий спосіб
+        - умовний спосіб
+        - дійсний спосіб
+    - name: Дієслівні поняття
+      items:
+        - дія
+        - результат
+        - тривалість
+        - інфінітив
+
+- type: group-sort
+  title: Функції видів
+  instruction: Розподіліть поняття за видами.
+  groups:
+    - name: Функції доконаного виду
+      items:
+        - результат
+        - завершення
+        - однократний
+        - факт дії
+    - name: Функції недоконаного виду
+      items:
+        - процес
+        - тривалість
+        - повторення
+        - багаторазовий
+    - name: Часові форми
+      items:
+        - теперішній час
+        - минулий час
+        - майбутній час
+    - name: Дієслівні форми
+      items:
+        - інфінітив
+        - особові закінчення
+        - дієвідміна
+
+- type: unjumble
+  title: Граматичні пояснення
+  instruction: Розташуйте слова в правильному порядку.
+  items:
+    - scrambled: доконаний / дії / результат / виражає / вид / завершеної / з / кінцевим / результатом / або / висновком
+      answer: Доконаний вид виражає результат завершеної дії з кінцевим результатом або висновком.
+
+    - scrambled: недоконаний / або / тривалість / вид / повторення / виражає / дії / процес / що / триває / певний / час
+      answer: Недоконаний вид виражає процес, тривалість або повторення дії, що триває певний час.
+
+    - scrambled: в / українській / мові / є / три / часи / дієслова
+      answer: В українській мові є три часи дієслова.
+
+    - scrambled: для / наказовий / команд / спосіб / використовують / наприклад / читай / пиши / або / слухай / уважно
+      answer: Наказовий спосіб використовують для команд, наприклад читай, пиши або слухай уважно.
+
+    - scrambled: писати / і / написати / це / видова / пара / дієслів
+      answer: Писати і написати — це видова пара дієслів.
+
+    - scrambled: інфінітив / базова / є / форма / дієслова / наприклад / читати / писати / говорити / без / особових / закінчень
+      answer: Інфінітив є базова форма дієслова, наприклад читати, писати, говорити без особових закінчень.
+
+    - scrambled: час / для / теперішній / використовують / опису / відбувається / дії / що / зараз / у / цей / момент
+      answer: Теперішній час використовують для опису дії, що відбувається зараз, у цей момент.
+
+    - scrambled: тривалість / скільки / часу / означає / триває / недоконаного / дія / функція / виду / у / реченні
+      answer: Тривалість означає, скільки часу триває дія — функція недоконаного виду у реченні.
+
+    - scrambled: умовний / спосіб / виражає / бажання / або / умову / з / часткою / би
+      answer: Умовний спосіб виражає бажання або умову з часткою би.
+
+    - scrambled: дієвідміна / система / закінчень / є / дієслова / за / особами / і / числами / в / різних / часах
+      answer: Дієвідміна є система закінчень дієслова за особами і числами в різних часах.
+
+    - scrambled: результат / завершеної / означає / наслідок / дії / функція / доконаного / виду / в / українській / граматиці
+      answer: Результат означає наслідок завершеної дії — функція доконаного виду в українській граматиці.
+
+    - scrambled: повторення / означає / дія / що / відбувається / регулярно / багато / разів / функція / недоконаного / виду
+      answer: Повторення означає дія, що відбувається регулярно, багато разів — функція недоконаного виду.
+
+    - scrambled: минулий / час / для / використовують / опису / дії / що / відбулася / раніше / до / моменту / мовлення
+      answer: Минулий час використовують для опису дії, що відбулася раніше, до моменту мовлення.
+
+    - scrambled: майбутній / час / для / використовують / опису / дії / що / відбудеться / пізніше / після / моменту / мовлення
+      answer: Майбутній час використовують для опису дії, що відбудеться пізніше, після моменту мовлення.
+
+- type: error-correction
+  title: Виправлення помилок
+  instruction: У кожному реченні є ОДНА помилка. Знайдіть і виправте.
+  items:
+    - sentence: «Читати» — доконаний вид.
+      error: доконаний
+      answer: недоконаний
+      options:
+        - доконаний
+        - недоконаний
+        - теперішній
+        - минулий
+      explanation: «Читати» — недоконаний вид, «прочитати» — доконаний.
+
+    - sentence: Вид означає «tense».
+      error: tense
+      answer: aspect
+      options:
+        - tense
+        - aspect
+        - mood
+        - voice
+      explanation: Вид = aspect, час = tense.
+
+    - sentence: Недоконаний вид виражає результат.
+      error: результат
+      answer: процес
+      options:
+        - результат
+        - процес
+        - завершення
+        - початок
+      explanation: НДВ виражає процес, ДВ — результат.
+
+    - sentence: В українській мові чотири часи.
+      error: чотири
+      answer: три
+      options:
+        - чотири
+        - три
+        - два
+        - п'ять
+      explanation: Три часи — теперішній, минулий, майбутній.
+
+    - sentence: «Написати» — недоконаний вид.
+      error: недоконаний
+      answer: доконаний
+      options:
+        - недоконаний
+        - доконаний
+        - теперішній
+        - наказовий
+      explanation: «Написати» — доконаний вид.
+
+    - sentence: Доконаний вид виражає тривалість.
+      error: тривалість
+      answer: результат
+      options:
+        - тривалість
+        - результат
+        - повторення
+        - процес
+      explanation: ДВ — результат, НДВ — тривалість.
+
+    - sentence: НДВ означає доконаний вид.
+      error: доконаний
+      answer: недоконаний
+      options:
+        - доконаний
+        - недоконаний
+        - називний
+        - давальний
+      explanation: НДВ = недоконаний вид.
+
+    - sentence: «Час» означає «aspect».
+      error: aspect
+      answer: tense
+      options:
+        - aspect
+        - tense
+        - mood
+        - voice
+      explanation: Час = tense, вид = aspect.
+
+    - sentence: Наказовий спосіб — для умов.
+      error: умов
+      answer: команд
+      options:
+        - умов
+        - команд
+        - питань
+        - описів
+      explanation: Наказовий — для команд, умовний — для умов.
+
+    - sentence: «Пишу» — минулий час.
+      error: минулий
+      answer: теперішній
+      options:
+        - минулий
+        - теперішній
+        - майбутній
+        - умовний
+      explanation: «Пишу» — теперішній час.
+
+    - sentence: Інфінітив — це минулий час.
+      error: минулий час
+      answer: базова форма
+      options:
+        - минулий час
+        - базова форма
+        - майбутній час
+        - наказовий спосіб
+      explanation: Інфінітив — базова форма дієслова.
+
+    - sentence: Доконаний вид виражає повторення.
+      error: повторення
+      answer: завершення
+      options:
+        - повторення
+        - завершення
+        - тривалість
+        - процес
+      explanation: Повторення — НДВ, завершення — ДВ.
+
+    - sentence: ДВ означає недоконаний вид.
+      error: недоконаний
+      answer: доконаний
+      options:
+        - недоконаний
+        - доконаний
+        - давальний
+        - називний
+      explanation: ДВ = доконаний вид.
+
+    - sentence: «Писав» — теперішній час.
+      error: теперішній
+      answer: минулий
+      options:
+        - теперішній
+        - минулий
+        - майбутній
+        - наказовий
+      explanation: «Писав» — минулий час.
+
+- type: cloze
+  title: Граматичний текст про вид і час
+  instruction: Заповніть пропуски правильними термінами.
+  passage: |
+    Українське дієслово має дві важливі категорії: {вид|час|рід} і {час|рід|число}. Перша категорія — {вид|час|особа} — показує, як ми дивимося на дію: як {процес|результат|команду} чи як {результат|процес|тривалість}. Недоконаний вид виражає {процес|результат|завершення}, {тривалість|результат|завершення} і {повторення|результат|завершення}. Доконаний вид виражає {результат|тривалість|повторення} і {завершення|тривалість|повторення}. Друга категорія — {час|вид|рід} — показує, коли відбувається дія: у {теперішньому|родовому|називному}, {минулому|давальному|знахідному} чи {майбутньому|орудному|місцевому}.
+
+- type: mark-the-words
+  title: Знайдіть терміни
+  instruction: Натисніть на ВСІ граматичні терміни в тексті.
+  text: "*Дієслово* «читати» — *недоконаного* *виду*. Воно змінюється за *особами* в *теперішньому* *часі*: я читаю, ти читаєш. У *минулому* *часі*: я читав. *Доконана* пара — «прочитати». *Інфінітив* — базова *форма*."
+
+- type: dialogue-reorder
+  title: Розмова про вид
+  instruction: Розташуйте репліки діалогу в правильному порядку.
+  lines:
+    - order: 1
+      speaker: А
+      text: Яким видом є дієслово «писати»?
+    - order: 2
+      speaker: B
+      text: Це недоконаний вид.
+    - order: 3
+      speaker: А
+      text: Правильно! А що виражає недоконаний вид?
+    - order: 4
+      speaker: B
+      text: Процес, тривалість або повторення дії.
+    - order: 5
+      speaker: А
+      text: Молодець! А яка доконана пара?
+    - order: 6
+      speaker: B
+      text: «Написати» — доконаний вид.
+    - order: 7
+      speaker: А
+      text: І що виражає доконаний вид?
+    - order: 8
+      speaker: B
+      text: Результат і завершення дії.
+
+- type: select
+  title: Множинний вибір
+  instruction: Оберіть ВСІ правильні відповіді.
+  items:
+    - question: Які терміни пов'язані з видом дієслова?
+      options:
+        - text: доконаний
+          correct: true
+        - text: недоконаний
+          correct: true
+        - text: теперішній
+          correct: false
+        - text: процес
+          correct: true
+      explanation: Вид — доконаний, недоконаний, процес. Теперішній — час.
+
+    - question: Які функції має недоконаний вид?
+      options:
+        - text: процес
+          correct: true
+        - text: тривалість
+          correct: true
+        - text: повторення
+          correct: true
+        - text: результат
+          correct: false
+      explanation: НДВ — процес, тривалість, повторення. Результат — ДВ.
+
+    - question: Які є часи в українській мові?
+      options:
+        - text: теперішній
+          correct: true
+        - text: минулий
+          correct: true
+        - text: майбутній
+          correct: true
+        - text: плюсквамперфект
+          correct: false
+      explanation: Три часи. Плюсквамперфекту немає.
+
+    - question: Які функції має доконаний вид?
+      options:
+        - text: результат
+          correct: true
+        - text: завершення
+          correct: true
+        - text: тривалість
+          correct: false
+        - text: повторення
+          correct: false
+      explanation: ДВ — результат, завершення. Тривалість, повторення — НДВ.
+
+    - question: Які терміни означають «mood»?
+      options:
+        - text: спосіб
+          correct: true
+        - text: наказовий спосіб
+          correct: true
+        - text: умовний спосіб
+          correct: true
+        - text: минулий час
+          correct: false
+      explanation: Спосіб = mood. Минулий час — tense.
+
+    - question: Які дієслова є недоконаного виду?
+      options:
+        - text: читати
+          correct: true
+        - text: писати
+          correct: true
+        - text: прочитати
+          correct: false
+        - text: написати
+          correct: false
+      explanation: Читати, писати — НДВ. Прочитати, написати — ДВ.
+
+    - question: Які дієслова є доконаного виду?
+      options:
+        - text: читати
+          correct: false
+        - text: писати
+          correct: false
+        - text: прочитати
+          correct: true
+        - text: написати
+          correct: true
+      explanation: Прочитати, написати — ДВ.
+
+    - question: Які терміни пов'язані з часом?
+      options:
+        - text: теперішній
+          correct: true
+        - text: минулий
+          correct: true
+        - text: майбутній
+          correct: true
+        - text: доконаний
+          correct: false
+      explanation: Часи — теперішній, минулий, майбутній. Доконаний — вид.
+
+    - question: Які форми дієслова існують?
+      options:
+        - text: інфінітив
+          correct: true
+        - text: особові форми
+          correct: true
+        - text: наказова форма
+          correct: true
+        - text: умовна форма
+          correct: true
+      explanation: Усі ці форми існують.
+
+    - question: Які скорочення використовують для виду?
+      options:
+        - text: ДВ
+          correct: true
+        - text: НДВ
+          correct: true
+        - text: ТЧ
+          correct: false
+        - text: МЧ
+          correct: false
+      explanation: ДВ, НДВ — вид. ТЧ, МЧ — час.
+
+    - question: Що виражає недоконаний вид?
+      options:
+        - text: процес
+          correct: true
+        - text: тривалість
+          correct: true
+        - text: результат
+          correct: false
+        - text: повторення
+          correct: true
+      explanation: НДВ — процес, тривалість, повторення.
+
+    - question: Що виражає доконаний вид?
+      options:
+        - text: результат
+          correct: true
+        - text: процес
+          correct: false
+        - text: завершення
+          correct: true
+        - text: тривалість
+          correct: false
+      explanation: ДВ — результат, завершення.
+
+    - question: Які терміни означають форми дієслова?
+      options:
+        - text: інфінітив
+          correct: true
+        - text: особові закінчення
+          correct: true
+        - text: відмінок
+          correct: false
+        - text: дієвідміна
+          correct: true
+      explanation: Форми дієслова. Відмінок — для іменників.
+
+    - question: Які способи має дієслово?
+      options:
+        - text: дійсний
+          correct: true
+        - text: наказовий
+          correct: true
+        - text: умовний
+          correct: true
+        - text: родовий
+          correct: false
+      explanation: Три способи. Родовий — відмінок.
+
+- type: translate
+  title: Переклад термінів
+  instruction: Оберіть правильний переклад.
+  items:
+    - source: aspect
+      options:
+        - text: вид
+          correct: true
+        - text: час
+          correct: false
+        - text: спосіб
+          correct: false
+        - text: стан
+          correct: false
+      explanation: Aspect — вид.
+
+    - source: perfective aspect
+      options:
+        - text: доконаний вид
+          correct: true
+        - text: недоконаний вид
+          correct: false
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: Perfective — доконаний.
+
+    - source: imperfective aspect
+      options:
+        - text: доконаний вид
+          correct: false
+        - text: недоконаний вид
+          correct: true
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: Imperfective — недоконаний.
+
+    - source: tense
+      options:
+        - text: вид
+          correct: false
+        - text: час
+          correct: true
+        - text: спосіб
+          correct: false
+        - text: стан
+          correct: false
+      explanation: Tense — час.
+
+    - source: present tense
+      options:
+        - text: теперішній час
+          correct: true
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: false
+        - text: умовний спосіб
+          correct: false
+      explanation: Present — теперішній.
+
+    - source: past tense
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: true
+        - text: майбутній час
+          correct: false
+        - text: наказовий спосіб
+          correct: false
+      explanation: Past — минулий.
+
+    - source: future tense
+      options:
+        - text: теперішній час
+          correct: false
+        - text: минулий час
+          correct: false
+        - text: майбутній час
+          correct: true
+        - text: умовний спосіб
+          correct: false
+      explanation: Future — майбутній.
+
+    - source: infinitive
+      options:
+        - text: інфінітив
+          correct: true
+        - text: особа
+          correct: false
+        - text: число
+          correct: false
+        - text: рід
+          correct: false
+      explanation: Infinitive — інфінітив.
+
+    - source: imperative mood
+      options:
+        - text: наказовий спосіб
+          correct: true
+        - text: умовний спосіб
+          correct: false
+        - text: дійсний спосіб
+          correct: false
+        - text: минулий час
+          correct: false
+      explanation: Imperative — наказовий.
+
+    - source: conditional mood
+      options:
+        - text: наказовий спосіб
+          correct: false
+        - text: умовний спосіб
+          correct: true
+        - text: дійсний спосіб
+          correct: false
+        - text: теперішній час
+          correct: false
+      explanation: Conditional — умовний.
+
+    - source: duration
+      options:
+        - text: тривалість
+          correct: true
+        - text: повторення
+          correct: false
+        - text: результат
+          correct: false
+        - text: процес
+          correct: false
+      explanation: Duration — тривалість.
+
+    - source: repetition
+      options:
+        - text: тривалість
+          correct: false
+        - text: повторення
+          correct: true
+        - text: результат
+          correct: false
+        - text: процес
+          correct: false
+      explanation: Repetition — повторення.
+
+    - source: result
+      options:
+        - text: тривалість
+          correct: false
+        - text: повторення
+          correct: false
+        - text: результат
+          correct: true
+        - text: процес
+          correct: false
+      explanation: Result — результат.
+
+    - source: completion
+      options:
+        - text: завершення
+          correct: true
+        - text: тривалість
+          correct: false
+        - text: повторення
+          correct: false
+        - text: процес
+          correct: false
+      explanation: Completion — завершення.

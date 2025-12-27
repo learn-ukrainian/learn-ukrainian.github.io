@@ -1,0 +1,110 @@
+module: 17-motion-coming-going
+level: B1
+file: curriculum/l2-uk-en/b1/17-motion-coming-going.md
+generated: '2025-12-27T17:29:17.649483'
+phase: 1
+scope: error-correction
+item_count: 6
+items:
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Він приїхав до офісу пішки о дев'ятій годині вранці.
+  error: приїхав
+  answer: прийшов
+  sentence_corrected: Він прийшов до офісу пішки о дев'ятій годині вранці.
+  options:
+  - приїхав
+  - прийшов
+  - увійшов
+  - виїхав
+  original_explanation: '"Пішки" = прийшов (від іти), не приїхав.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Вона увійшла з кімнати і закрила за собою двері.
+  error: увійшла
+  answer: вийшла
+  sentence_corrected: Вона вийшла з кімнати і закрила за собою двері.
+  options:
+  - увійшла
+  - вийшла
+  - прийшла
+  - приїхала
+  original_explanation: '"З кімнати" = вийшла (вихід), не увійшла.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Машина виїхала у гараж і зупинилася там на ніч.
+  error: виїхала
+  answer: в'їхала
+  sentence_corrected: Машина в'їхала у гараж і зупинилася там на ніч.
+  options:
+  - виїхала
+  - в'їхала
+  - прийшла
+  - прилетіла
+  original_explanation: '"У гараж" = в''їхала (вхід), не виїхала.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Літак вилетів з Лондона до Києва о п'ятій годині.
+  error: вилетів
+  answer: прилетів
+  sentence_corrected: Літак прилетів з Лондона до Києва о п'ятій годині.
+  options:
+  - вилетів
+  - прилетів
+  - влетів
+  - виїхав
+  original_explanation: '"З Лондона (до Києва)" = прилетів (прибуття), якщо ми в Києві.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Він виніс квіти для мами в кімнату на святкування.
+  error: виніс
+  answer: вніс
+  sentence_corrected: Він вніс квіти для мами в кімнату на святкування.
+  options:
+  - виніс
+  - вніс
+  - приніс
+  - прийшов
+  original_explanation: '"В кімнату" = вніс (вхід), не виніс.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Вона вийшла до будинку через головний вхід.
+  error: вийшла
+  answer: увійшла
+  sentence_corrected: Вона увійшла до будинку через головний вхід.
+  options:
+  - вийшла
+  - увійшла
+  - прийшла
+  - приїхала
+  original_explanation: '"До будинку" = увійшла (вхід), не вийшла.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

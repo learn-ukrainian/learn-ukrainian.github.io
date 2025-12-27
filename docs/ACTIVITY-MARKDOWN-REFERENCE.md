@@ -7,7 +7,7 @@
 
 | Level | Format | Activity Location | Prose File |
 |-------|--------|-------------------|------------|
-| **B1+** | **YAML-First** (preferred) | `{slug}.activities.yaml` | `{slug}.md` (prose only) |
+| **B1+** | **YAML-First** (preferred) | `activities/{slug}.yaml` | `{slug}.md` (prose only) |
 | A1-A2 | Embedded Markdown | Within `.md` file | Same file |
 
 ### Why YAML-First for B1+?
@@ -19,15 +19,18 @@
 ### File Structure Example (B1+)
 ```
 curriculum/l2-uk-en/b1/
-├── 52-abstract-concepts-ideas.md              # Prose content only
-└── 52-abstract-concepts-ideas.activities.yaml # All activities
+├── 52-abstract-concepts-ideas.md    # Prose content only
+├── activities/                       # YAML activity files
+│   └── 52-abstract-concepts-ideas.yaml
+└── queue/                            # Grammar validation queues
+    └── 52-abstract-concepts-ideas.yaml
 ```
 
 ---
 
 # YAML Activity Format (B1+)
 
-> **Validation:** `npm run validate:yaml curriculum/l2-uk-en/{level}/{file}.activities.yaml`
+> **Validation:** `npm run validate:yaml curriculum/l2-uk-en/{level}/activities/{file}.yaml`
 
 All 13 activity types are supported. The generator reads YAML files automatically when present.
 
@@ -498,7 +501,7 @@ statement: 'Слово "розв''язання" має інше значення
 
 | Format | Levels | When to Use |
 |--------|--------|-------------|
-| **YAML-First** | B1+ | Preferred. Separate `.activities.yaml` file. |
+| **YAML-First** | B1+ | Preferred. Separate `activities/{module}.yaml` file. |
 | Embedded Markdown | A1-A2 | Activities within `.md` file. |
 
 ## All 13 Activity Types
@@ -521,10 +524,10 @@ statement: 'Слово "розв''язання" має інше значення
 
 ```bash
 # Validate YAML activities (B1+)
-npm run validate:yaml curriculum/l2-uk-en/{level}/{file}.activities.yaml
+npm run validate:yaml curriculum/l2-uk-en/{level}/activities/{file}.yaml
 
 # Run module audit (works with both formats)
-python3 scripts/audit_module.py curriculum/l2-uk-en/{level}/{file}.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/{level}/{file}.md
 ```
 
 **Note:** `observe` is a content callout (`> [!observe]`), not an activity. Use it inline in lesson content for pattern discovery before grammar explanations.

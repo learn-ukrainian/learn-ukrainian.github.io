@@ -1,0 +1,125 @@
+module: 21-motion-figurative-uses
+level: B1
+file: curriculum/l2-uk-en/b1/21-motion-figurative-uses.md
+generated: '2025-12-27T17:29:17.731673'
+phase: 1
+scope: error-correction
+item_count: 6
+items:
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Ми довго думали і прийшли до висновку, що це насправді дуже
+    погана ідея.
+  error: прийшли
+  answer: дійшли
+  sentence_corrected: Ми довго думали і дійшли до висновку, що це насправді дуже погана
+    ідея.
+  options:
+  - прийшли
+  - дійшли
+  - вийшли
+  - зайшли
+  original_explanation: Хоча "прийти до висновку" іноді вживається, стилістично правильніше
+    "дійти висновку" (reach/arrive at a conclusion).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Він дуже сильно розлютився і пішов з себе, коли дізнався всю
+    гірку правду.
+  error: пішов
+  answer: вийшов
+  sentence_corrected: Він дуже сильно розлютився і вийшов з себе, коли дізнався всю
+    гірку правду.
+  options:
+  - пішов
+  - вийшов
+  - зайшов
+  - прийшов
+  original_explanation: Правильна ідіома — "вийти з себе" (to lose one's temper).
+    З себе не "йдуть", а "виходять" (як з приміщення).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: На жаль, ця проблема зайшла в сліпу вулицю і ми абсолютно не
+    знаємо виходу.
+  error: сліпу вулицю
+  answer: глухий кут
+  sentence_corrected: На жаль, ця проблема зайшла в глухий кут і ми абсолютно не знаємо
+    виходу.
+  options:
+  - сліпу вулицю
+  - глухий кут
+  - темний прохід
+  - закриту кімнату
+  original_explanation: Український відповідник англійського "dead end" — це "глухий
+    кут".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Я не можу перейти без твоїх корисних порад у цій складній життєвій
+    ситуації.
+  error: перейти
+  answer: обійтися
+  sentence_corrected: Я не можу обійтися без твоїх корисних порад у цій складній життєвій
+    ситуації.
+  options:
+  - перейти
+  - обійтися
+  - зайти
+  - вийти
+  original_explanation: '"Do without" — це "обійтися без".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Це нове червоне плаття тобі зовсім не ходить, краще одягни
+    щось синє.
+  error: ходить
+  answer: йде
+  sentence_corrected: Це нове червоне плаття тобі зовсім не йде, краще одягни щось
+    синє.
+  options:
+  - ходить
+  - йде
+  - біжить
+  - стоїть
+  original_explanation: Одяг "йде" (пасує), а не "ходить".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Час гуляє дуже швидко, коли ми веселимося разом із найкращими
+    друзями.
+  error: гуляє
+  answer: іде
+  sentence_corrected: Час іде дуже швидко, коли ми веселимося разом із найкращими
+    друзями.
+  options:
+  - гуляє
+  - іде
+  - стоїть
+  - сидить
+  original_explanation: Час "іде", "біжить" або "летить", але не "гуляє".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

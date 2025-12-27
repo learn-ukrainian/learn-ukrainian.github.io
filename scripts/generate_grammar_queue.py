@@ -23,8 +23,21 @@ import yaml
 
 
 def load_yaml_activities(md_file_path: str) -> list[dict] | None:
-    """Load activities from YAML file if it exists."""
-    yaml_path = Path(md_file_path).with_suffix('.activities.yaml')
+    """Load activities from YAML file if it exists.
+
+    Checks two locations (new structure first, then legacy):
+    1. {level}/activities/{module}.yaml (new structure)
+    2. {level}/{module}.activities.yaml (legacy)
+    """
+    md_path = Path(md_file_path)
+
+    # New structure: activities/{module}.yaml
+    yaml_path = md_path.parent / 'activities' / (md_path.stem + '.yaml')
+
+    # Fallback to legacy: {module}.activities.yaml
+    if not yaml_path.exists():
+        yaml_path = md_path.parent / (md_path.stem + '.activities.yaml')
+
     if not yaml_path.exists():
         return None
 
@@ -141,8 +154,13 @@ def generate_queue(md_file_path: str) -> dict | None:
 
 
 def write_queue(queue: dict, md_file_path: str) -> str:
-    """Write queue to YAML file."""
-    output_path = Path(md_file_path).with_suffix('.grammar-queue.yaml')
+    """Write queue to YAML file in queue/ subfolder."""
+    md_path = Path(md_file_path)
+
+    # New structure: queue/{module}.yaml
+    queue_dir = md_path.parent / 'queue'
+    queue_dir.mkdir(exist_ok=True)
+    output_path = queue_dir / (md_path.stem + '.yaml')
 
     with open(output_path, 'w', encoding='utf-8') as f:
         yaml.dump(queue, f, allow_unicode=True, default_flow_style=False, sort_keys=False)

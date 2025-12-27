@@ -1,0 +1,153 @@
+module: 09-aspect-integration
+level: B1
+file: curriculum/l2-uk-en/b1/09-aspect-integration.md
+generated: '2025-12-27T17:29:17.469819'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Завтра я буду прочитаю всю книгу.
+  error: буду прочитаю
+  answer: прочитаю
+  sentence_corrected: Завтра я прочитаю всю книгу.
+  options:
+  - буду прочитаю
+  - прочитаю
+  - буду читати
+  - читатиму
+  original_explanation: 'Не можна поєднувати "буду" з доконаним інфінітивом. Правильно:
+    "прочитаю" (простий майбутній ДВ) або "буду читати" (складна форма НДВ).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Я працюватиму над проєктом і завершиму його нарешті до кінця
+    тижня.
+  error: працюватиму
+  answer: попрацюю
+  sentence_corrected: Я попрацюю над проєктом і завершиму його нарешті до кінця тижня.
+  options:
+  - працюватиму
+  - попрацюю
+  - буду працювати
+  - працював
+  original_explanation: 'З маркером "нарешті" і "до кінця тижня" (результат), обидва
+    дієслова повинні бути доконаного виду: "попрацюю і завершу".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Уряд буде працюватиме над реформами наступного року.
+  error: буде працюватиме
+  answer: працюватиме
+  sentence_corrected: Уряд працюватиме над реформами наступного року.
+  options:
+  - буде працюватиме
+  - працюватиме
+  - буде працювати
+  - попрацює
+  original_explanation: 'Не можна змішувати складну і синтетичну форми. Правильно:
+    "буде працювати" (складна) АБО "працюватиме" (синтетична).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Вона читатиму книгу до кінця і прочитає всі розділи.
+  error: читатиму
+  answer: прочитає
+  sentence_corrected: Вона прочитає книгу до кінця і прочитає всі розділи.
+  options:
+  - читатиму
+  - прочитає
+  - буду читати
+  - читає
+  original_explanation: 'З маркером "до кінця" (результат) потрібен доконаний вид
+    в обох частинах: "прочитає книгу до кінця".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Я буду вивчити всі нові слова завтра.
+  error: буду вивчити
+  answer: вивчу
+  sentence_corrected: Я вивчу всі нові слова завтра.
+  options:
+  - буду вивчити
+  - вивчу
+  - буду вчити
+  - вивчатиму
+  original_explanation: '"Буду" вимагає недоконаного інфінітива (буду вчити), але
+    тут потрібен результат. Правильно: "вивчу" (простий майбутній ДВ).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Студенти будуть вивчатимуть нову граматику протягом семестру.
+  error: будуть вивчатимуть
+  answer: вивчатимуть
+  sentence_corrected: Студенти вивчатимуть нову граматику протягом семестру.
+  options:
+  - будуть вивчатимуть
+  - вивчатимуть
+  - будуть вивчати
+  - вивчать
+  original_explanation: 'Не можна поєднувати "будуть" (складна форма) з синтетичною
+    формою "вивчатимуть". Правильно: "будуть вивчати" АБО "вивчатимуть".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Я напишу листа протягом усього вечора.
+  error: напишу
+  answer: писатиму
+  sentence_corrected: Я писатиму листа протягом усього вечора.
+  options:
+  - напишу
+  - писатиму
+  - буду писати
+  - написав
+  original_explanation: '"Протягом усього вечора" вказує на процес, тому потрібен
+    недоконаний вид: "писатиму" або "буду писати".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок майбутнього
+  sentence_with_error: Ми зробимо домашнє завдання щодня.
+  error: зробимо
+  answer: робитимемо
+  sentence_corrected: Ми робитимемо домашнє завдання щодня.
+  options:
+  - зробимо
+  - робитимемо
+  - будемо робити
+  - зробили
+  original_explanation: '"Щодня" вказує на регулярність, тому потрібен недоконаний
+    вид: "робитимемо" або "будемо робити".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

@@ -103,6 +103,10 @@ def load_yaml_activities(md_file_path: str) -> list[dict] | None:
     """
     Load activities from YAML file if it exists.
 
+    Checks two locations (new structure first, then legacy):
+    1. {level}/activities/{module}.yaml (new structure)
+    2. {level}/{module}.activities.yaml (legacy)
+
     Args:
         md_file_path: Path to the markdown file
 
@@ -112,7 +116,13 @@ def load_yaml_activities(md_file_path: str) -> list[dict] | None:
     from pathlib import Path
 
     md_path = Path(md_file_path)
-    yaml_path = md_path.parent / (md_path.stem + '.activities.yaml')
+
+    # New structure: activities/{module}.yaml
+    yaml_path = md_path.parent / 'activities' / (md_path.stem + '.yaml')
+
+    # Fallback to legacy: {module}.activities.yaml
+    if not yaml_path.exists():
+        yaml_path = md_path.parent / (md_path.stem + '.activities.yaml')
 
     if not yaml_path.exists():
         return None

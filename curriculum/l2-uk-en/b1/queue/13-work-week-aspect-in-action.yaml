@@ -1,0 +1,148 @@
+module: 13-work-week-aspect-in-action
+level: B1
+file: curriculum/l2-uk-en/b1/13-work-week-aspect-in-action.md
+generated: '2025-12-27T17:29:17.561953'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Що ти зробиш завтра весь день у офісі?
+  error: зробиш
+  answer: робитимеш
+  sentence_corrected: Що ти робитимеш завтра весь день у офісі?
+  options:
+  - зробиш
+  - робитимеш
+  - робиш
+  - зробив
+  original_explanation: Питання про загальну активність протягом дня вимагає НДВ майбутній
+    час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я не писав звіт сьогодні, тому начальник чекає.
+  error: писав
+  answer: написав
+  sentence_corrected: Я не написав звіт сьогодні, тому начальник чекає.
+  options:
+  - писав
+  - написав
+  - пишу
+  - писатиму
+  original_explanation: 'Заперечення результату вимагає ДВ: очікуваний результат не
+    досягнутий.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Кожного ранку я перевірю електронну пошту перед роботою.
+  error: перевірю
+  answer: перевіряю
+  sentence_corrected: Кожного ранку я перевіряю електронну пошту перед роботою.
+  options:
+  - перевірю
+  - перевіряю
+  - перевіряв
+  - перевірятиму
+  original_explanation: Регулярна звичка вимагає НДВ теперішній час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Робіть цей звіт терміново до обіду, це важливо!
+  error: Робіть
+  answer: Зробіть
+  sentence_corrected: Зробіть цей звіт терміново до обіду, це важливо!
+  options:
+  - Робіть
+  - Зробіть
+  - Робили
+  - Робитимете
+  original_explanation: Конкретне доручення з дедлайном вимагає ДВ наказовий спосіб.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Учора я працював над презентацією і завершував її до кінця
+    дня.
+  error: завершував
+  answer: завершив
+  sentence_corrected: Учора я працював над презентацією і завершив її до кінця дня.
+  options:
+  - завершував
+  - завершив
+  - завершую
+  - завершуватиму
+  original_explanation: Досягнутий результат у минулому вимагає ДВ.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Команда обговорювала питання вчора і прийняла важливе рішення.
+  error: обговорювала
+  answer: обговорила
+  sentence_corrected: Команда обговорила питання вчора і прийняла важливе рішення.
+  options:
+  - обговорювала
+  - обговорила
+  - обговорює
+  - обговорюватиме
+  original_explanation: Послідовні завершені дії вимагають ДВ для обох дієслів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я зараз пишу звіт уже дві години і ще не написую його до кінця.
+  error: написую
+  answer: написав
+  sentence_corrected: Я зараз пишу звіт уже дві години і ще не написав його до кінця.
+  options:
+  - написую
+  - написав
+  - пишу
+  - писатиму
+  original_explanation: Заперечення з "ще не" вимагає ДВ для результату, що не досягнутий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Завтра я підготую матеріали для наради весь день без перерви.
+  error: підготую
+  answer: готуватиму
+  sentence_corrected: Завтра я готуватиму матеріали для наради весь день без перерви.
+  options:
+  - підготую
+  - готуватиму
+  - готую
+  - готував
+  original_explanation: Тривалий процес із показником "весь день" вимагає НДВ майбутній
+    час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,156 @@
+module: 08-aspect-past-result-process
+level: B1
+file: curriculum/l2-uk-en/b1/08-aspect-past-result-process.md
+generated: '2025-12-27T17:29:17.451323'
+phase: 1
+scope: error-correction
+item_count: 8
+items:
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Нарешті я вивчав усі граматичні правила і склав іспит успішно.
+  error: вивчав
+  answer: вивчив
+  sentence_corrected: Нарешті я вивчив усі граматичні правила і склав іспит успішно.
+  options:
+  - вивчав
+  - вивчив
+  - вивчаю
+  - вивчу
+  original_explanation: '"Нарешті" вказує на досягнутий результат після зусиль, тому
+    потрібен доконаний вид "вивчив".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Вчора весь вечір вона приготувала презентацію для важливої
+    зустрічі.
+  error: приготувала
+  answer: готувала
+  sentence_corrected: Вчора весь вечір вона готувала презентацію для важливої зустрічі.
+  options:
+  - приготувала
+  - готувала
+  - готує
+  - приготує
+  original_explanation: '"Весь вечір" підкреслює тривалість процесу, тому потрібен
+    недоконаний вид "готувала".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Поки він прочитав книгу, я приготував вечерю і накрив на стіл.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Поки він читав книгу, я приготував вечерю і накрив на стіл.
+  options:
+  - прочитав
+  - читав
+  - читає
+  - прочитає
+  original_explanation: '"Поки" описує фонову паралельну дію, завжди потрібен недоконаний
+    вид для обох дієслів.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Протягом місяця студенти вивчили українську граматику щотижня
+    і робили вправи.
+  error: вивчили
+  answer: вивчали
+  sentence_corrected: Протягом місяця студенти вивчали українську граматику щотижня
+    і робили вправи.
+  options:
+  - вивчили
+  - вивчали
+  - вивчають
+  - вивчать
+  original_explanation: '"Протягом місяця" + "щотижня" підкреслюють тривалий процес,
+    тому потрібен недоконаний вид "вивчали".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: За годину швидкої роботи він писав звіт і відправив його начальнику.
+  error: писав
+  answer: написав
+  sentence_corrected: За годину швидкої роботи він написав звіт і відправив його начальнику.
+  options:
+  - писав
+  - написав
+  - пише
+  - напише
+  original_explanation: '"За годину" + "відправив" показують завершений результат,
+    тому потрібен доконаний вид "написав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Вона цілий день написала листи клієнтам і відповідала на запитання.
+  error: написала
+  answer: писала
+  sentence_corrected: Вона цілий день писала листи клієнтам і відповідала на запитання.
+  options:
+  - написала
+  - писала
+  - пише
+  - напише
+  original_explanation: '"Цілий день" підкреслює тривалість зайнятості, тому потрібен
+    недоконаний вид "писала".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Йому вдалося вирішувати цю складну проблему після довгих зусиль.
+  error: вирішувати
+  answer: вирішити
+  sentence_corrected: Йому вдалося вирішити цю складну проблему після довгих зусиль.
+  options:
+  - вирішувати
+  - вирішити
+  - вирішує
+  - вирішить
+  original_explanation: '"Вдалося" показує досягнутий результат після зусиль, тому
+    потрібен доконаний вид "вирішити".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Вони довго попрацювали над завданням, але так і не знайшли
+    рішення.
+  error: попрацювали
+  answer: працювали
+  sentence_corrected: Вони довго працювали над завданням, але так і не знайшли рішення.
+  options:
+  - попрацювали
+  - працювали
+  - працюють
+  - попрацюють
+  original_explanation: '"Довго" + "але не знайшли рішення" підкреслюють тривалий
+    процес без результату, тому потрібен недоконаний вид "працювали".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

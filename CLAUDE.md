@@ -37,14 +37,64 @@ python3 scripts/audit_module.py ...
 ```
 
 **Why:** Project dependencies (pyyaml, etc.) are installed in `.venv/`, not system Python.
+
+## ALWAYS Fix the Source, Not Just the Symptom
+
+**Core Engineering Principle:**
+
+When you find a problem:
+1. ✅ **FIX THE SOURCE** - Update processes, tools, documentation that caused it
+2. ✅ **AUTOMATE THE FIX** - Make the system prevent/detect the issue
+3. ⚠️ **Manual fixes** - Only acceptable for VALIDATION of the automated fix
+4. ❌ **Never** - Fix symptoms manually and move on
+
+**Example (M17 cloze format issue):**
+- ❌ BAD: Manually fix M17 and proceed
+- ⚠️ PARTIAL: Fix M17, then fix documentation
+- ✅ GOOD: Fix documentation first, then validate with M17 conversion
+
+**Questions to ask:**
+- What process/tool/documentation caused this?
+- How can we prevent this from happening again?
+- Can a script detect/fix this automatically?
+
+**Validation workflow:**
+1. Identify the source (tool bug, missing docs, unclear process)
+2. Fix the source (update script, add docs, clarify workflow)
+3. Manually validate the fix works on affected items
+4. Deploy the fix so future work is automated
 </critical>
 
 ---
 
-## Current Work
-**A1 COMPLETE.** All 34 modules pass audit, MDX validation, and HTML validation.
+## Current Work & Immersion Strategy
 
-Ready for A2 enrichment or other tasks.
+**CRITICAL CONTEXT (user has repeated 10+ times):**
+
+### Completion Status
+- **A1 COMPLETE** (34 modules) - all pass audit, MDX, HTML validation
+- **A2 COMPLETE** (57 modules) - all pass validation
+- **B1 IN PROGRESS** (52/85 modules exist, 18/85 converted to MD+YAML)
+
+### Immersion Levels (affects NLP validation strategy)
+- **A1**: Scaffolded with English translations & transliteration → NOT suitable for Ukrainian NLP validation
+- **A2**: 40-50% immersed (transitional) → NOT suitable for Ukrainian NLP validation
+- **B1 M01-M05**: Metalanguage bridge (Ukrainian with grammar meta-terms) → preparing for full immersion
+- **B1 M06-M85**: 100% IMMERSED Ukrainian → IDEAL for Ukrainian NLP validation
+- **B2, C1, C2**: 100% IMMERSED Ukrainian → IDEAL for Ukrainian NLP validation
+
+**CURRENT FOCUS: B1** (not A1/A2)
+- B1+ is fully immersed Ukrainian content, making it the best target for Ukrainian NLP tools (LanguageTool, nlp-uk, Stanza, UA-GEC)
+- Gemini Grammar Validator prompt works best on fully Ukrainian content
+- A1/A2 can be checked later, but mixed-language content complicates NLP validation
+
+### B1 Content Quality Validation (Dec 27, 2025)
+**Tested 3 template types with Ukrainian Grammar Validator:**
+- ✅ **Grammar type** (M06-M16): HIGH QUALITY - no errors detected
+- ✅ **Metalanguage bridge** (M01-M05): HIGH QUALITY - no errors detected
+- ✅ **Vocab expansion** (M52-M53): HIGH QUALITY - no errors detected
+
+**Conclusion:** Existing B1 content is worth migrating. Focus on md_to_yaml conversion as primary obstacle.
 
 ---
 
@@ -252,6 +302,12 @@ npm run validate:html l2-uk-en a1 [moduleNum] # Browser rendering
 curricula-opus/
 ├── curriculum/l2-uk-en/
 │   ├── a1/               # A1 modules (34 modules)
+│   │   ├── 01-cyrillic-code-i.md  # Module markdown
+│   │   ├── activities/   # YAML activity files
+│   │   │   └── 01-cyrillic-code-i.yaml
+│   │   ├── queue/        # Grammar validation queues
+│   │   │   └── 01-cyrillic-code-i.yaml
+│   │   └── audit/        # Review reports
 │   ├── a2/               # A2 modules (50 modules)
 │   ├── b1/               # B1 modules (85 modules)
 │   ├── b2/               # B2 modules (110 modules)
@@ -369,6 +425,65 @@ npm run claude:deploy
 ```
 
 **See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete syntax.**
+
+## Manual Grammar Validation with Gemini
+
+When the audit flags suspicious grammar issues, you can validate them manually using Gemini in Antigravity IDE.
+
+### Workflow
+1. Run audit → See warnings in terminal output
+2. For suspicious warnings → Validate with Gemini using the Ukrainian Grammar Validator prompt
+3. Fix confirmed errors
+
+### Ukrainian Grammar Validator Prompt
+
+**Location:** `scripts/audit/ukrainian_grammar_validator_prompt.md`
+
+This prompt is adapted from your "Ukrainian Tutor" Gem and optimized for validating curriculum content. It checks:
+- **Russianisms** (кушать → їсти)
+- **Calques** (English loan translations: "робити сенс" → "мати сенс")
+- **Surzhyk** (mixed Ukrainian-Russian)
+- **Pedagogical context** ("Я є студент" is OK for A1, not for B2)
+
+### Usage Example
+
+When audit shows:
+```
+⚠ [COMPLEXITY_WORD_COUNT] Activity 'error-correction: Дативний відмінок'
+   sentence has unnatural word order
+```
+
+**Validate in Gemini:**
+```markdown
+[Paste entire content of scripts/audit/ukrainian_grammar_validator_prompt.md]
+
+---
+
+Validate this issue:
+
+**Sentence:** Я дав книгу мій друг
+**Level:** A2
+**Flagged Issue:** Case agreement error after "дав"
+**Suggested Correction:** моєму другу
+**Context:** Teaching dative case in A2 error-correction activity
+
+Is this a real error or pedagogically acceptable? Respond in JSON.
+```
+
+**Gemini will respond:**
+```json
+{
+  "is_real_error": true,
+  "error_type": "case_error",
+  "severity": "critical",
+  "explanation_uk": "Після дієслова 'дав' потрібен давальний відмінок (кому?): 'моєму другу'",
+  "explanation_en": "After verb 'дав', dative case required: 'моєму другу'",
+  "recommendation": "Fix case agreement",
+  "confidence": 1.0
+}
+```
+
+**Result:** Fix confirmed → Update module with "моєму другу"
 
 ## Level Status
 
