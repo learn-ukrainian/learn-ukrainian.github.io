@@ -15,32 +15,15 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.3-4 Complex))
-- **Richness:** ✅ 99/95 (grammar)
-
-## Richness Details
-**Score:** 99/95
-**Module Type:** grammar
-
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| engagement | 5 | 5 | 100% | 15% | 15.0% |
-| variety | 0.99 | - | 99% | 10% | 9.9% |
-| cultural | 7 | 3 | 100% | 10% | 10.0% |
-| visual | 6 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| examples | 24 | 24 | 100% | 20% | 20.0% |
-| dialogues | 11 | 4 | 100% | 15% | 15.0% |
-| realworld | 5 | 3 | 100% | 10% | 10.0% |
-| questions | 35 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **99.9%** |
+- **Richness:** ✅ 99% (grammar)
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
-✅ No issues found
+### Warnings
+- ⚠️ Some Ukrainian content may be missing (268/992 words)
 
 ## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -52,16 +35,16 @@
 | **Діалоги** | ✅ | 239 | Included in Core |
 | **Підсумок** | ✅ | 191 | Included in Core |
 | **Activities** | ➖ | 0 | Excluded Type |
-| **quiz: Логіка префіксів** | 🎮 | 8 | Activity (8 items, min 8) |
-| **match-up: Префікси та їх значення** | 🎮 | 13 | Activity (13 items, min 8) |
-| **fill-in: Вставте правильне дієслово** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false: Граматична перевірка** | 🎮 | 10 | Activity (10 items, min 8) |
-| **group-sort: Сортування за Значенням** | 🎮 | 17 | Activity (17 items, min 14) |
-| **unjumble: Побудуйте речення** | 🎮 | 6 | Activity (6 items, min 6) |
-| **error-correction: Знайдіть і виправте помилки** | 🎮 | 6 | Activity (6 items, min 6) |
-| **cloze: Історія однієї подорожі** | 🎮 | 14 | Activity (14 items, min 14) |
-| **mark-the-words: Знайдіть префіксальні дієслова** | 🎮 | 10 | Activity (10 items, min 6) |
-| **dialogue-reorder: Розмова по телефону** | 🎮 | 5 | Activity (5 items, min 4) |
-| **select: Оберіть правильні переклади** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: Перекладіть українською** | 🎮 | 6 | Activity (6 items, min 6) |
+| **quiz: Логіка префіксів** | ⚪️ | 0 | Skipped (using YAML) |
+| **match-up: Префікси та їх значення** | ⚪️ | 0 | Skipped (using YAML) |
+| **fill-in: Вставте правильне дієслово** | ⚪️ | 0 | Skipped (using YAML) |
+| **true-false: Граматична перевірка** | ⚪️ | 0 | Skipped (using YAML) |
+| **group-sort: Сортування за Значенням** | ⚪️ | 0 | Skipped (using YAML) |
+| **unjumble: Побудуйте речення** | ⚪️ | 0 | Skipped (using YAML) |
+| **error-correction: Знайдіть і виправте помилки** | ⚪️ | 0 | Skipped (using YAML) |
+| **cloze: Історія однієї подорожі** | ⚪️ | 0 | Skipped (using YAML) |
+| **mark-the-words: Знайдіть префіксальні дієслова** | ⚪️ | 0 | Skipped (using YAML) |
+| **dialogue-reorder: Розмова по телефону** | ⚪️ | 0 | Skipped (using YAML) |
+| **select: Оберіть правильні переклади** | ⚪️ | 0 | Skipped (using YAML) |
+| **translate: Перекладіть українською** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

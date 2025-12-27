@@ -8,15 +8,51 @@ Create a new module OR migrate an existing module to YAML format.
 
 ```
 /module-create [LEVEL] [MODULE_NUM]
+/module-create [LEVEL] [START]-[END]   # Batch mode
 ```
 
 ## Arguments
 
 - `$ARGUMENTS` - Level and module number (e.g., `a1 15` or `b2 45`)
+- Batch ranges supported: `b1 2-5` creates modules 2, 3, 4, 5
 
 ---
 
-## Instructions
+## Batch Mode (Multiple Modules)
+
+**When arguments contain a range (e.g., `b1 2-5`):**
+
+Use the **subagent pattern** to process each module with fresh context:
+
+```
+For each module in range:
+  1. Spawn Task agent with subagent_type="general-purpose"
+  2. Agent prompt: "Run /module-create {level} {module_num} - create single module"
+  3. Wait for agent completion
+  4. Log result (PASS/FAIL)
+  5. Continue to next module (fresh context)
+```
+
+**Why subagents?**
+- Each module gets full context capacity
+- Failure in one doesn't pollute the next
+- Prevents context exhaustion on large batches
+
+**Example batch execution:**
+```
+/module-create b1 2-5
+
+→ Task agent: /module-create b1 2 → ✅ PASS
+→ Task agent: /module-create b1 3 → ✅ PASS
+→ Task agent: /module-create b1 4 → ❌ FAIL (audit)
+→ Task agent: /module-create b1 5 → ✅ PASS
+
+Summary: 3/4 passed, 1 failed (b1/4)
+```
+
+---
+
+## Single Module Mode
 
 Parse arguments: $ARGUMENTS
 
@@ -38,17 +74,20 @@ ls curriculum/l2-uk-en/{LEVEL}/*{MODULE_NUM}*.md 2>/dev/null
 
 ## Migration Mode (Module Exists)
 
-### Stage 3: Extract Activities to YAML
+### Stage 3: Recreate Activities in YAML
 
-Run the converter with `--strip` to extract and clean in one step:
+**Drop old activities and recreate from scratch** (proven 50% faster than conversion):
 
-```bash
-.venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/{LEVEL}/{NUM}-*.md --strip
-```
+1. **Delete embedded activities** from `.md` file (keep only content sections)
+2. **Read module content** to understand topic and grammar focus
+3. **Study 1-2 similar modules** for YAML patterns (see `stage-3-activities.md` reference table)
+4. **Create `.activities.yaml` directly** with 12+ activities (B1)
+5. **DO NOT** use md_to_yaml.py converter - write YAML directly
 
-This:
-1. Extracts activities to `{num}-{slug}.activities.yaml`
-2. Removes activity sections from `.md` (keeps Summary + Vocabulary)
+**Why recreate vs convert?**
+- ✅ **50% faster** - M22 took 8 minutes vs 36 minutes average for MD conversion
+- ✅ **Zero format errors** - Direct control over structure
+- ✅ **Better quality** - Fresh activities with correct complexity
 
 ### Stage 4: Review & Fix
 
@@ -146,6 +185,34 @@ Before writing, confirm from quick-ref:
 - **FORBIDDEN:** English annotations in parentheses e.g. `(Before)`, `(While...)`, `(As soon as)`
 - **ALLOWED:** English ONLY in vocabulary table translations
 - All grammar explanations must be in Ukrainian with Ukrainian examples
+
+**Ukrainian Grammar Validation (MANDATORY):**
+
+Validate ALL Ukrainian text against these sources:
+- ✅ **Словник.UA** (slovnyk.ua) - standard spelling
+- ✅ **Словарь Грінченка** - authentic Ukrainian forms
+- ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
+- ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
+
+**Auto-fail Russianisms (fix immediately):**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| кушать | їсти |
+| да | так |
+| кто | хто |
+| нету | немає |
+| пока | поки |
+| сейчас | зараз |
+| приймати участь | брати участь |
+| самий кращий | найкращий |
+| слідуючий | наступний |
+
+**Auto-fail Calques (English loan translations):**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| робити сенс | мати сенс |
+| брати місце | відбуватися |
+| в кінці дня | врешті-решт |
 
 ### Stage Instructions (if needed)
 

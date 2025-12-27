@@ -380,3 +380,61 @@
     font-size: 2rem;
   }
 }
+
+/* ============= ACKNOWLEDGMENTS SECTION ============= */
+.acknowledgments {
+  padding: 3rem 0;
+  background: var(--ifm-background-surface-color);
+  text-align: center;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.acknowledgmentText {
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.resourceLinks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.resourceLinks a {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.resourceLinks a:hover {
+  background: rgba(0, 87, 183, 0.1);
+  text-decoration: none;
+}
+
+.separator {
+  color: var(--ifm-color-emphasis-400);
+  font-weight: 300;
+}
+
+.credits {
+  color: var(--ifm-color-emphasis-500);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .resourceLinks {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .separator {
+    display: none;
+  }
+}

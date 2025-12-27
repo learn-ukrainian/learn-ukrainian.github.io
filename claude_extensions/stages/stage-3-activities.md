@@ -2,6 +2,23 @@
 
 Generate activities in YAML format, separate from the prose content.
 
+## ⚡ Direct YAML Creation (Recommended)
+
+**For new modules or recreation, write activities directly in YAML:**
+
+1. **Read the module content** (explanation sections) to understand the topic
+2. **Study 1-2 similar modules** (see Reference table below) for YAML patterns
+3. **Create `.activities.yaml` file** with 12+ activities (B1)
+4. **Use the YAML Format Reference** below for correct structure
+5. **Run audit** to verify compliance
+6. **DO NOT** use md_to_yaml.py converter - write YAML directly!
+
+**Why direct YAML?**
+- ✅ **Faster** - No MD→YAML conversion step
+- ✅ **No format errors** - Direct control over structure
+- ✅ **Better quality** - Explicit syntax, no parsing ambiguity
+- ✅ **Proven** - M22 took 8 minutes vs 36 minutes for MD approach
+
 ## Reference Existing Modules First
 
 **Before writing activities, study 1-2 similar existing modules:**
@@ -41,12 +58,35 @@ curriculum/l2-uk-en/{level}/
 | `## true-false:` statements | Keep statements + T/F | `items[].statement`, `items[].correct` |
 | `## group-sort:` categories | Keep groups + items | `groups[].name`, `groups[].items` |
 | `## unjumble:` scrambled | Keep scrambled + answer | `items[].scrambled`, `items[].answer` |
-| `## cloze:` passage | Keep passage, reformat blanks | `passage` with `{ans\|opt1\|opt2}` |
+| `## cloze:` passage with `[___:1]` blanks + options | Convert `[___:N]` → `{ans\|opt1\|opt2}` | `passage` with inline `{ans\|opt1\|opt2}` |
 | `## error-correction:` | Keep sentence + error + fix | `items[].sentence/error/answer` |
 | `## mark-the-words:` | Keep text + targets | `text` with `*marked*` words |
 | `## dialogue-reorder:` | Keep lines + speakers | `lines[].order/speaker/text` |
 | `## select:` questions | Keep questions + all options | `items[].question`, `items[].options` |
 | `## translate:` sentences | Keep source + options | `items[].source`, `items[].options` |
+
+**CRITICAL - Cloze Format:**
+
+The MD format for cloze activities MUST use **numbered blanks** with option lists:
+
+```markdown
+## cloze: Title
+> Instructions
+
+Passage with [___:1] blank and [___:2] another blank.
+
+1. opt1 | opt2 | opt3 | opt4
+   > [!answer] correct_answer
+
+2. opt1 | opt2 | opt3 | opt4
+   > [!answer] correct_answer
+```
+
+**DO NOT use named blanks** like `[___:answer]` - the parser does not support this format.
+
+See `docs/ACTIVITY-MARKDOWN-REFERENCE.md` for complete cloze syntax.
+
+---
 
 **Then:**
 1. Add missing explanations (required for quiz, error-correction)
@@ -95,9 +135,11 @@ curriculum/l2-uk-en/{level}/
 ```yaml
 # Quiz (8+ items for B1)
 - type: quiz
+  id: quiz-id
   title: Quiz title
+  instructions: Select the correct answer.
   items:
-    - question: Question text?
+    - prompt: Question text (12-20 words for B1)?
       options:
         - text: Wrong answer
           correct: false
@@ -107,12 +149,14 @@ curriculum/l2-uk-en/{level}/
           correct: false
         - text: Wrong answer
           correct: false
-      explanation: Optional explanation.
+      explanation: Why correct/wrong.
 
 # Match-up (12+ pairs for B1)
 - type: match-up
+  id: match-id
   title: Match title
-  pairs:
+  instructions: Match the pairs.
+  items:
     - left: Ukrainian term
       right: English translation
     - left: Another term
@@ -120,27 +164,33 @@ curriculum/l2-uk-en/{level}/
 
 # Fill-in (12+ items for B1)
 - type: fill-in
+  id: fill-id
   title: Fill-in title
+  instructions: Choose the correct word.
   items:
-    - sentence: Sentence with _____ blank.
+    - prompt: Sentence with _____ blank (12-20 words for B1).
       answer: correct
       options:
-        - wrong1
         - correct
+        - wrong1
         - wrong2
         - wrong3
 
 # True-false (12+ items for B1)
 - type: true-false
+  id: true-false-id
   title: True/False title
+  instructions: Determine if the statement is true or false.
   items:
     - statement: Statement text.
       correct: true
       explanation: Why true/false.
 
-# Group-sort (16+ total items for B1)
+# Group-sort (16+ total items, 3-5 categories for B1)
 - type: group-sort
+  id: group-sort-id
   title: Sorting title
+  instructions: Sort items into categories.
   groups:
     - name: Category A
       items:
@@ -150,25 +200,49 @@ curriculum/l2-uk-en/{level}/
       items:
         - item3
         - item4
+    - name: Category C
+      items:
+        - item5
+        - item6
 
-# Unjumble (8+ items for B1)
+# Unjumble (6+ items for B1, 12-16 words per sentence)
 - type: unjumble
+  id: unjumble-id
   title: Unjumble title
+  instructions: Put the words in the correct order.
   items:
-    - scrambled: words / in / disorder
-      answer: Words in correct order.
+    - words: слова / у / неправильному / порядку / для / створення / речення / довжиною / дванадцять / або / більше / слів
+      answer: Слова у неправильному порядку для створення речення довжиною дванадцять або більше слів.
 
 # Cloze (14+ blanks for B1)
 - type: cloze
+  id: cloze-id
   title: Cloze title
-  passage: |
-    Text with {blank1|opt1|opt2|answer} and more {blank2|opt1|answer|opt3} blanks.
+  instructions: Instructions for cloze.
+  passage: 'Text with {answer1} blanks and {answer2} more blanks.'
+  blanks:
+    - id: 1
+      answer: answer1
+      options:
+        - answer1
+        - option1
+        - option2
+        - option3
+    - id: 2
+      answer: answer2
+      options:
+        - answer2
+        - option1
+        - option2
+        - option3
 
-# Error-correction (8+ items for B1)
+# Error-correction (6+ items for B1)
 - type: error-correction
+  id: error-id
   title: Error correction title
+  instructions: Find and fix the ONE error in each sentence.
   items:
-    - sentence: Sentence with error.
+    - sentence: Sentence with error (12-20 words for B1).
       error: wrong_word
       answer: correct_word
       options:
@@ -178,28 +252,36 @@ curriculum/l2-uk-en/{level}/
         - distractor2
       explanation: Why it's wrong.
 
-# Mark-the-words (6+ correct for B1)
+# Mark-the-words (6+ marked words for B1)
 - type: mark-the-words
+  id: mark-id
   title: Mark words title
-  instruction: Click all nouns.
-  text: Regular word *target* regular *target* word.
+  instructions: Click all target words in the text.
+  text: 'Regular word [target] regular [target] word [target] more text.'
+  hint: Optional hint about what to mark.
 
-# Dialogue-reorder (6+ lines for B1)
+# Dialogue-reorder (4+ lines minimum for B1)
 - type: dialogue-reorder
+  id: dialogue-id
   title: Dialogue title
+  instructions: Put the dialogue lines in the correct order.
   lines:
-    - order: 1
-      speaker: Олександр
+    - speaker: Олександр
       text: First line.
-    - order: 2
-      speaker: Наталія
+    - speaker: Наталія
       text: Second line.
+    - speaker: Олександр
+      text: Third line.
+    - speaker: Наталія
+      text: Fourth line.
 
-# Select (8+ items for B1)
+# Select (6+ items for B1)
 - type: select
+  id: select-id
   title: Select title
+  instructions: Select ALL correct answers for each question.
   items:
-    - question: Select ALL correct answers.
+    - prompt: Question text?
       options:
         - text: Correct 1
           correct: true
@@ -207,21 +289,27 @@ curriculum/l2-uk-en/{level}/
           correct: true
         - text: Wrong
           correct: false
-
-# Translate (8+ items for B1)
-- type: translate
-  title: Translate title
-  items:
-    - source: English sentence.
-      options:
-        - text: Wrong translation
+        - text: Wrong 2
           correct: false
+      explanation: Why these are correct.
+
+# Translate (6+ items for B1)
+- type: translate
+  id: translate-id
+  title: Translate title
+  instructions: Choose the correct Ukrainian translation.
+  items:
+    - prompt: English sentence.
+      options:
         - text: Correct translation
           correct: true
         - text: Wrong translation
           correct: false
         - text: Wrong translation
           correct: false
+        - text: Wrong translation
+          correct: false
+      explanation: Why this translation is correct.
 ```
 
 ## YAML Quoting Rules (CRITICAL)

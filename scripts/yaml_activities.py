@@ -374,8 +374,10 @@ class ActivityParser:
                 QuizOption(text=opt['text'], correct=opt.get('correct', False))
                 for opt in item_data.get('options', [])
             ]
+            # Accept both 'question' and 'prompt' field names for backwards compatibility
+            question = item_data.get('question') or item_data.get('prompt', '')
             items.append(QuizItem(
-                question=item_data['question'],
+                question=question,
                 options=options,
                 explanation=item_data.get('explanation')
             ))
@@ -388,8 +390,10 @@ class ActivityParser:
                 QuizOption(text=opt['text'], correct=opt.get('correct', False))
                 for opt in item_data.get('options', [])
             ]
+            # Accept both 'question' and 'prompt' field names for backwards compatibility
+            question = item_data.get('question') or item_data.get('prompt', '')
             items.append(SelectItem(
-                question=item_data['question'],
+                question=question,
                 options=options,
                 min_correct=item_data.get('min_correct'),
                 explanation=item_data.get('explanation')
@@ -409,8 +413,10 @@ class ActivityParser:
     def _parse_fill_in(self, data: dict) -> FillInActivity:
         items = []
         for item_data in data.get('items', []):
+            # Accept both 'sentence' and 'prompt' field names for backwards compatibility
+            sentence = item_data.get('sentence') or item_data.get('prompt', '')
             items.append(FillInItem(
-                sentence=item_data['sentence'],
+                sentence=sentence,
                 answer=item_data['answer'],
                 options=item_data.get('options', []),
                 explanation=item_data.get('explanation')

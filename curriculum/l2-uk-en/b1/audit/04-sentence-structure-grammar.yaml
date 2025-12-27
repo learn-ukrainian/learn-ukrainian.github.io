@@ -1,0 +1,182 @@
+module: 04-sentence-structure
+level: B1
+validated: 2025-12-27T22:25:00
+validator: gemini-grammar-check
+vesum_checked: true
+summary:
+  total_items: 14
+  errors_confirmed: 14
+  errors_rejected: 0
+  needs_review: 0
+  vesum_invalid_words: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Підмет" означає "object".'
+    error: object
+    answer: subject
+    sentence_corrected: '"Підмет" означає "subject".'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Correct term mapping."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Присудок" означає "subject".'
+    error: subject
+    answer: predicate
+    sentence_corrected: '"Присудок" означає "predicate".'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Correct term mapping."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Додаток" означає "subject".'
+    error: subject
+    answer: object
+    sentence_corrected: '"Додаток" означає "object".'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Correct term mapping."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Означення — головний член речення.
+    error: головний
+    answer: другорядний
+    sentence_corrected: Означення — другорядний член речення.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: У складносурядному речення одна частина залежна.
+    error: залежна
+    answer: рівноправна
+    sentence_corrected: У складносурядному речення одна частина рівноправна.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: false
+      explanation: "Typo in sentence: 'речення' -> 'реченні'. Fixed source activities file."
+      confidence: 1.0
+      fixed: true
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Кома" означає "period".'
+    error: period
+    answer: comma
+    sentence_corrected: '"Кома" означає "comma".'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Correct term mapping."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Крапка" означає "comma".'
+    error: comma
+    answer: period
+    sentence_corrected: '"Крапка" означає "period".'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Correct term mapping."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"І", "а", "але" — сполучники підрядності.'
+    error: підрядності
+    answer: сурядності
+    sentence_corrected: '"І", "а", "але" — сполучники сурядності.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Що", "бо", "коли" — сполучники сурядності.'
+    error: сурядності
+    answer: підрядності
+    sentence_corrected: '"Що", "бо", "коли" — сполучники підрядності.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Підрядне речення — незалежна частина.
+    error: незалежна
+    answer: залежна
+    sentence_corrected: Підрядне речення — залежна частина.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Головне речення — залежна частина.
+    error: залежна
+    answer: незалежна
+    sentence_corrected: Головне речення — незалежна частина.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Обставина" описує іменник.'
+    error: іменник
+    answer: дію
+    sentence_corrected: '"Обставина" описує дію.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Означення" описує дію.'
+    error: дію
+    answer: іменник
+    sentence_corrected: '"Означення" описує іменник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Factual correction."
+      confidence: 1.0
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Просте речення" має кілька частин.'
+    error: кілька
+    answer: одну
+    sentence_corrected: '"Просте речення" має одну частин.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: false
+      explanation: "Grammar error in correction: 'одну частин' -> 'одну частину'. Fixed source to use 'кілька частин'/'одну частину'."
+      confidence: 1.0
+      fixed: true

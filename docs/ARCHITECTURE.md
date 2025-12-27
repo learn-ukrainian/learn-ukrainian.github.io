@@ -345,6 +345,20 @@ See `docs/MARKDOWN-FORMAT.md` for the complete spec.
 | word | слово |
 ```
 
+## Content Validation
+
+Ukrainian language content is validated using LLM-based grammar checking with the Ukrainian Grammar Validator prompt.
+
+### Trusted Ukrainian Sources
+
+| Source | Type | Use For |
+|--------|------|---------|
+| **Словник.UA** (slovnyk.ua) | Online dictionary | Standard spelling |
+| **Словарь Грінченка** | Historical dictionary | Authentic Ukrainian forms |
+| **Антоненко-Давидович "Як ми говоримо"** | Style guide | Russianisms vs authentic |
+
+**NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
+
 ## Generator Usage
 
 ```bash

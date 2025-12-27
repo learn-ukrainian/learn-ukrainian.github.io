@@ -43,9 +43,6 @@ from .checks import (
     check_unjumble_word_match,
     check_content_quality,
     check_activity_header_format,
-    check_vesum_words,
-    check_vesum_activities,
-    get_vesum_status,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -71,6 +68,7 @@ from .gates import (
     evaluate_pedagogy,
     evaluate_immersion,
     evaluate_richness,
+    evaluate_grammar,
     compute_recommendation,
 )
 
@@ -535,13 +533,12 @@ def check_structure(content: str) -> tuple[bool, bool, bool]:
     return has_summary, has_vocab, has_vocab_table
 
 
-def audit_module(file_path: str, skip_vesum: bool = False) -> bool:
+def audit_module(file_path: str) -> bool:
     """
     Main audit function for a module file.
 
     Args:
         file_path: Path to the module markdown file.
-        skip_vesum: If True, skip VESUM dictionary validation (container not running).
 
     Returns:
         True if audit passed, False otherwise.
@@ -937,22 +934,6 @@ def audit_module(file_path: str, skip_vesum: bool = False) -> bool:
             'fix': v['fix']
         })
 
-    # 6. VESUM dictionary validation (B1+ only, auto-starts container if needed)
-    if not skip_vesum and level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
-        vesum_violations = check_vesum_words(
-            content, vocab_words, level_code, module_num, skip_vesum=False
-        )
-        for v in vesum_violations:
-            pedagogical_violations.append(v)
-
-        # 6b. VESUM validation for YAML activities (if present)
-        if yaml_activities:
-            activity_vesum_violations = check_vesum_activities(
-                yaml_activities, level_code, module_num, skip_vesum=False
-            )
-            for v in activity_vesum_violations:
-                pedagogical_violations.append(v)
-
     blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
     results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))
     if results['pedagogy'].status == 'FAIL':
@@ -1027,6 +1008,24 @@ def audit_module(file_path: str, skip_vesum: bool = False) -> bool:
                 print("   Dryness flags:")
                 for flag in richness_flags:
                     print(f"     - {flag}")
+
+    # Grammar validation check - look for -grammar.yaml in audit folder
+    file_dir = os.path.dirname(os.path.abspath(file_path))
+    file_name = os.path.basename(file_path)
+    base_name = os.path.splitext(file_name)[0]
+    audit_dir = os.path.join(file_dir, 'audit')
+    grammar_file = os.path.join(audit_dir, f"{base_name}-grammar.yaml")
+
+    grammar_summary = None
+    if os.path.exists(grammar_file):
+        try:
+            with open(grammar_file, 'r', encoding='utf-8') as f:
+                grammar_data = yaml.safe_load(f)
+                grammar_summary = grammar_data.get('summary', {})
+        except Exception:
+            pass
+
+    results['grammar'] = evaluate_grammar(os.path.exists(grammar_file), grammar_summary)
 
     # Transliteration policy
     if not transliteration_allowed:

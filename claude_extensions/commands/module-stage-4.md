@@ -8,11 +8,34 @@ Review module, fix violations, loop until PASS.
 
 ```
 /module-stage-4 [LEVEL] [MODULE_NUM]
+/module-stage-4 [LEVEL] [START]-[END]   # Batch mode
 ```
 
 ## Arguments
 
 - `$ARGUMENTS` - Level and module number (e.g., `a1 15` or `b2 45`)
+- Batch ranges supported: `b1 2-5` processes modules 2, 3, 4, 5
+
+---
+
+## Batch Mode (Multiple Modules)
+
+**When arguments contain a range (e.g., `b1 2-5`):**
+
+Use the **subagent pattern** to process each module with fresh context:
+
+```
+For each module in range:
+  1. Spawn Task agent with subagent_type="general-purpose"
+  2. Agent prompt: "Run /module-stage-4 {level} {module_num}"
+  3. Wait for agent completion
+  4. Log result (PASS/FAIL)
+  5. Continue to next module (fresh context)
+```
+
+---
+
+## Single Module Mode
 
 ## Instructions
 
@@ -42,11 +65,42 @@ Capture all violations.
 **IF VIOLATIONS:**
 
 Count violations by category:
-- Grammar violations (use `grammar-check` skill for verification)
+- Grammar violations (validate with dictionaries below)
 - Vocabulary violations
 - Activity syntax issues
 - Richness failures
 - Linguistic purity issues
+
+**Ukrainian Grammar Validation (MANDATORY):**
+
+Validate ALL Ukrainian text against these sources:
+- ✅ **Словник.UA** (slovnyk.ua) - standard spelling
+- ✅ **Словарь Грінченка** - authentic Ukrainian forms
+- ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
+- ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
+
+**Auto-fail Russianisms (fix before proceeding):**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| кушать | їсти |
+| да | так |
+| кто | хто |
+| нету | немає |
+| пока | поки |
+| сейчас | зараз |
+| приймати участь | брати участь |
+| самий кращий | найкращий |
+| слідуючий | наступний |
+| на протязі | протягом |
+| вибачаюсь | вибачте / перепрошую |
+
+**Auto-fail Calques (English loan translations):**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| робити сенс | мати сенс |
+| брати місце | відбуватися |
+| дивитися вперед | чекати з нетерпінням |
+| в кінці дня | врешті-решт |
 
 **Use architect skills for fix guidance:**
 

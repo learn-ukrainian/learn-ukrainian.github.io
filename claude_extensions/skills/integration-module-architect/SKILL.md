@@ -30,6 +30,18 @@ Create or review integration modules that consolidate all skills from a level.
 
 ---
 
+## Language Quality: Use `grammar-check` Skill
+
+**All Ukrainian text MUST be validated using the `grammar-check` skill** (Ukrainian Grammar Validator).
+
+Detects: Russianisms, surzhyk, calques, agreement/case errors.
+
+**Trusted dictionaries:** Словник.UA, Словарь Грінченка, Антоненко-Давидович "Як ми говоримо"
+
+**NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
+
+---
+
 ## Integration vs Checkpoint
 
 | Aspect | Checkpoint | Integration |

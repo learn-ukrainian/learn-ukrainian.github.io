@@ -556,11 +556,27 @@ def count_engagement_boxes(content: str) -> int:
 
 
 def count_examples(content: str) -> int:
-    """Count Ukrainian example sentences."""
+    """Count Ukrainian example sentences.
+
+    Matches various example formats used in curriculum:
+    - Bold sentences: **Це приклад.**
+    - Bulleted items: - Це приклад.
+    - Numbered items: 1. Це приклад.
+    - Labeled examples: *Приклад:* "Це приклад."
+    - Blockquote examples: > *Приклад:* Це приклад.
+    - Guillemet quotes: «Це приклад.»
+    - Definition format: *   **Word** — definition with example.
+    - Inline examples with highlighted words in sentences
+    """
     patterns = [
         r'\*\*[А-ЯІЇЄҐа-яіїєґ][^*]{5,}[.!?]\*\*',  # Bold Ukrainian sentences
         r'^\s*[-–—]\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Bulleted Ukrainian
         r'^\s*\d+\.\s*[А-ЯІЇЄҐа-яіїєґ][^.!?]{5,}[.!?]',  # Numbered Ukrainian
+        r'\*[Пп]риклад[и|:]?\*[:\s]+[«"]?[А-ЯІЇЄҐа-яіїєґ]',  # *Приклад:* or *приклад:* labels
+        r'>\s*\*[Пп]риклад',  # Blockquote example labels
+        r'«[А-ЯІЇЄҐа-яіїєґ][^»]{10,}[.!?]?»',  # Guillemet-quoted sentences (10+ chars)
+        r'^\s*\*\s+\*\*[А-ЯІЇЄҐа-яіїєґ]+\*\*\s*[—–-]',  # * **Word** — definition format
+        r'"[А-ЯІЇЄҐа-яіїєґ][^"]{10,}[.!?]"',  # Double-quoted Ukrainian sentences
     ]
     count = 0
     for pattern in patterns:

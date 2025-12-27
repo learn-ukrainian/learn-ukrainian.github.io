@@ -1,0 +1,114 @@
+module: 08-aspect-past-result-process
+level: B1
+validated: 2025-12-27T23:45:00
+validator: antigravity-agent
+summary:
+  total_items: 8
+  errors_confirmed: 8
+  errors_rejected: 0
+  needs_review: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Нарешті я вивчав усі граматичні правила і склав іспит успішно.
+    error: вивчав
+    answer: вивчив
+    sentence_corrected: Нарешті я вивчив усі граматичні правила і склав іспит успішно.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Нарешті» та успішний іспит вказують на завершений результат (доконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Вчора весь вечір вона приготувала презентацію для важливої зустрічі.
+    error: приготувала
+    answer: готувала
+    sentence_corrected: Вчора весь вечір вона готувала презентацію для важливої зустрічі.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Весь вечір» підкреслює тривалість процесу (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Поки він прочитав книгу, я приготував вечерю і накрив на стіл.
+    error: прочитав
+    answer: читав
+    sentence_corrected: Поки він читав книгу, я приготував вечерю і накрив на стіл.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Дія після «поки» (читав) є фоновою/тривалою, тому вимагає недоконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Протягом місяця студенти вивчили українську граматику щотижня і робили вправи.
+    error: вивчили
+    answer: вивчали
+    sentence_corrected: Протягом місяця студенти вивчали українську граматику щотижня і робили вправи.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Протягом місяця» та «щотижня» вказують на тривалий, повторюваний процес."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: За годину швидкої роботи він писав звіт і відправив його начальнику.
+    error: писав
+    answer: написав
+    sentence_corrected: За годину швидкої роботи він написав звіт і відправив його начальнику.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«За годину» вказує на час, за який досягнуто перезультату (доконаний)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Вона цілий день написала листи клієнтам і відповідала на запитання.
+    error: написала
+    answer: писала
+    sentence_corrected: Вона цілий день писала листи клієнтам і відповідала на запитання.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Цілий день» у цьому контексті — це тривалий процес (недоконаний)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Йому вдалося вирішувати цю складну проблему після довгих зусиль.
+    error: вирішувати
+    answer: вирішити
+    sentence_corrected: Йому вдалося вирішити цю складну проблему після довгих зусиль.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Вдалося» (managed to) вимагає результату (інфінітив доконаного виду)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок виду
+    sentence_with_error: Вони довго попрацювали над завданням, але так і не знайшли рішення.
+    error: попрацювали
+    answer: працювали
+    sentence_corrected: Вони довго працювали над завданням, але так і не знайшли рішення.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Довго» підкреслює процес, особливо коли результат не досягнуто."
+      confidence: 1.0
+      error_type: aspect_error

@@ -58,7 +58,7 @@ def generate_report(
 
     report_lines.append("## Gates")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'immersion', 'richness']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'immersion', 'richness', 'grammar']
     for k in keys_order:
         r = results.get(k)
         if r:
@@ -295,7 +295,7 @@ def print_gates(results: dict, level_code: str) -> None:
     """Print gate results to console."""
     print(f"\n--- STRICT GATES (Level {level_code}) ---")
     keys_order = ['words', 'activities', 'density', 'unique_types', 'priority',
-                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy']
+                  'engagement', 'audio', 'vocab', 'structure', 'lint', 'pedagogy', 'grammar']
     for k in keys_order:
         r = results.get(k)
         if r:

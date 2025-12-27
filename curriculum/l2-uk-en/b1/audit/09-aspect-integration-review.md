@@ -16,6 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 97.3% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 95% (grammar)
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found

@@ -65,11 +65,6 @@ from .checkpoint_format import (
     check_checkpoint_format,
     get_checkpoint_structure_summary,
 )
-from .vesum import (
-    check_vesum_words,
-    check_vesum_activities,
-    get_vesum_status,
-)
 
 __all__ = [
     # Grammar
@@ -121,8 +116,4 @@ __all__ = [
     # Checkpoint Format
     'check_checkpoint_format',
     'get_checkpoint_structure_summary',
-    # VESUM Validation
-    'check_vesum_words',
-    'check_vesum_activities',
-    'get_vesum_status',
 ]

@@ -1,0 +1,296 @@
+module: 05-ready-for-immersion
+level: B1
+validated: 2025-12-27T23:30:00
+validator: antigravity-agent
+summary:
+  total_items: 22
+  errors_confirmed: 22
+  errors_rejected: 0
+  needs_review: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Конструкція «ніколи не читав» — це очікувана дія.
+    error: очікувана дія
+    answer: загальне заперечення
+    sentence_corrected: Конструкція «ніколи не читав» — це загальне заперечення.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Ніколи не читав» — це про факт (загальне заперечення), а не про очікування."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Форма «читатиму» — це складна форма майбутнього.
+    error: складна
+    answer: синтетична
+    sentence_corrected: Форма «читатиму» — це синтетична форма майбутнього.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Читатиму» — це одна словоформа (синтетична)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Інструкція «знайдіть помилку» означає «match the pairs».
+    error: match the pairs
+    answer: find the error
+    sentence_corrected: Інструкція «знайдіть помилку» означає «find the error».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Знайдіть» — це find."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Слово «вже» — це частота в граматиці.
+    error: частота
+    answer: маркер
+    sentence_corrected: Слово «вже» — це маркер в граматиці.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Вже» — маркер доконаного виду (результату)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Розмовна мова — це стандарт для писемних текстів.
+    error: Розмовна
+    answer: Літературна
+    sentence_corrected: Літературна мова — це стандарт для писемних текстів.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Писемний стандарт — це літературна мова."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Пара «писати/написати» — це синоніми.
+    error: синоніми
+    answer: аспектуальна пара
+    sentence_corrected: Пара «писати/написати» — це аспектуальна пара.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Це форми одного дієслова (вид), а не різні слова."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Форма «буду читати» називається синтетична форма.
+    error: синтетична
+    answer: складна
+    sentence_corrected: Форма «буду читати» називається складна форма.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Буду читати» складається з двох слів (складна)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення термінів
+    sentence_with_error: Конструкція «ще не прочитав» — це загальне заперечення.
+    error: загальне заперечення
+    answer: очікувана дія
+    sentence_corrected: Конструкція «ще не прочитав» — це очікувана дія.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Ще не» вказує, що дія очікується."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: В українській мові шість відмінків.
+    error: шість
+    answer: сім
+    sentence_corrected: В українській мові сім відмінків.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Українська мова має 7 відмінків (кличний)."
+      confidence: 1.0
+      error_type: fact
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Доконаний вид» виражає процес.
+    error: процес
+    answer: результат
+    sentence_corrected: «Доконаний вид» виражає результат.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Доконаний вид фокусується на завершеності/результаті."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Підмет» — це другорядний член речення.
+    error: другорядний
+    answer: головний
+    sentence_corrected: «Підмет» — це головний член речення.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Підмет і присудок — головні члени речення."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Корінь» стоїть після суфікса.
+    error: після
+    answer: перед
+    sentence_corrected: «Корінь» стоїть перед суфікса.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Суфікс іде після кореня."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Називний» — сьомий відмінок.
+    error: сьомий
+    answer: перший
+    sentence_corrected: «Називний» — перший відмінок.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Називний — це початкова форма (хто? що?)."
+      confidence: 1.0
+      error_type: fact
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Що», «бо», «коли» — сполучники сурядності.
+    error: сурядності
+    answer: підрядності
+    sentence_corrected: «Що», «бо», «коли» — сполучники підрядності.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Ці сполучники вводять залежну частину."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Обставина» описує іменник.
+    error: іменник
+    answer: дію
+    sentence_corrected: «Обставина» описує дію.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Обставина характеризує дію (де? коли? як?)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Іменник» означає «verb».
+    error: verb
+    answer: noun
+    sentence_corrected: «Іменник» означає «noun».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Дієслово» означає «noun».
+    error: noun
+    answer: verb
+    sentence_corrected: «Дієслово» означає «verb».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: У складносурядному реченні одна частина залежна.
+    error: залежна
+    answer: рівноправна
+    sentence_corrected: У складносурядному реченні одна частина рівноправна.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Сурядність означає рівноправність."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Вид» дієслова означає «tense».
+    error: tense
+    answer: aspect
+    sentence_corrected: «Вид» дієслова означає «aspect».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Час» дієслова означає «aspect».
+    error: aspect
+    answer: tense
+    sentence_corrected: «Час» дієслова означає «tense».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Присудок» означає «subject».
+    error: subject
+    answer: predicate
+    sentence_corrected: «Присудок» означає «predicate».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: «Кома» означає «period».
+    error: period
+    answer: comma
+    sentence_corrected: «Кома» означає «comma».
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Translation error."
+      confidence: 1.0
+      error_type: translation

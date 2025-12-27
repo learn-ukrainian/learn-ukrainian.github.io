@@ -1,0 +1,114 @@
+module: 10-aspect-negation
+level: B1
+validated: 2025-12-27T23:55:00
+validator: antigravity-agent
+summary:
+  total_items: 8
+  errors_confirmed: 8
+  errors_rejected: 0
+  needs_review: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Я не прочитав цієї книги взагалі ніколи.
+    error: не прочитав
+    answer: не читав
+    sentence_corrected: Я не читав цієї книги взагалі ніколи.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Загальне заперечення («взагалі ніколи») вимагає недоконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Я ще не писав звіт, але напишу завтра.
+    error: ще не писав
+    answer: ще не написав
+    sentence_corrected: Я ще не написав звіт, але напишу завтра.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Ще не» з очікуванням завершення зазвичай вимагає доконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Не читай випадково фінал книги!
+    error: читай
+    answer: прочитай
+    sentence_corrected: Не прочитай випадково фінал книги!
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Застереження від випадкової дії («випадково») вимагає доконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Не прочитай погані книги взагалі!
+    error: прочитай
+    answer: читай
+    sentence_corrected: Не читай погані книги взагалі!
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Загальна заборона («взагалі») вимагає недоконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Він ще не робив домашнє завдання.
+    error: ще не робив
+    answer: ще не зробив
+    sentence_corrected: Він ще не зробив домашнє завдання.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Ще не» + очікування результату = доконаний вид."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Я ніколи не спізнився на заняття.
+    error: не спізнився
+    answer: не запізнювався
+    sentence_corrected: Я ніколи не запізнювався на заняття.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Факт відсутності дії в минулому («ніколи») вимагає недоконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Не забудьте ключі вдома завжди!
+    error: Не забудьте
+    answer: Не забувайте
+    sentence_corrected: Не забувайте ключі вдома завжди!
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Загальна порада на майбутнє («завжди») вимагає недоконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок заперечення
+    sentence_with_error: Не забувай взяти парасольку сьогодні!
+    error: Не забувай
+    answer: Не забудь
+    sentence_corrected: Не забудь взяти парасольку сьогодні!
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Конкретне нагадування в конкретній ситуації («сьогодні») вимагає доконаного виду."
+      confidence: 1.0
+      error_type: aspect_error

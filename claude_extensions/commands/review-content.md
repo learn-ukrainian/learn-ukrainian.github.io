@@ -20,24 +20,97 @@ Evaluate module content for educational quality, coherence, and pedagogical soun
   - `a1 10-20` - Review modules 10 through 20
   - `b2 1-10` - Review B2 modules 1 through 10
 
+---
+
+## Batch Mode (Multiple Modules)
+
+**When reviewing a range or full level (e.g., `b1 2-5` or `a1`):**
+
+Use the **subagent pattern** to process each module with fresh context:
+
+```
+For each module in range:
+  1. Spawn Task agent with subagent_type="general-purpose"
+  2. Agent prompt: "Run /review-content {level} {module_num} - review single module"
+  3. Wait for agent completion
+  4. Log result (score, issues)
+  5. Continue to next module (fresh context)
+```
+
+**Why subagents?**
+- Each module gets full context capacity
+- Content review requires reading full module + templates
+- Prevents context exhaustion on large batches
+
+**Example batch execution:**
+```
+/review-content b1 2-5
+
+→ Task agent: /review-content b1 2 → ✅ 5/5
+→ Task agent: /review-content b1 3 → ⚠️ 4/5 (coherence)
+→ Task agent: /review-content b1 4 → ✅ 5/5
+→ Task agent: /review-content b1 5 → ⚠️ 3/5 (accuracy, examples)
+
+Summary: 2/4 perfect, 2/4 need fixes
+```
+
+---
+
+## Single Module Mode
+
 ## Instructions
 
 Parse arguments: $ARGUMENTS
 
 **Step 1: Determine Scope**
-- If only LEVEL provided: Review ALL modules in that level
-- If LEVEL + NUMBER: Review single module
-- If LEVEL + RANGE (e.g., "10-20"): Review that range
+- If only LEVEL provided: Use batch mode (subagent per module)
+- If LEVEL + NUMBER: Review single module directly
+- If LEVEL + RANGE (e.g., "10-20"): Use batch mode (subagent per module)
 - Find all matching files in `curriculum/l2-uk-en/{level}/`
 
-**Step 2: For Each Module**
+**Step 2: For Each Module (Single Mode Only)**
 
 ### Extract Content
 1. Read the module file
-2. Extract lesson content (everything BEFORE `## Activities`)
+2. Extract lesson content (everything BEFORE `## Activities` or `## Вправи`)
    - Include: Summary, all instructional sections, examples, engagement boxes
    - Exclude: Frontmatter, Activities, Vocabulary, Self-Assessment
 3. Extract metadata (title, level, module number, topic)
+
+### Locate Activities (YAML-First Check)
+
+**Check for YAML activities file first:**
+
+```
+curriculum/l2-uk-en/{level}/activities/{module-slug}.yaml
+```
+
+Example: `curriculum/l2-uk-en/b1/activities/11-aspect-in-imperatives.yaml`
+
+**Priority order:**
+1. **If YAML file exists:** Read activities from YAML file (preferred format)
+2. **If no YAML file:** Read activities embedded in `.md` file (legacy format)
+
+**YAML Activity File Structure:**
+```yaml
+module: 11-aspect-in-imperatives
+level: B1
+activities:
+  - type: quiz
+    title: "Вибір аспекту"
+    items:
+      - question: "..."
+        answer: "..."
+        options: ["...", "...", "..."]
+  - type: fill-in
+    title: "..."
+    items:
+      - prompt: "..."
+        answer: "..."
+        options: ["...", "...", "..."]
+```
+
+**Note:** Some B1 modules are in transition - they may have a YAML file being built while the MD still has embedded activities. Always check for YAML file first.
 
 ### Evaluate Quality
 
@@ -69,7 +142,32 @@ Before scoring, verify the module follows the appropriate template:
 | Checkpoint (All) | `checkpoint` | All skill groups tested, 16+ activities |
 | Literature (LIT) | `literature-module-architect` | 100% immersion, essays not drills |
 
-**Also use `grammar-check` skill** to verify Ukrainian grammar complies with Ukrainian State Standard 2024.
+**Ukrainian Grammar Validation (MANDATORY):**
+
+Validate ALL Ukrainian text against these sources:
+- ✅ **Словник.UA** (slovnyk.ua) - standard spelling
+- ✅ **Словарь Грінченка** - authentic Ukrainian forms
+- ✅ **Антоненко-Давидович "Як ми говоримо"** - Russianisms guide
+- ❌ **NOT TRUSTED:** Google Translate, Russian-Ukrainian dictionaries
+
+**Auto-fail Russianisms:**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| кушать | їсти |
+| да | так |
+| кто | хто |
+| нету | немає |
+| приймати участь | брати участь |
+| самий кращий | найкращий |
+| слідуючий | наступний |
+| на протязі | протягом |
+
+**Auto-fail Calques:**
+| ❌ Wrong | ✅ Correct |
+|----------|-----------|
+| робити сенс | мати сенс |
+| брати місце | відбуватися |
+| дивитися вперед | чекати з нетерпінням |
 
 **Verify:**
 - [ ] Module structure matches template sections
@@ -105,10 +203,11 @@ Score each criterion 1-5:
 **4. Language Quality**
 - Clear, professional writing
 - No excessive repetition (same structure ≥5 times = flag)
-- Grammatically correct Ukrainian
+- Grammatically correct Ukrainian (validate against Словник.UA, Грінченка, Антоненко-Давидович)
 - Grammatically correct English explanations
 - Consistent terminology
-- **No Russisms/Surzhik:** Strictly standard Ukrainian (e.g., use 'так' not 'да', 'будь ласка' not 'пожалуйста', 'звичайно' not 'канешно'). Flag any non-standard usage.
+- **No Russisms/Surzhik:** Strictly standard Ukrainian. Auto-fail: кушать→їсти, да→так, кто→хто, нету→немає, приймати участь→брати участь, самий кращий→найкращий
+- **No Calques:** Auto-fail: робити сенс→мати сенс, брати місце→відбуватися
 
 **5. Pedagogical Correctness**
 - **Sequence:** Does it teach A before B? (e.g., specific letters before reading words)
@@ -133,7 +232,11 @@ Flag if ANY true:
 
 **8. Activity Quality** (Critical Check)
 
-Review ALL activities in the module for:
+Review ALL activities from the appropriate source:
+- **YAML file** (if `activities/{module-slug}.yaml` exists): Structured format, check YAML validity
+- **MD file** (legacy): Check embedded activity sections after `## Activities` or `## Вправи`
+
+For each activity, check:
 
 **8a. Structural Integrity**
 - No duplicate items (same question appears twice)

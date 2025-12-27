@@ -1,0 +1,194 @@
+module: 01-how-to-talk-about-grammar
+level: B1
+validated: 2025-12-27T21:35:00
+validator: claude-code
+vesum_checked: true
+summary:
+  total_items: 14
+  errors_confirmed: 14
+  errors_rejected: 0
+  needs_review: 0
+  vesum_invalid_words: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Книга" — це дієслово.'
+    error: дієслово
+    answer: іменник
+    sentence_corrected: '"Книга" — це іменник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Книга» — іменник (noun), не дієслово (verb)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Прислівник означає "noun".
+    error: Прислівник
+    answer: Іменник
+    sentence_corrected: Іменник означає "noun".
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Іменник» = noun, «прислівник» = adverb."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Називний — другий відмінок.
+    error: другий
+    answer: перший
+    sentence_corrected: Називний — перший відмінок.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Називний — перший відмінок (Н-Р-Д-З-О-М-К)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Швидко" — це прикметник.'
+    error: прикметник
+    answer: прислівник
+    sentence_corrected: '"Швидко" — це прислівник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Швидко» — прислівник (adverb), «швидкий» — прикметник (adjective)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Сполучник — це preposition.
+    error: preposition
+    answer: conjunction
+    sentence_corrected: Сполучник — це conjunction.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Сполучник» = conjunction, «прийменник» = preposition."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: В українській мові шість відмінків.
+    error: шість
+    answer: сім
+    sentence_corrected: В українській мові сім відмінків.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "В українській мові сім відмінків: Н-Р-Д-З-О-М-К."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Орудний — шостий відмінок.
+    error: шостий
+    answer: п'ятий
+    sentence_corrected: Орудний — п'ятий відмінок.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Орудний — п'ятий, місцевий — шостий (Н-Р-Д-З-О-М-К)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Він" — це числівник.'
+    error: числівник
+    answer: займенник
+    sentence_corrected: '"Він" — це займенник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Він» — займенник (pronoun), не числівник (numeral)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Давальний відповідає на "кого?"
+    error: кого
+    answer: кому
+    sentence_corrected: Давальний відповідає на "кому?"
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Давальний — «кому? чому?», родовий — «кого? чого?»."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"І" — це прийменник.'
+    error: прийменник
+    answer: сполучник
+    sentence_corrected: '"І" — це сполучник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«І» — сполучник (conjunction), не прийменник (preposition)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Місцевий — сьомий відмінок.
+    error: сьомий
+    answer: шостий
+    sentence_corrected: Місцевий — шостий відмінок.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Місцевий — шостий, кличний — сьомий (Н-Р-Д-З-О-М-К)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: '"Гарний" — це прислівник.'
+    error: прислівник
+    answer: прикметник
+    sentence_corrected: '"Гарний" — це прикметник.'
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Гарний» — прикметник (adjective), «гарно» — прислівник (adverb)."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Займенник означає "numeral".
+    error: numeral
+    answer: pronoun
+    sentence_corrected: Займенник означає "pronoun".
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Займенник» = pronoun, «числівник» = numeral."
+      confidence: 1.0
+      error_type: terminology
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Кличний — шостий відмінок.
+    error: шостий
+    answer: сьомий
+    sentence_corrected: Кличний — сьомий відмінок.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Кличний — сьомий (останній) відмінок."
+      confidence: 1.0
+      error_type: terminology

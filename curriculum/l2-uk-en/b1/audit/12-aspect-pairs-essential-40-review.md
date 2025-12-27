@@ -16,6 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 98.1% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found

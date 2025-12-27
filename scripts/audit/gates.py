@@ -157,6 +157,38 @@ def evaluate_immersion(
     return GateResult('PASS', '🇺🇦', f"{score:.1f}%{phase_label}")
 
 
+def evaluate_grammar(grammar_file_exists: bool, summary: dict = None) -> GateResult:
+    """Evaluate grammar validation status.
+
+    Checks if the module has been grammar-validated by looking for
+    the -grammar.yaml file in the audit folder.
+
+    Args:
+        grammar_file_exists: Whether the grammar validation file exists
+        summary: Optional summary dict from the grammar file with counts
+
+    Returns:
+        GateResult with validation status
+    """
+    if not grammar_file_exists:
+        return GateResult('INFO', '⏳', "Pending validation")
+
+    if summary:
+        confirmed = summary.get('errors_confirmed', 0)
+        rejected = summary.get('errors_rejected', 0)
+        total = summary.get('total_items', 0)
+        needs_review = summary.get('needs_review', 0)
+
+        if needs_review > 0:
+            return GateResult('WARN', '⚠️', f"Validated ({needs_review} need review)")
+        elif rejected > 0:
+            return GateResult('WARN', '⚠️', f"Validated ({rejected}/{total} rejected)")
+        else:
+            return GateResult('PASS', '✅', f"Validated ({confirmed}/{total} confirmed)")
+
+    return GateResult('PASS', '✅', "Validated")
+
+
 def compute_recommendation(
     pedagogical_violations: list,
     lint_errors: list,

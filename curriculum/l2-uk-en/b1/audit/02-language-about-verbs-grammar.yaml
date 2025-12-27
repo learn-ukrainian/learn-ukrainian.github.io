@@ -1,0 +1,195 @@
+module: 02-language-about-verbs
+level: B1
+validated: 2025-12-27T21:50:00
+validator: gemini-grammar-validator
+vesum_checked: true
+vesum_note: "НДВ, ДВ flagged as unknown (abbreviations, not dictionary words - false positive)"
+summary:
+  total_items: 14
+  errors_confirmed: 14
+  errors_rejected: 0
+  needs_review: 0
+  vesum_invalid_words: 0
+
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: «Читати» — доконаний вид.
+  error: доконаний
+  answer: недоконаний
+  sentence_corrected: «Читати» — недоконаний вид.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Читати» відповідає на питання «що робити?» (процес), тому це недоконаний вид."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Вид означає «tense».
+  error: tense
+  answer: aspect
+  sentence_corrected: Вид означає «aspect».
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Вид» — це aspect, а tense — це «час»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Недоконаний вид виражає результат.
+  error: результат
+  answer: процес
+  sentence_corrected: Недоконаний вид виражає процес.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Недоконаний вид фокусується на процесі або повторюваності дії."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: В українській мові чотири часи.
+  error: чотири
+  answer: три
+  sentence_corrected: В українській мові три часи.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "В українській мові є лише три часи: минулий, теперішній і майбутній."
+    confidence: 1.0
+    error_type: terminology
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: «Написати» — недоконаний вид.
+  error: недоконаний
+  answer: доконаний
+  sentence_corrected: «Написати» — доконаний вид.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Написати» означає завершену дію (що зробити?), отже це доконаний вид."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Доконаний вид виражає тривалість.
+  error: тривалість
+  answer: результат
+  sentence_corrected: Доконаний вид виражає результат.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Доконаний вид вказує на результат або завершення дії, а не на її тривалість."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: НДВ означає доконаний вид.
+  error: доконаний
+  answer: недоконаний
+  sentence_corrected: НДВ означає недоконаний вид.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "НДВ — це скорочення від «недоконаний вид»."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: «Час» означає «aspect».
+  error: aspect
+  answer: tense
+  sentence_corrected: «Час» означає «tense».
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Час» перекладається як tense, а aspect — це «вид»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Наказовий спосіб — для умов.
+  error: умов
+  answer: команд
+  sentence_corrected: Наказовий спосіб — для команд.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Наказовий спосіб (imperative) використовується для наказів і команд."
+    confidence: 1.0
+    error_type: terminology
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: «Пишу» — минулий час.
+  error: минулий
+  answer: теперішній
+  sentence_corrected: «Пишу» — теперішній час.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Пишу» — дія відбувається зараз, тому це теперішній час."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Інфінітив — це минулий час.
+  error: минулий час
+  answer: базова форма
+  sentence_corrected: Інфінітив — це базова форма.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Інфінітив — це неозначена (базова) форма дієслова, що не має часу."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Доконаний вид виражає повторення.
+  error: повторення
+  answer: завершення
+  sentence_corrected: Доконаний вид виражає завершення.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Повторювані дії виражаються недоконаним видом. Доконаний вид виражає завершення."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: ДВ означає недоконаний вид.
+  error: недоконаний
+  answer: доконаний
+  sentence_corrected: ДВ означає доконаний вид.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "ДВ — це скорочення від «доконаний вид»."
+    confidence: 1.0
+    error_type: aspect_error
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: «Писав» — теперішній час.
+  error: теперішній
+  answer: минулий
+  sentence_corrected: «Писав» — минулий час.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Писав» — дія відбувалася раніше, тому це минулий час."
+    confidence: 1.0
+    error_type: aspect_error

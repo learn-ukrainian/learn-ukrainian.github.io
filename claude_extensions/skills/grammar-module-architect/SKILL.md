@@ -29,6 +29,25 @@ Create or review grammar-focused modules using the appropriate level-specific te
 
 ---
 
+## Language Quality: Use `grammar-check` Skill
+
+**All Ukrainian text MUST be validated using the `grammar-check` skill.**
+
+This skill integrates the Ukrainian Grammar Validator (adapted from "Ukrainian Tutor" Gem) which detects:
+- **Russianisms** (кушать → їсти, кто → хто)
+- **Surzhyk** (mixed Ukrainian-Russian grammar)
+- **Calques** (English loan translations: "робити сенс" → "мати сенс")
+- **Agreement errors, case errors, morphology errors**
+
+**Trusted Ukrainian Dictionaries:**
+- **Словник.UA** (slovnyk.ua) - standard spelling
+- **Словарь Грінченка** - authentic Ukrainian forms
+- **Антоненко-Давидович "Як ми говоримо"** - Russianisms vs authentic Ukrainian
+
+**NOT Trusted:** Google Translate, Russian-Ukrainian dictionaries
+
+---
+
 ## Core Pedagogy
 
 ### TTT (Test-Teach-Test) Structure

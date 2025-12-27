@@ -1,0 +1,194 @@
+module: 03-reading-grammar-rules
+level: B1
+validated: 2025-12-27T22:05:00
+validator: gemini-grammar-validator
+vesum_checked: true
+summary:
+  total_items: 14
+  errors_confirmed: 14
+  errors_rejected: 0
+  needs_review: 0
+  vesum_invalid_words: 0
+
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Використовується" означає "means".'
+  error: means
+  answer: is used
+  sentence_corrected: '"Використовується" означає "is used".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Використовується» перекладається як «is used». «Means» — це «означає»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Суфікс стоїть перед коренем.
+  error: перед
+  answer: після
+  sentence_corrected: Суфікс стоїть після коренем.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Суфікс завжди стоїть після кореня. Перед коренем стоїть префікс."
+    confidence: 1.0
+    error_type: word_order
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Наприклад" означає "therefore".'
+  error: therefore
+  answer: for example
+  sentence_corrected: '"Наприклад" означає "for example".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Наприклад» перекладається як «for example». «Therefore» — це «отже»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Подібно до" показує контраст.'
+  error: контраст
+  answer: схожість
+  sentence_corrected: '"Подібно до" показує схожість.'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Подібно до» (similar to) вказує на схожість, а не на контраст."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Отже" означає "for example".'
+  error: for example
+  answer: therefore
+  sentence_corrected: '"Отже" означає "therefore".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Отже» перекладається як «therefore». «For example» — це «наприклад»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Префікс стоїть після кореня.
+  error: після
+  answer: перед
+  sentence_corrected: Префікс стоїть перед кореня.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Префікс завжди стоїть перед коренем. Після кореня стоїть суфікс."
+    confidence: 1.0
+    error_type: word_order
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Виняток" означає "rule".'
+  error: rule
+  answer: exception
+  sentence_corrected: '"Виняток" означає "exception".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Виняток» перекладається як «exception». «Rule» — це «правило»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Означає" в граматиці значить "is used".'
+  error: is used
+  answer: means
+  sentence_corrected: '"Означає" в граматиці значить "means".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Означає» перекладається як «means». «Is used» — це «використовується»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"На відміну від" показує схожість.'
+  error: схожість
+  answer: контраст
+  sentence_corrected: '"На відміну від" показує контраст.'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«На відміну від» (unlike/in contrast to) вказує на контраст або різницю."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Тобто" означає "therefore".'
+  error: therefore
+  answer: that is
+  sentence_corrected: '"Тобто" означає "that is".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Тобто» перекладається як «that is» (i.e.). «Therefore» — це «отже»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Основа" означає "root".'
+  error: root
+  answer: stem
+  sentence_corrected: '"Основа" означає "stem".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Основа» перекладається як «stem». «Root» — це «корінь»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Корінь" означає "stem".'
+  error: stem
+  answer: root
+  sentence_corrected: '"Корінь" означає "root".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Корінь» перекладається як «root». «Stem» — це «основа»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Правило" означає "exception".'
+  error: exception
+  answer: rule
+  sentence_corrected: '"Правило" означає "rule".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Правило» перекладається як «rule». «Exception» — це «виняток»."
+    confidence: 1.0
+    error_type: calque
+
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Показує" в граматиці значить "is used".'
+  error: is used
+  answer: shows
+  sentence_corrected: '"Показує" в граматиці значить "shows".'
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "«Показує» перекладається як «shows». «Is used» — це «використовується»."
+    confidence: 1.0
+    error_type: calque

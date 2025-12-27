@@ -223,7 +223,8 @@ def _yaml_quiz_to_jsx(activity: dict, title: str) -> str:
     questions_json = []
     for item in items:
         q = {
-            "question": escape_jsx(item.get('question', '')),
+            # Accept both 'question' and 'prompt' field names
+            "question": escape_jsx(item.get('question') or item.get('prompt', '')),
             "options": [
                 {"text": escape_jsx(opt.get('text', '')), "correct": opt.get('correct', False)}
                 for opt in item.get('options', [])
@@ -265,7 +266,8 @@ def _yaml_fill_in_to_jsx(activity: dict, title: str) -> str:
     items = activity.get('items', [])
     items_json = [
         {
-            "sentence": escape_jsx(item.get('sentence', '')),
+            # Accept both 'sentence' and 'prompt' field names
+            "sentence": escape_jsx(item.get('sentence') or item.get('prompt', '')),
             "answer": escape_jsx(item.get('answer', '')),
             "options": [escape_jsx(opt) for opt in item.get('options', [])]
         }
@@ -396,7 +398,8 @@ def _yaml_select_to_jsx(activity: dict, title: str) -> str:
     questions_json = []
     for item in items:
         q = {
-            "question": escape_jsx(item.get('question', '')),
+            # Accept both 'question' and 'prompt' field names
+            "question": escape_jsx(item.get('question') or item.get('prompt', '')),
             "options": [
                 {"text": escape_jsx(opt.get('text', '')), "correct": opt.get('correct', False)}
                 for opt in item.get('options', [])

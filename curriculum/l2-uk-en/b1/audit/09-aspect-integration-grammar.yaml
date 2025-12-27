@@ -1,0 +1,114 @@
+module: 09-aspect-integration
+level: B1
+validated: 2025-12-27T23:50:00
+validator: antigravity-agent
+summary:
+  total_items: 8
+  errors_confirmed: 7
+  errors_rejected: 1
+  needs_review: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Завтра я буду прочитаю всю книгу.
+    error: буду прочитаю
+    answer: прочитаю
+    sentence_corrected: Завтра я прочитаю всю книгу.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Не можна поєднувати «буду» з особовою формою «прочитаю» або доконаним інфінітивом."
+      confidence: 1.0
+      error_type: grammar_error
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Я працюватиму над проєктом і завершиму його нарешті до кінця тижня.
+    error: працюватиму
+    answer: попрацюю
+    sentence_corrected: Я попрацюю над проєктом і завершиму його нарешті до кінця тижня.
+    validate:
+      error_is_real_mistake: false
+      corrected_sentence_valid: false
+      explanation: "Речення містить слова-галюцинації («завершиму»). Delete item."
+      confidence: 1.0
+      error_type: hallucination
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Уряд буде працюватиме над реформами наступного року.
+    error: буде працюватиме
+    answer: працюватиме
+    sentence_corrected: Уряд працюватиме над реформами наступного року.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Буде працюватиме» — змішування складного і синтетичного майбутнього."
+      confidence: 1.0
+      error_type: grammar_error
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Вона читатиму книгу до кінця і прочитає всі розділи.
+    error: читатиму
+    answer: прочитає
+    sentence_corrected: Вона прочитає книгу до кінця і прочитає всі розділи.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Читатиму» (1 особа) не узгоджується з «Вона». Також результат вимагає доконаного виду."
+      confidence: 1.0
+      error_type: agreement
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Я буду вивчити всі нові слова завтра.
+    error: буду вивчити
+    answer: вивчу
+    sentence_corrected: Я вивчу всі нові слова завтра.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Буду» не вживається з доконаним інфінітивом."
+      confidence: 1.0
+      error_type: grammar_error
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Студенти будуть вивчатимуть нову граматику протягом семестру.
+    error: будуть вивчатимуть
+    answer: вивчатимуть
+    sentence_corrected: Студенти вивчатимуть нову граматику протягом семестру.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Змішування форм: або «будуть вивчати», або «вивчатимуть»."
+      confidence: 1.0
+      error_type: grammar_error
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Я напишу листа протягом усього вечора.
+    error: напишу
+    answer: писатиму
+    sentence_corrected: Я писатиму листа протягом усього вечора.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Протягом усього вечора» — тривалість, потрібен недоконаний вид."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок майбутнього
+    sentence_with_error: Ми зробимо домашнє завдання щодня.
+    error: зробимо
+    answer: робитимемо
+    sentence_corrected: Ми робитимемо домашнє завдання щодня.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Щодня» — регулярність, потрібен недоконаний вид."
+      confidence: 1.0
+      error_type: aspect_error

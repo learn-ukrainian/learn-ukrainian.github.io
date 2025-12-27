@@ -15,13 +15,11 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 40.8% (B1.1 Aspect)
-- **Richness:** ✅ 97% (grammar)
+- **Richness:** ✅ 98% (grammar)
+- **Grammar:** ⏳ Pending validation
 
 ## MDX VALIDATION
 ✅ No issues found
-
-## HTML VALIDATION
-✅ Renders correctly (16 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

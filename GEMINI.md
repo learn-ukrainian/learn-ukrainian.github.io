@@ -69,7 +69,7 @@
    - **Use "Prosecutor's Voice"**: Frame facts to actively dismantle imperial narratives.
    - **Anti-Russian propaganda**: Actively counter common lies about Ukrainian language/culture/history.
 9. **Issue Tracking**: Use GitHub Issues for all task tracking. DO NOT use `docs/issues/` (folder has been deprecated and removed). Use `gh issue create` and `gh issue list`.
-10. **Workflow Files**: ALL workflow/command files go in `claude_extensions/` (tracked). NEVER edit `.agent/workflows/` (gitignored, changes lost).
+10. **Workflow/Command Loading**: When user types `/slash-command`, load from `claude_extensions/commands/slash-command.md` (tracked in Git). NEVER load from `.agent/workflows/` (gitignored, not source of truth).
 
 ## File Structure Reference
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`

@@ -25,7 +25,7 @@
     "vocab:scan": "python3 scripts/populate_vocab_db.py",
     "vocab:rebuild": "npm run vocab:init:force && npm run vocab:scan",
     "seo:generate": "python3 scripts/generate_seo.py",
-    "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/"
+    "claude:deploy": "rsync -av claude_extensions/ .claude/ && rsync -av claude_extensions/ .agent/ && rsync -av claude_extensions/commands/ .agent/workflows/"
   },
   "repository": {
     "type": "git",

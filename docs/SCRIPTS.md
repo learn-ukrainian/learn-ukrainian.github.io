@@ -265,7 +265,7 @@ Or with issues:
 
 **Usage:**
 ```bash
-python3 scripts/audit_module.py curriculum/l2-uk-en/a1/05-*.md
+.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/b1/06-*.md
 ```
 
 **Issue Categories:**

@@ -1,0 +1,192 @@
+module: 06-aspect-complete-system
+level: B1
+validated: 2025-12-27T23:35:00
+validator: antigravity-agent
+summary:
+  total_items: 14
+  errors_confirmed: 14
+  errors_rejected: 0
+  needs_review: 0
+
+items:
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Я прочитав книгу дві години.
+    error: прочитав
+    answer: читав
+    sentence_corrected: Я читав книгу дві години.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Тривалість (дві години) вимагає недоконаного виду (процес)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Він завжди написав листи.
+    error: написав
+    answer: писав
+    sentence_corrected: Він завжди писав листи.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Завжди» вказує на повторювану дію (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Вона робила всі вправи і здала їх.
+    error: робила
+    answer: зробила
+    sentence_corrected: Вона зробила всі вправи і здала їх.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Результат (вправи зроблені і здані) вимагає доконаного виду."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Ми вчили слова і вивчили їх за годину.
+    error: вчили
+    answer: вивчили
+    sentence_corrected: Ми вивчили слова і вививчили їх за годину.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«За годину» вказує на час, за який досягнуто перезультату (доконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Студенти прочитали книгу весь тиждень.
+    error: прочитали
+    answer: читали
+    sentence_corrected: Студенти читали книгу весь тиждень.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Весь тиждень» — це тривалість (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Того дня я писав листа і відправив його.
+    error: писав
+    answer: написав
+    sentence_corrected: Того дня я написав листа і відправив його.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Послідовність завершених дій: написав і відправив."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Він часто прийшов до нас у гості.
+    error: прийшов
+    answer: приходив
+    sentence_corrected: Він часто приходив до нас у гості.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Часто» вказує на повторюваність (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Вона читала цю книгу і знає зміст.
+    error: читала
+    answer: прочитала
+    sentence_corrected: Вона прочитала цю книгу і знає зміст.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Результат дії (знає зміст) важливий зараз."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Я нарешті робив домашнє завдання.
+    error: робив
+    answer: зробив
+    sentence_corrected: Я нарешті зробив домашнє завдання.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Нарешті» часто підкреслює завершення (доконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Минулого місяця ми зустрічалися один раз.
+    error: зустрічалися
+    answer: зустрілися
+    sentence_corrected: Минулого місяця ми зустрілися один раз.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Один раз» як конкретна подія в минулому — доконаний вид."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Він увесь день написав звіт.
+    error: написав
+    answer: писав
+    sentence_corrected: Він увесь день писав звіт.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Увесь день» — тривалість (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Вона готувала смачну вечерю і всі з'їли її.
+    error: готувала
+    answer: приготувала
+    sentence_corrected: Вона приготувала смачну вечерю і всі з'їли її.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Результат (вечеря готова і з'їдена) — доконаний вид."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Одного разу я вчив цей вірш напам'ять.
+    error: вчив
+    answer: вивчив
+    sentence_corrected: Одного разу я вивчив цей вірш напам'ять.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "Результат навчання (знаю напам'ять) — доконаний вид."
+      confidence: 1.0
+      error_type: aspect_error
+
+  - activity: error-correction
+    title: Виправлення помилок
+    sentence_with_error: Ми постійно зробили ці вправи.
+    error: зробили
+    answer: робили
+    sentence_corrected: Ми постійно робили ці вправи.
+    validate:
+      error_is_real_mistake: true
+      corrected_sentence_valid: true
+      explanation: "«Постійно» — повторюваність (недоконаний вид)."
+      confidence: 1.0
+      error_type: aspect_error
