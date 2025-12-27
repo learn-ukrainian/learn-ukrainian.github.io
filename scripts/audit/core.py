@@ -43,6 +43,9 @@ from .checks import (
     check_unjumble_word_match,
     check_content_quality,
     check_activity_header_format,
+    check_vesum_words,
+    check_vesum_activities,
+    get_vesum_status,
 )
 from .checks.vocabulary import (
     count_vocab_rows,
@@ -153,7 +156,13 @@ def count_yaml_activity_items(activity: dict) -> int:
             total += len(group.get('items', []))
         return total
     elif act_type == 'cloze':
-        # Count blanks in passage: {word|opt1|opt2|opt3}
+        # Support two formats:
+        # 1. Inline format in passage: {word|opt1|opt2|opt3}
+        # 2. Separate blanks array with id, answer, options
+        blanks = activity.get('blanks', [])
+        if blanks:
+            return len(blanks)
+        # Fallback to inline format
         passage = activity.get('passage', '')
         return len(re.findall(r'\{[^}]+\}', passage))
     elif act_type == 'mark-the-words':
@@ -516,12 +525,13 @@ def check_structure(content: str) -> tuple[bool, bool, bool]:
     return has_summary, has_vocab, has_vocab_table
 
 
-def audit_module(file_path: str) -> bool:
+def audit_module(file_path: str, skip_vesum: bool = False) -> bool:
     """
     Main audit function for a module file.
 
     Args:
         file_path: Path to the module markdown file.
+        skip_vesum: If True, skip VESUM dictionary validation (container not running).
 
     Returns:
         True if audit passed, False otherwise.
@@ -916,6 +926,22 @@ def audit_module(file_path: str) -> bool:
             'issue': v['issue'],
             'fix': v['fix']
         })
+
+    # 6. VESUM dictionary validation (B1+ only, auto-starts container if needed)
+    if not skip_vesum and level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
+        vesum_violations = check_vesum_words(
+            content, vocab_words, level_code, module_num, skip_vesum=False
+        )
+        for v in vesum_violations:
+            pedagogical_violations.append(v)
+
+        # 6b. VESUM validation for YAML activities (if present)
+        if yaml_activities:
+            activity_vesum_violations = check_vesum_activities(
+                yaml_activities, level_code, module_num, skip_vesum=False
+            )
+            for v in activity_vesum_violations:
+                pedagogical_violations.append(v)
 
     blocking_pedagogy = [v for v in pedagogical_violations if v.get('blocking', True)]
     results['pedagogy'] = evaluate_pedagogy(len(blocking_pedagogy))

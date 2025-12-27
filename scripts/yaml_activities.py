@@ -300,6 +300,12 @@ class ActivityParser:
         if raw_data is None:
             return []
 
+        # Support both formats:
+        # 1. Direct list: [{ type: quiz, ... }, ...]
+        # 2. Wrapped in 'activities' key: { activities: [{ type: quiz, ... }, ...] }
+        if isinstance(raw_data, dict) and 'activities' in raw_data:
+            raw_data = raw_data['activities']
+
         if not isinstance(raw_data, list):
             raise ValueError(f"Expected list of activities, got {type(raw_data)}")
 
@@ -317,6 +323,12 @@ class ActivityParser:
 
         if raw_data is None:
             return []
+
+        # Support both formats:
+        # 1. Direct list: [{ type: quiz, ... }, ...]
+        # 2. Wrapped in 'activities' key: { activities: [{ type: quiz, ... }, ...] }
+        if isinstance(raw_data, dict) and 'activities' in raw_data:
+            raw_data = raw_data['activities']
 
         if not isinstance(raw_data, list):
             raise ValueError(f"Expected list of activities, got {type(raw_data)}")
@@ -359,7 +371,7 @@ class ActivityParser:
         items = []
         for item_data in data.get('items', []):
             options = [
-                QuizOption(text=opt['text'], correct=opt['correct'])
+                QuizOption(text=opt['text'], correct=opt.get('correct', False))
                 for opt in item_data.get('options', [])
             ]
             items.append(QuizItem(
@@ -373,7 +385,7 @@ class ActivityParser:
         items = []
         for item_data in data.get('items', []):
             options = [
-                QuizOption(text=opt['text'], correct=opt['correct'])
+                QuizOption(text=opt['text'], correct=opt.get('correct', False))
                 for opt in item_data.get('options', [])
             ]
             items.append(SelectItem(
@@ -468,9 +480,9 @@ class ActivityParser:
 
     def _parse_dialogue_reorder(self, data: dict) -> DialogueReorderActivity:
         lines = []
-        for line_data in data.get('lines', []):
+        for i, line_data in enumerate(data.get('lines', []), start=1):
             lines.append(DialogueLine(
-                order=line_data['order'],
+                order=line_data.get('order', i),  # Use implicit order if not specified
                 text=line_data['text'],
                 speaker=line_data.get('speaker')
             ))
@@ -480,7 +492,7 @@ class ActivityParser:
         items = []
         for item_data in data.get('items', []):
             options = [
-                TranslateOption(text=opt['text'], correct=opt['correct'])
+                TranslateOption(text=opt['text'], correct=opt.get('correct', False))
                 for opt in item_data.get('options', [])
             ]
             items.append(TranslateItem(
