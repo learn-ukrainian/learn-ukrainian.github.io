@@ -116,9 +116,16 @@ def load_yaml_activities(md_file_path: str) -> list[dict] | None:
 
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
-            activities = yaml.safe_load(f)
-        if isinstance(activities, list):
-            return activities
+            data = yaml.safe_load(f)
+        # Support both formats:
+        # 1. Root list: [{ type: quiz, ... }, ...]
+        # 2. Dict with 'activities' key: { activities: [{ type: quiz, ... }, ...] }
+        if isinstance(data, list):
+            return data
+        elif isinstance(data, dict) and 'activities' in data:
+            activities = data['activities']
+            if isinstance(activities, list):
+                return activities
         return None
     except (yaml.YAMLError, IOError) as e:
         print(f"  ⚠️ Error loading YAML activities: {e}")
@@ -132,7 +139,14 @@ def count_yaml_activity_items(activity: dict) -> int:
     if act_type in ('quiz', 'fill-in', 'true-false', 'unjumble', 'error-correction', 'select', 'translate'):
         return len(activity.get('items', []))
     elif act_type == 'match-up':
-        return len(activity.get('pairs', []))
+        # Support both 'pairs' (preferred) and 'items' with left/right keys
+        pairs = activity.get('pairs', [])
+        if pairs:
+            return len(pairs)
+        items = activity.get('items', [])
+        if items and isinstance(items[0], dict) and 'left' in items[0]:
+            return len(items)
+        return 0
     elif act_type == 'group-sort':
         total = 0
         for group in activity.get('groups', []):
@@ -143,9 +157,11 @@ def count_yaml_activity_items(activity: dict) -> int:
         passage = activity.get('passage', '')
         return len(re.findall(r'\{[^}]+\}', passage))
     elif act_type == 'mark-the-words':
-        # Count marked words: *word*
+        # Count marked words: *word* or [word]
         text = activity.get('text', '')
-        return len(re.findall(r'\*[^*]+\*', text))
+        asterisk_marks = len(re.findall(r'\*[^*]+\*', text))
+        bracket_marks = len(re.findall(r'\[[^\]]+\]', text))
+        return asterisk_marks + bracket_marks
     elif act_type == 'dialogue-reorder':
         return len(activity.get('lines', []))
 

@@ -14,33 +14,14 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 95.4% (target 85-100% (B1.1 Aspect))
-- **Richness:** ✅ 96/95 (grammar)
-
-## Richness Details
-**Score:** 96/95
-**Module Type:** grammar
-
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| engagement | 6 | 5 | 100% | 15% | 15.0% |
-| variety | 0.96 | - | 96% | 10% | 9.6% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| visual | 4 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.97 | - | 97% | 5% | 4.9% |
-| examples | 27 | 24 | 100% | 20% | 20.0% |
-| dialogues | 20 | 4 | 100% | 15% | 15.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| questions | 32 | 5 | 100% | 5% | 5.0% |
-| proverbs | 1 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **96.2%** |
+- **Immersion:** 🇺🇦 92.9% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 96% (grammar)
 
 ## MDX VALIDATION
 ✅ No issues found
 
 ## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,17 +32,4 @@
 | **Практика** | ⚪️ | 318 | Skipped |
 | **Діалоги** | ✅ | 337 | Included in Core |
 | **Підсумок** | ✅ | 226 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Одноразові та повторювані дії** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up: Маркери та вид** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Вибір виду в минулому** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false: Правда чи неправда про вид** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Одного разу чи щодня?** | 🎮 | 18 | Activity (18 items, min 14) |
-| **unjumble: Речення про минуле** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Виправлення помилок виду** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Вид у контексті** | 🎮 | 16 | Activity (16 items, min 14) |
-| **mark-the-words: Маркери доконаного виду** | 🎮 | 6 | Activity (6 items, min 6) |
-| **dialogue-reorder: Розмова про минуле** | 🎮 | 6 | Activity (6 items, min 4) |
-| **select: Множинний вибір — минуле** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: Переклад — вид у минулому** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Словник** | ⚪️ | 0 | Skipped |

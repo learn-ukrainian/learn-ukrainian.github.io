@@ -4,7 +4,7 @@
 
 ## Gates
 - **Words:** ✅ 1653/1200
-- **Activities:** ✅ 25/12
+- **Activities:** ✅ 24/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/5 types
 - **Priority:** ✅ Priority types used
@@ -14,32 +14,14 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 79.3% (B1.1 Aspect)
-- **Richness:** ✅ 97/95 (grammar)
-
-## Richness Details
-**Score:** 97/95
-**Module Type:** grammar
-
-### Raw Counts
-| Metric | Count |
-|--------|-------|
-| engagement | 5 |
-| variety | 0.9612903225806452 |
-| cultural | 5 |
-| visual | 2 |
-| paragraph_var | 1.0 |
-| examples | 24 |
-| dialogues | 12 |
-| realworld | 5 |
-| questions | 27 |
-| proverbs | 1 |
+- **Immersion:** 🇺🇦 79.1% (B1.1 Aspect)
+- **Richness:** ✅ 97% (grammar)
 
 ## MDX VALIDATION
 ✅ No issues found
 
 ## HTML VALIDATION
-✅ Renders correctly (24 interactive elements)
+✅ Renders correctly (23 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -51,8 +33,7 @@
 | **Практика** | ⚪️ | 211 | Skipped |
 | **Mini-Dialogues** | ✅ | 261 | Included in Core |
 | **Підсумок** | ✅ | 259 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Комплексний тест — Частини мови** | 🎮 | 14 | Activity (14 items, min 8) |
+| **Вправи** | ⚪️ | 386 | Skipped |
 | **quiz: Комплексний тест — Відмінки** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Комплексний тест — Вид і час** | 🎮 | 14 | Activity (14 items, min 8) |
 | **quiz: Комплексний тест — Речення** | 🎮 | 14 | Activity (14 items, min 8) |

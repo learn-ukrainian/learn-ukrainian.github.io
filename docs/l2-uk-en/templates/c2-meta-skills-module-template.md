@@ -295,6 +295,27 @@ vocabulary_focus:
 
 ## Meta-Skills-Specific Activities
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+
+| Activity | Format |
+|----------|--------|
+| **quiz** | `- [ ] wrong` / `- [x] correct` with optional `> explanation` |
+| **true-false** | `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation` |
+| **fill-in** | `> [!answer] correct` + `> [!options] a \| b \| c \| d` |
+| **error-correction** | ALL 4 required: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]` |
+| **match-up** | Table: `\| Left \| Right \|` |
+| **group-sort** | `### Category` headers with `- items` underneath |
+| **unjumble** | `> [!answer] Correct sentence here.` |
+| **cloze** | Inline: `{blank\|opt1\|opt2\|answer}` |
+| **select** | Multiple `- [x]` for all correct options |
+| **translate** | Multi-choice: `- [x] Correct translation.` with `> explanation` |
+| **mark-the-words** | `*marked*` words in blockquote passage |
+| **dialogue-reorder** | `- [N]` numbered lines (N = correct order) |
+
+---
+
 ### Grammar Verification
 
 ```markdown

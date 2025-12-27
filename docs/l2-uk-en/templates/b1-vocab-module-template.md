@@ -399,6 +399,113 @@ Minimum 5+ engagement boxes focusing on USAGE:
 
 ---
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation to work.
+
+**quiz** (checkbox, single answer):
+```markdown
+## quiz: Title
+1. Question text (12-20 words)?
+   - [ ] Wrong answer
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+```
+
+**match-up** (table):
+```markdown
+## match-up: Title
+| Left | Right |
+|------|-------|
+| term | definition |
+```
+
+**fill-in** (callouts):
+```markdown
+## fill-in: Title
+1. Sentence with _____ blank.
+   > [!answer] correct
+   > [!options] wrong1 | correct | wrong2 | wrong3
+```
+
+**true-false** (checkbox with explanations):
+```markdown
+## true-false: Title
+- [x] True statement.
+  > Explanation.
+- [ ] False statement.
+  > Explanation.
+```
+
+**group-sort** (category headers):
+```markdown
+## group-sort: Title
+### Category A
+- item1
+### Category B
+- item2
+```
+
+**select** (multi-checkbox):
+```markdown
+## select: Title
+1. Question (select ALL correct):
+   - [x] Correct 1
+   - [x] Correct 2
+   - [ ] Wrong
+```
+
+**cloze** (inline blanks):
+```markdown
+## cloze: Title
+> Text with {blank|opt1|opt2|answer} blanks.
+```
+
+**unjumble** (answer callout):
+```markdown
+## unjumble: Title
+1. words / in / order
+   > [!answer] Correct sentence.
+```
+
+**error-correction** (4 callouts):
+```markdown
+## error-correction: Title
+1. Sentence with error.
+   > [!error] wrong
+   > [!answer] correct
+   > [!options] wrong | correct | d1 | d2
+   > [!explanation] Why wrong.
+```
+
+**translate** (multi-choice):
+```markdown
+## translate: Title
+1. English sentence.
+   - [ ] Wrong
+   - [x] Correct
+   - [ ] Wrong
+   - [ ] Wrong
+```
+
+**mark-the-words** (asterisks):
+```markdown
+## mark-the-words: Title
+> [!instruction] Click target words.
+>
+> *Target* other *target*.
+```
+
+**dialogue-reorder** (numbered):
+```markdown
+## dialogue-reorder: Title
+- [2] Second line.
+- [1] First line.
+```
+
+---
+
 ### Match-up: Collocations (HIGH PRIORITY for vocab modules)
 
 **Example: Noun + Verb collocations**

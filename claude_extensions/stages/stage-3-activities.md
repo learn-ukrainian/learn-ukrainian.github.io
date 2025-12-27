@@ -2,6 +2,24 @@
 
 Generate activities in YAML format, separate from the prose content.
 
+## Reference Existing Modules First
+
+**Before writing activities, study 1-2 similar existing modules:**
+
+| Level | Module Type | Reference Examples | Look For |
+|-------|-------------|-------------------|----------|
+| B1 | Grammar | M06-10 (Aspect) | Activity variety, sequencing, quiz prompts |
+| B1 | Vocabulary | M52-53 | YAML format, cloze passage structure |
+| A2 | All types | M01-10 | Activity patterns, engagement integration |
+
+**Pattern extraction steps:**
+1. Read the `.md` file for activity section structure
+2. Read the `.activities.yaml` file (if exists) for YAML patterns
+3. Note: quiz question length, fill-in sentence structure, error types
+4. Adapt patterns to new content (don't copy actual items)
+
+---
+
 ## Output Files
 
 For each module, create:
@@ -36,16 +54,18 @@ curriculum/l2-uk-en/{level}/
 3. Add activity types if below level variety requirement
 4. Delete embedded activities from `.md` after YAML created
 
-## Activity Count Requirements
+## Activity Count Requirements (Relaxed)
 
-| Level | Count | Items per Activity | Types |
-|-------|-------|-------------------|-------|
-| A1 | 8+ | 12+ | 4+ |
-| A2 | 10+ | 12+ | 5+ |
-| B1 | 12+ | 14+ | 5+ |
-| B2 | 14+ | 16+ | 5+ |
-| C1 | 16+ | 18+ | 5+ |
-| C2 | 16+ | 18+ | 5+ |
+| Level | Target | WARN | FAIL | Items/Activity | Types |
+|-------|--------|------|------|----------------|-------|
+| A1 | 8+ | <8 | <6 | 12+ | 4+ |
+| A2 | 10+ | <10 | <8 | 12+ | 5+ |
+| B1 | 12+ | <12 | <8 | 14+ | 5+ |
+| B2 | 14+ | <14 | <10 | 16+ | 5+ |
+| C1 | 16+ | <16 | <12 | 18+ | 5+ |
+| C2 | 16+ | <16 | <12 | 18+ | 5+ |
+
+**WARN** = Passes with warning. **FAIL** = Blocks approval.
 
 ## Activity Matrix by Level
 
@@ -208,20 +228,42 @@ curriculum/l2-uk-en/{level}/
 
 When a string contains special characters, quote it properly:
 
-1. **Strings with embedded quotes** → wrap in single quotes, double internal quotes:
+1. **Quoted speech in cloze/mark-the-words** → use Ukrainian guillemets `«»`, NOT escaped quotes:
+   ```yaml
+   # ✅ CORRECT - guillemets work in MDX/JSX
+   passage: "Викладач сказав: «{Не забувай} читати щодня!»"
+   text: "Він відповів: «Я *не* розумію.»"
+
+   # ❌ WRONG - escaped quotes break MDX compilation
+   passage: "Викладач сказав: \"{Не забувай} читати щодня!\""
+   ```
+   **Why:** Cloze `passage` and mark-the-words `text` become JSX attributes. Escaped `\"` causes "Unexpected character" errors during MDX build.
+
+2. **Strings with embedded quotes (other fields)** → wrap in single quotes, double internal quotes:
    ```yaml
    explanation: '"Думка" means opinion.'
    statement: '"Рішення" та "розв''язання" — різні слова.'
    ```
 
-2. **Strings with colons** → wrap in quotes:
+3. **Strings with colons** → wrap in quotes:
    ```yaml
    explanation: 'Правильно: так і ні.'
    ```
 
-3. **Strings with apostrophes** → double the apostrophe inside single quotes:
+4. **Strings with apostrophes** → double the apostrophe inside single quotes:
    ```yaml
    statement: 'Слово "розв''язання" має інше значення.'
+   ```
+
+5. **Numeric option values** → quote as strings:
+   ```yaml
+   # ✅ CORRECT
+   - text: "5"
+     correct: false
+
+   # ❌ WRONG - causes 'int' object has no attribute 'replace'
+   - text: 5
+     correct: false
    ```
 
 ## Activity Sequencing

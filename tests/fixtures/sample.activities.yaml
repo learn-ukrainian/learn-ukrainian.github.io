@@ -1,0 +1,419 @@
+# Sample activity file for testing (B1 level)
+# B1 requires minimum 12 activities
+
+- type: quiz
+  title: "Перевірка розуміння"
+  items:
+    - question: "Який час використовується для завершених дій?"
+      options:
+        - text: "доконаний"
+          correct: true
+        - text: "недоконаний"
+          correct: false
+        - text: "минулий"
+          correct: false
+        - text: "майбутній"
+          correct: false
+    - question: "Яке дієслово є доконаним?"
+      options:
+        - text: "читати"
+          correct: false
+        - text: "прочитати"
+          correct: true
+        - text: "писати"
+          correct: false
+        - text: "говорити"
+          correct: false
+    - question: "Який префікс робить дієслово доконаним?"
+      options:
+        - text: "про-"
+          correct: true
+        - text: "без-"
+          correct: false
+        - text: "не-"
+          correct: false
+        - text: "пере-"
+          correct: false
+    - question: "Яке речення описує завершену дію?"
+      options:
+        - text: "Я прочитав книгу."
+          correct: true
+        - text: "Я читав книгу."
+          correct: false
+        - text: "Я читаю книгу."
+          correct: false
+        - text: "Я буду читати."
+          correct: false
+    - question: "Коли вживаємо недоконаний вид?"
+      options:
+        - text: "для опису процесу"
+          correct: true
+        - text: "для результату"
+          correct: false
+        - text: "для однократної дії"
+          correct: false
+        - text: "для завершення"
+          correct: false
+    - question: "Яке слово вказує на доконаний вид?"
+      options:
+        - text: "вже"
+          correct: true
+        - text: "завжди"
+          correct: false
+        - text: "часто"
+          correct: false
+        - text: "зазвичай"
+          correct: false
+    - question: "Яка пара є видовою?"
+      options:
+        - text: "читати — прочитати"
+          correct: true
+        - text: "читати — писати"
+          correct: false
+        - text: "бігти — йти"
+          correct: false
+        - text: "робити — працювати"
+          correct: false
+    - question: "Що показує доконаний вид?"
+      options:
+        - text: "результат дії"
+          correct: true
+        - text: "тривалість дії"
+          correct: false
+        - text: "повторюваність"
+          correct: false
+        - text: "процес"
+          correct: false
+
+- type: match-up
+  title: "З'єднайте пари"
+  pairs:
+    - left: "читати"
+      right: "прочитати"
+    - left: "писати"
+      right: "написати"
+    - left: "робити"
+      right: "зробити"
+    - left: "їсти"
+      right: "з'їсти"
+    - left: "пити"
+      right: "випити"
+    - left: "говорити"
+      right: "сказати"
+    - left: "вчити"
+      right: "вивчити"
+    - left: "бачити"
+      right: "побачити"
+
+- type: fill-in
+  title: "Заповніть пропуски"
+  items:
+    - sentence: "Я вже ___ цю книгу."
+      answer: "прочитав"
+      options: ["прочитав", "читав", "читаю", "прочитаю"]
+    - sentence: "Вона ___ лист учора."
+      answer: "написала"
+      options: ["написала", "писала", "пише", "напише"]
+    - sentence: "Ми ___ обід о другій."
+      answer: "з'їли"
+      options: ["з'їли", "їли", "їмо", "з'їмо"]
+    - sentence: "Він ___ каву вранці."
+      answer: "випив"
+      options: ["випив", "пив", "п'є", "вип'є"]
+    - sentence: "Вони ___ фільм учора."
+      answer: "подивились"
+      options: ["подивились", "дивились", "дивляться", "подивляться"]
+    - sentence: "Я ___ домашнє завдання."
+      answer: "зробив"
+      options: ["зробив", "робив", "роблю", "зроблю"]
+    - sentence: "Вона ___ нові слова."
+      answer: "вивчила"
+      options: ["вивчила", "вчила", "вчить", "вивчить"]
+    - sentence: "Ми ___ друзів у парку."
+      answer: "побачили"
+      options: ["побачили", "бачили", "бачимо", "побачимо"]
+
+- type: true-false
+  title: "Правда чи ні?"
+  items:
+    - statement: "Доконаний вид показує завершену дію."
+      correct: true
+    - statement: "Недоконаний вид показує результат."
+      correct: false
+    - statement: "Дієслово 'читати' є доконаним."
+      correct: false
+    - statement: "Дієслово 'прочитати' є доконаним."
+      correct: true
+    - statement: "Всі дієслова мають обидві форми виду."
+      correct: false
+    - statement: "Префікс 'про-' часто робить дієслово доконаним."
+      correct: true
+    - statement: "Доконаний вид вживається для опису процесу."
+      correct: false
+    - statement: "Недоконаний вид може показувати повторювану дію."
+      correct: true
+
+- type: group-sort
+  title: "Розподіліть дієслова"
+  groups:
+    - name: "Доконаний вид"
+      items: ["прочитати", "написати", "зробити", "побачити", "вивчити", "сказати"]
+    - name: "Недоконаний вид"
+      items: ["читати", "писати", "робити", "бачити", "вчити", "говорити"]
+
+- type: unjumble
+  title: "Складіть речення"
+  items:
+    - words: ["вже", "книгу", "прочитав", "Я", "цю"]
+      answer: "Я вже прочитав цю книгу."
+    - words: ["написала", "Вона", "лист", "учора"]
+      answer: "Вона написала лист учора."
+    - words: ["з'їли", "о", "Ми", "другій", "обід"]
+      answer: "Ми з'їли обід о другій."
+    - words: ["випив", "Він", "вранці", "каву"]
+      answer: "Він випив каву вранці."
+    - words: ["учора", "фільм", "подивились", "Вони"]
+      answer: "Вони подивились фільм учора."
+    - words: ["домашнє", "зробив", "завдання", "Я"]
+      answer: "Я зробив домашнє завдання."
+
+- type: cloze
+  title: "Заповніть текст"
+  passage: "Учора я {1} цікаву книгу. Спочатку я {2} перші три розділи, а потім {3} перерву. Після обіду я {4} читати і нарешті {5} всю книгу. Я був радий, що {6} таку гарну історію. Ввечері я {7} другові про книгу і він {8} послухати. Ми {9} разом обговорити сюжет. Друг {10} уважно і {11} багато запитань. Я {12} на всі його запитання. Він {13} теж прочитати цю книгу. Ми {14} зустрітися знову наступного тижня."
+  blanks:
+    - id: 1
+      answer: "знайшов"
+      options: ["знайшов", "знаходив", "знаходжу", "знайду"]
+    - id: 2
+      answer: "прочитав"
+      options: ["прочитав", "читав", "читаю", "прочитаю"]
+    - id: 3
+      answer: "зробив"
+      options: ["зробив", "робив", "роблю", "зроблю"]
+    - id: 4
+      answer: "продовжив"
+      options: ["продовжив", "продовжував", "продовжую", "продовжу"]
+    - id: 5
+      answer: "закінчив"
+      options: ["закінчив", "закінчував", "закінчую", "закінчу"]
+    - id: 6
+      answer: "прочитав"
+      options: ["прочитав", "читав", "читаю", "прочитаю"]
+    - id: 7
+      answer: "розповів"
+      options: ["розповів", "розповідав", "розповідаю", "розповім"]
+    - id: 8
+      answer: "захотів"
+      options: ["захотів", "хотів", "хоче", "захоче"]
+    - id: 9
+      answer: "вирішили"
+      options: ["вирішили", "вирішували", "вирішуємо", "вирішимо"]
+    - id: 10
+      answer: "слухав"
+      options: ["слухав", "послухав", "слухає", "послухає"]
+    - id: 11
+      answer: "поставив"
+      options: ["поставив", "ставив", "ставить", "поставить"]
+    - id: 12
+      answer: "відповів"
+      options: ["відповів", "відповідав", "відповідаю", "відповім"]
+    - id: 13
+      answer: "вирішив"
+      options: ["вирішив", "вирішував", "вирішує", "вирішить"]
+    - id: 14
+      answer: "домовились"
+      options: ["домовились", "домовлялись", "домовляємось", "домовимось"]
+
+- type: error-correction
+  title: "Виправте помилки"
+  items:
+    - sentence: "Я вчора читав цю книгу до кінця."
+      error: "читав"
+      answer: "прочитав"
+      options: ["прочитав", "читав", "читаю", "прочитаю"]
+      explanation: "Для завершеної дії (до кінця) використовуємо доконаний вид."
+    - sentence: "Вона написала лист цілий день."
+      error: "написала"
+      answer: "писала"
+      options: ["писала", "написала", "пише", "напише"]
+      explanation: "Для тривалої дії (цілий день) використовуємо недоконаний вид."
+    - sentence: "Ми їли обід і пішли."
+      error: "їли"
+      answer: "з'їли"
+      options: ["з'їли", "їли", "їмо", "з'їмо"]
+      explanation: "Для послідовних дій використовуємо доконаний вид."
+    - sentence: "Він завжди прочитав газету вранці."
+      error: "прочитав"
+      answer: "читав"
+      options: ["читав", "прочитав", "читає", "прочитає"]
+      explanation: "Для регулярної дії (завжди) використовуємо недоконаний вид."
+    - sentence: "Вони подивились фільм три години."
+      error: "подивились"
+      answer: "дивились"
+      options: ["дивились", "подивились", "дивляться", "подивляться"]
+      explanation: "Для дії з тривалістю (три години) використовуємо недоконаний вид."
+    - sentence: "Я зробив домашнє завдання весь вечір."
+      error: "зробив"
+      answer: "робив"
+      options: ["робив", "зробив", "роблю", "зроблю"]
+      explanation: "Для дії з тривалістю (весь вечір) використовуємо недоконаний вид."
+
+- type: mark-the-words
+  title: "Позначте доконані дієслова"
+  instruction: "Клікніть на всі дієслова доконаного виду."
+  passage: "Учора я прочитав цікаву статтю. Спочатку я читав заголовки, а потім вибрав найцікавішу тему. Я зрозумів головну думку і записав важливі факти. Увечері я розповів про статтю друзям. Вони зацікавились темою."
+  correct_words: ["прочитав", "вибрав", "зрозумів", "записав", "розповів", "зацікавились"]
+
+- type: dialogue-reorder
+  title: "Відновіть діалог"
+  lines:
+    - order: 1
+      speaker: "А"
+      text: "Привіт! Що ти робив учора?"
+    - order: 2
+      speaker: "Б"
+      text: "Привіт! Я прочитав нову книгу."
+    - order: 3
+      speaker: "А"
+      text: "Серйозно? І як вона тобі сподобалась?"
+    - order: 4
+      speaker: "Б"
+      text: "Дуже! Я прочитав її за один день."
+    - order: 5
+      speaker: "А"
+      text: "Швидко! А про що вона?"
+    - order: 6
+      speaker: "Б"
+      text: "Про пригоди у горах."
+
+- type: select
+  title: "Оберіть усі правильні"
+  items:
+    - question: "Які дієслова є доконаними?"
+      options:
+        - text: "прочитати"
+          correct: true
+        - text: "читати"
+          correct: false
+        - text: "написати"
+          correct: true
+        - text: "писати"
+          correct: false
+        - text: "зробити"
+          correct: true
+        - text: "робити"
+          correct: false
+    - question: "Які речення описують завершену дію?"
+      options:
+        - text: "Я прочитав книгу."
+          correct: true
+        - text: "Я читав книгу."
+          correct: false
+        - text: "Вона написала лист."
+          correct: true
+        - text: "Вона писала лист."
+          correct: false
+    - question: "Які префікси роблять дієслово доконаним?"
+      options:
+        - text: "про-"
+          correct: true
+        - text: "на-"
+          correct: true
+        - text: "з-"
+          correct: true
+        - text: "ви-"
+          correct: true
+    - question: "Які слова вказують на доконаний вид?"
+      options:
+        - text: "вже"
+          correct: true
+        - text: "нарешті"
+          correct: true
+        - text: "завжди"
+          correct: false
+        - text: "часто"
+          correct: false
+    - question: "У яких реченнях правильно вжито вид?"
+      options:
+        - text: "Я вже прочитав цю книгу."
+          correct: true
+        - text: "Я завжди читаю газету вранці."
+          correct: true
+        - text: "Я вже читав цю книгу."
+          correct: false
+        - text: "Я завжди прочитав газету."
+          correct: false
+    - question: "Які дієслова вживаємо для результату?"
+      options:
+        - text: "написав"
+          correct: true
+        - text: "зробив"
+          correct: true
+        - text: "писав"
+          correct: false
+        - text: "робив"
+          correct: false
+
+- type: translate
+  title: "Перекладіть"
+  items:
+    - source: "I have already read this book."
+      options:
+        - text: "Я вже прочитав цю книгу."
+          correct: true
+        - text: "Я вже читав цю книгу."
+          correct: false
+        - text: "Я читаю цю книгу."
+          correct: false
+        - text: "Я прочитаю цю книгу."
+          correct: false
+    - source: "She wrote a letter yesterday."
+      options:
+        - text: "Вона написала листа вчора."
+          correct: true
+        - text: "Вона писала листа вчора."
+          correct: false
+        - text: "Вона пише листа."
+          correct: false
+        - text: "Вона напише листа."
+          correct: false
+    - source: "They were watching a movie all evening."
+      options:
+        - text: "Вони дивились фільм увесь вечір."
+          correct: true
+        - text: "Вони подивились фільм увесь вечір."
+          correct: false
+        - text: "Вони дивляться фільм."
+          correct: false
+        - text: "Вони подивляться фільм."
+          correct: false
+    - source: "He finished his homework."
+      options:
+        - text: "Він закінчив домашнє завдання."
+          correct: true
+        - text: "Він закінчував домашнє завдання."
+          correct: false
+        - text: "Він закінчує домашнє завдання."
+          correct: false
+        - text: "Він закінчить домашнє завдання."
+          correct: false
+    - source: "We always read newspapers in the morning."
+      options:
+        - text: "Ми завжди читаємо газети вранці."
+          correct: true
+        - text: "Ми завжди прочитали газети вранці."
+          correct: false
+        - text: "Ми завжди прочитаємо газети вранці."
+          correct: false
+        - text: "Ми завжди читали газети вранці."
+          correct: false
+    - source: "I learned all the new words."
+      options:
+        - text: "Я вивчив усі нові слова."
+          correct: true
+        - text: "Я вчив усі нові слова."
+          correct: false
+        - text: "Я вчу усі нові слова."
+          correct: false
+        - text: "Я вивчу усі нові слова."
+          correct: false

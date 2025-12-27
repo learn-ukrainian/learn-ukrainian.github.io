@@ -311,6 +311,119 @@ Minimum 5+ engagement boxes with pedagogical value:
 
 ---
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation to work.
+
+**quiz** (checkbox, single answer):
+```markdown
+## quiz: Title
+1. Question text (12-20 words)?
+   - [ ] Wrong answer
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+   > Optional explanation.
+```
+
+**true-false** (checkbox with explanations):
+```markdown
+## true-false: Title
+- [x] True statement here.
+  > Explanation why true.
+- [ ] False statement here.
+  > Explanation why false.
+```
+
+**fill-in** (callouts):
+```markdown
+## fill-in: Title
+1. Sentence with _____ blank.
+   > [!answer] correct
+   > [!options] wrong1 | correct | wrong2 | wrong3
+```
+
+**error-correction** (all 4 callouts required):
+```markdown
+## error-correction: Title
+1. Sentence with error.
+   > [!error] wrong_word
+   > [!answer] correct_word
+   > [!options] wrong | correct | dist1 | dist2
+   > [!explanation] Why it's wrong.
+```
+
+**match-up** (table):
+```markdown
+## match-up: Title
+| Left | Right |
+|------|-------|
+| term | definition |
+```
+
+**group-sort** (category headers):
+```markdown
+## group-sort: Title
+### Category A
+- item1
+- item2
+### Category B
+- item3
+- item4
+```
+
+**unjumble** (answer callout):
+```markdown
+## unjumble: Title
+1. слова / у / порядку (12-16 words)
+   > [!answer] Слова у правильному порядку.
+```
+
+**cloze** (inline blanks):
+```markdown
+## cloze: Title
+> Text with {blank|opt1|opt2|answer} blanks (14+ blanks).
+```
+
+**select** (multi-checkbox):
+```markdown
+## select: Title
+1. Question (select ALL correct):
+   - [x] Correct option 1
+   - [x] Correct option 2
+   - [ ] Wrong option
+```
+
+**translate** (multi-choice):
+```markdown
+## translate: Title
+1. English sentence to translate.
+   - [ ] Wrong translation
+   - [x] Correct translation
+   - [ ] Wrong translation
+   - [ ] Wrong translation
+   > Explanation why correct.
+```
+
+**mark-the-words** (asterisks):
+```markdown
+## mark-the-words: Title
+> [!instruction] Click all nouns.
+>
+> *Мама* читає *книгу*.
+```
+
+**dialogue-reorder** (numbered brackets):
+```markdown
+## dialogue-reorder: Title
+- [4] Last line.
+- [1] First line.
+- [3] Third line.
+- [2] Second line.
+```
+
+---
+
 ### Quiz Questions (12-20 words REQUIRED)
 
 **❌ TOO SHORT (4-8 words) — AUDIT FAILS:**

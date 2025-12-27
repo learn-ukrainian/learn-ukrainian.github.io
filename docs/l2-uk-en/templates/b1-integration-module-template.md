@@ -295,6 +295,25 @@ immersion_target: 90-95%
 
 **WHY this mix:** Skills modules prioritize comprehension and strategy application over production.
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation.
+
+**quiz**: `- [ ] wrong` / `- [x] correct` with optional `> explanation`
+**true-false**: `- [x] True.` with `> explanation` / `- [ ] False.` with `> explanation`
+**fill-in**: `> [!answer]` + `> [!options] a | b | c | d`
+**error-correction**: ALL 4: `> [!error]` + `> [!answer]` + `> [!options]` + `> [!explanation]`
+**match-up**: Table format `| Left | Right |`
+**group-sort**: `### Category` headers with `- items`
+**unjumble**: `> [!answer] Correct sentence.`
+**cloze**: `{blank|opt1|opt2|answer}` inline
+**select**: Multiple `- [x]` for correct options
+**translate**: Multi-choice with `- [x]` for correct + `> explanation`
+**mark-the-words**: `*marked*` words in blockquote
+**dialogue-reorder**: `- [N]` numbered lines
+
+See `b1-grammar-module-template.md` for full examples.
+
 ---
 
 #### Section 7: Словник (Vocabulary)

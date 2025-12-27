@@ -161,8 +161,17 @@ def load_yaml_activities(yaml_path: Path) -> list[dict] | None:
         return None
     try:
         with open(yaml_path, 'r', encoding='utf-8') as f:
-            activities = yaml.safe_load(f)
-        return activities if isinstance(activities, list) else None
+            data = yaml.safe_load(f)
+        # Support both formats:
+        # 1. Root list: [{ type: quiz, ... }, ...]
+        # 2. Dict with 'activities' key: { activities: [{ type: quiz, ... }, ...] }
+        if isinstance(data, list):
+            return data
+        elif isinstance(data, dict) and 'activities' in data:
+            activities = data['activities']
+            if isinstance(activities, list):
+                return activities
+        return None
     except (yaml.YAMLError, IOError) as e:
         print(f"  ⚠️ Error loading YAML activities: {e}")
         return None
@@ -232,7 +241,12 @@ def _yaml_quiz_to_jsx(activity: dict, title: str) -> str:
 
 def _yaml_match_up_to_jsx(activity: dict, title: str) -> str:
     """Convert YAML match-up to JSX."""
+    # Support both 'pairs' (preferred) and 'items' with left/right keys
     pairs = activity.get('pairs', [])
+    if not pairs:
+        items = activity.get('items', [])
+        if items and isinstance(items[0], dict) and 'left' in items[0]:
+            pairs = items
     pairs_json = [
         {"left": escape_jsx(p.get('left', '')), "right": escape_jsx(p.get('right', ''))}
         for p in pairs
@@ -360,12 +374,13 @@ def _yaml_error_correction_to_jsx(activity: dict, title: str) -> str:
     jsx_items = []
 
     for item in items:
+        options_jsx = ', '.join([f'`{escape_jsx(opt)}`' for opt in item.get('options', [])])
         jsx_items.append(f'''  <ErrorCorrectionItem
-    sentence="{escape_jsx(item.get('sentence', ''))}"
-    errorWord="{escape_jsx(item.get('error', ''))}"
-    correctForm="{escape_jsx(item.get('answer', ''))}"
-    options={{[{', '.join(f'"{escape_jsx(opt)}"' for opt in item.get('options', []))}]}}
-    explanation="{escape_jsx(item.get('explanation', ''))}"
+    sentence={{`{escape_jsx(item.get('sentence', ''))}`}}
+    errorWord={{`{escape_jsx(item.get('error', ''))}`}}
+    correctForm={{`{escape_jsx(item.get('answer', ''))}`}}
+    options={{[{options_jsx}]}}
+    explanation={{`{escape_jsx(item.get('explanation', ''))}`}}
   />''')
 
     return f'''### {escape_jsx(title)}

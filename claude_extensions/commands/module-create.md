@@ -2,7 +2,7 @@
 
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
-Create a complete module through all 4 stages.
+Create a new module OR migrate an existing module to YAML format.
 
 ## Usage
 
@@ -14,22 +14,52 @@ Create a complete module through all 4 stages.
 
 - `$ARGUMENTS` - Level and module number (e.g., `a1 15` or `b2 45`)
 
-## 🚀 Fast Path (Gemini / Limited Context)
-**Action:** Run the full pipeline in one sequence.
-1. **Analyze:** Read `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md` (grep module), `docs/MARKDOWN-FORMAT.md`, & **appropriate template** from `docs/l2-uk-en/templates/`.
-2. **Draft:** Create module file with full content **following template structure**.
-3. **Audit:** `.venv/bin/python scripts/audit_module.py ...`
-4. **Fix:** Loop until PASS.
-5. **Review:** `/review-content l2-uk-en {LEVEL} {MODULE_NUM}` (Quality Gate: 5/5).
-6. **Finalize:** `npm run pipeline l2-uk-en {LEVEL} {MODULE_NUM}` && `npm run generate:json l2-uk-en {LEVEL} {MODULE_NUM}`
-
 ---
 
 ## Instructions
 
 Parse arguments: $ARGUMENTS
 
-This command runs the full module creation pipeline:
+### Step 0: Check if Module Exists
+
+```bash
+ls curriculum/l2-uk-en/{LEVEL}/*{MODULE_NUM}*.md 2>/dev/null
+```
+
+**If module EXISTS (migration mode):**
+- Skip stages 1-2 (content already exists)
+- Run stage 3: Create `.activities.yaml` from existing embedded activities
+- Run stage 4: Audit + pipeline
+
+**If module DOES NOT exist (creation mode):**
+- Run all stages 1-4
+
+---
+
+## Migration Mode (Module Exists)
+
+### Stage 3: Extract Activities to YAML
+
+Run the converter with `--strip` to extract and clean in one step:
+
+```bash
+.venv/bin/python scripts/md_to_yaml.py curriculum/l2-uk-en/{LEVEL}/{NUM}-*.md --strip
+```
+
+This:
+1. Extracts activities to `{num}-{slug}.activities.yaml`
+2. Removes activity sections from `.md` (keeps Summary + Vocabulary)
+
+### Stage 4: Review & Fix
+
+1. Run audit: `.venv/bin/python scripts/audit_module.py ...`
+2. Fix violations until PASS
+3. Run pipeline: `npm run pipeline l2-uk-en {LEVEL} {MODULE_NUM}`
+4. Generate JSON: `npm run generate:json l2-uk-en {LEVEL} {MODULE_NUM}`
+
+---
+
+## Creation Mode (New Module)
 
 ```
 Stage 1 → Stage 2 → Stage 3 → Stage 4 (review/fix loop) → OUTPUT

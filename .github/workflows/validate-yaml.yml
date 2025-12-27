@@ -1,0 +1,64 @@
+name: Validate YAML Activities
+
+on:
+  push:
+    paths:
+      - 'curriculum/**/*.activities.yaml'
+      - 'schemas/**'
+      - 'scripts/yaml_activities.py'
+      - 'scripts/validate_yaml.py'
+      - 'tests/test_yaml_activities.py'
+  pull_request:
+    paths:
+      - 'curriculum/**/*.activities.yaml'
+      - 'schemas/**'
+      - 'scripts/yaml_activities.py'
+      - 'scripts/validate_yaml.py'
+      - 'tests/test_yaml_activities.py'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema pytest
+
+      - name: Run YAML activity tests
+        run: python -m pytest tests/test_yaml_activities.py -v
+
+      - name: Validate all YAML activity files
+        run: python scripts/validate_yaml.py --all
+        continue-on-error: true  # Don't fail on existing content issues
+
+  schema-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate JSON Schemas
+        run: |
+          for schema in schemas/*.schema.json; do
+            echo "Validating $schema..."
+            node -e "JSON.parse(require('fs').readFileSync('$schema'))"
+          done
+          echo "All schemas are valid JSON"

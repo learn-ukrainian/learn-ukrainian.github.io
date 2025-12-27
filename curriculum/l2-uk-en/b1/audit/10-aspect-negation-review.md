@@ -14,33 +14,14 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 95.6% (target 85-100% (B1.1 Aspect))
-- **Richness:** ✅ 95/95 (grammar)
-
-## Richness Details
-**Score:** 95/95
-**Module Type:** grammar
-
-### Score Breakdown
-| Metric | Count | Target | Score | Weight | Contribution |
-|--------|-------|--------|-------|--------|--------------|
-| engagement | 19 | 5 | 100% | 15% | 15.0% |
-| variety | 0.89 | - | 89% | 10% | 8.9% |
-| cultural | 2 | 3 | 67% | 10% | 6.7% |
-| visual | 23 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
-| examples | 25 | 24 | 100% | 20% | 20.0% |
-| dialogues | 32 | 4 | 100% | 15% | 15.0% |
-| realworld | 4 | 3 | 100% | 10% | 10.0% |
-| questions | 37 | 5 | 100% | 5% | 5.0% |
-| proverbs | 2 | 1 | 100% | 5% | 5.0% |
-| **TOTAL** | | | | | **95.4%** |
+- **Immersion:** 🇺🇦 97.4% (target 85-100% (B1.1 Aspect))
+- **Richness:** ✅ 95% (grammar)
 
 ## MDX VALIDATION
 ✅ No issues found
 
 ## HTML VALIDATION
-✅ Renders correctly (11 interactive elements)
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -67,16 +48,4 @@
 | **Таблиця вибору** | ⚪️ | 0 | Skipped |
 | **Самоперевірка** | ⚪️ | 152 | Skipped |
 | **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Заперечення і вид** | 🎮 | 14 | Activity (14 items, min 8) |
-| **match-up: Переклад заперечень** | 🎮 | 8 | Activity (8 items, min 8) |
-| **fill-in: Заперечні форми дієслів** | 🎮 | 10 | Activity (10 items, min 8) |
-| **true-false: Правда чи неправда про заперечення** | 🎮 | 8 | Activity (8 items, min 8) |
-| **group-sort: Типи заперечень** | 🎮 | 18 | Activity (18 items, min 14) |
-| **unjumble: Речення із запереченням** | 🎮 | 8 | Activity (8 items, min 6) |
-| **error-correction: Виправлення помилок заперечення** | 🎮 | 8 | Activity (8 items, min 6) |
-| **cloze: Заперечення у контексті** | 🎮 | 14 | Activity (14 items, min 14) |
-| **mark-the-words: Заперечні слова та частки** | 🎮 | 6 | Activity (6 items, min 6) |
-| **dialogue-reorder: Розмова з запереченнями** | 🎮 | 6 | Activity (6 items, min 4) |
-| **select: Множинний вибір — заперечення** | 🎮 | 6 | Activity (6 items, min 6) |
-| **translate: Переклад — заперечення** | 🎮 | 6 | Activity (6 items, min 6) |
 | **Словник** | ⚪️ | 0 | Skipped |

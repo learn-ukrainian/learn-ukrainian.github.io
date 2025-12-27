@@ -25,6 +25,7 @@ import json
 import statistics
 import yaml
 from pathlib import Path
+from typing import Union
 
 # Module type detection from pedagogy field
 MODULE_TYPE_MAP = {
@@ -34,6 +35,7 @@ MODULE_TYPE_MAP = {
     'grammar': 'grammar',
     # Vocabulary types
     'vocabulary': 'vocabulary',
+    'vocab': 'vocabulary',
     'lexical': 'vocabulary',
     # Cultural types
     'cultural': 'cultural',
@@ -444,8 +446,12 @@ LEGACY_MARKERS = [
 ]
 
 
-def extract_level(file_path: Path) -> str:
+def extract_level(file_path: Union[str, Path, None]) -> str:
     """Extract level code from file path."""
+    if not file_path:
+        return 'B1'
+    if isinstance(file_path, str):
+        file_path = Path(file_path)
     parts = file_path.parts
     for part in parts:
         if part.upper() in ('A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'LIT'):
@@ -453,7 +459,7 @@ def extract_level(file_path: Path) -> str:
     return 'B1'  # Default
 
 
-def extract_module_type(content: str, file_path: Path) -> str:
+def extract_module_type(content: str, file_path: Union[str, Path, None] = None) -> str:
     """Extract module type from frontmatter pedagogy field."""
     # Try to parse frontmatter
     if content.startswith('---'):

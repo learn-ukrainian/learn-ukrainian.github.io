@@ -137,6 +137,71 @@ Brief recap (50-75 words):
 - Clear instructions in English
 - All answers must be correct
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation to work.
+
+**quiz** (multiple choice - single answer):
+```markdown
+## quiz: Title
+1. Question text?
+   - [ ] Wrong answer
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+```
+
+**match-up** (pair matching):
+```markdown
+## match-up: Title
+| Left | Right |
+|------|-------|
+| слово | word |
+| книга | book |
+```
+
+**fill-in** (gap fill with options):
+```markdown
+## fill-in: Title
+1. Sentence with _____ blank.
+   > [!answer] correct
+   > [!options] wrong1 | correct | wrong2 | wrong3
+```
+
+**true-false** (checkbox format with explanations):
+```markdown
+## true-false: Title
+- [x] True statement here.
+  > Explanation why it's true.
+- [ ] False statement here.
+  > Explanation why it's false.
+```
+
+**group-sort** (category headers with bullets):
+```markdown
+## group-sort: Title
+### Category A
+- item1
+- item2
+### Category B
+- item3
+- item4
+```
+
+**unjumble** (word reordering):
+```markdown
+## unjumble: Title
+1. слово / інше / ще
+   > [!answer] Правильне речення тут.
+```
+
+**anagram** (M01-10 only - letter unscrambling):
+```markdown
+## anagram: Title
+1. овсло
+   > [!answer] слово
+```
+
 ### ## Vocabulary
 
 ```markdown

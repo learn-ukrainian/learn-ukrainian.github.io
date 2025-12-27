@@ -146,6 +146,97 @@ Brief recap in Ukrainian (75-100 words):
 - Must include `error-correction`
 - All error-correction items need `[!explanation]`
 
+### Activity Format Quick Reference
+
+**CRITICAL:** Use these exact formats for MDX generation to work.
+
+**quiz** (multiple choice - single answer):
+```markdown
+## quiz: Title
+1. Question text?
+   - [ ] Wrong answer
+   - [x] Correct answer
+   - [ ] Wrong answer
+   - [ ] Wrong answer
+```
+
+**match-up** (pair matching):
+```markdown
+## match-up: Title
+| Left | Right |
+|------|-------|
+| слово | word |
+| книга | book |
+```
+
+**fill-in** (gap fill with options):
+```markdown
+## fill-in: Title
+1. Sentence with _____ blank.
+   > [!answer] correct
+   > [!options] wrong1 | correct | wrong2 | wrong3
+```
+
+**true-false** (checkbox format with explanations):
+```markdown
+## true-false: Title
+- [x] True statement here.
+  > Explanation why it's true.
+- [ ] False statement here.
+  > Explanation why it's false.
+```
+
+**group-sort** (category headers with bullets):
+```markdown
+## group-sort: Title
+### Category A
+- item1
+- item2
+### Category B
+- item3
+- item4
+```
+
+**unjumble** (word reordering):
+```markdown
+## unjumble: Title
+1. слово / інше / ще
+   > [!answer] Правильне речення тут.
+```
+
+**error-correction** (all 4 callouts required):
+```markdown
+## error-correction: Title
+1. Sentence with error.
+   > [!error] wrong_word
+   > [!answer] correct_word
+   > [!options] wrong | correct | distractor1 | distractor2
+   > [!explanation] Why it's wrong and how to fix.
+```
+
+**cloze** (passage with multiple blanks):
+```markdown
+## cloze: Title
+> Text with {blank1|option1|option2|answer} and {blank2|opt1|opt2|answer} blanks.
+```
+
+**mark-the-words** (click matching words):
+```markdown
+## mark-the-words: Title
+> [!instruction] Click all nouns in the sentence.
+>
+> *Мама* читає *книгу* в *кімнаті*.
+```
+
+**dialogue-reorder** (conversation ordering):
+```markdown
+## dialogue-reorder: Title
+- [4] Final response.
+- [1] Opening question.
+- [3] Follow-up answer.
+- [2] First response.
+```
+
 ### ## Vocabulary
 
 ```markdown
