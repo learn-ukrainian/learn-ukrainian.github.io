@@ -144,22 +144,54 @@ def parse_fill_in(content: str) -> list[dict]:
 
 
 def parse_true_false(content: str) -> list[dict]:
-    """Parse true-false activity from markdown."""
+    """Parse true-false activity from markdown.
+
+    Handles format:
+    1. Statement text here.
+       - [ ] Правда
+       - [x] Неправда
+       > Explanation text.
+    """
     items = []
 
-    for line in content.split('\n'):
-        line = line.strip()
+    # Split by numbered items
+    blocks = re.split(r'^\d+\.\s+', content, flags=re.MULTILINE)
 
-        # Format: - [x] statement (true) or - [ ] statement (false)
-        match = re.match(r'-\s*\[(x|\s)\]\s*(.+)', line, re.IGNORECASE)
-        if match:
-            is_true = match.group(1).lower() == 'x'
-            statement = match.group(2).strip()
-            items.append({'statement': statement, 'correct': is_true})
+    for block in blocks[1:]:  # Skip first empty split
+        lines = block.strip().split('\n')
+        if not lines:
+            continue
 
-        # Explanation on next line
-        elif line.startswith('>') and items:
-            items[-1]['explanation'] = line[1:].strip()
+        # First line is the statement
+        statement = lines[0].strip()
+        is_correct = None
+        explanation = None
+
+        for line in lines[1:]:
+            line = line.strip()
+
+            # Check for Правда/Неправда options
+            pravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Правда|True)', line, re.IGNORECASE)
+            nepravda_match = re.match(r'-\s*\[(x|\s)\]\s*(Неправда|False)', line, re.IGNORECASE)
+
+            if pravda_match:
+                # If Правда is checked, statement is true
+                if pravda_match.group(1).lower() == 'x':
+                    is_correct = True
+            elif nepravda_match:
+                # If Неправда is checked, statement is false
+                if nepravda_match.group(1).lower() == 'x':
+                    is_correct = False
+
+            # Explanation: > text
+            elif line.startswith('>') and not line.startswith('> [!'):
+                explanation = line[1:].strip()
+
+        if statement and is_correct is not None:
+            item = {'statement': statement, 'correct': is_correct}
+            if explanation:
+                item['explanation'] = explanation
+            items.append(item)
 
     return items
 
@@ -298,13 +330,22 @@ def parse_error_correction(content: str) -> list[dict]:
     return items
 
 
-def parse_cloze(content: str) -> dict:
-    """Parse cloze activity from markdown."""
+def parse_cloze(content: str) -> str:
+    """Parse cloze activity from markdown.
+
+    Input format:
+    Passage text with [___:1] blanks and [___:2] more blanks.
+
+    1. opt1 | opt2 | opt3 | opt4
+       > [!answer] correct_answer
+
+    Output: Passage with inline {correct|opt1|opt2|opt3} format.
+    """
     lines = content.strip().split('\n')
 
-    # Extract passage (lines before numbered items)
+    # Collect passage lines and blank definitions separately
     passage_lines = []
-    blanks = []
+    blanks = {}  # id -> {'answer': str, 'options': list}
 
     i = 0
     while i < len(lines):
@@ -316,84 +357,123 @@ def parse_cloze(content: str) -> dict:
             blank_id = int(num_match.group(1))
             options_str = num_match.group(2).strip()
 
-            # Check for inline options
+            # Parse options from pipe-separated list
             if '|' in options_str:
                 options = [o.strip() for o in options_str.split('|')]
-                answer = options[0]  # First is correct
             else:
-                # Old format: look for [!answer] on next line
-                answer = options_str
-                options = [answer]
-                if i + 1 < len(lines) and '[!answer]' in lines[i + 1]:
-                    answer = lines[i + 1].replace('> [!answer]', '').strip()
-                    i += 1
+                options = [options_str]
 
-            blanks.append({
-                'id': blank_id,
-                'answer': answer,
-                'options': options[:4] if len(options) >= 4 else options + [''] * (4 - len(options))
-            })
-        elif not num_match and not line.startswith('>'):
+            # Look for [!answer] on next line
+            answer = options[0]  # Default to first option
+            if i + 1 < len(lines) and '> [!answer]' in lines[i + 1]:
+                answer = lines[i + 1].replace('> [!answer]', '').strip()
+                i += 1
+
+            blanks[blank_id] = {'answer': answer, 'options': options}
+
+        elif not line.startswith('>') and line:
             passage_lines.append(line)
 
         i += 1
 
-    passage = ' '.join(passage_lines).strip()
+    # Combine passage lines
+    passage = '\n'.join(passage_lines).strip()
 
-    # Convert [___:N] to {N} format
-    passage = re.sub(r'\[___:(\d+)\]', r'{\1}', passage)
+    # Replace [___:N] with {answer|opt1|opt2|opt3}
+    def replace_blank(match):
+        blank_id = int(match.group(1))
+        if blank_id in blanks:
+            b = blanks[blank_id]
+            answer = b['answer']
+            options = b['options']
 
-    return {'passage': passage, 'blanks': blanks}
+            # Put answer first, then other options (excluding answer if duplicate)
+            other_opts = [o for o in options if o != answer][:3]
+            all_opts = [answer] + other_opts
+
+            return '{' + '|'.join(all_opts) + '}'
+        return match.group(0)  # Keep original if not found
+
+    passage = re.sub(r'\[___:(\d+)\]', replace_blank, passage)
+
+    return passage
 
 
-def parse_mark_the_words(content: str) -> dict:
-    """Parse mark-the-words activity from markdown."""
+def parse_mark_the_words(content: str) -> str:
+    """Parse mark-the-words activity from markdown.
+
+    Input formats:
+    - Passage text with [correct] words in [brackets] to mark.
+    - Passage text with **correct** words in **bold** to mark.
+    - Numbered items: 1. Sentence with [word] or **word** markers.
+
+    Output: Passage with *word* markers for correct words.
+    """
     lines = content.strip().split('\n')
 
-    instruction = ''
-    passage = ''
-    correct_words = []
+    passage_lines = []
 
     for line in lines:
         line = line.strip()
 
-        # Extract words in [brackets]
-        words = re.findall(r'\[([^\]]+)\]', line)
-        if words:
-            correct_words.extend(words)
-            # Remove brackets for passage
-            passage = re.sub(r'\[([^\]]+)\]', r'\1', line)
-        elif line.startswith('>'):
-            # Skip explanation lines
+        # Skip empty lines and explanation/hint callouts (> Відзначте: ...)
+        if not line or line.startswith('>'):
             continue
-        elif not passage and line:
-            instruction = line
 
-    return {
-        'instruction': instruction or 'Mark the indicated words.',
-        'passage': passage,
-        'correct_words': correct_words
-    }
+        # Remove numbered prefix (1., 2., etc.)
+        line = re.sub(r'^\d+\.\s*', '', line)
+
+        # Convert [word] to *word*
+        if '[' in line and ']' in line:
+            line = re.sub(r'\[([^\]]+)\]', r'*\1*', line)
+
+        # Convert **word** to *word* (double asterisks to single)
+        if '**' in line:
+            line = re.sub(r'\*\*([^*]+)\*\*', r'*\1*', line)
+
+        # Only add lines that have content after stripping
+        if line:
+            passage_lines.append(line)
+
+    return '\n'.join(passage_lines)
 
 
 def parse_dialogue_reorder(content: str) -> list[dict]:
-    """Parse dialogue-reorder activity from markdown."""
+    """Parse dialogue-reorder activity from markdown.
+
+    Input formats:
+    - A: text or - B: text (generic speakers)
+    - Олена: text (named speakers in Ukrainian)
+    - Speaker: text (named speakers in English)
+
+    Output: List of {order, text, speaker} dicts.
+    """
     lines = []
     order = 1
 
     for line in content.split('\n'):
         line = line.strip()
 
-        # Format: - A: text or - B: text
-        match = re.match(r'-\s*([AB]?):\s*(.+)', line)
+        # Skip empty lines and callouts
+        if not line or line.startswith('>'):
+            continue
+
+        # Try to match: - Speaker: text (with any speaker name)
+        match = re.match(r'-\s*([^:]+):\s*(.+)', line)
         if match:
-            speaker = match.group(1) if match.group(1) else None
+            speaker = match.group(1).strip()
             text = match.group(2).strip()
             item = {'order': order, 'text': text}
             if speaker:
                 item['speaker'] = speaker
             lines.append(item)
             order += 1
+        # Also try without speaker: - text
+        elif line.startswith('-'):
+            text = line[1:].strip()
+            if text:
+                lines.append({'order': order, 'text': text})
+                order += 1
 
     return lines
 
@@ -527,20 +607,18 @@ def parse_activities_section(activities_md: str) -> list[dict]:
             parsed = parser(content)
 
             if activity_type == 'cloze':
-                # Cloze returns dict with passage and blanks
+                # Cloze returns passage string with inline {answer|opt1|opt2} format
                 activity = {
                     'type': activity_type,
                     'title': title,
-                    'passage': parsed['passage'],
-                    'blanks': parsed['blanks']
+                    'passage': parsed
                 }
             elif activity_type == 'mark-the-words':
+                # Mark-the-words returns text string with *word* markers
                 activity = {
                     'type': activity_type,
                     'title': title,
-                    'instruction': parsed['instruction'],
-                    'passage': parsed['passage'],
-                    'correct_words': parsed['correct_words']
+                    'text': parsed
                 }
             elif activity_type in ['match-up']:
                 activity = {

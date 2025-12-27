@@ -820,8 +820,15 @@ def calculate_paragraph_variety(content: str) -> float:
         return 0.5
 
 
-def calculate_richness_score(content: str, level: str, file_path: Path = None) -> dict:
-    """Calculate richness score and components based on module type."""
+def calculate_richness_score(content: str, level: str, file_path: Path = None, yaml_activity_types: set = None) -> dict:
+    """Calculate richness score and components based on module type.
+
+    Args:
+        content: Markdown content of the module
+        level: CEFR level (A1, A2, B1, B2, C1, C2)
+        file_path: Path to the module file (for type detection)
+        yaml_activity_types: Set of activity types from YAML file (optional)
+    """
     # Determine module type for type-specific criteria
     module_type = extract_module_type(content, file_path) if file_path else 'grammar'
     targets = MODULE_TYPE_TARGETS.get(module_type, MODULE_TYPE_TARGETS['grammar'])
@@ -889,9 +896,14 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None) -
             'resources': count_resources(prose),
         })
     elif module_type == 'checkpoint':
-        # Use full content for activity_types since prose strips the Activities section
+        # Use YAML activity types if provided, otherwise search markdown
+        if yaml_activity_types:
+            activity_type_count = len(yaml_activity_types)
+        else:
+            # Fallback: search markdown for activity types
+            activity_type_count = len(set(re.findall(r'^##\s*(quiz|match-up|fill-in|unjumble|cloze|error-correction|translate|mark-the-words|group-sort|true-false|select|dialogue-reorder)', content, re.MULTILINE)))
         raw.update({
-            'activity_types': len(set(re.findall(r'^##\s*(quiz|match-up|fill-in|unjumble|cloze|error-correction|translate|mark-the-words|group-sort|true-false|select|dialogue-reorder)', content, re.MULTILINE))),
+            'activity_types': activity_type_count,
             'review_sections': len(re.findall(r'^##\s*[^\n]+', prose, re.MULTILINE)),
         })
     else:  # 'content' or 'cultural' - generic fallback

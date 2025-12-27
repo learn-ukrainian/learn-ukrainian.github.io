@@ -360,11 +360,12 @@ def _yaml_cloze_to_jsx(activity: dict, title: str) -> str:
     clean_passage = re.sub(blank_pattern, replace_blank, passage)
 
     import json
+    # Use template literal for passage to properly handle newlines and special characters
     return f'''### {escape_jsx(title)}
 
 <Cloze
   title="{escape_jsx(title)}"
-  passage="{escape_jsx(clean_passage)}"
+  passage={{`{escape_jsx(clean_passage)}`}}
   blanks={{JSON.parse(`{json.dumps(blanks, ensure_ascii=False)}`)}}
 />'''
 
@@ -463,12 +464,13 @@ def _yaml_mark_the_words_to_jsx(activity: dict, title: str) -> str:
     clean_text = re.sub(r'\*([^*]+)\*', r'\1', text)
 
     import json
+    # Use template literals for text to properly handle special characters like ! and ?
     return f'''### {escape_jsx(title)}
 
 <MarkTheWords>
   <MarkTheWordsActivity
-    instruction="{escape_jsx(instruction)}"
-    text="{escape_jsx(clean_text)}"
+    instruction={{`{escape_jsx(instruction)}`}}
+    text={{`{escape_jsx(clean_text)}`}}
     correctWords={{JSON.parse(`{json.dumps(correct_words, ensure_ascii=False)}`)}}
   />
 </MarkTheWords>'''

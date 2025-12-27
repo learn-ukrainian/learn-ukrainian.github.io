@@ -973,7 +973,9 @@ def audit_module(file_path: str) -> bool:
 
     # Richness evaluation (B1+ only)
     if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
-        richness_result = calculate_richness_score(content, level_code, file_path)
+        # Pass YAML activity types for checkpoints so richness can count them
+        yaml_activity_types = set(found_activity_types) if use_yaml_activities else None
+        richness_result = calculate_richness_score(content, level_code, file_path, yaml_activity_types)
         richness_flags = detect_dryness_flags(content, level_code, file_path)
         results['richness'] = evaluate_richness(
             richness_result['score'],
@@ -1041,7 +1043,8 @@ def audit_module(file_path: str) -> bool:
     richness_data = None
     richness_flags_for_report = None
     if level_code in ('B1', 'B2', 'C1', 'C2', 'LIT'):
-        richness_data = calculate_richness_score(content, level_code, file_path)
+        yaml_activity_types = set(found_activity_types) if use_yaml_activities else None
+        richness_data = calculate_richness_score(content, level_code, file_path, yaml_activity_types)
         richness_flags_for_report = detect_dryness_flags(content, level_code, file_path)
 
     report_content = generate_report(
