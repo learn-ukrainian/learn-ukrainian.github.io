@@ -1,0 +1,62 @@
+module: 14-aspect-integration-practice
+level: B1
+validated: '2025-12-28T00:15:00'
+validator: antigravity
+summary:
+  total_items: 6
+  errors_confirmed: 4
+  errors_rejected: 2
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Помилки виду в контексті
+  sentence_with_error: Поки я прочитав книгу вдома, задзвонив телефон і перервав мене.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Поки я читав книгу вдома, задзвонив телефон і перервав мене.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Сполучник 'поки' вказує на тривалий фоновий процес, під час якого сталася інша дія. Потрібен недоконаний вид: читав."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Помилки виду в контексті
+  sentence_with_error: Як тільки я приходив до офісу вчора вранці, я подзвонив клієнту.
+  error: приходив
+  answer: прийшов
+  sentence_corrected: Як тільки я прийшов до офісу вчора вранці, я подзвонив клієнту.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Конструкція 'як тільки' вказує на момент завершення дії (приходу), після якої сталася інша. Потрібен доконаний вид: прийшов."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Помилки виду в контексті
+  sentence_with_error: Він ще не закінчував роботу над важливим звітом, хоча працював
+    тиждень.
+  error: закінчував
+  answer: закінчив
+  sentence_corrected: Він ще не закінчив роботу над важливим звітом, хоча працював
+    тиждень.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Акцент на відсутності результату ('ще не'). Потрібен доконаний вид: закінчив."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Помилки виду в контексті
+  sentence_with_error: Нарешті після місяців роботи команда завершувала проєкт та
+    представила результати.
+  error: завершувала
+  answer: завершила
+  sentence_corrected: Нарешті після місяців роботи команда завершила проєкт та представила
+    результати.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Слово 'нарешті' та контекст (представила результати) вказують на успішне завершення. Потрібен доконаний вид: завершила."
+    confidence: 1.0
+    error_type: aspect_error

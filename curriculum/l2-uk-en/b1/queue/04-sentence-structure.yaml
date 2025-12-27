@@ -1,0 +1,1608 @@
+module: 04-sentence-structure
+level: B1
+file: curriculum/l2-uk-en/b1/04-sentence-structure.md
+generated: '2025-12-28T00:15:29.335641'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 14
+  fill-in: 28
+  cloze: 1
+  unjumble: 14
+  quiz: 28
+  translate: 14
+  true-false: 14
+item_count: 113
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Підмет" означає "object".'
+  error: object
+  answer: subject
+  sentence_corrected: '"Підмет" означає "subject".'
+  options:
+  - object
+  - subject
+  - predicate
+  - attribute
+  original_explanation: '"Підмет" = subject.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Присудок" означає "subject".'
+  error: subject
+  answer: predicate
+  sentence_corrected: '"Присудок" означає "predicate".'
+  options:
+  - subject
+  - predicate
+  - object
+  - attribute
+  original_explanation: '"Присудок" = predicate.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Додаток" означає "subject".'
+  error: subject
+  answer: object
+  sentence_corrected: '"Додаток" означає "object".'
+  options:
+  - subject
+  - object
+  - predicate
+  - attribute
+  original_explanation: '"Додаток" = object.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Означення — головний член речення.
+  error: головний
+  answer: другорядний
+  sentence_corrected: Означення — другорядний член речення.
+  options:
+  - головний
+  - другорядний
+  - допоміжний
+  - службовий
+  original_explanation: Означення — другорядний член.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: У складносурядному реченні одна частина залежна.
+  error: залежна
+  answer: рівноправна
+  sentence_corrected: У складносурядному реченні одна частина рівноправна.
+  options:
+  - залежна
+  - рівноправна
+  - підрядна
+  - головна
+  original_explanation: У складносурядному частини рівноправні.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Кома" означає "period".'
+  error: period
+  answer: comma
+  sentence_corrected: '"Кома" означає "comma".'
+  options:
+  - period
+  - comma
+  - colon
+  - dash
+  original_explanation: '"Кома" = comma, "крапка" = period.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Крапка" означає "comma".'
+  error: comma
+  answer: period
+  sentence_corrected: '"Крапка" означає "period".'
+  options:
+  - comma
+  - period
+  - colon
+  - dash
+  original_explanation: '"Крапка" = period.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"І", "а", "але" — сполучники підрядності.'
+  error: підрядності
+  answer: сурядності
+  sentence_corrected: '"І", "а", "але" — сполучники сурядності.'
+  options:
+  - підрядності
+  - сурядності
+  - прийменники
+  - частки
+  original_explanation: '"І", "а", "але" — сурядності.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Що", "бо", "коли" — сполучники сурядності.'
+  error: сурядності
+  answer: підрядності
+  sentence_corrected: '"Що", "бо", "коли" — сполучники підрядності.'
+  options:
+  - сурядності
+  - підрядності
+  - прийменники
+  - частки
+  original_explanation: '"Що", "бо", "коли" — підрядності.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Підрядне речення — незалежна частина.
+  error: незалежна
+  answer: залежна
+  sentence_corrected: Підрядне речення — залежна частина.
+  options:
+  - незалежна
+  - залежна
+  - головна
+  - проста
+  original_explanation: Підрядне — залежна, головне — незалежна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Головне речення — залежна частина.
+  error: залежна
+  answer: незалежна
+  sentence_corrected: Головне речення — незалежна частина.
+  options:
+  - залежна
+  - незалежна
+  - підрядна
+  - проста
+  original_explanation: Головне — незалежна частина.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Обставина" описує іменник.'
+  error: іменник
+  answer: дію
+  sentence_corrected: '"Обставина" описує дію.'
+  options:
+  - іменник
+  - дію
+  - підмет
+  - присудок
+  original_explanation: Обставина — де, коли, як відбувається дія.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Означення" описує дію.'
+  error: дію
+  answer: іменник
+  sentence_corrected: '"Означення" описує іменник.'
+  options:
+  - дію
+  - іменник
+  - присудок
+  - обставину
+  original_explanation: Означення описує іменник.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Просте речення" має кілька частин.'
+  error: кілька частин
+  answer: одну частину
+  sentence_corrected: '"Просте речення" має одну частину.'
+  options:
+  - кілька частин
+  - одну частину
+  - дві частини
+  - три частини
+  original_explanation: Просте має одну пару підмет-присудок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Хто виконує дію — це ___.
+  answer: підмет
+  complete_sentence: Хто виконує дію — це підмет.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Що робить підмет — це ___.
+  answer: присудок
+  complete_sentence: Що робить підмет — це присудок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: На що спрямована дія — це ___.
+  answer: додаток
+  complete_sentence: На що спрямована дія — це додаток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Яка характеристика іменника — це ___.
+  answer: означення
+  complete_sentence: Яка характеристика іменника — це означення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Де, коли, як відбувається дія — це ___.
+  answer: обставина
+  complete_sentence: Де, коли, як відбувається дія — це обставина.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Subject = ___.
+  answer: підмет
+  complete_sentence: Subject = підмет.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Predicate = ___.
+  answer: присудок
+  complete_sentence: Predicate = присудок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Object = ___.
+  answer: додаток
+  complete_sentence: Object = додаток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Підмет і присудок — це ___ члени.
+  answer: головні
+  complete_sentence: Підмет і присудок — це головні члени.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Додаток, означення, обставина — це ___ члени.
+  answer: другорядні
+  complete_sentence: Додаток, означення, обставина — це другорядні члени.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: '"Sentence part" = ___.'
+  answer: член речення
+  complete_sentence: '"Sentence part" = член речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Загальний термін для підмета чи присудка — ___.
+  answer: головний член
+  complete_sentence: Загальний термін для підмета чи присудка — головний член.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Загальний термін для додатка чи означення — ___.
+  answer: другорядний член
+  complete_sentence: Загальний термін для додатка чи означення — другорядний член.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Члени речення
+  sentence_template: Attribute = ___.
+  answer: означення
+  complete_sentence: Attribute = означення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Речення з однією парою підмет-присудок — ___.
+  answer: просте речення
+  complete_sentence: Речення з однією парою підмет-присудок — просте речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Речення з кількома частинами — ___.
+  answer: складне речення
+  complete_sentence: Речення з кількома частинами — складне речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Рівноправні частини з "і", "а", "але" — ___.
+  answer: складносурядне
+  complete_sentence: Рівноправні частини з "і", "а", "але" — складносурядне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Залежна частина з "що", "бо", "коли" — ___.
+  answer: складнопідрядне
+  complete_sentence: Залежна частина з "що", "бо", "коли" — складнопідрядне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Незалежна частина — ___.
+  answer: головне речення
+  complete_sentence: Незалежна частина — головне речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Залежна частина — ___.
+  answer: підрядне речення
+  complete_sentence: Залежна частина — підрядне речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: '"І", "а", "але" — сполучники ___.'
+  answer: сурядності
+  complete_sentence: '"І", "а", "але" — сполучники сурядності.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: '"Що", "бо", "коли" — сполучники ___.'
+  answer: підрядності
+  complete_sentence: '"Що", "бо", "коли" — сполучники підрядності.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Main clause = ___.
+  answer: головне речення
+  complete_sentence: Main clause = головне речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Subordinate clause = ___.
+  answer: підрядне речення
+  complete_sentence: Subordinate clause = підрядне речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Simple sentence = ___.
+  answer: просте речення
+  complete_sentence: Simple sentence = просте речення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Compound sentence = ___.
+  answer: складносурядне
+  complete_sentence: Compound sentence = складносурядне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Complex sentence (з підрядністю) = ___.
+  answer: складнопідрядне
+  complete_sentence: Complex sentence (з підрядністю) = складнопідрядне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Види речень
+  sentence_template: Coordinating conjunction = ___.
+  answer: сполучник сурядності
+  complete_sentence: Coordinating conjunction = сполучник сурядності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Аналіз речення
+  passage_template: У реченні «Студент читає книгу в бібліотеці» є {підмет} і {присудок}
+    як головні члени. {Підмет} — «студент», {присудок} — «читає». Слово «книгу» —
+    це {додаток}, на яке спрямована дія. «В бібліотеці» — це {обставина}, що показує,
+    де відбувається дія. Це {просте} речення, бо має лише одну пару підмет-присудок.
+    Якби було «Студент читає, бо любить книги», це було б {складнопідрядне} речення.
+    «Бо» — сполучник {підрядності}. Перед «бо» треба ставити {кому}. «Я читаю, а сестра
+    пише» — це {складносурядне} речення, бо «а» — сполучник {сурядності}. Правила
+    побудови речень вивчає {синтаксис}. Система розділових знаків — це {пунктуація}.
+  blanks:
+  - id: 1
+    answer: підмет
+    options:
+    - підмет
+    - присудок
+    - додаток
+  - id: 2
+    answer: присудок
+    options:
+    - присудок
+    - додаток
+    - обставина
+  - id: 3
+    answer: Підмет
+    options:
+    - Підмет
+    - Присудок
+    - Додаток
+  - id: 4
+    answer: присудок
+    options:
+    - присудок
+    - додаток
+    - обставина
+  - id: 5
+    answer: додаток
+    options:
+    - додаток
+    - означення
+    - обставина
+  - id: 6
+    answer: обставина
+    options:
+    - обставина
+    - означення
+    - додаток
+  - id: 7
+    answer: просте
+    options:
+    - просте
+    - складне
+    - складносурядне
+  - id: 8
+    answer: складнопідрядне
+    options:
+    - складнопідрядне
+    - просте
+    - складносурядне
+  - id: 9
+    answer: підрядності
+    options:
+    - підрядності
+    - сурядності
+    - прийменник
+  - id: 10
+    answer: кому
+    options:
+    - кому
+    - крапку
+    - тире
+  - id: 11
+    answer: складносурядне
+    options:
+    - складносурядне
+    - складнопідрядне
+    - просте
+  - id: 12
+    answer: сурядності
+    options:
+    - сурядності
+    - підрядності
+    - прийменник
+  - id: 13
+    answer: синтаксис
+    options:
+    - синтаксис
+    - морфологія
+    - фонетика
+  - id: 14
+    answer: пунктуація
+    options:
+    - пунктуація
+    - синтаксис
+    - лексика
+  complete_passage: У реченні «Студент читає книгу в бібліотеці» є {підмет} і {присудок}
+    як головні члени. {Підмет} — «студент», {присудок} — «читає». Слово «книгу» —
+    це {додаток}, на яке спрямована дія. «В бібліотеці» — це {обставина}, що показує,
+    де відбувається дія. Це {просте} речення, бо має лише одну пару підмет-присудок.
+    Якби було «Студент читає, бо любить книги», це було б {складнопідрядне} речення.
+    «Бо» — сполучник {підрядності}. Перед «бо» треба ставити {кому}. «Я читаю, а сестра
+    пише» — це {складносурядне} речення, бо «а» — сполучник {сурядності}. Правила
+    побудови речень вивчає {синтаксис}. Система розділових знаків — це {пунктуація}.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Підмет — це член речення, який виконує головну дію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Присудок — це член речення, який називає дію підмета.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Додаток — це другорядний член речення, на який спрямована дія підмета в
+    реченні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Означення — це другорядний член, який описує характеристику, ознаку іменника
+    в реченні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Обставина — це член речення, який описує обставини події.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Просте речення має лише одну пару підмет і присудок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Складне речення має кілька частин, які з'єднані сполучниками сурядності
+    або підрядності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Складносурядне речення має рівноправні частини, з'єднані сполучниками і,
+    а, але, або.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Складнопідрядне речення має головну частину і залежну підрядну частину,
+    з'єднану сполучником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Перед сполучниками підрядності що, бо, коли завжди ставимо кому в українській
+    мові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Головне речення — незалежна частина складного речення, яка може існувати
+    самостійно без підрядного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Підрядне речення — це залежна частина, яка не існує самостійно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Синтаксис — це розділ граматики, який вивчає будову речень і правила їх
+    побудови.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Синтаксичні пояснення
+  jumbled_words: []
+  answer: Пунктуація — це система розділових знаків і правила їх вживання в писемному
+    мовленні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Хто або що виконує дію в реченні — який це член речення?
+  options:
+  - text: підмет
+    correct: true
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: false
+  - text: обставина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Яка дія виконується або який стан описується — який це член речення?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: true
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: На кого або що спрямована дія — який це член речення?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: true
+  - text: обставина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Який член речення описує іменник, дає його характеристику?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Який член речення описує обставини дії — де, коли, як?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: false
+  - text: обставина
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Англійське слово "subject" перекладається українською як який граматичний
+    термін?
+  options:
+  - text: підмет
+    correct: true
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Англійське слово "predicate" перекладається українською як який граматичний
+    термін?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: true
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Англійське слово "object" перекладається українською як який граматичний
+    термін?
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: true
+  - text: означення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Підмет і присудок — це які важливі члени речення в українській мові?
+  options:
+  - text: головні члени
+    correct: true
+  - text: другорядні члени
+    correct: false
+  - text: допоміжні члени
+    correct: false
+  - text: службові члени
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: Додаток, означення та обставина — це які саме члени українського речення?
+  options:
+  - text: головні члени
+    correct: false
+  - text: другорядні члени
+    correct: true
+  - text: допоміжні члени
+    correct: false
+  - text: службові члени
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: У цьому простому реченні "Марія читає книгу" яке слово є підметом?
+  options:
+  - text: Марія
+    correct: true
+  - text: читає
+    correct: false
+  - text: книгу
+    correct: false
+  - text: Марія читає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: У цьому простому реченні "Марія читає книгу" яке слово є присудком?
+  options:
+  - text: Марія
+    correct: false
+  - text: читає
+    correct: true
+  - text: книгу
+    correct: false
+  - text: Марія читає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: У цьому простому реченні "Марія читає книгу" яке слово є додатком?
+  options:
+  - text: Марія
+    correct: false
+  - text: читає
+    correct: false
+  - text: книгу
+    correct: true
+  - text: Марія читає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Члени речення
+  question: У цьому реченні "Гарна дівчина читає" яке слово виконує роль означення?
+  options:
+  - text: гарна
+    correct: true
+  - text: дівчина
+    correct: false
+  - text: читає
+    correct: false
+  - text: дівчина читає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Речення з однією парою підмет-присудок — яке воно?
+  options:
+  - text: просте речення
+    correct: true
+  - text: складне речення
+    correct: false
+  - text: складносурядне
+    correct: false
+  - text: складнопідрядне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Якщо речення має кілька частин, то яке це граматичне речення?
+  options:
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: true
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Коли частини речення рівноправні та з'єднані "і", "а", "але" — яке це
+    речення?
+  options:
+  - text: просте
+    correct: false
+  - text: складнопідрядне
+    correct: false
+  - text: складносурядне
+    correct: true
+  - text: підрядне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Коли одна частина речення залежить від іншої — яке це речення?
+  options:
+  - text: просте
+    correct: false
+  - text: складнопідрядне
+    correct: true
+  - text: складносурядне
+    correct: false
+  - text: головне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Як називається незалежна частина у структурі складного українського речення?
+  options:
+  - text: головне речення
+    correct: true
+  - text: підрядне речення
+    correct: false
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Як граматично називається залежна частина у складному українському реченні?
+  options:
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: true
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Англійський термін "Simple sentence" перекладається українською мовою
+    як який термін?
+  options:
+  - text: просте речення
+    correct: true
+  - text: складне речення
+    correct: false
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Англійський термін "Main clause" перекладається українською мовою як який
+    термін?
+  options:
+  - text: головне речення
+    correct: true
+  - text: підрядне речення
+    correct: false
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Англійський термін "Subordinate clause" перекладається українською мовою
+    як який термін?
+  options:
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: true
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: До якого типу належать сполучники "і", "а", "але" в українській мові?
+  options:
+  - text: сполучники сурядності
+    correct: true
+  - text: сполучники підрядності
+    correct: false
+  - text: прийменники
+    correct: false
+  - text: частки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: До якого типу належать сполучники "що", "бо", "коли" в українській мові?
+  options:
+  - text: сполучники сурядності
+    correct: false
+  - text: сполучники підрядності
+    correct: true
+  - text: прийменники
+    correct: false
+  - text: частки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: Коли речення має лише дві слова "Я читаю" — яке воно?
+  options:
+  - text: просте
+    correct: true
+  - text: складне
+    correct: false
+  - text: складносурядне
+    correct: false
+  - text: складнопідрядне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: '"Я читаю, а сестра пише" — яке це речення?'
+  options:
+  - text: просте
+    correct: false
+  - text: складнопідрядне
+    correct: false
+  - text: складносурядне
+    correct: true
+  - text: підрядне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Види речень
+  question: '"Я читаю, бо люблю книги" — яке це речення?'
+  options:
+  - text: просте
+    correct: false
+  - text: складнопідрядне
+    correct: true
+  - text: складносурядне
+    correct: false
+  - text: головне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: subject
+  answer: ''
+  options:
+  - text: підмет
+    correct: true
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: false
+  - text: обставина
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: predicate
+  answer: ''
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: true
+  - text: додаток
+    correct: false
+  - text: обставина
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: object
+  answer: ''
+  options:
+  - text: підмет
+    correct: false
+  - text: присудок
+    correct: false
+  - text: додаток
+    correct: true
+  - text: обставина
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: attribute
+  answer: ''
+  options:
+  - text: підмет
+    correct: false
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: true
+  - text: обставина
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: adverbial
+  answer: ''
+  options:
+  - text: підмет
+    correct: false
+  - text: додаток
+    correct: false
+  - text: означення
+    correct: false
+  - text: обставина
+    correct: true
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: simple sentence
+  answer: ''
+  options:
+  - text: просте речення
+    correct: true
+  - text: складне речення
+    correct: false
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: main clause
+  answer: ''
+  options:
+  - text: головне речення
+    correct: true
+  - text: підрядне речення
+    correct: false
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: subordinate clause
+  answer: ''
+  options:
+  - text: головне речення
+    correct: false
+  - text: підрядне речення
+    correct: true
+  - text: просте речення
+    correct: false
+  - text: складне речення
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: comma
+  answer: ''
+  options:
+  - text: кома
+    correct: true
+  - text: крапка
+    correct: false
+  - text: двокрапка
+    correct: false
+  - text: тире
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: period
+  answer: ''
+  options:
+  - text: кома
+    correct: false
+  - text: крапка
+    correct: true
+  - text: двокрапка
+    correct: false
+  - text: тире
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: colon
+  answer: ''
+  options:
+  - text: кома
+    correct: false
+  - text: крапка
+    correct: false
+  - text: двокрапка
+    correct: true
+  - text: тире
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: dash
+  answer: ''
+  options:
+  - text: кома
+    correct: false
+  - text: крапка
+    correct: false
+  - text: двокрапка
+    correct: false
+  - text: тире
+    correct: true
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: syntax
+  answer: ''
+  options:
+  - text: синтаксис
+    correct: true
+  - text: морфологія
+    correct: false
+  - text: фонетика
+    correct: false
+  - text: пунктуація
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: punctuation
+  answer: ''
+  options:
+  - text: синтаксис
+    correct: false
+  - text: морфологія
+    correct: false
+  - text: фонетика
+    correct: false
+  - text: пунктуація
+    correct: true
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Підмет" означає "subject".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Присудок" означає "object".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: Підмет і присудок — головні члени речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: Означення — головний член речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Складнопідрядне" має залежну частину.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Складносурядне" має залежну частину.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: Перед "що", "бо", "коли" ставимо кому.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Кома" означає "period".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Просте речення" має одну пару підмет-присудок.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Головне речення" — залежна частина.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Додаток" означає "object".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Обставина" описує іменник.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"Синтаксис" — це правила побудови речень.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Синтаксична термінологія
+  statement: '"І", "а", "але" — сполучники підрядності.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,1413 @@
+module: 51-checkpoint-advanced-grammar
+level: B1
+file: curriculum/l2-uk-en/b1/51-checkpoint-advanced-grammar.md
+generated: '2025-12-28T00:15:30.797644'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 10
+  fill-in: 24
+  unjumble: 10
+  quiz: 44
+  true-false: 14
+item_count: 102
+items:
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Він сидів за столом, читавши книгу.
+  error: читавши
+  answer: читаючи
+  sentence_corrected: Він сидів за столом, читаючи книгу.
+  options:
+  - читавши
+  - читаючи
+  - прочитавши
+  - читати
+  original_explanation: Одночасність вимагає НДВ дієприслівника "читаючи".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Прочитаючи книгу, вона поклала її на полицю.
+  error: Прочитаючи
+  answer: Прочитавши
+  sentence_corrected: Прочитавши книгу, вона поклала її на полицю.
+  options:
+  - Прочитаючи
+  - Прочитавши
+  - Читаючи
+  - Читавши
+  original_explanation: Попередність вимагає ДВ дієприслівника "прочитавши".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Працюючий лікар допоміг пацієнту.
+  error: Працюючий
+  answer: Лікар, який працює,
+  sentence_corrected: Лікар, який працює, лікар допоміг пацієнту.
+  options:
+  - Працюючий
+  - Лікар, який працює,
+  - Працювавший
+  - Попрацювавши
+  original_explanation: '"Працюючий" — канцеляризм, краще підрядне речення.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Написаний книга стала популярною.
+  error: Написаний
+  answer: Написана
+  sentence_corrected: Написана книга стала популярною.
+  options:
+  - Написаний
+  - Написана
+  - Написане
+  - Написано
+  original_explanation: Книга (жін. рід) → написана (жін. рід).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Рішення прийнятий вчора.
+  error: прийнятий
+  answer: прийнято
+  sentence_corrected: Рішення прийнято вчора.
+  options:
+  - прийнятий
+  - прийнято
+  - прийнята
+  - прийняте
+  original_explanation: Безособова конструкція вимагає короткої форми "прийнято".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Книгу написана письменником.
+  error: написана
+  answer: написано
+  sentence_corrected: Книгу написано письменником.
+  options:
+  - написана
+  - написано
+  - написаний
+  - написане
+  original_explanation: Після "книгу" (знах. відм.) потрібна коротка форма "написано".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: У кімнаті сиділо два дітей.
+  error: два
+  answer: двоє
+  sentence_corrected: У кімнаті сиділо двоє дітей.
+  options:
+  - два
+  - двоє
+  - двох
+  - другі
+  original_explanation: З "діти" використовується збірний числівник "двоє".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Він прийшовши додому о п''ятій.
+  error: прийшовши
+  answer: прийшов
+  sentence_corrected: Він прийшов додому о п''ятій.
+  options:
+  - прийшовши
+  - прийшов
+  - приходячи
+  - приходив
+  original_explanation: Дієприслівник не може бути присудком у реченні.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Синочка, як справи в школі?
+  error: Синочка
+  answer: Синочку
+  sentence_corrected: Синочку, як справи в школі?
+  options:
+  - Синочка
+  - Синочку
+  - Синок
+  - Синові
+  original_explanation: 'Звертання вимагає кличного відмінка: "синочку".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки з просунутою граматикою
+  sentence_with_error: Оглянувшись виставку, вона вийшла з музею.
+  error: Оглянувшись
+  answer: Оглянувши
+  sentence_corrected: Оглянувши виставку, вона вийшла з музею.
+  options:
+  - Оглянувшись
+  - Оглянувши
+  - Оглядаючись
+  - Оглядаючи
+  original_explanation: '"Оглянути" (не зворотне) → "оглянувши" (без -сь).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] книгу, вона насолоджувалася тишею.'
+  answer: Читаючи
+  complete_sentence: '[Читаючи] книгу, вона насолоджувалася тишею.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] звіт, він нарешті пішов додому.'
+  answer: Написавши
+  complete_sentence: '[Написавши] звіт, він нарешті пішов додому.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: Вона стояла біля вікна, [___] на вулицю.
+  answer: дивлячись
+  complete_sentence: Вона стояла біля вікна, [дивлячись] на вулицю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] з Києва, вони зупинилися у Львові.'
+  answer: Повертаючись
+  complete_sentence: '[Повертаючись] з Києва, вони зупинилися у Львові.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: Він сидів за столом, [___] статтю.
+  answer: пишучи
+  complete_sentence: Він сидів за столом, [пишучи] статтю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] за квитки, вони увійшли до музею.'
+  answer: Заплативши
+  complete_sentence: '[Заплативши] за квитки, вони увійшли до музею.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: Дівчина йшла вулицею, [___] по телефону.
+  answer: розмовляючи
+  complete_sentence: Дівчина йшла вулицею, [розмовляючи] по телефону.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] каву, він вийшов з кав''ярні.'
+  answer: Випивши
+  complete_sentence: '[Випивши] каву, він вийшов з кав''ярні.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: Студенти слухали лекцію, [___] нотатки.
+  answer: роблячи
+  complete_sentence: Студенти слухали лекцію, [роблячи] нотатки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] новину, вона одразу зателефонувала другові.'
+  answer: Почувши
+  complete_sentence: '[Почувши] новину, вона одразу зателефонувала другові.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: Він ходив по кімнаті, [___] про майбутнє.
+  answer: думаючи
+  complete_sentence: Він ходив по кімнаті, [думаючи] про майбутнє.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприслівники — заповніть пропуски
+  sentence_template: '[___] роботу, вона вирішила відпочити.'
+  answer: Закінчивши
+  complete_sentence: '[Закінчивши] роботу, вона вирішила відпочити.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: '[___] письменником книга стала бестселером.'
+  answer: Написана
+  complete_sentence: '[Написана] письменником книга стала бестселером.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Проєкт [___] минулого тижня.
+  answer: завершено
+  complete_sentence: Проєкт [завершено] минулого тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: '[___] будинок вражає своєю красою.'
+  answer: Побудований
+  complete_sentence: '[Побудований] будинок вражає своєю красою.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Рішення [___] одноголосно.
+  answer: прийнято
+  complete_sentence: Рішення [прийнято] одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Ми розглядали [___] художником картину.
+  answer: намальовану
+  complete_sentence: Ми розглядали [намальовану] художником картину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: '[___] завдання отримало високу оцінку.'
+  answer: Виконане
+  complete_sentence: '[Виконане] завдання отримало високу оцінку.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Документ [___] директором.
+  answer: підписано
+  complete_sentence: Документ [підписано] директором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Це була [___] кілька років тому стаття.
+  answer: написана
+  complete_sentence: Це була [написана] кілька років тому стаття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Музей [___] у 1990 році.
+  answer: відкрито
+  complete_sentence: Музей [відкрито] у 1990 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: '[___] робота здивувала всіх.'
+  answer: Зроблена
+  complete_sentence: '[Зроблена] робота здивувала всіх.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: Угоду [___] представниками обох сторін.
+  answer: підписано
+  complete_sentence: Угоду [підписано] представниками обох сторін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні дієприкметники — заповніть пропуски
+  sentence_template: '[___] товари доставлять завтра.'
+  answer: Замовлені
+  complete_sentence: '[Замовлені] товари доставлять завтра.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Читаючи книгу, вона думала про майбутнє.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Закінчивши роботу, він пішов додому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Написана письменником книга стала бестселером.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Рішення було прийнято одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Слухаючи музику, вона готувала вечерю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Заплативши за каву, він вийшов з кав'ярні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Проєкт було завершено минулого тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Побачивши картину, він був захоплений.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Побудований будинок вражає своєю красою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з дієприслівниками та дієприкметниками
+  jumbled_words: []
+  answer: Усміхаючись, вона привіталася з друзями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Дієприслівник недоконаного виду показує, що додаткова дія відбувається
+    разом з основною. Яке значення передає "Читаючи книгу, вона пила каву"?
+  options:
+  - text: Читання і пиття кави відбувалися одночасно
+    correct: true
+  - text: Спочатку вона прочитала, потім випила каву
+    correct: false
+  - text: Вона буде читати і пити каву
+    correct: false
+  - text: Вона не читала книгу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: 'Дієприслівники недоконаного виду утворюються за формулою: основа теперішнього
+    часу плюс суфікс. Яка правильна форма від дієслова "писати"?'
+  options:
+  - text: пишучи
+    correct: true
+  - text: писаючи
+    correct: false
+  - text: писавши
+    correct: false
+  - text: написавши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Зворотні дієприслівники утворюються з часткою -сь. Яка правильна форма
+    від дієслова "усміхатися"?
+  options:
+  - text: усміхаючись
+    correct: true
+  - text: усміхаючися
+    correct: false
+  - text: усміхавшись
+    correct: false
+  - text: усміхаюсь
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: При утворенні дієприслівників відбуваються чергування приголосних. Яка
+    правильна форма від дієслова "казати"?
+  options:
+  - text: кажучи
+    correct: true
+  - text: казаючи
+    correct: false
+  - text: казавши
+    correct: false
+  - text: скажучи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Дієприслівник недоконаного виду можна використовувати в реченні з будь-яким
+    часом основного дієслова. Яке речення правильне?
+  options:
+  - text: Слухаючи музику, вона працюватиме
+    correct: true
+  - text: Слухаючи музику, вона працювала (неправильно)
+    correct: false
+  - text: Слухаючи музику, вона працює (неправильно)
+    correct: false
+  - text: Жодне з перелічених
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Дієприслівник від дієслова "йти" утворюється від основи теперішнього часу
+    "йд-". Яка правильна форма?
+  options:
+  - text: йдучи
+    correct: true
+  - text: йшовши
+    correct: false
+  - text: ходячи
+    correct: false
+  - text: йтючи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: 'Оберіть речення, де дієприслівник недоконаного виду використано правильно
+    для вираження одночасності двох дій:'
+  options:
+  - text: Дивлячись у вікно, він думав про майбутнє
+    correct: true
+  - text: Подивившись у вікно, він думав про майбутнє
+    correct: false
+  - text: Дивитися у вікно, він думав про майбутнє
+    correct: false
+  - text: Дивлячий у вікно, він думав про майбутнє
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Дієприслівники недоконаного виду особливо поширені в публіцистиці та літературі.
+    Яке речення типове для новин?
+  options:
+  - text: Виступаючи на конференції, міністр оголосив рішення
+    correct: true
+  - text: Виступивши на конференції, міністр оголосив рішення
+    correct: false
+  - text: Міністр виступав на конференції і оголосив рішення
+    correct: false
+  - text: Усі варіанти однаково типові
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Яка правильна форма дієприслівника недоконаного виду від дієслова "нести"?
+  options:
+  - text: несучи
+    correct: true
+  - text: несячи
+    correct: false
+  - text: нісши
+    correct: false
+  - text: принесши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники недоконаного виду (M42)
+  question: Дієприслівник недоконаного виду від "сидіти" має суфікс -ячи через м'який
+    кінцевий приголосний основи. Яка правильна форма?
+  options:
+  - text: сидячи
+    correct: true
+  - text: сидючи
+    correct: false
+  - text: сівши
+    correct: false
+  - text: сидівши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Дієприслівник доконаного виду показує попередню дію. Яке значення передає
+    "Прочитавши книгу, вона поклала її на полицю"?
+  options:
+  - text: Спочатку вона прочитала, потім поклала
+    correct: true
+  - text: Вона читала і клала одночасно
+    correct: false
+  - text: Вона буде читати і класти
+    correct: false
+  - text: Вона не прочитала книгу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Дієприслівники доконаного виду утворюються від основи інфінітива доконаного
+    виду плюс суфікс -вши/-ши. Яка правильна форма від "написати"?
+  options:
+  - text: написавши
+    correct: true
+  - text: написуючи
+    correct: false
+  - text: напишучи
+    correct: false
+  - text: писавши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Зворотні дієприслівники доконаного виду також мають частку -сь. Яка правильна
+    форма від "повернутися"?
+  options:
+  - text: повернувшись
+    correct: true
+  - text: повернувшися
+    correct: false
+  - text: повертаючись
+    correct: false
+  - text: поверненувшись
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: У реченні "Закінчивши роботу, вона пішла додому" дієприслівник показує,
+    що робота була завершена перед тим, як вона пішла. Яка правильна форма від "зробити"?
+  options:
+  - text: зробивши
+    correct: true
+  - text: роблячи
+    correct: false
+  - text: зробивший
+    correct: false
+  - text: зробивсь
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: 'Оберіть речення, де дієприслівник доконаного виду використано правильно
+    для вираження послідовності дій:'
+  options:
+  - text: Заплативши за каву, він вийшов з кав'ярні
+    correct: true
+  - text: Заплачуючи за каву, він вийшов з кав'ярні
+    correct: false
+  - text: Заплативший за каву, він вийшов з кав'ярні
+    correct: false
+  - text: Платячи за каву, він виходив з кав'ярні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Яка правильна форма дієприслівника доконаного виду від дієслова "сказати"?
+  options:
+  - text: сказавши
+    correct: true
+  - text: кажучи
+    correct: false
+  - text: скажучи
+    correct: false
+  - text: говорячи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Дієприслівники доконаного виду часто використовуються для опису послідовності
+    дій. Яке речення правильне?
+  options:
+  - text: Відчинивши двері, він увійшов до кімнати
+    correct: true
+  - text: Відчиняючи двері, він увійшов до кімнати
+    correct: false
+  - text: Відчинювати двері, він увійшов до кімнати
+    correct: false
+  - text: Відчинивший двері, він увійшов до кімнати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Яка правильна форма дієприслівника доконаного виду від дієслова "взяти"?
+  options:
+  - text: взявши
+    correct: true
+  - text: беручи
+    correct: false
+  - text: взявший
+    correct: false
+  - text: бравши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: Дієприслівник від дієслова "прийти" утворюється від основи "прийш-". Яка
+    правильна форма?
+  options:
+  - text: прийшовши
+    correct: true
+  - text: прийдучи
+    correct: false
+  - text: приходячи
+    correct: false
+  - text: прийшовший
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієприслівники доконаного виду (M43)
+  question: 'Оберіть речення, де правильно поєднано дієприслівники обох видів для
+    опису різних часових відношень:'
+  options:
+  - text: Прочитавши статтю і роздумуючи над нею, він записав свої думки
+    correct: true
+  - text: Прочитавши статтю і роздумувавши над нею, він записав свої думки
+    correct: false
+  - text: Читаючи статтю і роздумуючи над нею, він записавши свої думки
+    correct: false
+  - text: Прочитуючи статтю і роздумувавши над нею, він записав свої думки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Активні дієприкметники теперішнього часу на -учий/-ючий є канцеляризмами
+    в сучасній українській мові. Як краще сказати замість "працюючий студент"?
+  options:
+  - text: студент, що працює
+    correct: true
+  - text: працюючий студент (це правильно)
+    correct: false
+  - text: студент працюючий
+    correct: false
+  - text: працювавший студент
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Активні дієприкметники минулого часу (посивілий, змарнілий) є природними
+    формами української мови. Яке слово є таким дієприкметником?
+  options:
+  - text: посивілий
+    correct: true
+  - text: сивіючий
+    correct: false
+  - text: сивий
+    correct: false
+  - text: посивіти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Як правильно замінити канцеляризм "читаюча жінка" на природну конструкцію?
+  options:
+  - text: жінка, яка читає
+    correct: true
+  - text: читаюча жінка (це правильно)
+    correct: false
+  - text: жінка читаюча
+    correct: false
+  - text: читаюча собі жінка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Який активний дієприкметник минулого часу утворено від дієслова "змарніти"?
+  options:
+  - text: змарнілий
+    correct: true
+  - text: змарніючий
+    correct: false
+  - text: змарнений
+    correct: false
+  - text: марний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Активні дієприкметники минулого часу утворюються від неперехідних дієслів.
+    Яке речення правильне?
+  options:
+  - text: посмутнілий чоловік сидів на лавці
+    correct: true
+  - text: посмутніючий чоловік сидів на лавці
+    correct: false
+  - text: посмутнений чоловік сидів на лавці
+    correct: false
+  - text: смутніючий чоловік сидів на лавці
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Яке слово НЕ є канцеляризмом і може вільно вживатися в сучасній українській
+    мові?
+  options:
+  - text: зів'ялий
+    correct: true
+  - text: в'януючий
+    correct: false
+  - text: працюючий
+    correct: false
+  - text: читаючий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Як правильно замінити канцеляризм "граючі діти" на природну конструкцію?
+  options:
+  - text: діти, що грають
+    correct: true
+  - text: граючі діти (це правильно)
+    correct: false
+  - text: діти граючі
+    correct: false
+  - text: гравші діти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Активні дієприкметники (M44)
+  question: Активний дієприкметник минулого часу "порослий" утворено від дієслова
+    "порости". Яке речення правильне?
+  options:
+  - text: Паркан, порослий плющем, виглядав мальовничо
+    correct: true
+  - text: Паркан, поростаючий плющем, виглядав мальовничо
+    correct: false
+  - text: Паркан порослий плющем виглядав мальовничо
+    correct: false
+  - text: Порослий паркан плющем виглядав мальовничо
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Пасивні дієприкметники утворюються від дієслів доконаного виду і описують
+    результат дії над предметом. Яка правильна форма від "написати"?
+  options:
+  - text: написаний
+    correct: true
+  - text: писаний
+    correct: false
+  - text: напишучий
+    correct: false
+  - text: написуваний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: При утворенні пасивних дієприкметників відбуваються чергування приголосних.
+    Яка правильна форма від "зробити"?
+  options:
+  - text: зроблений
+    correct: true
+  - text: зробений
+    correct: false
+  - text: зробаний
+    correct: false
+  - text: зробивший
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Пасивні дієприкметники узгоджуються з іменниками в роді, числі та відмінку.
+    Яка правильна форма для "книга, яку написали"?
+  options:
+  - text: написана книга
+    correct: true
+  - text: написаний книга
+    correct: false
+  - text: написане книга
+    correct: false
+  - text: написані книга
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Яка правильна форма пасивного дієприкметника від "купити"?
+  options:
+  - text: куплений
+    correct: true
+  - text: купений
+    correct: false
+  - text: купаний
+    correct: false
+  - text: купивший
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Яка правильна форма пасивного дієприкметника для "завдання, яке виконали"?
+  options:
+  - text: виконане завдання
+    correct: true
+  - text: виконаний завдання
+    correct: false
+  - text: виконана завдання
+    correct: false
+  - text: виконані завдання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Пасивний дієприкметник від "побудувати" має суфікс -ний. Яка правильна
+    форма?
+  options:
+  - text: побудований
+    correct: true
+  - text: побудований
+    correct: false
+  - text: будуваний
+    correct: false
+  - text: побудівний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Коли потрібно вказати виконавця дії з пасивним дієприкметником, використовується
+    орудний відмінок. Яке речення правильне?
+  options:
+  - text: Книга написана письменником
+    correct: true
+  - text: Книга написана письменника
+    correct: false
+  - text: Книга написана письменнику
+    correct: false
+  - text: Книга написана письменник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — повна форма (M45)
+  question: Яка правильна форма пасивного дієприкметника від "відкрити"?
+  options:
+  - text: відкритий
+    correct: true
+  - text: відкрений
+    correct: false
+  - text: відкриваний
+    correct: false
+  - text: відкривший
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Короткі пасивні дієприкметники утворюються суфіксом -но/-то і не змінюються
+    за родами. Яке речення правильне?
+  options:
+  - text: Книгу написано минулого року
+    correct: true
+  - text: Книгу написана минулого року
+    correct: false
+  - text: Книгу написаний минулого року
+    correct: false
+  - text: Книгу написане минулого року
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Короткі форми використовуються в безособових конструкціях. Яка правильна
+    форма для "рішення прийняли"?
+  options:
+  - text: рішення прийнято
+    correct: true
+  - text: рішення прийняте
+    correct: false
+  - text: рішення прийнятий
+    correct: false
+  - text: рішення прийнята
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Короткі пасивні форми поширені в офіційному стилі. Яке речення типове
+    для новин?
+  options:
+  - text: Угоду підписано вчора
+    correct: true
+  - text: Угода підписана вчора
+    correct: false
+  - text: Угоду підписали вчора
+    correct: false
+  - text: Вони підписали угоду вчора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Яка правильна коротка форма від "завершити"?
+  options:
+  - text: завершено
+    correct: true
+  - text: завершений
+    correct: false
+  - text: завершена
+    correct: false
+  - text: завершене
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Яка різниця між "Книга написана" і "Книгу написано"?
+  options:
+  - text: Перше — повна форма з узгодженням, друге — коротка безособова
+    correct: true
+  - text: Обидва речення однакові
+    correct: false
+  - text: Перше неправильне
+    correct: false
+  - text: Друге неправильне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Яка правильна коротка форма від "прийняти"?
+  options:
+  - text: прийнято
+    correct: true
+  - text: прийнятий
+    correct: false
+  - text: прийнята
+    correct: false
+  - text: прийняте
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Короткі форми на -но/-то характерні для якого стилю мовлення?
+  options:
+  - text: офіційно-ділового та публіцистичного
+    correct: true
+  - text: розмовного
+    correct: false
+  - text: художнього
+    correct: false
+  - text: наукового
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пасивні дієприкметники — коротка форма (M46)
+  question: Яка правильна коротка форма від "відправити"?
+  options:
+  - text: відправлено
+    correct: true
+  - text: відправлений
+    correct: false
+  - text: відправлена
+    correct: false
+  - text: відправлене
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Дієприслівники недоконаного виду показують одночасність з основною дією.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Дієприслівники доконаного виду показують дію, що відбувається після основної.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Активні дієприкметники теперішнього часу на -учий/-ючий є канцеляризмами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Пасивні дієприкметники утворюються від дієслів недоконаного виду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Короткі пасивні форми на -но/-то не змінюються за родами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Демінутиви можуть виражати не лише малий розмір, а й ніжність.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Збірні числівники двоє, троє використовуються тільки з дітьми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Дієприслівник "читаючи" утворюється від основи теперішнього часу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Форма "зроблений" має чергування б→бл.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Активний дієприкметник "посивілий" є канцеляризмом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Коротка форма "прийнято" використовується в безособових конструкціях.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Демінутив "водичка" може виражати ввічливість.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Дробовий числівник "третина" означає одну третину.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила просунутої граматики
+  statement: Дієприслівник "написавши" показує одночасність дій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,452 @@
+module: 49-numerals-collectives-fractions
+level: B1
+file: curriculum/l2-uk-en/b1/49-numerals-collectives-fractions.md
+generated: '2025-12-28T00:15:30.734617'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 8
+  unjumble: 6
+  quiz: 8
+  true-false: 8
+item_count: 36
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я купив три ножиці для різних потреб.
+  error: три
+  answer: троє
+  sentence_corrected: Я купив троє ножиці для різних потреб.
+  options:
+  - три
+  - троє
+  - трьох
+  - трьома
+  original_explanation: «Ножиці» — pluralia tantum, потребує збірного числівника.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Чекала півтора години на нього.
+  error: півтора
+  answer: півтори
+  sentence_corrected: Чекала півтори години на нього.
+  options:
+  - півтора
+  - півтори
+  - полтора
+  - половину
+  original_explanation: «Година» — жіночого роду, тому «півтори».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дві третини населення підтримує ідею.
+  error: третини
+  answer: третіх
+  sentence_corrected: Дві третіх населення підтримує ідею.
+  options:
+  - третини
+  - третіх
+  - третій
+  - третин
+  original_explanation: 'Правильний дріб: «дві третіх» (родовий множини від «третя»).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я працюю з троє студентами щодня.
+  error: троє
+  answer: трьома
+  sentence_corrected: Я працюю з трьома студентами щодня.
+  options:
+  - троє
+  - трьома
+  - трьох
+  - трьом
+  original_explanation: 'В орудному відмінку: «з трьома студентами».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Обидві батьки прийшли на збори.
+  error: Обидві
+  answer: Обоє
+  sentence_corrected: Обоє батьки прийшли на збори.
+  options:
+  - Обидві
+  - Обоє
+  - Обидва
+  - Обох
+  original_explanation: «Батьки» (батько + мати) — різна стать, тому «обоє».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: П'ять відсотки бюджету витрачено.
+  error: відсотки
+  answer: відсотків
+  sentence_corrected: П'ять відсотків бюджету витрачено.
+  options:
+  - відсотки
+  - відсотків
+  - відсоток
+  - відсоткові
+  original_explanation: 'Після 5-20 — родовий множини: «п''ять відсотків».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: У мене _____ дітей — син і донька.
+  answer: двоє
+  complete_sentence: У мене двоє__ дітей — син і донька.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Купив _____ ножиць для кухні.
+  answer: троє
+  complete_sentence: Купив троє__ ножиць для кухні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Чекала _____ години на вокзалі.
+  answer: півтори
+  complete_sentence: Чекала півтори__ години на вокзалі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: _____ населення підтримує реформи.
+  answer: Дві третіх
+  complete_sentence: Дві третіх__ населення підтримує реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: _____ батьків прийшли на збори.
+  answer: Обоє
+  complete_sentence: Обоє__ батьків прийшли на збори.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Залишилася _____ роботи.
+  answer: чверть
+  complete_sentence: Залишилася чверть__ роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Ми працювали з _____ студентами.
+  answer: трьома
+  complete_sentence: Ми працювали з трьома__ студентами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Ціни зросли на п'ять _____.
+  answer: відсотків
+  complete_sentence: Ціни зросли на п'ять відсотків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: У мене троє майже вже дорослих дітей, які живуть окремо від нас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Я сьогодні вранці купив двоє нових ножиць для кухні у великому магазині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Згідно з результатами останнього опитування, дві третіх населення міста
+    підтримують ініціативу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Вона чекала на автобус півтори години на зупинці під холодним зимовим дощем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Обоє моїх батьків підтримали це рішення, хоча спочатку вони мали сумніви.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: До завершення ще залишилася чверть роботи, і ми маємо закінчити до п'ятниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: В якому реченні збірний числівник використано правильно відповідно до
+    граматичних норм української мови?
+  options:
+  - text: Я купив три ножиці для різних цілей
+    correct: false
+  - text: У мене троє дітей — дві доньки та син
+    correct: true
+  - text: На столі лежать четверо книг
+    correct: false
+  - text: Ми замовили п'ятеро піц
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: Чому з іменником «окуляри» потрібно використовувати збірний числівник,
+    а не звичайний кількісний числівник?
+  options:
+  - text: Бо «окуляри» — це назва парного предмета для очей
+    correct: false
+  - text: Бо «окуляри» — це іменник жіночого роду
+    correct: false
+  - text: Бо «окуляри» — іменник, що вживається тільки в множині
+    correct: true
+  - text: Бо «окуляри» — запозичене слово з латини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: Яка правильна форма для вираження «1.5 години» в українській мові, враховуючи
+    рід іменника?
+  options:
+  - text: Півтора години
+    correct: false
+  - text: Півтори години
+    correct: true
+  - text: Полтора години
+    correct: false
+  - text: Один і пів години
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: Як правильно сказати «2/3 населення» в українській мові відповідно до
+    норм?
+  options:
+  - text: Дві третини населення
+    correct: false
+  - text: Дві третіх населення
+    correct: true
+  - text: Двоє третини населення
+    correct: false
+  - text: Два третіх населення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: Яке речення демонструє правильне відмінювання збірного числівника в орудному
+    відмінку при роботі з групою?
+  options:
+  - text: Я працюю з троє студентами над проектом
+    correct: false
+  - text: Я працюю з троїх студентами над проектом
+    correct: false
+  - text: Я працюю з трьома студентами над проектом
+    correct: true
+  - text: Я працюю з троїм студентами над проектом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: В якому контексті форма «обоє» використовується правильно відповідно до
+    української граматики для позначення пари?
+  options:
+  - text: Обоє сестри прийшли на свято
+    correct: false
+  - text: Обоє батьків підтримали рішення сина
+    correct: true
+  - text: Обоє вікна були відкриті
+    correct: false
+  - text: Обоє жінки голосували за
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: Яка правильна форма для вираження «25%» як дробу в українській мові, що
+    часто вживається?
+  options:
+  - text: Одна четверта
+    correct: false
+  - text: Чверть
+    correct: true
+  - text: Четвертина
+    correct: false
+  - text: Двадцять п'ята
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння збірних числівників
+  question: У якому реченні збірний числівник недоречний і краще використати звичайний
+    кількісний числівник замість нього?
+  options:
+  - text: Четверо студентів склали іспит
+    correct: false
+  - text: Троє ножиць лежить на столі
+    correct: false
+  - text: П'ятеро книг стоїть на полиці
+    correct: true
+  - text: Двоє дітей грається у дворі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: Збірні числівники обов'язкові з іменниками pluralia tantum (ножиці, двері).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: «Півтора» вживається з іменниками всіх трьох родів без зміни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: Форма «обоє» використовується для пари різної статі або змішаних груп.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: Збірні числівники не відмінюються за відмінками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: «Дві третіх» — правильна форма дробу 2/3 в українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: Для груп людей можна використовувати тільки збірні числівники.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: «Чверть» та «половина» — це іменники, що керують родовим відмінком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила числівників
+  statement: П'ятдесят відсотків завжди дорівнює «половина».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

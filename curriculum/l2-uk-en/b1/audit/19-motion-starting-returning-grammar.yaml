@@ -1,0 +1,106 @@
+module: 19-motion-starting-returning
+level: B1
+validated: '2025-12-28T00:40:00'
+validator: antigravity
+summary:
+  total_items: 8
+  errors_confirmed: 6
+  errors_rejected: 2
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Після концерту люди поїхали по домівках у різні сторони.
+  error: поїхали
+  answer: роз'їхалися
+  sentence_corrected: Після концерту люди роз'їхалися по домівках у різні сторони.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух багатьох людей у різні сторони (розсіювання) вимагає префікса роз- і частки -ся: роз'їхалися."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Я розійдуся до тебе завтра на каву.
+  error: розійдуся
+  answer: зайду
+  sentence_corrected: Я зайду до тебе завтра на каву.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Короткий візит (по дорозі або спеціально) позначається префіксом за-: зайду."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Кур'єр поніс листи всім клієнтам у різні квартали міста.
+  error: поніс
+  answer: розніс
+  sentence_corrected: Кур'єр розніс листи всім клієнтам у різні квартали міста.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Доставка багатьох предметів у різні місця (розподіл) вимагає префікса роз-: розніс."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Вона зайшла до магазину й провела там дві години, вибираючи подарунки.
+  error: зайшла
+  answer: пішла
+  sentence_corrected: Вона пішла до магазину й провела там дві години, вибираючи подарунки.
+  validate:
+    error_is_real_mistake: false
+    corrected_sentence_valid: true
+    explanation: "'Зайшла' (увійшла всередину) є абсолютно правильним варіантом, навіть якщо вона провела там багато часу. Помилки немає."
+    confidence: 1.0
+    error_type: false_positive
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Ми роз'їхалися на дачу в суботу вранці й залишилися там до вечора неділі.
+  error: роз'їхалися
+  answer: поїхали
+  sentence_corrected: Ми поїхали на дачу в суботу вранці й залишилися там до вечора неділі.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Початок руху групи в одне місце вимагає префікса по-: поїхали. 'Роз'їхалися' означає рух у різні боки."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Він пішов до друга на хвилинку, щоб повернути книжку.
+  error: пішов
+  answer: зайшов
+  sentence_corrected: Він зайшов до друга на хвилинку, щоб повернути книжку.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дуже короткий візит ('на хвилинку') найкраще описується дієсловом 'зайти' (заскочити): зайшов."
+    confidence: 0.9
+    error_type: word_choice
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Таксі завезло всіх пасажирів додому в різні частини міста після святкування.
+  error: завезло
+  answer: розвезло
+  sentence_corrected: Таксі розвезло всіх пасажирів додому в різні частини міста після святкування.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Розвезення людей по різних місцях вимагає префікса роз-: розвезло."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Виправлення помилок у використанні префіксів
+  sentence_with_error: Птахи зайшли в гніздо на зиму й залишилися там до весни.
+  error: зайшли
+  answer: пішли
+  sentence_corrected: Птахи пішли в гніздо на зиму й залишилися там до весни.
+  validate:
+    error_is_real_mistake: false
+    corrected_sentence_valid: false
+    explanation: "Семантична нісенітниця: птахи не 'ходять' (пішли/зайшли) у гніздо на зимівлю, і 'пішли' не виправляє ситуацію."
+    confidence: 1.0
+    error_type: semantic_error

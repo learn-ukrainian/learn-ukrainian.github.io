@@ -1,0 +1,94 @@
+module: 15-checkpoint-aspect-mastery
+level: B1
+validated: '2025-12-28T00:20:00'
+validator: antigravity
+summary:
+  total_items: 10
+  errors_confirmed: 7
+  errors_rejected: 3
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Він щодня прочитав газету.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Він щодня читав газету.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Слово 'щодня' вказує на регулярну дію, що вимагає недоконаного виду: читав."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Вона нарешті писала звіт.
+  error: писала
+  answer: написала
+  sentence_corrected: Вона нарешті написала звіт.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Слово 'нарешті' вказує на досягнення результату, тому потрібен доконаний вид: написала."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Я ніколи не прочитав цю книгу.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Я ніколи не читав цю книгу.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Заперечення досвіду ('ніколи не') вимагає недоконаного виду: не читав."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Він ще не читав цю статтю.
+  error: читав
+  answer: прочитав
+  sentence_corrected: Він ще не прочитав цю статтю.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Ще не' із значенням 'поки що немає результату' вимагає доконаного виду: (ще не) прочитав."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Читай цей документ до завтра!
+  error: Читай
+  answer: Прочитай
+  sentence_corrected: Прочитай цей документ до завтра!
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Наявність дедлайну ('до завтра') вказує на необхідність результату. Потрібен доконаний вид: Прочитай."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Я увесь день зробив цю роботу.
+  error: зробив
+  answer: робив
+  sentence_corrected: Я увесь день робив цю роботу.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Вказівка на тривалість 'увесь день' вимагає недоконаного виду: робив."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Типові помилки з видом
+  sentence_with_error: Не торкнися цього!
+  error: торкнися
+  answer: торкайся
+  sentence_corrected: Не торкайся цього!
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Заборона дії (негативний імператив) майже завжди вимагає недоконаного виду: Не торкайся."
+    confidence: 1.0
+    error_type: aspect_error

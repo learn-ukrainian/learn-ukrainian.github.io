@@ -1,0 +1,464 @@
+module: 24-motion-practice-integration
+level: B1
+file: curriculum/l2-uk-en/b1/24-motion-practice-integration.md
+generated: '2025-12-28T00:15:29.995261'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 9
+  unjumble: 6
+  quiz: 8
+  true-false: 8
+item_count: 37
+items:
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Я вчора *приїхав до* Києва потягом.
+  error: до Києва
+  answer: в Київ
+  sentence_corrected: Я вчора *приїхав до* Києва потягом.
+  options:
+  - в Київ
+  - на Київ
+  - у Київ
+  original_explanation: З дієсловом "приїхати" краще вживати В/НА + Зн.в. (Приїхати
+    в місто). "До Києва" можливо з "Доїхати".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Він підійшов *в* мене і запитав дорогу.
+  error: в мене
+  answer: до мене
+  sentence_corrected: Він підійшов *в* мене і запитав дорогу.
+  options:
+  - до мене
+  - на мене
+  - у мене
+  original_explanation: '"Підійти" завжди вимагає ДО + Род.в.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Ми *вийшли з* автобусу на зупинці.
+  error: з автобусу
+  answer: з автобуса
+  sentence_corrected: Ми *вийшли з* автобусу на зупинці.
+  options:
+  - з автобуса
+  - від автобуса
+  - із автобуса
+  original_explanation: Родовий відмінок слова "автобус" — автобусА. "Автобусу" —
+    це Давальний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Треба *перейти через* вулиці на зелене світло.
+  error: вулиці
+  answer: вулицю
+  sentence_corrected: Треба *перейти через* вулицю на зелене світло.
+  options:
+  - вулицю
+  - вулицею
+  - вулиця
+  original_explanation: Перейти через (що?) — Знахідний відмінок. Вулиця -> Вулицю.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Вона *зайшла з* магазину, щоб купити хліб.
+  error: з магазину
+  answer: в магазин
+  sentence_corrected: Вона *зайшла з* магазину, щоб купити хліб.
+  options:
+  - в магазин
+  - до магазину
+  - на магазин
+  original_explanation: Зайшла (куди?) — напрямок. В магазин.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Типові помилки
+  sentence_with_error: Ми довго *гуляли на* парку.
+  error: на парку
+  answer: по парку
+  sentence_corrected: Ми довго *гуляли на* парку.
+  options:
+  - по парку
+  - в парку
+  - у парку
+  original_explanation: Гуляти (де?) — в парку, або (як?) — по парку. "На парку" —
+    неможливо (хіба що зверху на деревах).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Минулого тижня я вирішив [___]їхати з дому дуже рано.
+  answer: ви
+  complete_sentence: Минулого тижня я вирішив [ви]їхати з дому дуже рано.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Навігатор повів мене дивним шляхом, і я [___]їхав через старий
+    міст.
+  answer: пере
+  complete_sentence: Навігатор повів мене дивним шляхом, і я [пере]їхав через старий
+    міст.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Потім я повернув [___] вузьку вулицю, де майже не було асфальту.
+  answer: на
+  complete_sentence: Потім я повернув [на] вузьку вулицю, де майже не було асфальту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Раптом дорога скінчилася, і я зрозумів, що [___]їхав у глухий
+    кут.
+  answer: за
+  complete_sentence: Раптом дорога скінчилася, і я зрозумів, що [за]їхав у глухий
+    кут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Довелося розвертатися і [___]їжджати назад на головну трасу.
+  answer: ви
+  complete_sentence: Довелося розвертатися і [ви]їжджати назад на головну трасу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Я [___]тратив купу часу через цю помилку.
+  answer: в
+  complete_sentence: Я [в]тратив купу часу через цю помилку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Коли я нарешті [___]їхав до бабусі, вона вже чекала на вулиці.
+  answer: до
+  complete_sentence: Коли я нарешті [до]їхав до бабусі, вона вже чекала на вулиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Я [___]йшов у хату втомлений, але радий.
+  answer: за
+  complete_sentence: Я [за]йшов у хату втомлений, але радий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в русі
+  sentence_template: Ми довго гуляли [___] саду і розмовляли.
+  answer: по
+  complete_sentence: Ми довго гуляли [по] саду і розмовляли.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Будь ласка, вийдіть з центрального входу вокзалу і відразу поверніть праворуч
+    за ріг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Потім вам треба йти прямо два довгі квартали аж до великого перехрестя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Перейдіть через широку дорогу на цьому світлофорі і спокійно станьте на
+    зупинці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Вам потрібно уважно почекати і сісти на жовтий автобус номер п'ять або сім.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Вийдіть на третій зупинці, яка називається площа Ринок, біля старого театру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть маршрут
+  jumbled_words: []
+  answer: Пройдіть ще трохи вперед по алеї, і ви побачите наш прекрасний музей зліва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви хочете сказати таксисту, щоб він оминув затори на дорозі. Яке дієслово
+    з префіксом ви використаєте?
+  options:
+  - text: Об'їхати (рух навколо перешкоди).
+    correct: true
+  - text: Заїхати (рух всередину на короткий час).
+    correct: false
+  - text: Переїхати (рух через перешкоду або зміна житла).
+    correct: false
+  - text: Доїхати (рух до кінцевої точки).
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ваша колега питає про результати складної наради. Ви хочете сказати, що
+    переговори закінчилися нічим (dead end). Яку фразу ви оберете?
+  options:
+  - text: Ми вийшли на фінішну пряму.
+    correct: false
+  - text: Переговори зайшли в глухий кут.
+    correct: true
+  - text: Ми обійшли всі гострі кути.
+    correct: false
+  - text: Справи пішли в гору.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви стоїте біля театру і чекаєте друга. Він дзвонить і каже "Я вже близько".
+    Яке дієслово описує його наближення до вас?
+  options:
+  - text: Я під'їжджаю / підходжу (movement towards).
+    correct: true
+  - text: Я від'їжджаю / відходжу (movement away).
+    correct: false
+  - text: Я проїжджаю (passing by).
+    correct: false
+  - text: Я виїжджаю (starting the trip).
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Турист запитує дорогу. Вам треба сказати йому перетнути велику вулицю.
+    Яку конструкцію ви використаєте?
+  options:
+  - text: Ідіть по вулиці.
+    correct: false
+  - text: Перейдіть через вулицю.
+    correct: true
+  - text: Вийдіть з вулиці.
+    correct: false
+  - text: Зайдіть на вулицю.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви розповідаєте про свою кар'єру. Як сказати, що ви звільнилися з компанії
+    за власним бажанням?
+  options:
+  - text: Я зайшов з роботи.
+    correct: false
+  - text: Я пішов з роботи.
+    correct: true
+  - text: Я прийшов з роботи.
+    correct: false
+  - text: Я обійшов роботу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви зустріли знайомого, якого не бачили 100 років. Він питає "Як життя?".
+    Що ви відповісте нейтрально-позитивно?
+  options:
+  - text: Справи йдуть потихеньку / добре.
+    correct: true
+  - text: Справи стоять на місці.
+    correct: false
+  - text: Справи пішли геть.
+    correct: false
+  - text: Справи біжать швидко.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви заблукали в незнайомому місті. Ви дзвоните друзям. Що ви скажете, щоб
+    описати ситуацію, коли ви випадково потрапили не туди?
+  options:
+  - text: Я приїхав у центр.
+    correct: false
+  - text: Я заїхав кудись не туди.
+    correct: true
+  - text: Я переїхав місто.
+    correct: false
+  - text: Я виїхав з міста.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі навігації
+  question: Ви описуєте свій ранок. "Я ___ з дому о 8:00". Який префікс потрібен для
+    старту руху зсередини?
+  options:
+  - text: Від- (відійшов).
+    correct: false
+  - text: Ви- (вийшов).
+    correct: true
+  - text: З- (зійшов).
+    correct: false
+  - text: Пі- (пішов).
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: Фраза "Час біжить" є неправильною, треба казати "Час йде".
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: Якщо ви скажете таксисту "Зупиніть тут", це ввічливо.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: '"Я дійшов до висновку" означає, що ви фізично прийшли в кімнату з написом
+    "Висновок".'
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: Префікс ПО- у слові "походити" означає "ходити трошки або певний час".
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: '"Ми пройшли митний контроль." Тут "пройшли" означає завершену процедуру.'
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: '"Сонце зійшло" означає, що сонце спустилося вниз.'
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: '"Метро ходить до опівночі".'
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Культурні нюанси та логіка
+  statement: '"Корабель пливе" і "Людина пливе" — це різні дієслова українською.'
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

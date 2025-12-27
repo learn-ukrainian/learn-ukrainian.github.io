@@ -1,0 +1,1212 @@
+module: 41-checkpoint-complex-sentences-2
+level: B1
+file: curriculum/l2-uk-en/b1/41-checkpoint-complex-sentences-2.md
+generated: '2025-12-28T00:15:30.488089'
+scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  unjumble: 8
+  quiz: 32
+  translate: 8
+  true-false: 12
+item_count: 82
+items:
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Хоча він хворів, тому пішов на роботу через важливу нараду.
+  error: тому пішов
+  answer: пішов
+  sentence_corrected: Хоча він хворів, пішов на роботу через важливу нараду.
+  options:
+  - пішов
+  - тому що пішов
+  - але пішов
+  - проте пішов
+  original_explanation: «Хоча» не поєднується з «тому» — це різні типи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Тому що йшов сильний дощ, ми залишились вдома весь день.
+  error: Тому що
+  answer: Оскільки
+  sentence_corrected: Оскільки йшов сильний дощ, ми залишились вдома весь день.
+  options:
+  - Оскільки
+  - Через
+  - Бо
+  - Тому
+  original_explanation: На початку речення — «оскільки» або «через те що».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Він запитав, де живу я тепер у цьому місті після переїзду.
+  error: де живу я
+  answer: де я живу
+  sentence_corrected: Він запитав, де я живу тепер у цьому місті після переїзду.
+  options:
+  - де я живу
+  - де живе я
+  - де живуть я
+  - де я живеш
+  original_explanation: У непрямих питаннях порядок прямий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Вона попросила, щоб я допомагаю їй завтра з проєктом обов'язково.
+  error: допомагаю
+  answer: допоміг
+  sentence_corrected: Вона попросила, щоб я допоміг їй завтра з проєктом обов'язково.
+  options:
+  - допоміг
+  - допомогти
+  - допоможу
+  - допомагав
+  original_explanation: Після «щоб» — минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Він запитав, я прийду завтра чи ні на важливу зустріч.
+  error: запитав, я
+  answer: запитав, чи я
+  sentence_corrected: Він запитав, чи я прийду завтра чи ні на важливу зустріч.
+  options:
+  - запитав, чи я
+  - 'запитав: я'
+  - запитав я
+  - запитав, що я
+  original_explanation: Потрібен сполучник «чи».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Попри йшов дощ, ми пішли гуляти в парк біля річки.
+  error: Попри йшов дощ
+  answer: Попри дощ
+  sentence_corrected: Попри дощ, ми пішли гуляти в парк біля річки.
+  options:
+  - Попри дощ
+  - Хоча дощ
+  - Незважаючи дощ
+  - Через дощ
+  original_explanation: «Попри» + іменник, не речення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Вона сказала, щоб він приходить завтра на роботу раніше.
+  error: приходить
+  answer: прийшов
+  sentence_corrected: Вона сказала, щоб він прийшов завтра на роботу раніше.
+  options:
+  - прийшов
+  - приходити
+  - приходив
+  - прийде
+  original_explanation: Після «щоб» в непрямих наказах — минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Коли поки вона готувала, діти грались у кімнаті весь вечір.
+  error: Коли поки
+  answer: Поки
+  sentence_corrected: Поки вона готувала, діти грались у кімнаті весь вечір.
+  options:
+  - Поки
+  - Коли
+  - Після того як
+  - Перш ніж
+  original_explanation: Не можна поєднувати «коли» і «поки» на початку речення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ він втомився, продовжував працювати над проєктом до пізньої
+    ночі.
+  answer: Хоча
+  complete_sentence: Хоча він втомився, продовжував працювати над проєктом до пізньої
+    ночі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Вона залишилась вдома, ___ захворіла на грип минулого тижня.
+  answer: тому що
+  complete_sentence: Вона залишилась вдома, тому що захворіла на грип минулого тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ йшов сильний дощ, ми взяли парасольки з собою перед виходом.
+  answer: Оскільки
+  complete_sentence: Оскільки йшов сильний дощ, ми взяли парасольки з собою перед
+    виходом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ вона готувала смачну вечерю, діти робили уроки в кімнаті.
+  answer: Поки
+  complete_sentence: Поки вона готувала смачну вечерю, діти робили уроки в кімнаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ ми поснідали, вийшли на прогулянку по місту до парку.
+  answer: Після того як
+  complete_sentence: Після того як ми поснідали, вийшли на прогулянку по місту до
+    парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Він сказав, ___ приїде завтра ввечері на свято до нас.
+  answer: що
+  complete_sentence: Він сказав, що приїде завтра ввечері на свято до нас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Вона запитала, ___ я маю вільний час сьогодні ввечері для розмови.
+  answer: чи
+  complete_sentence: Вона запитала, чи я маю вільний час сьогодні ввечері для розмови.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Мама попросила, ___ я прибрав у своїй кімнаті до приходу гостей.
+  answer: щоб
+  complete_sentence: Мама попросила, щоб я прибрав у своїй кімнаті до приходу гостей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Він порадив, щоб я більше ___ і менше нервував через роботу.
+  answer: відпочивав
+  complete_sentence: Він порадив, щоб я більше відпочивав і менше нервував через роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Вона запитала, ___ я працюю вже три роки в цій компанії.
+  answer: де
+  complete_sentence: Вона запитала, де я працюю вже три роки в цій компанії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ всі труднощі, група досягла вершини гори вчасно до заходу
+    сонця.
+  answer: Попри
+  complete_sentence: Попри всі труднощі, група досягла вершини гори вчасно до заходу
+    сонця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Директор наказав, щоб усі працівники ___ о дев'ятій годині ранку.
+  answer: зібрались
+  complete_sentence: Директор наказав, щоб усі працівники зібрались о дев'ятій годині
+    ранку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ ми закінчили роботу, пішли на обід до кав'ярні біля офісу.
+  answer: Як тільки
+  complete_sentence: Як тільки ми закінчили роботу, пішли на обід до кав'ярні біля
+    офісу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Він відповів, ___ обов'язково зателефонує наступного дня після
+    зустрічі.
+  answer: що
+  complete_sentence: Він відповів, що обов'язково зателефонує наступного дня після
+    зустрічі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Хоча він втомився, продовжував працювати над важливим проєктом до пізньої
+    ночі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Оскільки йшов сильний дощ, ми вирішили залишитись удома і дивитись фільм.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Поки вона готувала смачну вечерю, діти робили домашні завдання в кімнаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Він сказав, що обов'язково прийде на важливу зустріч завтра ввечері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Вона запитала, чи я маю вільний час сьогодні ввечері для розмови.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Лікар порадив, щоб пацієнт більше відпочивав і менше нервував через роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Після того як ми поснідали, вийшли на прогулянку по місту до парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Як тільки закінчився дощ, ми вирішили поїхати на пікнік за місто.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Який сполучник найчастіше використовується для вираження поступки та протиставлення
+    в українській мові?
+  options:
+  - text: хоча
+    correct: true
+  - text: тому що
+    correct: false
+  - text: якщо
+    correct: false
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Який вираз використовується як формальний та офіційний синонім сполучника
+    «хоча» в діловому стилі мовлення?
+  options:
+  - text: попри
+    correct: false
+  - text: незважаючи на те що
+    correct: true
+  - text: проте
+    correct: false
+  - text: бо
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Як правильно використати «попри» в реченні для вираження поступки у формальному
+    стилі мовлення?
+  options:
+  - text: Попри дощ, ми пішли гуляти.
+    correct: true
+  - text: Попри йшов дощ, ми пішли.
+    correct: false
+  - text: Хоча попри дощ, пішли.
+    correct: false
+  - text: Попри що дощ, пішли.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Яке з наведених нижче речень правильно виражає допустове значення з протиставленням
+    та сполучником?
+  options:
+  - text: Було холодно, проте ми пішли гуляти.
+    correct: true
+  - text: Було холодно, хоча пішли гуляти.
+    correct: false
+  - text: Попри холодно, ми пішли.
+    correct: false
+  - text: Незважаючи холодно, пішли.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Як правильно поєднати допустовий сполучник з причиновим у складному реченні
+    для вираження складної логіки?
+  options:
+  - text: Хоча він хворів, пішов на роботу, тому що мав важливу зустріч.
+    correct: true
+  - text: Хоча він хворів, тому що пішов на роботу.
+    correct: false
+  - text: Тому що хворів, хоча пішов.
+    correct: false
+  - text: Хоча тому що хворів, пішов.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Яке слово використовується як прийменник з іменником для вираження поступки
+    та подолання перешкод?
+  options:
+  - text: попри
+    correct: true
+  - text: хоча
+    correct: false
+  - text: проте
+    correct: false
+  - text: незважаючи на те що
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Як правильно виразити підсилене допустове значення українською мовою в
+    офіційному стилі мовлення?
+  options:
+  - text: хоча
+    correct: false
+  - text: хоча й
+    correct: true
+  - text: попри
+    correct: false
+  - text: проте
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Допустові речення (М35)
+  question: Яке речення правильно поєднує допустовий сполучник з часовим для вираження
+    складної думки?
+  options:
+  - text: Хоча він втомився, продовжував працювати, поки не закінчив проєкт.
+    correct: true
+  - text: Хоча поки він втомився, закінчив.
+    correct: false
+  - text: Поки хоча втомився, продовжував.
+    correct: false
+  - text: Втомився хоча поки, закінчив.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Який сполучник вводить причину після наслідку в українській мові для пояснення
+    дії в реченні?
+  options:
+  - text: тому що
+    correct: true
+  - text: тому
+    correct: false
+  - text: отже
+    correct: false
+  - text: оскільки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Який сполучник використовується для вираження наслідку після причини в
+    українській мові у складних реченнях?
+  options:
+  - text: тому що
+    correct: false
+  - text: тому
+    correct: true
+  - text: бо
+    correct: false
+  - text: оскільки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Який сполучник зазвичай ставиться на початку речення з причиною перед
+    наслідком у стилі офіційного мовлення?
+  options:
+  - text: тому що
+    correct: false
+  - text: бо
+    correct: false
+  - text: оскільки
+    correct: true
+  - text: тому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Як правильно виразити причинно-наслідковий зв'язок з «тому що» в українській
+    мові правильно?
+  options:
+  - text: Він запізнився, тому що автобус не приїхав.
+    correct: true
+  - text: Тому що він запізнився, автобус не приїхав.
+    correct: false
+  - text: Він запізнився тому, що автобус.
+    correct: false
+  - text: Він тому що запізнився, автобус.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Яка різниця між «бо» і «тому що» в українській мові з точки зору стилістики
+    мовлення?
+  options:
+  - text: «Бо» — розмовний стиль, «тому що» — нейтральний.
+    correct: true
+  - text: «Бо» — офіційний, «тому що» — розмовний.
+    correct: false
+  - text: Немає різниці в значенні.
+    correct: false
+  - text: «Бо» завжди на початку речення.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Який сполучник використовується для вираження формального причинового
+    зв'язку на початку академічного речення?
+  options:
+  - text: бо
+    correct: false
+  - text: тому що
+    correct: false
+  - text: через те що
+    correct: true
+  - text: тому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Як правильно виразити наслідок з «отже» в українській мові для підсумовування
+    думки в реченні?
+  options:
+  - text: Він захворів, отже не прийшов на роботу.
+    correct: true
+  - text: Отже він захворів, не прийшов.
+    correct: false
+  - text: Він отже захворів не прийшов.
+    correct: false
+  - text: Захворів отже не прийшов він.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Причинові та наслідкові речення (М36)
+  question: Яке речення правильно поєднує причиновий і наслідковий сполучники в одному
+    складному висловлюванні?
+  options:
+  - text: Оскільки йшов дощ, ми залишились вдома, тому не змогли зустрітись.
+    correct: true
+  - text: Тому що оскільки дощ, залишились.
+    correct: false
+  - text: Оскільки тому дощ йшов, залишились.
+    correct: false
+  - text: Йшов дощ оскільки тому залишились.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Який сполучник використовується для вираження одночасності двох дій в
+    українській мові в часових реченнях?
+  options:
+  - text: коли
+    correct: false
+  - text: поки
+    correct: true
+  - text: після того як
+    correct: false
+  - text: перш ніж
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Який сполучник виражає негайну і миттєву послідовність дій в українській
+    мові для часових речень?
+  options:
+  - text: коли
+    correct: false
+  - text: поки
+    correct: false
+  - text: як тільки
+    correct: true
+  - text: до того як
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Який сполучник використовується для дії, що передує іншій дії, тобто означає
+    «перед» у часових реченнях?
+  options:
+  - text: після того як
+    correct: false
+  - text: перш ніж
+    correct: true
+  - text: поки
+    correct: false
+  - text: як тільки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Як правильно виразити послідовність дій з «після того як» в українській
+    мові в реченні?
+  options:
+  - text: Після того як ми поснідали, вийшли з дому.
+    correct: true
+  - text: Ми поснідали після того як вийшли.
+    correct: false
+  - text: Після ми того як поснідали, вийшли.
+    correct: false
+  - text: Поснідали після того як ми вийшли.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Яке з наведених речень правильно використовує «поки» для вираження одночасності
+    двох паралельних дій?
+  options:
+  - text: Поки вона готувала, діти грались у кімнаті.
+    correct: true
+  - text: Поки вона приготувала, діти пограли.
+    correct: false
+  - text: Готувала поки діти грались вона.
+    correct: false
+  - text: Діти поки грались, вона готувала.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Який сполучник використовується для загального часового відношення в українській
+    мові як універсальний варіант?
+  options:
+  - text: коли
+    correct: true
+  - text: поки
+    correct: false
+  - text: доки
+    correct: false
+  - text: щойно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Як правильно виразити «до того як» в українській мові для дії, що передує
+    іншій дії в реченні?
+  options:
+  - text: До того як почався дощ, ми повернулися додому.
+    correct: true
+  - text: Почався дощ до того як ми повернулися.
+    correct: false
+  - text: До того як ми повернулися, почався дощ.
+    correct: false
+  - text: Ми до того як дощ почався повернулися.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Часові речення (М37)
+  question: Яке речення правильно поєднує кілька часових сполучників у складному висловлюванні
+    з послідовністю подій?
+  options:
+  - text: Коли він прийшов, поки чекав, зателефонував друг.
+    correct: true
+  - text: Поки коли він прийшов, зателефонував.
+    correct: false
+  - text: Він коли поки прийшов, зателефонував друг.
+    correct: false
+  - text: Зателефонував коли поки він прийшов.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Який сполучник вводить непряме твердження в українській мові для переказу
+    чужих слів?
+  options:
+  - text: що
+    correct: true
+  - text: чи
+    correct: false
+  - text: щоб
+    correct: false
+  - text: який
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Який сполучник використовується для непрямих загальних питань типу «так/ні»
+    в українській мові?
+  options:
+  - text: що
+    correct: false
+  - text: чи
+    correct: true
+  - text: щоб
+    correct: false
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Яка саме граматична конструкція використовується для непрямих наказів
+    і прохань в українській мові?
+  options:
+  - text: що + теперішній час
+    correct: false
+  - text: чи + майбутній час
+    correct: false
+  - text: щоб + минулий час
+    correct: true
+  - text: який + інфінітив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Як змінюються займенники в непрямій мові при передачі чужих слів третьою
+    особою в реченні?
+  options:
+  - text: «я» змінюється на «він/вона», «ти» на «я», «ми» на «вони»
+    correct: true
+  - text: Займенники не змінюються.
+    correct: false
+  - text: «я» змінюється на «ти», «ти» на «я»
+    correct: false
+  - text: Тільки присвійні змінюються.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Яким знаком закінчується непряме питання в українській мові на відміну
+    від прямого питання?
+  options:
+  - text: Знаком питання.
+    correct: false
+  - text: Крапкою.
+    correct: true
+  - text: Знаком оклику.
+    correct: false
+  - text: Двокрапкою.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Який саме порядок слів використовується в непрямих питаннях в українській
+    мові як обов'язковий?
+  options:
+  - text: Прямий (підмет + присудок).
+    correct: true
+  - text: Інвертований (присудок + підмет).
+    correct: false
+  - text: Довільний.
+    correct: false
+  - text: Як у прямому питанні.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Як правильно передати пряме питання «Де ти працюєш?» у непрямій мові від
+    третьої особи?
+  options:
+  - text: Він запитав, де я працюю.
+    correct: true
+  - text: Він запитав, чи я працюю.
+    correct: false
+  - text: 'Він запитав: де працюю я?'
+    correct: false
+  - text: Він запитав, де працюю я.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Непряма мова (М39-40)
+  question: Яке дієслово введення найкраще виражає емоційне настійливе прохання в
+    непрямій мові українською?
+  options:
+  - text: попросити
+    correct: false
+  - text: сказати
+    correct: false
+  - text: наказати
+    correct: false
+  - text: благати
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: Although he was tired, he continued working on the important project.
+  answer: ''
+  options:
+  - text: Хоча він втомився, продовжував працювати над важливим проєктом.
+    correct: true
+  - text: Тому що він втомився, продовжував працювати.
+    correct: false
+  - text: Хоча втомився він, продовжував працювати.
+    correct: false
+  - text: Він хоча втомився, продовжував працювати.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: Since it was raining heavily, we decided to stay at home all day.
+  answer: ''
+  options:
+  - text: Оскільки йшов сильний дощ, ми вирішили залишитись вдома весь день.
+    correct: true
+  - text: Тому що йшов дощ, ми вирішили залишитись.
+    correct: false
+  - text: Йшов дощ, оскільки залишились вдома.
+    correct: false
+  - text: Ми оскільки йшов дощ, залишились вдома.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: While she was cooking dinner, the children were playing in the
+    living room.
+  answer: ''
+  options:
+  - text: Поки вона готувала вечерю, діти грались у вітальні.
+    correct: true
+  - text: Коли вона готувала, діти грались.
+    correct: false
+  - text: Вона готувала, поки діти грались.
+    correct: false
+  - text: Готувала поки діти грались вона.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: He said that he would definitely come to the meeting tomorrow evening.
+  answer: ''
+  options:
+  - text: Він сказав, що обов'язково прийде на зустріч завтра ввечері.
+    correct: true
+  - text: Він сказав, що я прийду на зустріч.
+    correct: false
+  - text: Він сказав, чи прийде на зустріч.
+    correct: false
+  - text: Він сказав прийти на зустріч завтра.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: She asked if I had free time this evening for a conversation.
+  answer: ''
+  options:
+  - text: Вона запитала, чи я маю вільний час сьогодні ввечері для розмови.
+    correct: true
+  - text: Вона запитала, що я маю час.
+    correct: false
+  - text: Вона запитала, я маю час?
+    correct: false
+  - text: Вона запитала, чи маю я час?
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: The doctor advised that the patient should rest more and worry
+    less about work.
+  answer: ''
+  options:
+  - text: Лікар порадив, щоб пацієнт більше відпочивав і менше нервував через роботу.
+    correct: true
+  - text: Лікар порадив, щоб пацієнт відпочиває.
+    correct: false
+  - text: Лікар порадив пацієнта відпочивати.
+    correct: false
+  - text: Лікар порадив, що пацієнт відпочиває.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: After we had breakfast, we went for a walk in the park near the
+    river.
+  answer: ''
+  options:
+  - text: Після того як ми поснідали, пішли на прогулянку в парк біля річки.
+    correct: true
+  - text: Коли поснідали, пішли на прогулянку.
+    correct: false
+  - text: Ми поснідали після того як пішли.
+    correct: false
+  - text: Після поснідали, пішли гуляти.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: As soon as it stopped raining, we decided to go on a picnic outside
+    the city.
+  answer: ''
+  options:
+  - text: Як тільки дощ закінчився, ми вирішили поїхати на пікнік за місто.
+    correct: true
+  - text: Коли дощ закінчився, поїхали.
+    correct: false
+  - text: Поки дощ закінчився, поїхали.
+    correct: false
+  - text: Дощ закінчився як тільки поїхали.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Сполучник «хоча» можна поєднувати з «тому» в одному реченні для вираження
+    допусту.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: На початку речення замість «тому що» краще використовувати «оскільки»
+    для причини.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Сполучник «поки» використовується з доконаним видом для вираження одночасних
+    дій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Після «щоб» в непрямих наказах використовується минулий час дієслова
+    обов'язково.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Непряме питання в українській мові закінчується знаком питання як і пряме
+    питання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Слово «попри» використовується як прийменник з іменником, а не з реченням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: У непрямій мові займенники змінюються відповідно до контексту висловлювання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Сполучник «як тільки» виражає повільну поступову послідовність дій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Для непрямих загальних питань типу «так/ні» використовується сполучник
+    «чи».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: У непрямих питаннях зберігається інвертований порядок слів як у прямих
+    питаннях.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Сполучник «коли» є універсальним часовим сполучником для різних часових
+    відношень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила складних речень
+  statement: Конструкція «після того як» може стояти як на початку, так і в середині
+    речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

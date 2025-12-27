@@ -1,0 +1,94 @@
+module: 20-motion-approaching-departing
+level: B1
+validated: '2025-12-28T00:45:00'
+validator: antigravity
+summary:
+  total_items: 7
+  errors_confirmed: 5
+  errors_rejected: 2
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Я відійшов до школи після довгої прогулянки по місту.
+  error: відійшов
+  answer: дійшов
+  sentence_corrected: Я дійшов до школи після довгої прогулянки по місту.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Прийменник 'до' вказує на досягнення мети, що вимагає префікса до-: дійшов. 'Відійшов' вживається з прийменником 'від'."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Таксі підїхало до аеропорту і висадило пасажирів.
+  error: підїхало
+  answer: під'їхало
+  sentence_corrected: Таксі під'їхало до аеропорту і висадило пасажирів.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Після префікса, що закінчується на приголосний, перед 'я, ю, є, ї' ставиться апостроф: під'їхало."
+    confidence: 1.0
+    error_type: spelling_error
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Ми підійшли до Києва після п'яти годин в дорозі транспортом.
+  error: підійшли
+  answer: доїхали
+  sentence_corrected: Ми доїхали до Києва після п'яти годин в дорозі транспортом.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух транспортом на велику відстань — це 'їхати', а досягнення мети — префікс до-: доїхали."
+    confidence: 1.0
+    error_type: word_choice
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Кур'єр підніс пакунок на пошту за три кілометри від складу.
+  error: підніс
+  answer: відніс
+  sentence_corrected: Кур'єр відніс пакунок на пошту за три кілометри від складу.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Доставка речі на відстань ('на пошту') — це 'віднести'. 'Піднести' означає підняти вгору або піднести близько."
+    confidence: 1.0
+    error_type: word_choice
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Автобус доїхав до зупинки і відчинив двері для нових пасажирів.
+  error: доїхав
+  answer: під'їхав
+  sentence_corrected: Автобус під'їхав до зупинки і відчинив двері для нових пасажирів.
+  validate:
+    error_is_real_mistake: false
+    corrected_sentence_valid: true
+    explanation: "'Доїхав до зупинки' — граматично і семантично правильна фраза (досяг зупинки). Заміна на 'під'їхав' можлива, але помилки немає."
+    confidence: 1.0
+    error_type: false_positive
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Він дійшов від столу після розмови і повернувся на своє місце.
+  error: дійшов
+  answer: відійшов
+  sentence_corrected: Він відійшов від столу після розмови і повернувся на своє місце.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух 'від' об'єкта вимагає префікса від-: відійшов."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Знайдіть і виправте помилки
+  sentence_with_error: Літак відїхав від терміналу і полетів до Нью-Йорка.
+  error: відїхав
+  answer: відлетів
+  sentence_corrected: Літак відлетів від терміналу і полетів до Нью-Йорка.
+  validate:
+    error_is_real_mistake: false
+    corrected_sentence_valid: false
+    explanation: "Літак на землі рухається як транспорт (taxying), тому 'від'їхав' (від терміналу) технічно правильно. 'Відлетів від терміналу' звучить неприродно (зліт відбувається зі злітної смуги)."
+    confidence: 0.9
+    error_type: semantic_error

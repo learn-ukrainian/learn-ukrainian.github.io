@@ -1,0 +1,980 @@
+module: 06-aspect-complete-system
+level: B1
+file: curriculum/l2-uk-en/b1/06-aspect-complete-system.md
+generated: '2025-12-28T00:15:29.470148'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 14
+  fill-in: 24
+  unjumble: 16
+  quiz: 14
+  true-false: 14
+item_count: 82
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Я прочитав книгу дві години.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Я читав книгу дві години.
+  options:
+  - прочитав
+  - читав
+  - читаю
+  - буду читати
+  original_explanation: 'Тривалість (дві години) вимагає НДВ: читав.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Він завжди написав листи.
+  error: написав
+  answer: писав
+  sentence_corrected: Він завжди писав листи.
+  options:
+  - написав
+  - писав
+  - пише
+  - напише
+  original_explanation: 'Завжди (звичка) вимагає НДВ: писав.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Вона робила всі вправи і здала їх.
+  error: робила
+  answer: зробила
+  sentence_corrected: Вона зробила всі вправи і здала їх.
+  options:
+  - робила
+  - зробила
+  - робить
+  - зробить
+  original_explanation: 'Результат (усі вправи, і здала) вимагає ДВ: зробила.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Ми вчили слова і вивчили їх за годину.
+  error: вчили
+  answer: вивчили
+  sentence_corrected: Ми вивчили слова і вививчили їх за годину.
+  options:
+  - вчили
+  - вивчили
+  - вчимо
+  - вивчимо
+  original_explanation: 'Контекст "і вивчили за годину" = результат, треба ДВ: вивчили.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Студенти прочитали книгу весь тиждень.
+  error: прочитали
+  answer: читали
+  sentence_corrected: Студенти читали книгу весь тиждень.
+  options:
+  - прочитали
+  - читали
+  - читають
+  - читатимуть
+  original_explanation: 'Весь тиждень (тривалість) вимагає НДВ: читали.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Того дня я писав листа і відправив його.
+  error: писав
+  answer: написав
+  sentence_corrected: Того дня я написав листа і відправив його.
+  options:
+  - писав
+  - написав
+  - пишу
+  - напише
+  original_explanation: 'Послідовність завершених дій (і відправив) вимагає ДВ: написав.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Він часто прийшов до нас у гості.
+  error: прийшов
+  answer: приходив
+  sentence_corrected: Він часто приходив до нас у гості.
+  options:
+  - прийшов
+  - приходив
+  - приходить
+  - прийде
+  original_explanation: 'Часто (повторення) вимагає НДВ: приходив.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Вона читала цю книгу і знає зміст.
+  error: читала
+  answer: прочитала
+  sentence_corrected: Вона прочитала цю книгу і знає зміст.
+  options:
+  - читала
+  - прочитала
+  - читає
+  - прочитає
+  original_explanation: 'Контекст "і знає зміст" = результат, треба ДВ: прочитала.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Я нарешті робив домашнє завдання.
+  error: робив
+  answer: зробив
+  sentence_corrected: Я нарешті зробив домашнє завдання.
+  options:
+  - робив
+  - зробив
+  - роблю
+  - зроблю
+  original_explanation: 'Нарешті (завершення) вимагає ДВ: зробив.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Минулого місяця ми зустрічалися один раз.
+  error: зустрічалися
+  answer: зустрілися
+  sentence_corrected: Минулого місяця ми зустрілися один раз.
+  options:
+  - зустрічалися
+  - зустрілися
+  - зустрічаємося
+  - зустрінемося
+  original_explanation: 'Один раз (одноразова дія) вимагає ДВ: зустрілися.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Він увесь день написав звіт.
+  error: написав
+  answer: писав
+  sentence_corrected: Він увесь день писав звіт.
+  options:
+  - написав
+  - писав
+  - пише
+  - напише
+  original_explanation: 'Увесь день (тривалість) вимагає НДВ: писав.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Вона готувала смачну вечерю і всі з'їли її.
+  error: готувала
+  answer: приготувала
+  sentence_corrected: Вона приготувала смачну вечерю і всі з'їли її.
+  options:
+  - готувала
+  - приготувала
+  - готує
+  - приготує
+  original_explanation: 'Результат (і всі з''їли) вимагає ДВ: приготувала.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Одного разу я вчив цей вірш напам'ять.
+  error: вчив
+  answer: вивчив
+  sentence_corrected: Одного разу я вивчив цей вірш напам'ять.
+  options:
+  - вчив
+  - вивчив
+  - вчу
+  - вивчу
+  original_explanation: 'Одного разу (одноразова дія) + напам''ять (результат) вимагає
+    ДВ: вивчив.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Ми постійно зробили ці вправи.
+  error: зробили
+  answer: робили
+  sentence_corrected: Ми постійно робили ці вправи.
+  options:
+  - зробили
+  - робили
+  - робимо
+  - зробимо
+  original_explanation: 'Постійно (регулярність) вимагає НДВ: робили.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Я ___ книгу дві години. (читав/прочитав)
+  answer: читав
+  complete_sentence: Я читав книгу дві години. (читав/прочитав)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Я ___ книгу вчора. (читав/прочитав)
+  answer: прочитав
+  complete_sentence: Я прочитав книгу вчора. (читав/прочитав)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вона ___ листа весь вечір. (писала/написала)
+  answer: писала
+  complete_sentence: Вона писала листа весь вечір. (писала/написала)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вона ___ листа і відправила його. (писала/написала)
+  answer: написала
+  complete_sentence: Вона написала листа і відправила його. (писала/написала)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Він завжди ___ каву вранці. (пив/випив)
+  answer: пив
+  complete_sentence: Він завжди пив каву вранці. (пив/випив)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Він ___ каву і пішов на роботу. (пив/випив)
+  answer: випив
+  complete_sentence: Він випив каву і пішов на роботу. (пив/випив)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Ми ___ домашнє завдання годину. (робили/зробили)
+  answer: робили
+  complete_sentence: Ми робили домашнє завдання годину. (робили/зробили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Ми ___ усі вправи. (робили/зробили)
+  answer: зробили
+  complete_sentence: Ми зробили усі вправи. (робили/зробили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Студенти ___ слова щодня. (вчили/вивчили)
+  answer: вчили
+  complete_sentence: Студенти вчили слова щодня. (вчили/вивчили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Студенти ___ усі слова до іспиту. (вчили/вивчили)
+  answer: вивчили
+  complete_sentence: Студенти вивчили усі слова до іспиту. (вчили/вивчили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вчора я ___ фільм дві години. (дивився/подивився)
+  answer: дивився
+  complete_sentence: Вчора я дивився фільм дві години. (дивився/подивився)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вчора я ___ цікавий фільм. (дивився/подивився)
+  answer: подивився
+  complete_sentence: Вчора я подивився цікавий фільм. (дивився/подивився)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вона часто ___ борщ. (готувала/приготувала)
+  answer: готувала
+  complete_sentence: Вона часто готувала борщ. (готувала/приготувала)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду
+  sentence_template: Вона ___ смачний борщ на обід. (готувала/приготувала)
+  answer: приготувала
+  complete_sentence: Вона приготувала смачний борщ на обід. (готувала/приготувала)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти ___ це завдання? (робив/зробив)
+  answer: зробив
+  complete_sentence: Ти зробив це завдання? (робив/зробив)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти вчора ___ телевізор? (дивився/подивився)
+  answer: дивився
+  complete_sentence: Ти вчора дивився телевізор? (дивився/подивився)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Хто ___ цю прекрасну картину? (малював/намалював)
+  answer: намалював
+  complete_sentence: Хто намалював цю прекрасну картину? (малював/намалював)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти вже ___ сніданок? (готував/приготував)
+  answer: приготував
+  complete_sentence: Ти вже приготував сніданок? (готував/приготував)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти колись ___ у цьому ресторані? (був/побув)
+  answer: був
+  complete_sentence: Ти колись був у цьому ресторані? (був/побув)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ви ___ нові слова на сьогодні? (вчили/вивчили)
+  answer: вивчили
+  complete_sentence: Ви вивчили нові слова на сьогодні? (вчили/вивчили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти ___ мені листа? (писав/написав)
+  answer: писав
+  complete_sentence: Ти писав мені листа? (писав/написав)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Ти ___ листа і відправив? (писав/написав)
+  answer: написав
+  complete_sentence: Ти написав листа і відправив? (писав/написав)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Що ви ___ вчора ввечері? (робили/зробили)
+  answer: робили
+  complete_sentence: Що ви робили вчора ввечері? (робили/зробили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Аспект у запитаннях
+  sentence_template: Що ви ___ за вихідні? (робили/зробили)
+  answer: зробили
+  complete_sentence: Що ви зробили за вихідні? (робили/зробили)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Недоконаний вид виражає процес або тривалість дії без акценту на її завершенні
+    чи результаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Доконаний вид завжди підкреслює результат, завершеність і одноразовість
+    дії, що відбулася в минулому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Я читав цю велику книгу дві години поспіль, але так і не закінчив її.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Я нарешті прочитав цю складну книгу до кінця і тепер можу вільно обговорити
+    її зміст.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Вона завжди пила каву вранці перед роботою, коли ще жила в Києві з батьками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Він швидко написав листа, уважно перевірив його, відправив на пошту і пішов
+    додому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Темпоральні маркери часу, такі як "довго" чи "нарешті", завжди допомагають
+    обрати правильний вид дієслова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про вид
+  jumbled_words: []
+  answer: Правильний вибір виду дієслова залежить не тільки від контексту, але й від
+    конкретного наміру мовця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Він прийшов додому, зняв пальто і помив руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Вона відкрила книгу, знайшла потрібну сторінку і почала читати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Студент взяв ручку, подумав хвилину і написав правильну відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Ми зустрілися біля метро, купили квитки і пішли в кіно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Я встав вранці, випив каву і пішов на роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Вони закінчили проект, здали звіт і пішли святкувати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Вчитель пояснив правило, дав приклади і запитав студентів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Послідовність дій
+  jumbled_words: []
+  answer: Сонце зійшло, птахи почали співати і місто прокинулося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Яке з наведених нижче дієслів виражає процес дії без акценту на її завершенні
+    або результаті?
+  options:
+  - text: писати
+    correct: true
+  - text: написати
+    correct: false
+  - text: відправити
+    correct: false
+  - text: зробити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Яке з поданих дієслів підкреслює завершеність дії та наявність конкретного
+    результату в минулому чи майбутньому?
+  options:
+  - text: читати
+    correct: false
+  - text: робити
+    correct: false
+  - text: прочитати
+    correct: true
+  - text: вчити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: У реченні "Я читав книгу дві години" використано недоконаний чи доконаний
+    вид дієслова, і чому?
+  options:
+  - text: недоконаний
+    correct: true
+  - text: доконаний
+    correct: false
+  - text: обидва
+    correct: false
+  - text: жодний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Яке значення має речення "Я прочитав книгу" — процес читання чи завершення
+    читання з результатом?
+  options:
+  - text: недоконаний
+    correct: false
+  - text: доконаний
+    correct: true
+  - text: обидва
+    correct: false
+  - text: жодний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Яке з наведених речень описує регулярну звичку в минулому, а не одноразову
+    завершену дію?
+  options:
+  - text: Він завжди пив каву вранці.
+    correct: true
+  - text: Він випив каву.
+    correct: false
+  - text: Він п'є каву зараз.
+    correct: false
+  - text: Він вип'є каву завтра.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Яке речення описує одноразову завершену дію в конкретний момент минулого,
+    а не повторювану або тривалу дію?
+  options:
+  - text: Я часто писав листи.
+    correct: false
+  - text: Я написав листа вчора.
+    correct: true
+  - text: Я писав листи щодня.
+    correct: false
+  - text: Я писав листа годину.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: У реченні "Вона робила вправи весь вечір" що підкреслюється — тривалість
+    процесу чи досягнення кінцевого результату?
+  options:
+  - text: процес
+    correct: true
+  - text: результат
+    correct: false
+  - text: початок
+    correct: false
+  - text: кінець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Коли ми говоримо "Вона зробила всі вправи", на що ми робимо акцент — на
+    процесі виконання чи на завершенні всіх вправ?
+  options:
+  - text: процес
+    correct: false
+  - text: результат
+    correct: true
+  - text: тривалість
+    correct: false
+  - text: повторення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Який з наведених маркерів часу зазвичай вказує на недоконаний вид дієслова,
+    підкреслюючи тривалість процесу без акценту на результаті?
+  options:
+  - text: весь день
+    correct: true
+  - text: нарешті
+    correct: false
+  - text: вже
+    correct: false
+  - text: одного разу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Який темпоральний маркер найчастіше супроводжує доконаний вид дієслова,
+    сигналізуючи про завершення дії та досягнення результату?
+  options:
+  - text: довго
+    correct: false
+  - text: годину
+    correct: false
+  - text: нарешті
+    correct: true
+  - text: часто
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Що означає речення "Я вчив слова два дні" — що мовець досяг результату
+    чи що він був залучений у процес вивчення протягом двох днів?
+  options:
+  - text: процес навчання
+    correct: true
+  - text: результат вивчення
+    correct: false
+  - text: одноразова дія
+    correct: false
+  - text: майбутня дія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: Коли хтось каже "Я вивчив усі слова", що це повідомляє — факт залучення
+    до процесу чи досягнення конкретного результату?
+  options:
+  - text: процес навчання
+    correct: false
+  - text: результат вивчення
+    correct: true
+  - text: повторювана дія
+    correct: false
+  - text: незавершена дія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: У яких ситуаціях слід використовувати недоконаний вид дієслова, щоб правильно
+    передати характер дії в українській мові?
+  options:
+  - text: для опису процесу
+    correct: true
+  - text: для одноразової дії
+    correct: false
+  - text: для завершеної дії
+    correct: false
+  - text: для результату
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення виду
+  question: У якому контексті доречно використовувати доконаний вид дієслова, щоб
+    передати завершеність та результативність дії в українському реченні?
+  options:
+  - text: для процесу
+    correct: false
+  - text: для звички
+    correct: false
+  - text: для завершеної дії
+    correct: true
+  - text: для тривалості
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: НДВ виражає процес.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: ДВ виражає результат.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Читати" — це ДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Прочитати" — це ДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Весь день" вказує на НДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Нарешті" вказує на НДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: Звички виражаються через НДВ.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: Одноразові дії виражаються через НДВ.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Я читав" може означати незавершену дію.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Я прочитав" означає завершену дію.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: НДВ завжди про минуле.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: ДВ не має форми теперішнього часу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Годину" вказує на тривалість = НДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Вид дієслова
+  statement: '"Вже" завжди з НДВ.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

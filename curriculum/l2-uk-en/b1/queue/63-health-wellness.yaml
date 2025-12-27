@@ -1,0 +1,583 @@
+module: 63-health-wellness
+level: B1
+file: curriculum/l2-uk-en/b1/63-health-wellness.md
+generated: '2025-12-28T00:15:31.164163'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 8
+  true-false: 12
+item_count: 48
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він робить дієту вже три місяці, щоб схуднути.
+  error: робить
+  answer: дотримується
+  sentence_corrected: Він дотримується дієту вже три місяці, щоб схуднути.
+  options:
+  - робить
+  - дотримується
+  - має
+  - дає
+  original_explanation: Правильна колокація — "дотримуватися дієти", а не "робити
+    дієту".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Лікар сказав, що треба мати курс лікування протягом тижня.
+  error: мати
+  answer: пройти
+  sentence_corrected: Лікар сказав, що треба пройти курс лікування протягом тижня.
+  options:
+  - мати
+  - пройти
+  - робити
+  - давати
+  original_explanation: Правильна колокація — "пройти курс лікування", а не "мати".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона відчуває депресію після втрати роботи та потребує допомоги.
+  error: відчуває
+  answer: страждає на
+  sentence_corrected: Вона страждає на депресію після втрати роботи та потребує допомоги.
+  options:
+  - відчуває
+  - страждає на
+  - робить
+  - має
+  original_explanation: 'Краще: "страждати на депресію" або "мати депресію".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Потрібно робити імунітет сильнішим за допомогою правильного
+    харчування.
+  error: робити
+  answer: зміцнювати
+  sentence_corrected: Потрібно зміцнювати імунітет сильнішим за допомогою правильного
+    харчування.
+  options:
+  - робити
+  - зміцнювати
+  - мати
+  - давати
+  original_explanation: Правильна колокація — "зміцнювати імунітет", а не "робити".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Йому потрібна профілактика хвороби, яка вже почалася минулого
+    тижня.
+  error: профілактика
+  answer: лікування
+  sentence_corrected: Йому потрібна лікування хвороби, яка вже почалася минулого тижня.
+  options:
+  - профілактика
+  - лікування
+  - одужання
+  - терапія
+  original_explanation: Якщо хвороба вже почалася, потрібне "лікування", а не "профілактика".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Я даю стрес на роботі кожного дня через великий обсяг завдань.
+  error: даю
+  answer: відчуваю
+  sentence_corrected: Я відчуваю стрес на роботі кожного дня через великий обсяг завдань.
+  options:
+  - даю
+  - відчуваю
+  - роблю
+  - маю
+  original_explanation: Правильна колокація — "відчувати стрес", а не "давати стрес".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Бажаю тобі швидкого лікування після операції на коліні!
+  error: лікування
+  answer: одужання
+  sentence_corrected: Бажаю тобі швидкого одужання після операції на коліні!
+  options:
+  - лікування
+  - одужання
+  - здоров'я
+  - стану
+  original_explanation: 'Правильно: "бажати швидкого одужання", а не "бажати лікування".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона має терапію у психолога щотижня по вівторках.
+  error: має
+  answer: проходить
+  sentence_corrected: Вона проходить терапію у психолога щотижня по вівторках.
+  options:
+  - має
+  - проходить
+  - робить
+  - дає
+  original_explanation: Правильна колокація — "проходити терапію", а не "мати терапію".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Як ваше _____ сьогодні? Добре себе почуваєте?
+  answer: самопочуття
+  complete_sentence: Як ваше самопочуття__ сьогодні? Добре себе почуваєте?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Лікар призначив курс _____, який триватиме два тижні.
+  answer: лікування
+  complete_sentence: Лікар призначив курс лікування__, який триватиме два тижні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Вітаміни допомагають _____ імунітет у холодну пору року.
+  answer: зміцнити
+  complete_sentence: Вітаміни допомагають зміцнити__ імунітет у холодну пору року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Паління — це _____ звичка, яка шкодить здоров'ю всього організму.
+  answer: шкідлива
+  complete_sentence: Паління — це шкідлива__ звичка, яка шкодить здоров'ю всього організму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Хронічний _____ може призвести до серйозних проблем зі здоров'ям.
+  answer: стрес
+  complete_sentence: Хронічний стрес__ може призвести до серйозних проблем зі здоров'ям.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Якщо тривога не проходить, варто звернутися до _____ по допомогу.
+  answer: психолога
+  complete_sentence: Якщо тривога не проходить, варто звернутися до психолога__ по
+    допомогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ харчування — це основа здорового способу життя для кожного.
+  answer: Правильне
+  complete_sentence: Правильне__ харчування — це основа здорового способу життя для
+    кожного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Бажаю вам швидкого _____! Сподіваюся, скоро станете здоровими!
+  answer: одужання
+  complete_sentence: Бажаю вам швидкого одужання__! Сподіваюся, скоро станете здоровими!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Регулярні фізичні _____ допомагають підтримувати тіло в хорошій
+    формі.
+  answer: вправи
+  complete_sentence: Регулярні фізичні вправи__ допомагають підтримувати тіло в хорошій
+    формі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ краща за лікування — це відома медична мудрість.
+  answer: Профілактика
+  complete_sentence: Профілактика__ краща за лікування — це відома медична мудрість.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: 'Намагайтеся дотримуватися _____ дня: лягати та вставати в один
+    час.'
+  answer: режиму
+  complete_sentence: 'Намагайтеся дотримуватися режиму__ дня: лягати та вставати в
+    один час.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Три місяці тому він позбувся _____ від куріння та почувається
+    краще.
+  answer: залежності
+  complete_sentence: Три місяці тому він позбувся залежності__ від куріння та почувається
+    краще.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Як ваше самопочуття сьогодні?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Потрібно піклуватися про здоров'я.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Треба пройти курс лікування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Вітаміни допомагають зміцнити імунітет.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Куріння — це шкідлива звичка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Як ви справляєтеся зі стресом?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Варто звернутися до психолога.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про здоров'я
+  jumbled_words: []
+  answer: Бажаю вам швидкого одужання!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яке слово означає загальний стан організму людини, її фізичне та психічне
+    благополуччя?
+  options:
+  - text: самопочуття
+    correct: false
+  - text: здоров'я
+    correct: true
+  - text: стан
+    correct: false
+  - text: організм
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яке слово використовують, щоб описати, як людина себе відчуває в конкретний
+    момент часу?
+  options:
+  - text: здоров'я
+    correct: false
+  - text: стан
+    correct: false
+  - text: самопочуття
+    correct: true
+  - text: імунітет
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Що означає слово "профілактика" в контексті медицини та здорового способу
+    життя?
+  options:
+  - text: лікування хвороби
+    correct: false
+  - text: запобігання хворобам
+    correct: true
+  - text: відновлення після операції
+    correct: false
+  - text: медичний огляд
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яке слово описує захисну систему організму, що допомагає боротися з інфекціями?
+  options:
+  - text: організм
+    correct: false
+  - text: лікування
+    correct: false
+  - text: стан
+    correct: false
+  - text: імунітет
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яка різниця між словами "здоровий" та "корисний" у контексті їжі?
+  options:
+  - text: Це повні синоніми без різниці
+    correct: false
+  - text: '"Здоровий" — про стан організму, "корисний" — про користь для здоров''я'
+    correct: true
+  - text: '"Корисний" більш формальне слово'
+    correct: false
+  - text: '"Здоровий" використовують тільки для людей'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яке дієслово найкраще поєднується зі словом "лікування" для позначення
+    процесу?
+  options:
+  - text: мати лікування
+    correct: false
+  - text: робити лікування
+    correct: false
+  - text: пройти лікування
+    correct: true
+  - text: давати лікування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Що означає слово "залежність" у контексті шкідливих звичок та здорового
+    способу життя?
+  options:
+  - text: корисна звичка
+    correct: false
+  - text: патологічна потреба в чомусь
+    correct: true
+  - text: режим дня
+    correct: false
+  - text: фізична активність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики здоров'я та самопочуття
+  question: Яке слово використовують для опису психологічного стану хвилювання та
+    неспокою?
+  options:
+  - text: депресія
+    correct: false
+  - text: стрес
+    correct: false
+  - text: тривога
+    correct: true
+  - text: терапія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: '"Здоров''я" та "самопочуття" — це повні синоніми, їх можна завжди замінювати.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: Правильно говорити "пройти лікування" для позначення процесу медичного
+    втручання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: '"Тривога" та "стрес" означають те саме і використовуються в однакових
+    контекстах.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: В українській культурі звернення до психолога вважається нормальною практикою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: Правильно говорити "дотримуватися дієти" для опису слідування плану харчування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: Слово "залежність" використовується тільки для опису наркотичної залежності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: '"Профілактика" означає лікування хвороби на ранній стадії її розвитку.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: Правильно говорити "зміцнити імунітет" для опису покращення захисної
+    системи організму.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: '"Шкідливий" та "нездоровий" — це повні синоніми без будь-якої різниці.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: В Україні санаторне лікування є популярною традицією оздоровлення організму.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: Можна сказати "відчувати депресію" як правильну колокацію в українській
+    мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання лексики здоров'я
+  statement: '"Режим дня" означає розпорядок активності, включаючи сон та харчування.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

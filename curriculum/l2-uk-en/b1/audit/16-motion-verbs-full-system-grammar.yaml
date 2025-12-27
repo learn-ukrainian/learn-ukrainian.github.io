@@ -1,0 +1,94 @@
+module: 16-motion-verbs-full-system
+level: B1
+validated: '2025-12-28T00:25:00'
+validator: antigravity
+summary:
+  total_items: 8
+  errors_confirmed: 7
+  errors_rejected: 1
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я іду до роботи на автобусі щодня вже десять років.
+  error: іду
+  answer: їжджу
+  sentence_corrected: Я їжджу до роботи на автобусі щодня вже десять років.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух транспортом (на автобусі) позначається дієсловом їхати/їздити. Регулярна дія (щодня) вимагає різноспрямованого дієслова: їжджу."
+    confidence: 1.0
+    error_type: word_choice
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Літак літає до Лондона зараз і приземлиться через дві години.
+  error: літає
+  answer: летить
+  sentence_corrected: Літак летить до Лондона зараз і приземлиться через дві години.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дія відбувається в конкретний момент (зараз), тому потрібне односпрямоване дієслово руху: летить."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він несе товари на вантажівці до магазину кожного тижня.
+  error: несе
+  answer: возить
+  sentence_corrected: Він возить товари на вантажівці до магазину кожного тижня.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Переміщення вантажу транспортом (на вантажівці) — це везти/возити. Регулярна дія (кожного тижня) — різноспрямоване: возить."
+    confidence: 1.0
+    error_type: word_choice
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Мама водить мене до школи зараз, бо я запізнююся.
+  error: водить
+  answer: веде
+  sentence_corrected: Мама веде мене до школи зараз, бо я запізнююся.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух відбувається зараз (конкретна одноразова дія), тому потрібне односпрямоване дієслово: веде."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я ходжу в магазин зараз, повернуся через пів години.
+  error: ходжу
+  answer: іду
+  sentence_corrected: Я іду в магазин зараз, повернуся через пів години.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дія відбувається в момент мовлення (зараз), тому потрібне односпрямоване дієслово: іду (йду)."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Черепаха повзає до води прямо зараз, дивись як повільно!
+  error: повзає
+  answer: повзе
+  sentence_corrected: Черепаха повзе до води прямо зараз, дивись як повільно!
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух відбувається безпосередньо зараз, в одному напрямку. Потрібне односпрямоване дієслово: повзе."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вони тягнуть важкі сумки з магазину кожного дня після роботи.
+  error: тягнуть
+  answer: тягають
+  sentence_corrected: Вони тягають важкі сумки з магазину кожного дня після роботи.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Регулярна повторювана дія (кожного дня) вимагає різноспрямованого дієслова: тягають."
+    confidence: 1.0
+    error_type: aspect_error

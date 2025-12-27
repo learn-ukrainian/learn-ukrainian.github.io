@@ -1,0 +1,106 @@
+module: 12-aspect-pairs-essential-40
+level: B1
+validated: '2025-12-28T00:08:00'
+validator: antigravity
+summary:
+  total_items: 8
+  errors_confirmed: 8
+  errors_rejected: 0
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Я прочитав книгу три години вчора ввечері.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Я читав книгу три години вчора ввечері.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Означення часу 'три години' вказує на тривалість процесу, тому потрібен недоконаний вид: читав."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Вона написала листа цілий день, але не закінчила.
+  error: написала
+  answer: писала
+  sentence_corrected: Вона писала листа цілий день, але не закінчила.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Цілий день' та 'не закінчила' вказують на незавершений процес. Доконаний вид 'написала' (завершила писати) тут помилковий."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Ми робили домашнє завдання і вже здали його викладачу.
+  error: робили
+  answer: зробили
+  sentence_corrected: Ми зробили домашнє завдання і вже здали його викладачу.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дія завершена (результат - 'здали'), отже попередня дія теж має бути завершеною (зробили)."
+    confidence: 0.95
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Він готував вечерю за годину і всі смачно поїли.
+  error: готував
+  answer: приготував
+  sentence_corrected: Він приготував вечерю за годину і всі смачно поїли.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Конструкція 'за годину' (за який час?) вказує на час, витрачений на досягнення результату. Потрібен доконаний вид: приготував."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Я купував хліб вчора і приніс його додому.
+  error: купував
+  answer: купив
+  sentence_corrected: Я купив хліб вчора і приніс його додому.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Послідовність завершених дій: купив і приніс. Недоконаний вид 'купував' акцентує на процесі, що тут неприродно."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Вони шукали ключі і нарешті знаходили їх під столом.
+  error: знаходили
+  answer: знайшли
+  sentence_corrected: Вони шукали ключі і нарешті знайшли їх під столом.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Нарешті' вказує на досягнення результату (знайшли) після процесу (шукали)."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Викладач пояснив це правило кілька разів упродовж семестру.
+  error: пояснив
+  answer: пояснював
+  sentence_corrected: Викладач пояснював це правило кілька разів упродовж семестру.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Кілька разів' вказує на повторюваність дії, що вимагає недоконаного виду: пояснював."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок у виборі виду
+  sentence_with_error: Студенти вивчали нові слова вчора і вивчали їх всі до контрольної.
+  error: вивчали (друге)
+  answer: вивчили
+  sentence_corrected: Студенти вивчали нові слова вчора і вивчили їх всі до контрольної.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Друга частина речення вказує на результат ('до контрольної', тобто завершили вивчення). Потрібен доконаний вид: вивчили."
+    confidence: 1.0
+    error_type: aspect_error

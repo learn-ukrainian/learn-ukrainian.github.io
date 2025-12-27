@@ -1,0 +1,70 @@
+module: 17-motion-coming-going
+level: B1
+validated: '2025-12-28T00:30:00'
+validator: antigravity
+summary:
+  total_items: 6
+  errors_confirmed: 5
+  errors_rejected: 1
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Він приїхав до офісу пішки о дев'ятій годині вранці.
+  error: приїхав
+  answer: прийшов
+  sentence_corrected: Він прийшов до офісу пішки о дев'ятій годині вранці.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Слово 'пішки' означає рух ногами, тому потрібно вживати дієслово 'йти/ходити', а не 'їхати/їздити'. З префіксом при-: прийшов."
+    confidence: 1.0
+    error_type: word_choice
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Вона увійшла з кімнати і закрила за собою двері.
+  error: увійшла
+  answer: вийшла
+  sentence_corrected: Вона вийшла з кімнати і закрила за собою двері.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Прийменник 'з' (з кімнати) вказує на рух назовні, що відповідає префіксу ви-: вийшла."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Машина виїхала у гараж і зупинилася там на ніч.
+  error: виїхала
+  answer: в'їхала
+  sentence_corrected: Машина в'їхала у гараж і зупинилася там на ніч.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух всередину ('у гараж') позначається префіксом в- (у-): в'їхала (або заїхала)."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Він виніс квіти для мами в кімнату на святкування.
+  error: виніс
+  answer: вніс
+  sentence_corrected: Він вніс квіти для мами в кімнату на святкування.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух всередину ('в кімнату') вимагає префікса в-: вніс (або заніс)."
+    confidence: 1.0
+    error_type: prefix_error
+- activity: error-correction
+  title: Помилки з префіксами
+  sentence_with_error: Вона вийшла до будинку через головний вхід.
+  error: вийшла
+  answer: увійшла
+  sentence_corrected: Вона увійшла до будинку через головний вхід.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Рух 'до будинку' (всередину) через вхід відповідає префіксу в- (у-): увійшла."
+    confidence: 1.0
+    error_type: prefix_error

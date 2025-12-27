@@ -1,10 +1,15 @@
 module: 19-motion-starting-returning
 level: B1
 file: curriculum/l2-uk-en/b1/19-motion-starting-returning.md
-generated: '2025-12-27T17:29:17.690795'
-phase: 1
-scope: error-correction
-item_count: 8
+generated: '2025-12-28T00:15:29.864059'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 10
+  unjumble: 8
+  quiz: 8
+  true-false: 10
+item_count: 42
 items:
 - activity: error-correction
   title: Виправлення помилок у використанні префіксів
@@ -55,25 +60,6 @@ items:
   - приніс
   original_explanation: Роз- потрібен для доставки в різні місця, а по- означає початок
     переносу в одному напрямку.
-  validate:
-    error_is_real_mistake: null
-    corrected_sentence_valid: null
-    explanation: null
-    confidence: null
-- activity: error-correction
-  title: Виправлення помилок у використанні префіксів
-  sentence_with_error: Вона зайшла до магазину й провела там дві години, вибираючи
-    подарунки.
-  error: зайшла
-  answer: пішла
-  sentence_corrected: Вона пішла до магазину й провела там дві години, вибираючи подарунки.
-  options:
-  - зайшла
-  - пішла
-  - розійшлася
-  - прийшла
-  original_explanation: За- означає короткий візит, а для тривалого перебування потрібен
-    інший префікс, наприклад по-.
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -137,21 +123,391 @@ items:
     corrected_sentence_valid: null
     explanation: null
     confidence: null
-- activity: error-correction
-  title: Виправлення помилок у використанні префіксів
-  sentence_with_error: Птахи зайшли в гніздо на зиму й залишилися там до весни.
-  error: зайшли
-  answer: пішли
-  sentence_corrected: Птахи пішли в гніздо на зиму й залишилися там до весни.
-  options:
-  - зайшли
-  - пішли
-  - розійшлися
-  - прийшли
-  original_explanation: За- означає короткий візит, а для тривалого перебування потрібен
-    інший префікс.
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Вони ___ на дачу в суботу вранці й провели там увесь вихідний.
+  answer: поїхали
+  complete_sentence: Вони поїхали на дачу в суботу вранці й провели там увесь вихідний.
   validate:
-    error_is_real_mistake: null
-    corrected_sentence_valid: null
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Після зборів колеги ___ по домівках у різні сторони міста.
+  answer: розійшлися
+  complete_sentence: Після зборів колеги розійшлися по домівках у різні сторони міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Я ___ до тебе на каву завтра ввечері, якщо не заперечуєш.
+  answer: зайду
+  complete_sentence: Я зайду до тебе на каву завтра ввечері, якщо не заперечуєш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Птахи ___ на південь восени, коли почалися холоди.
+  answer: полетіли
+  complete_sentence: Птахи полетіли на південь восени, коли почалися холоди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Вона ___ до магазину по дорозі додому на п'ять хвилин.
+  answer: зайшла
+  complete_sentence: Вона зайшла до магазину по дорозі додому на п'ять хвилин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Кур'єр ___ пакунки всім клієнтам у різні частини міста.
+  answer: розніс
+  complete_sentence: Кур'єр розніс пакунки всім клієнтам у різні частини міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Ми ___ до батьків у селі й залишилися там на тиждень.
+  answer: поїхали
+  complete_sentence: Ми поїхали до батьків у селі й залишилися там на тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Таксі ___ пасажирів додому після вечірки в різні райони.
+  answer: розвезло
+  complete_sentence: Таксі розвезло пасажирів додому після вечірки в різні райони.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Він ___ на роботу о восьмій годині й повернувся ввечері.
+  answer: пішов
+  complete_sentence: Він пішов на роботу о восьмій годині й повернувся ввечері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір префікса в реченнях
+  sentence_template: Листя ___ від сильного вітру в різні сторони парку.
+  answer: розлетілося
+  complete_sentence: Листя розлетілося від сильного вітру в різні сторони парку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Вони пішли на роботу о восьмій годині ранку і повернулися ввечері додому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Після довгих зборів усі колеги розійшлися по своїх домівках у різні сторони
+    нашого міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Я зайду до тебе завтра ввечері на каву, якщо ти будеш вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Кур'єр розніс листи всім сусідам у різні квартири нашого будинку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Ми поїхали на море у п'ятницю вранці і провели там цілий тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Вона заїхала до батьків по дорозі на роботу, щоб віддати їм ключі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Зручне таксі швидко розвезло всіх пасажирів додому після великої вечірки
+    в різні райони нашої столиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновлення порядку слів у реченнях
+  jumbled_words: []
+  answer: Птахи полетіли на південь восени, коли почалися перші холоди й морози.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Яке значення має дієслово "піти" у реченні "Він пішов на роботу о восьмій
+    годині"?
+  options:
+  - text: Він вирушив, почав рух до роботи
+    correct: true
+  - text: Він прибув на роботу о восьмій годині
+    correct: false
+  - text: Він повернувся з роботи о восьмій годині
+    correct: false
+  - text: Він зробив короткий візит на роботу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Що означає фраза "Зайду до тебе завтра ввечері" в контексті візиту до
+    друга?
+  options:
+  - text: Я приїду на тиждень
+    correct: false
+  - text: Я завітаю ненадовго, швидкий візит
+    correct: true
+  - text: Я почну рух до тебе завтра
+    correct: false
+  - text: Я не зможу прийти завтра
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Яке значення має дієслово "розійшлися" у реченні "Після концерту люди
+    розійшлися по домівках"?
+  options:
+  - text: Люди почали йти до концерту
+    correct: false
+  - text: Люди зайшли на концерт ненадовго
+    correct: false
+  - text: Люди розділилися й пішли в різні сторони
+    correct: true
+  - text: Люди прийшли на концерт разом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Який префікс використовується для вираження початку подорожі або руху
+    з одного місця?
+  options:
+  - text: по- (поїхати, піти, полетіти)
+    correct: true
+  - text: за- (заїхати, зайти, залетіти)
+    correct: false
+  - text: роз- (роз'їхатися, розійтися, розлетітися)
+    correct: false
+  - text: під- (підійти, під'їхати, підлетіти)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Що означає фраза "Заїхати до магазину по дорозі на роботу" в контексті
+    щоденної подорожі?
+  options:
+  - text: Почати подорож до магазину замість роботи
+    correct: false
+  - text: Зробити короткий заїзд до магазину, не змінюючи основного маршруту
+    correct: true
+  - text: Прибути до магазину і залишитися там на день
+    correct: false
+  - text: 'Розділитися на дві групи: одна до роботи, друга до магазину'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Яке дієслово правильно описує ситуацію, коли група гостей покинула вечірку
+    й поїхала в різні сторони?
+  options:
+  - text: Гості поїхали додому (всі в одному напрямку)
+    correct: false
+  - text: Гості заїхали додому (короткий візит)
+    correct: false
+  - text: Гості роз'їхалися додому (кожен у свій бік)
+    correct: true
+  - text: Гості приїхали додому (прибули разом)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Який префікс найкраще підходить для опису дії "почати нести вантаж з одного
+    місця до іншого"?
+  options:
+  - text: по- (понести вантаж)
+    correct: true
+  - text: за- (занести вантаж)
+    correct: false
+  - text: роз- (рознести вантаж)
+    correct: false
+  - text: при- (принести вантаж)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Префікси по-, за-, роз- — вибір значення
+  question: Що означає фраза "Кур'єр розніс листи всім сусідам" у контексті доставки
+    пошти?
+  options:
+  - text: Кур'єр почав нести листи від пошти
+    correct: false
+  - text: Кур'єр заніс листи одному сусідові швидко
+    correct: false
+  - text: Кур'єр доставив листи різним сусідам у різні місця
+    correct: true
+  - text: Кур'єр приніс листи від центрального офісу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Вони розійшлися додому після зустрічі в кафе.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Я зайду до тебе на тиждень у липні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Він пішов на роботу о восьмій годині ранку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Кур'єр поніс пакунки всім клієнтам у різні місця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Ми заїхали до друзів на каву по дорозі додому.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Після концерту люди поїхали по домівках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Вона залетіла до кімнати на хвилину й одразу вийшла.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Таксі розвезло всіх пасажирів додому в різні райони міста.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Вони зайшли в кіно на два фільми підряд.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильність використання префіксів
+  statement: Птахи розлетілися в різні сторони, коли почули шум.
+  answer: ''
+  validate:
+    statement_valid: null
     explanation: null
     confidence: null

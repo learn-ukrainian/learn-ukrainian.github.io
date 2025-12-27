@@ -1,10 +1,17 @@
 module: 23-motion-patterns-other-verbs
 level: B1
 file: curriculum/l2-uk-en/b1/23-motion-patterns-other-verbs.md
-generated: '2025-12-27T17:29:17.770165'
-phase: 1
-scope: error-correction
-item_count: 6
+generated: '2025-12-28T00:15:29.972218'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 8
+  cloze: 1
+  unjumble: 6
+  quiz: 8
+  translate: 6
+  true-false: 8
+item_count: 43
 items:
 - activity: error-correction
   title: Виправте префікс
@@ -106,5 +113,571 @@ items:
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Вчора був божевільний день. Шеф наказав ___робити весь звіт,
+    тому що дані змінилися.
+  answer: пере
+  complete_sentence: Вчора був божевільний день. Шеф наказав переробити весь звіт,
+    тому що дані змінилися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Я мусив ___дзвонити клієнтам і пояснити ситуацію.
+  answer: пере
+  complete_sentence: Я мусив передзвонити клієнтам і пояснити ситуацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Моя колега ___плакала, бо не встигала з дедлайном.
+  answer: за
+  complete_sentence: Моя колега заплакала, бо не встигала з дедлайном.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Я вирішив її ___тримати у скрутну хвилину.
+  answer: під
+  complete_sentence: Я вирішив її підтримати у скрутну хвилину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Я допоміг їй ___класти документи на іншу мову.
+  answer: пере
+  complete_sentence: Я допоміг їй перекласти документи на іншу мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Ввечері ми нарешті все ___кінчили і видихнули.
+  answer: за
+  complete_sentence: Ввечері ми нарешті все закінчили і видихнули.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Шеф ___вірив роботу і залишився задоволеним.
+  answer: пере
+  complete_sentence: Шеф перевірив роботу і залишився задоволеним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Життя в офісі
+  sentence_template: Клієнт ___писав контракт без зайвих питань.
+  answer: під
+  complete_sentence: Клієнт підписав контракт без зайвих питань.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Історія успіху
+  passage_template: Мій друг Андрій вирішив {відкрити} власний бізнес. Він хотів {виробляти}
+    екологічні меблі. Спочатку йому було важко {знайти} інвесторів, які б {підтримали}
+    його ідею. Багато людей {відмовлялися} давати гроші, бо це був ризик. Але Андрій
+    не здався. Він {переробляв} бізнес-план п'ять разів, щоб зробити його ідеальним.
+    Він {прочитав} багато книг про маркетинг. Нарешті, один банк погодився {підписати}
+    кредитний договір. Андрій {найняв} найкращих майстрів і почав роботу. Через рік
+    його компанія вже {виконувала} замовлення з Європи. Андрій довів, що якщо ти хочеш
+    {досягти} успіху, треба багато працювати і ніколи не здаватися, навіть якщо хочеться
+    {заплакати}. Тільки так можна {реалізувати} свою мрію і {отримати} задоволення
+    від життя.
+  blanks:
+  - id: 1
+    answer: відкрити
+    options:
+    - відкрити
+    - закрити
+    - перекрити
+    - прикрити
+  - id: 2
+    answer: виробляти
+    options:
+    - виробляти
+    - заробляти
+    - приробляти
+    - переробляти
+  - id: 3
+    answer: знайти
+    options:
+    - знайти
+    - підняти
+    - вийти
+    - зайти
+  - id: 4
+    answer: підтримали
+    options:
+    - підтримали
+    - відтримали
+    - затримали
+    - притримали
+  - id: 5
+    answer: відмовлялися
+    options:
+    - відмовлялися
+    - підмовлялися
+    - домовлялися
+    - замовлялися
+  - id: 6
+    answer: переробляв
+    options:
+    - переробляв
+    - виробляв
+    - заробляв
+    - приробляв
+  - id: 7
+    answer: прочитав
+    options:
+    - прочитав
+    - перечитав
+    - дочитав
+    - зачитав
+  - id: 8
+    answer: підписати
+    options:
+    - підписати
+    - приписати
+    - виписати
+    - записати
+  - id: 9
+    answer: найняв
+    options:
+    - найняв
+    - зайняв
+    - перейняв
+    - прийняв
+  - id: 10
+    answer: виконувала
+    options:
+    - виконувала
+    - переконувала
+    - законувала
+    - приконувала
+  - id: 11
+    answer: досягти
+    options:
+    - досягти
+    - пересягти
+    - засягти
+    - присягти
+  - id: 12
+    answer: заплакати
+    options:
+    - заплакати
+    - виплакати
+    - відплакати
+    - переплакати
+  - id: 13
+    answer: реалізувати
+    options:
+    - реалізувати
+    - паралізувати
+    - аналізувати
+    - локалізувати
+  - id: 14
+    answer: отримати
+    options:
+    - отримати
+    - тримати
+    - стримати
+    - притримати
+  complete_passage: Мій друг Андрій вирішив {відкрити} власний бізнес. Він хотів {виробляти}
+    екологічні меблі. Спочатку йому було важко {знайти} інвесторів, які б {підтримали}
+    його ідею. Багато людей {відмовлялися} давати гроші, бо це був ризик. Але Андрій
+    не здався. Він {переробляв} бізнес-план п'ять разів, щоб зробити його ідеальним.
+    Він {прочитав} багато книг про маркетинг. Нарешті, один банк погодився {підписати}
+    кредитний договір. Андрій {найняв} найкращих майстрів і почав роботу. Через рік
+    його компанія вже {виконувала} замовлення з Європи. Андрій довів, що якщо ти хочеш
+    {досягти} успіху, треба багато працювати і ніколи не здаватися, навіть якщо хочеться
+    {заплакати}. Тільки так можна {реалізувати} свою мрію і {отримати} задоволення
+    від життя.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Наша компанія вже багато років успішно виробляє якісні меблі для дому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вам потрібно терміново переробити цей важливий звіт до кінця робочого дня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Коли він почув цю сумну новину, то відразу замовк і вийшов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ми вирішили не підписувати контракт, тому що умови були дуже поганими.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я не можу відповісти на це складне питання прямо зараз без підготовки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Студент дуже добре підготувався до іспиту і отримав найвищу оцінку в групі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Дієслово "виробляти" має префікс ВИ-. Що означає це слово в контексті
+    заводу?
+  options:
+  - text: Створення продукту та виведення його назовні (випуск).
+    correct: true
+  - text: Принесення матеріалів всередину приміщення.
+    correct: false
+  - text: Повторне перероблення старих речей.
+    correct: false
+  - text: Початок робочого процесу вранці.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Що логічно означає дієслово "переписати", якщо ПЕРЕ- означає "знову/через"?
+  options:
+  - text: Написати текст знову, щоб виправити помилки.
+    correct: true
+  - text: Раптово почати писати дуже швидко.
+    correct: false
+  - text: Написати щось знизу сторінки.
+    correct: false
+  - text: Закінчити писати великий роман.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Дієслово "відмовитися" використовує префікс ВІД-. Яке абстрактне значення
+    це створює?
+  options:
+  - text: Відштовхування пропозиції, небажання щось робити.
+    correct: true
+  - text: Приєднання до групи людей.
+    correct: false
+  - text: Проходження крізь складну ситуацію.
+    correct: false
+  - text: Швидкий і енергійний початок дії.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Чому дієслово "заплакати" має префікс ЗА-, якщо тут немає значення "закриття"?
+  options:
+  - text: Тому що для емоцій ЗА- означає початок дії.
+    correct: true
+  - text: Тому що це повторна дія, яка відбувається знову.
+    correct: false
+  - text: Тому що людина ходить навколо, коли плаче.
+    correct: false
+  - text: Тому що плач — це кінцевий результат.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Слово "підтримати" логічно пов'язане з префіксом ПІД-. Яка метафора тут
+    працює?
+  options:
+  - text: Надання опори знизу, як фундамент тримає будинок.
+    correct: true
+  - text: Рух під міст або в тунель.
+    correct: false
+  - text: Дія, яка робиться таємно.
+    correct: false
+  - text: Завершення важливої справи до кінця.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Чим відрізняється "читати книгу" від "прочитати книгу"?
+  options:
+  - text: '"Прочитати" означає пройти книгу наскрізь, завершити.'
+    correct: true
+  - text: '"Прочитати" означає читати вголос для аудиторії.'
+    correct: false
+  - text: '"Прочитати" означає тільки почати читання.'
+    correct: false
+  - text: '"Прочитати" означає читати дуже швидко.'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Дієслово "приєднатися" містить префікс ПРИ-. Чому цей префікс підходить?
+  options:
+  - text: Бо це рух до об'єкта, зближення та контакт.
+    correct: true
+  - text: Бо це рух назовні з групи.
+    correct: false
+  - text: Бо це зміна внутрішнього стану.
+    correct: false
+  - text: Бо це повторення дії багато разів.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Логіка префіксів
+  question: Слово "вигадати" має корінь "гадати" і префікс ВИ-. Яка логіка?
+  options:
+  - text: '"Витягнути" нову ідею з власної голови назовні.'
+    correct: true
+  - text: Знайти щось випадково на землі.
+    correct: false
+  - text: Забути щось важливе і намагатися згадати.
+    correct: false
+  - text: Повторити думку іншої людини.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: We need to rewrite the article.
+  answer: ''
+  options:
+  - text: Нам треба переписати цю статтю.
+    correct: true
+  - text: Нам треба написати цю статтю.
+    correct: false
+  - text: Нам треба виписати цю статтю.
+    correct: false
+  - text: Нам треба записати цю статтю.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: She refused to answer.
+  answer: ''
+  options:
+  - text: Вона відмовилася відповідати.
+    correct: true
+  - text: Вона погодилася відповідати.
+    correct: false
+  - text: Вона почала відповідати.
+    correct: false
+  - text: Вона продовжила відповідати.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: The factory produces cars.
+  answer: ''
+  options:
+  - text: Завод виробляє автомобілі.
+    correct: true
+  - text: Завод робить автомобілі.
+    correct: false
+  - text: Завод переробляє автомобілі.
+    correct: false
+  - text: Завод заробляє автомобілі.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: He suddenly started speaking.
+  answer: ''
+  options:
+  - text: Він раптом заговорив.
+    correct: true
+  - text: Він раптом говорив.
+    correct: false
+  - text: Він раптом проговорив.
+    correct: false
+  - text: Він раптом переговорив.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: Can you support me?
+  answer: ''
+  options:
+  - text: Ти можеш мене підтримати?
+    correct: true
+  - text: Ти можеш мене тримати?
+    correct: false
+  - text: Ти можеш мене витримати?
+    correct: false
+  - text: Ти можеш мене затримати?
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Перекладіть речення
+  source_sentence: I finished reading the book completely.
+  answer: ''
+  options:
+  - text: Я прочитав книгу.
+    correct: true
+  - text: Я читав книгу.
+    correct: false
+  - text: Я зачитав книгу.
+    correct: false
+  - text: Я перечитав книгу.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: Префікс ВИ- завжди означає фізичний вихід з приміщення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: Дієслово "приготувати" означає "почати готувати".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Переробити" означає зробити роботу ще раз (re-do).'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Заплакати" і "плакати" — це синоніми без різниці у значенні.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Підтримати" буквально означає "тримати знизу".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Відмовитися" — це антонім до слова "погодитися".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Доробити" означає "почати робити".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Міфи та правда про префікси
+  statement: '"Вигадати" і "згадати" — це одне й те саме.'
+  answer: ''
+  validate:
+    statement_valid: null
     explanation: null
     confidence: null

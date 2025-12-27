@@ -1,0 +1,570 @@
+module: 32-conditionals-unreal-yakby
+level: B1
+file: curriculum/l2-uk-en/b1/32-conditionals-unreal-yakby.md
+generated: '2025-12-28T00:15:30.248609'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 8
+  cloze: 1
+  unjumble: 6
+  quiz: 8
+  true-false: 8
+item_count: 37
+items:
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Якщо я мав гроші, я б купив новий будинок.
+  error: Якщо
+  answer: Якби
+  sentence_corrected: Якби я мав гроші, я б купив новий будинок.
+  options:
+  - Якби
+  - Коли б
+  - Хоча
+  - Тому що
+  original_explanation: Нереальна умова вимагає «якби», не «якщо».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Якби я знаю відповідь, я б сказав тобі правду.
+  error: знаю
+  answer: знав
+  sentence_corrected: Якби я знав відповідь, я б сказав тобі правду.
+  options:
+  - знав
+  - знатиму
+  - знаєш
+  - знати
+  original_explanation: У нереальних умовах використовується минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Якби вона прийшла, ми поговорили з нею вчора.
+  error: поговорили
+  answer: б поговорили
+  sentence_corrected: Якби вона прийшла, ми б поговорили з нею вчора.
+  options:
+  - б поговорили
+  - поговоримо
+  - поговорити
+  - говоримо
+  original_explanation: У наслідку нереальної умови потрібна частка «б».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він би допомогти мені, якби мав більше часу.
+  error: допомогти
+  answer: допоміг
+  sentence_corrected: Він би допоміг мені, якби мав більше часу.
+  options:
+  - допоміг
+  - допомагав
+  - допомагає
+  - допомогла
+  original_explanation: Потрібна минула форма, не інфінітив.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Якби вона знала правду, вона б сказав мені.
+  error: сказав
+  answer: сказала
+  sentence_corrected: Якби вона знала правду, вона б сказала мені.
+  options:
+  - сказала
+  - скаже
+  - сказати
+  - говорить
+  original_explanation: Форма має узгоджуватися з родом підмета «вона».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Якби я був президент, змінив би закони в країні.
+  error: президент
+  answer: президентом
+  sentence_corrected: Якби я був президентом, змінив би закони в країні.
+  options:
+  - президентом
+  - президента
+  - президенту
+  - президенти
+  original_explanation: 'Після «був» потрібен орудний відмінок: президентом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Якби я ___ більше часу, я б допоміг тобі з проєктом.
+  answer: мав
+  complete_sentence: Якби я мав більше часу, я б допоміг тобі з проєктом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Якби вона ___ правду, вона б сказала мені про це.
+  answer: знала
+  complete_sentence: Якби вона знала правду, вона б сказала мені про це.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Я ___ поїхав до Парижа, якби мав гроші на відпустку.
+  answer: б
+  complete_sentence: Я б поїхав до Парижа, якби мав гроші на відпустку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Якби ми ___ в Україні, ми б розмовляли українською щодня.
+  answer: жили
+  complete_sentence: Якби ми жили в Україні, ми б розмовляли українською щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Вона ___ сказала, якби знала відповідь на це питання.
+  answer: б
+  complete_sentence: Вона б сказала, якби знала відповідь на це питання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Якби він ___ старанніше в університеті, він би став лікарем.
+  answer: вчився
+  complete_sentence: Якби він вчився старанніше в університеті, він би став лікарем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Ми ___ поговорили, якби він прийшов на зустріч вчора.
+  answer: б
+  complete_sentence: Ми б поговорили, якби він прийшов на зустріч вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильною формою
+  sentence_template: Якби я ___ про твої проблеми раніше, я б допоміг.
+  answer: знав
+  complete_sentence: Якби я знав про твої проблеми раніше, я б допоміг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Олена мріє про подорожі. Вона думає: «(1)___ я (2)___ мільйон
+    гривень, я (3)___ поїхала до Японії на місяць. (4)___ могла вибирати будь-яку
+    країну, (5)___ (6)___ жила в Канаді. (7)___ я (8)___ президентом, зробила (9)___
+    освіту безкоштовною. (10)___ у мене був більше часу, я (11)___ вивчила ще одну
+    іноземну мову. На жаль, це тільки мрії. Але (12)___ я почала вчитися зараз, за
+    рік (13)___ (14)___ знала набагато більше!»'
+  blanks:
+  - id: 1
+    answer: Якби
+    options:
+    - Якби
+    - Якщо
+    - Коли
+    - Хоча
+  - id: 2
+    answer: мала
+    options:
+    - мала
+    - маю
+    - матиму
+    - мати
+  - id: 3
+    answer: б
+    options:
+    - б
+    - би
+    - ба
+    - бо
+  - id: 4
+    answer: Якби
+    options:
+    - Якби
+    - Якщо
+    - Коли
+    - Хоча
+  - id: 5
+    answer: мабуть
+    options:
+    - мабуть
+    - напевно
+    - точно
+    - ніколи
+  - id: 6
+    answer: б
+    options:
+    - б
+    - би
+    - ба
+    - бо
+  - id: 7
+    answer: Якби
+    options:
+    - Якби
+    - Якщо
+    - Коли
+    - Хоча
+  - id: 8
+    answer: була
+    options:
+    - була
+    - є
+    - буду
+    - бути
+  - id: 9
+    answer: б
+    options:
+    - б
+    - би
+    - ба
+    - бо
+  - id: 10
+    answer: Якби
+    options:
+    - Якби
+    - Якщо
+    - Коли
+    - Хоча
+  - id: 11
+    answer: б
+    options:
+    - б
+    - би
+    - ба
+    - бо
+  - id: 12
+    answer: якби
+    options:
+    - якби
+    - якщо
+    - коли б
+    - хоча
+  - id: 13
+    answer: б
+    options:
+    - б
+    - би
+    - ба
+    - бо
+  - id: 14
+    answer: уже
+    options:
+    - уже
+    - ще
+    - вже
+    - теж
+  complete_passage: 'Олена мріє про подорожі. Вона думає: «(1)___ я (2)___ мільйон
+    гривень, я (3)___ поїхала до Японії на місяць. (4)___ могла вибирати будь-яку
+    країну, (5)___ (6)___ жила в Канаді. (7)___ я (8)___ президентом, зробила (9)___
+    освіту безкоштовною. (10)___ у мене був більше часу, я (11)___ вивчила ще одну
+    іноземну мову. На жаль, це тільки мрії. Але (12)___ я почала вчитися зараз, за
+    рік (13)___ (14)___ знала набагато більше!»'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби я мав час, я б допоміг тобі з цим великим важливим проєктом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби вона знала правду, вона б чесно сказала мені про все відразу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби ми жили в Україні, ми б вільно розмовляли українською мовою щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби я прийшов раніше, я б встиг на останній потяг до Києва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби він мав великі гроші, він б купив новий красивий будинок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Якби я була президентом, я б змінила освіту в усій країні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яке з наведених речень є правильним прикладом нереальної умови з використанням
+    сполучника «якби» в українській мові?
+  options:
+  - text: Якби я мав час, я б допоміг тобі.
+    correct: true
+  - text: Якщо я матиму час, я допоможу тобі.
+    correct: false
+  - text: Якби я матиму час, я допоможу.
+    correct: false
+  - text: Якщо я мав час, я б допоміг.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яка саме частка обов'язково використовується в наслідку нереальної умови
+    для позначення гіпотетичності в українській мові?
+  options:
+  - text: не
+    correct: false
+  - text: ж
+    correct: false
+  - text: б / би
+    correct: true
+  - text: ні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: У яких випадках використовується варіант «би» замість «б» у нереальних
+    умовних реченнях української мови?
+  options:
+  - text: Завжди після дієслова.
+    correct: false
+  - text: Завжди після підмета.
+    correct: false
+  - text: Після приголосного звуку.
+    correct: true
+  - text: Тільки в минулому часі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яке з наведених речень правильно виражає жаль про минуле за допомогою
+    нереальної умови?
+  options:
+  - text: Якби я тоді знав, я б не зробив цієї помилки.
+    correct: true
+  - text: Якщо дізнаюся, скажу тобі правду.
+    correct: false
+  - text: Коли прийде, поговоримо з ним.
+    correct: false
+  - text: Я хочу, щоб ти прийшов завтра.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яка є основна відмінність між сполучниками «якщо» і «якби» в умовних реченнях
+    української мови?
+  options:
+  - text: «Якщо» — для минулого, «якби» — для майбутнього.
+    correct: false
+  - text: «Якщо» — для реальних умов, «якби» — для нереальних.
+    correct: true
+  - text: «Якщо» — формальне, «якби» — розмовне.
+    correct: false
+  - text: Відмінності немає, вони взаємозамінні.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Як правильно сформулювати нереальну умову про теперішній час, коли ситуація
+    суперечить реальності?
+  options:
+  - text: Якщо я маю гроші, я куплю будинок.
+    correct: false
+  - text: Якби я матиму гроші, я куплю будинок.
+    correct: false
+  - text: Якби я мав гроші, я б купив будинок.
+    correct: true
+  - text: Якби я маю гроші, я б купив будинок.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яке з наведених речень є граматично правильним у контексті нереальних
+    умов з узгодженням роду?
+  options:
+  - text: Якби вона знала правду, вона скажала б.
+    correct: false
+  - text: Якби вона знала правду, вона б сказала.
+    correct: true
+  - text: Якби вона знає правду, вона б сказала.
+    correct: false
+  - text: Якщо вона знала правду, вона б сказала.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: У якому з наведених речень частка «б» стоїть у правильній позиції відповідно
+    до правил?
+  options:
+  - text: Я б поїхав до Львова, якби мав час.
+    correct: true
+  - text: Я поїхав би б до Львова, якби мав час.
+    correct: false
+  - text: Б я поїхав до Львова, якби мав часу.
+    correct: false
+  - text: Я поїхав би до би Львова, якби час.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Нереальна умова з «якби» описує ситуації, що не можуть статися.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: У нереальних умовах використовується теперішній час дієслова.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Частка «б» обов'язкова в наслідку нереальної умови.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: «Якби» і «якщо» — це взаємозамінні сполучники.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Форма «би» використовується після голосного звуку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Нереальні умови можуть виражати жаль про минуле.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення «Якби я мав час» означає, що в мене є час.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: В українській мові є чітке розмежування second і third conditional як
+    в англійській.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

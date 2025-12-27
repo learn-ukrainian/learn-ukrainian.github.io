@@ -1,0 +1,122 @@
+module: 11-aspect-in-imperatives
+level: B1
+validated: '2025-12-28T00:05:00'
+validator: antigravity
+summary:
+  total_items: 8
+  errors_confirmed: 8
+  errors_rejected: 0
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Зайдіть, будь ласка! Сядьте! Візьміть чай! Це неправильні форми
+    для гостинного запрошення.
+  error: Зайдіть
+  answer: Заходьте
+  sentence_corrected: Заходьте, будь ласка! Сядьте! Візьміть чай! Це неправильні форми
+    для гостинного запрошення.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "У ситуації гостинного запрошення вживання доконаного виду (Зайдіть, Сядьте) звучить як наказ. Для ввічливого запрошення слід вживати недоконаний вид: Заходьте, Сідайте."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Телефонуй мені негайно, коли прийдеш додому! Мені потрібно
+    знати, що ти в безпеці.
+  error: Телефонуй
+  answer: Зателефонуй
+  sentence_corrected: Зателефонуй мені негайно, коли прийдеш додому! Мені потрібно
+    знати, що ти в безпеці.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Йдеться про конкретну одноразову дію в майбутньому після приходу додому ('коли прийдеш'). Тому слід вживати доконаний вид: Зателефонуй."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Прочитай книги регулярно для покращення словникового запасу!
+    Це дуже корисна порада.
+  error: Прочитай
+  answer: Читай
+  sentence_corrected: Читай книги регулярно для покращення словникового запасу! Це
+    дуже корисна порада.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Слово 'регулярно' вказує на повторювану дію, тому вимагається недоконаний вид: Читай."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Пиши конспект і здай його до кінця заняття! Це обов'язкове
+    завдання для всіх.
+  error: Пиши
+  answer: Напиши
+  sentence_corrected: Напиши конспект і здай його до кінця заняття! Це обов'язкове
+    завдання для всіх.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дія спрямована на результат, який потрібно показати ('здай' - доконаний вид). Тому перша дія теж має бути доконаного виду: Напиши."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Закривай вікно, будь ласка, холодно! У кімнаті дуже холодний
+    вітер з вулиці.
+  error: Закривай
+  answer: Закрий
+  sentence_corrected: Закрий вікно, будь ласка, холодно! У кімнаті дуже холодний вітер
+    з вулиці.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Прохання спрямоване на досягнення конкретного результату зараз (щоб вікно стало закритим). Доконаний вид: Закрий."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Куштуй цю страву і скажи свою думку про неї! Мені цікаво, чи
+    тобі сподобається.
+  error: Куштуй
+  answer: Скуштуй
+  sentence_corrected: Скуштуй цю страву і скажи свою думку про неї! Мені цікаво, чи
+    тобі сподобається.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Одноразова дія для отримання враження ('скажи думку'). Потрібно один раз спробувати (результат). Доконаний вид: Скуштуй."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Допоможи мені щодня з прибиранням квартири, бо я не встигаю
+    сама прибирати.
+  error: Допоможи
+  answer: Допомагай
+  sentence_corrected: Допомагай мені щодня з прибиранням квартири, бо я не встигаю
+    сама прибирати.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Маркер 'щодня' вказує на регулярність, тому потрібен недоконаний вид: Допомагай."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Знайдіть та виправте помилку у виборі аспекту
+  sentence_with_error: Слухай цю пісню один раз і скажи, чи вона тобі сподобалася
+    чи ні.
+  error: Слухай
+  answer: Послухай
+  sentence_corrected: Послухай цю пісню один раз і скажи, чи вона тобі сподобалася
+    чи ні.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Вказівка 'один раз' вимагає доконаного виду (завершена дія): Послухай."
+    confidence: 1.0
+    error_type: aspect_error

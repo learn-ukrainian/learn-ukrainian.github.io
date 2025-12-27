@@ -6,7 +6,8 @@ Unified command for the full module processing workflow:
 1. Lint MD (audit for format issues)
 2. Generate MDX (convert to Docusaurus format)
 3. Validate MDX (ensure no content loss)
-4. Validate HTML (future: headless browser check)
+4. Grammar Queue (generate validation queues for error-correction activities)
+5. Validate HTML (headless browser check - requires dev server)
 
 Usage:
     python scripts/pipeline.py [lang_pair] [level] [module_num] [--steps STEPS]
@@ -150,6 +151,43 @@ def step_validate_mdx(lang_pair: str, level: Optional[str], module_num: Optional
     else:
         return StepResult("validate_mdx", False, "MDX validation failed", details=(stderr or "")[:500])
 
+def step_grammar_queue(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+    """Generate grammar validation queue from error-correction activities."""
+    print("\n" + "="*60)
+    print("📋 Step: Generate Grammar Queue")
+    print("="*60)
+
+    if not level:
+        return StepResult("grammar_queue", False, "Level required for grammar queue")
+
+    level_path = CURRICULUM_DIR / lang_pair / level
+    generated = 0
+    skipped = 0
+
+    if module_num:
+        # Single module
+        module_files = list(level_path.glob(f"{module_num:02d}-*.md")) + list(level_path.glob(f"{module_num}-*.md"))
+        if not module_files:
+            return StepResult("grammar_queue", False, f"Module {module_num} not found")
+    else:
+        # All modules in level
+        module_files = sorted(level_path.glob("*.md"))
+
+    for md_file in module_files:
+        cmd = [str(VENV_PYTHON), "scripts/generate_grammar_queue.py", str(md_file)]
+        code, stdout, stderr = run_command(cmd)
+
+        if "Generated queue" in stdout:
+            generated += 1
+            print(f"  ✅ {md_file.stem}")
+        else:
+            skipped += 1
+
+    if generated > 0:
+        return StepResult("grammar_queue", True, f"Generated {generated} queue files ({skipped} skipped)")
+    else:
+        return StepResult("grammar_queue", True, f"No validatable activities found ({skipped} modules checked)")
+
 def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
     """Validate HTML rendering with headless browser."""
     print("\n" + "="*60)
@@ -200,6 +238,7 @@ def run_pipeline(
         "lint": step_lint,
         "generate": step_generate,
         "validate_mdx": step_validate_mdx,
+        "grammar_queue": step_grammar_queue,
         "validate_html": step_validate_html,
     }
 
@@ -253,7 +292,7 @@ Examples:
                        help="CEFR level (a1, a2, b1, b2, c1, c2)")
     parser.add_argument("module_num", nargs="?", type=int, default=None,
                        help="Module number")
-    parser.add_argument("--steps", default="lint,generate,validate_mdx,validate_html",
+    parser.add_argument("--steps", default="lint,generate,validate_mdx,grammar_queue,validate_html",
                        help="Comma-separated steps to run (default: all)")
 
     args = parser.parse_args()

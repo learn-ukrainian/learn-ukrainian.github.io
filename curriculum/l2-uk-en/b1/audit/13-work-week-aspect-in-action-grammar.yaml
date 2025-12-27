@@ -1,0 +1,107 @@
+module: 13-work-week-aspect-in-action
+level: B1
+validated: '2025-12-28T00:10:00'
+validator: antigravity
+summary:
+  total_items: 8
+  errors_confirmed: 8
+  errors_rejected: 0
+  needs_review: 0
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Що ти зробиш завтра весь день у офісі?
+  error: зробиш
+  answer: робитимеш
+  sentence_corrected: Що ти робитимеш завтра весь день у офісі?
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Обставина часу 'весь день' вказує на тривалий процес, тому потрібно вживати недоконаний вид (майбутній час): робитимеш."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я не писав звіт сьогодні, тому начальник чекає.
+  error: писав
+  answer: написав
+  sentence_corrected: Я не написав звіт сьогодні, тому начальник чекає.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Контекст (начальник чекає) вказує на очікування результату. 'Не написав' означає відсутність результату."
+    confidence: 0.9
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Кожного ранку я перевірю електронну пошту перед роботою.
+  error: перевірю
+  answer: перевіряю
+  sentence_corrected: Кожного ранку я перевіряю електронну пошту перед роботою.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Кожного ранку' вказує на регулярну дію в теперішньому. 'Перевірю' — це майбутній доконаний. Правильно: перевіряю."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Робіть цей звіт терміново до обіду, це важливо!
+  error: Робіть
+  answer: Зробіть
+  sentence_corrected: Зробіть цей звіт терміново до обіду, це важливо!
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Наказ виконати дію до конкретного терміну ('до обіду') вимагає доконаного виду: Зробіть."
+    confidence: 1.0
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Учора я працював над презентацією і завершував її до кінця
+    дня.
+  error: завершував
+  answer: завершив
+  sentence_corrected: Учора я працював над презентацією і завершив її до кінця дня.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Дія завершилася успішно ('до кінця дня'). 'Працював' (процес) і 'завершив' (результат). Вживати 'завершував' (процес завершення) тут менш доречно."
+    confidence: 0.95
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Команда обговорювала питання вчора і прийняла важливе рішення.
+  error: обговорювала
+  answer: обговорила
+  sentence_corrected: Команда обговорила питання вчора і прийняла важливе рішення.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Послідовність подій: обговорили, а потім прийняли рішення. Обидві дії завершені -> доконаний вид."
+    confidence: 0.9
+    error_type: aspect_error
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я зараз пишу звіт уже дві години і ще не написую його до кінця.
+  error: написую
+  answer: написав
+  sentence_corrected: Я зараз пишу звіт уже дві години і ще не написав його до кінця.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "'Ще не' вимагає вказівки на відсутність результату (не написав). Форми 'написую' не існує."
+    confidence: 1.0
+    error_type: spelling
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Завтра я підготую матеріали для наради весь день без перерви.
+  error: підготую
+  answer: готуватиму
+  sentence_corrected: Завтра я готуватиму матеріали для наради весь день без перерви.
+  validate:
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+    explanation: "Тривалість 'весь день' вимагає недоконаного виду: буду готувати / готуватиму."
+    confidence: 1.0
+    error_type: aspect_error

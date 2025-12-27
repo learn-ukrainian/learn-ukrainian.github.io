@@ -1,10 +1,16 @@
 module: 12-aspect-pairs-essential-40
 level: B1
 file: curriculum/l2-uk-en/b1/12-aspect-pairs-essential-40.md
-generated: '2025-12-27T17:29:17.537589'
-phase: 1
-scope: error-correction
-item_count: 8
+generated: '2025-12-28T00:15:29.642384'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  cloze: 1
+  unjumble: 8
+  quiz: 14
+  true-false: 14
+item_count: 59
 items:
 - activity: error-correction
   title: Виправлення помилок у виборі виду
@@ -148,5 +154,705 @@ items:
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Вчора я ___ книгу весь вечір, але не закінчив її.
+  answer: читав
+  complete_sentence: Вчора я читав книгу весь вечір, але не закінчив її.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Минулого тижня вона нарешті ___ цю складну книгу до кінця.
+  answer: прочитала
+  complete_sentence: Минулого тижня вона нарешті прочитала цю складну книгу до кінця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Я ___ листа дві години вчора.
+  answer: писав
+  complete_sentence: Я писав листа дві години вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Я вже ___ листа і відправив його.
+  answer: написав
+  complete_sentence: Я вже написав листа і відправив його.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Вони ___ домашнє завдання щодня.
+  answer: робили
+  complete_sentence: Вони робили домашнє завдання щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Вони вже ___ всі вправи.
+  answer: зробили
+  complete_sentence: Вони вже зробили всі вправи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Він ___ вечерю цілу годину.
+  answer: готував
+  complete_sentence: Він готував вечерю цілу годину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Він ___ чудовий борщ за годину.
+  answer: приготував
+  complete_sentence: Він приготував чудовий борщ за годину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Ми ___ хліб у цій пекарні щотижня.
+  answer: купували
+  complete_sentence: Ми купували хліб у цій пекарні щотижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Ми ___ новий автомобіль минулого місяця.
+  answer: купили
+  complete_sentence: Ми купили новий автомобіль минулого місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Я ___ ключі цілий ранок, але марно.
+  answer: шукав
+  complete_sentence: Я шукав ключі цілий ранок, але марно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Я ___ ключі під столом нарешті.
+  answer: знайшов
+  complete_sentence: Я знайшов ключі під столом нарешті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Викладач ___ це правило кілька разів.
+  answer: пояснював
+  complete_sentence: Викладач пояснював це правило кілька разів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір виду в реченнях
+  sentence_template: Викладач ___ це правило дуже чітко вчора.
+  answer: пояснив
+  complete_sentence: Викладач пояснив це правило дуже чітко вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Текст про навчання української мови
+  passage_template: Минулого року я {1} українську мову в університеті. Кожного дня
+    я {2} нові слова, {3} граматичні правила та {4} тексти. Викладач завжди дуже чітко
+    {5} складні моменти і {6} цікаві приклади з літератури.  Одного разу я {7} дуже
+    важку книгу в бібліотеці. Я {8} її цілий місяць, {9} складні місця та {10} нотатки.
+    Нарешті в кінці семестру я {11} всю книгу і {12} головну ідею автора.  Тепер я
+    можу сказати, що я багато {13} за цей рік. Я {14} говорити українською досить
+    вільно і навіть {15} розуміти складні тексти без словника.
+  blanks:
+  - id: 1
+    answer: вивчав
+    options:
+    - вивчав
+    - вивчив
+    - вивчаю
+    - буду вивчати
+  - id: 2
+    answer: вивчав
+    options:
+    - вивчав
+    - вивчив
+    - вивчаю
+    - буду вивчати
+  - id: 3
+    answer: читав
+    options:
+    - читав
+    - прочитав
+    - читаю
+    - буду читати
+  - id: 4
+    answer: перекладав
+    options:
+    - перекладав
+    - переклав
+    - перекладаю
+    - буду перекладати
+  - id: 5
+    answer: пояснював
+    options:
+    - пояснював
+    - пояснив
+    - пояснює
+    - буде пояснювати
+  - id: 6
+    answer: показував
+    options:
+    - показував
+    - показав
+    - показує
+    - буде показувати
+  - id: 7
+    answer: брав
+    options:
+    - брав
+    - взяв
+    - беру
+    - буду брати
+  - id: 8
+    answer: читав
+    options:
+    - читав
+    - прочитав
+    - читаю
+    - буду читати
+  - id: 9
+    answer: підкреслював
+    options:
+    - підкреслював
+    - підкреслив
+    - підкреслюю
+    - буду підкреслювати
+  - id: 10
+    answer: робив
+    options:
+    - робив
+    - зробив
+    - роблю
+    - буду робити
+  - id: 11
+    answer: читав
+    options:
+    - читав
+    - прочитав
+    - читаю
+    - буду читати
+  - id: 12
+    answer: розумів
+    options:
+    - розумів
+    - зрозумів
+    - розумію
+    - буду розуміти
+  - id: 13
+    answer: вивчав
+    options:
+    - вивчав
+    - вивчив
+    - навчився
+    - буду навчатися
+  - id: 14
+    answer: вчив
+    options:
+    - вчив
+    - навчився
+    - вивчив
+    - буду вчити
+  - id: 15
+    answer: навчився
+    options:
+    - навчився
+    - навчаюся
+    - навчу
+    - буду навчатися
+  complete_passage: Минулого року я вивчав українську мову в університеті. Кожного
+    дня я вивчав нові слова, читав граматичні правила та перекладав тексти. Викладач
+    завжди дуже чітко пояснював складні моменти і показував цікаві приклади з літератури.  Одного
+    разу я брав дуже важку книгу в бібліотеці. Я читав її цілий місяць, підкреслював
+    складні місця та робив нотатки. Нарешті в кінці семестру я читав всю книгу і розумів
+    головну ідею автора.  Тепер я можу сказати, що я багато вивчав за цей рік. Я вчив
+    говорити українською досить вільно і навіть навчився розуміти складні тексти без
+    словника.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Недоконаний вид виражає процес або тривалість дії без чіткого акценту на
+    її завершенні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Доконаний вид показує завершену дію з конкретним результатом або підсумком
+    для мовця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Видові пари утворюються трьома основними способами в українській мові залежно
+    від дієслова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Префікс на часто додається до недоконаного виду для утворення доконаного
+    виду дієслів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Суплетивні пари мають різні корені і їх потрібно запам'ятовувати окремо
+    як лексичні одиниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Я писав листа дві години, але так і не написав його до кінця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Вона читала книгу весь тиждень і нарешті прочитала її в неділю ввечері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про видові пари
+  jumbled_words: []
+  answer: Коли я готував вечерю, мій брат прийшов і допоміг мені приготувати борщ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яке з наведених нижче дієслів є доконаним видом і виражає завершену дію
+    з конкретним результатом?
+  options:
+  - text: читати
+    correct: false
+  - text: прочитати
+    correct: true
+  - text: читаю
+    correct: false
+  - text: буду читати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яке речення правильно використовує недоконаний вид для вираження тривалого
+    процесу без акценту на завершенні?
+  options:
+  - text: Я написав листа дві години.
+    correct: false
+  - text: Я писав листа дві години.
+    correct: true
+  - text: Я пишу листа дві години.
+    correct: false
+  - text: Я буду писати листа дві години.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Який префікс найчастіше утворює доконаний вид дієслова "писати" в українській
+    мові для позначення завершеності дії?
+  options:
+  - text: про-
+    correct: false
+  - text: на-
+    correct: true
+  - text: з-
+    correct: false
+  - text: по-
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яка пара дієслів є суплетивною і має різні корені для недоконаного та
+    доконаного виду?
+  options:
+  - text: писати / написати
+    correct: false
+  - text: робити / зробити
+    correct: false
+  - text: говорити / сказати
+    correct: true
+  - text: читати / прочитати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: У якому реченні доконаний вид використовується правильно для позначення
+    одноразової завершеної дії в минулому часі?
+  options:
+  - text: Я купував хліб вчора.
+    correct: false
+  - text: Я купив хліб вчора.
+    correct: true
+  - text: Я купую хліб вчора.
+    correct: false
+  - text: Я буду купувати хліб вчора.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яке дієслово є недоконаним видом і утворює пару з доконаним "зробити"
+    для позначення процесу виконання дії?
+  options:
+  - text: робив
+    correct: false
+  - text: робити
+    correct: true
+  - text: зробив
+    correct: false
+  - text: зроблю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Який суфікс змінюється при утворенні доконаного виду "вирішити" з недоконаного
+    "вирішувати" через суфіксацію?
+  options:
+  - text: -а- → -и-
+    correct: false
+  - text: -ува- → -и-
+    correct: true
+  - text: -ла- → -сла-
+    correct: false
+  - text: -и- → -а-
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: У якому реченні недоконаний вид правильно використовується для вираження
+    повторюваної або регулярної дії?
+  options:
+  - text: Я прочитав цю книгу щодня.
+    correct: false
+  - text: Я читав цю книгу щодня.
+    correct: true
+  - text: Я прочитаю цю книгу щодня.
+    correct: false
+  - text: Я читаю цю книгу щодня теперішнім часом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яке словосполучення сигналізує про необхідність використання доконаного
+    виду через вказівку на завершеність дії?
+  options:
+  - text: весь день
+    correct: false
+  - text: довго
+    correct: false
+  - text: вже
+    correct: true
+  - text: часто
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яка пара дієслів утворена за допомогою префікса "при-" для позначення
+    завершеного процесу приготування або підготовки?
+  options:
+  - text: писати / написати
+    correct: false
+  - text: читати / прочитати
+    correct: false
+  - text: готувати / приготувати
+    correct: true
+  - text: робити / зробити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: У якому реченні доконаний вид неправильно використовується з виразом тривалості,
+    що створює граматичну помилку?
+  options:
+  - text: Я писав листа дві години.
+    correct: false
+  - text: Я написав листа дві години.
+    correct: true
+  - text: Я писав листа вчора.
+    correct: false
+  - text: Я пишу листа зараз.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яка стратегія є найефективнішою для запам'ятовування видових пар дієслів
+    в українській мові згідно з поданим матеріалом?
+  options:
+  - text: Вивчати тільки недоконаний вид.
+    correct: false
+  - text: Вивчати тільки доконаний вид.
+    correct: false
+  - text: Завжди вивчати обидві форми разом як пару.
+    correct: true
+  - text: Вивчати дієслова в алфавітному порядку.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: Яке дієслово є доконаним видом для недоконаного "шукати" і має інший корінь
+    через суплетивізм?
+  options:
+  - text: пошукати
+    correct: false
+  - text: шукав
+    correct: false
+  - text: знайти
+    correct: true
+  - text: дошукати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання виду
+  question: У якому контексті правильно використовується недоконаний вид для опису
+    фонової дії, під час якої відбувається інша подія?
+  options:
+  - text: Я прочитав книгу, коли хтось постукав.
+    correct: false
+  - text: Я читав книгу, коли хтось постукав.
+    correct: true
+  - text: Я прочитаю книгу, коли хтось постукав.
+    correct: false
+  - text: Я читаю книгу, коли хтось постукав.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Твердження про видові пари
+  statement: Правда
+  answer: ''
+  validate:
+    statement_valid: null
     explanation: null
     confidence: null

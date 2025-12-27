@@ -1,0 +1,594 @@
+module: 62-environment-ecology
+level: B1
+file: curriculum/l2-uk-en/b1/62-environment-ecology.md
+generated: '2025-12-28T00:15:31.137897'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 8
+  true-false: 12
+item_count: 48
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Треба охороняти клімат від змін і потепління.
+  error: охороняти
+  answer: боротися зі змінами
+  sentence_corrected: Треба боротися зі змінами клімат від змін і потепління.
+  options:
+  - охороняти
+  - боротися зі змінами
+  - зберігати
+  - забруднювати
+  original_explanation: 'Клімат не "охороняють". Правильно: "боротися зі змінами клімату".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Ми повинні забруднювати клімат менше щодня.
+  error: забруднювати клімат
+  answer: впливати на клімат
+  sentence_corrected: Ми повинні впливати на клімат менше щодня.
+  options:
+  - забруднювати клімат
+  - впливати на клімат
+  - охороняти клімат
+  - зберігати клімат
+  original_explanation: 'Клімат не "забруднюють". Правильно: "впливати на клімат"
+    або "змінювати клімат".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Заводи охороняють відходи на спеціальних полігонах.
+  error: охороняють
+  answer: утилізують
+  sentence_corrected: Заводи утилізують відходи на спеціальних полігонах.
+  options:
+  - охороняють
+  - утилізують
+  - зберігають
+  - захищають
+  original_explanation: 'Відходи не "охороняють". Правильно: "утилізувати відходи"
+    або "переробляти".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вітер та сонце — це вичерпні джерела енергії.
+  error: вичерпні
+  answer: відновлювальні
+  sentence_corrected: Вітер та сонце — це відновлювальні джерела енергії.
+  options:
+  - вичерпні
+  - відновлювальні
+  - промислові
+  - природні
+  original_explanation: Сонце та вітер — відновлювальні джерела, бо не закінчуються.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Треба забруднювати природу для майбутніх поколінь.
+  error: забруднювати
+  answer: зберігати
+  sentence_corrected: Треба зберігати природу для майбутніх поколінь.
+  options:
+  - забруднювати
+  - зберігати
+  - руйнувати
+  - вичерпувати
+  original_explanation: Природу треба "зберігати" або "охороняти", а не "забруднювати".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Компанія робить переробку пластику на новому заводі.
+  error: робить
+  answer: здійснює
+  sentence_corrected: Компанія здійснює переробку пластику на новому заводі.
+  options:
+  - робить
+  - здійснює
+  - дає
+  - має
+  original_explanation: Правильна колокація — "здійснювати переробку" або просто "переробляти".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Глобальне охолодження загрожує планеті через парникові гази.
+  error: охолодження
+  answer: потепління
+  sentence_corrected: Глобальне потепління загрожує планеті через парникові гази.
+  options:
+  - охолодження
+  - потепління
+  - забруднення
+  - руйнування
+  original_explanation: Парникові гази спричиняють "потепління", а не "охолодження".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Екосистема — це тип забруднення у водних об'єктах.
+  error: тип забруднення
+  answer: біологічна система
+  sentence_corrected: Екосистема — це біологічна система у водних об'єктах.
+  options:
+  - тип забруднення
+  - біологічна система
+  - вид енергії
+  - спосіб переробки
+  original_explanation: '"Екосистема" — біологічна система організмів та середовища.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Карпатські _____ — це легені України, які потребують захисту.
+  answer: ліси
+  complete_sentence: Карпатські ліси__ — це легені України, які потребують захисту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: В Україні вчаться _____ сміття на пластик, скло та папір.
+  answer: сортувати
+  complete_sentence: В Україні вчаться сортувати__ сміття на пластик, скло та папір.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Глобальне _____ загрожує всій планеті через підвищення температури.
+  answer: потепління
+  complete_sentence: Глобальне потепління__ загрожує всій планеті через підвищення
+    температури.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Сонце та вітер — це _____ джерела енергії, які не закінчуються.
+  answer: відновлювальні
+  complete_sentence: Сонце та вітер — це відновлювальні__ джерела енергії, які не
+    закінчуються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ Дніпра — одна з найбільших екологічних проблем України.
+  answer: Забруднення
+  complete_sentence: Забруднення__ Дніпра — одна з найбільших екологічних проблем
+    України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Україна має унікальне _____ — багато видів тварин та рослин.
+  answer: біорізноманіття
+  complete_sentence: Україна має унікальне біорізноманіття__ — багато видів тварин
+    та рослин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Заводи скорочують _____ в атмосферу, щоб зменшити забруднення.
+  answer: викиди
+  complete_sentence: Заводи скорочують викиди__ в атмосферу, щоб зменшити забруднення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Деякі види тварин перебувають на межі _____ через втрату середовища.
+  answer: вимирання
+  complete_sentence: Деякі види тварин перебувають на межі вимирання__ через втрату
+    середовища.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ ґрунтів загрожує сільському господарству України через
+    інтенсивне землеробство.
+  answer: Деградація
+  complete_sentence: Деградація__ ґрунтів загрожує сільському господарству України
+    через інтенсивне землеробство.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Концепція _____ розвитку балансує економіку та екологію для майбутніх
+    поколінь.
+  answer: стійкого
+  complete_sentence: Концепція стійкого__ розвитку балансує економіку та екологію
+    для майбутніх поколінь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Озоновий _____ захищає Землю від ультрафіолетового випромінювання
+    Сонця.
+  answer: шар
+  complete_sentence: Озоновий шар__ захищає Землю від ультрафіолетового випромінювання
+    Сонця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Чорнобильська зона відчуження стала унікальним природним _____
+    для диких тварин.
+  answer: заповідником
+  complete_sentence: Чорнобильська зона відчуження стала унікальним природним заповідником__
+    для диких тварин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Охорона довкілля — пріоритет для сучасного суспільства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: В Україні вчаться сортувати сміття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Глобальне потепління загрожує всій планеті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Карпати мають багате біорізноманіття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Переробка сміття економить ресурси.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Україна розвиває відновлювальні джерела енергії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Забруднення Дніпра — серйозна проблема.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Деякі види на межі вимирання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Яке слово є офіційним терміном для "environment" в українських законах
+    та документах?
+  options:
+  - text: природа
+    correct: false
+  - text: довкілля
+    correct: true
+  - text: екологія
+    correct: false
+  - text: клімат
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Яка різниця між "переробка" та "утилізація" у контексті поводження з відходами?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Переробка" — перетворення на нові матеріали, "утилізація" — знищення'
+    correct: true
+  - text: '"Утилізація" — перетворення, "переробка" — знищення'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Що означає термін "біорізноманіття" в екологічному контексті науки про
+    довкілля?
+  options:
+  - text: Кількість людей на планеті
+    correct: false
+  - text: Різноманітність живих організмів
+    correct: true
+  - text: Тип клімату
+    correct: false
+  - text: Забруднення повітря
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Яке словосполучення правильно описує процес глобального підвищення температури
+    на планеті?
+  options:
+  - text: холодне потепління
+    correct: false
+  - text: глобальне потепління
+    correct: true
+  - text: локальне потепління
+    correct: false
+  - text: кліматичне охолодження
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Яке слово означає "sustainable development" українською у сфері економіки
+    та екології?
+  options:
+  - text: швидкий розвиток
+    correct: false
+  - text: стійкий розвиток
+    correct: true
+  - text: екологічний розвиток
+    correct: false
+  - text: природний розвиток
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Як правильно сказати про шкідливі гази, що спричиняють парниковий ефект
+    в атмосфері?
+  options:
+  - text: отруйні гази
+    correct: false
+  - text: промислові гази
+    correct: false
+  - text: парникові гази
+    correct: true
+  - text: природні гази
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Що таке "екосистема" у науковому розумінні біології та екології природних
+    процесів?
+  options:
+  - text: Тип забруднення
+    correct: false
+  - text: Біологічна система організмів та середовища
+    correct: true
+  - text: Вид енергії
+    correct: false
+  - text: Спосіб переробки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння екологічної лексики
+  question: Яке дієслово найкраще поєднується зі словом "сміття" для опису екологічної
+    практики?
+  options:
+  - text: охороняти сміття
+    correct: false
+  - text: сортувати сміття
+    correct: true
+  - text: зберігати сміття
+    correct: false
+  - text: захищати сміття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Довкілля" та "природа" — це повні синоніми, їх можна завжди замінювати
+    у будь-якому контексті.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Переробка" означає перетворення відходів на нові матеріали, наприклад,
+    пластику на волокно.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: Правильно говорити "забруднювати клімат" для опису негативного впливу
+    на погодні умови.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: Карпатський біосферний заповідник входить до світової мережі резерватів
+    ЮНЕСКО.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Біорізноманіття" — це технічний термін для опису різноманітності живих
+    організмів на планеті.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Відновлювальні джерела" енергії включають нафту та вугілля, бо їх можна
+    відновити.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: Правильна колокація — "сортувати сміття" для опису роздільного збору
+    відходів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Стійкий розвиток" означає максимально швидкий економічний ріст без
+    обмежень.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Екосистема" — це біологічна система, що включає організми та їхнє середовище.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: Правильно говорити "охороняти сміття" для опису екологічної діяльності
+    із відходами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: '"Парникові гази" — це гази, що спричиняють парниковий ефект та глобальне
+    потепління.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання екологічної лексики
+  statement: Чорнобильська зона відчуження стала унікальним заповідником для диких
+    тварин.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
