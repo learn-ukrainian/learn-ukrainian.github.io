@@ -1,0 +1,1019 @@
+module: 56-discourse-markers-basic
+level: B1
+validated: '2025-12-28T10:07:55.863331'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 82
+  errors_confirmed: 8
+  passed_items: 74
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Він хотів прийти, тому не зміг через хворобу.
+  error: тому
+  answer: але
+  sentence_corrected: Він хотів прийти, але не зміг через хворобу.
+  options:
+  - тому
+  - але
+  - отже
+  - значить
+  original_explanation: Потрібен контрастний маркер «але», а не причинно-наслідковий
+    «тому».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Я маю три улюблені книги, тобто детективи, романи та біографії.
+  error: тобто
+  answer: а саме
+  sentence_corrected: Я маю три улюблені книги, а саме детективи, романи та біографії.
+  options:
+  - тобто
+  - а саме
+  - наприклад
+  - зокрема
+  original_explanation: «А саме» використовується для переліку конкретних елементів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Вона здається холодною, справді вона дуже тепла людина.
+  error: справді
+  answer: насправді
+  sentence_corrected: Вона здається холодною, насправді вона дуже тепла людина.
+  options:
+  - справді
+  - насправді
+  - дійсно
+  - загалом
+  original_explanation: «Насправді» протиставляє зовнішнє враження та реальність.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Було пізно, тому ми все одно поїхали на концерт до Львова.
+  error: тому
+  answer: проте
+  sentence_corrected: Було пізно, проте ми все одно поїхали на концерт до Львова.
+  options:
+  - тому
+  - проте
+  - отже
+  - значить
+  original_explanation: Контекст показує контраст, не причину, тому потрібен маркер
+    «проте».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Експеримент провалився. Наприклад, потрібно повторити його
+    з новими параметрами.
+  error: Наприклад
+  answer: Тому
+  sentence_corrected: Експеримент провалився. Тому, потрібно повторити його з новими
+    параметрами.
+  options:
+  - Наприклад
+  - Тому
+  - А саме
+  - Зокрема
+  original_explanation: Друге речення — наслідок першого, потрібен маркер «тому».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Він цікавиться спортом, наприклад футболом, хокеєм та теннісом.
+  error: наприклад
+  answer: а саме
+  sentence_corrected: Він цікавиться спортом, а саме футболом, хокеєм та теннісом.
+  options:
+  - наприклад
+  - а саме
+  - тобто
+  - зокрема
+  original_explanation: Перераховані всі види спорту, тому краще «а саме», а не «наприклад».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Ми готувалися до іспиту ретельно. А саме результати були розчаровуючими.
+  error: А саме
+  answer: Проте
+  sentence_corrected: Ми готувалися до іспиту ретельно. Проте результати були розчаровуючими.
+  options:
+  - А саме
+  - Проте
+  - Тобто
+  - Наприклад
+  original_explanation: Тут контраст між підготовкою та результатом, потрібен маркер
+    «проте».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки з маркерами
+  sentence_with_error: Загалом, я люблю подорожувати різними країнами світу.
+  error: Загалом
+  answer: Взагалі
+  sentence_corrected: Взагалі, я люблю подорожувати різними країнами світу.
+  options:
+  - Загалом
+  - Взагалі
+  - Справді
+  - Дійсно
+  original_explanation: Для загального твердження про уподобання краще «взагалі»,
+    «загалом» — для підсумків.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Хотів прийти на зустріч у Києві, _____ не зміг через роботу.
+  answer: але
+  complete_sentence: Хотів прийти на зустріч у Києві, але__ не зміг через роботу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Експерти прогнозували падіння. _____ результати виявилися позитивними.
+  answer: Проте
+  complete_sentence: Експерти прогнозували падіння. Проте__ результати виявилися позитивними.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Уряд оголосив про реформи. _____ парламент їх не підтримав.
+  answer: Однак
+  complete_sentence: Уряд оголосив про реформи. Однак__ парламент їх не підтримав.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: _____ погода була холодна, ми все одно поїхали до Карпат.
+  answer: Хоча
+  complete_sentence: Хоча__ погода була холодна, ми все одно поїхали до Карпат.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Ціни високі, _____ якість чудова.
+  answer: але
+  complete_sentence: Ціни високі, але__ якість чудова.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Вона працює в банку, _____ її брат — у школі.
+  answer: а
+  complete_sentence: Вона працює в банку, а__ її брат — у школі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: _____ і дорого, _____ смачно.
+  answer: Хоч
+  complete_sentence: Хоч__ і дорого, Хоч__ смачно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Команда грала добре. _____ перемоги досягти не вдалося.
+  answer: Проте
+  complete_sentence: Команда грала добре. Проте__ перемоги досягти не вдалося.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Документи готові. _____ є одна проблема з підписами.
+  answer: Однак
+  complete_sentence: Документи готові. Однак__ є одна проблема з підписами.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Він говорить українською _____ англійською однаково добре.
+  answer: і
+  complete_sentence: Він говорить українською і__ англійською однаково добре.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Мама вдома, _____ тато на роботі у Львові.
+  answer: а
+  complete_sentence: Мама вдома, а__ тато на роботі у Львові.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Рішення прийняте. _____ є сумніви щодо його реалізації.
+  answer: Проте
+  complete_sentence: Рішення прийняте. Проте__ є сумніви щодо його реалізації.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: _____ було пізно, ми дійшли до вершини гори.
+  answer: Хоча
+  complete_sentence: Хоча__ було пізно, ми дійшли до вершини гори.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Контрастні маркери
+  sentence_template: Проєкт цікавий, _____ бюджет обмежений.
+  answer: проте
+  complete_sentence: Проєкт цікавий, проте__ бюджет обмежений.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Була злива у Києві, _____ ми залишилися вдома.
+  answer: тому
+  complete_sentence: Була злива у Києві, тому__ ми залишилися вдома.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Поїзд запізнився на дві години. _____ я не встиг на зустріч.
+  answer: Через це
+  complete_sentence: Поїзд запізнився на дві години. Через це__ я не встиг на зустріч.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Всі докази на місці. _____, що маємо висновок?
+  answer: Отже
+  complete_sentence: Всі докази на місці. Отже__, що маємо висновок?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Ми проаналізували всі дані. _____, можемо зробити висновок.
+  answer: Таким чином
+  complete_sentence: Ми проаналізували всі дані. Таким чином__, можемо зробити висновок.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Ти не прийдеш на вечірку? _____, підемо без тебе.
+  answer: Значить
+  complete_sentence: Ти не прийдеш на вечірку? Значить__, підемо без тебе.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Магазин зачинено о восьмій. _____ ми поспішали.
+  answer: Тому
+  complete_sentence: Магазин зачинено о восьмій. Тому__ ми поспішали.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Результати експерименту позитивні. _____, гіпотезу підтверджено.
+  answer: Отже
+  complete_sentence: Результати експерименту позитивні. Отже__, гіпотезу підтверджено.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Він не вивчив матеріал. _____ провалив іспит.
+  answer: Тому
+  complete_sentence: Він не вивчив матеріал. Тому__ провалив іспит.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Інтернет не працює. _____ не можемо надіслати листа.
+  answer: Через це
+  complete_sentence: Інтернет не працює. Через це__ не можемо надіслати листа.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Дослідження завершено. _____, можна підсумувати результати.
+  answer: Таким чином
+  complete_sentence: Дослідження завершено. Таким чином__, можна підсумувати результати.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Вона не знає української добре. _____ їй важко читати новини.
+  answer: Тому
+  complete_sentence: Вона не знає української добре. Тому__ їй важко читати новини.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Ціни зросли на двадцять відсотків. _____ люди купують менше.
+  answer: Через це
+  complete_sentence: Ціни зросли на двадцять відсотків. Через це__ люди купують менше.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Ти згоден з пропозицією? _____, починаємо завтра!
+  answer: Отже
+  complete_sentence: Ти згоден з пропозицією? Отже__, починаємо завтра!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Причина та наслідок
+  sentence_template: Звіт готовий. _____, можемо презентувати його керівництву.
+  answer: Таким чином
+  complete_sentence: Звіт готовий. Таким чином__, можемо презентувати його керівництву.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Погода була погана, але ми поїхали на концерт.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Отже, що маємо, який висновок робимо?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Тобто ви кажете, що ви не згодні?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Наприклад, можна зробити цю справу так.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Проте я все ж поїхав до Карпат.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Загалом, проєкт нашої команди був успішним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Він цікавиться історією, зокрема українською культурою.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення з маркерами
+  jumbled_words: []
+  answer: Насправді він дуже добра і відкрита людина.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Він поліглот, _____ володіє багатьма мовами вільно, включаючи українську
+    та англійську.
+  options:
+  - text: тобто
+    correct: true
+  - text: а саме
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: зокрема
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: У мене три хобі, _____ читання книг, плавання в басейні та фотографія.
+  options:
+  - text: а саме
+    correct: true
+  - text: тобто
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: зокрема
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Багато європейських країн, _____ Польща та Німеччина, підтримали нове
+    рішення Євросоюзу.
+  options:
+  - text: наприклад
+    correct: true
+  - text: тобто
+    correct: false
+  - text: а саме
+    correct: false
+  - text: власне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Він цікавиться мистецтвом, _____ українським живописом та іконописом Київської
+    Русі.
+  options:
+  - text: зокрема
+    correct: true
+  - text: тобто
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: власне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: _____, я хотів сказати дещо інше про цю важливу тему нашого обговорення.
+  options:
+  - text: Власне
+    correct: true
+  - text: Тобто
+    correct: false
+  - text: А саме
+    correct: false
+  - text: Наприклад
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Лінгвіст — це вчений, _____ фахівець, який вивчає мови та їхню структуру.
+  options:
+  - text: тобто
+    correct: true
+  - text: а саме
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: зокрема
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Потрібно вивчити три теми для успішного складання іспиту, _____ граматику,
+    лексику та фонетику.
+  options:
+  - text: а саме
+    correct: true
+  - text: тобто
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: власне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Пояснення та уточнення
+  question: Українська культура багата і різноманітна, _____ народні пісні та танці
+    відомі в усьому світі.
+  options:
+  - text: зокрема
+    correct: true
+  - text: тобто
+    correct: false
+  - text: а саме
+    correct: false
+  - text: власне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: _____, я люблю подорожувати різними країнами світу, це моя найбільша пристрасть.
+  options:
+  - text: Взагалі
+    correct: true
+  - text: Загалом
+    correct: false
+  - text: Справді
+    correct: false
+  - text: Дійсно
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: _____, проєкт був успішним, хоча виникли деякі технічні проблеми на початку.
+  options:
+  - text: Загалом
+    correct: true
+  - text: Взагалі
+    correct: false
+  - text: Справді
+    correct: false
+  - text: Насправді
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: Це _____ хороша ідея для нашого стартапу, я повністю підтримую цю пропозицію!
+  options:
+  - text: справді
+    correct: true
+  - text: загалом
+    correct: false
+  - text: взагалі
+    correct: false
+  - text: насправді
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: Ви _____ маєте рацію щодо цього важливого питання, я погоджуюся з вами.
+  options:
+  - text: дійсно
+    correct: true
+  - text: справді
+    correct: false
+  - text: загалом
+    correct: false
+  - text: взагалі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: Він здається суворим керівником, але _____ дуже добрий і турботливий до
+    колег.
+  options:
+  - text: насправді
+    correct: true
+  - text: справді
+    correct: false
+  - text: дійсно
+    correct: false
+  - text: загалом
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: Здавалося, що завдання легке, _____ воно виявилося надзвичайно складним.
+  options:
+  - text: насправді
+    correct: true
+  - text: справді
+    correct: false
+  - text: дійсно
+    correct: false
+  - text: взагалі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: Ця книга _____ цікава, я не могла відірватися від читання всю ніч!
+  options:
+  - text: справді
+    correct: true
+  - text: загалом
+    correct: false
+  - text: взагалі
+    correct: false
+  - text: насправді
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Узагальнення та підсилення
+  question: _____, результати дослідження підтвердили нашу гіпотезу про мовні зміни.
+  options:
+  - text: Дійсно
+    correct: true
+  - text: Справді
+    correct: false
+  - text: Загалом
+    correct: false
+  - text: Взагалі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: However, I still went to Kyiv.
+  answer: ''
+  options:
+  - text: Проте я все ж поїхав до Києва.
+    correct: true
+  - text: Тому я все ж поїхав до Києва.
+    correct: false
+  - text: Отже я все ж поїхав до Києва.
+    correct: false
+  - text: Значить я все ж поїхав до Києва.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: So, what do we have?
+  answer: ''
+  options:
+  - text: Отже, що маємо?
+    correct: true
+  - text: Проте, що маємо?
+    correct: false
+  - text: Але, що маємо?
+    correct: false
+  - text: Тобто, що маємо?
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: That is, you're saying that...
+  answer: ''
+  options:
+  - text: Тобто ви кажете, що...
+    correct: true
+  - text: Наприклад ви кажете, що...
+    correct: false
+  - text: А саме ви кажете, що...
+    correct: false
+  - text: Зокрема ви кажете, що...
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: For example, we could do this.
+  answer: ''
+  options:
+  - text: Наприклад, можна зробити так.
+    correct: true
+  - text: Тобто, можна зробити так.
+    correct: false
+  - text: А саме, можна зробити так.
+    correct: false
+  - text: Зокрема, можна зробити так.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: Although it was late, we arrived on time.
+  answer: ''
+  options:
+  - text: Хоча було пізно, ми прибули вчасно.
+    correct: true
+  - text: Проте було пізно, ми прибули вчасно.
+    correct: false
+  - text: Але було пізно, ми прибули вчасно.
+    correct: false
+  - text: Тому було пізно, ми прибули вчасно.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: In general, I like traveling.
+  answer: ''
+  options:
+  - text: Взагалі, я люблю подорожувати.
+    correct: true
+  - text: Загалом, я люблю подорожувати.
+    correct: false
+  - text: Справді, я люблю подорожувати.
+    correct: false
+  - text: Дійсно, я люблю подорожувати.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: Actually, he is very kind.
+  answer: ''
+  options:
+  - text: Насправді він дуже добрий.
+    correct: true
+  - text: Справді він дуже добрий.
+    correct: false
+  - text: Дійсно він дуже добрий.
+    correct: false
+  - text: Загалом він дуже добрий.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Переклад із маркерами
+  source_sentence: Therefore, we stayed home.
+  answer: ''
+  options:
+  - text: Тому ми залишилися вдома.
+    correct: true
+  - text: Проте ми залишилися вдома.
+    correct: false
+  - text: Але ми залишилися вдома.
+    correct: false
+  - text: Хоча ми залишилися вдома.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Проте» формальніший за «але» і частіше використовується в письмових
+    текстах.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Тобто» і «а саме» мають однакове значення і взаємозамінні.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Насправді» використовується, коли реальність контрастує з очікуванням.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Отже» і «тому» можна завжди використовувати як синоніми.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Хоча» вводить поступку або застереження, а не прямий контраст.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Загалом» і «взагалі» мають однакове значення.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Однак» — найкнижніший варіант контрастного маркера.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: Дискурсивні маркери завжди стоять на початку речення.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Справді» і «дійсно» мають емоційно однаковий відтінок.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «До речі» та «між іншим» — вставні маркери для додаткової інформації.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Зокрема» вживається для наведення повного переліку елементів.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «Таким чином» — розмовний маркер для неформального спілкування.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: Після вставного маркера в середині речення ставляться коми з обох сторін.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність
+  statement: «І» та «а» — синоніми з однаковим значенням.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

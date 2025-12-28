@@ -1,0 +1,870 @@
+module: 71-emotional-intelligence
+level: B1
+validated: '2025-12-28T10:10:25.568367'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 70
+  errors_confirmed: 14
+  passed_items: 56
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він показує емпатію до всіх колег у нашій команді.
+  error: показує
+  answer: виявляє
+  sentence_corrected: Він виявляє емпатію до всіх колег у нашій команді.
+  options:
+  - показує
+  - виявляє
+  - дає
+  - має
+  original_explanation: Правильна колокація — "виявляти емпатію", а не "показувати
+    емпатію".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Я маю на себе відповідальність за цю серйозну помилку.
+  error: маю
+  answer: беру
+  sentence_corrected: Я беру на себе відповідальність за цю серйозну помилку.
+  options:
+  - маю
+  - беру
+  - даю
+  - роблю
+  original_explanation: Правильна колокація — "брати на себе відповідальність", а
+    не "мати".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вони зробили примирення після довгої та важкої сварки.
+  error: зробили
+  answer: досягли
+  sentence_corrected: Вони досягли примирення після довгої та важкої сварки.
+  options:
+  - зробили
+  - досягли
+  - мали
+  - дали
+  original_explanation: Правильна колокація — "досягти примирення", а не "зробити
+    примирення".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Давайте зробимо компроміс у цій складній ситуації.
+  error: зробимо
+  answer: знайдемо
+  sentence_corrected: Давайте знайдемо компроміс у цій складній ситуації.
+  options:
+  - зробимо
+  - знайдемо
+  - матимемо
+  - дамо
+  original_explanation: Правильна колокація — "знайти компроміс" або "піти на компроміс".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він дає пробачення всім, хто його образив раніше.
+  error: дає
+  answer: просить
+  sentence_corrected: Він просить пробачення всім, хто його образив раніше.
+  options:
+  - дає
+  - просить
+  - має
+  - виявляє
+  original_explanation: Пробачення "просять" (від інших) або "дають" (іншим). Контекст
+    потребує "просить".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона робить терпіння до своїх маленьких дітей кожного дня.
+  error: робить
+  answer: виявляє
+  sentence_corrected: Вона виявляє терпіння до своїх маленьких дітей кожного дня.
+  options:
+  - робить
+  - виявляє
+  - дає
+  - показує
+  original_explanation: Терпіння "мають", "виявляють" або "втрачають", а не "роблять".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Я маю співчуття у зв'язку з вашою важкою втратою.
+  error: маю
+  answer: висловлюю
+  sentence_corrected: Я висловлюю співчуття у зв'язку з вашою важкою втратою.
+  options:
+  - маю
+  - висловлюю
+  - даю
+  - роблю
+  original_explanation: Правильна колокація — "висловлювати співчуття", а не "мати
+    співчуття".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він завжди виконує обіцянки, які дає своїм друзям.
+  error: виконує
+  answer: дотримується
+  sentence_corrected: Він завжди дотримується обіцянки, які дає своїм друзям.
+  options:
+  - виконує
+  - дотримується
+  - робить
+  - має
+  original_explanation: Правильна колокація — "дотримуватися обіцянок" (виконувати
+    — для зобов'язань).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Ваша робота має похвалу за чудовий кінцевий результат.
+  error: має
+  answer: заслуговує
+  sentence_corrected: Ваша робота заслуговує похвалу за чудовий кінцевий результат.
+  options:
+  - має
+  - заслуговує
+  - дає
+  - робить
+  original_explanation: Правильна колокація — "заслуговувати на похвалу", а не "мати
+    похвалу".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Діти потребують заохочення, а не лише зауваження від батьків.
+  error: зауваження
+  answer: критики
+  sentence_corrected: Діти потребують заохочення, а не лише критики від батьків.
+  options:
+  - зауваження
+  - критики
+  - похвали
+  - поради
+  original_explanation: 'У контексті протиставлення: "заохочення" vs "критика" (загальне),
+    а не "зауваження".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Ми мусимо знайти порозуміння в цій важливій для всіх справі.
+  error: знайти
+  answer: досягти
+  sentence_corrected: Ми мусимо досягти порозуміння в цій важливій для всіх справі.
+  options:
+  - знайти
+  - досягти
+  - зробити
+  - мати
+  original_explanation: Правильна колокація — "досягти порозуміння" (знайти — для
+    компромісу).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона робить рекомендації щодо лікування своїх пацієнтів.
+  error: робить
+  answer: дає
+  sentence_corrected: Вона дає рекомендації щодо лікування своїх пацієнтів.
+  options:
+  - робить
+  - дає
+  - має
+  - виявляє
+  original_explanation: Правильна колокація — "давати рекомендації", а не "робити
+    рекомендації".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: У нашій родині панує повне розуміння один до одного.
+  error: розуміння
+  answer: взаєморозуміння
+  sentence_corrected: У нашій родині панує повне взаєморозуміння один до одного.
+  options:
+  - розуміння
+  - взаєморозуміння
+  - порозуміння
+  - терпіння
+  original_explanation: '"Взаєморозуміння" — mutual understanding (обидві сторони),
+    "розуміння" — односторонньо.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він завжди має ввічливість до старших людей у громаді.
+  error: має
+  answer: виявляє
+  sentence_corrected: Він завжди виявляє ввічливість до старших людей у громаді.
+  options:
+  - має
+  - виявляє
+  - дає
+  - показує
+  original_explanation: Правильна колокація — "виявляти ввічливість", а не "мати ввічливість".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Я _____ вашу підтримку в цей важкий час для нашої родини.
+  answer: ціную
+  complete_sentence: Я ціную__ вашу підтримку в цей важкий час для нашої родини.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Він завжди _____ емпатію до колег, коли вони мають проблеми.
+  answer: виявляє
+  complete_sentence: Він завжди виявляє__ емпатію до колег, коли вони мають проблеми.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Прошу _____ за запізнення — це більше не повториться в майбутньому.
+  answer: вибачення
+  complete_sentence: Прошу вибачення__ за запізнення — це більше не повториться в
+    майбутньому.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Давайте _____ компроміс — обидві сторони повинні дещо поступитися.
+  answer: знайдемо
+  complete_sentence: Давайте знайдемо__ компроміс — обидві сторони повинні дещо поступитися.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Я _____ на себе відповідальність за цю помилку в нашому проєкті.
+  answer: беру
+  complete_sentence: Я беру__ на себе відповідальність за цю помилку в нашому проєкті.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Ваша робота заслуговує на _____ — це чудовий результат для команди!
+  answer: похвалу
+  complete_sentence: Ваша робота заслуговує на похвалу__ — це чудовий результат для
+    команди!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Для цієї роботи з дітьми потрібно багато _____ та спокою.
+  answer: терпіння
+  complete_sentence: Для цієї роботи з дітьми потрібно багато терпіння__ та спокою.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Він людина великої _____ — йому можна повністю довіряти в усьому.
+  answer: порядності
+  complete_sentence: Він людина великої порядності__ — йому можна повністю довіряти
+    в усьому.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Після довгої сварки вони нарешті _____ примирення і помирились.
+  answer: досягли
+  complete_sentence: Після довгої сварки вони нарешті досягли__ примирення і помирились.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Я відкритий до конструктивної _____ — вона допомагає мені рости.
+  answer: критики
+  complete_sentence: Я відкритий до конструктивної критики__ — вона допомагає мені
+    рости.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Мені потрібна ваша _____ в особистій справі, якщо не заперечуєте.
+  answer: порада
+  complete_sentence: Мені потрібна ваша порада__ в особистій справі, якщо не заперечуєте.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Він завжди _____ обіцянок — якщо сказав, то зробить обов'язково.
+  answer: дотримується
+  complete_sentence: Він завжди дотримується__ обіцянок — якщо сказав, то зробить
+    обов'язково.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: У нашій команді панує повне _____ — ми розуміємо одне одного.
+  answer: взаєморозуміння
+  complete_sentence: У нашій команді панує повне взаєморозуміння__ — ми розуміємо
+    одне одного.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Ця тема потребує особливої _____ — не всі готові про це говорити.
+  answer: делікатності
+  complete_sentence: Ця тема потребує особливої делікатності__ — не всі готові про
+    це говорити.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я розумію, як ви себе почуваєте.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Дозвольте вибачитися за запізнення.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Давайте знайдемо компроміс.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я ціную вашу підтримку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я беру на себе відповідальність.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вони нарешті досягли примирення.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Для цієї роботи потрібно багато терпіння.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я відкритий до конструктивної критики.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Він завжди дотримується обіцянок.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ваша робота заслуговує на похвалу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Можу я попросити вашу пораду?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Він завжди виявляє емпатію до колег.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: У нашій команді панує повне порозуміння.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Прошу вибачення за цю помилку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово означає здатність відчувати те, що відчуває інша людина, ставити
+    себе на її місце?
+  options:
+  - text: співчуття
+    correct: false
+  - text: емпатія
+    correct: true
+  - text: терпіння
+    correct: false
+  - text: толерантність
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово використовується для висловлення жалю за чужу втрату, наприклад,
+    на похороні?
+  options:
+  - text: емпатія
+    correct: false
+  - text: співчуття
+    correct: true
+  - text: розуміння
+    correct: false
+  - text: підтримка
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яка різниця між "вибачення" та "пробачення"?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Вибачення" — формально, "пробачення" — глибше, особистіше'
+    correct: true
+  - text: '"Пробачення" — формально, "вибачення" — глибше'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке дієслово найкраще поєднується зі словом "відповідальність"?
+  options:
+  - text: мати відповідальність
+    correct: false
+  - text: давати відповідальність
+    correct: false
+  - text: нести відповідальність
+    correct: true
+  - text: робити відповідальність
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово означає "здатність чекати спокійно, без роздратування"?
+  options:
+  - text: терпимість
+    correct: false
+  - text: толерантність
+    correct: false
+  - text: терпіння
+    correct: true
+  - text: витримка
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Що означає фраза "піти на компроміс"?
+  options:
+  - text: Перемогти у суперечці
+    correct: false
+  - text: Погодитися з усім, що каже опонент
+    correct: false
+  - text: Поступитися частиною своїх вимог для досягнення згоди
+    correct: true
+  - text: Відмовитися від переговорів
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово найбільш формальне для вираження "advice"?
+  options:
+  - text: порада
+    correct: false
+  - text: підказка
+    correct: false
+  - text: рекомендація
+    correct: true
+  - text: думка
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яка різниця між "критика" та "зауваження"?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Критика" — загальна оцінка, "зауваження" — конкретний коментар про недолік'
+    correct: true
+  - text: '"Зауваження" — загальна оцінка, "критика" — конкретний коментар'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Що означає "конструктивна критика"?
+  options:
+  - text: Критика, яка руйнує самооцінку
+    correct: false
+  - text: Критика без пропозицій
+    correct: false
+  - text: Критика, яка допомагає виправити помилки
+    correct: true
+  - text: Позитивна похвала
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово означає "процес відновлення стосунків після конфлікту"?
+  options:
+  - text: компроміс
+    correct: false
+  - text: порозуміння
+    correct: false
+  - text: примирення
+    correct: true
+  - text: вибачення
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке дієслово найкраще поєднується зі словом "емпатію"?
+  options:
+  - text: давати емпатію
+    correct: false
+  - text: робити емпатію
+    correct: false
+  - text: виявляти емпатію
+    correct: true
+  - text: мати емпатію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Що означає слово "порядність"?
+  options:
+  - text: Чистота, охайність
+    correct: false
+  - text: Моральна чесність, надійність
+    correct: true
+  - text: Організованість
+    correct: false
+  - text: Дисциплінованість
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яка різниця між "щирість" та "відвертість"?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Щирість" — від серця, "відвертість" — говорити все прямо, іноді занадто'
+    correct: true
+  - text: '"Відвертість" — від серця, "щирість" — говорити все прямо'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційного інтелекту
+  question: Яке слово використовують, коли хочуть сказати "mutual understanding"?
+  options:
+  - text: розуміння
+    correct: false
+  - text: порозуміння
+    correct: false
+  - text: взаєморозуміння
+    correct: true
+  - text: компроміс
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Емпатія" та "співчуття" — це повні синоніми, їх можна завжди замінювати.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "виявляти емпатію".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Терпіння" та "терпимість" означають те саме.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "нести відповідальність".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Прошу вибачення" та "прошу пробачення" — абсолютно ідентичні вирази.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "давати емпатію".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Конструктивна критика" — це критика, яка допомагає виправити помилки.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "дотримуватися обіцянок".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Зауваження" та "критика" — це те саме.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "піти на компроміс".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Щирість" та "відвертість" означають те саме.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "висловити співчуття".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Взаєморозуміння" означає "mutual understanding".'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "робити терпіння".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

@@ -2,15 +2,6 @@
 **Phase:** B1 | **Level:** B1 | **Pedagogy:** "TTT" | **Target:** 1500
 **Overall Status:** ✅ PASS
 
-## PEDAGOGICAL VIOLATIONS
-- **[VESUM_ERROR]** VESUM validation error: timed out
-  - FIX: Check nlp_uk container logs
-
-## Recommendation
-**📝 UPDATE** (severity 10/100)
-
-- 1 pedagogical violations (minor)
-
 ## Gates
 - **Words:** ✅ 1650/1500
 - **Activities:** ✅ 12/12
@@ -25,13 +16,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 95.5% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 95% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (6/37 confirmed)
 
-## MDX VALIDATION
-✅ No issues found
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 32 | 24 | 100% | 20% | 20.0% |
+| engagement | 7 | 5 | 100% | 15% | 15.0% |
+| dialogues | 16 | 4 | 100% | 15% | 15.0% |
+| variety | 0.93 | - | 93% | 10% | 9.3% |
+| cultural | 4 | 3 | 100% | 10% | 10.0% |
+| realworld | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 10 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.94 | - | 94% | 5% | 4.7% |
+| questions | 22 | 5 | 100% | 5% | 5.0% |
+| proverbs | 10 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.7%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

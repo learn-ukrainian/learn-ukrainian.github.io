@@ -1,0 +1,456 @@
+module: 47-passive-constructions
+level: B1
+validated: '2025-12-28T10:06:47.264313'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 36
+  errors_confirmed: 6
+  passed_items: 30
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Книга написаний відомим українським письменником.
+  error: написаний
+  answer: написана
+  sentence_corrected: Книга написана відомим українським письменником.
+  options:
+  - написаний
+  - написана
+  - написане
+  - написані
+  original_explanation: «Книга» — жіночого роду, тому дієприкметник «написана».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Рішення прийнята комісією одноголосно вчора.
+  error: прийнята
+  answer: прийняте
+  sentence_corrected: Рішення прийняте комісією одноголосно вчора.
+  options:
+  - прийнята
+  - прийняте
+  - прийнятий
+  - прийняті
+  original_explanation: «Рішення» — середнього роду, тому дієприкметник «прийняте».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Контракт підписується вчора директором компанії.
+  error: підписується
+  answer: підписано
+  sentence_corrected: Контракт підписано вчора директором компанії.
+  options:
+  - підписується
+  - підписано
+  - підписаний
+  - підписувався
+  original_explanation: «Вчора» — завершена дія, тому короткий пасив «підписано».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Документ підготовлено юристом та надіслані партнерам.
+  error: надіслані
+  answer: надіслано
+  sentence_corrected: Документ підготовлено юристом та надіслано партнерам.
+  options:
+  - надіслані
+  - надіслано
+  - надісланий
+  - надіслана
+  original_explanation: Обидві форми мають бути короткими — «підготовлено» та «надіслано».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Будинок будувався зараз дуже швидко робітниками.
+  error: будувався
+  answer: будується
+  sentence_corrected: Будинок будується зараз дуже швидко робітниками.
+  options:
+  - будувався
+  - будується
+  - збудовано
+  - збудований
+  original_explanation: «Зараз» — теперішній час, тому «будується».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Результати було оголошено комісія на церемонії.
+  error: комісія
+  answer: комісією
+  sentence_corrected: Результати було оголошено комісією на церемонії.
+  options:
+  - комісія
+  - комісією
+  - комісії
+  - комісію
+  original_explanation: Виконавець стоїть в орудному відмінку — «комісією».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Книга ___ відомим письменником минулого століття.
+  answer: написана
+  complete_sentence: Книга написана відомим письменником минулого століття.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Рішення ___ одноголосно на засіданні комісії.
+  answer: прийнято
+  complete_sentence: Рішення прийнято одноголосно на засіданні комісії.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Хліб ___ щоранку о п'ятій годині.
+  answer: випікається
+  complete_sentence: Хліб випікається щоранку о п'ятій годині.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Документи ___ секретарем і надіслані директору.
+  answer: підготовлені
+  complete_sentence: Документи підготовлені секретарем і надіслані директору.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Зараз ___ новий міст через річку.
+  answer: будується
+  complete_sentence: Зараз будується новий міст через річку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Усі квитки ___ ще минулого тижня.
+  answer: продано
+  complete_sentence: Усі квитки продано ще минулого тижня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Ця страва ___ з свіжих місцевих інгредієнтів.
+  answer: готується
+  complete_sentence: Ця страва готується з свіжих місцевих інгредієнтів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Звіт ___ аналітиками та подано керівництву.
+  answer: підготовлений
+  complete_sentence: Звіт підготовлений аналітиками та подано керівництву.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Ця книга написана відомим українським автором минулого року та перекладена
+    багатьма мовами.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Рішення було прийнято комісією одноголосно після тривалого обговорення усіх
+    можливих варіантів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Новий стадіон зараз будується дуже швидко у нашому місті для олімпійських
+    змагань.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Усі документи були підготовлено секретарем та надіслано партнерам до кінця
+    робочого дня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Хліб випікається в цій пекарні щоранку о п'ятій годині за традиційним українським
+    рецептом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте пасивне речення
+  jumbled_words: []
+  answer: Текст зараз уважно перевіряється редактором та ретельно коректором перед
+    публікацією в журналі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яке речення використовує зворотний пасив, що підкреслює процес, який триває
+    в момент мовлення?
+  options:
+  - text: Книгу написано минулого року відомим письменником
+    correct: false
+  - text: Книга написана відомим українським письменником
+    correct: false
+  - text: Книга пишеться вже третій рік поспіль
+    correct: true
+  - text: Книга була написана ще в минулому столітті
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яка конструкція найкраще підходить для офіційного оголошення результатів
+    без вказівки на виконавця?
+  options:
+  - text: Результати оголосили члени журі конкурсу
+    correct: false
+  - text: Результати оголошено офіційно на церемонії нагородження
+    correct: true
+  - text: Результати оголошуються щороку в цей час
+    correct: false
+  - text: Результати були оголошені головою комісії
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яке речення демонструє правильне використання повного пасиву з виконавцем
+    дії в орудному відмінку?
+  options:
+  - text: Картина намальована відомим українським художником
+    correct: true
+  - text: Картину намальовано в минулому столітті
+    correct: false
+  - text: Картина малюється талановитим художником зараз
+    correct: false
+  - text: Картини малювати художником правильно
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Чим принципово відрізняється зворотний пасив від повного пасиву в сучасній
+    українській мові?
+  options:
+  - text: Зворотний пасив завжди вимагає вказівки на виконавця
+    correct: false
+  - text: Зворотний пасив використовується тільки в минулому часі
+    correct: false
+  - text: Зворотний пасив підкреслює процес, а не завершений результат
+    correct: true
+  - text: Зворотний пасив не може вживатися з неживими підметами
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яке речення граматично неправильне через невідповідність між типом пасиву
+    та часовим контекстом?
+  options:
+  - text: Документ підписано обома сторонами вчора ввечері
+    correct: false
+  - text: Контракт підписується минулого тижня директором компанії
+    correct: true
+  - text: Угода підписана міністрами закордонних справ
+    correct: false
+  - text: Договори підписуються електронним підписом щодня
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яка форма правильна для вираження завершеної дії в минулому без вказівки
+    на виконавця?
+  options:
+  - text: Будинок будувався протягом трьох років
+    correct: false
+  - text: Будинок будується вже довгий час
+    correct: false
+  - text: Будинок збудовано минулого року успішно
+    correct: true
+  - text: Будинок будований протягом багатьох років
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яке речення правильно використовує зворотний пасив для опису регулярного
+    процесу в щоденному житті?
+  options:
+  - text: Хліб випечено кожного ранку в пекарні
+    correct: false
+  - text: Хліб випікається щоранку о п'ятій годині
+    correct: true
+  - text: Хліб випечений пекарем щоранку вчасно
+    correct: false
+  - text: Хліб випікано протягом багатьох століть
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння пасивних конструкцій
+  question: Яка трансформація активного речення «Студенти написали есе» в пасивне
+    є граматично правильною?
+  options:
+  - text: Студенти написали есе → Есе написалося студентами
+    correct: false
+  - text: Студенти написали есе → Есе написане студентами
+    correct: true
+  - text: Студенти написали есе → Есе написались студентами
+    correct: false
+  - text: Студенти написали есе → Есе написаний студентами
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Повний пасив вимагає узгодження дієприкметника з підметом у роді та числі.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Зворотний пасив з -ся завжди вказує на виконавця дії в орудному відмінку.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Короткий пасив (-но/-то) вимагає додатка у знахідному відмінку.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Зворотний пасив можна використовувати для опису завершених дій у минулому.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Для вираження майбутнього часу в короткому пасиві використовується «буде».
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: «Будинок будується робітниками» — типова конструкція зворотного пасиву.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Повний пасив найкраще підходить, коли потрібно підкреслити виконавця
+    дії.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила пасивних конструкцій
+  statement: Усі три типи пасиву можуть взаємозамінно використовуватися в будь-якому
+    контексті.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

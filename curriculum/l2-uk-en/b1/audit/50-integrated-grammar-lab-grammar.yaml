@@ -1,0 +1,566 @@
+module: 50-integrated-grammar-lab
+level: B1
+validated: '2025-12-28T10:07:10.941443'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 37
+  errors_confirmed: 6
+  passed_items: 31
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Рекомендовано збільшити бюджетик на двадцять відсоточків.
+  error: бюджетик
+  answer: бюджет
+  sentence_corrected: Рекомендовано збільшити бюджет на двадцять відсоточків.
+  options:
+  - бюджетик
+  - бюджет
+  - бюджетний
+  - бюджетування
+  original_explanation: Демінутиви недоречні в офіційних документах.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Синочку, кашка тобою з'їдено добре!
+  error: з'їдено
+  answer: з'їдена
+  sentence_corrected: Синочку, кашка тобою з'їдена добре!
+  options:
+  - з'їдено
+  - з'їдена
+  - з'їв
+  - їв
+  original_explanation: 'У сімейному стилі краще активна конструкція: «ти з''їв кашку».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Начальником сказано, що треба закінчити проектик.
+  error: проектик
+  answer: проект
+  sentence_corrected: Начальником сказано, що треба закінчити проект.
+  options:
+  - проектик
+  - проект
+  - проектний
+  - проектування
+  original_explanation: Демінутив «проектик» недоречний у робочому контексті.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Троє хлопців залучено до реалізації завдань.
+  error: залучено
+  answer: прийшло
+  sentence_corrected: Троє хлопців прийшло до реалізації завдань.
+  options:
+  - залучено
+  - прийшло
+  - прибуло
+  - з'явилось
+  original_explanation: 'У розмовному стилі краще: «Троє хлопців прийшло допомагати».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Прогнозується, що сонечко завтра буде гарненьким.
+  error: сонечко
+  answer: сонце
+  sentence_corrected: Прогнозується, що сонце завтра буде гарненьким.
+  options:
+  - сонечко
+  - сонце
+  - сонячно
+  - сонячний
+  original_explanation: У прогнозі погоди (офіційний контекст) демінутиви недоречні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Матусю, рекомендовано мені з'їсти кашу до кінця.
+  error: рекомендовано
+  answer: треба
+  sentence_corrected: Матусю, треба мені з'їсти кашу до кінця.
+  options:
+  - рекомендовано
+  - треба
+  - потрібно
+  - необхідно
+  original_explanation: Офіційна конструкція неприродна у сімейній розмові.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Офіційний] За результатами перевірки _____, що якість відповідає
+    стандартам.'
+  answer: встановлено
+  complete_sentence: '[Офіційний] За результатами перевірки встановлено__, що якість
+    відповідає стандартам.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Сімейний] _____, іди обідати, супчик уже готовий!'
+  answer: Синочку
+  complete_sentence: '[Сімейний] Синочку__, іди обідати, супчик уже готовий!'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Офіційний] _____ населення підтримує ініціативу.'
+  answer: Дві третіх
+  complete_sentence: '[Офіційний] Дві третіх__ населення підтримує ініціативу.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Розмовний] _____ нового працівника до команди.'
+  answer: Взяли
+  complete_sentence: '[Розмовний] Взяли__ нового працівника до команди.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Офіційний] _____ спеціалістів задіяно у проекті.'
+  answer: П'ятеро
+  complete_sentence: '[Офіційний] П''ятеро__ спеціалістів задіяно у проекті.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Сімейний] Такий _____ песик прибіг до нас!'
+  answer: гарненький
+  complete_sentence: '[Сімейний] Такий гарненький__ песик прибіг до нас!'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Офіційний] _____ завершити роботу до кінця тижня.'
+  answer: Рекомендовано
+  complete_sentence: '[Офіційний] Рекомендовано__ завершити роботу до кінця тижня.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть відповідний стиль
+  sentence_template: '[Розмовний] Ми чекали _____ години на автобус.'
+  answer: півтори
+  complete_sentence: '[Розмовний] Ми чекали півтори__ години на автобус.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: cloze
+  title: Редагування звіту
+  passage_template: 'ЗВІТ ПРО ВИКОНАННЯ ПРОЕКТУ
+
+
+    За звітний період {виконано} сімдесят відсотків запланованих робіт. {Третину}
+    бюджету витрачено на матеріали. {П''ятеро} спеціалістів залучено до реалізації
+    {проекту}.
+
+
+    {Встановлено}, що якість робіт відповідає стандартам. Зауваження замовника {враховано}
+    повністю. Коригування {внесено} до проектної документації {своєчасно}.
+
+
+    {Прогнозується}, що проект буде завершено протягом {півтора} місяця. {Чверть}
+    робіт потребує додаткового фінансування.
+
+
+    {Рекомендовано}:
+
+    — Збільшити бюджет на двадцять відсотків.
+
+    — Залучити ще {двоє} спеціалістів.
+
+    — {Продовжити} термін виконання на три тижні.'
+  blanks:
+  - id: '1'
+    answer: виконано
+    options:
+    - виконано
+    - зроблено
+    - закінчено
+  - id: '2'
+    answer: Третину
+    options:
+    - Третину
+    - Третина
+    - Третіх
+  - id: '3'
+    answer: П'ятеро
+    options:
+    - П'ятеро
+    - П'ять
+    - П'ятьох
+  - id: '4'
+    answer: проекту
+    options:
+    - проекту
+    - завдання
+    - роботи
+  - id: '5'
+    answer: Встановлено
+    options:
+    - Встановлено
+    - Виявилось
+    - Побачили
+  - id: '6'
+    answer: враховано
+    options:
+    - враховано
+    - взято
+    - прийнято
+  - id: '7'
+    answer: внесено
+    options:
+    - внесено
+    - зроблено
+    - написано
+  - id: '8'
+    answer: своєчасно
+    options:
+    - своєчасно
+    - швидко
+    - терміново
+  - id: '9'
+    answer: Прогнозується
+    options:
+    - Прогнозується
+    - Думаємо
+    - Здається
+  - id: '10'
+    answer: півтора
+    options:
+    - півтора
+    - полтора
+    - один з половиною
+  - id: '11'
+    answer: Чверть
+    options:
+    - Чверть
+    - Четверта
+    - Четвертина
+  - id: '12'
+    answer: Рекомендовано
+    options:
+    - Рекомендовано
+    - Треба
+    - Потрібно
+  - id: '13'
+    answer: двоє
+    options:
+    - двоє
+    - два
+    - двох
+  - id: '14'
+    answer: Продовжити
+    options:
+    - Продовжити
+    - Подовжити
+    - Збільшити
+  complete_passage: 'ЗВІТ ПРО ВИКОНАННЯ ПРОЕКТУ
+
+
+    За звітний період {виконано} сімдесят відсотків запланованих робіт. {Третину}
+    бюджету витрачено на матеріали. {П''ятеро} спеціалістів залучено до реалізації
+    {проекту}.
+
+
+    {Встановлено}, що якість робіт відповідає стандартам. Зауваження замовника {враховано}
+    повністю. Коригування {внесено} до проектної документації {своєчасно}.
+
+
+    {Прогнозується}, що проект буде завершено протягом {півтора} місяця. {Чверть}
+    робіт потребує додаткового фінансування.
+
+
+    {Рекомендовано}:
+
+    — Збільшити бюджет на двадцять відсотків.
+
+    — Залучити ще {двоє} спеціалістів.
+
+    — {Продовжити} термін виконання на три тижні.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    passage_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: Прогнозується, що проект буде завершено до кінця місяця відповідно до затвердженого
+    графіка.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: Синочку, їж кашку, вона така тепленька і смачненька, бабуся для тебе приготувала.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: Дві третіх опитаних працівників задоволені результатами проведеного дослідження
+    цього року.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: Наші хлопці зробили майже все за тиждень, і тепер можна відпочивати.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: П'ятеро спеціалістів залучено до проекту додатково для прискорення виконання
+    робіт.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте стилістично правильне речення
+  jumbled_words: []
+  answer: Котику, я зараз налию тобі свіженького смачненького молочка з холодильника.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Яка граматична особливість найбільше характеризує офіційний стиль українських
+    ділових документів та звітів?
+  options:
+  - text: Велика кількість демінутивів для створення дружньої атмосфери
+  - text: Широке використання коротких пасивних форм на -но/-то
+    correct: true
+  - text: Переважання активних конструкцій з особовими займенниками
+  - text: Часте вживання вигуків та емоційно забарвленої лексики
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: В якому контексті демінутив «проблемка» найімовірніше виражає іронію,
+    а не справжнє зменшення?
+  options:
+  - text: У розмові бабусі з онуком про домашнє завдання
+  - text: У звіті менеджера про серйозну помилку в проекті
+    correct: true
+  - text: У описі маленької технічної несправності принтера
+  - text: У дитячій книжці про пригоди маленьких тварин
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Яке речення найкраще поєднує офіційний стиль з точною статистикою, що
+    типово для ділових звітів?
+  options:
+  - text: Майже всі хлопці зробили роботу добре
+  - text: Троє працівників працювали дуже гарненько
+  - text: Три четвертих завдань виконано у встановлений термін
+    correct: true
+  - text: Половинка проекту вже готова, ура!
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Чому змішування демінутивів з пасивними конструкціями в одному тексті
+    зазвичай неприродне та стилістично помилкове?
+  options:
+  - text: Бо ці форми мають різні закінчення і не узгоджуються
+  - text: Бо демінутиви не існують у сучасній українській мові
+  - text: Бо вони належать до різних стильових регістрів
+    correct: true
+  - text: Бо пасив неможливо утворити від демінутивів
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Яка конструкція типова для української бабусі, що розмовляє з онуком про
+    їжу та піклування?
+  options:
+  - text: Рекомендовано з'їсти кашу до кінця
+  - text: Синочку, їж кашку, вона така смачненька!
+    correct: true
+  - text: Кашу має бути з'їдено повністю
+  - text: Третина каші залишилася неспожитою
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: В якому тексті найкраще поєднано пасивні конструкції та збірні числівники
+    для офіційного звіту?
+  options:
+  - text: П'ятеро спеціалістів залучено до проекту, двоє консультантів запрошено додатково
+    correct: true
+  - text: П'ять спеціалістів залучено до проекту, два консультанти запрошено
+  - text: П'ятеро спеціалістиків залучено до проектику
+  - text: Залучили п'ятьох спеціалістів, ще запросили двох консультантів
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Як найкраще перефразувати офіційне «Рекомендовано завершити проект до
+    кінця кварталу» у розмовному стилі?
+  options:
+  - text: Рекомендується завершення проекту до кварталу
+  - text: Начальник сказав, що треба закінчити до кінця кварталу
+    correct: true
+  - text: Кварталик закінчується, тож проектик треба закінчити
+  - text: До кінця кварталу має бути завершено проект
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Стилістичний аналіз
+  question: Яка основна функція цитати в офіційному журналістському тексті, що робить
+    його живішим та цікавішим?
+  options:
+  - text: Замінити всі пасивні конструкції активними
+  - text: Показати неграмотність мовця
+  - text: Внести живу мову та персональну думку у формальний текст
+    correct: true
+  - text: Уникнути використання статистичних даних
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Короткий пасив (-но/-то) характерний переважно для офіційного стилю.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Демінутиви можуть вільно використовуватися в ділових документах.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Збірні числівники вживаються в обох стилях — офіційному та розмовному.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Іронічні демінутиви («проблемка») типові лише для дитячої мови.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Цитати у журналістських текстах вносять елемент живої мови.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Змішування офіційного та сімейного стилів — ознака грамотності.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Активні конструкції з особовими займенниками типові для розмовного стилю.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Стилістичні правила
+  statement: Дроби та відсотки використовуються виключно в наукових текстах.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

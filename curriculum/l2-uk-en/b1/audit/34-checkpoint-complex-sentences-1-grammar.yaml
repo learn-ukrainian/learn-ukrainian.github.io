@@ -1,0 +1,827 @@
+module: 34-checkpoint-complex-sentences-1
+level: B1
+validated: '2025-12-28T10:05:30.267070'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 54
+  errors_confirmed: 6
+  passed_items: 48
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Книга, яка я читаю, дуже цікава й захоплююча.
+  error: яка
+  answer: яку
+  sentence_corrected: Книга, яку я читаю, дуже цікава й захоплююча.
+  options:
+  - яку
+  - якої
+  - якій
+  - яким
+  original_explanation: 'Знахідний відмінок: читаю що? — книгу, яку.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Я хочу, щоб ти прийти завтра на важливу зустріч.
+  error: прийти
+  answer: прийшов
+  sentence_corrected: Я хочу, щоб ти прийшов завтра на важливу зустріч.
+  options:
+  - прийшов
+  - приходиш
+  - прийдеш
+  - приходив
+  original_explanation: Різні суб'єкти = щоб + минула форма.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Якщо я мав гроші, я б купив новий автомобіль.
+  error: Якщо
+  answer: Якби
+  sentence_corrected: Якби я мав гроші, я б купив новий автомобіль.
+  options:
+  - Якби
+  - Коли б
+  - Хоча
+  - Тому що
+  original_explanation: Нереальна умова вимагає «якби».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Якби я вивчив тоді, зараз знаю відповідь добре.
+  error: знаю
+  answer: би знав
+  sentence_corrected: Якби я вивчив тоді, зараз би знав відповідь добре.
+  options:
+  - би знав
+  - знатиму
+  - знав
+  - знаєш
+  original_explanation: 'Змішана умова: наслідок теж гіпотетичний.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Місто, куди я народився, знаходиться на заході.
+  error: куди
+  answer: де
+  sentence_corrected: Місто, де я народився, знаходиться на заході.
+  options:
+  - де
+  - звідки
+  - який
+  - яке
+  original_explanation: Локація (не напрямок) = де.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Комплексний тест
+  sentence_with_error: Я прийшов, щоб я допоміг тобі з проєктом.
+  error: щоб я допоміг
+  answer: щоб допомогти
+  sentence_corrected: Я прийшов, щоб допомогти тобі з проєктом.
+  options:
+  - щоб допомогти
+  - щоби допомагати
+  - щоб допомагаю
+  - щоб допоможу
+  original_explanation: Однакові суб'єкти = щоб + інфінітив.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Книга, ___ я читаю, дуже цікава й захоплююча.
+  answer: яку
+  complete_sentence: Книга, яку я читаю, дуже цікава й захоплююча.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Місто, ___ я народився, знаходиться на заході України.
+  answer: де
+  complete_sentence: Місто, де я народився, знаходиться на заході України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Я прийшов, ___ допомогти тобі з проєктом.
+  answer: щоб
+  complete_sentence: Я прийшов, щоб допомогти тобі з проєктом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Батьки хочуть, ___ діти вивчилися в університеті.
+  answer: щоб
+  complete_sentence: Батьки хочуть, щоб діти вивчилися в університеті.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ матиму час, зателефоную тобі ввечері.
+  answer: Якщо
+  complete_sentence: Якщо матиму час, зателефоную тобі ввечері.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ я мав гроші, купив би новий автомобіль.
+  answer: Якби
+  complete_sentence: Якби я мав гроші, купив би новий автомобіль.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Він хоче, щоб вона ___ йому листа до п'ятниці.
+  answer: написала
+  complete_sentence: Він хоче, щоб вона написала йому листа до п'ятниці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Якби я вивчив тоді, зараз ___ знав відповідь.
+  answer: би
+  complete_sentence: Якби я вивчив тоді, зараз би знав відповідь.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Час, ___ ми зустрілися, був незабутнім моментом.
+  answer: коли
+  complete_sentence: Час, коли ми зустрілися, був незабутнім моментом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Країна, ___ він приїхав, знаходиться в Африці.
+  answer: звідки
+  complete_sentence: Країна, звідки він приїхав, знаходиться в Африці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: Я поїхав, щоб ___ нові місця по всьому світу.
+  answer: побачити
+  complete_sentence: Я поїхав, щоб побачити нові місця по всьому світу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Інтегрований тест
+  sentence_template: ___ прийде, і ___ матиме час, поговоримо з ним.
+  answer: Якщо, якщо
+  complete_sentence: Якщо, якщо прийде, і Якщо, якщо матиме час, поговоримо з ним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Ця книга, яку я читаю, дуже цікава, захоплююча і неймовірно прекрасна.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Я хочу, щоб ти прийшов до мене на важливе свято завтра.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Якщо матиму вільний час, я обов'язково зателефоную тобі ввечері завтра.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Якби я мав гроші, я б купив новий великий сучасний автомобіль.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Місто, де я народився, знаходиться на красивому і мальовничому західному
+    заході України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Комплексний тест
+  jumbled_words: []
+  answer: Якби я вивчив тоді, я зараз би знав правильну і повну відповідь.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яке відносне слово використовується для опису місця, де щось відбувається
+    чи знаходиться?
+  options:
+  - text: який
+    correct: false
+  - text: де
+    correct: true
+  - text: коли
+    correct: false
+  - text: що
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яка форма слова «який» потрібна в реченні «Книга, ___ я читаю, дуже цікава»?
+  options:
+  - text: яка
+    correct: false
+  - text: яку
+    correct: true
+  - text: якої
+    correct: false
+  - text: якій
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яке відносне слово в українській мові використовується для позначення
+    напрямку руху до певного місця?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: У наведеному реченні «Час, ___ ми зустрілися, був незабутнім» потрібно
+    використати слово?
+  options:
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яка форма «який» потрібна в реченні «Людина, ___ я допомагав, подякувала
+    мені»?
+  options:
+  - text: яка
+    correct: false
+  - text: який
+    correct: false
+  - text: якій
+    correct: true
+  - text: яку
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яке саме відносне слово в українській мові використовується для позначення
+    походження чи джерела?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: true
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: У наведеному українському реченні «Все, ___ він сказав, було правдою»
+    потрібно використати?
+  options:
+  - text: який
+    correct: false
+  - text: яке
+    correct: false
+  - text: що
+    correct: true
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Відносні речення (М26-28)
+  question: Яка форма «який» потрібна в реченні «Студент, з ___ я працював, став лікарем»?
+  options:
+  - text: якого
+    correct: false
+  - text: яким
+    correct: true
+  - text: якому
+    correct: false
+  - text: який
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Коли в підрядному реченні мети з «щоб» використовується інфінітив, а не
+    минула форма?
+  options:
+  - text: Коли суб'єкти головного і підрядного речення однакові.
+    correct: true
+  - text: Коли суб'єкти головного і підрядного речення різні.
+    correct: false
+  - text: Завжди після дієслова «хотіти».
+    correct: false
+  - text: Тільки в минулому часі.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Яке з наведених чотирьох речень правильно виражає мету з різними суб'єктами?
+  options:
+  - text: Я хочу, щоб ти прийти завтра.
+    correct: false
+  - text: Я хочу, щоб ти прийшов завтра.
+    correct: true
+  - text: Я хочу тебе прийти завтра.
+    correct: false
+  - text: Я хочу ти прийдеш завтра.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Як правильно перекласти англійське речення «She asked him to help her»
+    українською мовою?
+  options:
+  - text: Вона попросила, щоб він допоміг їй.
+    correct: true
+  - text: Вона попросила його допомогти їй.
+    correct: false
+  - text: Вона попросила, щоб він допомогти їй.
+    correct: false
+  - text: Вона попросила він допоміг їй.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Яке з наведених чотирьох речень правильно виражає мету з однаковими суб'єктами?
+  options:
+  - text: Я прийшов, щоб допомогти тобі.
+    correct: true
+  - text: Я прийшов, щоб я допоміг тобі.
+    correct: false
+  - text: Я прийшов, щоб допомагаю тобі.
+    correct: false
+  - text: Я прийшов, щоб допоміг тобі.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Як правильно узгодити форму в реченні «Він хоче, щоб вона ___ листа»?
+  options:
+  - text: написав
+    correct: false
+  - text: написала
+    correct: true
+  - text: написати
+    correct: false
+  - text: напише
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Яке саме дієслово в українській мові вимагає конструкції «щоб + минула
+    форма» для різних суб'єктів?
+  options:
+  - text: піти, щоб
+    correct: false
+  - text: прийти, щоб
+    correct: false
+  - text: хотіти, щоб
+    correct: true
+  - text: вміти, щоб
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Як виразити заперечення в підрядному реченні мети «Я хочу, щоб ти не йшов»?
+  options:
+  - text: Я хочу, щоб ти нікуди не йшов.
+    correct: true
+  - text: Я не хочу, щоб ти йшов нікуди.
+    correct: false
+  - text: Я хочу, щоб ти йшов не.
+    correct: false
+  - text: Я хочу не, щоб ти йшов.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Підрядні речення мети (М29-30)
+  question: Як правильно виразити мету в реченні «Батьки хочуть, щоб діти ___» з різними
+    суб'єктами?
+  options:
+  - text: вчитися старанно
+    correct: false
+  - text: вчилися старанно
+    correct: true
+  - text: вчаться старанно
+    correct: false
+  - text: вчити старанно
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Який сполучник використовується для реальних умов, що можуть справді статися
+    в майбутньому?
+  options:
+  - text: якщо
+    correct: true
+  - text: якби
+    correct: false
+  - text: коли б
+    correct: false
+  - text: щоб
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Який саме сполучник слід використовувати для нереальних гіпотетичних умов
+    в українській мові?
+  options:
+  - text: якщо
+    correct: false
+  - text: якби
+    correct: true
+  - text: коли
+    correct: false
+  - text: щоб
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Яка саме частка є обов'язковою в наслідку нереальної умови для позначення
+    гіпотетичності?
+  options:
+  - text: ж
+    correct: false
+  - text: б / би
+    correct: true
+  - text: не
+    correct: false
+  - text: ні
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Яке з наведених речень є прикладом змішаної умови, де минуле впливає на
+    теперішнє?
+  options:
+  - text: Якби я вивчив тоді, зараз би знав.
+    correct: true
+  - text: Якби я мав час, допоміг би.
+    correct: false
+  - text: Якщо прийде, поговоримо.
+    correct: false
+  - text: Якби прийшов, поговорили б.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Що саме характеризує ланцюгову умову з кількома підрядними реченнями в
+    українській мові?
+  options:
+  - text: Змішування якщо і якби.
+    correct: false
+  - text: Кілька умов для одного наслідку.
+    correct: true
+  - text: Тільки минулий час.
+    correct: false
+  - text: Відсутність частки «б».
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Як слід правильно виразити нереальну умову про теперішній час, що суперечить
+    реальності?
+  options:
+  - text: Якщо я маю гроші, купую будинок.
+    correct: false
+  - text: Якби я мав гроші, купив би будинок.
+    correct: true
+  - text: Якби я маю гроші, куплю будинок.
+    correct: false
+  - text: Якщо я мав гроші, купив будинок.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: У яких саме випадках форма «би» використовується замість «б» у нереальних
+    умовах?
+  options:
+  - text: Завжди після дієслова.
+    correct: false
+  - text: Після приголосного звуку.
+    correct: true
+  - text: Після голосного звуку.
+    correct: false
+  - text: Тільки в множині.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Умовні речення (М31-33)
+  question: Яка саме конструкція виражає альтернативний наслідок, тобто англійське
+    «otherwise» в українській мові?
+  options:
+  - text: тому що
+    correct: false
+  - text: хоча
+    correct: false
+  - text: інакше
+    correct: true
+  - text: бо
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: The book that I'm reading is very interesting.
+  answer: ''
+  options:
+  - text: Книга, яку я читаю, дуже цікава.
+    correct: true
+  - text: Книга, яка я читаю, цікава.
+    correct: false
+  - text: Книга, якої читаю, цікава.
+    correct: false
+  - text: Книга, якій читаю, цікава.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: I want you to come to my birthday party.
+  answer: ''
+  options:
+  - text: Я хочу, щоб ти прийшов на мій день народження.
+    correct: true
+  - text: Я хочу, щоб ти прийти на день народження.
+    correct: false
+  - text: Я хочу тебе прийти на день народження.
+    correct: false
+  - text: Я хочу ти прийшов на день народження.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: If I have time, I will help you with the project.
+  answer: ''
+  options:
+  - text: Якщо матиму час, допоможу тобі з проєктом.
+    correct: true
+  - text: Якби матиму час, допоможу тобі.
+    correct: false
+  - text: Якщо мав час, допоміг тобі.
+    correct: false
+  - text: Якби маю час, допомагаю тобі.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: If I had money, I would buy a new car.
+  answer: ''
+  options:
+  - text: Якби я мав гроші, я б купив новий автомобіль.
+    correct: true
+  - text: Якщо маю гроші, куплю автомобіль.
+    correct: false
+  - text: Якби маю гроші, купив автомобіль.
+    correct: false
+  - text: Якщо мав гроші, б купив автомобіль.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: If I had studied then, I would know the answer now.
+  answer: ''
+  options:
+  - text: Якби я вивчив тоді, зараз би знав відповідь.
+    correct: true
+  - text: Якщо вивчив тоді, знаю зараз.
+    correct: false
+  - text: Якби вивчу, знатиму зараз.
+    correct: false
+  - text: Якщо вивчив, б знаю зараз.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Комплексний переклад
+  source_sentence: The city where I was born is very beautiful.
+  answer: ''
+  options:
+  - text: Місто, де я народився, дуже красиве.
+    correct: true
+  - text: Місто, куди народився, красиве.
+    correct: false
+  - text: Місто, звідки народився, красиве.
+    correct: false
+  - text: Місто, яке народився, красиве.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true

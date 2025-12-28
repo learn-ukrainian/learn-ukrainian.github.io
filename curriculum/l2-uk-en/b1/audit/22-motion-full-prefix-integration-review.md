@@ -16,14 +16,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 92.6% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 99% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (6/45 confirmed)
 
-## MDX VALIDATION
-### Warnings
-- ⚠️ Some Ukrainian content may be missing (268/992 words)
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** grammar
 
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 47 | 24 | 100% | 20% | 20.0% |
+| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| dialogues | 11 | 4 | 100% | 15% | 15.0% |
+| variety | 0.99 | - | 99% | 10% | 9.9% |
+| cultural | 7 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 6 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 35 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

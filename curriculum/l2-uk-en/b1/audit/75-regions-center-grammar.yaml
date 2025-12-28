@@ -1,0 +1,605 @@
+module: 75-regions-center
+level: B1
+validated: '2025-12-28T13:03:24.781832'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 50
+  errors_confirmed: 8
+  passed_items: 42
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Київ — столиця Польщі.
+  error: Польщі
+  answer: України
+  sentence_corrected: Київ — столиця України.
+  options:
+  - Польщі
+  - України
+  - Росії
+  - Білорусі
+  original_explanation: Київ — столиця України, не Польщі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Тарас Шевченко народився на Полтавщині.
+  error: Полтавщині
+  answer: Черкащині
+  sentence_corrected: Тарас Шевченко народився на Черкащині.
+  options:
+  - Полтавщині
+  - Черкащині
+  - Київщині
+  - Волині
+  original_explanation: Шевченко народився на Черкащині, в селі Моринці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Микола Гоголь написав "Кобзар".
+  error: Кобзар
+  answer: Вечори на хуторі біля Диканьки
+  sentence_corrected: Микола Гоголь написав "Вечори на хуторі біля Диканьки".
+  options:
+  - Кобзар
+  - Вечори на хуторі біля Диканьки
+  - Енеїда
+  - Заповіт
+  original_explanation: '"Кобзар" написав Шевченко, а Гоголь — "Вечори на хуторі біля
+    Диканьки".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Чигирин був столицею Київської Русі.
+  error: Київської Русі
+  answer: козацької держави
+  sentence_corrected: Чигирин був столицею козацької держави.
+  options:
+  - Київської Русі
+  - козацької держави
+  - Австро-Угорщини
+  - Польщі
+  original_explanation: Чигирин був першою столицею козацької держави, а не Русі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дністер — головна річка України.
+  error: Дністер
+  answer: Дніпро
+  sentence_corrected: Дніпро — головна річка України.
+  options:
+  - Дністер
+  - Дніпро
+  - Десна
+  - Дунай
+  original_explanation: Дніпро — головна річка України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Богдан Хмельницький був князем.
+  error: князем
+  answer: гетьманом
+  sentence_corrected: Богдан Хмельницький був гетьманом.
+  options:
+  - князем
+  - гетьманом
+  - царем
+  - королем
+  original_explanation: Хмельницький був гетьманом козацької держави.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Полтавська битва відбулася у 1809 році.
+  error: '1809'
+  answer: '1709'
+  sentence_corrected: Полтавська битва відбулася у 1709 році.
+  options:
+  - '1809'
+  - '1709'
+  - '1609'
+  - '1909'
+  original_explanation: Полтавська битва відбулася у 1709 році.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Калина — символ Росії.
+  error: Росії
+  answer: України
+  sentence_corrected: Калина — символ України.
+  options:
+  - Росії
+  - України
+  - Польщі
+  - Білорусі
+  original_explanation: Калина — традиційний символ України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Київ — це _____ України.
+  answer: столиця
+  complete_sentence: Київ — це столиця__ України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Черкащина — серце _____ України.
+  answer: козацької
+  complete_sentence: Черкащина — серце козацької__ України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ — найбільша річка України.
+  answer: Дніпро
+  complete_sentence: Дніпро__ — найбільша річка України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Тарас _____ — найвидатніший український поет.
+  answer: Шевченко
+  complete_sentence: Тарас Шевченко__ — найвидатніший український поет.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ — перша столиця козацької держави.
+  answer: Чигирин
+  complete_sentence: Чигирин__ — перша столиця козацької держави.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Микола Гоголь народився на _____.
+  answer: Полтавщині
+  complete_sentence: Микола Гоголь народився на Полтавщині__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Богдан Хмельницький був _____ козацької держави.
+  answer: гетьманом
+  complete_sentence: Богдан Хмельницький був гетьманом__ козацької держави.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ — традиційна українська сорочка з вишивкою.
+  answer: Вишиванка
+  complete_sentence: Вишиванка__ — традиційна українська сорочка з вишивкою.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Острів _____ — місце Запорозької Січі.
+  answer: Хортиця
+  complete_sentence: Острів Хортиця__ — місце Запорозької Січі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Книгу "Вечори на хуторі біля Диканьки" написав _____.
+  answer: Гоголь
+  complete_sentence: Книгу "Вечори на хуторі біля Диканьки" написав Гоголь__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ — перехідна зона між лісом та степом.
+  answer: Лісостеп
+  complete_sentence: Лісостеп__ — перехідна зона між лісом та степом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Полтавська _____ відбулася у 1709 році.
+  answer: битва
+  complete_sentence: Полтавська битва__ відбулася у 1709 році.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Київ — це столиця України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Черкащина — серце козацької України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Шевченко — найвидатніший український поет.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Гоголь написав Вечори на хуторі біля Диканьки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Дніпро — головна річка України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Чигирин був першою козацькою столицею.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: На острові Хортиці була Запорозька Січ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про Центральну Україну
+  jumbled_words: []
+  answer: Микола Гоголь народився на Полтавщині.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Київ є одним з найстаріших міст Європи та столицею України. Хто, за легендою,
+    заснував це місто?
+  options:
+  - text: Князь Володимир Великий
+    correct: false
+  - text: Три брати Кий, Щек та Хорив
+    correct: true
+  - text: Гетьман Богдан Хмельницький
+    correct: false
+  - text: Князь Ярослав Мудрий
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Черкащина називається серцем козацької України через свою важливу роль
+    в історії. Яке місто було першою столицею козацької держави?
+  options:
+  - text: Київ
+    correct: false
+  - text: Чигирин
+    correct: true
+  - text: Черкаси
+    correct: false
+  - text: Канів
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Тарас Шевченко — найвидатніший український поет, якого називають батьком
+    української літератури. Де він похований?
+  options:
+  - text: У Києві на Байковому кладовищі
+    correct: false
+  - text: У Каневі на Тарасовій горі
+    correct: true
+  - text: У Черкасах біля Дніпра
+    correct: false
+  - text: У Полтаві в центрі міста
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Микола Гоголь — класик літератури, який народився на Полтавщині. Яка книга
+    описує полтавське село та народні легенди?
+  options:
+  - text: Кобзар
+    correct: false
+  - text: Вечори на хуторі біля Диканьки
+    correct: true
+  - text: Енеїда
+    correct: false
+  - text: Заповіт
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Дніпро — головна річка України, яка тече через центр країни. Який острів
+    на Дніпрі був козацькою столицею?
+  options:
+  - text: Труханів острів
+    correct: false
+  - text: Хортиця
+    correct: true
+  - text: Гідропарк
+    correct: false
+  - text: Жуків острів
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: У 988 році в Києві відбулася важлива подія, яка вплинула на долю українського
+    народу. Що саме сталося?
+  options:
+  - text: Заснування Києва
+    correct: false
+  - text: Хрещення Русі
+    correct: true
+  - text: Полтавська битва
+    correct: false
+  - text: Козацьке повстання
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Полтавська битва 1709 року вплинула на долю Східної Європи. Хто брав участь
+    у цій битві?
+  options:
+  - text: Козаки проти татар
+    correct: false
+  - text: Петро I проти Карла XII
+    correct: true
+  - text: Україна проти Польщі
+    correct: false
+  - text: Росія проти Османської імперії
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Лісостеп — особлива природна зона Полтавщини, яка характеризується унікальною
+    флорою та фауною. Що це таке?
+  options:
+  - text: Степ без рослинності
+    correct: false
+  - text: Перехідна зона між лісом та степом
+    correct: true
+  - text: Гірський ліс
+    correct: false
+  - text: Болотиста місцевість
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Іван Котляревський написав перший твір нової української літератури, який
+    започаткував нову епоху. Який це твір?
+  options:
+  - text: Кобзар
+    correct: false
+  - text: Енеїда
+    correct: true
+  - text: Вечори на хуторі біля Диканьки
+    correct: false
+  - text: Заповіт
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння Центральної України
+  question: Київське метро відоме своїми глибокими станціями та унікальною архітектурою.
+    Яка станція є найглибшою у світі?
+  options:
+  - text: Хрещатик
+    correct: false
+  - text: Арсенальна
+    correct: true
+  - text: Майдан Незалежності
+    correct: false
+  - text: Золоті ворота
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Київ — одне з найстаріших міст Європи.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Чигирин був столицею України в двадцятому столітті.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Тарас Шевченко народився на Полтавщині.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Дніпро — третя за довжиною річка Європи.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Микола Гоголь написав "Кобзар".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Хортиця — найбільший річковий острів Європи.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Полтавська битва відбулася у 1709 році.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Калина — символ Польщі.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Богдан Хмельницький був гетьманом козацької держави.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Сорочинський ярмарок проводиться у Києві.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: Станція Арсенальна — найглибша станція метро у світі.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про Центральну Україну
+  statement: '"Енеїда" — перший твір нової української літератури.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

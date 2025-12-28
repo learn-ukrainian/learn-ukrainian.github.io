@@ -1,0 +1,621 @@
+module: 77-ukrainian-cinema-and-tv
+level: B1
+validated: '2025-12-28T10:10:52.038608'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 50
+  errors_confirmed: 8
+  passed_items: 42
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Олександр Довженко був відомий актор українського кіно.
+  error: актор
+  answer: режисер
+  sentence_corrected: Олександр Довженко був відомий режисер українського кіно.
+  options:
+  - актор
+  - режисер
+  - продюсер
+  - сценарист
+  original_explanation: Довженко був режисером, не актором. Він створив фільми «Земля»
+    та «Арсенал».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Перша кіностудія в Україні було засновано у Львові у 1907 році.
+  error: Львові
+  answer: Одесі
+  sentence_corrected: Перша кіностудія в Україні було засновано у Одесі у 1907 році.
+  options:
+  - Львові
+  - Одесі
+  - Києві
+  - Харкові
+  original_explanation: Першу кіностудію в Україні було засновано в Одесі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Фільм «Плем'я» знятий на англійській мові з українськими субтитрами.
+  error: англійській
+  answer: жестовій
+  sentence_corrected: Фільм «Плем'я» знятий на жестовій мові з українськими субтитрами.
+  options:
+  - англійській
+  - жестовій
+  - українській
+  - російській
+  original_explanation: «Плем'я» знятий на жестовій мові без субтитрів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Серіал «Слуга народу» — це історична драма про козацьку добу.
+  error: історична драма про козацьку добу
+  answer: комедія про вчителя, який став президентом
+  sentence_corrected: Серіал «Слуга народу» — це комедія про вчителя, який став президентом.
+  options:
+  - історична драма про козацьку добу
+  - комедія про вчителя, який став президентом
+  - детектив про злочини
+  - трилер про шпигунів
+  original_explanation: «Слуга народу» — комедійний серіал про вчителя, який стає
+    президентом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Одеський кінофестиваль проводиться у січні кожного року.
+  error: січні
+  answer: липні
+  sentence_corrected: Одеський кінофестиваль проводиться у липні кожного року.
+  options:
+  - січні
+  - липні
+  - вересні
+  - грудні
+  original_explanation: Одеський кінофестиваль традиційно проводиться в липні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Фільм «Атлантида» отримав «Оскар» за найкращу режисуру.
+  error: «Оскар» за найкращу режисуру
+  answer: головний приз Венеційського фестивалю
+  sentence_corrected: Фільм «Атлантида» отримав головний приз Венеційського фестивалю.
+  options:
+  - «Оскар» за найкращу режисуру
+  - головний приз Венеційського фестивалю
+  - «Золотий глобус»
+  - нагороду Каннського фестивалю
+  original_explanation: «Атлантида» отримала головний приз у секції «Горизонти» Венеційського
+    фестивалю.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Сергій Лозниця знімає виключно комедійні фільми для дітей.
+  error: комедійні фільми для дітей
+  answer: документальні та ігрові драми
+  sentence_corrected: Сергій Лозниця знімає виключно документальні та ігрові драми.
+  options:
+  - комедійні фільми для дітей
+  - документальні та ігрові драми
+  - анімаційні фільми
+  - музичні серіали
+  original_explanation: Лозниця відомий серйозними документальними та ігровими фільмами.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у реченнях про кіно
+  sentence_with_error: Кінофестиваль «Молодість» спеціалізується на фільмах для літніх
+    людей.
+  error: фільмах для літніх людей
+  answer: дебютних та студентських фільмах
+  sentence_corrected: Кінофестиваль «Молодість» спеціалізується на дебютних та студентських
+    фільмах.
+  options:
+  - фільмах для літніх людей
+  - дебютних та студентських фільмах
+  - документальних фільмах
+  - мультфільмах
+  original_explanation: «Молодість» підтримує молодих режисерів та їхні дебютні роботи.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Олександр Довженко — видатний український _____.
+  answer: режисер
+  complete_sentence: Олександр Довженко — видатний український режисер__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Фільм «Плем'я» здобув три _____ на Каннському фестивалі.
+  answer: нагороди
+  complete_sentence: Фільм «Плем'я» здобув три нагороди__ на Каннському фестивалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: _____ фільму «20 днів у Маріуполі» відбулася на кінофестивалі.
+  answer: Прем'єра
+  complete_sentence: Прем'єра__ фільму «20 днів у Маріуполі» відбулася на кінофестивалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Серіал «Слуга народу» має багато _____, кожна по сорок хвилин.
+  answer: серій
+  complete_sentence: Серіал «Слуга народу» має багато серій__, кожна по сорок хвилин.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Головну роль у фільмі зіграв відомий _____.
+  answer: актор
+  complete_sentence: Головну роль у фільмі зіграв відомий актор__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Фільм «Атлантида» — це _____ про життя після війни.
+  answer: драма
+  complete_sentence: Фільм «Атлантида» — це драма__ про життя після війни.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Для іноземних глядачів фільм показують із _____.
+  answer: субтитрами
+  complete_sentence: Для іноземних глядачів фільм показують із субтитрами__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: _____ пише текст діалогів для фільму.
+  answer: Сценарист
+  complete_sentence: Сценарист__ пише текст діалогів для фільму.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Одеський _____ збирає режисерів з усього світу.
+  answer: кінофестиваль
+  complete_sentence: Одеський кінофестиваль__ збирає режисерів з усього світу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: _____ організовує фінансування та виробництво фільму.
+  answer: Продюсер
+  complete_sentence: Продюсер__ організовує фінансування та виробництво фільму.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: Фільм за мотивами книги називається _____.
+  answer: екранізацією
+  complete_sentence: Фільм за мотивами книги називається екранізацією__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски кінолексикою
+  sentence_template: _____ оцінює фільм і пише про нього статтю.
+  answer: Критик
+  complete_sentence: Критик__ оцінює фільм і пише про нього статтю.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Олександр Довженко є видатний український режисер, який створив фільм «Земля».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Фільм «Плем'я» здобув три нагороди на Каннському фестивалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Одеський міжнародний кінофестиваль проводиться щороку у липні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Серіал «Слуга народу» доступний на Netflix у багатьох країнах.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Документальний фільм «20 днів у Маріуполі» здобув премію «Оскар».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Володимир Зеленський зіграв головну роль у цьому серіалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Фільм «Атлантида» отримав головний приз на Венеційському фестивалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про українське кіно
+  jumbled_words: []
+  answer: Українське кіно має понад столітню історію.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Олександр Довженко створив фільм «Земля» у 1930 році, і цей фільм вважається
+    одним із найкращих у світовій кінематографії. Чим відомий Довженко?
+  options:
+  - text: Він був першим українським телеведучим
+    correct: false
+  - text: Він є видатним режисером, що вплинув на світове кіно
+    correct: true
+  - text: Він заснував перший кінотеатр в Україні
+    correct: false
+  - text: Він був відомим українським актором
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Першу кіностудію в Україні було засновано на початку двадцятого століття,
+    коли кіно лише починало розвиватися. У якому місті це сталося?
+  options:
+  - text: У Києві
+    correct: false
+  - text: У Львові
+    correct: false
+  - text: В Одесі
+    correct: true
+  - text: У Харкові
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Фільм «Плем'я» Мирослава Слабошпицького здобув нагороди на Каннському
+    фестивалі та став унікальним явищем в українському кіно. У чому його особливість?
+  options:
+  - text: Це перший український фільм у кольорі
+    correct: false
+  - text: Фільм знятий повністю на жестовій мові без субтитрів
+    correct: true
+  - text: Це найдовший український фільм в історії
+    correct: false
+  - text: Фільм знятий виключно за кордоном
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Серіал «Слуга народу» розповідає історію вчителя історії, який несподівано
+    стає президентом України. Хто зіграв головну роль у цьому серіалі?
+  options:
+  - text: Олександр Довженко
+    correct: false
+  - text: Мирослав Слабошпицький
+    correct: false
+  - text: Володимир Зеленський
+    correct: true
+  - text: Валентин Васянович
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Одеський міжнародний кінофестиваль є одним з найважливіших культурних
+    подій в Україні та збирає кіномитців з усього світу. Коли він проводиться?
+  options:
+  - text: У січні
+    correct: false
+  - text: У липні
+    correct: true
+  - text: У вересні
+    correct: false
+  - text: У грудні
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Фільм «Атлантида» Валентина Васяновича отримав головний приз на Венеційському
+    кінофестивалі у секції «Горизонти». Про що розповідає цей фільм?
+  options:
+  - text: Про стародавню грецьку міфологію
+    correct: false
+  - text: Про життя в Україні після війни на сході
+    correct: true
+  - text: Про підводний світ Чорного моря
+    correct: false
+  - text: Про туризм в Одесі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Документальний фільм «20 днів у Маріуполі» здобув найвищу нагороду Американської
+    кіноакадемії у 2024 році. Яку саме премію він отримав?
+  options:
+  - text: Найкраща режисура
+    correct: false
+  - text: Найкращий іноземний фільм
+    correct: false
+  - text: Найкращий документальний фільм
+    correct: true
+  - text: Найкраща операторська робота
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Кінофестиваль «Молодість» у Києві спеціалізується на певному типі фільмів
+    та допомагає молодим талантам розпочати кар'єру. На чому він спеціалізується?
+  options:
+  - text: На фільмах жахів
+    correct: false
+  - text: На дебютних та студентських фільмах
+    correct: true
+  - text: На анімаційних фільмах
+    correct: false
+  - text: На телесеріалах
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Сергій Лозниця є відомим українським режисером, чиї фільми досліджують
+    складні теми історії та соціальних проблем. Який його фільм здобув приз у Каннах?
+  options:
+  - text: «Плем'я»
+    correct: false
+  - text: «Атлантида»
+    correct: false
+  - text: «Донбас»
+    correct: true
+  - text: «Земля»
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українське кіно — розуміння тексту
+  question: Фестиваль «Docudays UA» є найбільшим фестивалем документального кіно в
+    Україні та показує фільми на важливі соціальні теми. Чому присвячені ці фільми?
+  options:
+  - text: Подорожам та туризму
+    correct: false
+  - text: Правам людини та соціальним проблемам
+    correct: true
+  - text: Спортивним досягненням
+    correct: false
+  - text: Кулінарному мистецтву
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Першу кіностудію в Україні було засновано в Одесі у 1907 році, що зробило
+    це місто одним із центрів кінематографії.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Олександр Довженко знімав лише комедійні фільми, які не мали впливу на
+    світове кіно.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Фільм «Плем'я» знятий повністю на жестовій мові без субтитрів, що є унікальним
+    для світового кінематографу.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Серіал «Слуга народу» доступний лише в Україні і ніколи не перекладався
+    іншими мовами для міжнародної аудиторії.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Одеський міжнародний кінофестиваль проводиться щороку в липні та збирає
+    кіномитців з усього світу.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Українське кіно ніколи не отримувало нагород на престижних міжнародних
+    кінофестивалях.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Фільм «20 днів у Маріуполі» здобув «Оскар» за найкращий документальний
+    фільм у 2024 році.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Кінофестиваль «Молодість» у Києві спеціалізується на дебютних та студентських
+    фільмах молодих режисерів.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Студія «Укранімафільм» ніколи не створювала мультфільмів і займається
+    лише документальним кіно.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Валентин Васянович отримав головний приз Венеційського фестивалю за фільм
+    «Атлантида» у секції «Горизонти».
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Сергій Лозниця знімає лише ігрові фільми і ніколи не працював над документальним
+    кіно.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українське кіно
+  statement: Фільм «Земля» Олександра Довженка входить до списків найкращих фільмів
+    усіх часів за версією багатьох кінокритиків.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

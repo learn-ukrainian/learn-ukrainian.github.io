@@ -3,37 +3,39 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 3596/3500
+- **Words:** ✅ 3699/3500
 - **Activities:** ✅ 0/0
 - **Density:** ✅ All > 0
 - **Unique_types:** ✅ 0/0 types
 - **Priority:** ✅ N/A (LIT)
-- **Engagement:** ✅ 7/4
+- **Engagement:** ✅ 8/4
 - **Audio:** ℹ️ No audio
 - **Vocab:** ✅ 34/0
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.3% (target 95-100%)
-- **Richness:** ❌ 83/95 (literature)
+- **Richness:** ✅ 99% (literature)
+- **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 83/95
+**Score:** 99% (minimum: 90%)
 **Module Type:** literature
 
-### Raw Counts
-| Metric | Count |
-|--------|-------|
-| engagement | 3 |
-| variety | 0.9768211920529801 |
-| cultural | 13 |
-| visual | 4 |
-| paragraph_var | 1.0 |
-| analysis_sections | 4 |
-| literary_citations | 8 |
-| historical_context | 30 |
-| essays | 1 |
-| resources | 9 |
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 8 | 5 | 100% | 17% | 17.4% |
+| engagement | 4 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 2 | 2 | 100% | 13% | 13.0% |
+| resources | 9 | 3 | 100% | 9% | 8.7% |
+| variety | 0.97 | - | 97% | 4% | 4.2% |
+| cultural | 14 | - | 100% | 4% | 4.3% |
+| visual | 5 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **99.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |
@@ -41,7 +43,7 @@
 | **Феномен Івана Котляревського** | ⚪️ | 34 | Skipped |
 | **Summary** | ✅ | 66 | Included in Core |
 | **Частина I: Час Руїни: Анатомія Національної Катастрофи** | ⚪️ | 51 | Skipped |
-| **1. Політична Смерть: Хроніка Вбивства (1764–1783) 🕯️** | ⚪️ | 401 | Skipped |
+| **1. Політична Смерть: Хроніка Вбивства (1764–1783) 🕯️** | ⚪️ | 460 | Skipped |
 | **2. Інтелектуальний Вакуум і Мовна Шизофренія** | ⚪️ | 189 | Skipped |
 | **Частина II: Людина Вчинку. Портрет Невідомого 👤** | ⚪️ | 64 | Skipped |
 | **1. Родовід: Тінь Мазепи** | ⚪️ | 114 | Skipped |
@@ -62,4 +64,5 @@
 | **🏛️ Читальна Зала** | ⚪️ | 243 | Skipped |
 | **✍️ Аналітичний Практикум** | ⚪️ | 21 | Skipped |
 | **Завдання 1: Есе-Роздум (Critical Writing)** | ⚪️ | 254 | Skipped |
-| **Завдання 2: Історична Дискусія (Debate Club)** | ⚪️ | 129 | Skipped |
+| **Завдання 2: Історична Дискусія (Debate Club)** | ⚪️ | 107 | Skipped |
+| **Завдання 3: Аналіз Цитати (Short Response)** | ✅ | 66 | Included in Core |

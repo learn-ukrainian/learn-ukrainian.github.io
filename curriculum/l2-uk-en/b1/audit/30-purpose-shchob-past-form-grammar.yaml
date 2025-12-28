@@ -1,0 +1,778 @@
+module: 30-purpose-shchob-past-form
+level: B1
+validated: '2025-12-28T10:05:06.432390'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 53
+  errors_confirmed: 8
+  passed_items: 45
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Я хочу, щоб ти допомогти мені з цим складним проєктом.
+  error: допомогти
+  answer: допоміг
+  sentence_corrected: Я хочу, щоб ти допоміг мені з цим складним проєктом.
+  options:
+  - допоміг
+  - допомагати
+  - допомагаєш
+  - помогти
+  original_explanation: З різними суб'єктами використовуємо минулу форму, не інфінітив.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Мама попросила, щоб я купую свіжого хліба з пекарні.
+  error: купую
+  answer: купив
+  sentence_corrected: Мама попросила, щоб я купив свіжого хліба з пекарні.
+  options:
+  - купив
+  - купувати
+  - куплю
+  - купити
+  original_explanation: Після щоб потрібна минула форма, не теперішній час.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він хоче, щоб вона прийшов на важливу зустріч вчасно.
+  error: прийшов
+  answer: прийшла
+  sentence_corrected: Він хоче, щоб вона прийшла на важливу зустріч вчасно.
+  options:
+  - прийшла
+  - прийти
+  - прийде
+  - приходить
+  original_explanation: Форма має узгоджуватися з суб'єктом "вона" тобто жіночий рід.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Лікар порадив, щоб я відпочиваю протягом цілого тижня.
+  error: відпочиваю
+  answer: відпочив
+  sentence_corrected: Лікар порадив, щоб я відпочив протягом цілого тижня.
+  options:
+  - відпочив
+  - відпочити
+  - відпочину
+  - відпочивав
+  original_explanation: Після щоб з різними суб'єктами потрібна минула форма.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Вони вимагають, щоб ми йти з цього приміщення негайно.
+  error: йти
+  answer: пішли
+  sentence_corrected: Вони вимагають, щоб ми пішли з цього приміщення негайно.
+  options:
+  - пішли
+  - ідемо
+  - підемо
+  - ходили
+  original_explanation: З різними суб'єктами використовуємо минулу форму "пішли".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Батьки заборонили, щоб діти дивляться телевізор після десятої.
+  error: дивляться
+  answer: дивилися
+  sentence_corrected: Батьки заборонили, щоб діти дивилися телевізор після десятої.
+  options:
+  - дивилися
+  - дивитися
+  - подивилися
+  - дивитимуться
+  original_explanation: Після щоб потрібна минула форма, не теперішній час.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Вчитель хоче, щоб учні слухати уважно на всіх уроках.
+  error: слухати
+  answer: слухали
+  sentence_corrected: Вчитель хоче, щоб учні слухали уважно на всіх уроках.
+  options:
+  - слухали
+  - слухають
+  - послухати
+  - послухають
+  original_explanation: З різними суб'єктами потрібна минула форма після щоб.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Директор наказав, щоб працівники виконають завдання до вечора.
+  error: виконають
+  answer: виконали
+  sentence_corrected: Директор наказав, щоб працівники виконали завдання до вечора.
+  options:
+  - виконали
+  - виконати
+  - виконують
+  - виконувати
+  original_explanation: Після щоб потрібна минула форма, не майбутній час.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Я хочу, щоб ти ___ цю книгу до кінця тижня.
+  answer: прочитав
+  complete_sentence: Я хочу, щоб ти прочитав цю книгу до кінця тижня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Мама попросила, щоб я ___ свіжого хліба з магазину.
+  answer: купив
+  complete_sentence: Мама попросила, щоб я купив свіжого хліба з магазину.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Вони вимагають, щоб ми ___ з цього приміщення негайно.
+  answer: пішли
+  complete_sentence: Вони вимагають, щоб ми пішли з цього приміщення негайно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Лікар суворо заборонив, щоб пацієнт ___ цигарки.
+  answer: курив
+  complete_sentence: Лікар суворо заборонив, щоб пацієнт курив цигарки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Я щиро бажаю, щоб ви ___ щасливі все життя.
+  answer: були
+  complete_sentence: Я щиро бажаю, щоб ви були щасливі все життя.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Директор наказав, щоб секретарка ___ всі документи до наради.
+  answer: підготувала
+  complete_sentence: Директор наказав, щоб секретарка підготувала всі документи до
+    наради.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Він хоче, щоб вона ___ йому офіційного листа до пʼятниці.
+  answer: написала
+  complete_sentence: Він хоче, щоб вона написала йому офіційного листа до пʼятниці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Батьки просять, щоб діти ___ спати вчасно щовечора.
+  answer: лягали
+  complete_sentence: Батьки просять, щоб діти лягали спати вчасно щовечора.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Вчитель хоче, щоб учні ___ усі завдання до кінця уроку.
+  answer: виконали
+  complete_sentence: Вчитель хоче, щоб учні виконали усі завдання до кінця уроку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Він попросив, щоб вона ___ на зустріч вчасно.
+  answer: прийшла
+  complete_sentence: Він попросив, щоб вона прийшла на зустріч вчасно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Ми сподіваємося, щоб погода ___ гарною протягом вихідних.
+  answer: була
+  complete_sentence: Ми сподіваємося, щоб погода була гарною протягом вихідних.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильну форму дієслова
+  sentence_template: Закон вимагає, щоб усі громадяни ___ свої права та обовʼязки.
+  answer: знали
+  complete_sentence: Закон вимагає, щоб усі громадяни знали свої права та обовʼязки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: cloze
+  title: Щоб плюс минула форма в контексті
+  passage_template: 'Мій начальник дуже вимогливий. Він завжди хоче, щоб ми [___:1]
+    на роботу вчасно. Він вимагає, щоб кожен працівник [___:2] свої завдання до кінця
+    робочого дня. Вчора він наказав, щоб секретарка [___:3] усі документи до важливої
+    наради.
+
+
+    Моя мама теж має багато побажань. Вона хоче, щоб я [___:4] їй частіше. Вона просить,
+    щоб я [___:5] додому на вихідні. Вона бажає, щоб її діти [___:6] здорові та щасливі.
+
+
+    У школі вчителі теж використовують цю конструкцію. Вони вимагають, щоб учні [___:7]
+    домашні завдання вчасно. Вони рекомендують, щоб батьки [___:8] з дітьми кожного
+    вечора. Вони сподіваються, щоб всі учні [___:9] успішними.
+
+
+    Лікарі також часто дають поради. Вони рекомендують, щоб пацієнти [___:10] здоровий
+    спосіб життя. Вони забороняють, щоб хворі [___:11] важкі речі. Вони бажають, щоб
+    усі [___:12] здорові. Вони наполягають, щоб люди [___:13] регулярно. Вони також
+    порадили, щоб ми [___:14] більше овочів.
+
+    '
+  blanks:
+  - options:
+    - приходили
+    - приходити
+    - приходимо
+    - прийдемо
+    answer: приходили
+  - options:
+    - завершив
+    - завершити
+    - завершить
+    - завершував
+    answer: завершив
+  - options:
+    - підготувала
+    - підготувати
+    - підготує
+    - готувала
+    answer: підготувала
+  - options:
+    - телефонував
+    - телефонувати
+    - телефоную
+    - зателефоную
+    answer: телефонував
+  - options:
+    - приїжджав
+    - приїжджати
+    - приїжджаю
+    - приїду
+    answer: приїжджав
+  - options:
+    - були
+    - бути
+    - є
+    - будуть
+    answer: були
+  - options:
+    - здавали
+    - здавати
+    - здають
+    - здадуть
+    answer: здавали
+  - options:
+    - займалися
+    - займатися
+    - займаються
+    - займуться
+    answer: займалися
+  - options:
+    - стали
+    - стати
+    - стануть
+    - ставали
+    answer: стали
+  - options:
+    - вели
+    - вести
+    - ведуть
+    - вестимуть
+    answer: вели
+  - options:
+    - піднімали
+    - піднімати
+    - піднімають
+    - підніматимуть
+    answer: піднімали
+  - options:
+    - були
+    - бути
+    - є
+    - будуть
+    answer: були
+  - options:
+    - тренувалися
+    - тренуватися
+    - тренуються
+    - тренуватимуться
+    answer: тренувалися
+  - options:
+    - їли
+    - їсти
+    - їдять
+    - їстимуть
+    answer: їли
+  complete_passage: 'Мій начальник дуже вимогливий. Він завжди хоче, щоб ми [___:1]
+    на роботу вчасно. Він вимагає, щоб кожен працівник [___:2] свої завдання до кінця
+    робочого дня. Вчора він наказав, щоб секретарка [___:3] усі документи до важливої
+    наради.
+
+
+    Моя мама теж має багато побажань. Вона хоче, щоб я [___:4] їй частіше. Вона просить,
+    щоб я [___:5] додому на вихідні. Вона бажає, щоб її діти [___:6] здорові та щасливі.
+
+
+    У школі вчителі теж використовують цю конструкцію. Вони вимагають, щоб учні [___:7]
+    домашні завдання вчасно. Вони рекомендують, щоб батьки [___:8] з дітьми кожного
+    вечора. Вони сподіваються, щоб всі учні [___:9] успішними.
+
+
+    Лікарі також часто дають поради. Вони рекомендують, щоб пацієнти [___:10] здоровий
+    спосіб життя. Вони забороняють, щоб хворі [___:11] важкі речі. Вони бажають, щоб
+    усі [___:12] здорові. Вони наполягають, щоб люди [___:13] регулярно. Вони також
+    порадили, щоб ми [___:14] більше овочів.
+
+    '
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    passage_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Я хочу, щоб ти прийшов до мене на мій день народження завтра.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Батьки вимагають, щоб діти виконали всі свої домашні завдання вчасно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Директор наказав, щоб секретарка підготувала всі необхідні документи до
+    наради.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Лікар порадив, щоб пацієнт добре відпочив принаймні один цілий тиждень.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Сподіваюся, щоб завтра на важливому екзамені у тебе все було добре.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Експерти рекомендують, щоб люди пили достатньо чистої води щодня для здоров'я.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Вона попросила, щоб він допоміг їй із складним проектом до кінця тижня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Начальник вимагає, щоб усі працівники прийшли на нараду рівно о третій.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли батьки хочуть, щоб
+    діти прибрали кімнату?
+  options:
+  - text: прибрали
+    correct: true
+  - text: прибрати
+    correct: false
+  - text: прибирають
+    correct: false
+  - text: приберуть
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли лікар рекомендує,
+    щоб пацієнт відпочив тиждень?
+  options:
+  - text: відпочив
+    correct: true
+  - text: відпочити
+    correct: false
+  - text: відпочиває
+    correct: false
+  - text: відпочине
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли начальник наказав,
+    щоб усі прийшли на нараду?
+  options:
+  - text: прийшли
+    correct: true
+  - text: прийти
+    correct: false
+  - text: приходять
+    correct: false
+  - text: прийдуть
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли вона попросила, щоб
+    він зателефонував ввечері?
+  options:
+  - text: зателефонував
+    correct: true
+  - text: зателефонувати
+    correct: false
+  - text: телефонує
+    correct: false
+  - text: зателефонує
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли ми хочемо, щоб гості
+    залишилися на вечерю?
+  options:
+  - text: залишилися
+    correct: true
+  - text: залишитися
+    correct: false
+  - text: залишаються
+    correct: false
+  - text: залишаться
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли директор вимагає,
+    щоб студенти здали роботи вчасно?
+  options:
+  - text: здали
+    correct: true
+  - text: здати
+    correct: false
+  - text: здають
+    correct: false
+  - text: здадуть
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли батько хоче, щоб
+    син допоміг йому в саду?
+  options:
+  - text: допоміг
+    correct: true
+  - text: допомогти
+    correct: false
+  - text: допомагає
+    correct: false
+  - text: допоможе
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли закон вимагає, щоб
+    громадяни платили податки?
+  options:
+  - text: платили
+    correct: true
+  - text: платити
+    correct: false
+  - text: платять
+    correct: false
+  - text: заплатять
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли вчитель просить,
+    щоб учні слухали уважно?
+  options:
+  - text: слухали
+    correct: true
+  - text: слухати
+    correct: false
+  - text: слухають
+    correct: false
+  - text: послухають
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли мама бажає, щоб дочка
+    була щасливою?
+  options:
+  - text: була
+    correct: true
+  - text: бути
+    correct: false
+  - text: є
+    correct: false
+  - text: буде
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли він наполягає, щоб
+    вона взяла парасольку?
+  options:
+  - text: взяла
+    correct: true
+  - text: взяти
+    correct: false
+  - text: бере
+    correct: false
+  - text: візьме
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Конструкція щоб плюс минула форма
+  question: Яку форму дієслова потрібно вставити в речення, коли експерти рекомендують,
+    щоб люди пили воду?
+  options:
+  - text: пили
+    correct: true
+  - text: пити
+    correct: false
+  - text: п'ють
+    correct: false
+  - text: питимуть
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Конструкція щоб плюс минула форма використовується, коли підмети різні.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Форма дієслова після щоб узгоджується з підметом головного речення.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Я хочу, щоб ти прийти" є граматично правильним.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Минула форма після щоб не виражає минулий час, а умовний спосіб.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Вона хоче, щоб він прийшла" є правильним.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Кома перед сполучником щоб є обов'язковою в українській мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Батьки хочуть, щоб діти вчаться" є граматично правильним.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Заперечення в підрядному реченні ставиться перед дієсловом.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вибір між доконаним і недоконаним видом залежить від контексту дії.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Мама просить, щоб я допоміг" потребує форми жіночого роду.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Конструкція щоб плюс минула форма існує тільки в українській мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після дієслова "вимагати" завжди використовується минула форма з різними
+    підметами.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

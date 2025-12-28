@@ -1,0 +1,1382 @@
+module: 84-b1-grammar-integration
+level: B1
+validated: '2025-12-28T15:06:45.132592'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 94
+  errors_confirmed: 14
+  passed_items: 80
+  notes: Fixed dangling participle and punctuation examples.
+  fixed_items: 0
+items:
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Він прочитав книгу весь день без перерви.
+  error: прочитав
+  answer: читав
+  sentence_corrected: Він читав книгу весь день без перерви.
+  options:
+  - прочитав
+  - читав
+  - читає
+  - прочитає
+  original_explanation: Тривалість (весь день) вимагає НДВ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Вона їде до роботи щодня автобусом.
+  error: їде
+  answer: їздить
+  sentence_corrected: Вона їздить до роботи щодня автобусом.
+  options:
+  - їде
+  - їздить
+  - поїхала
+  - поїде
+  original_explanation: Щодня = регулярно = різноспрямований.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Студент, яка вивчає українську, з Німеччини.
+  error: яка
+  answer: який
+  sentence_corrected: Студент, який вивчає українську, з Німеччини.
+  options:
+  - яка
+  - який
+  - яке
+  - які
+  original_explanation: Студент = чоловічий рід = який.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Він прийшов, бо допомогти друзям.
+  error: бо
+  answer: щоб
+  sentence_corrected: Він прийшов, щоб допомогти друзям.
+  options:
+  - бо
+  - щоб
+  - якщо
+  - хоча
+  original_explanation: Мета + інфінітив = щоб.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Якщо я знав це раніше, я сказав би.
+  error: Якщо
+  answer: Якби
+  sentence_corrected: Якби я знав це раніше, я сказав би.
+  options:
+  - Якщо
+  - Якби
+  - Коли
+  - Хоча
+  original_explanation: Нереальна умова в минулому = якби.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Прийшовши додому, телевізор був увімкнений.
+  error: телевізор
+  answer: він увімкнув телевізор
+  sentence_corrected: Прийшовши додому, він увімкнув телевізор.
+  options:
+  - телевізор був увімкнений
+  - він увімкнув телевізор
+  - увімкнули телевізор
+  - телевізор увімкнувся
+  original_explanation: Дієприслівник потребує спільного підмета з головним реченням.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Він завжди прийшов вчасно на роботу.
+  error: прийшов
+  answer: приходив
+  sentence_corrected: Він завжди приходив вчасно на роботу.
+  options:
+  - прийшов
+  - приходив
+  - приходить
+  - прийде
+  original_explanation: Завжди (звичка) вимагає НДВ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Написана Шевченком, книга дуже відома.
+  error: Написана Шевченком,
+  answer: Написана Шевченком
+  sentence_corrected: Написана Шевченком книга дуже відома.
+  options:
+  - Написана Шевченком,
+  - Написана Шевченком
+  - Книга написана Шевченком,
+  - Книга, написана Шевченком
+  original_explanation: Дієприкметниковий зворот перед означуваним словом не виділяється
+    комами.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Вони обійшли весь парк за дві години.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Вони обійшли весь парк за дві години.
+  options:
+  - обійшли
+  - речення правильне
+  - обходили
+  - об'їхали
+  original_explanation: Речення граматично правильне.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Він читав цю книгу і знає зміст добре.
+  error: читав
+  answer: прочитав
+  sentence_corrected: Він прочитав цю книгу і знає зміст добре.
+  options:
+  - читав
+  - прочитав
+  - читає
+  - прочитає
+  original_explanation: Контекст "знає зміст" вказує на результат = ДВ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Місто, куди я народився, дуже красиве.
+  error: куди
+  answer: де
+  sentence_corrected: Місто, де я народився, дуже красиве.
+  options:
+  - куди
+  - де
+  - звідки
+  - який
+  original_explanation: Народився = місце (де?), не напрямок (куди?).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Оскільки погода погана, ми підемо.
+  error: Оскільки
+  answer: Хоча
+  sentence_corrected: Хоча погода погана, ми підемо.
+  options:
+  - Оскільки
+  - Хоча
+  - Бо
+  - Якщо
+  original_explanation: Контраст (погана, але підемо) = допустове = хоча.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Він завжди написав листи по п'ятницях.
+  error: написав
+  answer: писав
+  sentence_corrected: Він завжди писав листи по п'ятницях.
+  options:
+  - написав
+  - писав
+  - пише
+  - напише
+  original_explanation: Завжди + по п'ятницях = регулярність = НДВ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте граматичні помилки
+  sentence_with_error: Птахи полетіли на південь кожної осені.
+  error: полетіли
+  answer: відлітають
+  sentence_corrected: Птахи відлітають на південь кожної осені.
+  options:
+  - полетіли
+  - відлітають
+  - летять
+  - полетять
+  original_explanation: Кожної осені = регулярно = НДВ + різноспрямований.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Я ___ книгу дві години, але не дочитав. (читав / прочитав)
+  answer: читав
+  complete_sentence: Я читав книгу дві години, але не дочитав. (читав / прочитав)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Він ___ до університету щодня пішки. (йде / ходить)
+  answer: ходить
+  complete_sentence: Він ходить до університету щодня пішки. (йде / ходить)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Студентка, ___ вивчає українську, з Канади. (який / яка)
+  answer: яка
+  complete_sentence: Студентка, яка вивчає українську, з Канади. (який / яка)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Він прийшов, ___ допомогти. (бо / щоб)
+  answer: щоб
+  complete_sentence: Він прийшов, щоб допомогти. (бо / щоб)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: ___ я знав це раніше, я сказав би. (Якщо / Якби)
+  answer: Якби
+  complete_sentence: Якби я знав це раніше, я сказав би. (Якщо / Якби)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Нарешті він ___ усі вправи. (робив / зробив)
+  answer: зробив
+  complete_sentence: Нарешті він зробив усі вправи. (робив / зробив)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Вона ___ з дому і ___ до автобуса. (вийшла / виходила, пішла
+    / йшла)
+  answer: вийшла
+  complete_sentence: Вона вийшла з дому і вийшла до автобуса. (вийшла / виходила,
+    пішла / йшла)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: ___ погода погана, ми підемо. (Хоча / Оскільки)
+  answer: Хоча
+  complete_sentence: Хоча погода погана, ми підемо. (Хоча / Оскільки)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Місто, ___ вона народилася, дуже красиве. (де / куди)
+  answer: де
+  complete_sentence: Місто, де вона народилася, дуже красиве. (де / куди)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Він ___ цю справу до кінця. (доробив / доробляв)
+  answer: доробив
+  complete_sentence: Він доробив цю справу до кінця. (доробив / доробляв)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Вона часто ___ до бабусі влітку. (їздила / поїхала)
+  answer: їздила
+  complete_sentence: Вона часто їздила до бабусі влітку. (їздила / поїхала)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Птахи ___ на південь кожної осені. (відлітають / полетіли)
+  answer: відлітають
+  complete_sentence: Птахи відлітають на південь кожної осені. (відлітають / полетіли)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: ___ було пізно, вони поїхали. (Оскільки / Хоча)
+  answer: Оскільки
+  complete_sentence: Оскільки було пізно, вони поїхали. (Оскільки / Хоча)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Заповніть пропуски (змішана граматика)
+  sentence_template: Він ___ вулицю і ___ у магазин. (перейшов / переходив, зайшов
+    / заходив)
+  answer: перейшов
+  complete_sentence: Він перейшов вулицю і перейшов у магазин. (перейшов / переходив,
+    зайшов / заходив)
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Я прочитав книгу, яку мені порадив друг, і тепер можу обговорити її зміст.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Хоча погода була погана, вони вирішили піти на прогулянку до парку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він вийшов з дому, перейшов вулицю і зайшов у кав'ярню, де чекала подруга.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Прочитавши статтю про українську культуру, вона вирішила поїхати до Львова.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Якби я мав більше часу, я вивчив би ще одну мову.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Студент, який вивчає українську, приїхав зі Сполучених Штатів Америки минулого
+    року.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Вона ходила до університету щодня, бо жила недалеко від нього.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Текст, написаний відомим українським письменником, був опублікований у престижному
+    журналі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Працюючи над проєктом, він слухав українську музику, щоб краще зосередитися.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Оскільки поїзд запізнився на годину, ми вирішили випити кави на вокзалі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Я читав книгу дві години, але не дочитав її до кінця" перша
+    частина використовує НДВ, бо описує тривалий процес без акценту на результаті.
+  options:
+  - text: процес без результату
+    correct: true
+  - text: завершену дію
+    correct: false
+  - text: одноразову подію
+    correct: false
+  - text: майбутню дію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке дієслово правильно вжити в реченні "Він ___ листа і відправив його
+    поштою" — написав чи писав?
+  options:
+  - text: написав (ДВ)
+    correct: true
+  - text: писав (НДВ)
+    correct: false
+  - text: пише (теперішній час)
+    correct: false
+  - text: напише (майбутній час)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Студенти завжди вивчали нові слова перед іспитом" використовується
+    НДВ, бо слово "завжди" вказує на регулярну звичку в минулому.
+  options:
+  - text: регулярну звичку
+    correct: true
+  - text: одноразову дію
+    correct: false
+  - text: завершений результат
+    correct: false
+  - text: конкретний момент
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке речення правильно передає одноразову завершену дію — "Він часто приходив
+    у гості" чи "Він одного разу прийшов у гості"?
+  options:
+  - text: Він одного разу прийшов у гості.
+    correct: true
+  - text: Він часто приходив у гості.
+    correct: false
+  - text: Обидва речення однакові.
+    correct: false
+  - text: Жодне не є правильним.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Нарешті вона зробила домашнє завдання і пішла гуляти" маркер
+    "нарешті" вказує на завершення дії з результатом.
+  options:
+  - text: завершення з результатом
+    correct: true
+  - text: процес у часі
+    correct: false
+  - text: регулярну дію
+    correct: false
+  - text: незавершену дію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке дієслово треба вжити в реченні "Ми ___ усі вправи за дві години" —
+    робили чи зробили?
+  options:
+  - text: зробили (ДВ)
+    correct: true
+  - text: робили (НДВ)
+    correct: false
+  - text: робимо (теперішній)
+    correct: false
+  - text: робитимемо (майбутній)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке значення має речення "Вона готувала вечерю весь вечір" — процес приготування
+    чи завершений результат?
+  options:
+  - text: процес без акценту на результаті
+    correct: true
+  - text: завершений результат
+    correct: false
+  - text: одноразова дія
+    correct: false
+  - text: майбутня дія
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У контексті "Того дня він написав три листи і відправив усі поштою" усі
+    дієслова мають бути доконаного виду, бо описують послідовність завершених дій.
+  options:
+  - text: послідовність завершених дій
+    correct: true
+  - text: паралельні процеси
+    correct: false
+  - text: регулярні звички
+    correct: false
+  - text: незавершені дії
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке речення описує звичку в минулому — "Кожної неділі він ходив у церкву"
+    чи "Одного разу він пішов у церкву"?
+  options:
+  - text: Кожної неділі він ходив у церкву.
+    correct: true
+  - text: Одного разу він пішов у церкву.
+    correct: false
+  - text: Обидва описують звичку.
+    correct: false
+  - text: Жодне не описує звичку.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Я вчив українську мову п'ять років і нарешті вивчив її добре"
+    перший дієслово має бути НДВ, бо описує тривалий процес протягом п'яти років.
+  options:
+  - text: тривалий процес
+    correct: true
+  - text: завершений результат
+    correct: false
+  - text: одноразову дію
+    correct: false
+  - text: умовну дію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Який темпоральний маркер найчастіше вказує на доконаний вид — "довго"
+    чи "нарешті"?
+  options:
+  - text: нарешті (завершення)
+    correct: true
+  - text: довго (тривалість)
+    correct: false
+  - text: обидва вказують на ДВ
+    correct: false
+  - text: обидва вказують на НДВ
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Раптом він побачив друга і підійшов до нього" маркер "раптом"
+    та контекст одноразової події вимагають доконаного виду.
+  options:
+  - text: одноразова несподівана подія
+    correct: true
+  - text: тривала регулярна дія
+    correct: false
+  - text: незавершений процес
+    correct: false
+  - text: майбутня подія
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: Яке речення граматично правильне — "Вчора я читав цікаву статтю" чи "Вчора
+    я читав цікаву статтю дві години"?
+  options:
+  - text: Обидва правильні, але з різними відтінками.
+    correct: true
+  - text: Тільки перше правильне.
+    correct: false
+  - text: Тільки друге правильне.
+    correct: false
+  - text: Обидва неправильні.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Вибір виду дієслова
+  question: У реченні "Він завжди допомагав друзям, коли вони просили" дієслово "допомагав"
+    має бути НДВ, бо описує регулярну дію в минулому.
+  options:
+  - text: регулярну дію в минулому
+    correct: true
+  - text: одноразову допомогу
+    correct: false
+  - text: завершений результат
+    correct: false
+  - text: умовну дію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Він ходить до університету щодня" використовується різноспрямоване
+    дієслово, бо описує регулярний рух туди і назад.
+  options:
+  - text: регулярний рух (різноспрямований)
+    correct: true
+  - text: рух зараз (односпрямований)
+    correct: false
+  - text: минулий рух
+    correct: false
+  - text: майбутній рух
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Яке дієслово правильно вжити в реченні "Зараз вона ___ до Львова на автобусі"
+    — їде чи їздить?
+  options:
+  - text: їде (односпрямований)
+    correct: true
+  - text: їздить (різноспрямований)
+    correct: false
+  - text: поїхала (минулий час)
+    correct: false
+  - text: поїде (майбутній час)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Діти бігали у парку цілу годину" використовується різноспрямоване
+    дієслово, бо описує рух у різних напрямках протягом години.
+  options:
+  - text: рух у різних напрямках
+    correct: true
+  - text: рух в одному напрямку
+    correct: false
+  - text: одноразовий біг
+    correct: false
+  - text: конкретну мету
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Який префікс потрібен для значення "вийти з приміщення" — ви-, при-, чи
+    за-?
+  options:
+  - text: ви- (вийти)
+    correct: true
+  - text: при- (прийти)
+    correct: false
+  - text: за- (зайти)
+    correct: false
+  - text: під- (підійти)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Він перейшов вулицю і зайшов у магазин" обидва дієслова мають
+    префікси, що змінюють напрямок руху.
+  options:
+  - text: пере- (через) + за- (всередину)
+    correct: true
+  - text: від- + при-
+    correct: false
+  - text: ви- + під-
+    correct: false
+  - text: об- + над-
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Яке речення описує регулярний рух — "Вона йде до школи" чи "Вона ходить
+    до школи"?
+  options:
+  - text: Вона ходить до школи.
+    correct: true
+  - text: Вона йде до школи.
+    correct: false
+  - text: Обидва описують регулярний рух.
+    correct: false
+  - text: Жодне не описує регулярний рух.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Птахи відлітають на південь кожної осені" використовується
+    різноспрямоване дієслово з префіксом, бо описує регулярну міграцію.
+  options:
+  - text: регулярна міграція
+    correct: true
+  - text: одноразовий політ
+    correct: false
+  - text: рух зараз
+    correct: false
+  - text: рух у минулому
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Яке дієслово означає "підійти ближче до когось" — підійти чи відійти?
+  options:
+  - text: підійти (наближення)
+    correct: true
+  - text: відійти (віддалення)
+    correct: false
+  - text: обійти (навколо)
+    correct: false
+  - text: перейти (через)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Вони обійшли весь парк за дві години" префікс "об-" вказує
+    на рух навколо певного простору.
+  options:
+  - text: рух навколо (об-)
+    correct: true
+  - text: рух через (пере-)
+    correct: false
+  - text: рух з (ви-)
+    correct: false
+  - text: рух до (при-)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Яке речення правильне — "Літак летить до Одеси" чи "Літак літає до Одеси"?
+  options:
+  - text: Обидва правильні з різним значенням.
+    correct: true
+  - text: Тільки перше правильне.
+    correct: false
+  - text: Тільки друге правильне.
+    correct: false
+  - text: Обидва неправильні.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Човен пливе по Дніпру" використовується односпрямоване дієслово,
+    бо описує конкретний рух у певному напрямку зараз.
+  options:
+  - text: конкретний рух зараз
+    correct: true
+  - text: регулярний рух
+    correct: false
+  - text: рух туди і назад
+    correct: false
+  - text: минулий рух
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Який префікс додати до "йти", щоб отримати значення "увійти всередину"
+    — ви-, за-, чи від-?
+  options:
+  - text: за- (зайти)
+    correct: true
+  - text: ви- (вийти)
+    correct: false
+  - text: від- (відійти)
+    correct: false
+  - text: пере- (перейти)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: У реченні "Вона несе важку сумку додому" використовується односпрямоване
+    дієслово, бо описує рух з вантажем у конкретному напрямку.
+  options:
+  - text: рух з вантажем зараз
+    correct: true
+  - text: регулярне носіння
+    correct: false
+  - text: рух туди і назад
+    correct: false
+  - text: минулий рух
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Дієслова руху з префіксами
+  question: Яка різниця між "везти" та "возити" — перше для руху зараз, а друге для
+    регулярного руху?
+  options:
+  - text: везти = зараз; возити = регулярно
+    correct: true
+  - text: везти = регулярно; возити = зараз
+    correct: false
+  - text: немає різниці
+    correct: false
+  - text: обидва для минулого часу
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Я знаю студента, який вивчає українську мову" сполучник "який"
+    вводить підрядне означальне речення.
+  options:
+  - text: підрядне означальне
+    correct: true
+  - text: підрядне мети
+    correct: false
+  - text: підрядне умови
+    correct: false
+  - text: підрядне причини
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Який сполучник правильно вжити в реченні "Місто, ___ я народився, дуже
+    красиве" — де чи куди?
+  options:
+  - text: де (місце)
+    correct: true
+  - text: куди (напрямок)
+    correct: false
+  - text: звідки (походження)
+    correct: false
+  - text: коли (час)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Він прийшов, щоб допомогти друзям" сполучник "щоб" вводить
+    підрядне речення мети.
+  options:
+  - text: підрядне мети
+    correct: true
+  - text: підрядне причини
+    correct: false
+  - text: підрядне умови
+    correct: false
+  - text: підрядне часу
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Яка структура правильна для нереальної умови — "Якби я знав, сказав би"
+    чи "Якщо я знаю, скажу"?
+  options:
+  - text: Якби я знав, сказав би.
+    correct: true
+  - text: Якщо я знаю, скажу.
+    correct: false
+  - text: Обидві для нереальної умови.
+    correct: false
+  - text: Обидві неправильні.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Хоча погода погана, ми підемо на прогулянку" сполучник "хоча"
+    вводить допустове підрядне речення.
+  options:
+  - text: допустове (попри перешкоду)
+    correct: true
+  - text: умовне
+    correct: false
+  - text: причинове
+    correct: false
+  - text: означальне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Який сполучник правильно вжити в реченні "Вона прийшла, ___ хотіла побачити
+    тебе" — бо чи хоча?
+  options:
+  - text: бо (причина)
+    correct: true
+  - text: хоча (допуст)
+    correct: false
+  - text: якщо (умова)
+    correct: false
+  - text: щоб (мета)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Країна, куди ми їдемо, дуже красива" сполучник "куди" вводить
+    підрядне означальне з напрямком руху.
+  options:
+  - text: напрямок руху (куди?)
+    correct: true
+  - text: місце (де?)
+    correct: false
+  - text: походження (звідки?)
+    correct: false
+  - text: час (коли?)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Яка структура правильна для реальної умови — "Якщо прийдеш, побачиш" чи
+    "Якби прийшов, побачив би"?
+  options:
+  - text: Якщо прийдеш, побачиш.
+    correct: true
+  - text: Якби прийшов, побачив би.
+    correct: false
+  - text: Обидві для реальної умови.
+    correct: false
+  - text: Обидві неправильні.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Оскільки було пізно, вони поїхали додому" сполучник "оскільки"
+    вводить причинове підрядне речення.
+  options:
+  - text: причинове (чому поїхали?)
+    correct: true
+  - text: допустове
+    correct: false
+  - text: умовне
+    correct: false
+  - text: означальне
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Який сполучник правильно вжити в реченні "День, ___ ми зустрілися, був
+    сонячний" — коли чи де?
+  options:
+  - text: коли (час)
+    correct: true
+  - text: де (місце)
+    correct: false
+  - text: куди (напрямок)
+    correct: false
+  - text: який (означення)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Батько працював, щоб діти могли вчитися" сполучник "щоб" +
+    минулий час використовується, бо підмети різні.
+  options:
+  - text: різні підмети (батько, діти)
+    correct: true
+  - text: однаковий підмет
+    correct: false
+  - text: реальна умова
+    correct: false
+  - text: допустове речення
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Незважаючи на дощ, ми пішли на прогулянку" конструкція "незважаючи
+    на" виражає допустове значення.
+  options:
+  - text: допустове (попри перешкоду)
+    correct: true
+  - text: причинове
+    correct: false
+  - text: умовне
+    correct: false
+  - text: часове
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: Який сполучник правильно вжити в реченні "Село, ___ він приїхав, біля
+    Полтави" — звідки чи куди?
+  options:
+  - text: звідки (походження)
+    correct: true
+  - text: куди (напрямок)
+    correct: false
+  - text: де (місце)
+    correct: false
+  - text: коли (час)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Складні речення
+  question: У реченні "Вона працювала, поки не закінчила проєкт" сполучник "поки не"
+    вводить часове підрядне речення з кінцевою межею.
+  options:
+  - text: часове з межею (до якого моменту)
+    correct: true
+  - text: умовне
+    correct: false
+  - text: допустове
+    correct: false
+  - text: причинове
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Недоконаний вид завжди вказує на процес або тривалість дії, а не на її
+    результат.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Доконаний вид може мати форму теперішнього часу в сучасній українській
+    мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Дієслово "ходити" є різноспрямованим і описує регулярний рух або рух
+    туди-сюди.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Сполучник "якби" використовується для вираження реальної умови в теперішньому
+    часі.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Сполучник "хоча" вводить допустове підрядне речення, що виражає контраст
+    або перешкоду.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Дієприслівники недоконаного виду утворюються за допомогою суфіксів -учи,
+    -ючи, -ачи.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Пасивні дієприкметники утворюються від дієслів недоконаного виду за допомогою
+    суфіксів -ний, -тий.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Безособовий пасив утворюється за допомогою закінчень -но, -то і не має
+    узгодження з підметом.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Маркер "нарешті" зазвичай вказує на доконаний вид дієслова через значення
+    завершення.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Конструкція "щоб + інфінітив" використовується тільки при однакових підметах
+    у головному та підрядному реченнях.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Односпрямовані дієслова руху описують регулярний рух у різних напрямках.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Сполучник "оскільки" виражає причинове значення, аналогічне до сполучника
+    "бо".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Префікс "від-" у дієсловах руху означає наближення до когось або чогось.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Граматичні правила
+  statement: Дієприслівники доконаного виду утворюються за допомогою суфіксів -вши,
+    -ши і описують попередню дію.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

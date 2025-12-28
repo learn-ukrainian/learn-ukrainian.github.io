@@ -1,0 +1,605 @@
+module: 55-agreement-disagreement
+level: B1
+validated: '2025-12-28T10:07:55.249899'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 50
+  errors_confirmed: 8
+  passed_items: 42
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Я погоджую з вашою думкою про цей проєкт.
+  error: погоджую
+  answer: погоджуюся
+  sentence_corrected: Я погоджуюся з вашою думкою про цей проєкт.
+  options:
+  - погоджую
+  - погоджуюся
+  - погоджуюсь
+  - погоджую
+  original_explanation: Правильно — "погоджуюся" (зворотне дієслово з -ся).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Він є повний згодний з нашою позицією.
+  error: повний
+  answer: повністю
+  sentence_corrected: Він є повністю згодний з нашою позицією.
+  options:
+  - повний
+  - повністю
+  - повно
+  - цілий
+  original_explanation: Правильно — "повністю згодний" (прислівник + прикметник).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Це є хибна твердження про ситуацію в країні.
+  error: хибна
+  answer: хибне
+  sentence_corrected: Це є хибне твердження про ситуацію в країні.
+  options:
+  - хибна
+  - хибне
+  - хибний
+  - хибно
+  original_explanation: '"Твердження" — середнього роду, тому "хибне твердження".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Вони довго сперечали про кращий спосіб вирішення.
+  error: сперечали
+  answer: сперечалися
+  sentence_corrected: Вони довго сперечалися про кращий спосіб вирішення.
+  options:
+  - сперечали
+  - сперечалися
+  - сперечались
+  - сперечили
+  original_explanation: '"Сперечатися" — зворотне дієслово, правильно "сперечалися".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Нам потрібно досягти компромісу про це питання.
+  error: про
+  answer: щодо
+  sentence_corrected: Нам потрібно досягти комщодомісу щодо це питання.
+  options:
+  - про
+  - щодо
+  - до
+  - на
+  original_explanation: Правильна колокація — "досягти компромісу ЩОДО чогось", а
+    не "про".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Я ні взагалі згодний з такою пропозицією.
+  error: ні взагалі
+  answer: зовсім не
+  sentence_corrected: Я зовсім не згодний з такою пропозицією.
+  options:
+  - ні взагалі
+  - зовсім не
+  - взагалі ні
+  - ні зовсім
+  original_explanation: Правильно — "Я зовсім не згодний" або "Зовсім ні, я не згодний".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Навпроти, я вважаю, що це хороша ідея.
+  error: Навпроти
+  answer: Навпаки
+  sentence_corrected: Навпаки, я вважаю, що це хороша ідея.
+  options:
+  - Навпроти
+  - Навпаки
+  - Напроти
+  - Навспак
+  original_explanation: Правильно — "навпаки" (on the contrary), а не "навпроти" (opposite).
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки у виразах згоди та незгоди
+  sentence_with_error: Давайте продискутуємо це питання на нараді.
+  error: продискутуємо
+  answer: обговоримо
+  sentence_corrected: Давайте обговоримо це питання на нараді.
+  options:
+  - продискутуємо
+  - обговоримо
+  - подискутуємо
+  - здискутуємо
+  original_explanation: '"Продискутуємо" — калька з російської, правильно "обговоримо".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Я _____ з вашою пропозицією змінити стратегію маркетингу нашої
+    компанії.
+  answer: погоджуюся
+  complete_sentence: Я погоджуюся__ з вашою пропозицією змінити стратегію маркетингу
+    нашої компанії.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: _____, це дуже важлива тема, яку потрібно обговорити на нараді.
+  answer: Справді
+  complete_sentence: Справді__, це дуже важлива тема, яку потрібно обговорити на нараді.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Не _____, що ця стратегія принесе очікувані результати наступного
+    року.
+  answer: думаю
+  complete_sentence: Не думаю__, що ця стратегія принесе очікувані результати наступного
+    року.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: _____, я допоможу вам з цим проєктом, бо маю досвід у цій сфері.
+  answer: Звичайно
+  complete_sentence: Звичайно__, я допоможу вам з цим проєктом, бо маю досвід у цій
+    сфері.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Ви _____ праві — це справді найкращий підхід до розв'язання проблеми.
+  answer: абсолютно
+  complete_sentence: Ви абсолютно__ праві — це справді найкращий підхід до розв'язання
+    проблеми.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: _____, я вважаю, що потрібно більше інвестувати в рекламу, а
+    не скорочувати витрати.
+  answer: Навпаки
+  complete_sentence: Навпаки__, я вважаю, що потрібно більше інвестувати в рекламу,
+    а не скорочувати витрати.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Нам потрібно знайти _____, щоб задовольнити інтереси обох сторін
+    у цій справі.
+  answer: компроміс
+  complete_sentence: Нам потрібно знайти компроміс__, щоб задовольнити інтереси обох
+    сторін у цій справі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Після тривалих дискусій команда досягла _____ щодо нового плану
+    дій.
+  answer: консенсусу
+  complete_sentence: Після тривалих дискусій команда досягла консенсусу__ щодо нового
+    плану дій.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Це _____ твердження — дані свідчать про протилежне, і це легко
+    перевірити.
+  answer: хибне
+  complete_sentence: Це хибне__ твердження — дані свідчать про протилежне, і це легко
+    перевірити.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Я _____ не згодний з таким підходом до вирішення цієї складної
+    проблеми.
+  answer: категорично
+  complete_sentence: Я категорично__ не згодний з таким підходом до вирішення цієї
+    складної проблеми.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: — Ви підтримуєте цю пропозицію? — _____, це суперечить нашим
+    інтересам.
+  answer: Зовсім ні
+  complete_sentence: — Ви підтримуєте цю пропозицію? — Зовсім ні__, це суперечить
+    нашим інтересам.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Давайте детально _____ цю пропозицію на наступному засіданні
+    комітету.
+  answer: обговоримо
+  complete_sentence: Давайте детально обговоримо__ цю пропозицію на наступному засіданні
+    комітету.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Вважаю, що ваш висновок _____, бо він не враховує всіх факторів
+    ситуації.
+  answer: неправильний
+  complete_sentence: Вважаю, що ваш висновок неправильний__, бо він не враховує всіх
+    факторів ситуації.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для згоди або незгоди
+  sentence_template: Він годинами _____ з колегами про найкращий спосіб реалізації
+    нового проєкту.
+  answer: сперечався
+  complete_sentence: Він годинами сперечався__ з колегами про найкращий спосіб реалізації
+    нового проєкту.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Я повністю погоджуюся з вашою позицією.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Не думаю, що це правильний підхід.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Дозвольте не погодитися з цим твердженням.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Нам потрібно знайти розумний компроміс.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Зовсім ні, ви тут помиляєтесь.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Це є абсолютно хибне твердження.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Ми нарешті досягли консенсусу щодо цього питання.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про згоду та незгоду
+  jumbled_words: []
+  answer: Справді так, ви маєте рацію у цьому.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яке слово виражає найсильнішу згоду з позицією співрозмовника в українській
+    мові?
+  options:
+  - text: так
+    correct: false
+  - text: звичайно
+    correct: false
+  - text: абсолютно
+    correct: true
+  - text: можливо
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Як ввічливо висловити незгоду з колегою на офіційній нараді?
+  options:
+  - text: Ви помиляєтесь!
+    correct: false
+  - text: Зовсім ні!
+    correct: false
+  - text: Дозвольте не погодитися.
+    correct: true
+  - text: Це неправильно!
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яке слово означає досягнення спільної згоди всіх учасників дискусії?
+  options:
+  - text: компроміс
+    correct: false
+  - text: консенсус
+    correct: true
+  - text: згода
+    correct: false
+  - text: рішення
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Чим відрізняється "сперечатися" від "дискутувати" в українській мові?
+  options:
+  - text: Це повні синоніми без різниці
+    correct: false
+  - text: '"Сперечатися" — емоційно, "дискутувати" — інтелектуально'
+    correct: true
+  - text: '"Дискутувати" — неформальне, "сперечатися" — формальне'
+    correct: false
+  - text: '"Сперечатися" — позитивне, "дискутувати" — негативне'
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яке слово найкраще підходить для вираження незгоди у форматі "це протилежне"?
+  options:
+  - text: зовсім ні
+    correct: false
+  - text: аж ніяк
+    correct: false
+  - text: навпаки
+    correct: true
+  - text: це не так
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яка різниця між словами "цілком" та "повністю" при вираженні згоди?
+  options:
+  - text: '"Цілком" — сильніше за "повністю"'
+    correct: false
+  - text: Вони практично синоніми з однаковою силою
+    correct: true
+  - text: '"Повністю" — формальніше за "цілком"'
+    correct: false
+  - text: '"Цілком" — лише для незгоди'
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яке слово є найбільш нейтральним для опису спільного обговорення теми?
+  options:
+  - text: сперечатися
+    correct: false
+  - text: дискутувати
+    correct: false
+  - text: обговорювати
+    correct: true
+  - text: дебатувати
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння згоди та незгоди
+  question: Яке слово використовується для опису твердження, яке не відповідає істині?
+  options:
+  - text: неправильний
+    correct: false
+  - text: помилка
+    correct: false
+  - text: хибний
+    correct: true
+  - text: не згодний
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Погоджуватися" та "згодний" можна використовувати як повні синоніми
+    у всіх контекстах.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: У формальному контексті краще використовувати "Дозвольте не погодитися"
+    замість "Зовсім ні".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Консенсус" та "компроміс" означають те саме — згоду між сторонами.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: Слово "навпаки" використовується для вираження протилежної думки.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Сперечатися" має нейтральну конотацію, як і "дискутувати".'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: Слово "хибний" використовується для опису неправдивого твердження.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Абсолютно" та "цілком" виражають однаковий рівень згоди.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: У неформальній розмові з друзями краще використовувати "Аж ніяк" замість
+    "Та ні".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: Правильно говорити "погоджуватися на компроміс".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Обговорювати" — найнейтральніше слово для опису процесу дискусії.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: Слово "помилка" можна використовувати лише для опису дій, а не думок.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання згоди та незгоди
+  statement: '"Справді" та "дійсно" є повними синонімами без різниці у використанні.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

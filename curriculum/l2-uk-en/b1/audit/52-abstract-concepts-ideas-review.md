@@ -16,7 +16,24 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.4% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (8/48 confirmed)
+
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 17 | 15 | 100% | 20% | 20.0% |
+| engagement | 11 | 4 | 100% | 15% | 15.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 8 | 3 | 100% | 10% | 10.0% |
+| register_notes | 15 | 5 | 100% | 10% | 10.0% |
+| variety | 0.97 | - | 97% | 5% | 4.9% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -16,10 +16,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 79.1% (B1.1 Aspect)
 - **Richness:** ✅ 97% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (22/193 confirmed)
 
-## MDX VALIDATION
-✅ No issues found
+## Richness Details
+**Score:** 97% (minimum: 95%)
+**Module Type:** grammar
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 26 | 24 | 100% | 20% | 20.0% |
+| engagement | 5 | 5 | 100% | 15% | 15.0% |
+| dialogues | 12 | 4 | 100% | 15% | 15.0% |
+| variety | 0.96 | - | 96% | 10% | 9.6% |
+| cultural | 5 | 3 | 100% | 10% | 10.0% |
+| realworld | 5 | 3 | 100% | 10% | 10.0% |
+| visual | 2 | 3 | 67% | 5% | 3.4% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| questions | 27 | 5 | 100% | 5% | 5.0% |
+| proverbs | 1 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **97.9%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

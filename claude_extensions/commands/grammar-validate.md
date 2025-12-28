@@ -130,22 +130,22 @@ Check if `sentence_corrected` is grammatically correct:
 - Contains Russianisms or calques
 - Wrong case/aspect/agreement
 
-### Step 4: Write Results to Audit Folder
+### Step 4: Finalize using Python Script
 
-Save validated results to the **audit folder** (not queue folder):
+**Do NOT write the audit file manually.** Instead, use the provided Python script which handles:
+1.  Generating the audit file with correct metadata
+2.  Preserving your validation notes and fixes
+3.  Auto-updating the Review Report status
+4.  Cleaning up the queue file
 
+**Command:**
+```bash
+.venv/bin/python scripts/finalize_validation.py {queue_file_path} "{notes}"
 ```
-curriculum/l2-uk-en/{level}/audit/{module-slug}-grammar.yaml
-```
 
-Example: `curriculum/l2-uk-en/b1/audit/01-how-to-talk-about-grammar-grammar.yaml`
-
-```yaml
-validate:
-  error_is_real_mistake: true
-  corrected_sentence_valid: true
-  explanation: "«Прийшов» неправильно для транспорту. «Приїхав» (з префіксом при-) вживається для прибуття транспортом."
-  confidence: 0.95
+**Example:**
+```bash
+.venv/bin/python scripts/finalize_validation.py curriculum/l2-uk-en/b1/queue/01-how-to-talk-about-grammar.yaml "Fixed 1 Russianism"
 ```
 
 ### Step 5: Apply Fixes (When Validation Finds Problems)
@@ -206,27 +206,29 @@ The correction itself has grammar problems.
 - "Improve" sentences that passed validation
 - Fix items flagged for human review
 
-### Step 6: Update Activities File
+### Step 6: Log Fixes (Pre-Finalization)
 
-After applying fixes, update the source activities file:
+**If you made fixes (deleted items or fixed corrections):**
 
-```
-curriculum/l2-uk-en/{level}/activities/{module-slug}.yaml
-```
+You MUST log this **in the queue YAML file** *before* running the finalization script. The script will read this and preserve it in the audit trail.
 
-**Verify the fix:**
-1. Confirm the fix resolves the issue
-2. Update the audit file with `fixed: true`
+**How to log a fix:**
+1.  Modify the item in the queue YAML (fix the `answer` or `sentence`).
+2.  Add the `validate` block to that item:
 
-### Step 7: Clean Up Queue File
-
-After successful validation, **delete the queue file** to keep the queue folder clean:
-
-```bash
-rm curriculum/l2-uk-en/{level}/queue/{module}.yaml
+```yaml
+    validate:
+      action: "fixed"
+      notes: "Fixed Russianism: 'рахувати' -> 'вважати'"
+      confidence: 1.0
 ```
 
-The queue folder should only contain pending work.
+**If you Deleted an item:**
+Just delete it from the YAML file. The script will record a lower total item count, and you should mention "Deleted X items" in the script notes argument.
+
+### Step 7: Clean Up
+
+The script `finalize_validation.py` automatically deletes the queue file. You do not need to delete it manually.
 
 ---
 

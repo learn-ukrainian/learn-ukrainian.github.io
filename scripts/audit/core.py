@@ -241,17 +241,18 @@ def detect_level(file_path: str, frontmatter_str: str) -> tuple[str, int]:
 
 
 def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: str = "") -> str | None:
-    """Detect module focus (grammar, vocab, checkpoint, etc.)."""
-    # Check frontmatter for explicit focus
+    """Detect module focus (grammar, vocab, checkpoint, skills, cultural, etc.)."""
+    # Check frontmatter for explicit focus - recognize all valid config types
     focus_match = re.search(
-        r'^focus:\s*(grammar|vocab|vocabulary|checkpoint)$',
+        r'^focus:\s*["\']?(grammar|vocab|vocabulary|checkpoint|skills|cultural|capstone|bridge)["\']?$',
         frontmatter_str, re.MULTILINE | re.IGNORECASE
     )
     if focus_match:
         focus_val = focus_match.group(1).lower()
-        if focus_val == 'checkpoint':
-            return 'checkpoint'
-        return 'grammar' if focus_val == 'grammar' else 'vocab'
+        # Normalize vocabulary -> vocab
+        if focus_val == 'vocabulary':
+            return 'vocab'
+        return focus_val
 
     # Detect checkpoint from title or filename
     title_lower = title.lower() if title else ""
@@ -262,7 +263,14 @@ def detect_focus(frontmatter_str: str, level_code: str, module_num: int, title: 
     if level_code == 'B1':
         if module_num <= 5:
             return 'bridge'  # M01-05: Bridge modules (metalanguage)
-        return 'grammar' if module_num <= 45 else 'vocab'
+        elif module_num <= 51:
+            return 'grammar'  # M06-51: Grammar modules
+        elif module_num <= 71:
+            return 'vocab'  # M52-71: Vocabulary modules
+        elif module_num <= 81:
+            return 'cultural'  # M72-81: Cultural modules
+        else:
+            return 'skills'  # M82-86: Integration/Skills modules
     elif level_code == 'B2':
         return 'grammar' if module_num <= 40 else 'vocab'
 

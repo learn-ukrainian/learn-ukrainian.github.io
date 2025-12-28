@@ -133,8 +133,8 @@ def extract_ukrainian_sentences(text: str) -> list[str]:
     prose_lines = []
     for line in lines:
         stripped = line.strip()
-        # Skip table rows
-        if stripped.startswith('|'):
+        # Skip table rows (both regular and inside blockquotes)
+        if stripped.startswith('|') or stripped.startswith('> |'):
             continue
         # Skip headers
         if stripped.startswith('#'):

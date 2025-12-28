@@ -16,13 +16,24 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.8% (target 85-100% (B1.5-6 Vocab))
 - **Richness:** ✅ 96% (vocabulary)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (8/48 confirmed)
 
-## MDX VALIDATION
-✅ No issues found
+## Richness Details
+**Score:** 96% (minimum: 95%)
+**Module Type:** vocabulary
 
-## HTML VALIDATION
-✅ Renders correctly (13 interactive elements)
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| collocations | 30 | 20 | 100% | 25% | 25.0% |
+| usage_examples | 20 | 15 | 100% | 20% | 20.0% |
+| engagement | 12 | 4 | 100% | 15% | 15.0% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| visual | 11 | 3 | 100% | 10% | 10.0% |
+| register_notes | 9 | 5 | 100% | 10% | 10.0% |
+| variety | 0.96 | - | 96% | 5% | 4.8% |
+| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **96.5%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

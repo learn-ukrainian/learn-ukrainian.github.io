@@ -28,7 +28,7 @@ from typing import Any, Optional
 ROOT_DIR = Path(__file__).parent.parent
 CURRICULUM_DIR = ROOT_DIR / "curriculum"
 OUTPUT_DIR = ROOT_DIR / "output"
-LEVEL_FOLDERS = ["a1", "a2", "b1", "b2", "c1", "c2"]
+LEVEL_FOLDERS = ["a1", "a2", "b1", "b2", "c1", "c2", "lit"]
 
 # =============================================================================
 # FRONTMATTER PARSER

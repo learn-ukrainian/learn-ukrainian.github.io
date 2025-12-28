@@ -565,14 +565,21 @@ def count_items(text: str) -> int:
     bullets = len(re.findall(r'^\s*-\s+[^\[]', text, re.MULTILINE))
 
     # 5. Cloze Placeholders
-    # Match {1} or {1:DROPDOWN...} or {1:TEXT...}
-    cloze_placeholders = len(re.findall(r'\{\d+(?::[^}]+)?\}', text))
+    # Match {1} or {1:DROPDOWN...} or {1:TEXT...} (numbered format)
+    # Also match {word|opt1|opt2...} (inline answer format)
+    cloze_numbered = len(re.findall(r'\{\d+(?::[^}]+)?\}', text))
+    cloze_inline = len(re.findall(r'\{[^}|]+\|[^}]+\}', text))  # {word|opt1|opt2}
+    cloze_placeholders = cloze_numbered + cloze_inline
 
-    # 6. Mark-the-words Brackets
-    mark_words = len([
+    # 6. Mark-the-words Brackets or Asterisks
+    # Match [word] brackets (original format)
+    mark_words_brackets = len([
         m for m in re.findall(r'\[([^\]]+)\]', text)
         if not m.startswith('!') and not re.match(r'[^\]]+\]\(', m)
     ])
+    # Also match *word* asterisks (inline format)
+    mark_words_asterisks = len(re.findall(r'\*[^*]+\*', text))
+    mark_words = mark_words_brackets + mark_words_asterisks
 
     # Priority Logic
     if numbered > 0:

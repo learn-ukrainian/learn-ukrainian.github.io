@@ -16,13 +16,23 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.8% (checkpoint - no gate)
 - **Richness:** ✅ 98% (checkpoint)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (10/102 confirmed)
 
-## MDX VALIDATION
-✅ No issues found
+## Richness Details
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
 
-## HTML VALIDATION
-✅ Renders correctly (20 interactive elements)
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 34 | 3 | 100% | 20% | 20.0% |
+| variety | 0.90 | - | 90% | 15% | 13.5% |
+| engagement | 4 | 3 | 100% | 10% | 10.0% |
+| cultural | 2 | - | 100% | 10% | 10.0% |
+| visual | 10 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 0.99 | - | 99% | 10% | 9.9% |
+| **TOTAL** | | | | | **98.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

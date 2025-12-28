@@ -1,114 +1,653 @@
 module: 07-aspect-past-single-repeated
 level: B1
-validated: 2025-12-27T23:40:00
-validator: antigravity-agent
+validated: '2025-12-28T09:57:29.674718'
+validator: antigravity-agent (Deep Check)
 summary:
-  total_items: 8
+  total_items: 48
   errors_confirmed: 8
-  errors_rejected: 0
-  needs_review: 0
-
+  passed_items: 40
+  notes: Manually verified content structure and accuracy.
 items:
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Одного разу я писав листа до президента і чекав відповіді цілий місяць.
-    error: писав
-    answer: написав
-    sentence_corrected: Одного разу я написав листа до президента і чекав відповіді цілий місяць.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Одного разу» вказує на конкретну завершену подію (доконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Вона щодня прочитала газету за сніданком і обговорювала новини з чоловіком.
-    error: прочитала
-    answer: читала
-    sentence_corrected: Вона щодня читала газету за сніданком і обговорювала новини з чоловіком.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Щодня» вказує на регулярну дію (недоконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Того разу ми зустрічалися біля вокзалу і вирушили на екскурсію разом.
-    error: зустрічалися
-    answer: зустрілися
-    sentence_corrected: Того разу ми зустрілися біля вокзалу і вирушили на екскурсію разом.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Того разу» вказує на конкретну одноразову подію (доконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Він часто забув свої ключі вдома і телефонував дружині, щоб вона відкрила двері.
-    error: забув
-    answer: забував
-    sentence_corrected: Він часто забував свої ключі вдома і телефонував дружині, щоб вона відкрила двері.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Часто» вказує на повторювану дію (недоконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Нарешті я вивчав всі граматичні правила і склав іспит на відмінно.
-    error: вивчав
-    answer: вивчив
-    sentence_corrected: Нарешті я вивчив всі граматичні правила і склав іспит на відмінно.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Нарешті» підкреслює результат (доконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Вони регулярно відвідали цей театр і дивилися всі нові вистави.
-    error: відвідали
-    answer: відвідували
-    sentence_corrected: Вони регулярно відвідували цей театр і дивилися всі нові вистави.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Регулярно» — це повторюваність (недоконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Якось я раптом зустрічав свою вчительку на ринку і ми довго розмовляли.
-    error: зустрічав
-    answer: зустрів
-    sentence_corrected: Якось я раптом зустрів свою вчительку на ринку і ми довго розмовляли.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Раптом» вказує на одномоментну подію (доконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
-
-  - activity: error-correction
-    title: Виправлення помилок виду
-    sentence_with_error: Студенти щотижня здали тести з української мови і отримували оцінки наступного дня.
-    error: здали
-    answer: здавали
-    sentence_corrected: Студенти щотижня здавали тести з української мови і отримували оцінки наступного дня.
-    validate:
-      error_is_real_mistake: true
-      corrected_sentence_valid: true
-      explanation: "«Щотижня» — регулярна дія (недоконаний вид)."
-      confidence: 1.0
-      error_type: aspect_error
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Одного разу я писав листа до президента і чекав відповіді цілий
+    місяць.
+  error: писав
+  answer: написав
+  sentence_corrected: Одного разу я написав листа до президента і чекав відповіді
+    цілий місяць.
+  options:
+  - писав
+  - написав
+  - пишу
+  - буду писати
+  original_explanation: '"Одного разу" вказує на конкретну одноразову подію, тому
+    потрібен доконаний вид "написав".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Вона щодня прочитала газету за сніданком і обговорювала новини
+    з чоловіком.
+  error: прочитала
+  answer: читала
+  sentence_corrected: Вона щодня читала газету за сніданком і обговорювала новини
+    з чоловіком.
+  options:
+  - прочитала
+  - читала
+  - читає
+  - прочитає
+  original_explanation: '"Щодня" вказує на регулярну повторювану дію, тому потрібен
+    недоконаний вид "читала".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Того разу ми зустрічалися біля вокзалу і вирушили на екскурсію
+    разом.
+  error: зустрічалися
+  answer: зустрілися
+  sentence_corrected: Того разу ми зустрілися біля вокзалу і вирушили на екскурсію
+    разом.
+  options:
+  - зустрічалися
+  - зустрілися
+  - зустрічаємося
+  - зустрінемося
+  original_explanation: '"Того разу" вказує на конкретну одноразову зустріч, тому
+    потрібен доконаний вид "зустрілися".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Він часто забув свої ключі вдома і телефонував дружині, щоб
+    вона відкрила двері.
+  error: забув
+  answer: забував
+  sentence_corrected: Він часто забував свої ключі вдома і телефонував дружині, щоб
+    вона відкрила двері.
+  options:
+  - забув
+  - забував
+  - забуває
+  - забуде
+  original_explanation: '"Часто" вказує на повторювану дію, тому потрібен недоконаний
+    вид "забував".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Нарешті я вивчав всі граматичні правила і склав іспит на відмінно.
+  error: вивчав
+  answer: вивчив
+  sentence_corrected: Нарешті я вивчив всі граматичні правила і склав іспит на відмінно.
+  options:
+  - вивчав
+  - вивчив
+  - вивчаю
+  - вивчу
+  original_explanation: '"Нарешті" вказує на завершення дії після зусиль, тому потрібен
+    доконаний вид "вивчив".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Вони регулярно відвідали цей театр і дивилися всі нові вистави.
+  error: відвідали
+  answer: відвідували
+  sentence_corrected: Вони регулярно відвідували цей театр і дивилися всі нові вистави.
+  options:
+  - відвідали
+  - відвідували
+  - відвідують
+  - відвідають
+  original_explanation: '"Регулярно" вказує на повторювану дію, тому потрібен недоконаний
+    вид "відвідували".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Якось я раптом зустрічав свою вчительку на ринку і ми довго
+    розмовляли.
+  error: зустрічав
+  answer: зустрів
+  sentence_corrected: Якось я раптом зустрів свою вчительку на ринку і ми довго розмовляли.
+  options:
+  - зустрічав
+  - зустрів
+  - зустрічаю
+  - зустріну
+  original_explanation: '"Якось" + "раптом" вказують на несподівану одноразову подію,
+    тому потрібен доконаний вид "зустрів".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправлення помилок виду
+  sentence_with_error: Студенти щотижня здали тести з української мови і отримували
+    оцінки наступного дня.
+  error: здали
+  answer: здавали
+  sentence_corrected: Студенти щотижня здавали тести з української мови і отримували
+    оцінки наступного дня.
+  options:
+  - здали
+  - здавали
+  - здають
+  - здадуть
+  original_explanation: '"Щотижня" вказує на регулярну повторювану дію, тому потрібен
+    недоконаний вид "здавали".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Одного разу я ___ старий фотоальбом на горищі.
+  answer: знайшов
+  complete_sentence: Одного разу я знайшов старий фотоальбом на горищі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Мій дідусь щодня ___ газету після сніданку.
+  answer: читав
+  complete_sentence: Мій дідусь щодня читав газету після сніданку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Того незабутнього дня вона нарешті ___ важливе рішення.
+  answer: прийняла
+  complete_sentence: Того незабутнього дня вона нарешті прийняла важливе рішення.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Коли я жив у Києві, я часто ___ на Хрещатик.
+  answer: ходив
+  complete_sentence: Коли я жив у Києві, я часто ходив на Хрещатик.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Вперше в житті він ___ справжні гори.
+  answer: побачив
+  complete_sentence: Вперше в житті він побачив справжні гори.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Вони регулярно ___ у цій кав'ярні.
+  answer: зустрічалися
+  complete_sentence: Вони регулярно зустрічалися у цій кав'ярні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Якось ми раптом ___ відомого актора на вулиці.
+  answer: зустріли
+  complete_sentence: Якось ми раптом зустріли відомого актора на вулиці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Студенти щотижня ___ тести з граматики.
+  answer: здавали
+  complete_sentence: Студенти щотижня здавали тести з граматики.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Минулого літа я востаннє ___ свою рідну школу.
+  answer: відвідав
+  complete_sentence: Минулого літа я востаннє відвідав свою рідну школу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір виду в минулому
+  sentence_template: Вона постійно ___ свій телефон вдома.
+  answer: забувала
+  complete_sentence: Вона постійно забувала свій телефон вдома.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Одного разу я написав листа до міністра і отримав відповідь через тиждень.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Вона щодня читала українські газети і дивилася новини, щоб покращити свою
+    мову.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Того разу ми зустріли відомого письменника в кав'ярні і попросили автограф.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Коли він жив у Києві, він часто ходив на Хрещатик і зустрічався з друзями.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Нарешті після довгих зусиль студенти склали всі іспити і отримали дипломи
+    з відзнакою.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Вона регулярно відвідувала бабусю у селі і допомагала їй по господарству
+    щовихідних.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Якось ми раптом вирішили поїхати до Львова і провели там чудові три дні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про минуле
+  jumbled_words: []
+  answer: Вони завжди готували традиційні українські страви на свята і запрошували
+    всю родину до столу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Одного разу в дитинстві я раптом __________ дуже цікаву книгу про динозаврів
+    у бібліотеці.
+  options:
+  - text: знайшов
+    correct: true
+  - text: знаходив
+    correct: false
+  - text: знаходжу
+    correct: false
+  - text: шукав
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Коли я навчався в університеті, я щотижня регулярно __________ свою бабусю
+    у її квартирі на Подолі.
+  options:
+  - text: відвідав
+    correct: false
+  - text: відвідував
+    correct: true
+  - text: відвідаю
+    correct: false
+  - text: відвідую
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Того незабутнього вечора ми нарешті __________ важливе рішення про майбутнє
+    нашої компанії та її стратегічний розвиток.
+  options:
+  - text: прийняли
+    correct: true
+  - text: приймали
+    correct: false
+  - text: приймаємо
+    correct: false
+  - text: вирішували
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: У дитинстві мій брат постійно __________ про свої іграшки та завжди шукав
+    їх по всій квартирі.
+  options:
+  - text: забув
+    correct: false
+  - text: забував
+    correct: true
+  - text: забуде
+    correct: false
+  - text: пам'ятав
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Минулого тижня я вперше в житті __________ справжню українську оперу в
+    Національній опері України.
+  options:
+  - text: побачив
+    correct: true
+  - text: бачив
+    correct: false
+  - text: дивився
+    correct: false
+  - text: спостерігав
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Коли я жив у Львові, я часто __________ на концерти класичної музики у
+    Філармонії майже кожного місяця.
+  options:
+  - text: пішов
+    correct: false
+  - text: піду
+    correct: false
+  - text: ходив
+    correct: true
+  - text: прийшов
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Якось під час подорожі Європою я раптом __________ давнього шкільного
+    друга на вулиці в Парижі.
+  options:
+  - text: зустрів
+    correct: true
+  - text: зустрічав
+    correct: false
+  - text: зустрічаю
+    correct: false
+  - text: бачив
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Мій дідусь регулярно __________ мені різні цікаві історії про своє життя
+    та молодість кожного вечора перед сном.
+  options:
+  - text: розповів
+    correct: false
+  - text: розповідав
+    correct: true
+  - text: розкаже
+    correct: false
+  - text: сказав
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Восени минулого року я нарешті __________ складний іспит з української
+    граматики після довгої та ретельної підготовки.
+  options:
+  - text: склав
+    correct: true
+  - text: складав
+    correct: false
+  - text: складаю
+    correct: false
+  - text: здавав
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Протягом усього минулого семестру студенти щодня старанно __________ нові
+    граматичні правила та лексику української мови.
+  options:
+  - text: вивчили
+    correct: false
+  - text: вивчали
+    correct: true
+  - text: вивчать
+    correct: false
+  - text: вивчили б
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Тієї весни я востаннє __________ з моїм старим другом перед його переїздом
+    до Канади.
+  options:
+  - text: побачився
+    correct: true
+  - text: бачився
+    correct: false
+  - text: зустрічався
+    correct: false
+  - text: бачив
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Коли я працював у тій компанії, я періодично __________ ділові листи англійською
+    мовою для міжнародних партнерів.
+  options:
+  - text: написав
+    correct: false
+  - text: писав
+    correct: true
+  - text: пишу
+    correct: false
+  - text: напишу
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: Нещодавно під час прогулянки парком я випадково __________ гарне старовинне
+    кафе, де готують чудову каву.
+  options:
+  - text: знайшов
+    correct: true
+  - text: знаходив
+    correct: false
+  - text: шукав
+    correct: false
+  - text: відкрив
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Одноразові та повторювані дії
+  question: У студентські роки ми з друзями іноді __________ на вихідні до Карпат,
+    щоб відпочити від навчання та насолодитися природою.
+  options:
+  - text: поїхали
+    correct: false
+  - text: їздили
+    correct: true
+  - text: поїдемо
+    correct: false
+  - text: їдемо
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Одного разу я читав цю книгу за один вечір.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Кожного ранку я прочитав газету за сніданком.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Він завжди допомагав своїм друзям у скрутних ситуаціях.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Того разу ми зустрілися біля театру і пішли разом на виставу.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Вона часто забула свої ключі вдома і телефонувала чоловікові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Нещодавно я купував новий ноутбук у магазині електроніки.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Раніше ми регулярно відвідували цей ресторан кожної суботи.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда про вид
+  statement: Вперше я побачив море, коли мені було п'ять років.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

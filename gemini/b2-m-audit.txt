@@ -1,3 +1,0 @@
-
-========================================
-Error: File curriculum/l2-uk-en/b2/-*.md not found.

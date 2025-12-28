@@ -1,0 +1,558 @@
+module: 48-diminutives-master-class
+level: B1
+validated: '2025-12-28T10:07:09.707363'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 42
+  errors_confirmed: 6
+  passed_items: 36
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Шановний директорику, прошу підписати документи.
+  error: директорику
+  answer: директоре
+  sentence_corrected: Шановний директоре, прошу підписати документи.
+  options:
+  - директорику
+  - директоре
+  - директор
+  - директорчику
+  original_explanation: Демінутиви недоречні в офіційних звертаннях.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дай мені хлібок, будь ласка.
+  error: хлібок
+  answer: хлібчика
+  sentence_corrected: Дай мені хлібчика, будь ласка.
+  options:
+  - хлібок
+  - хлібчика
+  - хлібця
+  - хлібочок
+  original_explanation: Правильний демінутив від "хліб" — "хлібчик" (родовий — "хлібчика").
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Моя донька — справжня зіренька!
+  error: зіренька
+  answer: зірочка
+  sentence_corrected: Моя донька — справжня зірочка!
+  options:
+  - зіренька
+  - зірочка
+  - зіронька
+  - зірка
+  original_explanation: Правильний демінутив від "зірка" — "зірочка".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ваша зарплатка цього місяця буде нижчою.
+  error: зарплатка
+  answer: зарплата
+  sentence_corrected: Ваша зарплата цього місяця буде нижчою.
+  options:
+  - зарплатка
+  - зарплата
+  - зарплаточка
+  - зарплатонька
+  original_explanation: Демінутив у негативному контексті звучить образливо.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Котику мій, ти сьогодні такий сердитенький!
+  error: сердитенький
+  answer: сердитий
+  sentence_corrected: Котику мій, ти сьогодні такий сердитий!
+  options:
+  - сердитенький
+  - сердитий
+  - сердитесенький
+  - сердитоватий
+  original_explanation: Демінутив від негативної якості звучить іронічно або дивно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Маємо проблемку — проект провалено повністю.
+  error: проблемку
+  answer: проблему
+  sentence_corrected: Маємо проблему — проект провалено повністю.
+  options:
+  - проблемку
+  - проблему
+  - проблеменьку
+  - проблемочку
+  original_explanation: Якщо проект провалено, це не "проблемка", а серйозна проблема.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Хочеш _____ з молоком?
+  answer: кавку
+  complete_sentence: Хочеш кавку__ з молоком?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Яке гарне _____!
+  answer: сонечко
+  complete_sentence: Яке гарне сонечко__!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Дай мені _____, будь ласка.
+  answer: водички
+  complete_sentence: Дай мені водички__, будь ласка.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Де твоя _____?
+  answer: книжечка
+  complete_sentence: Де твоя книжечка__?
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Мій _____ вже спить.
+  answer: синочок
+  complete_sentence: Мій синочок__ вже спить.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Купи _____ на вечерю.
+  answer: хлібчика
+  complete_sentence: Купи хлібчика__ на вечерю.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Яка _____ зірка!
+  answer: гарненька
+  complete_sentence: Яка гарненька__ зірка!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Утворіть демінутив
+  sentence_template: Підійди _____.
+  answer: близенько
+  complete_sentence: Підійди близенько__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Синочку, з'їж ще трошки каші, будь ласка, бо бабуся тебе дуже любить.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Сонечко моє, як я дуже сумувала за тобою весь цей довгий тиждень.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Дайте мені склянку холодної водички, будь ласка, після такої спеки на вулиці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Ось яка гарненька нова машинка у тебе, нещодавно куплена за великі гроші.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Бабусю рідненька, дякую за ці смачні пиріжечки, що ти сьогодні для мене
+    спекла.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення з демінутивами
+  jumbled_words: []
+  answer: Маємо таку маленьку проблемку з нашим проектиком, яку треба швидко вирішити
+    разом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Яка найпоширеніша функція демінутивів в українській мові, коли ми говоримо
+    не про фізичний розмір предмета?
+  options:
+  - text: Вираження офіційності та формальності в ділових документах
+    correct: false
+  - text: Вираження ніжності, любові та теплого ставлення до співрозмовника
+    correct: true
+  - text: Підкреслення негативного ставлення до предмета розмови
+    correct: false
+  - text: Заміна складних граматичних конструкцій простішими
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: У якому контексті речення «У нас маленька проблемка» найімовірніше виражає
+    іронію, а не справжній малий розмір проблеми?
+  options:
+  - text: Коли батьки говорять з маленькою дитиною про її іграшки
+    correct: false
+  - text: Коли продавець пропонує товар покупцеві на ринку
+    correct: false
+  - text: Коли колега повідомляє про серйозну помилку в проекті
+    correct: true
+  - text: Коли бабуся розмовляє з онуком про його домашнє завдання
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Який суфікс утворює найніжніший демінутив від слова «мати», якщо ми хочемо
+    висловити особливу любов?
+  options:
+  - text: -ка (матка)
+    correct: false
+  - text: -інка (матінка) або -уся (матуся)
+    correct: true
+  - text: -ця (матиця)
+    correct: false
+  - text: -иха (матиха)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Чому використання демінутивів у формальних документах вважається серйозною
+    помилкою стилю та порушенням норм?
+  options:
+  - text: Бо демінутиви не існують в українській літературній мові
+    correct: false
+  - text: Бо демінутиви завжди виражають негативне ставлення автора
+    correct: false
+  - text: Бо демінутиви надають тексту неформального або іронічного звучання
+    correct: true
+  - text: Бо демінутиви використовуються виключно в дитячій літературі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Яке речення демонструє правильне використання демінутива для ввічливого
+    прохання в повсякденній ситуації спілкування?
+  options:
+  - text: Директоре, підпишіть документик терміново!
+    correct: false
+  - text: Колеги, маємо проблемку з бюджетиком.
+    correct: false
+  - text: Можна водички, будь ласка?
+    correct: true
+  - text: Ваша зарплатка цього місяця буде менша.
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Який подвійний демінутив від слова «малий» виражає максимальний ступінь
+    зменшення в ланцюжку нанизування суфіксів?
+  options:
+  - text: маленький
+    correct: false
+  - text: малюсенький
+    correct: false
+  - text: малесесенький
+    correct: true
+  - text: малесенько
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: У якому діалозі демінутиви використовуються найприродніше відповідно до
+    українських мовних норм і культурних традицій?
+  options:
+  - text: 'Бабуся до онука: «Синочку, їстимеш кашку?»'
+    correct: true
+  - text: 'Директор до підлеглого: «Колего, маємо проблемку з договорчиком.»'
+    correct: false
+  - text: 'Лікар до пацієнта: «Ви маєте серйозну хворобку.»'
+    correct: false
+  - text: 'Суддя на засіданні: «Підсудний, підпишіть протокольчик.»'
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння демінутивів
+  question: Яка функція демінутива «котику» як звертання між закоханими в сучасній
+    українській мові та культурі?
+  options:
+  - text: Вказівка на те, що людина схожа на кота зовнішньо
+    correct: false
+  - text: Іронічне зауваження про поведінку партнера
+    correct: false
+  - text: Вираження ніжності та близькості між партнерами
+    correct: true
+  - text: Нейтральне звертання без емоційного забарвлення
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: Give me some bread, please. (politely)
+  answer: ''
+  options:
+  - text: Дай мені хліба, будь ласка.
+    correct: false
+  - text: Дай мені хлібчика, будь ласка.
+    correct: true
+  - text: Дай мені хлібище, будь ласка.
+    correct: false
+  - text: Дай мені хлібина, будь ласка.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: My dear son, how was school?
+  answer: ''
+  options:
+  - text: Синочку, як було в школі?
+    correct: true
+  - text: Сину, як було в школі?
+    correct: false
+  - text: Синище, як було в школі?
+    correct: false
+  - text: Синовий, як було в школі?
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: What a cute kitty!
+  answer: ''
+  options:
+  - text: Який кіт!
+    correct: false
+  - text: Який гарненький котик!
+    correct: true
+  - text: Який котище!
+    correct: false
+  - text: Який кошеня!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: We have a small problem. (ironic, actually big)
+  answer: ''
+  options:
+  - text: Маємо невелику проблему.
+    correct: false
+  - text: Маємо проблемку.
+    correct: true
+  - text: Маємо величезну проблему.
+    correct: false
+  - text: Маємо проблемище.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: Grandma, thank you for the delicious pie!
+  answer: ''
+  options:
+  - text: Бабо, дякую за пиріг!
+    correct: false
+  - text: Бабусю, дякую за пиріжечок!
+    correct: true
+  - text: Бабище, дякую за пиріжок!
+    correct: false
+  - text: Бабуля, дякую за пиріженьку!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: Would you have a minute? (politely)
+  answer: ''
+  options:
+  - text: Маєте хвилину?
+    correct: false
+  - text: Маєте хвилинку?
+    correct: true
+  - text: Маєте хвилище?
+    correct: false
+  - text: Маєте хвилинище?
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Демінутиви можуть виражати іронію та сарказм, а не лише ніжність.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Демінутиви використовуються виключно в розмовах з дітьми.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Подвійні демінутиви (малесенький, гарнесенький) типові для мови до дітей.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Демінутиви доречні в офіційних документах для створення довірчого тону.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: «Сонечко» та «котику» — типові звертання між закоханими в Україні.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Усі іменники української мови можуть утворювати демінутиви.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: На ринку продавці використовують демінутиви для створення довіри.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила демінутивів
+  statement: Демінутив завжди означає малий розмір предмета.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

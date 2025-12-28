@@ -1,0 +1,732 @@
+module: 46-past-passive-participles-2
+level: B1
+validated: '2025-12-28T10:06:46.905529'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 43
+  errors_confirmed: 6
+  passed_items: 37
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Книга написано автором минулого року.
+  error: Книга
+  answer: Книгу
+  sentence_corrected: Книгу написано автором минулого року.
+  options:
+  - Книга
+  - Книгу
+  - Книзі
+  - Книгою
+  original_explanation: 'Після короткої форми додаток стоїть у знахідному відмінку:
+    «Книгу написано».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Рішення прийнята одноголосно всіма членами комісії.
+  error: прийнята
+  answer: прийнято
+  sentence_corrected: Рішення прийнято одноголосно всіма членами комісії.
+  options:
+  - прийнята
+  - прийнято
+  - прийнятий
+  - прийняті
+  original_explanation: 'Коротка форма не змінюється за родами: «рішення прийнято»
+    (не «прийнята»).'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Мене було сказано прийти о дев'ятій годині.
+  error: Мене
+  answer: Мені
+  sentence_corrected: Мені було сказано прийти о дев'ятій годині.
+  options:
+  - Мене
+  - Мені
+  - Мною
+  - Я
+  original_explanation: 'Для позначення особи використовується давальний відмінок:
+    «Мені було сказано».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Документи оформлено завтра вранці без затримки.
+  error: завтра
+  answer: вчора
+  sentence_corrected: Документи оформлено вчора вранці без затримки.
+  options:
+  - завтра
+  - вчора
+  - сьогодні
+  - позавчора
+  original_explanation: Коротка форма без «буде» позначає минулий або теперішній час,
+    не майбутній.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: На заводі заборонений курити в приміщенні.
+  error: заборонений
+  answer: заборонено
+  sentence_corrected: На заводі заборонено курити в приміщенні.
+  options:
+  - заборонений
+  - заборонено
+  - заборонена
+  - заборонені
+  original_explanation: 'Безособові конструкції з інфінітивом використовують коротку
+    форму: «заборонено курити».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Контракт було підписано обидві сторони.
+  error: обидві
+  answer: обома
+  sentence_corrected: Контракт було підписано обома сторони.
+  options:
+  - обидві
+  - обома
+  - обидва
+  - обох
+  original_explanation: 'Виконавець стоїть в орудному відмінку: «обома сторонами».'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: ___ написано вчора ввечері.
+  answer: Листа
+  complete_sentence: Листа написано вчора ввечері.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Рішення ___ комісією одноголосно.
+  answer: прийнято
+  complete_sentence: Рішення прийнято комісією одноголосно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Мені ___ сказано чекати в коридорі.
+  answer: було
+  complete_sentence: Мені було сказано чекати в коридорі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Тут ___ паркуватися без спеціального дозволу.
+  answer: заборонено
+  complete_sentence: Тут заборонено паркуватися без спеціального дозволу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: ___ оголошено результати конкурсу.
+  answer: Вчора
+  complete_sentence: Вчора оголошено результати конкурсу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Документи ___ вчасно та без помилок.
+  answer: оформлено
+  complete_sentence: Документи оформлено вчасно та без помилок.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: ___ встановлено нові правила безпеки.
+  answer: На заводі
+  complete_sentence: На заводі встановлено нові правила безпеки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Виберіть правильну форму
+  sentence_template: Нам ___ виконати це завдання до кінця тижня.
+  answer: доручено
+  complete_sentence: Нам доручено виконати це завдання до кінця тижня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: cloze
+  title: Офіційний документ
+  passage_template: 'ПРОТОКОЛ ЗАСІДАННЯ
+
+
+    Дата: 15 грудня 2024 року
+
+
+    На засіданні комісії {розглянуто|обговорено|прийнято} важливі питання розвитку
+    підприємства. Спочатку {заслухано|представлено|обговорено} звіт про виконану роботу
+    за попередній квартал. {Встановлено|Вирішено|Доведено}, що план виконано на дев''яносто
+    вісім відсотків.
+
+
+    Далі {розглянуто|заслухано|обговорено} пропозиції щодо модернізації виробництва.
+    Після обговорення {прийнято|погоджено|затверджено} рішення про виділення додаткового
+    фінансування. Суму {визначено|встановлено|затверджено} у розмірі п''ятсот тисяч
+    гривень.
+
+
+    На засіданні також {затверджено|прийнято|встановлено} нові правила техніки безпеки.
+    Керівникам відділів {доручено|наказано|рекомендовано} забезпечити ознайомлення
+    всіх працівників з новими вимогами.
+
+
+    Протокол {підписано|завірено|оформлено} головою комісії та секретарем. Копії {надіслано|передано|розіслано}
+    до всіх структурних підрозділів. {Повідомлено|Оголошено|Зазначено}, що наступне
+    засідання відбудеться через місяць.
+
+
+    Всім членам комісії {рекомендовано|доручено|запропоновано} надати письмові пропозиції
+    до наступного засідання. Засідання {закрито|завершено|закінчено} о чотирнадцятій
+    годині. Присутність усіх членів {визнано|визначено|оголошено} обов''язковою.
+
+    '
+  blanks:
+  - id: 1
+    answer: розглянуто
+    options:
+    - розглянуто
+    - обговорено
+    - прийнято
+  - id: 2
+    answer: заслухано
+    options:
+    - заслухано
+    - представлено
+    - обговорено
+  - id: 3
+    answer: Встановлено
+    options:
+    - Встановлено
+    - Вирішено
+    - Доведено
+  - id: 4
+    answer: розглянуто
+    options:
+    - розглянуто
+    - заслухано
+    - обговорено
+  - id: 5
+    answer: прийнято
+    options:
+    - прийнято
+    - погоджено
+    - затверджено
+  - id: 6
+    answer: визначено
+    options:
+    - визначено
+    - встановлено
+    - затверджено
+  - id: 7
+    answer: затверджено
+    options:
+    - затверджено
+    - прийнято
+    - встановлено
+  - id: 8
+    answer: доручено
+    options:
+    - доручено
+    - наказано
+    - рекомендовано
+  - id: 9
+    answer: підписано
+    options:
+    - підписано
+    - завірено
+    - оформлено
+  - id: 10
+    answer: надіслано
+    options:
+    - надіслано
+    - передано
+    - розіслано
+  - id: 11
+    answer: Повідомлено
+    options:
+    - Повідомлено
+    - Оголошено
+    - Зазначено
+  - id: 12
+    answer: рекомендовано
+    options:
+    - рекомендовано
+    - доручено
+    - запропоновано
+  - id: 13
+    answer: закрито
+    options:
+    - закрито
+    - завершено
+    - закінчено
+  - id: 14
+    answer: визнано
+    options:
+    - визнано
+    - визначено
+    - оголошено
+  complete_passage: 'ПРОТОКОЛ ЗАСІДАННЯ
+
+
+    Дата: 15 грудня 2024 року
+
+
+    На засіданні комісії {розглянуто|обговорено|прийнято} важливі питання розвитку
+    підприємства. Спочатку {заслухано|представлено|обговорено} звіт про виконану роботу
+    за попередній квартал. {Встановлено|Вирішено|Доведено}, що план виконано на дев''яносто
+    вісім відсотків.
+
+
+    Далі {розглянуто|заслухано|обговорено} пропозиції щодо модернізації виробництва.
+    Після обговорення {прийнято|погоджено|затверджено} рішення про виділення додаткового
+    фінансування. Суму {визначено|встановлено|затверджено} у розмірі п''ятсот тисяч
+    гривень.
+
+
+    На засіданні також {затверджено|прийнято|встановлено} нові правила техніки безпеки.
+    Керівникам відділів {доручено|наказано|рекомендовано} забезпечити ознайомлення
+    всіх працівників з новими вимогами.
+
+
+    Протокол {підписано|завірено|оформлено} головою комісії та секретарем. Копії {надіслано|передано|розіслано}
+    до всіх структурних підрозділів. {Повідомлено|Оголошено|Зазначено}, що наступне
+    засідання відбудеться через місяць.
+
+
+    Всім членам комісії {рекомендовано|доручено|запропоновано} надати письмові пропозиції
+    до наступного засідання. Засідання {закрито|завершено|закінчено} о чотирнадцятій
+    годині. Присутність усіх членів {визнано|визначено|оголошено} обов''язковою.
+
+    '
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    passage_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Листа було написано вчора ввечері секретаркою та відправлено директору одразу
+    наступного ранку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Результати конкурсу було офіційно оголошено минулого тижня на зустрічі з
+    журналістами у Києві.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Мені було сказано чекати у коридорі до дев'ятої години поки не прийде керівник.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: На заводі цього місяця встановлено нові правила безпеки після серйозного
+    інциденту минулого року.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Усі документи було оформлено вчасно та без жодних помилок завдяки досвідченому
+    юристу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Побудуйте речення
+  jumbled_words: []
+  answer: Важливе рішення прийнято комісією одноголосно після тривалого обговорення
+    всіх можливих варіантів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Яке з наведених нижче тверджень найточніше описує головну функцію короткої
+    форми пасивних дієприкметників в українській мові?
+  options:
+  - text: Вона завжди вимагає вказівки на виконавця дії в орудному відмінку
+    correct: false
+  - text: Вона дозволяє повідомити про результат дії без називання виконавця
+    correct: true
+  - text: Вона використовується виключно для опису майбутніх подій
+    correct: false
+  - text: Вона завжди узгоджується з підметом у роді та числі
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: В якому типі текстів коротка форма пасивних дієприкметників використовується
+    найчастіше відповідно до сучасних норм української мови?
+  options:
+  - text: У приватних листах та особистих повідомленнях друзям
+    correct: false
+  - text: У художній літературі для опису почуттів персонажів
+    correct: false
+  - text: В офіційних документах, новинах та наукових текстах
+    correct: true
+  - text: У дитячих казках та розважальних оповіданнях
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Яке речення демонструє правильне використання короткої форми пасивного
+    дієприкметника з відповідним відмінком додатка?
+  options:
+  - text: Книга написано автором минулого року
+    correct: false
+  - text: Листа написаний секретаркою вчора
+    correct: false
+  - text: Рішення прийнято комісією одноголосно
+    correct: true
+  - text: Документ підготовлена юристом ретельно
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Чим принципово відрізняється коротка форма пасивного дієприкметника від
+    повної форми з граматичного погляду?
+  options:
+  - text: Коротка форма не змінюється за родами та числами, завжди закінчуючись на
+      -о
+    correct: true
+  - text: Коротка форма завжди вимагає наявності допоміжного дієслова «бути»
+    correct: false
+  - text: Коротка форма використовується лише з живими істотами
+    correct: false
+  - text: Коротка форма може узгоджуватися з підметом у всіх родах
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Яка конструкція правильно передає значення «мені повідомили» з використанням
+    короткої форми та давального відмінка?
+  options:
+  - text: Я повідомлено про зустріч завтра
+    correct: false
+  - text: Мене повідомлено вчасно про всі зміни
+    correct: false
+  - text: Мені було повідомлено про перенесення засідання
+    correct: true
+  - text: Мною повідомлено всіх учасників наради
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Яке з наведених модальних безособових виразів використовує ту саму структуру,
+    що й коротка форма пасивного дієприкметника?
+  options:
+  - text: Заборонено входити без перепустки на територію заводу
+    correct: true
+  - text: Потрібний новий підхід до вирішення проблеми
+    correct: false
+  - text: Важлива підтримка з боку всіх учасників проекту
+    correct: false
+  - text: Необхідний термін виконання роботи встановлено
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: У якому реченні правильно вказано час дії з використанням короткої форми
+    пасивного дієприкметника?
+  options:
+  - text: Звіт подано завтра вранці керівництву
+    correct: false
+  - text: Рішення буде прийнято до кінця тижня
+    correct: true
+  - text: Документи оформлюватимуться написано завтра
+    correct: false
+  - text: Контракт підписано буде наступного місяця
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння короткої форми
+  question: Яке речення містить типову помилку в узгодженні при використанні короткої
+    форми пасивного дієприкметника?
+  options:
+  - text: Всі документи написані та подані вчасно
+    correct: true
+  - text: Документи написано та подано вчасно
+    correct: false
+  - text: Роботу виконано якісно й у строк
+    correct: false
+  - text: Результати оприлюднено на сайті
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: The letter was written yesterday.
+  answer: ''
+  options:
+  - text: Лист написаний вчора.
+    correct: false
+  - text: Листа написано вчора.
+    correct: true
+  - text: Лист написався вчора.
+    correct: false
+  - text: Листи написано вчора.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: It is forbidden to enter.
+  answer: ''
+  options:
+  - text: Входити заборонений.
+    correct: false
+  - text: Заборонено входити.
+    correct: true
+  - text: Вхід заборонена.
+    correct: false
+  - text: Входження заборонено.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: I was told to come at nine.
+  answer: ''
+  options:
+  - text: Мене сказали прийти о дев'ятій.
+    correct: false
+  - text: Мені було сказано прийти о дев'ятій.
+    correct: true
+  - text: Я сказаний прийти о дев'ятій.
+    correct: false
+  - text: Мною сказано прийти о дев'ятій.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: The decision has been made.
+  answer: ''
+  options:
+  - text: Рішення прийнятий.
+    correct: false
+  - text: Рішення прийнято.
+    correct: true
+  - text: Рішення прийняте було.
+    correct: false
+  - text: Рішенню прийнято.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: New rules have been established.
+  answer: ''
+  options:
+  - text: Нові правила встановлений.
+    correct: false
+  - text: Нове правило встановлені.
+    correct: false
+  - text: Нові правила встановлено.
+    correct: true
+  - text: Нових правил встановлено.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть українською
+  source_sentence: It is recommended to arrive early.
+  answer: ''
+  options:
+  - text: Рекомендовано приходити заздалегідь.
+    correct: true
+  - text: Рекомендований приходити заздалегідь.
+    correct: false
+  - text: Прихід рекомендована заздалегідь.
+    correct: false
+  - text: Рекомендовані приходити заздалегідь.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Коротка форма пасивного дієприкметника завжди закінчується на -о і не
+    змінюється за родами та числами.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Після короткої форми додаток стоїть у називному відмінку, як і з повною
+    формою.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Для вираження майбутнього часу з короткою формою використовується допоміжне
+    слово «буде».
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Коротка форма обов'язково вимагає вказівки на виконавця дії в орудному
+    відмінку.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Давальний відмінок використовується для позначення особи, на яку спрямовано
+    дію у конструкції «Мені було сказано».
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Слова «необхідно», «потрібно», «важливо» — це повні форми пасивних дієприкметників
+    у сучасній українській мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Коротка форма частіше використовується в офіційних документах та новинах,
+    ніж у розмовній мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: «Книга написано» — це правильна конструкція української мови відповідно
+    до граматичних норм.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

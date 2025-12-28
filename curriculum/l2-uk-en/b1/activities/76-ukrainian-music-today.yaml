@@ -1,0 +1,720 @@
+# Activities for Module 76: Українська музика сьогодні
+# Level: B1 Cultural Module (requires 12+ activities, 8+ items per activity)
+
+- type: quiz
+  title: Розуміння українського музичного контексту
+  items:
+    - question: Який український гурт став символом нової української музики в 1990-х роках і досі залишається найпопулярнішим рок-гуртом країни?
+      options:
+        - text: Скрябін
+          correct: false
+        - text: Океан Ельзи
+          correct: true
+        - text: Вопл Відоплясова
+          correct: false
+        - text: Тартак
+          correct: false
+      explanation: Океан Ельзи з Львова став символом нової української музики. Їхній фронтмен Святослав Вакарчук написав пісні, які знає кожен українець.
+
+    - question: Яка українська співачка вперше принесла Україні перемогу на Євробаченні у 2004 році з піснею, що поєднувала електронну музику з карпатськими мотивами?
+      options:
+        - text: Джамала
+          correct: false
+        - text: Тіна Кароль
+          correct: false
+        - text: Руслана
+          correct: true
+        - text: Ані Лорак
+          correct: false
+      explanation: Руслана виграла Євробачення 2004 з енергійною піснею "Wild Dances", яка поєднувала електронну музику з карпатськими мотивами.
+
+    - question: Про що була пісня "1944" Джамали, з якою вона перемогла на Євробаченні 2016 року?
+      options:
+        - text: Про кохання та розлуку
+          correct: false
+        - text: Про депортацію кримських татар
+          correct: true
+        - text: Про Другу світову війну
+          correct: false
+        - text: Про незалежність України
+          correct: false
+      explanation: Пісня "1944" була присвячена депортації кримських татар. Це був глибокий, емоційний виступ, який торкнувся мільйонів глядачів.
+
+    - question: Який український гурт переміг на Євробаченні 2022 року з піснею "Stefania", яка поєднувала реп із народними мотивами?
+      options:
+        - text: Go_A
+          correct: false
+        - text: Onuka
+          correct: false
+        - text: Kalush Orchestra
+          correct: true
+        - text: DakhaBrakha
+          correct: false
+      explanation: Kalush Orchestra переміг на Євробаченні 2022 з піснею "Stefania". Гурт виступав під час війни, і їхня перемога стала символом української стійкості.
+
+    - question: Який український гурт відомий своїм стилем "етно-хаос" і поєднанням різних етнічних традицій у музиці?
+      options:
+        - text: Onuka
+          correct: false
+        - text: DakhaBrakha
+          correct: true
+        - text: Go_A
+          correct: false
+        - text: Latexfauna
+          correct: false
+      explanation: DakhaBrakha експериментує з етнічною музикою, створюючи унікальний "етно-хаос". Вони виступали на найбільших світових фестивалях.
+
+    - question: Скільки разів Україна перемагала на Євробаченні станом на 2022 рік?
+      options:
+        - text: Один раз
+          correct: false
+        - text: Два рази
+          correct: false
+        - text: Три рази
+          correct: true
+        - text: Чотири рази
+          correct: false
+      explanation: Україна тричі перемагала на Євробаченні — у 2004 (Руслана), 2016 (Джамала) та 2022 (Kalush Orchestra).
+
+    - question: Який український музичний фестиваль збирав до 500 тисяч відвідувачів за чотири дні і проходив у Києві?
+      options:
+        - text: Країна Мрій
+          correct: false
+        - text: Leopolis Jazz Fest
+          correct: false
+        - text: Atlas Weekend
+          correct: true
+        - text: Koktebel Jazz Festival
+          correct: false
+      explanation: Atlas Weekend у Києві збирав до 500 тисяч відвідувачів за чотири дні і був одним з найбільших музичних фестивалів України.
+
+    - question: Хто заснував музичний фестиваль "Країна Мрій", присвячений українській музиці?
+      options:
+        - text: Святослав Вакарчук
+          correct: false
+        - text: Олег Скрипка
+          correct: true
+        - text: Олег Псюк
+          correct: false
+        - text: Руслана
+          correct: false
+      explanation: Країна Мрій — фестиваль української музики, заснований Олегом Скрипкою з гурту Вопл Відоплясова.
+
+    - question: Яка українська реперка виступала на Coachella та інших міжнародних фестивалях і співає про реальне життя та соціальні теми?
+      options:
+        - text: Jerry Heil
+          correct: false
+        - text: Alyona Alyona
+          correct: true
+        - text: Джамала
+          correct: false
+        - text: Onuka
+          correct: false
+      explanation: Alyona Alyona — одна з найвідоміших українських реперок. Вона виступала на Coachella та інших міжнародних фестивалях і співає про реальне життя.
+
+    - question: Який український гурт поєднує електронну музику з народними інструментами, і їхні кліпи вважаються витворами мистецтва?
+      options:
+        - text: DakhaBrakha
+          correct: false
+        - text: Go_A
+          correct: false
+        - text: Onuka
+          correct: true
+        - text: Океан Ельзи
+          correct: false
+      explanation: Гурт Onuka поєднує електронну музику з народними інструментами. Їхні кліпи — це справжні витвори мистецтва.
+
+- type: true-false
+  title: Факти про українську музику
+  items:
+    - statement: Українська популярна музика почала активно розвиватися лише після 2000 року.
+      correct: false
+      explanation: Українська популярна музика почала активно розвиватися в 1990-х роках, після здобуття незалежності у 1991 році.
+
+    - statement: Океан Ельзи — це гурт з Львова, і їхній фронтмен — Святослав Вакарчук.
+      correct: true
+      explanation: Так, Океан Ельзи з Львова став символом нової української музики, а Святослав Вакарчук — їхній фронтмен.
+
+    - statement: Руслана виграла Євробачення з класичною оперною арією.
+      correct: false
+      explanation: 'Руслана виграла Євробачення 2004 з енергійною піснею "Wild Dances", яка поєднувала електронну музику з карпатськими мотивами.'
+
+    - statement: Пісня "Stefania" Kalush Orchestra присвячена матері лідера гурту Олега Псюка.
+      correct: true
+      explanation: '"Stefania" — це пісня про матір, написана лідером гурту Олегом Псюком.'
+
+    - statement: Go_A виступали на Євробаченні 2021 з піснею "Шум", яка стала хітом у соціальних мережах.
+      correct: true
+      explanation: Так, гурт Go_A з їхньою електро-фолк піснею "Шум" (2021) став справжнім хітом у соціальних мережах.
+
+    - statement: DakhaBrakha грає виключно класичну народну музику без експериментів.
+      correct: false
+      explanation: DakhaBrakha експериментує з етнічною музикою, створюючи унікальний "етно-хаос", поєднуючи різні традиції.
+
+    - statement: Atlas Weekend — це джазовий фестиваль, який проходить у Львові.
+      correct: false
+      explanation: Atlas Weekend — це великий музичний фестиваль різних жанрів у Києві. Джазовий фестиваль у Львові — це Leopolis Jazz Fest.
+
+    - statement: Україна ніколи не потрапляла в топ-10 Євробачення, крім своїх перемог.
+      correct: false
+      explanation: Україна регулярно потрапляє в топ-10 Євробачення, навіть без перемог.
+
+    - statement: Onuka поєднує електронну музику з традиційними народними інструментами.
+      correct: true
+      explanation: Так, гурт Onuka відомий саме поєднанням електроніки з народними інструментами.
+
+    - statement: Київ став одним із центрів електронної музики в регіоні Східної Європи.
+      correct: true
+      explanation: Так, українська електронна сцена має світове визнання, і Київ став одним із центрів електронної музики в регіоні.
+
+    - statement: Leopolis Jazz Fest — це рок-фестиваль у Києві.
+      correct: false
+      explanation: Leopolis Jazz Fest — це один з найкращих джазових фестивалів Східної Європи, який проходить у Львові.
+
+    - statement: Alyona Alyona — це українська оперна співачка.
+      correct: false
+      explanation: Alyona Alyona — одна з найвідоміших українських реперок, яка виступала на Coachella.
+
+- type: match-up
+  title: Виконавці та їхні характеристики
+  pairs:
+    - left: Океан Ельзи
+      right: найпопулярніший український рок-гурт
+    - left: Руслана
+      right: перша перемога України на Євробаченні (2004)
+    - left: Джамала
+      right: '"1944" — пісня про депортацію кримських татар'
+    - left: Kalush Orchestra
+      right: реп із народними мотивами, перемога 2022
+    - left: DakhaBrakha
+      right: '"етно-хаос", експерименти з етнічною музикою'
+    - left: Onuka
+      right: електроніка з народними інструментами
+    - left: Go_A
+      right: електро-фолк, хіт "Шум"
+    - left: Alyona Alyona
+      right: українська реперка на Coachella
+    - left: Святослав Вакарчук
+      right: фронтмен Океану Ельзи
+    - left: Олег Скрипка
+      right: засновник фестивалю Країна Мрій
+    - left: Олег Псюк
+      right: лідер Kalush Orchestra
+    - left: Atlas Weekend
+      right: найбільший музичний фестиваль Києва
+
+- type: match-up
+  title: Музична лексика — переклад
+  pairs:
+    - left: хіт
+      right: hit (popular song)
+    - left: альбом
+      right: album
+    - left: концерт
+      right: concert
+    - left: фестиваль
+      right: festival
+    - left: виконавець
+      right: performer, artist
+    - left: гурт
+      right: band
+    - left: співак
+      right: singer (male)
+    - left: кліп
+      right: music video
+    - left: сцена
+      right: stage
+    - left: слухач
+      right: listener
+    - left: шанувальник
+      right: fan
+    - left: тур
+      right: tour
+
+- type: fill-in
+  title: Музична лексика в контексті
+  items:
+    - sentence: Океан Ельзи — найпопулярніший український рок-_____.
+      answer: гурт
+      options:
+        - пісня
+        - гурт
+        - концерт
+        - хіт
+
+    - sentence: Руслана випустила новий _____ з десятьма піснями.
+      answer: альбом
+      options:
+        - альбом
+        - концерт
+        - кліп
+        - тур
+
+    - sentence: Мільйони людей дивляться новий _____ Onuka на YouTube.
+      answer: кліп
+      options:
+        - альбом
+        - концерт
+        - кліп
+        - фестиваль
+
+    - sentence: Atlas Weekend — найбільший музичний _____ України.
+      answer: фестиваль
+      options:
+        - концерт
+        - гурт
+        - фестиваль
+        - хіт
+
+    - sentence: Пісня "Stefania" стала справжнім _____ після Євробачення.
+      answer: хітом
+      options:
+        - альбомом
+        - хітом
+        - концертом
+        - кліпом
+
+    - sentence: Джамала — талановита українська _____.
+      answer: співачка
+      options:
+        - співак
+        - співачка
+        - гурт
+        - виконавець
+
+    - sentence: Я хочу піти на _____ Океану Ельзи наступного тижня.
+      answer: концерт
+      options:
+        - альбом
+        - концерт
+        - кліп
+        - хіт
+
+    - sentence: DakhaBrakha виступали на _____ по всій Європі.
+      answer: сцені
+      options:
+        - альбомі
+        - хіті
+        - сцені
+        - кліпі
+
+    - sentence: Я великий _____ української музики і слухаю її щодня.
+      answer: шанувальник
+      options:
+        - слухач
+        - шанувальник
+        - виконавець
+        - концерт
+
+    - sentence: Kalush Orchestra планує великий _____ Європою наступного року.
+      answer: тур
+      options:
+        - концерт
+        - альбом
+        - тур
+        - фестиваль
+
+    - sentence: Мені подобається _____ музика — Onuka, DakhaBrakha.
+      answer: електронна
+      options:
+        - класична
+        - електронна
+        - народна
+        - джазова
+
+    - sentence: Alyona Alyona — відома українська _____.
+      answer: реперка
+      options:
+        - співачка
+        - реперка
+        - рок-зірка
+        - джазистка
+
+- type: group-sort
+  title: Категоризація музики
+  groups:
+    - name: Перемоги на Євробаченні
+      items:
+        - Руслана (2004)
+        - Джамала (2016)
+        - Kalush Orchestra (2022)
+    - name: Електронна музика та неофолк
+      items:
+        - Onuka
+        - DakhaBrakha
+        - Go_A
+    - name: Рок-музика
+      items:
+        - Океан Ельзи
+        - Скрябін
+        - Тартак
+    - name: Реп та хіп-хоп
+      items:
+        - Alyona Alyona
+        - Kalush Orchestra
+        - Skofka
+    - name: Музичні фестивалі
+      items:
+        - Atlas Weekend
+        - Країна Мрій
+        - Leopolis Jazz Fest
+
+- type: select
+  title: Виберіть правильні відповіді
+  items:
+    - question: Виберіть ВСІ українські перемоги на Євробаченні.
+      options:
+        - text: Руслана (2004)
+          correct: true
+        - text: Тіна Кароль (2008)
+          correct: false
+        - text: Джамала (2016)
+          correct: true
+        - text: Go_A (2021)
+          correct: false
+        - text: Kalush Orchestra (2022)
+          correct: true
+
+    - question: Виберіть ВСІ гурти, які експериментують з електронною музикою та фольклором.
+      options:
+        - text: Onuka
+          correct: true
+        - text: Океан Ельзи
+          correct: false
+        - text: DakhaBrakha
+          correct: true
+        - text: Go_A
+          correct: true
+        - text: Скрябін
+          correct: false
+
+    - question: Виберіть ВСІ музичні фестивалі, що проходили в Україні.
+      options:
+        - text: Atlas Weekend
+          correct: true
+        - text: Країна Мрій
+          correct: true
+        - text: Leopolis Jazz Fest
+          correct: true
+        - text: Glastonbury
+          correct: false
+        - text: Coachella
+          correct: false
+
+    - question: Виберіть ВСІ слова, що означають "музичний колектив".
+      options:
+        - text: гурт
+          correct: true
+        - text: група
+          correct: true
+        - text: співак
+          correct: false
+        - text: виконавець
+          correct: false
+        - text: ансамбль
+          correct: true
+
+    - question: Виберіть ВСІ жанри сучасної української музики.
+      options:
+        - text: електронна музика
+          correct: true
+        - text: реп
+          correct: true
+        - text: неофолк
+          correct: true
+        - text: інді-рок
+          correct: true
+        - text: кантрі
+          correct: false
+
+    - question: Виберіть ВСІ характеристики пісні "Stefania" Kalush Orchestra.
+      options:
+        - text: поєднання репу з народними мотивами
+          correct: true
+        - text: присвячена матері Олега Псюка
+          correct: true
+        - text: перемога на Євробаченні 2022
+          correct: true
+        - text: класична оперна арія
+          correct: false
+        - text: інструментальна композиція
+          correct: false
+
+    - question: Виберіть ВСІ характеристики гурту DakhaBrakha.
+      options:
+        - text: стиль "етно-хаос"
+          correct: true
+        - text: експерименти з етнічною музикою
+          correct: true
+        - text: виступи на світових фестивалях
+          correct: true
+        - text: виключно електронна музика
+          correct: false
+        - text: рок-гурт з Львова
+          correct: false
+
+    - question: Виберіть ВСІ правильні колокації з музичною лексикою.
+      options:
+        - text: слухати музику
+          correct: true
+        - text: йти на концерт
+          correct: true
+        - text: випускати альбом
+          correct: true
+        - text: робити пісню
+          correct: false
+        - text: грати на гітарі
+          correct: true
+
+- type: cloze
+  title: Текст про українську музику
+  passage: |
+    Українська музика переживає справжній {ренесанс|занепад|ренесанс|кризу} за останні десятиліття. Україна тричі {перемагала|програвала|перемагала|виступала} на Євробаченні: у 2004 році Руслана виграла з {енергійною|сумною|енергійною|повільною} піснею "Wild Dances".
+
+    Сучасна українська сцена дуже {різноманітна|однакова|різноманітна|обмежена}. Гурт Onuka поєднує {електронну|класичну|електронну|рок} музику з народними інструментами. DakhaBrakha створює унікальний "{етно-хаос|рок-н-рол|етно-хаос|джаз}", експериментуючи з різними {традиціями|правилами|традиціями|законами}.
+
+    У сфері репу Alyona Alyona стала справжньою {зіркою|початківцем|зіркою|невідомою}. Вона виступала на {Coachella|Євробаченні|Coachella|Atlas Weekend} та інших міжнародних {фестивалях|стадіонах|фестивалях|клубах}.
+
+    До 2022 року в Україні проходили великі музичні {фестивалі|концерти|фестивалі|змагання}. Atlas Weekend у {Києві|Львові|Києві|Одесі} збирав до 500 тисяч {відвідувачів|артистів|відвідувачів|пісень}. Leopolis Jazz Fest у Львові став одним з найкращих {джазових|рокових|джазових|попових} фестивалів Східної Європи.
+
+- type: unjumble
+  title: Складіть речення про музику
+  items:
+    - scrambled: музику / українську / люблю / слухати / Я
+      answer: Я люблю слухати українську музику.
+
+    - scrambled: Ельзи / гурт / Океан / український / популярний / найбільш
+      answer: Океан Ельзи — найбільш популярний український гурт.
+
+    - scrambled: Євробаченні / Україна / на / тричі / перемагала
+      answer: Україна тричі перемагала на Євробаченні.
+
+    - scrambled: електронну / з / поєднує / Onuka / інструментами / музику / народними
+      answer: Onuka поєднує електронну музику з народними інструментами.
+
+    - scrambled: концерт / на / хочу / я / наступного / піти / тижня
+      answer: Я хочу піти на концерт наступного тижня.
+
+    - scrambled: Alyona / реперка / Alyona / українська / відома
+      answer: Alyona Alyona — відома українська реперка.
+
+    - scrambled: фестивалі / великі / в / проходили / Україні / музичні
+      answer: В Україні проходили великі музичні фестивалі.
+
+    - scrambled: стилі / етно-хаос / у / DakhaBrakha / грає
+      answer: DakhaBrakha грає у стилі етно-хаос.
+
+- type: error-correction
+  title: Виправте помилки в реченнях про музику
+  items:
+    - sentence: Я хочу піти в концерт Океану Ельзи.
+      error: в
+      answer: на
+      options:
+        - в
+        - на
+        - до
+        - із
+      explanation: Правильно говорити "піти НА концерт", а не "в концерт".
+
+    - sentence: Руслана виграла Євробачення з класичним оперним піснем.
+      error: піснем
+      answer: піснею
+      options:
+        - піснем
+        - піснею
+        - пісня
+        - пісні
+      explanation: '"Пісня" — жіночий рід, тому правильно "з піснею", а не "з піснем".'
+
+    - sentence: DakhaBrakha — це гурт що грає етно-хаос.
+      error: що
+      answer: який
+      options:
+        - що
+        - який
+        - котрий
+        - хто
+      explanation: 'Для означення "гурт" використовуємо "який", а не "що".'
+
+    - sentence: Мій улюблений співачка — Джамала.
+      error: улюблений
+      answer: улюблена
+      options:
+        - улюблений
+        - улюблена
+        - улюблене
+        - улюблені
+      explanation: '"Співачка" — жіночий рід, тому прикметник теж у жіночому роді: "улюблена".'
+
+    - sentence: Kalush Orchestra випустив новий альбом минулому році.
+      error: минулому
+      answer: минулого
+      options:
+        - минулому
+        - минулого
+        - минулий
+        - минулім
+      explanation: Правильно "минулого року" (родовий відмінок), а не "минулому році".
+
+    - sentence: Я слухаю українську музику щодень.
+      error: щодень
+      answer: щодня
+      options:
+        - щодень
+        - щодня
+        - кожний день
+        - всі дні
+      explanation: Правильно "щодня" (прислівник), а не "щодень".
+
+    - sentence: Atlas Weekend — найбільший фестиваль України, що збирає 500 тисяч людей.
+      error: людей
+      answer: відвідувачів
+      options:
+        - людей
+        - відвідувачів
+        - людин
+        - особи
+      explanation: У контексті фестивалю краще використовувати "відвідувачів", хоча "людей" граматично правильно. Це стилістична рекомендація.
+
+    - sentence: Onuka поєднує електронну музику із народні інструменти.
+      error: народні
+      answer: народними
+      options:
+        - народні
+        - народними
+        - народних
+        - народним
+      explanation: Після прийменника "з/із" потрібен орудний відмінок — "з народними інструментами".
+
+- type: dialogue-reorder
+  title: Відновіть порядок розмови про музику
+  lines:
+    - order: 1
+      speaker: Олена
+      text: Привіт! Що ти слухаєш?
+
+    - order: 2
+      speaker: Тарас
+      text: Привіт! Новий альбом Onuka. Ти знаєш цей гурт?
+
+    - order: 3
+      speaker: Олена
+      text: Так, звісно! Мені дуже подобається їхня музика.
+
+    - order: 4
+      speaker: Тарас
+      text: А ти на якому концерті була останнім часом?
+
+    - order: 5
+      speaker: Олена
+      text: Я ходила на концерт Океану Ельзи минулого року.
+
+    - order: 6
+      speaker: Тарас
+      text: О, я теж хочу побачити їх наживо. А який твій улюблений виконавець?
+
+    - order: 7
+      speaker: Олена
+      text: Мабуть, Джамала. Її голос такий глибокий та емоційний.
+
+    - order: 8
+      speaker: Тарас
+      text: Згоден. А ти слухаєш український реп?
+
+- type: translate
+  title: Переклад музичних фраз
+  items:
+    - source: I love listening to Ukrainian music.
+      options:
+        - text: Я люблю слухаю українську музику.
+          correct: false
+        - text: Я люблю слухати українську музику.
+          correct: true
+        - text: Мені люблю слухати українську музику.
+          correct: false
+        - text: Я люблю слухати україньску музику.
+          correct: false
+
+    - source: My favorite band is Okean Elzy.
+      options:
+        - text: Мій улюблений гурт — це Океан Ельзи.
+          correct: true
+        - text: Моя улюблена гурт — це Океан Ельзи.
+          correct: false
+        - text: Мій улюблений група — Океан Ельзи.
+          correct: false
+        - text: Моє улюблене гурт — Океан Ельзи.
+          correct: false
+
+    - source: Ukraine won Eurovision three times.
+      options:
+        - text: Україна виграла Євробачення три разів.
+          correct: false
+        - text: Україна тричі перемогла на Євробаченні.
+          correct: true
+        - text: Україна перемагала Євробачення три рази.
+          correct: false
+        - text: Україна виграв Євробачення тричі.
+          correct: false
+
+    - source: I want to go to a concert next week.
+      options:
+        - text: Я хочу піти на концерт наступного тижня.
+          correct: true
+        - text: Я хочу йти в концерт наступний тиждень.
+          correct: false
+        - text: Я хочу піти до концерту наступного тижня.
+          correct: false
+        - text: Я хотіла піти на концерт наступного тижня.
+          correct: false
+
+    - source: This song is very popular in Ukraine.
+      options:
+        - text: Ця пісня дуже популярний в Україні.
+          correct: false
+        - text: Ця пісня дуже популярна в Україні.
+          correct: true
+        - text: Ця пісня дуже популярне на Україні.
+          correct: false
+        - text: Це пісня дуже популярна в Україні.
+          correct: false
+
+    - source: DakhaBrakha combines different ethnic traditions.
+      options:
+        - text: DakhaBrakha комбінує різні етнічні традиції.
+          correct: false
+        - text: DakhaBrakha поєднує різні етнічні традиції.
+          correct: true
+        - text: DakhaBrakha з'єднує різних етнічних традицій.
+          correct: false
+        - text: DakhaBrakha поєднує різних етнічних традицій.
+          correct: false
+
+    - source: What music do you listen to?
+      options:
+        - text: Яку музику ти слухаєш?
+          correct: true
+        - text: Що музику ти слухаєш?
+          correct: false
+        - text: Яка музика ти слухаєш?
+          correct: false
+        - text: Яку музику ти слухати?
+          correct: false
+
+    - source: The band released a new album.
+      options:
+        - text: Гурт випустив новий альбом.
+          correct: true
+        - text: Гурт випустила новий альбом.
+          correct: false
+        - text: Гурт випустило нового альбому.
+          correct: false
+        - text: Гурт випустивши новий альбом.
+          correct: false
+
+- type: mark-the-words
+  title: Знайдіть музичну лексику
+  instruction: Натисніть на всі слова, пов'язані з музикою.
+  text: |
+    Українська *музика* переживає ренесанс. Сучасні *гурти* як Onuka та DakhaBrakha випускають нові *альбоми* та *кліпи*. Їхні *концерти* збирають тисячі *шанувальників*. На *фестивалях* як Atlas Weekend можна почути різні *жанри* — від *репу* до *електроніки*. Українські *виконавці* здобули міжнародне визнання, а їхні *хіти* звучать по всьому світу.

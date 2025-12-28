@@ -1,0 +1,595 @@
+module: 61-professional-communication
+level: B1
+validated: '2025-12-28T10:08:20.826769'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 52
+  errors_confirmed: 8
+  passed_items: 44
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він робив нараду з колегами вчора о третій годині.
+  error: робив
+  answer: проводив
+  sentence_corrected: Він проводив нараду з колегами вчора о третій годині.
+  options:
+  - робив
+  - проводив
+  - мав
+  - давав
+  original_explanation: Правильна колокація — "проводити нараду", а не "робити нараду".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона має велику зарплату в цій компанії.
+  error: має
+  answer: отримує
+  sentence_corrected: Вона отримує велику зарплату в цій компанії.
+  options:
+  - має
+  - отримує
+  - бере
+  - дає
+  original_explanation: Правильна колокація — "отримувати зарплату", а не "мати зарплату".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Потрібно виконати дедлайн до понеділка.
+  error: виконати
+  answer: дотримуватися
+  sentence_corrected: Потрібно дотримуватися дедлайн до понеділка.
+  options:
+  - виконати
+  - дотримуватися
+  - робити
+  - мати
+  original_explanation: 'Правильно: "дотримуватися дедлайну" або "встигнути до дедлайну".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він зробив підвищення до менеджера.
+  error: зробив
+  answer: отримав
+  sentence_corrected: Він отримав підвищення до менеджера.
+  options:
+  - зробив
+  - отримав
+  - мав
+  - давав
+  original_explanation: Правильна колокація — "отримати підвищення", а не "зробити
+    підвищення".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона робить кар'єру в IT вже десять років.
+  error: робить
+  answer: будує
+  sentence_corrected: Вона будує кар'єру в IT вже десять років.
+  options:
+  - робить
+  - будує
+  - має
+  - дає
+  original_explanation: Правильна колокація — "будувати кар'єру", а не "робити кар'єру".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Мені потрібно йти на зустріч з керівництвом завтра.
+  error: зустріч
+  answer: нараду
+  sentence_corrected: Мені потрібно йти на нараду з керівництвом завтра.
+  options:
+  - зустріч
+  - нараду
+  - презентацію
+  - проєкт
+  original_explanation: Для офіційної внутрішньої зустрічі з керівництвом краще "нарада".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він має великий професіоналізм у своїй роботі.
+  error: має
+  answer: демонструє
+  sentence_corrected: Він демонструє великий професіоналізм у своїй роботі.
+  options:
+  - має
+  - демонструє
+  - робить
+  - дає
+  original_explanation: Краще "демонструвати професіоналізм" або "показувати професіоналізм".
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Я працюю над нарадою з клієнтами.
+  error: над нарадою
+  answer: над проєктом
+  sentence_corrected: Я працюю над проєктом з клієнтами.
+  options:
+  - над нарадою
+  - над проєктом
+  - над завданням
+  - над звітом
+  original_explanation: 'Правильно: "працювати над проєктом", нараду проводять, а
+    не працюють над нею.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Мій _____ призначив нараду на завтра о дев'ятій.
+  answer: керівник
+  complete_sentence: Мій керівник__ призначив нараду на завтра о дев'ятій.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Завтра я роблю _____ для інвесторів про результати проєкту.
+  answer: презентацію
+  complete_sentence: Завтра я роблю презентацію__ для інвесторів про результати проєкту.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Мені потрібно здати _____ до п'ятниці.
+  answer: звіт
+  complete_sentence: Мені потрібно здати звіт__ до п'ятниці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Маю п'ять років _____ роботи в маркетингу.
+  answer: досвіду
+  complete_sentence: Маю п'ять років досвіду__ роботи в маркетингу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Вона отримала _____ до керівника відділу.
+  answer: підвищення
+  complete_sentence: Вона отримала підвищення__ до керівника відділу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Наша _____ — найкраща у компанії.
+  answer: команда
+  complete_sentence: Наша команда__ — найкраща у компанії.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ — наступний понеділок, встигнемо вчасно.
+  answer: Дедлайн
+  complete_sentence: Дедлайн__ — наступний понеділок, встигнемо вчасно.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Я працюю у _____ розробки програмного забезпечення.
+  answer: відділі
+  complete_sentence: Я працюю у відділі__ розробки програмного забезпечення.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Мене запросили на _____ у п'ятницю.
+  answer: співбесіду
+  complete_sentence: Мене запросили на співбесіду__ у п'ятницю.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Надішли своє _____ на цю вакансію.
+  answer: резюме
+  complete_sentence: Надішли своє резюме__ на цю вакансію.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: У мене троє _____ у команді.
+  answer: підлеглих
+  complete_sentence: У мене троє підлеглих__ у команді.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Планую _____ на серпень — поїду до моря.
+  answer: відпустку
+  complete_sentence: Планую відпустку__ на серпень — поїду до моря.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Ця робота вимагає технічних _____.
+  answer: навичок
+  complete_sentence: Ця робота вимагає технічних навичок__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Цінуємо ваш _____ та відданість роботі.
+  answer: професіоналізм
+  complete_sentence: Цінуємо ваш професіоналізм__ та відданість роботі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Маю п'ять років досвіду роботи в маркетингу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Завтра нарада починається о дев'ятій ранку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я працюю у команді відділу продажів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Завтра готую презентацію для інвесторів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вона отримала підвищення до керівника відділу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Мені потрібно здати звіт до п'ятниці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я планую відпустку на серпень.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Мене запросили на співбесіду у п'ятницю.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Яке слово означає людину, якій ви підпорядковані на роботі?
+  options:
+  - text: колега
+    correct: false
+  - text: підлеглий
+    correct: false
+  - text: керівник
+    correct: true
+  - text: співробітник
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Як називається офіційна робоча зустріч з обговоренням питань?
+  options:
+  - text: презентація
+    correct: false
+  - text: нарада
+    correct: true
+  - text: звіт
+    correct: false
+  - text: проєкт
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Яке слово означає "deadline" українською в професійному контексті?
+  options:
+  - text: завдання
+    correct: false
+  - text: проєкт
+    correct: false
+  - text: дедлайн
+    correct: true
+  - text: звіт
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Що таке "підвищення" в контексті кар'єри?
+  options:
+  - text: збільшення зарплати
+    correct: false
+  - text: отримання вищої посади
+    correct: true
+  - text: нове завдання
+    correct: false
+  - text: зміна офісу
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Яке дієслово найкраще поєднується зі словом "нараду"?
+  options:
+  - text: робити нараду
+    correct: false
+  - text: мати нараду
+    correct: false
+  - text: проводити нараду
+    correct: true
+  - text: давати нараду
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Як називається документ з інформацією про досвід та освіту для пошуку
+    роботи?
+  options:
+  - text: звіт
+    correct: false
+  - text: презентація
+    correct: false
+  - text: резюме
+    correct: true
+  - text: проєкт
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Яка різниця між "нарадою" та "зустріччю"?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Нарада" — формальніша, "зустріч" — ширше поняття'
+    correct: true
+  - text: '"Зустріч" — тільки з клієнтами'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння професійної лексики
+  question: Що означає слово "лікарняний" в контексті роботи?
+  options:
+  - text: лікарня
+    correct: false
+  - text: відпустка через хворобу
+    correct: true
+  - text: медична страховка
+    correct: false
+  - text: візит до лікаря
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Колега" та "співробітник" — це повні синоніми.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "проводити нараду".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Підвищення" означає тільки збільшення зарплати.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "робити презентацію" або "проводити презентацію".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Нарада" та "зустріч" — це те саме.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "отримувати зарплату".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Лікарняний" означає візит до лікарні.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "мати досвід роботи в маркетингу".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Дедлайн" — це український термін для кінцевого терміну.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "пройти співбесіду".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Відділ" та "команда" означають те саме.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "будувати кар'єру".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "виконувати дедлайн".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правила використання
+  statement: '"Компетенція" та "навички" — це синоніми.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

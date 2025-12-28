@@ -15,26 +15,27 @@
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.0% (target 95-100%)
-- **Richness:** ❌ 92/95 (literature)
+- **Richness:** ✅ 96% (literature)
+- **Grammar:** ⏳ Pending validation
 
 ## Richness Details
-**Score:** 92/95
+**Score:** 96% (minimum: 90%)
 **Module Type:** literature
 
 ### Score Breakdown
 | Metric | Count | Target | Score | Weight | Contribution |
 |--------|-------|--------|-------|--------|--------------|
-| engagement | 4 | 6 | 67% | 15% | 10.1% |
-| variety | 0.97 | - | 97% | 5% | 4.9% |
-| cultural | 6 | - | 100% | 5% | 5.0% |
-| visual | 8 | 3 | 100% | 5% | 5.0% |
-| paragraph_var | 1.00 | - | 100% | 5% | 5.0% |
-| analysis_sections | 6 | 5 | 100% | 20% | 20.0% |
-| literary_citations | 4 | 5 | 80% | 20% | 16.0% |
-| historical_context | 30 | 3 | 100% | 15% | 15.0% |
-| essays | 5 | 2 | 100% | 15% | 15.0% |
-| resources | 9 | 3 | 100% | 10% | 10.0% |
-| **TOTAL** | | | | | **105.9%** |
+| analysis_sections | 10 | 5 | 100% | 17% | 17.4% |
+| literary_citations | 4 | 5 | 80% | 17% | 13.9% |
+| engagement | 4 | 4 | 100% | 13% | 13.0% |
+| historical_context | 30 | 3 | 100% | 13% | 13.0% |
+| essays | 2 | 2 | 100% | 13% | 13.0% |
+| resources | 9 | 3 | 100% | 9% | 8.7% |
+| variety | 0.97 | - | 97% | 4% | 4.2% |
+| cultural | 6 | - | 100% | 4% | 4.3% |
+| visual | 8 | 1 | 100% | 4% | 4.3% |
+| paragraph_var | 1.00 | - | 100% | 4% | 4.3% |
+| **TOTAL** | | | | | **96.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

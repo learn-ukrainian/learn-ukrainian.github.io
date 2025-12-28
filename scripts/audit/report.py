@@ -67,8 +67,8 @@ def generate_report(
             else:  # dict
                 report_lines.append(f"- **{k.capitalize()}:** {r['icon']} {r['msg']}")
 
-    # Add richness details section (only if there are flags to fix or score is below threshold)
-    if richness_data and richness_flags:
+    # Add richness details section (B1+ and LIT)
+    if richness_data:
         report_lines.append("")
         report_lines.append("## Richness Details")
         score = richness_data.get('score', 0)
@@ -81,11 +81,17 @@ def generate_report(
         normalized = richness_data.get('normalized', {})
         targets = richness_data.get('targets', {})
         weights = richness_data.get('weights', {})
+        
         if raw_counts:
             report_lines.append("| Metric | Count | Target | Score | Weight | Contribution |")
             report_lines.append("|--------|-------|--------|-------|--------|--------------|")
             total_contribution = 0
-            for metric, count in raw_counts.items():
+            
+            # Sort by weight (descending)
+            sorted_metrics = sorted(raw_counts.keys(), key=lambda k: weights.get(k, 0), reverse=True)
+            
+            for metric in sorted_metrics:
+                count = raw_counts[metric]
                 target = targets.get(metric, '-')
                 norm_score = normalized.get(metric, 0)
                 weight = weights.get(metric, 0.05)

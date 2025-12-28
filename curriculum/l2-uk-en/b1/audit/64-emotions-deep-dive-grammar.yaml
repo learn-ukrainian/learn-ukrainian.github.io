@@ -1,0 +1,676 @@
+module: 64-emotions-deep-dive
+level: B1
+validated: '2025-12-28T10:08:44.072915'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 60
+  errors_confirmed: 8
+  passed_items: 52
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Я відчуваю настрій сьогодні поганий.
+  error: відчуваю настрій
+  answer: маю настрій
+  sentence_corrected: Я маю настрій сьогодні поганий.
+  options:
+  - відчуваю настрій
+  - маю настрій
+  - бачу настрій
+  - чую настрій
+  original_explanation: 'Правильно: "мати настрій" або "бути в настрої", не "відчувати
+    настрій".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Його слова викликали в мене гордості.
+  error: гордості
+  answer: гордість
+  sentence_corrected: Його слова викликали в мене гордість.
+  options:
+  - гордості
+  - гордість
+  - гордістю
+  - гордощі
+  original_explanation: 'Після "викликали" потрібен знахідний відмінок: "викликали
+    гордість".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Вона відчувала великий страху перед виступом.
+  error: страху
+  answer: страх
+  sentence_corrected: Вона відчувала великий страх перед виступом.
+  options:
+  - страху
+  - страх
+  - страхом
+  - страхові
+  original_explanation: 'Після "відчувала" потрібен знахідний відмінок: "відчувала
+    страх".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Мене охопило глибока сум після новини.
+  error: глибока сум
+  answer: глибокий сум
+  sentence_corrected: Мене охопило глибокий сум після новини.
+  options:
+  - глибока сум
+  - глибокий сум
+  - глибоке сум
+  - глибокі сум
+  original_explanation: '"Сум" — іменник чоловічого роду, тому прикметник має бути
+    "глибокий".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Він не міг стримувати свій гніву на нараді.
+  error: гніву
+  answer: гнів
+  sentence_corrected: Він не міг стримувати свій гнів на нараді.
+  options:
+  - гніву
+  - гнів
+  - гнівом
+  - гніві
+  original_explanation: 'Після "стримувати" потрібен знахідний відмінок: "стримувати
+    гнів".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Діти дивилися з великою подивом на фокусника.
+  error: великою подивом
+  answer: великим подивом
+  sentence_corrected: Діти дивилися з великим подивом на фокусника.
+  options:
+  - великою подивом
+  - великим подивом
+  - великого подиву
+  - великій подив
+  original_explanation: '"Подив" — іменник чоловічого роду, орудний відмінок: "з великим
+    подивом".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Вона мучилася ревнощів до його колеги.
+  error: ревнощів
+  answer: ревнощами
+  sentence_corrected: Вона мучилася ревнощами до його колеги.
+  options:
+  - ревнощів
+  - ревнощами
+  - ревнощі
+  - ревнощам
+  original_explanation: '"Мучитися" вимагає орудного відмінка: "мучитися ревнощами".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки в емоційній лексиці
+  sentence_with_error: Після перемоги вони відчули щирої радості.
+  error: щирої радості
+  answer: щиру радість
+  sentence_corrected: Після перемоги вони відчули щиру радість.
+  options:
+  - щирої радості
+  - щиру радість
+  - щирою радістю
+  - щирій радості
+  original_explanation: 'Після "відчули" потрібен знахідний відмінок: "відчули щиру
+    радість".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Після успішного виступу вона відчула справжню _____.
+  answer: гордість
+  complete_sentence: Після успішного виступу вона відчула справжню гордість__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Несподівана новина викликала в нього повне _____.
+  answer: здивування
+  complete_sentence: Несподівана новина викликала в нього повне здивування__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Постійна _____ шкодить психічному здоров'ю людини.
+  answer: тривога
+  complete_sentence: Постійна тривога__ шкодить психічному здоров'ю людини.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Мене охопив глибокий _____ після втрати друга.
+  answer: сум
+  complete_sentence: Мене охопив глибокий сум__ після втрати друга.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Він не міг _____ гнів і почав кричати на колег.
+  answer: стримати
+  complete_sentence: Він не міг стримати__ гнів і почав кричати на колег.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Діти дивилися на феєрверк із _____.
+  answer: захопленням
+  complete_sentence: Діти дивилися на феєрверк із захопленням__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Після складного іспиту я відчув величезне _____.
+  answer: полегшення
+  complete_sentence: Після складного іспиту я відчув величезне полегшення__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Брехня викликає в мене _____.
+  answer: відразу
+  complete_sentence: Брехня викликає в мене відразу__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: У неї страх _____, тому вона не літає.
+  answer: висоти
+  complete_sentence: У неї страх висоти__, тому вона не літає.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: _____ — погана порадниця, вона руйнує стосунки.
+  answer: Заздрість
+  complete_sentence: Заздрість__ — погана порадниця, вона руйнує стосунки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Йому було _____ за свою поведінку на вечірці.
+  answer: соромно
+  complete_sentence: Йому було соромно__ за свою поведінку на вечірці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Вибір правильного слова для контексту
+  sentence_template: Вона взялася за проєкт з великим _____.
+  answer: ентузіазмом
+  complete_sentence: Вона взялася за проєкт з великим ентузіазмом__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Відчуваю глибоку _____. Розмовно: Мені стремно.'
+  answer: тривогу
+  complete_sentence: 'Формально: Відчуваю глибоку тривогу__. Розмовно: Мені стремно.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Це викликає _____. Розмовно: Це бісить.'
+  answer: роздратування
+  complete_sentence: 'Формально: Це викликає роздратування__. Розмовно: Це бісить.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Маю певні _____. Розмовно: Я боюся.'
+  answer: побоювання
+  complete_sentence: 'Формально: Маю певні побоювання__. Розмовно: Я боюся.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Це породжує _____. Розмовно: Це напружує.'
+  answer: занепокоєння
+  complete_sentence: 'Формально: Це породжує занепокоєння__. Розмовно: Це напружує.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Відчуваю _____. Розмовно: Я в шоці!'
+  answer: здивування
+  complete_sentence: 'Формально: Відчуваю здивування__. Розмовно: Я в шоці!'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Це викликає глибоку _____. Розмовно: Мене це бісить.'
+  answer: огиду
+  complete_sentence: 'Формально: Це викликає глибоку огиду__. Розмовно: Мене це бісить.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Переживаю значне _____. Розмовно: Я розчарований.'
+  answer: розчарування
+  complete_sentence: 'Формально: Переживаю значне розчарування__. Розмовно: Я розчарований.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Формальний та розмовний реєстр
+  sentence_template: 'Формально: Відчуваю вдячність. Розмовно: Я такий _____!'
+  answer: радий
+  complete_sentence: 'Формально: Відчуваю вдячність. Розмовно: Я такий радий__!'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Вона відчувала справжню радість після перемоги.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Він не міг стримати свій гнів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Його рішення викликало моє здивування.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Він відчуває постійну тривогу через роботу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Ніколи не втрачайте надію.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Вона відчула величезне полегшення після іспиту.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Він згоряв від сорому за свою поведінку.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Він взявся за роботу з великим ентузіазмом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Родина пережила велике горе минулого року.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Погана погода погіршує мій настрій.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Діти дивилися на фокусника із великим подивом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про емоції
+  jumbled_words: []
+  answer: Глибоке почуття провини довго мучило його.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яка різниця між емоцією та почуттям у контексті психології?
+  options:
+  - text: Емоція — тривалий стан, почуття — короткочасна реакція
+    correct: false
+  - text: Емоція — короткочасна реакція, почуття — тривалий стан
+    correct: true
+  - text: Це повні синоніми без різниці у значенні
+    correct: false
+  - text: Емоція стосується тіла, почуття — розуму
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яке слово найкраще описує сильне негативне почуття до чогось морально
+    неприйнятного?
+  options:
+  - text: роздратування
+    correct: false
+  - text: гнів
+    correct: false
+  - text: огида
+    correct: true
+  - text: сум
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яка колокація є правильною для слова "надія" з точки зору української
+    граматики?
+  options:
+  - text: мати надію
+    correct: false
+  - text: втрачати надію
+    correct: true
+  - text: викликати надію
+    correct: false
+  - text: контролювати надію
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яке слово описує загальний емоційний фон протягом певного часу?
+  options:
+  - text: емоція
+    correct: false
+  - text: почуття
+    correct: false
+  - text: настрій
+    correct: true
+  - text: тривога
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яка пара слів правильно показує різницю в інтенсивності емоції?
+  options:
+  - text: страх (менш інтенсивний) → хвилювання (більш інтенсивний)
+    correct: false
+  - text: хвилювання (менш інтенсивний) → страх (більш інтенсивний)
+    correct: true
+  - text: гнів (менш інтенсивний) → роздратування (більш інтенсивний)
+    correct: false
+  - text: горе (менш інтенсивний) → сум (більш інтенсивний)
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яке дієслово найкраще поєднується зі словом "здивування" в українській
+    мові?
+  options:
+  - text: відчувати здивування
+    correct: false
+  - text: викликати здивування
+    correct: true
+  - text: мати здивування
+    correct: false
+  - text: бути в здивуванні
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яка емоція часто вважається небезпечнішою за негативні емоції у соціальному
+    контексті?
+  options:
+  - text: гнів
+    correct: false
+  - text: страх
+    correct: false
+  - text: байдужість
+    correct: true
+  - text: розчарування
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Розуміння емоційної лексики
+  question: Яке слово найкраще описує позитивне здивування з відтінком захоплення
+    чимось незвичайним?
+  options:
+  - text: здивування
+    correct: false
+  - text: подив
+    correct: true
+  - text: шок
+    correct: false
+  - text: розгубленість
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Настрій" означає короткочасну реакцію на конкретну подію.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Подив" має більш позитивний відтінок, ніж нейтральне "здивування".'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: Колокація "відчувати настрій" є правильною в українській мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Горе" — це інтенсивніша форма суму, часто пов''язана з втратою.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Хвилювання" завжди має негативне значення в українській мові.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: В українській мові "ревнощі" та "заздрість" — це повні синоніми.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Огида" частіше вживається для морального несхвалення, ніж "відраза".'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: Правильна колокація — "викликати гордість за когось".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Байдужість" може бути небезпечнішою за негативні емоції, бо блокує
+    дію.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Розгубленість" описує стан, коли людина не знає, як реагувати на ситуацію.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: Українці частіше використовують слово "емоція" у щоденній розмові, ніж
+    "почуття".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про емоції
+  statement: '"Панічний страх" — це правильна колокація для опису сильного страху.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

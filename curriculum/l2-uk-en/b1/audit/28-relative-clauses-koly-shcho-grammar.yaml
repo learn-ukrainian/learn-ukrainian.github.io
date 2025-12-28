@@ -1,0 +1,864 @@
+module: 28-relative-clauses-koly-shcho
+level: B1
+validated: '2025-12-28T10:04:53.030647'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 59
+  errors_confirmed: 8
+  passed_items: 51
+  notes: Manually verified content structure and accuracy. Clean.
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: День, що ми познайомилися на роботі, був дуже теплим.
+  error: що
+  answer: коли
+  sentence_corrected: День, коли ми познайомилися на роботі, був дуже теплим.
+  options:
+  - що
+  - коли
+  - який
+  - де
+  original_explanation: '"День" — часовий антецедент, потребує сполучника "коли",
+    не "що".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Те, коли він сказав на зборах, здивувало всіх присутніх.
+  error: коли
+  answer: що
+  sentence_corrected: Те, що він сказав на зборах, здивувало всіх присутніх.
+  options:
+  - коли
+  - що
+  - яке
+  - де
+  original_explanation: '"Те" — абстрактний займенник, потребує сполучника "що", не
+    "коли".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Момент, що я зрозумів правду, був дуже болісним для мене.
+  error: що
+  answer: коли
+  sentence_corrected: Момент, коли я зрозумів правду, був дуже болісним для мене.
+  options:
+  - що
+  - коли
+  - який
+  - де
+  original_explanation: '"Момент" — часовий антецедент, потребує сполучника "коли",
+    не "що".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Все, коли я знаю про цю справу, — це правда.
+  error: коли
+  answer: що
+  sentence_corrected: Все, що я знаю про цю справу, — це правда.
+  options:
+  - коли
+  - що
+  - яке
+  - де
+  original_explanation: '"Все" — абстрактний займенник, потребує сполучника "що",
+    не "коли".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Час, що ми жили в селі, був найщасливішим у житті.
+  error: що
+  answer: коли
+  sentence_corrected: Час, коли ми жили в селі, був найщасливішим у житті.
+  options:
+  - що
+  - коли
+  - який
+  - де
+  original_explanation: '"Час" — часовий антецедент, потребує сполучника "коли", не
+    "що".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Факт, коли це правда, визнають усі експерти світу.
+  error: коли
+  answer: що
+  sentence_corrected: Факт, що це правда, визнають усі експерти світу.
+  options:
+  - коли
+  - що
+  - який
+  - де
+  original_explanation: '"Факт" — абстрактний іменник, потребує сполучника "що", не
+    "коли".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Рік, що вона народилася, був дуже складним для країни.
+  error: що
+  answer: коли
+  sentence_corrected: Рік, коли вона народилася, був дуже складним для країни.
+  options:
+  - що
+  - коли
+  - який
+  - де
+  original_explanation: '"Рік" — часовий антецедент, потребує сполучника "коли", не
+    "що".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ідея, коли все можливо, надихає людей на великі справи.
+  error: коли
+  answer: що
+  sentence_corrected: Ідея, що все можливо, надихає людей на великі справи.
+  options:
+  - коли
+  - що
+  - яка
+  - де
+  original_explanation: '"Ідея" — абстрактний іменник, потребує сполучника "що", не
+    "коли".'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: День, ___ ми познайомилися на конференції, був сонячним.
+  answer: коли
+  complete_sentence: День, коли ми познайомилися на конференції, був сонячним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Те, ___ він сказав мені вчора, залишилось у пам'яті.
+  answer: що
+  complete_sentence: Те, що він сказав мені вчора, залишилось у пам'яті.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Момент, ___ я зрозумів свою помилку, був дуже болісним.
+  answer: коли
+  complete_sentence: Момент, коли я зрозумів свою помилку, був дуже болісним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Все, ___ ми маємо у житті, — результат нашої праці.
+  answer: що
+  complete_sentence: Все, що ми маємо у житті, — результат нашої праці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Час, ___ вона вчилася в університеті, був найкращим.
+  answer: коли
+  complete_sentence: Час, коли вона вчилася в університеті, був найкращим.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Факт, ___ це правда, визнають усі експерти.
+  answer: що
+  complete_sentence: Факт, що це правда, визнають усі експерти.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Рік, ___ народився мій батько, був дуже складним.
+  answer: коли
+  complete_sentence: Рік, коли народився мій батько, був дуже складним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Щось, ___ турбує мене вже давно, — це здоров'я.
+  answer: що
+  complete_sentence: Щось, що турбує мене вже давно, — це здоров'я.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Вечір, ___ вони оголосили про заручини, був святковим.
+  answer: коли
+  complete_sentence: Вечір, коли вони оголосили про заручини, був святковим.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Ідея, ___ кожен може змінитися, дає надію всім.
+  answer: що
+  complete_sentence: Ідея, що кожен може змінитися, дає надію всім.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Нічого, ___ б здивувало нас у цій справі, не сталося.
+  answer: що
+  complete_sentence: Нічого, що б здивувало нас у цій справі, не сталося.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Мить, ___ все навколо затихло, тривала лише секунду.
+  answer: коли
+  complete_sentence: Мить, коли все навколо затихло, тривала лише секунду.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Думка, ___ ми можемо все виправити, надихає мене.
+  answer: що
+  complete_sentence: Думка, що ми можемо все виправити, надихає мене.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Епоха, ___ будували цей замок, була середньовічною.
+  answer: коли
+  complete_sentence: Епоха, коли будували цей замок, була середньовічною.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: cloze
+  title: Коли та що у контексті
+  passage_template: 'Минулого року я згадував день, [___:1] вперше приїхав до Києва
+    на навчання. Це був момент, [___:2] моє життя змінилося назавжди і безповоротно.
+    Все, [___:3] я знав про столицю раніше, виявилося неповним і поверховим.
+
+
+    Перший тиждень, [___:4] я жив у гуртожитку, був дуже складним для адаптації. Те,
+    [___:5] мені розповідали друзі про студентське життя, не підготувало мене повністю.
+    Час, [___:6] я шукав нових друзів, тривав кілька місяців на початку.
+
+
+    Факт, [___:7] я нарешті адаптувався, став очевидним після першого семестру. Вечір,
+    [___:8] ми святкували успішну сесію, запам''ятався мені назавжди. Все, [___:9]
+    ми робили тоді, було наповнене радістю та ентузіазмом.
+
+
+    Думка, [___:10] я можу досягти своєї мети, надихала мене кожного ранку. Епоха,
+    [___:11] я був студентом у Києві, стала найкращою порою мого життя. Те, [___:12]
+    я пережив за ці роки, зробило мене сильнішим і мудрішим. Нічого, [___:13] б я
+    хотів змінити в тому часі, не приходить на думку. Рік, [___:14] я закінчив університет,
+    став новим етапом мого дорослого життя.
+
+    '
+  blanks:
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - яке
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - яке
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - яке
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - яка
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - яка
+    - де
+    answer: коли
+  - options:
+    - коли
+    - що
+    - яке
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - яке
+    - де
+    answer: що
+  - options:
+    - коли
+    - що
+    - який
+    - де
+    answer: коли
+  complete_passage: 'Минулого року я згадував день, [___:1] вперше приїхав до Києва
+    на навчання. Це був момент, [___:2] моє життя змінилося назавжди і безповоротно.
+    Все, [___:3] я знав про столицю раніше, виявилося неповним і поверховим.
+
+
+    Перший тиждень, [___:4] я жив у гуртожитку, був дуже складним для адаптації. Те,
+    [___:5] мені розповідали друзі про студентське життя, не підготувало мене повністю.
+    Час, [___:6] я шукав нових друзів, тривав кілька місяців на початку.
+
+
+    Факт, [___:7] я нарешті адаптувався, став очевидним після першого семестру. Вечір,
+    [___:8] ми святкували успішну сесію, запам''ятався мені назавжди. Все, [___:9]
+    ми робили тоді, було наповнене радістю та ентузіазмом.
+
+
+    Думка, [___:10] я можу досягти своєї мети, надихала мене кожного ранку. Епоха,
+    [___:11] я був студентом у Києві, стала найкращою порою мого життя. Те, [___:12]
+    я пережив за ці роки, зробило мене сильнішим і мудрішим. Нічого, [___:13] б я
+    хотів змінити в тому часі, не приходить на думку. Рік, [___:14] я закінчив університет,
+    став новим етапом мого дорослого життя.
+
+    '
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    passage_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: День, коли ми познайомилися на конференції в Києві, був дуже теплим і сонячним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Те, що він сказав мені вчора ввечері, здивувало всіх присутніх на зустрічі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Момент, коли я нарешті зрозумів правду про цю справу, був дуже болісним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Все, що ми маємо у нашому житті сьогодні, є результатом нашої спільної праці.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Час, коли вона вчилася в університеті на факультеті журналістики, був найкращим.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Факт, що це справжня правда без сумніву, визнають усі відомі експерти світу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Рік, коли Україна стала незалежною державою серед інших країн світу, був
+    історичним.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Думка, що ми можемо все змінити у нашому житті, надихає мене щодня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про день, коли познайомилися
+    і він був теплим?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про те, що він сказав і воно
+    здивувало присутніх?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яке
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про момент, коли зрозумів правду
+    і це було болісно?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про все, що ви знаєте про цю
+    справу?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яке
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про час, коли жили в селі і
+    було щасливо?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про факт, що це правда і він
+    неоспорний?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про рік, коли народилася і
+    він був складним?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про щось, що турбує вас уже
+    давно?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яке
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про вечір, коли він зробив
+    пропозицію?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про ідею, що все можливо і
+    вона надихає?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яка
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про нічого, що здивувало б
+    вас у цій справі?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яке
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про мить, коли все змінилося
+    раптово?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: яка
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про думку, що ви помилилися
+    і вона тривожить?
+  options:
+  - text: коли
+    correct: false
+  - text: що
+    correct: true
+  - text: яка
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Коли чи що?
+  question: Який сполучник потрібно вставити в речення про епоху, коли жили наші предки?
+  options:
+  - text: коли
+    correct: true
+  - text: що
+    correct: false
+  - text: яка
+    correct: false
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "коли" використовується тільки для часових антецедентів, таких
+    як день, момент, час.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "що" як відносний займенник завжди вимагає антецедента перед собою.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "День, що ми зустрілися" є граматично правильним в українській
+    мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "тоді коли" підкреслює конкретний момент або період у минулому.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Все, що я знаю" та "Все, яке я знаю" однаково правильні.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "що" може бути і відносним займенником, і сполучником підрядності.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "щоразу коли" означає "кожного разу, коли" і виражає регулярність.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Факт, коли це правда" є граматично правильним в українській
+    мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після займенника "нічого" завжди використовується відносний займенник
+    "що".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "коли" в реченні "День, коли..." можна замінити на "в який день".
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "кожного разу коли" є синонімом виразу "щоразу коли" в українській
+    мові.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Ідея, що все можливо" використовує "що" як сполучник, а не відносний
+    займенник.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Що (відносний) можна відрізнити від що (сполучник) за наявністю антецедента.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Момент, коли я зрозумів" і "Момент, в який я зрозумів" мають
+    різне значення.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

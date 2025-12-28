@@ -1,0 +1,660 @@
+module: 78-technology-and-startups
+level: B1
+validated: '2025-12-28T15:04:31.645616'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 52
+  errors_confirmed: 8
+  passed_items: 44
+  notes: Manually verified content structure and accuracy. Clean.
+  fixed_items: 0
+items:
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Grammarly — це російська компанія з офісом у Москві.
+  error: російська
+  answer: українська
+  sentence_corrected: Grammarly — це українська компанія з офісом у Москві.
+  options:
+  - російська
+  - українська
+  - американська
+  - британська
+  original_explanation: Grammarly — українська компанія, заснована в Києві.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Застосунок "Дія" дозволяє тільки переглядати документи.
+  error: тільки
+  answer: також
+  sentence_corrected: Застосунок "Дія" дозволяє також переглядати документи.
+  options:
+  - тільки
+  - також
+  - ніколи
+  - рідко
+  original_explanation: '"Дія" також дозволяє отримувати державні послуги.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Ajax Systems — це львівська компанія, що виробляє системи безпеки.
+  error: львівська
+  answer: харківська
+  sentence_corrected: Ajax Systems — це харківська компанія, що виробляє системи безпеки.
+  options:
+  - львівська
+  - харківська
+  - київська
+  - одеська
+  original_explanation: Ajax Systems — харківська компанія.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: В Україні працює близько п'ятдесят тисяч програмістів.
+  error: п'ятдесят
+  answer: триста
+  sentence_corrected: В Україні працює близько триста тисяч програмістів.
+  options:
+  - п'ятдесят
+  - триста
+  - двадцять
+  - сто
+  original_explanation: В Україні працює понад триста тисяч програмістів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Михайлу Федорову було 45 років, коли він став міністром цифрової
+    трансформації.
+  error: '45'
+  answer: '28'
+  sentence_corrected: Михайлу Федорову було 28 років, коли він став міністром цифрової
+    трансформації.
+  options:
+  - '45'
+  - '28'
+  - '35'
+  - '50'
+  original_explanation: Михайлу Федорову було лише 28 років на момент призначення.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Reface — це застосунок для перекладу текстів різними мовами.
+  error: перекладу
+  answer: заміни
+  sentence_corrected: Reface — це застосунок для заміни текстів різними мовами.
+  options:
+  - перекладу
+  - заміни
+  - написання
+  - читання
+  original_explanation: Reface — застосунок для заміни облич у відео.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Україна займає перше місце у світі за кількістю ІТ-спеціалістів.
+  error: перше
+  answer: четверте
+  sentence_corrected: Україна займає четверте місце у світі за кількістю ІТ-спеціалістів.
+  options:
+  - перше
+  - четверте
+  - десяте
+  - сотне
+  original_explanation: Україна займає четверте місце у світі за кількістю сертифікованих
+    ІТ-спеціалістів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Помилки про технології
+  sentence_with_error: Коворкінг — це приватний офіс для однієї компанії.
+  error: приватний
+  answer: спільний
+  sentence_corrected: Коворкінг — це спільний офіс для однієї компанії.
+  options:
+  - приватний
+  - спільний
+  - секретний
+  - державний
+  original_explanation: Коворкінг — це спільний робочий простір для різних людей та
+    компаній.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Grammarly — це найвідоміший український _____.
+  answer: стартап
+  complete_sentence: Grammarly — це найвідоміший український стартап__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Українські _____ відомі своїм високим рівнем технічної освіти.
+  answer: розробники
+  complete_sentence: Українські розробники__ відомі своїм високим рівнем технічної
+    освіти.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Ajax Systems виробляє розумні системи _____.
+  answer: безпеки
+  complete_sentence: Ajax Systems виробляє розумні системи безпеки__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: '"Дія" — це революційна _____ для цифрових документів.'
+  answer: платформа
+  complete_sentence: '"Дія" — це революційна платформа__ для цифрових документів.'
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Через "Дію" можна отримати цифровий _____.
+  answer: паспорт
+  complete_sentence: Через "Дію" можна отримати цифровий паспорт__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Київ, Харків, Львів — це головні ІТ-_____ України.
+  answer: хаби
+  complete_sentence: Київ, Харків, Львів — це головні ІТ-хаби__ України.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Штучний _____ — одна з популярних спеціалізацій в ІТ.
+  answer: інтелект
+  complete_sentence: Штучний інтелект__ — одна з популярних спеціалізацій в ІТ.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Багато розробників працюють у _____ замість офісу.
+  answer: коворкінгу
+  complete_sentence: Багато розробників працюють у коворкінгу__ замість офісу.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Reface — це застосунок для заміни _____ у відео.
+  answer: облич
+  complete_sentence: Reface — це застосунок для заміни облич__ у відео.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: ІТ-сектор генерує мільярди доларів щорічного _____.
+  answer: експорту
+  complete_sentence: ІТ-сектор генерує мільярди доларів щорічного експорту__.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Венчурний _____ інвестує гроші у стартапи.
+  answer: капітал
+  complete_sentence: Венчурний капітал__ інвестує гроші у стартапи.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Технічна лексика
+  sentence_template: Фріланс — це вільна _____, незалежна робота.
+  answer: зайнятість
+  complete_sentence: Фріланс — це вільна зайнятість__, незалежна робота.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Grammarly є один з найвідоміших українських стартапів світового рівня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Понад триста тисяч програмістів працюють в українській ІТ-індустрії.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Застосунок "Дія" об'єднує цифрові документи та державні послуги.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Україна займає четверте місце у світі за кількістю ІТ-спеціалістів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Харківська компанія Ajax Systems виробляє розумні системи безпеки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Компанію Grammarly заснували українці у Києві у 2009 році.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: Цифровий паспорт має таку саму юридичну силу як паперовий.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Речення про технології
+  jumbled_words: []
+  answer: ІТ-сектор генерує понад п'ять мільярдів доларів щорічного експорту.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Стаття повідомляє, що українська ІТ-індустрія почала активно розвиватися
+    у 2000-х роках — яка була головна причина цього розвитку?
+  options:
+  - text: Уряд інвестував гроші в технології
+    correct: false
+  - text: Західні компанії відкрили український потенціал
+    correct: true
+  - text: Україна приєдналася до Європейського Союзу
+    correct: false
+  - text: Університети почали готувати програмістів
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: За даними тексту, скільки мільярдів доларів генерує український ІТ-сектор
+    щорічного експорту, і чому це важливо для економіки країни?
+  options:
+  - text: один мільярд доларів
+    correct: false
+  - text: три мільярди доларів
+    correct: false
+  - text: п'ять мільярдів доларів
+    correct: true
+  - text: десять мільярдів доларів
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Які п'ять міст текст називає головними ІТ-хабами України, де працюють
+    десятки тисяч розробників програмного забезпечення?
+  options:
+  - text: Київ, Львів, Вінниця, Полтава, Суми
+    correct: false
+  - text: Київ, Харків, Львів, Дніпро, Одеса
+    correct: true
+  - text: Київ, Харків, Запоріжжя, Миколаїв, Черкаси
+    correct: false
+  - text: Львів, Тернопіль, Івано-Франківськ, Рівне, Луцьк
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Текст повідомляє, що компанію Grammarly заснували українці у Києві в 2009
+    році — яку послугу надає цей сервіс мільйонам користувачів?
+  options:
+  - text: переклад текстів
+    correct: false
+  - text: перевірка граматики англійською мовою
+    correct: true
+  - text: створення презентацій
+    correct: false
+  - text: редагування відео
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Згідно з текстом, компанія Grammarly оцінюється в тринадцять мільярдів
+    доларів — хто з українців є одним із засновників цієї компанії?
+  options:
+  - text: Михайло Федоров
+    correct: false
+  - text: Олексій Шевченко
+    correct: true
+  - text: Дмитро Запорожець
+    correct: false
+  - text: Віталій Кличко
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: У тексті йдеться про харківську компанію Ajax Systems, що виробляє розумні
+    системи безпеки — у скількох країнах світу продаються їхні продукти?
+  options:
+  - text: у 50 країнах
+    correct: false
+  - text: у 80 країнах
+    correct: false
+  - text: у 100 країнах
+    correct: false
+  - text: у понад 130 країнах
+    correct: true
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Що означає назва застосунку "Дія", і чому цю назву обрали для позначення
+    платформи державних цифрових послуг України?
+  options:
+  - text: Держава і Ти
+    correct: false
+  - text: Держава і Я
+    correct: true
+  - text: Документи і Автоматизація
+    correct: false
+  - text: Цифрова Ідентифікація Адміністрації
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Текст стверджує, що Україна стала першою країною у світі, де офіційно
+    визнаний певний цифровий документ — про який документ ідеться?
+  options:
+  - text: цифрове водійське посвідчення
+    correct: false
+  - text: цифровий паспорт у смартфоні
+    correct: true
+  - text: цифровий студентський квиток
+    correct: false
+  - text: цифрова довідка про доходи
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Згідно з текстом, скільки державних послуг можна отримати онлайн через
+    застосунок "Дія", що значно спрощує взаємодію громадян з державою?
+  options:
+  - text: понад 50 послуг
+    correct: false
+  - text: понад 100 послуг
+    correct: true
+  - text: понад 200 послуг
+    correct: false
+  - text: понад 500 послуг
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: У тексті йдеться про вік Михайла Федорова на момент його призначення на
+    посаду міністра цифрової трансформації — скільки йому було років?
+  options:
+  - text: 25 років
+    correct: false
+  - text: 28 років
+    correct: true
+  - text: 32 роки
+    correct: false
+  - text: 35 років
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Скільки ІТ-спеціалістів працює в українській ІТ-індустрії, і до яких регіонів
+    світу експортуються їхні послуги, за даними тексту?
+  options:
+  - text: 100 000 спеціалістів, до Європи
+    correct: false
+  - text: 200 000 спеціалістів, до США та Європи
+    correct: false
+  - text: понад 300 000 спеціалістів, до США, Європи та Азії
+    correct: true
+  - text: 500 000 спеціалістів, по всьому світу
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українська ІТ-індустрія
+  question: Яке місце у світі займає Україна за кількістю сертифікованих ІТ-спеціалістів,
+    згідно з інформацією про досягнення українських програмістів?
+  options:
+  - text: перше місце
+    correct: false
+  - text: друге місце
+    correct: false
+  - text: четверте місце
+    correct: true
+  - text: десяте місце
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Компанію Grammarly заснували у Києві в 2009 році троє українців — Олексій
+    Шевченко, Макс Литвин та Дмитро Лідер.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: GitLab — це українська компанія, яка повністю заснована і працює лише
+    в Україні без міжнародного присутства.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Застосунок Reface з Києва став одним із найпопулярніших застосунків у
+    світі, набравши понад сто мільйонів завантажень у 2020 році.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Ajax Systems — це київська компанія, що виробляє програмне забезпечення
+    для бухгалтерського обліку та фінансового менеджменту.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Цифровий паспорт у застосунку "Дія" має таку саму юридичну силу, як і
+    паперовий паспорт громадянина України.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Через застосунок "Дія" можна лише переглядати документи, але не можна
+    отримувати державні послуги онлайн без відвідування офісів.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Під час повномасштабного вторгнення застосунок "Дія" використовувався
+    для отримання гуманітарної допомоги та реєстрації збитків від війни.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Усі українські ІТ-компанії працюють виключно на аутсорсингу та не створюють
+    власних продуктів для міжнародного ринку.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Засновники Grammarly познайомились у Київському політехнічному інституті
+    та спочатку створили сервіс для перевірки академічних робіт.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Естонія, яка вважається лідером у цифровізації, вивчає український досвід
+    застосунку "Дія" як приклад для наслідування.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Коворкінг у Києві коштує близько п'яти тисяч гривень на місяць за гнучке
+    місце без фіксованого робочого столу.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Факти про українські технології
+  statement: Міністерство цифрової трансформації України є одним із найстаріших міністерств
+    у країні та було створено ще за часів СРСР.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true

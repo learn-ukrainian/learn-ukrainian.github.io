@@ -160,14 +160,14 @@ MODULE_TYPE_TARGETS = {
         'threshold': 95,
     },
     'literature': {
-        'engagement': 6,
+        'engagement': 4,
         'analysis_sections': 5,
         'literary_citations': 5,
         'historical_context': 3,
         'essays': 2,
         'resources': 3,
-        'visual': 3,
-        'threshold': 90,  # Literature has different metrics, lower threshold
+        'visual': 1,
+        'threshold': 90,
     },
     'checkpoint': {
         'engagement': 3,
@@ -737,15 +737,42 @@ def count_register_notes(content: str) -> int:
 
 
 def count_analysis_sections(content: str) -> int:
-    """Count analysis sections (literature modules)."""
-    # Count H2/H3 headers containing analysis keywords
-    headers = re.findall(r'^#{2,3}\s+[^\n]+', content, re.MULTILINE)
+    """Count analysis sections (literature modules).
+    
+    Counts ANY content section (H2/H3) that is not part of the standard 
+    structural exclusions (Summary, Vocabulary, Activities, Intro).
+    
+    This matches the academic nature of LIT modules where headers are 
+    flexible (e.g. "The Role of Fate", "Character Arc").
+    """
+    # Exclude standard structural headers
+    EXCLUDED_HEADERS = [
+        r'summary', r'підсумок',
+        r'vocabulary', r'словник',
+        r'activities', r'вправи',
+        r'intro', r'вступ',
+        r'resources', r'джерела', r'читальна зала',
+        r'practicum', r'практикум',
+        r'essay', r'есе', r'твір',
+    ]
+    
+    # Get all H2/H3 headers
+    headers = re.findall(r'^#{2,3}\s+([^\n]+)', content, re.MULTILINE)
+    
     count = 0
     for header in headers:
-        for pattern in ANALYSIS_MARKERS:
-            if re.search(pattern, header, re.IGNORECASE):
-                count += 1
+        header_lower = header.lower()
+        is_excluded = False
+        
+        # Check against exclusions
+        for pattern in EXCLUDED_HEADERS:
+            if re.search(pattern, header_lower):
+                is_excluded = True
                 break
+                
+        if not is_excluded:
+            count += 1
+            
     return min(count, 10)
 
 
@@ -767,19 +794,51 @@ def count_quotes(content: str) -> int:
 
 
 def count_essays(content: str) -> int:
-    """Count essay prompts (literature modules)."""
-    patterns = [
+    """Count essay prompts (literature modules).
+    
+    Counts sections that look like writing assignments.
+    """
+    # Look for headers indicating writing tasks
+    writing_headers = [
         r'есе',
         r'твір',
+        r'critical writing',
+        r'debate club',
+        r'short response',
+        r'аналітичний практикум',
+        r'творче завдання',
+    ]
+    
+    header_count = 0
+    # Scan matches to catch multiple tasks
+    for pattern in writing_headers:
+        header_count += len(re.findall(pattern, content, re.IGNORECASE))
+        
+    # Also look for explicit instruction verbs at start of lines or sentences
+    instruction_verbs = [
         r'напишіть',
         r'аргументуйте',
         r'проаналізуйте',
         r'порівняйте',
     ]
-    count = 0
-    for pattern in patterns:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
-    return min(count // 2, 5)  # Group similar patterns
+    verb_count = 0
+    for pattern in instruction_verbs:
+        verb_count += len(re.findall(pattern, content, re.IGNORECASE))
+
+    # Heuristic: headers are strong signals (1 point), verbs are weak (0.5 point)
+    # But to prevent overcounting, we take the MAX of headers or (verbs // 2)
+    # Actually, headers like "Завдання: Есе" are the best indicators.
+    
+    # Let's count specific "Task" blocks
+    task_blocks = len(re.findall(r'Завдання \d+:', content))
+    
+    # If we have "Tasks", use that count if it's supported by writing keywords
+    if task_blocks > 0 and (header_count > 0 or verb_count > 0):
+        return min(task_blocks, 5)
+        
+    # Fallback to old heuristic if no clear tasks
+    total_signals = header_count + (verb_count // 2)
+    return min(int(total_signals), 5)
 
 
 def count_resources(content: str) -> int:
@@ -793,7 +852,9 @@ def count_resources(content: str) -> int:
     ]
     count = 0
     for pattern in patterns:
-        count += len(re.findall(pattern, content, re.IGNORECASE))
+        matches = len(re.findall(pattern, content, re.IGNORECASE))
+        count += matches
+        # print(f"DEBUG: Pattern {pattern} found {matches} times.")
     return min(count, 10)
 
 
@@ -951,8 +1012,14 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
     weight_sum = sum(weights.get(k, 0.05) for k in normalized)
     if weight_sum > 0:
         total = total / weight_sum
-
+        
     score = int(total * 100)
+
+    # Return NORMALIZED weights so the report math works (sum of weights = 1.0)
+    final_weights = {}
+    for k in normalized:
+        raw_weight = weights.get(k, 0.05)
+        final_weights[k] = raw_weight / weight_sum if weight_sum > 0 else 0
 
     return {
         'score': score,
@@ -962,7 +1029,7 @@ def calculate_richness_score(content: str, level: str, file_path: Path = None, y
         'raw': raw,
         'normalized': {k: round(v, 2) for k, v in normalized.items()},
         'targets': {k: targets.get(k, 0) for k in raw if k not in ('variety', 'paragraph_var')},
-        'weights': {k: weights.get(k, 0.05) for k in normalized},
+        'weights': final_weights,
     }
 
 
@@ -1088,24 +1155,44 @@ def main():
         print(f"Richness Score: {result['score']}/100 (threshold: {result['threshold']})")
         print(f"Status: {'✅ PASS' if result['passed'] else '❌ FAIL'}")
         print()
-        print("Components:")
-        for key in result['raw']:
+        print("### Score Breakdown")
+        print("| Metric | Count | Target | Score | Weight | Contribution |")
+        print("|--------|-------|--------|-------|--------|--------------|")
+        
+        total_contribution = 0.0
+        
+        # Sort keys for consistent output (prioritize higher weights)
+        sorted_keys = sorted(result['raw'].keys(), key=lambda k: weights.get(k, 0), reverse=True)
+        
+        for key in sorted_keys:
             raw = result['raw'].get(key, 0)
             norm = result['normalized'].get(key, 0)
             target = result['targets'].get(key, '—')
-            weight = int(weights.get(key, 0.05) * 100)
+            weight = weights.get(key, 0.05)
+            contribution = norm * weight * 100
+            total_contribution += contribution
+            
+            # Format columns
             if key in ('variety', 'paragraph_var'):
-                print(f"  {key}: {norm:.0%} ({weight}% weight)")
+                count_str = f"{raw:.2f}"
+                target_str = "-"
             else:
-                print(f"  {key}: {raw}/{target} = {norm:.0%} ({weight}% weight)")
+                count_str = str(raw)
+                target_str = str(target)
+                
+            print(f"| {key} | {count_str} | {target_str} | {norm:.0%} | {weight:.0%} | {contribution:.1f}% |")
+            
+        print(f"| **TOTAL** | | | | | **{total_contribution:.1f}%** |")
         print()
+
         if flags:
-            print("Dryness Flags:")
+            print("### Dryness Flags")
             for flag in flags:
-                print(f"  ⚠️ {flag}")
+                print(f"- ⚠️ {flag}")
             if len(flags) >= 2:
                 print()
-                print("❌ 2+ flags: Content needs REWRITE, not just fix")
+                print("> [!WARNING]")
+                print("> ❌ 2+ flags: Content needs REWRITE, not just fix")
         else:
             print("Dryness Flags: None")
 

@@ -16,13 +16,26 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 97.4% (target 85-100% (B1.1 Aspect))
 - **Richness:** ✅ 95% (grammar)
-- **Grammar:** ⏳ Pending validation
+- **Grammar:** ✅ Validated (8/48 confirmed)
 
-## MDX VALIDATION
-✅ No issues found
+## Richness Details
+**Score:** 95% (minimum: 95%)
+**Module Type:** grammar
 
-## HTML VALIDATION
-✅ Renders correctly (12 interactive elements)
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 31 | 24 | 100% | 20% | 20.0% |
+| engagement | 19 | 5 | 100% | 15% | 15.0% |
+| dialogues | 32 | 4 | 100% | 15% | 15.0% |
+| variety | 0.89 | - | 89% | 10% | 8.9% |
+| cultural | 2 | 3 | 67% | 10% | 6.7% |
+| realworld | 4 | 3 | 100% | 10% | 10.0% |
+| visual | 23 | 3 | 100% | 5% | 5.0% |
+| paragraph_var | 0.96 | - | 96% | 5% | 4.8% |
+| questions | 37 | 5 | 100% | 5% | 5.0% |
+| proverbs | 2 | 1 | 100% | 5% | 5.0% |
+| **TOTAL** | | | | | **95.4%** |
 
 ## Section Audit
 | Section | Status | Count | Notes |

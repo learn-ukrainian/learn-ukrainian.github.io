@@ -1,0 +1,764 @@
+module: 81-ukrainski-sviata-ta-festyvali
+level: B1
+validated: '2025-12-28T15:05:28.293336'
+validator: antigravity-agent (Deep Check)
+summary:
+  total_items: 58
+  errors_confirmed: 8
+  passed_items: 50
+  notes: Manually verified content structure and accuracy. Clean.
+  fixed_items: 0
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Різдво в Україні святкують тридцять першого грудня кожного
+    року.
+  error: тридцять першого грудня
+  answer: двадцять п'ятого грудня
+  sentence_corrected: Різдво в Україні святкують двадцять п'ятого грудня кожного року.
+  options:
+  - тридцять першого грудня
+  - двадцять п'ятого грудня
+  - сьомого січня
+  - першого січня
+  original_explanation: З 2023 року Різдво офіційно святкують 25 грудня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: На Святвечір українці готують п'ять страв для святкового столу.
+  error: п'ять страв
+  answer: дванадцять страв
+  sentence_corrected: На Святвечір українці готують дванадцять страв для святкового
+    столу.
+  options:
+  - п'ять страв
+  - дванадцять страв
+  - десять страв
+  - три страви
+  original_explanation: Традиційно на Святвечір готують дванадцять страв.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Кутю готують на Великдень як основну святкову страву.
+  error: на Великдень
+  answer: на Різдво
+  sentence_corrected: Кутю готують на Різдво як основну святкову страву.
+  options:
+  - на Великдень
+  - на Різдво
+  - на Масляну
+  - на Новий рік
+  original_explanation: Кутя — традиційна різдвяна страва, а на Великдень готують
+    паски.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: На Великдень українці вітаються словами «Вітаю зі святом!».
+  error: «Вітаю зі святом!»
+  answer: «Христос Воскрес!»
+  sentence_corrected: На Великдень українці вітаються словами «Христос Воскрес!».
+  options:
+  - «Вітаю зі святом!»
+  - «Христос Воскрес!»
+  - «З Різдвом Христовим!»
+  - «Щасливого Нового року!»
+  original_explanation: Традиційне великоднє привітання — «Христос Воскрес!».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Свято Івана Купала відзначають у грудні і пов'язане зі снігом.
+  error: у грудні
+  answer: у липні
+  sentence_corrected: Свято Івана Купала відзначають у липні і пов'язане зі снігом.
+  options:
+  - у грудні
+  - у липні
+  - у вересні
+  - у березні
+  original_explanation: Івана Купала відзначають у липні, це свято літнього сонцестояння.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: День Незалежності України святкують двадцять другого січня.
+  error: двадцять другого січня
+  answer: двадцять четвертого серпня
+  sentence_corrected: День Незалежності України святкують двадцять четвертого серпня.
+  options:
+  - двадцять другого січня
+  - двадцять четвертого серпня
+  - двадцять восьмого червня
+  - першого грудня
+  original_explanation: День Незалежності — 24 серпня, а 22 січня — День Соборності.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Масляну відзначають після Великодня як завершення посту.
+  error: після Великодня
+  answer: перед Великим постом
+  sentence_corrected: Масляну відзначають перед Великим постом як завершення посту.
+  options:
+  - після Великодня
+  - перед Великим постом
+  - на Різдво
+  - після Нового року
+  original_explanation: Масляна — тижневе свято перед Великим постом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Крашанки — це яйця зі складними орнаментами та візерунками.
+  error: Крашанки
+  answer: Писанки
+  sentence_corrected: Писанки — це яйця зі складними орнаментами та візерунками.
+  options:
+  - Крашанки
+  - Писанки
+  - Паски
+  - Вареники
+  original_explanation: Писанки мають складні орнаменти, а крашанки — однотонні.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    error_is_real_mistake: true
+    corrected_sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Вітаю вас із {blank}!
+  answer: святом
+  complete_sentence: Вітаю вас із святом!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Бажаю вам {blank} та щастя!
+  answer: здоров'я
+  complete_sentence: Бажаю вам здоров'я та щастя!
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: На святах ми зазвичай {blank} за столом.
+  answer: збираємося
+  complete_sentence: На святах ми зазвичай збираємося за столом.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Ця традиція {blank} з давніх часів.
+  answer: походить
+  complete_sentence: Ця традиція походить з давніх часів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Святвечір починається з появи першої {blank} на небі.
+  answer: зірки
+  complete_sentence: Святвечір починається з появи першої зірки на небі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Після вечері діти йдуть {blank} до сусідів.
+  answer: колядувати
+  complete_sentence: Після вечері діти йдуть колядувати до сусідів.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: На Великдень готують паски та {blank}.
+  answer: крашанки
+  complete_sentence: На Великдень готують паски та крашанки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Молодь стрибає через {blank} на Івана Купала.
+  answer: багаття
+  complete_sentence: Молодь стрибає через багаття на Івана Купала.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: День Незалежності {blank} 24 серпня.
+  answer: відзначають
+  complete_sentence: День Незалежності відзначають 24 серпня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Atlas Weekend — один з {blank} фестивалів у Східній Європі.
+  answer: найбільших
+  complete_sentence: Atlas Weekend — один з найбільших фестивалів у Східній Європі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Україна {blank} незалежність у 1991 році.
+  answer: проголосила
+  complete_sentence: Україна проголосила незалежність у 1991 році.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: fill-in
+  title: Святкові вирази
+  sentence_template: Українці {blank} у вишиванках на свята.
+  answer: вбираються
+  complete_sentence: Українці вбираються у вишиванках на свята.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: Святвечір починається з появи першої зірки на небі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: На Різдво українці традиційно готують дванадцять страв.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: На Великдень українці вітаються словами «Христос воскрес!».
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: На Івана Купала молодь традиційно стрибає через багаття.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: День Незалежності в Україні святкують кожного року 24 серпня.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: На Купала дівчата пускають вінки зі свічками на воду.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: На День Соборності 22 січня об'єдналися дві українські республіки.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: unjumble
+  title: Складіть речення про свята
+  jumbled_words: []
+  answer: Atlas Weekend один з найбільших фестивалів у Східній Європі.
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    sentence_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Українське Різдво традиційно святкували 7 січня за юліанським календарем,
+    але з 2023 року офіційною датою стало інше число. Коли тепер офіційно святкують
+    Різдво?
+  options:
+  - text: 6 січня
+    correct: false
+  - text: 25 грудня
+    correct: true
+  - text: 1 січня
+    correct: false
+  - text: 31 грудня
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Святвечір в Україні починається з особливого моменту, пов'язаного з небом.
+    Після якої події українські родини сідають за святковий стіл?
+  options:
+  - text: Після заходу сонця
+    correct: false
+  - text: Після появи першої зірки
+    correct: true
+  - text: Після опівночі
+    correct: false
+  - text: Після дзвонів церкви
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: На Святвечір українці готують особливу страву з пшениці, меду та маку.
+    Ця страва є обов'язковою на святковому столі. Як вона називається?
+  options:
+  - text: Вареники
+    correct: false
+  - text: Борщ
+    correct: false
+  - text: Кутя
+    correct: true
+  - text: Узвар
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Українці мають традицію готувати на Святвечір певну кількість страв. Скільки
+    страв традиційно подають на різдвяний стіл?
+  options:
+  - text: Шість страв
+    correct: false
+  - text: Дев'ять страв
+    correct: false
+  - text: Дванадцять страв
+    correct: true
+  - text: П'ятнадцять страв
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: На Великдень українці вітаються особливими словами, які символізують радість
+    від свята. Як українці традиційно вітаються на Великдень?
+  options:
+  - text: «З Новим роком!» — «Зі святом!»
+    correct: false
+  - text: «Христос Воскрес!» — «Воістину Воскрес!»
+    correct: true
+  - text: «Вітаю!» — «Дякую!»
+    correct: false
+  - text: «З Різдвом!» — «Ще й вам!»
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Писанки та крашанки — важливі символи Великодня. Орнаменти на писанках
+    мають символічне значення. Що символізує спіраль на писанці?
+  options:
+  - text: Удачу та гроші
+    correct: false
+  - text: Вічність
+    correct: true
+  - text: Здоров'я
+    correct: false
+  - text: Любов
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Свято Івана Купала — одне з найдавніших народних свят в Україні. Коли
+    його відзначають і з якими стихіями воно пов'язане?
+  options:
+  - text: У березні, пов'язане з повітрям та землею
+    correct: false
+  - text: У липні, пов'язане з вогнем та водою
+    correct: true
+  - text: У вересні, пов'язане з землею та зерном
+    correct: false
+  - text: У грудні, пов'язане зі снігом та льодом
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: На свято Івана Купала молодь виконує особливий ритуал, пов'язаний з вогнем.
+    Що традиційно роблять молоді люди цієї ночі?
+  options:
+  - text: Запалюють свічки в церкві
+    correct: false
+  - text: Стрибають через багаття
+    correct: true
+  - text: Розводять вогнище на горі
+    correct: false
+  - text: Несуть смолоскипи через село
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: День Незалежності України — головне державне свято. Якого числа Верховна
+    Рада ухвалила Акт проголошення незалежності України?
+  options:
+  - text: 1 грудня 1991 року
+    correct: false
+  - text: 24 серпня 1991 року
+    correct: true
+  - text: 22 січня 1919 року
+    correct: false
+  - text: 28 червня 1996 року
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: quiz
+  title: Українські свята — розуміння тексту
+  question: Atlas Weekend — один з найбільших музичних фестивалів у Східній Європі.
+    Скільки приблизно відвідувачів щороку збирає цей фестиваль?
+  options:
+  - text: Понад 10 000
+    correct: false
+  - text: Понад 50 000
+    correct: false
+  - text: Понад 100 000
+    correct: true
+  - text: Понад 500 000
+    correct: false
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    question_valid: true
+    options_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: Happy holiday to you! (using the formal form)
+  answer: ''
+  options:
+  - text: Вітаю вас із святом!
+    correct: true
+  - text: Вітаю тебе зі святом!
+    correct: false
+  - text: Бажаю вам свята!
+    correct: false
+  - text: З святом вам!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: I wish you health and happiness!
+  answer: ''
+  options:
+  - text: Я хочу здоров'я та щастя!
+    correct: false
+  - text: Бажаю вам здоров'я та щастя!
+    correct: true
+  - text: Вам здоров'я та щастя!
+    correct: false
+  - text: Здоров'я та щастя вам бажати!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: Christ is Risen!
+  answer: ''
+  options:
+  - text: Христос Воскрес!
+    correct: true
+  - text: Христос воскресе!
+    correct: false
+  - text: Христос встав!
+    correct: false
+  - text: Христос живий!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: Truly He is Risen!
+  answer: ''
+  options:
+  - text: Справді Воскрес!
+    correct: false
+  - text: Воістину Воскрес!
+    correct: true
+  - text: Так, Він Воскрес!
+    correct: false
+  - text: Правда Воскрес!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: During holidays we usually gather at the table.
+  answer: ''
+  options:
+  - text: На святах ми зазвичай збираємося за столом.
+    correct: true
+  - text: У святах ми звичайно сідаємо до столу.
+    correct: false
+  - text: Під час свят ми часто за столом.
+    correct: false
+  - text: На свята ми збираємо стіл.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: This tradition comes from ancient times.
+  answer: ''
+  options:
+  - text: Ця традиція походить з давніх часів.
+    correct: true
+  - text: Традиція ця від давніх часів.
+    correct: false
+  - text: Ця традиція з давніх часів прийшла.
+    correct: false
+  - text: Давні часи дали цю традицію.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: Thank you for the invitation!
+  answer: ''
+  options:
+  - text: Дякую за запрошення!
+    correct: true
+  - text: Спасибі за запрошення!
+    correct: false
+  - text: Дякую за запрошувати!
+    correct: false
+  - text: Дяка за запрошення!
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: translate
+  title: Перекладіть святкові фрази
+  source_sentence: Young people jump over the bonfire.
+  answer: ''
+  options:
+  - text: Молодь стрибає через багаття.
+    correct: true
+  - text: Молоді люди скачуть над вогнем.
+    correct: false
+  - text: Молодь перескакує вогонь.
+    correct: false
+  - text: Молоді стрибають у багаття.
+    correct: false
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    source_valid: true
+    answer_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: З 2023 року Україна офіційно святкує Різдво 25 грудня за григоріанським
+    календарем, перейшовши від 7 січня.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Кутя — це традиційна українська страва, яку готують на Великдень замість
+    паски.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: На Святвечір українські родини традиційно готують дванадцять різних страв
+    для святкового столу.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: 'Колядки та щедрівки — це одне й те саме: святкові пісні, які співають
+    на Різдво.'
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Писанки — це яйця, пофарбовані в один колір, без орнаментів та візерунків.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Свято Івана Купала відзначають у ніч з 6 на 7 липня і воно пов'язане
+    з літнім сонцестоянням.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: На Івана Купала дівчата традиційно пускають на воду вінки зі свічками
+    для ворожіння.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Масляна — це тижневе свято, яке відзначають після Великодня та пов'язане
+    із закінченням посту.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: День Незалежності України святкують 24 серпня, коли у 1991 році було
+    ухвалено Акт незалежності.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: День Соборності — це свято об'єднання всіх українських земель в одну
+    державу у 1919 році.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Atlas Weekend проводиться виключно за кордоном і ніколи не проходив у
+    Києві.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
+- activity: true-false
+  title: Правда чи хибність про українські свята
+  statement: Фестиваль «Країна Мрій» присвячений українській народній культурі та
+    етнічній музиці.
+  answer: ''
+  validate:
+    explanation: Verified correct.
+    confidence: 1.0
+    statement_valid: true
