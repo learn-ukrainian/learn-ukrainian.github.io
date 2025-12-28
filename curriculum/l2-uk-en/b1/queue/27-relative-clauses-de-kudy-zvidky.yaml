@@ -1,0 +1,867 @@
+module: 27-relative-clauses-de-kudy-zvidky
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/27-relative-clauses-de-kudy-zvidky.md
+generated: '2025-12-29T00:22:00.500759'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  cloze: 1
+  unjumble: 8
+  quiz: 14
+  true-false: 14
+item_count: 59
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Місто, куди я живу вже десять років, дуже красиве.
+  error: куди
+  answer: де
+  sentence_corrected: Місто, де я живу вже десять років, дуже красиве.
+  options:
+  - куди
+  - де
+  - звідки
+  - там
+  original_explanation: '"Жити" — статичне дієслово, потрібна локація "де я живу".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Країна, де ми летимо цього літа, знаходиться в Азії.
+  error: де
+  answer: куди
+  sentence_corrected: Країна, куди ми летимо цього літа, знаходиться в Азії.
+  options:
+  - де
+  - куди
+  - звідки
+  - туди
+  original_explanation: '"Летимо" — дієслово руху з напрямком "куди ми летимо".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Село, куди він приїхав минулого тижня, далеко від міста.
+  error: куди
+  answer: звідки
+  sentence_corrected: Село, звідки він приїхав минулого тижня, далеко від міста.
+  options:
+  - куди
+  - звідки
+  - де
+  - звідти
+  original_explanation: '"Приїхав (сюди) з села" — походження "звідки він приїхав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Офіс, звідки вона працює щодня, знаходиться в центрі.
+  error: звідки
+  answer: де
+  sentence_corrected: Офіс, де вона працює щодня, знаходиться в центрі.
+  options:
+  - звідки
+  - де
+  - куди
+  - там
+  original_explanation: '"Працювати" — статичне дієслово, потрібна локація "де вона
+    працює".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Готель, куди ми зупинилися на ніч, має чудовий сервіс.
+  error: куди
+  answer: де
+  sentence_corrected: Готель, де ми зупинилися на ніч, має чудовий сервіс.
+  options:
+  - куди
+  - де
+  - звідки
+  - там
+  original_explanation: '"Зупинитися" — статична дія в місці "де ми зупинилися".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Будинок, де вона виїхала минулого місяця, тепер порожній.
+  error: де
+  answer: звідки
+  sentence_corrected: Будинок, звідки вона виїхала минулого місяця, тепер порожній.
+  options:
+  - де
+  - звідки
+  - куди
+  - звідти
+  original_explanation: '"Виїхала (з будинку)" — походження "звідки вона виїхала".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Регіон, звідки ми їздимо на відпочинок, дуже красивий.
+  error: звідки
+  answer: куди
+  sentence_corrected: Регіон, куди ми їздимо на відпочинок, дуже красивий.
+  options:
+  - звідки
+  - куди
+  - де
+  - туди
+  original_explanation: '"Їздимо (до регіону)" — напрямок "куди ми їздимо".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Університет, де він вступив цього року, престижний в країні.
+  error: де
+  answer: куди
+  sentence_corrected: Університет, куди він вступив цього року, престижний в країні.
+  options:
+  - де
+  - куди
+  - звідки
+  - туди
+  original_explanation: '"Вступити (до університету)" — напрямок "куди він вступив".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Місто, ___ я живу вже десять років, дуже велике.
+  answer: де
+  complete_sentence: Місто, де я живу вже десять років, дуже велике.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Країна, ___ ми плануємо поїхати влітку, знаходиться далеко.
+  answer: куди
+  complete_sentence: Країна, куди ми плануємо поїхати влітку, знаходиться далеко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Регіон, ___ він приїхав на навчання, на заході України.
+  answer: звідки
+  complete_sentence: Регіон, звідки він приїхав на навчання, на заході України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Офіс, ___ вона щодня ходить на роботу, близько до дому.
+  answer: куди
+  complete_sentence: Офіс, куди вона щодня ходить на роботу, близько до дому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Будинок, ___ живуть мої батьки вже тридцять років, старий.
+  answer: де
+  complete_sentence: Будинок, де живуть мої батьки вже тридцять років, старий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Місто, ___ він телефонував сьогодні вранці, невідоме мені.
+  answer: звідки
+  complete_sentence: Місто, звідки він телефонував сьогодні вранці, невідоме мені.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Університет, ___ навчаються мої друзі, дуже престижний у країні.
+  answer: де
+  complete_sentence: Університет, де навчаються мої друзі, дуже престижний у країні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Село, ___ ми їздимо на вихідні до бабусі, у горах.
+  answer: куди
+  complete_sentence: Село, куди ми їздимо на вихідні до бабусі, у горах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Країна, ___ походять мої предки, має багату історію.
+  answer: звідки
+  complete_sentence: Країна, звідки походять мої предки, має багату історію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Кімната, ___ діти сплять кожної ночі, дуже затишна.
+  answer: де
+  complete_sentence: Кімната, де діти сплять кожної ночі, дуже затишна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Аеропорт, ___ відлітає наш рейс о сьомій годині, далеко від центру.
+  answer: звідки
+  complete_sentence: Аеропорт, звідки відлітає наш рейс о сьомій годині, далеко від
+    центру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Готель, ___ ми забронювали номер заздалегідь, біля моря.
+  answer: де
+  complete_sentence: Готель, де ми забронювали номер заздалегідь, біля моря.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Місце, ___ всі хочуть потрапити влітку, — це узбережжя.
+  answer: куди
+  complete_sentence: Місце, куди всі хочуть потрапити влітку, — це узбережжя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Регіон, ___ евакуювали людей минулого тижня, небезпечний зараз.
+  answer: звідки
+  complete_sentence: Регіон, звідки евакуювали людей минулого тижня, небезпечний зараз.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Де, куди, звідки у контексті
+  passage_template: 'Минулого року я вирішив відвідати село, [___:1] жили мої дідусь
+    і бабуся все своє життя. Це місце, [___:2] я часто їздив у дитинстві на літні
+    канікули. Будинок, [___:3] вони мешкали понад п''ятдесят років, стоїть на пагорбі.
+    Звідти видно долину, [___:4] тече річка і пасуться корови.
+
+
+    Дорога до села йде через ліс, [___:5] ростуть столітні дуби. Є місце, [___:6]
+    можна зупинитися і помилуватися краєвидом на гори. Село, [___:7] я нарешті приїхав
+    після довгої дороги, зустріло мене тишею і спокоєм.
+
+
+    Бабуся показала мені церкву, [___:8] вінчалися мої батьки тридцять років тому.
+    Ми пішли на цвинтар, [___:9] поховані наші предки багатьох поколінь. Потім ми
+    відвідали криницю, [___:10] беруть воду всі жителі села.
+
+
+    Увечері ми сиділи на ґанку будинку, [___:11] я провів стільки щасливих днів у
+    дитинстві. Бабуся розповідала про місця, [___:12] вона подорожувала в молодості
+    з дідусем. Країни, [___:13] вони мріяли поїхати, здавалися тоді такими далекими
+    та недосяжними. Тепер це село — єдине місце, [___:14] вона хоче залишитися назавжди.
+
+    '
+  blanks:
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - туди
+    answer: куди
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - туди
+    answer: куди
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - звідти
+    answer: звідки
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  - options:
+    - де
+    - куди
+    - звідки
+    - туди
+    answer: куди
+  - options:
+    - де
+    - куди
+    - звідки
+    - туди
+    answer: куди
+  - options:
+    - де
+    - куди
+    - звідки
+    - там
+    answer: де
+  complete_passage: 'Минулого року я вирішив відвідати село, [___:1] жили мої дідусь
+    і бабуся все своє життя. Це місце, [___:2] я часто їздив у дитинстві на літні
+    канікули. Будинок, [___:3] вони мешкали понад п''ятдесят років, стоїть на пагорбі.
+    Звідти видно долину, [___:4] тече річка і пасуться корови.
+
+
+    Дорога до села йде через ліс, [___:5] ростуть столітні дуби. Є місце, [___:6]
+    можна зупинитися і помилуватися краєвидом на гори. Село, [___:7] я нарешті приїхав
+    після довгої дороги, зустріло мене тишею і спокоєм.
+
+
+    Бабуся показала мені церкву, [___:8] вінчалися мої батьки тридцять років тому.
+    Ми пішли на цвинтар, [___:9] поховані наші предки багатьох поколінь. Потім ми
+    відвідали криницю, [___:10] беруть воду всі жителі села.
+
+
+    Увечері ми сиділи на ґанку будинку, [___:11] я провів стільки щасливих днів у
+    дитинстві. Бабуся розповідала про місця, [___:12] вона подорожувала в молодості
+    з дідусем. Країни, [___:13] вони мріяли поїхати, здавалися тоді такими далекими
+    та недосяжними. Тепер це село — єдине місце, [___:14] вона хоче залишитися назавжди.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Місто, де я народився і провів своє дитинство, дуже красиве та старовинне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Країна, куди ми плануємо поїхати цього літа на відпочинок, знаходиться в
+    Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Село, звідки походить моя родина вже багато поколінь, знаходиться у Карпатах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Офіс, де вона працює кожного дня з ранку до вечора, знаходиться в центрі
+    міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Регіон, куди вони переїжджають на постійне проживання цього місяця, дуже
+    мальовничий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Будинок, звідки вона виїхала після закінчення університету минулого року,
+    тепер порожній.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Кав'ярня, де ми зустрічаємося з друзями кожної суботи після обіду, дуже
+    затишна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Аеропорт, куди прибуває наш міжнародний рейс із Лондона о третій годині,
+    новий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про місто, в якому народилися та
+    яке дуже красиве і старовинне?
+  options:
+  - text: де
+    correct: true
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: false
+  - text: там
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про країну, до якої летимо цього
+    літа та яка знаходиться в Європі?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про село, з якого приїхали гості
+    вчора та яке далеко в горах?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: true
+  - text: звідти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про офіс, в якому вона працює вже
+    п'ять років та який знаходиться в центрі?
+  options:
+  - text: де
+    correct: true
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: false
+  - text: тут
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про регіон, до якого вони переїжджають
+    на постійне проживання та який дуже мальовничий?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про місто, з якого він телефонував
+    учора ввечері та яке було незнайомим?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: true
+  - text: звідти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про готель, в якому ми зупинилися
+    на ніч та який має чудовий вид на море?
+  options:
+  - text: де
+    correct: true
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: false
+  - text: там
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про університет, до якого вона вступила
+    цього року та який дуже престижний у країні?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про країну, з якої походить ця традиція
+    та яка має багату культурну спадщину?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: true
+  - text: звідти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про парк, в якому діти граються
+    щодня після школи та який нещодавно відремонтували?
+  options:
+  - text: де
+    correct: true
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: false
+  - text: там
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про аеропорт, до якого прибуває
+    наш літак о третій годині та який новий?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про будинок, з якого вона виїхала
+    минулого місяця та який тепер порожній і занедбаний?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: true
+  - text: звідти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про кав'ярню, в якій ми зустрічаємося
+    з друзями щосуботи та яка затишна та приваблива?
+  options:
+  - text: де
+    correct: true
+  - text: куди
+    correct: false
+  - text: звідки
+    correct: false
+  - text: там
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Де, куди чи звідки?
+  question: Яке слово потрібно вставити в речення про село, до якого ми їздимо влітку
+    відпочивати щороку та яке у моїх дідуся й бабусі?
+  options:
+  - text: де
+    correct: false
+  - text: куди
+    correct: true
+  - text: звідки
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "де" використовується для опису місця, куди спрямований рух.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "куди" використовується з дієсловами руху, що передбачають напрямок.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Місто, звідки ми їдемо" граматично правильне для опису напрямку
+    руху.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "звідки" може бути замінене на "з якого / з якої" без зміни значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Прислівник "там" є вказівним аналогом "де" для віддаленого місця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Країна, де ми летимо" є граматично правильним українським реченням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "нікуди" є заперечною формою від "куди" і означає відсутність напрямку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Прислівники "сюди" і "звідси" мають протилежні значення щодо напрямку
+    руху.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Будинок, куди я живу" є правильним способом описати місце проживання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Слово "десь" є невизначеною формою від "де" і означає "в якомусь невідомому
+    місці".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: В англійській мові одне слово "where" може перекладатися як "де", "куди"
+    і "звідки".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Регіон, звідки він телефонував" передбачає, що він був у тому
+    регіоні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Прислівник "всюди" може замінити "де" в будь-якому контексті для узагальнення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Місце, куди ми зустрілися" є граматично правильним для опису
+    зустрічі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

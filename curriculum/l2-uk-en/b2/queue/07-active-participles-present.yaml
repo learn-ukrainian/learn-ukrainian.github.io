@@ -1,0 +1,1409 @@
+module: 07-active-participles-present
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/07-active-participles-present.md
+generated: '2025-12-28T20:26:13.202088'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Читаючая дівчина сиділа біля вікна.
+  error: читаючая
+  answer: читаюча
+  sentence_corrected: Читаючая дівчина сиділа біля вікна.
+  options:
+  - читаючая
+  - читаюча
+  - читающа
+  - читаваша
+  original_explanation: Жіночий рід закінчується на -а, не на -ая (русизм).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Працюючий колега попросив допомоги у розмові по телефону.
+  error: працюючий
+  answer: який працює
+  sentence_corrected: Працюючий колега попросив допомоги у розмові по телефону.
+  options:
+  - працюючий
+  - який працює
+  - що працює
+  - працювавший
+  original_explanation: У розмовному контексті краще підрядне речення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Написаючий автор завершив книгу.
+  error: написаючий
+  answer: пишучий
+  sentence_corrected: Написаючий автор завершив книгу.
+  options:
+  - написаючий
+  - пишучий
+  - написавший
+  - написуючий
+  original_explanation: Від доконаного «написати» не можна утворити дієприкметник
+    теперішнього часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дивлячий чоловік стояв біля дверей.
+  error: дивлячий
+  answer: дивлячийся
+  sentence_corrected: Дивлячий чоловік стояв біля дверей.
+  options:
+  - дивлячий
+  - дивлячийся
+  - дивившийся
+  - дивлячийсь
+  original_explanation: Зворотне дієслово зберігає -ся в дієприкметнику.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Існуючих правилів треба дотримуватися.
+  error: правилів
+  answer: правил
+  sentence_corrected: Існуючих правил треба дотримуватися.
+  options:
+  - правилів
+  - правил
+  - правилах
+  - правилами
+  original_explanation: Родовий відмінок множини — «правил» (не «правилів»).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Зростаючую тенденцію спостерігають економісти.
+  error: зростаючую
+  answer: зростаючу
+  sentence_corrected: Зростаючую тенденцію спостерігають економісти.
+  options:
+  - зростаючую
+  - зростаючу
+  - зростаючою
+  - зростаючії
+  original_explanation: Знахідний відмінок жіночого роду — -у, не -ую.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Плиннучий час не зупиниш.
+  error: плиннучий
+  answer: плинучий
+  sentence_corrected: Плиннучий час не зупиниш.
+  options:
+  - плиннучий
+  - плинучий
+  - плиннущий
+  - пливучий
+  original_explanation: Правильна форма — плинучий (одна «н»).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Летящий птах сів на дерево.
+  error: летящий
+  answer: летючий
+  sentence_corrected: Летящий птах сів на дерево.
+  options:
+  - летящий
+  - летючий
+  - летаючий
+  - летівший
+  original_explanation: Правильна українська форма — летючий, не летящий (русизм).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Біжучого хлопця я бачила у розмовному стилі.
+  error: біжучого
+  answer: який біжить
+  sentence_corrected: Біжучого хлопця я бачила у розмовному стилі.
+  options:
+  - біжучого
+  - який біжить
+  - що біжить
+  - біжавшого
+  original_explanation: У розмовному стилі дієприкметник недоречний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Слухаюча аудиторія аплодувала.
+  error: слухаюча
+  answer: слухаюча
+  sentence_corrected: Слухаюча аудиторія аплодувала.
+  options:
+  - слухаюча
+  - яка слухала
+  - що слухала
+  - слухавша
+  original_explanation: У формальному контексті дієприкметник доречний. Помилки немає.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Падаючих зір було багато тієї ночі.
+  error: зір
+  answer: зорь
+  sentence_corrected: Падаючих зорь було багато тієї ночі.
+  options:
+  - зір
+  - зорь
+  - зірок
+  - зоряних
+  original_explanation: Родовий множини від «зоря» — «зорь» або «зір» (обидва правильні,
+    але «зір» частіше вживається з іншим значенням).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Змінюючий клімат впливає на екосистеми.
+  error: змінюючий
+  answer: змінюючийся
+  sentence_corrected: Змінюючий клімат впливає на екосистеми.
+  options:
+  - змінюючий
+  - змінюючийся
+  - змінивший
+  - зміненний
+  original_explanation: «Змінюватися» — зворотне дієслово, тому «змінюючийся».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Говорючий папуга став зіркою шоу.
+  error: говорючий
+  answer: говорячий
+  sentence_corrected: Говорючий папуга став зіркою шоу.
+  options:
+  - говорючий
+  - говорячий
+  - говоруючий
+  - говорящий
+  original_explanation: Від «говорять» — говорячий (не -ючий).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Наростаюча напруженість турбує населенню.
+  error: населенню
+  answer: населення
+  sentence_corrected: Наростаюча напруженість турбує населення.
+  options:
+  - населенню
+  - населення
+  - населенням
+  - населенні
+  original_explanation: «Турбує» вимагає знахідного відмінка — населення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Сидяча праця погано впливає на здорові.
+  error: здорові
+  answer: здоров'я
+  sentence_corrected: Сидяча праця погано впливає на здоров'я.
+  options:
+  - здорові
+  - здоров'я
+  - здоровлі
+  - здоровому
+  original_explanation: Правильна форма — здоров'я (з апострофом).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Існуючи закони потребують модернізації.
+  error: існуючи
+  answer: існуючі
+  sentence_corrected: Існуючи закони потребують модернізації.
+  options:
+  - існуючи
+  - існуючі
+  - існувавші
+  - існуємі
+  original_explanation: «Існуючи» — дієприслівник; потрібен дієприкметник «існуючі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони читають → _____ книгу.
+  answer: читаючий
+  complete_sentence: Вони читають → читаючий__ книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони пишуть → _____ автор.
+  answer: пишучий
+  complete_sentence: Вони пишуть → пишучий__ автор.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони працюють → _____ колега.
+  answer: працюючий
+  complete_sentence: Вони працюють → працюючий__ колега.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони біжать → _____ спортсмен.
+  answer: біжучий
+  complete_sentence: Вони біжать → біжучий__ спортсмен.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони летять → _____ птах.
+  answer: летючий
+  complete_sentence: Вони летять → летючий__ птах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони сидять → _____ положення.
+  answer: сидячий
+  complete_sentence: Вони сидять → сидячий__ положення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони стоять → _____ вода.
+  answer: стояча
+  complete_sentence: Вони стоять → стояча__ вода.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони зростають → _____ тенденція.
+  answer: зростаюча
+  complete_sentence: Вони зростають → зростаюча__ тенденція.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони падають → _____ листя.
+  answer: падаюче
+  complete_sentence: Вони падають → падаюче__ листя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони говорять → _____ людина.
+  answer: говоряча
+  complete_sentence: Вони говорять → говоряча__ людина.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони зникають → _____ вид тварин.
+  answer: зникаючий
+  complete_sentence: Вони зникають → зникаючий__ вид тварин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони існують → _____ проблеми.
+  answer: існуючі
+  complete_sentence: Вони існують → існуючі__ проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони діють → _____ закон.
+  answer: діючий
+  complete_sentence: Вони діють → діючий__ закон.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони слухають → _____ аудиторія.
+  answer: слухаюча
+  complete_sentence: Вони слухають → слухаюча__ аудиторія.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони живуть → _____ організм.
+  answer: живучий
+  complete_sentence: Вони живуть → живучий__ організм.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметник
+  sentence_template: Вони наростають → _____ напруга.
+  answer: наростаюча
+  complete_sentence: Вони наростають → наростаюча__ напруга.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Я бачу _____ дівчину (читаюча).
+  answer: читаючу
+  complete_sentence: Я бачу читаючу__ дівчину (читаюча).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Шум _____ машин заважав спати (працюючі).
+  answer: працюючих
+  complete_sentence: Шум працюючих__ машин заважав спати (працюючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Я розмовляв із _____ студентом (пишучий).
+  answer: пишучим
+  complete_sentence: Я розмовляв із пишучим__ студентом (пишучий).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Це книга про _____ види тварин (зникаючі).
+  answer: зникаючі
+  complete_sentence: Це книга про зникаючі__ види тварин (зникаючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Ми говорили про _____ закони (діючі).
+  answer: діючі
+  complete_sentence: Ми говорили про діючі__ закони (діючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Вона дивилася на _____ листя (падаюче).
+  answer: падаюче
+  complete_sentence: Вона дивилася на падаюче__ листя (падаюче).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Голос _____ папуги здивував гостей (говорячий).
+  answer: говорячого
+  complete_sentence: Голос говорячого__ папуги здивував гостей (говорячий).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Проблема _____ цін турбує всіх (зростаючі).
+  answer: зростаючих
+  complete_sentence: Проблема зростаючих__ цін турбує всіх (зростаючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Ми спостерігали за _____ птахами (летючі).
+  answer: летючими
+  complete_sentence: Ми спостерігали за летючими__ птахами (летючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Вода в _____ ріці була холодною (плинуча).
+  answer: плинучій
+  complete_sentence: Вода в плинучій__ ріці була холодною (плинуча).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Він стояв біля _____ вогню (палаючий).
+  answer: палаючого
+  complete_sentence: Він стояв біля палаючого__ вогню (палаючий).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Ми чули голоси _____ дітей (біжучі).
+  answer: біжучих
+  complete_sentence: Ми чули голоси біжучих__ дітей (біжучі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Це правило стосується _____ норм (існуючі).
+  answer: існуючих
+  complete_sentence: Це правило стосується існуючих__ норм (існуючі).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Я передав листа _____ колезі (працюючий).
+  answer: працюючому
+  complete_sentence: Я передав листа працюючому__ колезі (працюючий).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Вони допомогли _____ жінці (слухаюча).
+  answer: слухаючій
+  complete_sentence: Вони допомогли слухаючій__ жінці (слухаюча).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відмінювання дієприкметників
+  sentence_template: Ефект _____ часу відчувався всюди (плинучий).
+  answer: плинучого
+  complete_sentence: Ефект плинучого__ часу відчувався всюди (плинучий).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Зникаючий туман відкривав краєвид.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Читаюча дівчина не помітила мене.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Наростаючий шум заповнював зал.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Існуючі правила потребують оновлення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Падаюче листя вкривало землю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Працюючий чоловік заснув за столом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Летючі тіні пролетіли над містом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Плинуча ріка несла осіннє листя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Зростаючі ціни турбують населення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Діючі закони регулюють відносини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Живуча традиція передається поколінням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Сидяча робота шкодить здоров'ю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Спадаючий рівень води непокоїть екологів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Стояча вода може бути небезпечною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Біжучий хлопець наздогнав автобус.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Говорячий папуга розважав гостей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Яке слово є активним дієприкметником теперішнього часу?
+  options:
+  - text: написаний
+    correct: false
+  - text: читаючий
+    correct: true
+  - text: прочитавши
+    correct: false
+  - text: читати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Від якого дієслова утворено дієприкметник «працюючий»?
+  options:
+  - text: праця
+    correct: false
+  - text: працювати
+    correct: true
+  - text: працівник
+    correct: false
+  - text: опрацювати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: У якому регістрі найчастіше вживають активні дієприкметники?
+  options:
+  - text: розмовний
+    correct: false
+  - text: художній
+    correct: true
+  - text: інтернет-спілкування
+    correct: false
+  - text: телефонна розмова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Як правильно перефразувати «читаюча дівчина» для розмовного мовлення?
+  options:
+  - text: дівчина читає
+    correct: false
+  - text: дівчина, яка читає
+    correct: true
+  - text: дівчина читаюча
+    correct: false
+  - text: читаюча є дівчина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Який суфікс правильний після шиплячих приголосних?
+  options:
+  - text: -ючий
+    correct: false
+  - text: -учий
+    correct: true
+  - text: -ачий
+    correct: false
+  - text: -ящий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Чи можна утворити активний дієприкметник від дієслова «написати»?
+  options:
+  - text: так, написаючий
+    correct: false
+  - text: так, написуючий
+    correct: false
+  - text: ні, бо це доконаний вид
+    correct: true
+  - text: так, написавший
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Яке слово є дієприслівником, а НЕ дієприкметником?
+  options:
+  - text: читаючий
+    correct: false
+  - text: читаючи
+    correct: true
+  - text: читаюча
+    correct: false
+  - text: читаючого
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: У якому реченні дієприкметник вжито правильно стилістично?
+  options:
+  - text: Слухай, бачиш того біжучого хлопця?
+    correct: false
+  - text: Наростаючий шум заповнював зал.
+    correct: true
+  - text: Передай працюючому колезі цю записку.
+    correct: false
+  - text: Подивись на їдучий автобус!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Яка форма родового відмінка від «читаючий» (чоловічий рід)?
+  options:
+  - text: читаючому
+    correct: false
+  - text: читаючого
+    correct: true
+  - text: читаючим
+    correct: false
+  - text: читаючому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Яке слово є усталеним дієприкметником, що вживається і в розмові?
+  options:
+  - text: працюючий
+    correct: false
+  - text: летючий
+    correct: true
+  - text: біжучий
+    correct: false
+  - text: пишучий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Як утворити дієприкметник від дієслова «слухати»?
+  options:
+  - text: слухавший
+    correct: false
+  - text: слухаючий
+    correct: true
+  - text: слуханий
+    correct: false
+  - text: слухаємий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Чому українська мова рідше використовує дієприкметники, ніж російська?
+  options:
+  - text: бо українська простіша
+    correct: false
+  - text: бо підрядні речення природніші для української
+    correct: true
+  - text: бо дієприкметників немає в українській
+    correct: false
+  - text: бо це заборонено граматикою
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Яка форма жіночого роду від «працюючий»?
+  options:
+  - text: працююча
+    correct: false
+  - text: працюючая
+    correct: false
+  - text: працюючі
+    correct: false
+  - text: працююча
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: У якому контексті доречно вжити «зростаючий»?
+  options:
+  - text: SMS другу
+    correct: false
+  - text: новинний заголовок
+    correct: true
+  - text: розмова з дитиною
+    correct: false
+  - text: замовлення в кафе
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Який дієприкметник утворюється від зворотного дієслова «дивитися»?
+  options:
+  - text: дивлячий
+    correct: false
+  - text: дивлячийся
+    correct: true
+  - text: дивлячись
+    correct: false
+  - text: дивучийся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнайте дієприкметники
+  question: Який приклад демонструє правильне вживання в науковому стилі?
+  options:
+  - text: Той біжучий хлопець — мій брат.
+    correct: false
+  - text: Існуючі теорії пояснюють феномен.
+    correct: true
+  - text: Дай тому працюючому каву.
+    correct: false
+  - text: Летюча миша страшна.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Як правильно перефразувати «читаюча студентка» в підрядне речення?
+  options:
+  - text: студентка, яка читає
+    correct: true
+  - text: студентка, що читала
+    correct: false
+  - text: студентка читає
+    correct: false
+  - text: студентка, читаючи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: «Наростаючий шум» = ?
+  options:
+  - text: шум, який наростає
+    correct: true
+  - text: шум наростав
+    correct: false
+  - text: шум, що наростав
+    correct: false
+  - text: шуму наростаючого
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Яке підрядне речення відповідає «зникаючий вид»?
+  options:
+  - text: вид, який зникає
+    correct: true
+  - text: вид, який зник
+    correct: false
+  - text: вид зникаючий
+    correct: false
+  - text: зникаючого виду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: '«Працюючий чоловік» трансформується в:'
+  options:
+  - text: чоловік, який працює
+    correct: true
+  - text: чоловік працюючий
+    correct: false
+  - text: чоловік, що працював
+    correct: false
+  - text: чоловіка, який працює
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Як перефразувати «падаюче листя»?
+  options:
+  - text: листя, яке падає
+    correct: true
+  - text: листя падаюче
+    correct: false
+  - text: листя, що впало
+    correct: false
+  - text: падало листя
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: «Існуючі правила» = ?
+  options:
+  - text: правила, які існують
+    correct: true
+  - text: правила існуючі
+    correct: false
+  - text: правила, що існували
+    correct: false
+  - text: існуючих правил
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Яке речення правильно передає «летючий птах»?
+  options:
+  - text: птах, який летить
+    correct: true
+  - text: птах летючий
+    correct: false
+  - text: птах, що летів
+    correct: false
+  - text: птаха летючого
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: '«Змінюючийся клімат» трансформується в:'
+  options:
+  - text: клімат, який змінюється
+    correct: true
+  - text: клімат змінюється
+    correct: false
+  - text: клімат, що змінився
+    correct: false
+  - text: змінюючогося клімату
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Як перефразувати «слухаюча аудиторія»?
+  options:
+  - text: аудиторія, яка слухає
+    correct: true
+  - text: аудиторія слухаюча
+    correct: false
+  - text: аудиторія, що слухала
+    correct: false
+  - text: слухаючої аудиторії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: «Біжучий хлопець» = ?
+  options:
+  - text: хлопець, який біжить
+    correct: true
+  - text: хлопець біжучий
+    correct: false
+  - text: хлопець, що бігав
+    correct: false
+  - text: біжучого хлопця
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Яке підрядне речення відповідає «плинуча ріка»?
+  options:
+  - text: ріка, яка пливе
+    correct: true
+  - text: ріка плинуча
+    correct: false
+  - text: ріка, що плила
+    correct: false
+  - text: плинучої ріки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Як правильно перефразувати «зростаючі ціни»?
+  options:
+  - text: ціни, які зростають
+    correct: true
+  - text: ціни зростаючі
+    correct: false
+  - text: ціни, що зросли
+    correct: false
+  - text: зростаючих цін
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: '«Діючий закон» трансформується в:'
+  options:
+  - text: закон, який діє
+    correct: true
+  - text: закон діючий
+    correct: false
+  - text: закон, що діяв
+    correct: false
+  - text: діючого закону
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Яке речення правильно передає «палаючий вогонь»?
+  options:
+  - text: вогонь, який палає
+    correct: true
+  - text: вогонь палаючий
+    correct: false
+  - text: вогонь, що палав
+    correct: false
+  - text: палаючого вогню
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: Як перефразувати «спадаючий рівень»?
+  options:
+  - text: рівень, який спадає
+    correct: true
+  - text: рівень спадаючий
+    correct: false
+  - text: рівень, що спав
+    correct: false
+  - text: спадаючого рівня
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильну трансформацію
+  question: «Живуча традиція» = ?
+  options:
+  - text: традиція, яка живе
+    correct: true
+  - text: традиція живуча
+    correct: false
+  - text: традиція, що жила
+    correct: false
+  - text: живучої традиції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Активні дієприкметники теперішнього часу утворюються від недоконаних
+    дієслів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У розмовному мовленні дієприкметники вживаються так само часто, як у
+    літературі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Дієприкметник «читаючий» відповідає на питання «як?».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Після шиплячих приголосних пишемо суфікс -учий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Летюча миша" — це приклад усталеного дієприкметника.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Зворотні дієслова втрачають -ся в дієприкметнику.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Дієприкметники відмінюються як прикметники м'якої групи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Працюючий колега" — природна фраза для SMS-повідомлення.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Можна утворити дієприкметник «написаючий» від «написати».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Сидяча робота" — приклад книжного стилю.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Українська мова використовує дієприкметники частіше, ніж російська.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У науковому стилі дієприкметники вживаються помірно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Дієприкметник може стояти і перед іменником, і після нього.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Падаючий" — активний дієприкметник минулого часу.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Форма множини від «читаючий» — «читаючі».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Дієприкметники можна утворити від будь-якого дієслова.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

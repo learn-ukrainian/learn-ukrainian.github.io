@@ -1,0 +1,1663 @@
+module: 02-past-passive-participles
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/02-past-passive-participles.md
+generated: '2025-12-28T19:51:21.708833'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 32
+  fill-in: 48
+  unjumble: 32
+  quiz: 16
+  true-false: 16
+item_count: 144
+items:
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Двері закриний, не можна увійти.
+  error: закриний
+  answer: закриті
+  sentence_corrected: Двері закриті, не можна увійти.
+  options:
+  - закриний
+  - закриті
+  - закритий
+  - закрина
+  original_explanation: Двері — множина, потрібно «закриті». Після голосної -тий,
+    не -ний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Книга була написаний вчора.
+  error: написаний
+  answer: написана
+  sentence_corrected: Книга була написана вчора.
+  options:
+  - написаний
+  - написана
+  - написане
+  - написані
+  original_explanation: Книга — жіночий рід, потрібно «написана».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Вікна відкритий, тому холодно.
+  error: відкритий
+  answer: відкриті
+  sentence_corrected: Вікна відкриті, тому холодно.
+  options:
+  - відкритий
+  - відкриті
+  - відкрита
+  - відкрите
+  original_explanation: Вікна — множина, потрібно «відкриті».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Проєкт зробитий успішно.
+  error: зробитий
+  answer: зроблений
+  sentence_corrected: Проєкт зроблений успішно.
+  options:
+  - зробитий
+  - зроблений
+  - зробленний
+  - зробити
+  original_explanation: Правильна форма «зроблений» з чергуванням б→бл.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Рішення було прийнятий учора.
+  error: прийнятий
+  answer: прийняте
+  sentence_corrected: Рішення було прийняте учора.
+  options:
+  - прийнятий
+  - прийняте
+  - прийнята
+  - прийняті
+  original_explanation: Рішення — середній рід, потрібно «прийняте».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Текст перекладен на українську.
+  error: перекладен
+  answer: перекладений
+  sentence_corrected: Текст перекладений на українську.
+  options:
+  - перекладен
+  - перекладений
+  - перекладенний
+  - перекласти
+  original_explanation: 'Повна форма: перекладений.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Завдання виконані студент.
+  error: студент
+  answer: студентом
+  sentence_corrected: Завдання виконані студентом.
+  options:
+  - студент
+  - студентом
+  - студента
+  - студенту
+  original_explanation: 'Агент дії в орудному відмінку: студентом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Документи був підписані директором.
+  error: був
+  answer: були
+  sentence_corrected: Документи були підписані директором.
+  options:
+  - був
+  - були
+  - була
+  - було
+  original_explanation: Документи — множина, потрібно «були».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Стаття опублікуваний у журналі.
+  error: опублікуваний
+  answer: опублікована
+  sentence_corrected: Стаття опублікована у журналі.
+  options:
+  - опублікуваний
+  - опублікована
+  - опублікуване
+  - опублікувати
+  original_explanation: Стаття — жіночий рід, форма «опублікована».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Проблема розв'язаний експертами.
+  error: розв'язаний
+  answer: розв'язана
+  sentence_corrected: Проблема розв'язана експертами.
+  options:
+  - розв'язаний
+  - розв'язана
+  - розв'язане
+  - розв'язані
+  original_explanation: Проблема — жіночий рід, потрібно «розв'язана».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Лист буде надіслані завтра.
+  error: надіслані
+  answer: надісланий
+  sentence_corrected: Лист буде надісланий завтра.
+  options:
+  - надіслані
+  - надісланий
+  - надіслана
+  - надіслане
+  original_explanation: Лист — чоловічий рід однина, потрібно «надісланий».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Угода підписана обидвома сторона.
+  error: сторона
+  answer: сторонами
+  sentence_corrected: Угода підписана обидвома сторонами.
+  options:
+  - сторона
+  - сторонами
+  - сторони
+  - стороні
+  original_explanation: 'Потрібен орудний відмінок множини: сторонами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Нове обладнання встановлена.
+  error: встановлена
+  answer: встановлене
+  sentence_corrected: Нове обладнання встановлене.
+  options:
+  - встановлена
+  - встановлене
+  - встановлений
+  - встановлені
+  original_explanation: Обладнання — середній рід, потрібно «встановлене».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Звіт підготовленний командою.
+  error: підготовленний
+  answer: підготовлений
+  sentence_corrected: Звіт підготовлений командою.
+  options:
+  - підготовленний
+  - підготовлений
+  - підготовлена
+  - підготовити
+  original_explanation: 'Одна н у суфіксі: підготовлений.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: Результати було отримані сьогодні.
+  error: було
+  answer: були
+  sentence_corrected: Результати були отримані сьогодні.
+  options:
+  - було
+  - були
+  - буде
+  - був
+  original_explanation: Результати — множина, потрібно «були».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у творенні
+  sentence_with_error: План затверджена директором.
+  error: затверджена
+  answer: затверджений
+  sentence_corrected: План затверджений директором.
+  options:
+  - затверджена
+  - затверджений
+  - затверджене
+  - затверджені
+  original_explanation: План — чоловічий рід, потрібно «затверджений».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Я читаю написана книга.
+  error: написана книга
+  answer: написану книгу
+  sentence_corrected: Я читаю написану книгу.
+  options:
+  - написана книга
+  - написану книгу
+  - написаної книги
+  - написаній книзі
+  original_explanation: 'Після «читаю» — знахідний відмінок: написану книгу.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: У опублікований статті є помилка.
+  error: опублікований
+  answer: опублікованій
+  sentence_corrected: У опублікованій статті є помилка.
+  options:
+  - опублікований
+  - опублікованій
+  - опубліковану
+  - опублікованої
+  original_explanation: 'Місцевий відмінок жін. роду: опублікованій статті.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Дякуємо за отриманий допомогу.
+  error: отриманий
+  answer: отриману
+  sentence_corrected: Дякуємо за отриману допомогу.
+  options:
+  - отриманий
+  - отриману
+  - отриманої
+  - отриманій
+  original_explanation: 'Допомога — жін. рід, знах. відмінок: отриману допомогу.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Без підписаний документ не можна.
+  error: підписаний
+  answer: підписаного
+  sentence_corrected: Без підписаного документ не можна.
+  options:
+  - підписаний
+  - підписаного
+  - підписаному
+  - підписаним
+  original_explanation: '«Без» вимагає родового відмінка: підписаного документа.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: На запланований зустрічі обговорили це.
+  error: запланований
+  answer: запланованій
+  sentence_corrected: На запланованій зустрічі обговорили це.
+  options:
+  - запланований
+  - запланованій
+  - заплановану
+  - запланованої
+  original_explanation: 'Місцевий відмінок жін. роду: запланованій зустрічі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Працюємо з підготовлені матеріали.
+  error: підготовлені
+  answer: підготовленими
+  sentence_corrected: Працюємо з підготовленими матеріали.
+  options:
+  - підготовлені
+  - підготовленими
+  - підготовлених
+  - підготовленим
+  original_explanation: '«З» вимагає орудного відмінка: підготовленими матеріалами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Згідно з затверджений план діємо.
+  error: затверджений
+  answer: затвердженим
+  sentence_corrected: Згідно з затвердженим план діємо.
+  options:
+  - затверджений
+  - затвердженим
+  - затвердженого
+  - затвердженому
+  original_explanation: '«Згідно з» вимагає орудного відмінка: затвердженим планом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Для встановлений система потрібен час.
+  error: встановлений
+  answer: встановленої
+  sentence_corrected: Для встановленої система потрібен час.
+  options:
+  - встановлений
+  - встановленої
+  - встановлену
+  - встановленій
+  original_explanation: '«Для» вимагає родового відмінка жін. роду: встановленої системи.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: До написана стаття є питання.
+  error: написана
+  answer: написаної
+  sentence_corrected: До написаної стаття є питання.
+  options:
+  - написана
+  - написаної
+  - написану
+  - написаній
+  original_explanation: '«До» вимагає родового відмінка: написаної статті.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Про отримані результати повідомимо.
+  error: отримані
+  answer: отримані
+  sentence_corrected: Про отримані результати повідомимо.
+  options:
+  - отримані
+  - отриманих
+  - отриманими
+  - отриманим
+  original_explanation: «Про» вимагає знахідного — форми збігаються.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Разом із призначений колега працюємо.
+  error: призначений
+  answer: призначеним
+  sentence_corrected: Разом із призначеним колега працюємо.
+  options:
+  - призначений
+  - призначеним
+  - призначеного
+  - призначеному
+  original_explanation: '«Разом із» вимагає орудного: призначеним колегою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: За встановлений правила граємо.
+  error: встановлений
+  answer: встановленими
+  sentence_corrected: За встановленими правила граємо.
+  options:
+  - встановлений
+  - встановленими
+  - встановлених
+  - встановленим
+  original_explanation: '«За» (в значенні «згідно з») + орудний множини: встановленими
+    правилами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Крім виконані завдання, є й інші.
+  error: виконані
+  answer: виконаних
+  sentence_corrected: Крім виконаних завдання, є й інші.
+  options:
+  - виконані
+  - виконаних
+  - виконаними
+  - виконаним
+  original_explanation: '«Крім» вимагає родового відмінка: виконаних завдань.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: Ми говорили про завершена проєкт.
+  error: завершена
+  answer: завершений
+  sentence_corrected: Ми говорили про завершений проєкт.
+  options:
+  - завершена
+  - завершений
+  - завершеного
+  - завершеному
+  original_explanation: 'Проєкт — чол. рід, знахідний = називний: завершений проєкт.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: На відміну від створений версія, ця краща.
+  error: створений
+  answer: створеної
+  sentence_corrected: На відміну від створеної версія, ця краща.
+  options:
+  - створений
+  - створеної
+  - створену
+  - створеній
+  original_explanation: '«На відміну від» + родовий жін. роду: створеної версії.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте відмінкові помилки
+  sentence_with_error: У завершена проєкт є недоліки.
+  error: завершена
+  answer: завершеному
+  sentence_corrected: У завершеному проєкт є недоліки.
+  options:
+  - завершена
+  - завершеному
+  - завершеного
+  - завершеним
+  original_explanation: 'Місцевий відмінок чол. роду: у завершеному проєкті.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Книга _____ відомим автором.
+  answer: написана
+  complete_sentence: Книга написана__ відомим автором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Проєкт _____ успішно.
+  answer: завершений
+  complete_sentence: Проєкт завершений__ успішно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Вікна _____, тому холодно.
+  answer: відкриті
+  complete_sentence: Вікна відкриті__, тому холодно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Рішення було _____ учора.
+  answer: прийняте
+  complete_sentence: Рішення було прийняте__ учора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: _____ документи лежать на столі.
+  answer: Підписані
+  complete_sentence: Підписані__ документи лежать на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Текст _____ на українську мову.
+  answer: перекладений
+  complete_sentence: Текст перекладений__ на українську мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Будинок _____ у минулому столітті.
+  answer: побудований
+  complete_sentence: Будинок побудований__ у минулому столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: _____ стаття опублікована в журналі.
+  answer: Написана
+  complete_sentence: Написана__ стаття опублікована в журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Двері _____, можна заходити.
+  answer: відчинені
+  complete_sentence: Двері відчинені__, можна заходити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Посилка буде _____ завтра.
+  answer: доставлена
+  complete_sentence: Посилка буде доставлена__ завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Завдання _____ студентом вчасно.
+  answer: виконане
+  complete_sentence: Завдання виконане__ студентом вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Лист _____ і _____.
+  answer: написаний
+  complete_sentence: Лист написаний__ і написаний__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Угода _____ обома сторонами.
+  answer: підписана
+  complete_sentence: Угода підписана__ обома сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Проблема _____ експертами.
+  answer: розв'язана
+  complete_sentence: Проблема розв'язана__ експертами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Захід _____ на наступний тиждень.
+  answer: запланований
+  complete_sentence: Захід запланований__ на наступний тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть дієприкметники
+  sentence_template: Новина _____ в усіх ЗМІ.
+  answer: опублікована
+  complete_sentence: Новина опублікована__ в усіх ЗМІ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Я читаю _____ книгу.
+  answer: написану
+  complete_sentence: Я читаю написану__ книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: У _____ статті є цікаві факти.
+  answer: опублікованій
+  complete_sentence: У опублікованій__ статті є цікаві факти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Ми говорили про _____ проєкт.
+  answer: завершений
+  complete_sentence: Ми говорили про завершений__ проєкт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Без _____ дозволу не можна входити.
+  answer: отриманого
+  complete_sentence: Без отриманого__ дозволу не можна входити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Дякуємо за _____ допомогу.
+  answer: надану
+  complete_sentence: Дякуємо за надану__ допомогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: На _____ засіданні обговорили питання.
+  answer: запланованому
+  complete_sentence: На запланованому__ засіданні обговорили питання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Працюємо з _____ матеріалами.
+  answer: підготовленими
+  complete_sentence: Працюємо з підготовленими__ матеріалами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Згідно з _____ планом діємо.
+  answer: затвердженим
+  complete_sentence: Згідно з затвердженим__ планом діємо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Для _____ системи потрібне оновлення.
+  answer: встановленої
+  complete_sentence: Для встановленої__ системи потрібне оновлення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: У _____ документі все чітко.
+  answer: підписаному
+  complete_sentence: У підписаному__ документі все чітко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Про _____ результати повідомимо завтра.
+  answer: отримані
+  complete_sentence: Про отримані__ результати повідомимо завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: До _____ статті є коментарі.
+  answer: опублікованої
+  complete_sentence: До опублікованої__ статті є коментарі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Разом із _____ колегами працюємо.
+  answer: призначеними
+  complete_sentence: Разом із призначеними__ колегами працюємо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: За _____ правилами граємо.
+  answer: встановленими
+  complete_sentence: За встановленими__ правилами граємо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: Крім _____ завдань, є й інші.
+  answer: виконаних
+  complete_sentence: Крім виконаних__ завдань, є й інші.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Узгодження у відмінках
+  sentence_template: На відміну від _____ версії, ця краща.
+  answer: попередньої
+  complete_sentence: На відміну від попередньої__ версії, ця краща.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Книга _____ написана торік.
+  answer: була
+  complete_sentence: Книга була__ написана торік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Лист _____ відправлений завтра.
+  answer: буде
+  complete_sentence: Лист буде__ відправлений завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Рішення _____ прийняте вчора.
+  answer: було
+  complete_sentence: Рішення було__ прийняте вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Документи _____ підготовлені заздалегідь.
+  answer: були
+  complete_sentence: Документи були__ підготовлені заздалегідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Проєкт _____ завершений наступного місяця.
+  answer: буде
+  complete_sentence: Проєкт буде__ завершений наступного місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Угода _____ підписана минулого року.
+  answer: була
+  complete_sentence: Угода була__ підписана минулого року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Завдання _____ виконане студентами.
+  answer: було
+  complete_sentence: Завдання було__ виконане студентами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Усі листи _____ надіслані вчора.
+  answer: були
+  complete_sentence: Усі листи були__ надіслані вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Новий закон _____ прийнятий парламентом.
+  answer: буде
+  complete_sentence: Новий закон буде__ прийнятий парламентом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Результати _____ оголошені завтра.
+  answer: будуть
+  complete_sentence: Результати будуть__ оголошені завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Стаття _____ опублікована в журналі.
+  answer: була
+  complete_sentence: Стаття була__ опублікована в журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Нові правила _____ затверджені керівництвом.
+  answer: були
+  complete_sentence: Нові правила були__ затверджені керівництвом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Замовлення _____ доставлене вчасно.
+  answer: було
+  complete_sentence: Замовлення було__ доставлене вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: План _____ розроблений командою.
+  answer: був
+  complete_sentence: План був__ розроблений командою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Зміни _____ внесені до документа.
+  answer: були
+  complete_sentence: Зміни були__ внесені до документа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дієприкметники з «бути»
+  sentence_template: Договір _____ підписаний сьогодні.
+  answer: буде
+  complete_sentence: Договір буде__ підписаний сьогодні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Книга була написана відомим автором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Проєкт буде завершений наступного тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Стаття була опублікована у журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Договір був підписаний обома сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Усі завдання були виконані вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Рішення було прийняте керівництвом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Книга перекладена на українську мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Будинок був побудований у минулому столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Конференція буде організована наступного місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Результати будуть оголошені завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Усі листи були отримані сьогодні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Нові правила були встановлені.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Посилку буде доставлено завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Проєкт був створений нашою командою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: План був затверджений директором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Захід був призначений на п'ятницю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Прочитана мною книга виявилася дуже цікавою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Успішно завершений проєкт отримав нагороду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Написана українською стаття була перекладена на англійською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Підготовлені заздалегідь матеріали допомогли нам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Професійно організоване свято всім сподобалося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Отримані результати підтвердили нашу гіпотезу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Вчасно виконана робота була високо оцінена.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Нове встановлене обладнання працює добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Нещодавно опублікований звіт містить цікаві дані.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Нова створена програма допомагає студентам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Призначена зустріч була перенесена на п'ятницю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Надіслані електронною поштою документи були отримані.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Закриті вікна не пропускають холодне повітря.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Відкрита виставка привернула увагу багатьох відвідувачів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Побудований у місті новий парк став популярним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення з дієприкметниками
+  jumbled_words: []
+  answer: Виданий минулого року підручник використовується в школах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Який дієприкметник утворюється від дієслова «написати»?
+  options:
+  - text: написаний
+    correct: true
+  - text: написитий
+    correct: false
+  - text: напислений
+    correct: false
+  - text: написуваний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Який суфікс використовується після кореня на голосну?
+  options:
+  - text: -тий
+    correct: true
+  - text: -ний
+    correct: false
+  - text: -лий
+    correct: false
+  - text: -уний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Від якого дієслова утворено «зроблений»?
+  options:
+  - text: зробити
+    correct: true
+  - text: робити
+    correct: false
+  - text: зробляти
+    correct: false
+  - text: роблювати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яка правильна форма для іменника «книга» (ж.р.)?
+  options:
+  - text: прочитана книга
+    correct: true
+  - text: прочитаний книга
+    correct: false
+  - text: прочитане книга
+    correct: false
+  - text: прочитані книга
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яке дієслово НЕ може утворити пасивний дієприкметник?
+  options:
+  - text: спати
+    correct: true
+  - text: написати
+    correct: false
+  - text: прочитати
+    correct: false
+  - text: зробити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Як утворити пасив у майбутньому часі?
+  options:
+  - text: буде + дієприкметник
+    correct: true
+  - text: був + дієприкметник
+    correct: false
+  - text: є + дієприкметник
+    correct: false
+  - text: лише дієприкметник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Який дієприкметник від «закрити»?
+  options:
+  - text: закритий
+    correct: true
+  - text: закриний
+    correct: false
+  - text: закрилений
+    correct: false
+  - text: закрюваний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Що означає «підписаний договір»?
+  options:
+  - text: договір, який підписали
+    correct: true
+  - text: договір, який підписують
+    correct: false
+  - text: договір для підписання
+    correct: false
+  - text: договір без підпису
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: У якому регістрі дієприкметники найчастіші?
+  options:
+  - text: науковому та офіційному
+    correct: true
+  - text: розмовному
+    correct: false
+  - text: художньому
+    correct: false
+  - text: усному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яка форма множини від «написаний»?
+  options:
+  - text: написані
+    correct: true
+  - text: написаний
+    correct: false
+  - text: написана
+    correct: false
+  - text: написане
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Від яких дієслів утворюються пасивні дієприкметники?
+  options:
+  - text: від перехідних доконаного виду
+    correct: true
+  - text: від будь-яких дієслів
+    correct: false
+  - text: тільки від дієслів руху
+    correct: false
+  - text: від неперехідних дієслів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Який дієприкметник утворено від «створити»?
+  options:
+  - text: створений
+    correct: true
+  - text: створитий
+    correct: false
+  - text: створюваний
+    correct: false
+  - text: створілий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Як узгоджується дієприкметник з іменником?
+  options:
+  - text: у роді, числі та відмінку
+    correct: true
+  - text: лише в роді
+    correct: false
+  - text: лише в числі
+    correct: false
+  - text: не узгоджується
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яка форма в орудному відмінку від «написаний лист»?
+  options:
+  - text: написаним листом
+    correct: true
+  - text: написаного листа
+    correct: false
+  - text: написаному листу
+    correct: false
+  - text: написаний лист
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яке чергування відбувається у «зроблений»?
+  options:
+  - text: б → бл
+    correct: true
+  - text: д → дж
+    correct: false
+  - text: т → ч
+    correct: false
+  - text: жодного
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення дієприкметників
+  question: Яка форма для середнього роду від «завершити»?
+  options:
+  - text: завершене
+    correct: true
+  - text: завершений
+    correct: false
+  - text: завершена
+    correct: false
+  - text: завершені
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Пасивні дієприкметники утворюються від будь-яких дієслів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Суфікс -тий використовується після кореня на голосну.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметник не змінюється за родами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: «Зроблений» утворено від «зробити» з чергуванням б→бл.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Для майбутнього часу використовуємо «був» + дієприкметник.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметники характерні для розмовного стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: «Написана книга» означає «книга, яку написали».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметник у множині закінчується на -і.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: «Закриний» — правильна форма дієприкметника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметник відповідає на питання «який?»
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Від дієслова «спати» можна утворити пасивний дієприкметник.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметник з «бути» утворює пасивну конструкцію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: В орудному відмінку чол. роду закінчення -ий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: «Підготовлений» утворено від «підготувати».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: Дієприкметник не відмінюється за відмінками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення
+  statement: У науковому тексті дієприкметники дуже поширені.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

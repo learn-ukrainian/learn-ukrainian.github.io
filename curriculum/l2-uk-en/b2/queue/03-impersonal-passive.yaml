@@ -1,0 +1,1728 @@
+module: 03-impersonal-passive
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/03-impersonal-passive.md
+generated: '2025-12-28T19:51:22.751390'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 32
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 128
+items:
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Книга написано українською мовою відомим письменником.
+  error: Книга
+  answer: Книгу
+  sentence_corrected: Книгу написано українською мовою відомим письменником.
+  options:
+  - Книга
+  - Книгу
+  - Книзі
+  - Книгою
+  original_explanation: Після -но/-то об'єкт стоїть у знахідному відмінку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Закон прийнято парламентом.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Закон прийнято парламентом.
+  options:
+  - Закон
+  - речення правильне
+  - прийнято
+  - парламентом
+  original_explanation: Це речення правильне. "Закон" — знахідний = називний для неістот.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Угода підписано представниками обох сторін.
+  error: Угода
+  answer: Угоду
+  sentence_corrected: Угоду підписано представниками обох сторін.
+  options:
+  - Угода
+  - Угоду
+  - Угоді
+  - Угодою
+  original_explanation: Знахідний відмінок жіночого роду — угоду.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Рішення затверджена на засіданні комітету.
+  error: затверджена
+  answer: затверджено
+  sentence_corrected: Рішення затверджено на засіданні комітету.
+  options:
+  - затверджена
+  - затверджено
+  - затвердженої
+  - затвердженим
+  original_explanation: Форми -но/-то не змінюються за родами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Документи направлені до міністерства для розгляду.
+  error: направлені
+  answer: направлено
+  sentence_corrected: Документи направлено до міністерства для розгляду.
+  options:
+  - направлені
+  - направлено
+  - направлених
+  - направленим
+  original_explanation: Форми -но/-то не узгоджуються з множиною.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Заяву розглянуто та задоволено.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Заяву розглянуто та задоволено.
+  options:
+  - Заяву
+  - речення правильне
+  - розглянуто
+  - задоволено
+  original_explanation: Речення правильне. "Заяву" — знахідний відмінок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Проєкт схвалена комісією минулого тижня.
+  error: схвалена
+  answer: схвалено
+  sentence_corrected: Проєкт схвалено комісією минулого тижня.
+  options:
+  - схвалена
+  - схвалено
+  - схваленого
+  - схваленим
+  original_explanation: Форма -но не змінюється.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Звіти подані вчасно до секретаріату.
+  error: подані
+  answer: подано
+  sentence_corrected: Звіти подано вчасно до секретаріату.
+  options:
+  - подані
+  - подано
+  - поданих
+  - поданим
+  original_explanation: Безособова форма не узгоджується з об'єктом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Справа закрито за браком доказів.
+  error: Справа
+  answer: Справу
+  sentence_corrected: Справу закрито за браком доказів.
+  options:
+  - Справа
+  - Справу
+  - Справі
+  - Справою
+  original_explanation: Знахідний відмінок для жіночого роду.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Наказ видано директором підприємства.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Наказ видано директором підприємства.
+  options:
+  - Наказ
+  - речення правильне
+  - видано
+  - директором
+  original_explanation: Речення правильне. "Наказ" — знахідний = називний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Пропозиція відхилена більшістю голосів.
+  error: відхилена
+  answer: відхилено
+  sentence_corrected: Пропозиція відхилено більшістю голосів.
+  options:
+  - відхилена
+  - відхилено
+  - відхиленої
+  - відхиленою
+  original_explanation: Форма -но/-то — "пропозицію відхилено".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Результати оголошена на прес-конференції.
+  error: оголошена
+  answer: оголошено
+  sentence_corrected: Результати оголошено на прес-конференції.
+  options:
+  - оголошена
+  - оголошено
+  - оголошених
+  - оголошеним
+  original_explanation: Для множини також "оголошено" — без узгодження.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Матеріали передані до архіву на зберігання.
+  error: передані
+  answer: передано
+  sentence_corrected: Матеріали передано до архіву на зберігання.
+  options:
+  - передані
+  - передано
+  - переданих
+  - переданим
+  original_explanation: Безособова форма однакова для всіх чисел.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Реформу розпочато урядом минулого року.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Реформу розпочато урядом минулого року.
+  options:
+  - Реформу
+  - речення правильне
+  - розпочато
+  - урядом
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Умови договору змінені без попередження.
+  error: змінені
+  answer: змінено
+  sentence_corrected: Умови договору змінено без попередження.
+  options:
+  - змінені
+  - змінено
+  - змінених
+  - зміненим
+  original_explanation: Безособова форма — "умови змінено".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення відмінкових помилок
+  sentence_with_error: Кошти перераховані на рахунок отримувача.
+  error: перераховані
+  answer: перераховано
+  sentence_corrected: Кошти перераховано на рахунок отримувача.
+  options:
+  - перераховані
+  - перераховано
+  - перерахованих
+  - перерахованим
+  original_explanation: Форма -но не узгоджується з об'єктом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Мені сказано про зміни в розкладі. (у розмові)
+  error: сказано
+  answer: сказали
+  sentence_corrected: Мені сказали про зміни в розкладі. (у розмові)
+  options:
+  - сказано
+  - сказали
+  - скажуть
+  - говорили
+  original_explanation: У розмовному стилі вживається 3-я особа множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Документи направлені до секретаріату. (в офіційному документі)
+  error: направлені
+  answer: направлено
+  sentence_corrected: Документи направлено до секретаріату. (в офіційному документі)
+  options:
+  - направлені
+  - направлено
+  - направляються
+  - направляли
+  original_explanation: В офіційному документі вживається -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Рішення прийнято.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Рішення прийнято.
+  options:
+  - Рішення
+  - речення правильне
+  - прийнято
+  - стиль правильний
+  original_explanation: Речення правильне для офіційного стилю.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Нам передано привіт від колег. (у звичайній розмові)
+  error: передано
+  answer: передали
+  sentence_corrected: Нам передали привіт від колег. (у звичайній розмові)
+  options:
+  - передано
+  - передали
+  - передають
+  - передадуть
+  original_explanation: У розмові природніше "передали".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Закон прийнято Верховною Радою.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Закон прийнято Верховною Радою.
+  options:
+  - Закон
+  - речення правильне
+  - прийнято
+  - Верховною
+  original_explanation: Конструкція правильна для офіційного стилю.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Йому показано нову квартиру. (у побутовій ситуації)
+  error: показано
+  answer: показали
+  sentence_corrected: Йому показали нову квартиру. (у побутовій ситуації)
+  options:
+  - показано
+  - показали
+  - показують
+  - покажуть
+  original_explanation: У побутовому мовленні вживається 3-я особа множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Угоду укладено на вигідних умовах.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Угоду укладено на вигідних умовах.
+  options:
+  - Угоду
+  - речення правильне
+  - укладено
+  - вигідних
+  original_explanation: Правильна офіційна конструкція.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Нас попередили про затримку.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Нас попередили про затримку.
+  options:
+  - Нас
+  - речення правильне
+  - попередили
+  - затримку
+  original_explanation: Правильна розмовна форма пасиву.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Мені пояснено всі деталі угоди. (у звичайному спілкуванні)
+  error: пояснено
+  answer: пояснили
+  sentence_corrected: Мені пояснили всі деталі угоди. (у звичайному спілкуванні)
+  options:
+  - пояснено
+  - пояснили
+  - пояснюють
+  - поясняться
+  original_explanation: У звичайному спілкуванні — "пояснили".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Засідання оголошено закритим.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Засідання оголошено закритим.
+  options:
+  - Засідання
+  - речення правильне
+  - оголошено
+  - закритим
+  original_explanation: Стандартна офіційна формула.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Їй розказано про все. (у побуті)
+  error: розказано
+  answer: розказали
+  sentence_corrected: Їй розказали про все. (у побуті)
+  options:
+  - розказано
+  - розказали
+  - розкажуть
+  - розказують
+  original_explanation: У побутовому мовленні — "розказали".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Бюджет затверджено на засіданні.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Бюджет затверджено на засіданні.
+  options:
+  - Бюджет
+  - речення правильне
+  - затверджено
+  - засіданні
+  original_explanation: Правильна офіційна форма.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Йому надано відпустку на тиждень.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Йому надано відпустку на тиждень.
+  options:
+  - Йому
+  - речення правильне
+  - надано
+  - відпустку
+  original_explanation: Правильна форма для офіційного документа.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Тобі зроблено зауваження. (у неформальній ситуації)
+  error: зроблено
+  answer: зробили
+  sentence_corrected: Тобі зробили зауваження. (у неформальній ситуації)
+  options:
+  - зроблено
+  - зробили
+  - роблять
+  - зроблять
+  original_explanation: У неформальному спілкуванні — "зробили".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Проєкт відхилено комісією.
+  error: none
+  answer: речення правильне
+  sentence_corrected: Проєкт відхилено комісією.
+  options:
+  - Проєкт
+  - речення правильне
+  - відхилено
+  - комісією
+  original_explanation: Правильна офіційна конструкція.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення стилістичних помилок
+  sentence_with_error: Мене поінформовано про рішення суду. (у розмові)
+  error: поінформовано
+  answer: поінформували
+  sentence_corrected: Мене поінформували про рішення суду. (у розмові)
+  options:
+  - поінформовано
+  - поінформували
+  - інформують
+  - поінформуватимуть
+  original_explanation: У розмові природніше "поінформували".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Закон про освіту _____ Верховною Радою минулого тижня після тривалого
+    обговорення.
+  answer: прийнято
+  complete_sentence: Закон про освіту прийнято__ Верховною Радою минулого тижня після
+    тривалого обговорення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Офіційну угоду між двома державами _____ на найвищому рівні під
+    час саміту.
+  answer: підписано
+  complete_sentence: Офіційну угоду між двома державами підписано__ на найвищому рівні
+    під час саміту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Державний бюджет на наступний фінансовий рік _____ урядом та
+    передано на голосування.
+  answer: затверджено
+  complete_sentence: Державний бюджет на наступний фінансовий рік затверджено__ урядом
+    та передано на голосування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Усі необхідні документи для подання заяви _____ та передано до
+    секретаріату.
+  answer: підготовлено
+  complete_sentence: Усі необхідні документи для подання заяви підготовлено__ та передано
+    до секретаріату.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Результати наукового експерименту _____ у провідному міжнародному
+    журналі.
+  answer: опубліковано
+  complete_sentence: Результати наукового експерименту опубліковано__ у провідному
+    міжнародному журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Точну дату проведення конференції _____ на засіданні оргкомітету.
+  answer: визначено
+  complete_sentence: Точну дату проведення конференції визначено__ на засіданні оргкомітету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Фінансування проєкту з розвитку інфраструктури _____ з державного
+    бюджету.
+  answer: забезпечено
+  complete_sentence: Фінансування проєкту з розвитку інфраструктури забезпечено__
+    з державного бюджету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Усі завдання першого етапу проєкту _____ вчасно та з високою
+    якістю.
+  answer: виконано
+  complete_sentence: Усі завдання першого етапу проєкту виконано__ вчасно та з високою
+    якістю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Роботу над новим законопроєктом _____ ще минулого місяця.
+  answer: розпочато
+  complete_sentence: Роботу над новим законопроєктом розпочато__ ще минулого місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Термін подання документів _____ до кінця поточного кварталу.
+  answer: продовжено
+  complete_sentence: Термін подання документів продовжено__ до кінця поточного кварталу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Дію попереднього договору _____ у зв'язку з порушенням умов.
+  answer: припинено
+  complete_sentence: Дію попереднього договору припинено__ у зв'язку з порушенням
+    умов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Пропозицію опозиції щодо перенесення голосування _____ більшістю
+    голосів.
+  answer: відхилено
+  complete_sentence: Пропозицію опозиції щодо перенесення голосування відхилено__
+    більшістю голосів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Усі запити громадян _____ та направлено до відповідних відділів.
+  answer: зареєстровано
+  complete_sentence: Усі запити громадян зареєстровано__ та направлено до відповідних
+    відділів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Порушення правил дорожнього руху _____ камерами відеоспостереження.
+  answer: зафіксовано
+  complete_sentence: Порушення правил дорожнього руху зафіксовано__ камерами відеоспостереження.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Новий проєкт концепції реформи _____ на засіданні кабінету міністрів.
+  answer: схвалено
+  complete_sentence: Новий проєкт концепції реформи схвалено__ на засіданні кабінету
+    міністрів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення форм -но/-то
+  sentence_template: Справу _____ у зв'язку з відсутністю доказів вини підозрюваного.
+  answer: закрито
+  complete_sentence: Справу закрито__ у зв'язку з відсутністю доказів вини підозрюваного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: В офіційному наказі директора записано, що роботу над проєктом
+    _____.
+  answer: завершено
+  complete_sentence: В офіційному наказі директора записано, що роботу над проєктом
+    завершено__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: У розмові з другом я сказав, що мені вже _____ про цю новину.
+  answer: сказали
+  complete_sentence: У розмові з другом я сказав, що мені вже сказали__ про цю новину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: У протоколі засідання зафіксовано, що пропозицію _____ більшістю
+    голосів.
+  answer: схвалено
+  complete_sentence: У протоколі засідання зафіксовано, що пропозицію схвалено__ більшістю
+    голосів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: Коли я спитав колегу, він відповів, що йому _____ про зміни.
+  answer: повідомили
+  complete_sentence: Коли я спитав колегу, він відповів, що йому повідомили__ про
+    зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: 'У заголовку новини написано: "Угоду _____".'
+  answer: підписано
+  complete_sentence: 'У заголовку новини написано: "Угоду підписано__".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: На зустрічі друзів хтось згадав, що їм _____ цікаву історію.
+  answer: розповіли
+  complete_sentence: На зустрічі друзів хтось згадав, що їм розповіли__ цікаву історію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: В офіційному повідомленні зазначено, що терміни подачі документів
+    _____.
+  answer: продовжено
+  complete_sentence: В офіційному повідомленні зазначено, що терміни подачі документів
+    продовжено__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: 'У побутовій розмові: "Ти чув? Їм _____ премію!"'
+  answer: дали
+  complete_sentence: 'У побутовій розмові: "Ти чув? Їм дали__ премію!"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: У державному акті записано, що нові правила _____ з першого числа.
+  answer: встановлено
+  complete_sentence: У державному акті записано, що нові правила встановлено__ з першого
+    числа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: На перерві колега розповів, що його _____ на нову посаду.
+  answer: перевели
+  complete_sentence: На перерві колега розповів, що його перевели__ на нову посаду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: В урядовій постанові зазначається, що фінансування _____.
+  answer: забезпечено
+  complete_sentence: В урядовій постанові зазначається, що фінансування забезпечено__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: Мій друг сказав, що йому _____ відпустку на два тижні.
+  answer: дали
+  complete_sentence: Мій друг сказав, що йому дали__ відпустку на два тижні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: У судовому рішенні вказано, що справу _____ за браком доказів.
+  answer: закрито
+  complete_sentence: У судовому рішенні вказано, що справу закрито__ за браком доказів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: Сусідка розповіла, що їй _____ про підвищення тарифів.
+  answer: повідомили
+  complete_sentence: Сусідка розповіла, що їй повідомили__ про підвищення тарифів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: У наказі міністерства записано, що реформу _____ з наступного
+    року.
+  answer: розпочато
+  complete_sentence: У наказі міністерства записано, що реформу розпочато__ з наступного
+    року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір форми за контекстом
+  sentence_template: На вечірці хтось згадав, що їм _____ квитки на концерт.
+  answer: подарували
+  complete_sentence: На вечірці хтось згадав, що їм подарували__ квитки на концерт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: На засіданні прийнято важливе рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Всі документи направлено до міністерства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Справу закрито за браком доказів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Бюджет затверджено на наступний рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Угоду підписано на найвищому рівні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Результати опубліковано в науковому журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Реформу розпочато минулого року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Рішенням голови засідання оголошено закритим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Роботу над проєктом успішно завершено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Пропозицію схвалено профільним комітетом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Заяву зареєстровано у секретаріаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Дату проведення конференції визначено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Всі помилки у документі виправлено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Термін подання документів продовжено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Пропозицію відхилено більшістю голосів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень з -но/-то
+  jumbled_words: []
+  answer: Кошти перераховано на рахунок вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка форма дієслова типова для офіційно-ділового стилю української мови
+    та вказує на завершену дію без вказівки на виконавця?
+  options:
+  - text: форма -но/-то
+    correct: true
+  - text: форма -ся
+    correct: false
+  - text: активний стан
+    correct: false
+  - text: умовний спосіб
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: У реченні "Рішення прийнято" в якому відмінку стоїть слово "рішення" і
+    чому це важливо для розуміння конструкції?
+  options:
+  - text: знахідний відмінок
+    correct: true
+  - text: називний відмінок
+    correct: false
+  - text: родовий відмінок
+    correct: false
+  - text: орудний відмінок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка головна відмінність конструкції "Книгу написано" від "Книга написана"
+    з точки зору граматичної структури речення?
+  options:
+  - text: відсутність узгодження у -но/-то
+    correct: true
+  - text: різний час дієслова
+    correct: false
+  - text: різний вид дієслова
+    correct: false
+  - text: наявність підмета
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Чому форми -но/-то вважаються безособовими конструкціями і який ефект
+    це створює в офіційних документах?
+  options:
+  - text: вони не вказують на виконавця дії
+    correct: true
+  - text: вони не мають часу
+    correct: false
+  - text: вони не мають виду
+    correct: false
+  - text: вони не потребують об'єкта
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Від якої форми дієслова утворюються конструкції -но/-то і який морфологічний
+    процес при цьому відбувається?
+  options:
+  - text: від пасивного дієприкметника
+    correct: true
+  - text: від інфінітива
+    correct: false
+  - text: від теперішнього часу
+    correct: false
+  - text: від майбутнього часу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка конструкція є правильною з точки зору норм української мови та офіційно-ділового
+    стилю?
+  options:
+  - text: Заяву подано.
+    correct: true
+  - text: Заява подано.
+    correct: false
+  - text: Заява подана.
+    correct: false
+  - text: Заяву подану.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: В якому контексті використання форм -но/-то буде найбільш доречним та
+    відповідатиме стилістичним нормам?
+  options:
+  - text: в офіційних документах
+    correct: true
+  - text: у розмові з другом
+    correct: false
+  - text: у художній літературі
+    correct: false
+  - text: у приватному листуванні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка трансформація відбувається при переході від речення "Депутати прийняли
+    закон" до "Закон прийнято"?
+  options:
+  - text: активний стан → безособовий пасив
+    correct: true
+  - text: минулий час → теперішній час
+    correct: false
+  - text: доконаний вид → недоконаний вид
+    correct: false
+  - text: однина → множина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Чому речення "Мені налито чаю" звучить неприродно в побутовому мовленні
+    і яка альтернатива була б доречнішою?
+  options:
+  - text: форми -но/-то не вживаються в розмовному стилі
+    correct: true
+  - text: неправильний відмінок
+    correct: false
+  - text: неправильний вид дієслова
+    correct: false
+  - text: неправильний час дієслова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка особливість форм -но/-то робить їх зручними для офіційних оголошень
+    та повідомлень у засобах масової інформації?
+  options:
+  - text: лаконічність та об'єктивність
+    correct: true
+  - text: емоційність
+    correct: false
+  - text: експресивність
+    correct: false
+  - text: розмовність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Як правильно утворити форму -но від дієприкметника "затверджений" і в
+    якому реченні вона буде вжита правильно?
+  options:
+  - text: затверджено
+    correct: true
+  - text: затвердженно
+    correct: false
+  - text: затверджувано
+    correct: false
+  - text: затверджуємо
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яке речення демонструє правильне вживання форми -то, утвореної від дієприкметника
+    на -тий?
+  options:
+  - text: Засідання відкрито.
+    correct: true
+  - text: Засідання відкритий.
+    correct: false
+  - text: Засідання відкривано.
+    correct: false
+  - text: Засідання відкрий.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Чому в офіційних документах агент дії зазвичай не вказується при використанні
+    форм -но/-то?
+  options:
+  - text: для створення ефекту об'єктивності
+    correct: true
+  - text: тому що агент невідомий
+    correct: false
+  - text: тому що агент неважливий
+    correct: false
+  - text: тому що це граматично неможливо
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка стилістична різниця між реченнями "Рішення прийнято" та "Рішення прийняте
+    комітетом"?
+  options:
+  - text: перше — безособове, друге — з дієприкметником
+    correct: true
+  - text: різний час дієслова
+    correct: false
+  - text: різний вид дієслова
+    correct: false
+  - text: різний регістр
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: У яких типах текстів форми -но/-то зустрічаються найчастіше згідно з даними
+    корпусу української мови?
+  options:
+  - text: законодавчі акти та офіційні документи
+    correct: true
+  - text: художня література
+    correct: false
+  - text: усне мовлення
+    correct: false
+  - text: особисте листування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння конструкцій -но/-то
+  question: Яка форма пасиву більш типова для розмовного українського мовлення, коли
+    ми хочемо сказати, що хтось щось зробив?
+  options:
+  - text: 3-я особа множини
+    correct: true
+  - text: форма -но/-то
+    correct: false
+  - text: дієприкметник
+    correct: false
+  - text: зворотний пасив -ся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Який з чотирьох пасивних станів типовий для офіційно-ділових документів
+    та оголошень?
+  options:
+  - text: форма -но/-то
+    correct: true
+  - text: зворотний пасив -ся
+    correct: false
+  - text: 3-я особа множини
+    correct: false
+  - text: пасивний дієприкметник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яка форма пасиву типова для наукових текстів та опису процесів?
+  options:
+  - text: зворотний пасив -ся
+    correct: true
+  - text: форма -но/-то
+    correct: false
+  - text: 3-я особа множини
+    correct: false
+  - text: активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Від якої частини мови утворюються пасивні дієприкметники -ний/-тий?
+  options:
+  - text: від дієслова
+    correct: true
+  - text: від іменника
+    correct: false
+  - text: від прикметника
+    correct: false
+  - text: від прислівника
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яке закінчення мають пасивні дієприкметники чоловічого роду?
+  options:
+  - text: -ний або -тий
+    correct: true
+  - text: -на або -та
+    correct: false
+  - text: -не або -те
+    correct: false
+  - text: -ні або -ті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Чим відрізняється "Книга написана" від "Книгу написано" структурно?
+  options:
+  - text: відмінком підмета/об'єкта
+    correct: true
+  - text: часом дієслова
+    correct: false
+  - text: видом дієслова
+    correct: false
+  - text: способом дієслова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яка форма пасиву найпоширеніша в усному розмовному мовленні?
+  options:
+  - text: 3-я особа множини
+    correct: true
+  - text: форма -но/-то
+    correct: false
+  - text: пасивний дієприкметник
+    correct: false
+  - text: зворотний пасив -ся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: З яким відмінком узгоджується пасивний дієприкметник у функції присудка?
+  options:
+  - text: з називним
+    correct: true
+  - text: зі знахідним
+    correct: false
+  - text: з родовим
+    correct: false
+  - text: з орудним
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яку функцію виконують пасивні дієприкметники в реченні типу "Написана
+    книга цікава"?
+  options:
+  - text: означення
+    correct: true
+  - text: присудок
+    correct: false
+  - text: підмет
+    correct: false
+  - text: додаток
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Який стиль характеризується частим використанням пасивних конструкцій
+    в українській мові?
+  options:
+  - text: офіційно-діловий
+    correct: true
+  - text: розмовний
+    correct: false
+  - text: художній
+    correct: false
+  - text: публіцистичний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Як виражається агент дії при пасивному дієприкметнику?
+  options:
+  - text: орудним відмінком
+    correct: true
+  - text: знахідним відмінком
+    correct: false
+  - text: родовим відмінком
+    correct: false
+  - text: давальним відмінком
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Чотири форми українського пасиву відрізняються переважно за яким параметром?
+  options:
+  - text: регістром вживання
+    correct: true
+  - text: часом дії
+    correct: false
+  - text: видом дієслова
+    correct: false
+  - text: родом іменника
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яке закінчення мають пасивні дієприкметники жіночого роду?
+  options:
+  - text: -на або -та
+    correct: true
+  - text: -ний або -тий
+    correct: false
+  - text: -не або -те
+    correct: false
+  - text: -ні або -ті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Чому англомовним учням важко обирати між формами пасиву в українській
+    мові?
+  options:
+  - text: в англійській мові немає такого розмаїття форм
+    correct: true
+  - text: українська граматика складніша
+    correct: false
+  - text: в англійській немає пасиву
+    correct: false
+  - text: різна система часів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Яка форма пасиву підкреслює процес, а не результат дії?
+  options:
+  - text: зворотний пасив -ся
+    correct: true
+  - text: форма -но/-то
+    correct: false
+  - text: пасивний дієприкметник
+    correct: false
+  - text: 3-я особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: Від дієслів якого виду утворюються пасивні дієприкметники минулого часу?
+  options:
+  - text: доконаного виду
+    correct: true
+  - text: недоконаного виду
+    correct: false
+  - text: обох видів
+    correct: false
+  - text: тільки перехідних
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Повторення (М01-М02)
+  question: У якому типі тексту ви найімовірніше побачите речення "Будинок будується
+    вже два роки"?
+  options:
+  - text: науковий або інформаційний
+    correct: true
+  - text: офіційно-діловий
+    correct: false
+  - text: художній
+    correct: false
+  - text: розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Форми -но/-то узгоджуються з об'єктом у роді та числі, як звичайні дієприкметники.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Після форм -но/-то об'єкт стоїть у знахідному відмінку, а не в називному.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Форми -но/-то утворюються від пасивних дієприкметників минулого часу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Конструкції з -но/-то типові для розмовного стилю української мови.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: У конструкціях з -но/-то агент дії зазвичай не вказується.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Речення "Книга написано" є граматично правильним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Форми -но/-то можуть мати різні закінчення залежно від роду об'єкта.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: У заголовках новин часто використовують форми -но/-то для лаконічності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Конструкція "Рішення прийнято" має підмет у називному відмінку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Форма -то утворюється від дієприкметників на -тий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Форми -но/-то вживаються в українській мові рідше, ніж в інших слов'янських
+    мовах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: У науковому стилі частіше вживаються конструкції з -ся, ніж з -но/-то.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Можна сказати "Документи направлено" замість "Документи направлені".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Конструкції з -но/-то обов'язково вимагають вказівки на агента дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Для множини об'єкта форма -но/-то змінюється на -ні/-ті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні правила -но/-то
+  statement: Понад 85% використань -но/-то припадає на офіційно-діловий стиль.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

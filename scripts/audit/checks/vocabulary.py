@@ -343,7 +343,23 @@ def count_vocab_rows(content: str) -> int:
     """Count vocabulary table rows.
 
     Matches both H1 and H2 headers in English and Ukrainian.
+    Handles checkpoint modules with vocabulary subsections.
     """
+    # For H1 Словник section (checkpoints), capture everything to end
+    vocab_h1_match = re.search(
+        r'^#\s+(Vocabulary|Словник)\s*$(.*)$',
+        content, re.DOTALL | re.IGNORECASE | re.MULTILINE
+    )
+    if vocab_h1_match:
+        vocab_text = vocab_h1_match.group(2)
+        lines = vocab_text.split('\n')
+        # Count table rows (excluding separator rows with ---)
+        table_rows = [l for l in lines if l.strip().startswith('|') and '---' not in l]
+        # Count header rows (one per subsection table)
+        header_count = sum(1 for l in table_rows if '| Слово |' in l or '| Word |' in l)
+        return max(0, len(table_rows) - header_count)
+
+    # Fallback: original behavior for regular modules (H2 sections)
     vocab_section_match = re.search(
         r'(^#{1,2}\s+(Vocabulary|Словник).*?)(?=\n#{1,2}\s|\Z)',
         content, re.DOTALL | re.IGNORECASE | re.MULTILINE

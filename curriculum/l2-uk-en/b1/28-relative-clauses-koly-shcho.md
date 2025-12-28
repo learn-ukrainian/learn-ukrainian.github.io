@@ -19,7 +19,7 @@ objectives:
   - "Learner can form time relative clauses with коли"
   - "Learner can use що as a relative pronoun for facts"
   - "Learner can distinguish relative що from conjunction що"
-vocabulary_count: 20
+vocabulary_count: 26
 ---
 
 # Підрядні означальні: коли, що
@@ -338,6 +338,8 @@ vocabulary_count: 20
 
 **Студент:** Те, **що** я вже знаю, — це лише початок довгого шляху.
 
+---
+
 # Підсумок
 
 **Що ви навчилися:**
@@ -377,6 +379,12 @@ vocabulary_count: 20
 > - 📖 [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) — Вікіпедія
 > - 📺 [Ukrainian Complex Sentences](https://www.youtube.com/results?search_query=ukrainian+complex+sentences) — відео пояснення
 > - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
+
+---
+
+
+
+---
 
 # Словник
 

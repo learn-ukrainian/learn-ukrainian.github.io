@@ -1,0 +1,659 @@
+module: 79-sports-in-ukraine
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/79-sports-in-ukraine.md
+generated: '2025-12-29T00:22:04.522125'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 12
+  true-false: 12
+item_count: 52
+items:
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: '"Динамо" Київ двадцять разів вигравало чемпіонат України.'
+  error: двадцять
+  answer: шістнадцять
+  sentence_corrected: '"Динамо" Київ шістнадцять разів вигравало чемпіонат України.'
+  options:
+  - двадцять
+  - шістнадцять
+  - десять
+  - п'ять
+  original_explanation: '"Динамо" шістнадцять разів вигравало чемпіонат.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: Андрій Шевченко отримав "Золотий м'яч" як найкращий гравець.
+  error: Андрій Шевченко
+  answer: Олег Блохін
+  sentence_corrected: Олег Блохін отримав "Золотий м'яч" як найкращий гравець.
+  options:
+  - Андрій Шевченко
+  - Олег Блохін
+  - Віталій Кличко
+  - Сергій Бубка
+  original_explanation: '"Золотий м''яч" отримав Олег Блохін, а не Шевченко.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: Віталій Кличко з 2014 року обіймає посаду президента України.
+  error: президента
+  answer: мера
+  sentence_corrected: Віталій Кличко з 2014 року обіймає посаду мера України.
+  options:
+  - президента
+  - мера
+  - міністра
+  - губернатора
+  original_explanation: Віталій Кличко є мером Києва, а не президентом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: Яна Клочкова здобула п'ять олімпійських золотих медалей з плавання.
+  error: п'ять
+  answer: чотири
+  sentence_corrected: Яна Клочкова здобула чотири олімпійських золотих медалей з плавання.
+  options:
+  - п'ять
+  - чотири
+  - шість
+  - три
+  original_explanation: Клочкова має чотири олімпійських золота.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: Сергій Бубка — легендарний український марафонець.
+  error: марафонець
+  answer: стрибун
+  sentence_corrected: Сергій Бубка — легендарний український стрибун.
+  options:
+  - марафонець
+  - стрибун
+  - боксер
+  - плавець
+  original_explanation: Бубка — стрибун з жердиною, а не марафонець.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: '"Шахтар" виграв Лігу чемпіонів у 2009 році.'
+  error: Лігу чемпіонів
+  answer: Кубок УЄФА
+  sentence_corrected: '"Шахтар" виграв Кубок УЄФА у 2009 році.'
+  options:
+  - Лігу чемпіонів
+  - Кубок УЄФА
+  - Суперкубок
+  - Лігу Європи
+  original_explanation: '"Шахтар" виграв Кубок УЄФА, а не Лігу чемпіонів.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: Олександр Абраменко став олімпійським чемпіоном з біатлону.
+  error: біатлону
+  answer: фристайлу
+  sentence_corrected: Олександр Абраменко став олімпійським чемпіоном з фристайлу.
+  options:
+  - біатлону
+  - фристайлу
+  - лижних гонок
+  - сноуборду
+  original_explanation: Абраменко — чемпіон з фристайлу, а не біатлону.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки про спорт
+  sentence_with_error: НСК "Олімпійський" вміщує п'ятдесят тисяч глядачів.
+  error: п'ятдесят
+  answer: сімдесят
+  sentence_corrected: НСК "Олімпійський" вміщує сімдесят тисяч глядачів.
+  options:
+  - п'ятдесят
+  - сімдесят
+  - сорок
+  - вісімдесят
+  original_explanation: '"Олімпійський" вміщує сімдесят тисяч глядачів.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: '"Динамо" Київ — найтитулованіший український футбольний _____.'
+  answer: клуб
+  complete_sentence: '"Динамо" Київ — найтитулованіший український футбольний клуб__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Брати Кличко домінували у _____ понад десятиліття.
+  answer: боксі
+  complete_sentence: Брати Кличко домінували у боксі__ понад десятиліття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Яна Клочкова — найтитулованіша українська _____.
+  answer: олімпійка
+  complete_sentence: Яна Клочкова — найтитулованіша українська олімпійка__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Збірна України вийшла до _____ чемпіонату світу 2006 року.
+  answer: чвертьфіналу
+  complete_sentence: Збірна України вийшла до чвертьфіналу__ чемпіонату світу 2006
+    року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Сергій Бубка встановив тридцять п'ять світових _____.
+  answer: рекордів
+  complete_sentence: Сергій Бубка встановив тридцять п'ять світових рекордів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: НСК "Олімпійський" вміщує сімдесят тисяч _____.
+  answer: глядачів
+  complete_sentence: НСК "Олімпійський" вміщує сімдесят тисяч глядачів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Олександр Усик став абсолютним _____ у суперважкій вазі.
+  answer: чемпіоном
+  complete_sentence: Олександр Усик став абсолютним чемпіоном__ у суперважкій вазі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Український футбол має сильні _____ у Європі.
+  answer: традиції
+  complete_sentence: Український футбол має сильні традиції__ у Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Вболівальники підтримували команду протягом усього _____.
+  answer: матчу
+  complete_sentence: Вболівальники підтримували команду протягом усього матчу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: '"Шахтар" виграв Кубок УЄФА і здобув європейський _____.'
+  answer: трофей
+  complete_sentence: '"Шахтар" виграв Кубок УЄФА і здобув європейський трофей__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Віталій Кличко тричі ставав _____ світу за версією WBC.
+  answer: чемпіоном
+  complete_sentence: Віталій Кличко тричі ставав чемпіоном__ світу за версією WBC.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Спортивна лексика
+  sentence_template: Молодий гравець підписав _____ із європейським клубом.
+  answer: контракт
+  complete_sentence: Молодий гравець підписав контракт__ із європейським клубом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: '"Динамо" Київ є найтитулованішим українським футбольним клубом Європи.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Брати Кличко домінували у світовому боксі понад десятиліття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Яна Клочкова чотири рази ставала олімпійською чемпіонкою з плавання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Сергій Бубка встановив тридцять п'ять світових рекордів у стрибках.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Збірна України вийшла до чвертьфіналу чемпіонату світу 2006 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Олександр Усик став абсолютним чемпіоном у суперважкій вазі двічі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Футбол є найпопулярнішим видом спорту в Україні серед усіх.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення про спорт
+  jumbled_words: []
+  answer: Стадіон "Олімпійський" вміщує сімдесят тисяч глядачів на матчах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Стаття повідомляє, що "Динамо" Київ є найтитулованішим українським клубом
+    — скільки разів команда вигравала чемпіонат України за всю історію?
+  options:
+  - text: десять разів
+    correct: false
+  - text: шістнадцять разів
+    correct: true
+  - text: двадцять разів
+    correct: false
+  - text: п'ять разів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: За даними тексту, хто є єдиним українським футболістом, який отримав престижну
+    нагороду "Золотий м'яч" за найкращого гравця світу?
+  options:
+  - text: Андрій Шевченко
+    correct: false
+  - text: Олег Блохін
+    correct: true
+  - text: Віталій Кличко
+    correct: false
+  - text: Сергій Бубка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: У тексті йдеться про те, що "Шахтар" Донецьк виграв важливий європейський
+    трофей у 2009 році — який саме турнір виграла команда?
+  options:
+  - text: Лігу чемпіонів
+    correct: false
+  - text: Кубок УЄФА
+    correct: true
+  - text: Суперкубок Європи
+    correct: false
+  - text: Лігу Європи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Згідно з текстом, Віталій Кличко провів сорок сім професійних боїв за
+    свою кар'єру — скільки з них він виграв, демонструючи свою домінацію?
+  options:
+  - text: сорок боїв
+    correct: false
+  - text: сорок два бої
+    correct: false
+  - text: сорок п'ять боїв
+    correct: true
+  - text: усі сорок сім
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: У тексті повідомляється, що з 2014 року Віталій Кличко обіймає певну політичну
+    посаду — яку саме позицію він зайняв після завершення спортивної кар'єри?
+  options:
+  - text: президент України
+    correct: false
+  - text: мер Києва
+    correct: true
+  - text: міністр спорту
+    correct: false
+  - text: депутат парламенту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Текст стверджує, що Олександр Усик є унікальним боксером у історії — чим
+    саме він став першим у боксерському світі?
+  options:
+  - text: першим українським чемпіоном
+    correct: false
+  - text: абсолютним чемпіоном у двох вагових категоріях
+    correct: true
+  - text: наймолодшим чемпіоном світу
+    correct: false
+  - text: чемпіоном без поразок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Згідно з інформацією в тексті, Яна Клочкова є найтитулованішою українською
+    олімпійкою — скільки олімпійських золотих медалей вона здобула у плаванні?
+  options:
+  - text: дві медалі
+    correct: false
+  - text: три медалі
+    correct: false
+  - text: чотири медалі
+    correct: true
+  - text: п'ять медалей
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: У тексті йдеться про видатного українського легкоатлета Сергія Бубку —
+    скільки світових рекордів він встановив за свою кар'єру стрибуна з жердиною?
+  options:
+  - text: двадцять рекордів
+    correct: false
+  - text: двадцять п'ять рекордів
+    correct: false
+  - text: тридцять рекордів
+    correct: false
+  - text: тридцять п'ять рекордів
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Текст повідомляє, що Україна як незалежна держава бере участь в Олімпіадах
+    з певного року — з якого року українські спортсмени виступають під національним
+    прапором?
+  options:
+  - text: з 1991 року
+    correct: false
+  - text: з 1992 року
+    correct: false
+  - text: з 1994 року
+    correct: true
+  - text: з 1996 року
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: У тексті згадується, що українська жіноча команда виграла олімпійську
+    естафету у 2014 році — в якому виді спорту це сталося?
+  options:
+  - text: у плаванні
+    correct: false
+  - text: у біатлоні
+    correct: true
+  - text: у легкій атлетиці
+    correct: false
+  - text: у лижних гонках
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: Згідно з текстом, який український стадіон є найбільшим у країні та має
+    місткість сімдесят тисяч глядачів?
+  options:
+  - text: '"Донбас Арена"'
+    correct: false
+  - text: '"Арена Львів"'
+    correct: false
+  - text: НСК "Олімпійський"
+    correct: true
+  - text: '"Металіст"'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Український спорт
+  question: У тексті повідомляється, що Володимир Кличко утримував чемпіонські пояси
+    рекордний час — скільки років він був чемпіоном світу у суперважкій вазі?
+  options:
+  - text: п'ять років
+    correct: false
+  - text: вісім років
+    correct: false
+  - text: понад одинадцять років
+    correct: true
+  - text: п'ятнадцять років
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: '"Динамо" Київ — найтитулованіший український футбольний клуб, який шістнадцять
+    разів вигравав чемпіонат України.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: '"Шахтар" Донецьк продовжує проводити домашні матчі на своєму легендарному
+    стадіоні "Донбас Арена" в Донецьку.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Андрій Шевченко є найкращим бомбардиром збірної України за всю історію,
+    забивши 48 голів у 111 матчах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Брати Кличко — Віталій та Володимир — обидва стали чемпіонами світу з
+    боксу у суперважкій вазі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Олександр Усик програв обидва бої проти Ентоні Джошуа і не став абсолютним
+    чемпіоном.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Яна Клочкова здобула чотири олімпійських золотих медалі з плавання на
+    Іграх у Сіднеї та Афінах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Сергій Бубка — легендарний український марафонець, який виграв шість
+    чемпіонатів світу з бігу на довгі дистанції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Україна здобуває медалі на Олімпіадах переважно у легкій атлетиці, плаванні,
+    гімнастиці та боксі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Олімпійську естафету з біатлону 2014 року виграла команда у складі Підгрушної,
+    Семеренко та інших українок.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Олександр Абраменко став олімпійським чемпіоном з біатлону на Олімпіаді
+    2018 року в Пхьончхані.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: НСК "Олімпійський" у Києві має місткість сімдесят тисяч глядачів і є
+    найбільшим стадіоном України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про український спорт
+  statement: Збірна України з футболу ніколи не виходила далі групового етапу на чемпіонатах
+    світу та Європи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

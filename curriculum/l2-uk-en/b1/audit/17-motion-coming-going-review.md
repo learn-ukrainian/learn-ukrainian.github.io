@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 92.4% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 91.6% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (5/35 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.5%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -46,17 +52,4 @@
 | **Практика** | ⚪️ | 536 | Skipped |
 | **Діалоги** | ✅ | 282 | Included in Core |
 | **Підсумок** | ✅ | 155 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Префікси руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Префікс і значення** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Вибір дієслова** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Правила префіксів** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Дієслова за префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Складіть речення** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Помилки з префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Текст з дієсловами руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть дієслова з при-** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Переклад** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Множинний вибір** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Розставте репліки** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

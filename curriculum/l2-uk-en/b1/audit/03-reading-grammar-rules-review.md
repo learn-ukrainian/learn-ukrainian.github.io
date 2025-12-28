@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 35.7% (B1.1 Aspect)
+- **Immersion:** 🇺🇦 35.9% (B1.1 Aspect)
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (14/113 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.1%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (16 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -51,5 +57,4 @@
 | **Practice** | ⚪️ | 408 | Skipped |
 | **Mini-Dialogues** | ✅ | 337 | Included in Core |
 | **Підсумок** | ✅ | 400 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
 | **Словник** | ⚪️ | 0 | Skipped |

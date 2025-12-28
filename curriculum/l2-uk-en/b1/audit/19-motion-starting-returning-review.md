@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 96.7% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ✅ Validated (6/42 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.4%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -47,17 +53,4 @@
 | **Практика** | ⚪️ | 194 | Skipped |
 | **Діалоги** | ✅ | 218 | Included in Core |
 | **Підсумок** | ✅ | 180 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Префікси по-, за-, роз- — вибір значення** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Дієслова руху — українська-англійська** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Вибір префікса в реченнях** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Правильність використання префіксів** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Сортування дієслів за префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Відновлення порядку слів у реченнях** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Виправлення помилок у використанні префіксів** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Історія про родинну зустріч** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть дієслова з префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Розставте репліки в правильному порядку** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Множинний вибір — які речення правильні?** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Переклад з англійської на українську** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

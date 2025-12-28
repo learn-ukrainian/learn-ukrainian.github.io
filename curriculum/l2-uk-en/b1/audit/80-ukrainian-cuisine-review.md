@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)
-- **Grammar:** ✅ Validated ([View Audit](80-ukrainian-cuisine-grammar.yaml))
+- **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -34,6 +34,12 @@
 | realworld | 6 | - | 100% | 7% | 6.7% |
 | questions | 35 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **98.7%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (13 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

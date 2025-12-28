@@ -1,0 +1,775 @@
+module: 18-motion-passing-crossing
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/18-motion-passing-crossing.md
+generated: '2025-12-29T00:21:59.737630'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  unjumble: 8
+  quiz: 14
+  true-false: 14
+item_count: 58
+items:
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Я перейшов повз кінотеатр і не зайшов на сеанс.
+  error: перейшов
+  answer: пройшов
+  sentence_corrected: Я пройшов повз кінотеатр і не зайшов на сеанс.
+  options:
+  - перейшов
+  - пройшов
+  - обійшов
+  - зайшов
+  original_explanation: Прийменник **повз** вимагає префікса **про-**, а не **пере-**.
+    Пере- використовується з прийменником **через**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Водій проїхав затор на головній вулиці боковими шляхами.
+  error: проїхав
+  answer: об'їхав
+  sentence_corrected: Водій об'їхав затор на головній вулиці боковими шляхами.
+  options:
+  - проїхав
+  - об'їхав
+  - переїхав
+  - виїхав
+  original_explanation: Обхід затору = **об'їхати**, а не **проїхати**. Проїхати =
+    pass by/through, а не around.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Пішоходи переходять навколо будівлі щодня.
+  error: переходять
+  answer: обходять
+  sentence_corrected: Пішоходи обходять навколо будівлі щодня.
+  options:
+  - переходять
+  - обходять
+  - проходять
+  - заходять
+  original_explanation: Прийменник **навколо** вимагає префікса **об-**, а не **пере-**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Ми обїхали до Львова з Києва минулого місяця.
+  error: обїхали
+  answer: переїхали
+  sentence_corrected: Ми переїхали до Львова з Києва минулого місяця.
+  options:
+  - обїхали
+  - переїхали
+  - проїхали
+  - виїхали
+  original_explanation: Переїзд до іншого міста = **переїхати**, а не **об'їхати**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Літак проїхав навколо грозової хмари зліва.
+  error: проїхав
+  answer: облетів
+  sentence_corrected: Літак облетів навколо грозової хмари зліва.
+  options:
+  - проїхав
+  - облетів
+  - перелетів
+  - пролетів
+  original_explanation: Літак літає (**летіти**), а не їздить (**їхати**). Обхід навколо
+    = **облетіти**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Я обйшов через парк до університету пішки.
+  error: обйшов
+  answer: пройшов
+  sentence_corrected: Я пройшов через парк до університету пішки.
+  options:
+  - обйшов
+  - пройшов
+  - перейшов
+  - зайшов
+  original_explanation: Прийменник **через** (крізь) вимагає префікса **про-** або
+    **пере-**. У цьому контексті — **пройшов через**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Автобус переїхав повз мою зупинку без зупинки.
+  error: переїхав
+  answer: проїхав
+  sentence_corrected: Автобус проїхав повз мою зупинку без зупинки.
+  options:
+  - переїхав
+  - проїхав
+  - об'їхав
+  - виїхав
+  original_explanation: Прийменник **повз** вимагає префікса **про-**, а не **пере-**.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок з префіксами
+  sentence_with_error: Робітники пронесли паркан навколо будівлі за тиждень.
+  error: пронесли
+  answer: обнесли
+  sentence_corrected: Робітники обнесли паркан навколо будівлі за тиждень.
+  options:
+  - пронесли
+  - обнесли
+  - перенесли
+  - знесли
+  original_explanation: Поставити паркан **навколо** = **обнести**, а не **пронести**.
+    Обнести = enclose around.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Щоб потрапити на інший бік вулиці, треба ___ через дорогу на
+    зеленому світлофорі.
+  answer: перейти
+  complete_sentence: Щоб потрапити на інший бік вулиці, треба перейти через дорогу
+    на зеленому світлофорі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Автобус не зупинився на моїй зупинці і ___ повз неї без сповільнення
+    швидкості.
+  answer: проїхав
+  complete_sentence: Автобус не зупинився на моїй зупинці і проїхав повз неї без сповільнення
+    швидкості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Щоб уникнути заторів на головній дорозі, водій ___ центр міста
+    боковими вулицями та дістався швидше.
+  answer: об'їхав
+  complete_sentence: Щоб уникнути заторів на головній дорозі, водій об'їхав центр
+    міста боковими вулицями та дістався швидше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Турист ___ весь історичний центр Києва пішки за один день і зробив
+    багато фотографій.
+  answer: обійшов
+  complete_sentence: Турист обійшов весь історичний центр Києва пішки за один день
+    і зробив багато фотографій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Вантажівка ___ всі речі з старого офісу до нового через весь
+    Харків за вісім годин.
+  answer: перевезла
+  complete_sentence: Вантажівка перевезла всі речі з старого офісу до нового через
+    весь Харків за вісім годин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Ми ___ повз цей магазин учора, але не зайшли всередину купити
+    продукти.
+  answer: пройшли
+  complete_sentence: Ми пройшли повз цей магазин учора, але не зайшли всередину купити
+    продукти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Літак ___ через Атлантичний океан за вісім годин без зупинок
+    у проміжних аеропортах.
+  answer: перелетів
+  complete_sentence: Літак перелетів через Атлантичний океан за вісім годин без зупинок
+    у проміжних аеропортах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Робітники ___ високий паркан навколо всієї будівельної території
+    за три робочі дні.
+  answer: обнесли
+  complete_sentence: Робітники обнесли високий паркан навколо всієї будівельної території
+    за три робочі дні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Ми ___ до Львова з Одеси минулого року і тепер живемо тут постійно.
+  answer: переїхали
+  complete_sentence: Ми переїхали до Львова з Одеси минулого року і тепер живемо тут
+    постійно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Гід ___ групу туристів через всі зали Національного музею історії
+    України за дві години.
+  answer: провів
+  complete_sentence: Гід провів групу туристів через всі зали Національного музею
+    історії України за дві години.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Вона ___ повний курс української мови за шість місяців і тепер
+    вільно розмовляє.
+  answer: пройшла
+  complete_sentence: Вона пройшла повний курс української мови за шість місяців і
+    тепер вільно розмовляє.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Пішоходи ___ небезпечну зону з правого боку по тимчасовому тротуару
+    щодня.
+  answer: обходять
+  complete_sentence: Пішоходи обходять небезпечну зону з правого боку по тимчасовому
+    тротуару щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Потяг ___ через довгий тунель під Карпатами і вийшов на інший
+    бік гірського масиву.
+  answer: проїхав
+  complete_sentence: Потяг проїхав через довгий тунель під Карпатами і вийшов на інший
+    бік гірського масиву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір дієслова з правильним префіксом
+  sentence_template: Він ___ коробку через всю кімнату і поставив її у кут біля вікна.
+  answer: переніс
+  complete_sentence: Він переніс коробку через всю кімнату і поставив її у кут біля
+    вікна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Я щодня переходжу через цю дорогу на зеленому світлофорі по пішохідному
+    переходу безпечно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Автобус проїхав повз мою зупинку і не зупинився, бо водій не помітив пасажирів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Водій об'їхав затор на головній дорозі боковими вулицями і приїхав на зустріч
+    вчасно без спізнення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Ми обійшли весь історичний центр міста пішки за чотири години і побачили
+    всі головні пам'ятки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Вантажівка перевезла всі меблі з старого офісу до нового через місто за
+    один робочий день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Літак перелетів через Атлантичний океан за вісім годин без зупинок у проміжних
+    аеропортах успішно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Гід провів групу туристів через всі зали музею і розповів про кожен експонат
+    детально.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень про рух
+  jumbled_words: []
+  answer: Я пройшов повз цей магазин учора, але не зайшов всередину, бо не мав часу
+    на покупки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке дієслово описує рух з одного боку дороги на інший бік, долаючи перешкоду
+    у вигляді проїжджої частини?
+  options:
+  - text: перейти
+    correct: true
+  - text: пройти
+    correct: false
+  - text: обійти
+    correct: false
+  - text: прийти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Який префікс використовується у дієслові, що описує рух повз об'єкт без
+    зупинки чи входження всередину простору?
+  options:
+  - text: пере-
+    correct: false
+  - text: про-
+    correct: true
+  - text: об-
+    correct: false
+  - text: під-
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке речення правильно описує ситуацію, коли автомобіль їде боковими вулицями,
+    щоб уникнути заторів на головній дорозі?
+  options:
+  - text: Автомобіль переїхав затор.
+    correct: false
+  - text: Автомобіль проїхав затор.
+    correct: false
+  - text: Автомобіль об'їхав затор.
+    correct: true
+  - text: Автомобіль з'їхав затор.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Який прийменник завжди вимагає родового відмінка і використовується разом
+    з префіксом об- для опису руху навколо об'єкта?
+  options:
+  - text: через
+    correct: false
+  - text: повз
+    correct: false
+  - text: навколо
+    correct: true
+  - text: після
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: 'Яке дієслово треба використати у реченні: "Птахи _______ через океан
+    восени на південь для зимівлі у теплих країнах"?'
+  options:
+  - text: перелітають
+    correct: true
+  - text: пролітають
+    correct: false
+  - text: облітають
+    correct: false
+  - text: долітають
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке з наведених речень описує ситуацію, коли людина рухається пішки повз
+    будівлю, не заходячи всередину і не зупиняючись біля входу?
+  options:
+  - text: Я перейшов повз бібліотеку.
+    correct: false
+  - text: Я пройшов повз бібліотеку.
+    correct: true
+  - text: Я обійшов повз бібліотеку.
+    correct: false
+  - text: Я вийшов повз бібліотеку.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: 'Яке дієслово правильно завершує речення: "Робітники _______ паркан навколо
+    будівлі за п''ять днів роботи без вихідних"?'
+  options:
+  - text: перенесли
+    correct: false
+  - text: пронесли
+    correct: false
+  - text: обнесли
+    correct: true
+  - text: знесли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: 'Який префікс має два значення: проходження повз об''єкт (passing by)
+    і проходження крізь простір (passing through) залежно від контексту речення?'
+  options:
+  - text: пере-
+    correct: false
+  - text: про-
+    correct: true
+  - text: об-
+    correct: false
+  - text: під-
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке речення правильно використовує префікс пере- в абстрактному значенні
+    для опису зміни місця проживання з одного міста в інше?
+  options:
+  - text: Ми пройшли до Львова минулого місяця.
+    correct: false
+  - text: Ми переїхали до Львова минулого місяця.
+    correct: true
+  - text: Ми об'їхали до Львова минулого місяця.
+    correct: false
+  - text: Ми виїхали до Львова минулого місяця.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: 'Яке дієслово потрібно у реченні: "Гід _______ туристів через річку на
+    маленькому дерев''яному човні за годину"?'
+  options:
+  - text: перевів
+    correct: true
+  - text: провів
+    correct: false
+  - text: обвів
+    correct: false
+  - text: звів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке дієслово найкраще описує дію, коли літак змінює маршрут і рухається
+    навколо грозової хмари, щоб уникнути турбулентності та небезпеки?
+  options:
+  - text: перелетів
+    correct: false
+  - text: пролетів
+    correct: false
+  - text: облетів
+    correct: true
+  - text: вилетів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Який прийменник використовується з дієсловами руху з префіксом пере- для
+    опису перетинання об'єкта на шляху до іншого боку?
+  options:
+  - text: через
+    correct: true
+  - text: повз
+    correct: false
+  - text: навколо
+    correct: false
+  - text: між
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: Яке речення демонструє неправильне використання префікса та прийменника,
+    порушуючи логіку зв'язку між напрямком руху та префіксальним значенням дієслова?
+  options:
+  - text: Я перейшов через дорогу.
+    correct: false
+  - text: Я перейшов повз дорогу.
+    correct: true
+  - text: Я пройшов повз дорогу.
+    correct: false
+  - text: Я обійшов навколо дороги.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння префіксів
+  question: 'Яке дієслово правильно використати у реченні: "Вантажівка _______ всі
+    меблі через місто на нову адресу за один день без пошкоджень"?'
+  options:
+  - text: пронесла
+    correct: false
+  - text: перевезла
+    correct: true
+  - text: обвезла
+    correct: false
+  - text: вивезла
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Префікс пере- завжди використовується з прийменником через і вимагає
+    знахідного відмінка для іменника після прийменника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Дієслова з префіксом про- можуть описувати як рух повз об'єкт (passing
+    by), так і рух крізь простір (passing through) залежно від контексту та прийменника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Прийменник навколо використовується тільки з дієсловами руху без префіксів
+    і ніколи не сполучається з префіксом об-.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Дієслово переїхати може означати як перетнути перешкоду на транспорті
+    (cross over), так і змінити місце проживання (move residence) в абстрактному значенні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Префікс про- завжди вимагає родового відмінка після прийменника повз
+    у всіх конструкціях з дієсловами руху.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Дієслова перейти (on foot), переїхати (by vehicle), та перелетіти (by
+    air) всі виражають одне й те саме значення перетинання, але відрізняються тільки
+    способом транспортування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Прийменники навколо та довкола є повними синонімами і обидва вимагають
+    родового відмінка, але довкола вважається більш розмовним та емоційним у сучасній
+    українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Коли потрібно описати обхід перешкоди, щоб дістатися до іншого боку,
+    завжди використовують префікс пере-, а не об-, бо кінцева мета — дістатися іншого
+    боку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Дієслово пройти може використовуватися в абстрактному значенні "to pass"
+    (an exam, a course), описуючи успішне завершення навчальної програми або тестування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Якщо у реченні використовується прийменник повз, то дієслово руху завжди
+    повинно мати префікс про-, а не пере- чи об-, через семантичну сполучуваність
+    префікса та прийменника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Префікс об- може бути додано до всіх базових дієслів руху (йти, їхати,
+    летіти, нести, везти, вести) для створення дієслів обходу навколо об'єктів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Речення "Я перейшов повз магазин" є граматично правильним, бо префікс
+    пере- може сполучатися з будь-яким прийменником залежно від контексту руху.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Дієслово провести може означати як фізичне переміщення людей крізь простір
+    (lead through), так і проведення часу або події (spend time, conduct event) в
+    абстрактному значенні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила префіксів та прийменників
+  statement: Коли літак змінює курс і рухається навколо грозової хмари, щоб уникнути
+    небезпеки, використовують дієслово облетіти з префіксом об-, а не перелетіти чи
+    пролетіти.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 93.5% (target 85-100% (B1.3-4 Complex))
+- **Immersion:** 🇺🇦 96.8% (target 85-100% (B1.3-4 Complex))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ✅ Validated (6/43 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 4 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -46,17 +52,4 @@
 | **Практика** | ⚪️ | 124 | Skipped |
 | **Діалоги** | ✅ | 222 | Included in Core |
 | **Підсумок** | ✅ | 231 | Included in Core |
-| **Activities** | ➖ | 0 | Excluded Type |
-| **true-false: Міфи та Правда про префікси** | ⚪️ | 0 | Skipped (using YAML) |
-| **quiz: Логіка префіксів** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Префікс та абстрактне значення** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Життя в офісі** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Класифікація дій** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Складні речення** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Виправте префікс** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Історія успіху** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть префіксальні дієслова (складний рівень)** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Проблеми з комп'ютером** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Оберіть синоніми** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Перекладіть речення** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

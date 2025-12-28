@@ -37,6 +37,12 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **95.4%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -61,5 +67,4 @@
 | **Основні правила заперечення** | ⚪️ | 120 | Skipped |
 | **Таблиця вибору** | ⚪️ | 0 | Skipped |
 | **Самоперевірка** | ⚪️ | 152 | Skipped |
-| **Вправи** | ⚪️ | 0 | Skipped |
 | **Словник** | ⚪️ | 0 | Skipped |

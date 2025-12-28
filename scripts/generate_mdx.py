@@ -109,6 +109,9 @@ def escape_jsx(text: str) -> str:
     """Escape text for use in JSX strings (both template literals and double quotes)."""
     if not text:
         return ''
+    # Convert to string if not already (handles int/float from YAML)
+    if not isinstance(text, str):
+        text = str(text)
     # Escape backslashes first, then other special chars
     text = text.replace('\\', '\\\\')
     text = text.replace('`', '\\`')

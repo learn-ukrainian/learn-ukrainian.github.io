@@ -1,0 +1,1421 @@
+module: 01-passive-voice-system
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/01-passive-voice-system.md
+generated: '2025-12-28T19:51:20.397815'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Книга написано вчора.
+  error: Книга
+  answer: Книгу
+  sentence_corrected: Книгу написано вчора.
+  options:
+  - Книга
+  - Книгу
+  - Книзі
+  - Книгою
+  original_explanation: У конструкції -но/-то об'єкт стоїть у знахідному відмінку
+    — "Книгу написано".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Роман написана автором.
+  error: написана
+  answer: написаний
+  sentence_corrected: Роман написаний автором.
+  options:
+  - написана
+  - написаний
+  - написане
+  - написані
+  original_explanation: Дієприкметник узгоджується з іменником "роман" (чол. рід)
+    — "написаний".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Картина намальована від художника.
+  error: від
+  answer: —
+  sentence_corrected: Картина намальована — художника.
+  options:
+  - від
+  - до
+  - для
+  - —
+  original_explanation: Агент виражається орудним відмінком без прийменника — "намальована
+    художником".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Листи відправлена секретарем.
+  error: відправлена
+  answer: відправлені
+  sentence_corrected: Листи відправлені секретарем.
+  options:
+  - відправлена
+  - відправлені
+  - відправлений
+  - відправлене
+  original_explanation: Дієприкметник узгоджується з іменником "листи" (множина) —
+    "відправлені".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Рішення прийнятий комісією.
+  error: прийнятий
+  answer: прийняте
+  sentence_corrected: Рішення прийняте комісією.
+  options:
+  - прийнятий
+  - прийняте
+  - прийнята
+  - прийняті
+  original_explanation: Дієприкметник узгоджується з іменником "рішення" (середній
+    рід) — "прийняте".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Закон прийнято парламенту.
+  error: парламенту
+  answer: парламентом
+  sentence_corrected: Закон прийнято парламентом.
+  options:
+  - парламенту
+  - парламентом
+  - парламент
+  - від парламенту
+  original_explanation: Агент виражається орудним відмінком — "прийнято парламентом".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Будинки збудований минулого року.
+  error: збудований
+  answer: збудовані
+  sentence_corrected: Будинки збудовані минулого року.
+  options:
+  - збудований
+  - збудовані
+  - збудована
+  - збудоване
+  original_explanation: Дієприкметник узгоджується з іменником "будинки" (множина)
+    — "збудовані".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Статтю було написана.
+  error: написана
+  answer: написано
+  sentence_corrected: Статтю було написано.
+  options:
+  - написана
+  - написано
+  - написаний
+  - написане
+  original_explanation: З "було" вживається форма -но/-то — "було написано".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Експеримент проводитися науковцями.
+  error: проводитися
+  answer: проводиться
+  sentence_corrected: Експеримент проводиться науковцями.
+  options:
+  - проводитися
+  - проводиться
+  - проводився
+  - проводяться
+  original_explanation: Правильна форма теперішнього часу — "проводиться".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Угода підписана від директора.
+  error: від
+  answer: —
+  sentence_corrected: Угода підписана — директора.
+  options:
+  - від
+  - до
+  - за
+  - —
+  original_explanation: Агент виражається орудним відмінком без прийменника — "підписана
+    директором".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Документ підготовлені секретарем.
+  error: підготовлені
+  answer: підготовлений
+  sentence_corrected: Документ підготовлений секретарем.
+  options:
+  - підготовлені
+  - підготовлений
+  - підготовлена
+  - підготовлене
+  original_explanation: Дієприкметник узгоджується з іменником "документ" (однина,
+    чол. рід) — "підготовлений".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Вікна відкрите о восьмій годині.
+  error: відкрите
+  answer: відкриті
+  sentence_corrected: Вікна відкриті о восьмій годині.
+  options:
+  - відкрите
+  - відкриті
+  - відкритий
+  - відкрита
+  original_explanation: Дієприкметник узгоджується з іменником "вікна" (множина) —
+    "відкриті".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Робота виконано вчасно.
+  error: Робота
+  answer: Роботу
+  sentence_corrected: Роботу виконано вчасно.
+  options:
+  - Робота
+  - Роботу
+  - Роботою
+  - Роботи
+  original_explanation: У конструкції -но/-то об'єкт стоїть у знахідному відмінку
+    — "Роботу виконано".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Переклад зроблена професіоналом.
+  error: зроблена
+  answer: зроблений
+  sentence_corrected: Переклад зроблений професіоналом.
+  options:
+  - зроблена
+  - зроблений
+  - зроблене
+  - зроблені
+  original_explanation: Дієприкметник узгоджується з іменником "переклад" (чол. рід)
+    — "зроблений".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Квитки замовлена заздалегідь.
+  error: замовлена
+  answer: замовлені
+  sentence_corrected: Квитки замовлені заздалегідь.
+  options:
+  - замовлена
+  - замовлені
+  - замовлений
+  - замовлене
+  original_explanation: Дієприкметник узгоджується з іменником "квитки" (множина)
+    — "замовлені".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пасивних конструкціях
+  sentence_with_error: Рішення було прийнятий одноголосно.
+  error: прийнятий
+  answer: прийняте
+  sentence_corrected: Рішення було прийняте одноголосно.
+  options:
+  - прийнятий
+  - прийняте
+  - прийнята
+  - прийняті
+  original_explanation: Дієприкметник узгоджується з іменником "рішення" (середній
+    рід) — "прийняте".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Роман _____ відомим письменником.
+  answer: написаний
+  complete_sentence: Роман написаний__ відомим письменником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Угода _____ двома сторонами.
+  answer: підписана
+  complete_sentence: Угода підписана__ двома сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Закон _____ парламентом.
+  answer: прийнятий
+  complete_sentence: Закон прийнятий__ парламентом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Картина _____ олійними фарбами.
+  answer: намальована
+  complete_sentence: Картина намальована__ олійними фарбами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Будинок _____ минулого року.
+  answer: збудований
+  complete_sentence: Будинок збудований__ минулого року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Листи _____ секретарем.
+  answer: відправлені
+  complete_sentence: Листи відправлені__ секретарем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Проєкт _____ командою інженерів.
+  answer: розроблений
+  complete_sentence: Проєкт розроблений__ командою інженерів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Вікно _____ о третій годині.
+  answer: відкрите
+  complete_sentence: Вікно відкрите__ о третій годині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Документи _____ директором.
+  answer: підготовлені
+  complete_sentence: Документи підготовлені__ директором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Книги _____ на полицю.
+  answer: поставлені
+  complete_sentence: Книги поставлені__ на полицю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Стаття _____ у журналі.
+  answer: опублікована
+  complete_sentence: Стаття опублікована__ у журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Рішення _____ комісією.
+  answer: затверджене
+  complete_sentence: Рішення затверджене__ комісією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Робота _____ вчасно.
+  answer: виконана
+  complete_sentence: Робота виконана__ вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Переклад _____ професіоналом.
+  answer: зроблений
+  complete_sentence: Переклад зроблений__ професіоналом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Квитки _____ заздалегідь.
+  answer: замовлені
+  complete_sentence: Квитки замовлені__ заздалегідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Музей _____ для відвідувачів.
+  answer: відкритий
+  complete_sentence: Музей відкритий__ для відвідувачів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Офіційний документ) Угоду _____ сторонами.
+  answer: підписано
+  complete_sentence: (Офіційний документ) Угоду підписано__ сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Наукова стаття) Експеримент _____ у лабораторії.
+  answer: проводиться
+  complete_sentence: (Наукова стаття) Експеримент проводиться__ у лабораторії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Художній опис) Картина _____ відомим художником.
+  answer: намальована
+  complete_sentence: (Художній опис) Картина намальована__ відомим художником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Розмовна мова) Мені _____ цікаву новину.
+  answer: розповіли
+  complete_sentence: (Розмовна мова) Мені розповіли__ цікаву новину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Офіційне повідомлення) Рішення _____ одноголосно.
+  answer: прийнято
+  complete_sentence: (Офіційне повідомлення) Рішення прийнято__ одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Технічна інструкція) Кнопка _____ двічі.
+  answer: натискається
+  complete_sentence: (Технічна інструкція) Кнопка натискається__ двічі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Літературний текст) Лист _____ дрібним почерком.
+  answer: написаний
+  complete_sentence: (Літературний текст) Лист написаний__ дрібним почерком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Офіційна заява) Справу _____.
+  answer: закрито
+  complete_sentence: (Офіційна заява) Справу закрито__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Наукова доповідь) Дані _____ спеціальним програмним забезпеченням.
+  answer: обробляються
+  complete_sentence: (Наукова доповідь) Дані обробляються__ спеціальним програмним
+    забезпеченням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Розмовна мова) Йому _____ гроші.
+  answer: дали
+  complete_sentence: (Розмовна мова) Йому дали__ гроші.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Офіційний наказ) Термін _____ до кінця місяця.
+  answer: продовжено
+  complete_sentence: (Офіційний наказ) Термін продовжено__ до кінця місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Художній опис) Музика _____ геніальним композитором.
+  answer: створена
+  complete_sentence: (Художній опис) Музика створена__ геніальним композитором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Наукова публікація) Результати _____ щорічно.
+  answer: публікуються
+  complete_sentence: (Наукова публікація) Результати публікуються__ щорічно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Розмовна мова) Нам _____ правила.
+  answer: пояснили
+  complete_sentence: (Розмовна мова) Нам пояснили__ правила.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Офіційне оголошення) Засідання _____ відкритим.
+  answer: оголошено
+  complete_sentence: (Офіційне оголошення) Засідання оголошено__ відкритим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть форму відповідно до регістру
+  sentence_template: (Технічний опис) Система _____ автоматично.
+  answer: налаштовується
+  complete_sentence: (Технічний опис) Система налаштовується__ автоматично.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Статтю було написано вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Роман написаний відомим автором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Експеримент проводиться науковцями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Мені сказали правду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Закон прийнято парламентом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Будинок будується у місті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Картина намальована талановитим художником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Засідання оголошено закритим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Результати аналізуються ретельно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Йому показали дорогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Угоду підписано двома сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Рішення було прийняте одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Гіпотеза перевіряється експериментально.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Нам пояснили правила.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Бюджет затверджено комісією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть пасивні речення
+  jumbled_words: []
+  answer: Роботу опубліковано у журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану використана в реченні "Книгу написано вчора"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: true
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану використана в реченні "Лист написаний олівцем"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: true
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану використана в реченні "Будинок будується швидко"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану використана в реченні "Мені сказали правду"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Для якого регістру найбільш характерна форма -но/-то?
+  options:
+  - text: Розмовного
+    correct: false
+  - text: Офіційно-ділового
+    correct: true
+  - text: Художнього
+    correct: false
+  - text: Розмовного та художнього
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану найчастіше використовується в наукових текстах?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану узгоджується з підметом у роді, числі та відмінку?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: true
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: У якому відмінку стоїть об'єкт у конструкції з -но/-то?
+  options:
+  - text: У називному
+    correct: false
+  - text: У родовому
+    correct: false
+  - text: У знахідному
+    correct: true
+  - text: В орудному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану є найбільш розмовною?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Як виражається агент (виконавець дії) у дієприкметниковій конструкції?
+  options:
+  - text: У називному відмінку
+    correct: false
+  - text: У родовому відмінку з прийменником "від"
+    correct: false
+  - text: В орудному відмінку
+    correct: true
+  - text: У знахідному відмінку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яке речення є правильним у офіційно-діловому стилі?
+  options:
+  - text: Рішення прийняли вчора.
+    correct: false
+  - text: Рішення прийнято вчора.
+    correct: true
+  - text: Рішення було прийняте вчора.
+    correct: false
+  - text: Рішення приймалось вчора.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма пасивного стану підкреслює процес, а не результат?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яке речення містить помилку?
+  options:
+  - text: Книга написана автором.
+    correct: false
+  - text: Книгу написано.
+    correct: false
+  - text: Книга написано.
+    correct: true
+  - text: Книгу написали.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Як утворюється форма -но/-то?
+  options:
+  - text: Від основи інфінітива + -но/-то
+    correct: false
+  - text: Від пасивного дієприкметника (середній рід)
+    correct: true
+  - text: Від дієслова + постфікс -ся
+    correct: false
+  - text: Від дієслова у 3-й особі множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яка форма буде правильною для художнього опису картини?
+  options:
+  - text: Картину намальовано.
+    correct: false
+  - text: Картина намальована художником.
+    correct: true
+  - text: Картину намалювали.
+    correct: false
+  - text: Картина малюється.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання форм пасивного стану
+  question: Яке речення є прикладом зворотної пасивної конструкції?
+  options:
+  - text: Закон прийнято.
+    correct: false
+  - text: Закон прийнятий парламентом.
+    correct: false
+  - text: Закон приймається парламентом.
+    correct: true
+  - text: Закон прийняли.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У реченні "Закон прийнято парламентом" слово "парламентом" стоїть у якому
+    відмінку?
+  options:
+  - text: У називному
+    correct: false
+  - text: У родовому
+    correct: false
+  - text: В орудному
+    correct: true
+  - text: У знахідному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма пасивного стану є найбільш давньою в українській мові?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що підкреслює зворотна пасивна конструкція (-ся)?
+  options:
+  - text: Результат дії
+    correct: false
+  - text: Процес дії
+    correct: true
+  - text: Виконавця дії
+    correct: false
+  - text: Час дії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якому стилі НЕ рекомендується вживати форму -но/-то?
+  options:
+  - text: В офіційно-діловому
+    correct: false
+  - text: У публіцистичному
+    correct: false
+  - text: У розмовному
+    correct: true
+  - text: У науковому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма буде правильною — "Роман написаний" чи "Роман написано"?
+  options:
+  - text: Тільки "написаний"
+    correct: false
+  - text: Тільки "написано"
+    correct: false
+  - text: Обидві правильні, але різний відтінок
+    correct: true
+  - text: Обидві неправильні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому в офіційних документах використовують форму -но/-то?
+  options:
+  - text: Вона коротша
+    correct: false
+  - text: Вона підкреслює результат без вказівки на виконавця
+    correct: true
+  - text: Вона звучить красивіше
+    correct: false
+  - text: Вона легша для написання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке речення містить помилку в узгодженні?
+  options:
+  - text: Книга написана.
+    correct: false
+  - text: Листи відправлені.
+    correct: false
+  - text: Рішення прийнятий.
+    correct: true
+  - text: Роман прочитаний.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно сказати "The problem is being solved" у науковому тексті?
+  options:
+  - text: Проблему вирішили.
+    correct: false
+  - text: Проблему вирішено.
+    correct: false
+  - text: Проблема вирішується.
+    correct: true
+  - text: Проблема вирішена.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якому реченні правильно виражено агента?
+  options:
+  - text: Картина намальована від художника.
+    correct: false
+  - text: Картина намальована для художника.
+    correct: false
+  - text: Картина намальована художником.
+    correct: true
+  - text: Картина намальована до художника.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка часова форма у реченні "Лист буде написаний"?
+  options:
+  - text: Минулий час
+    correct: false
+  - text: Теперішній час
+    correct: false
+  - text: Майбутній час
+    correct: true
+  - text: Умовний спосіб
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Скільки форм пасивного стану має українська мова?
+  options:
+  - text: Одну
+    correct: false
+  - text: Дві
+    correct: false
+  - text: Три
+    correct: false
+  - text: Чотири
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якому реченні використано дієприкметникову пасивну конструкцію?
+  options:
+  - text: Книгу написано.
+    correct: false
+  - text: Книга написана автором.
+    correct: true
+  - text: Книгу написали.
+    correct: false
+  - text: Книга пишеться.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма характерна для інструкцій та технічних описів?
+  options:
+  - text: Дієприкметникова
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чим відрізняється "Книга написана" від "Книгу написано"?
+  options:
+  - text: Значенням
+    correct: false
+  - text: Стилістичним забарвленням
+    correct: true
+  - text: Часом
+    correct: false
+  - text: Видом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке речення є прикладом пасивного стану з майбутнім часом?
+  options:
+  - text: Книга була написана.
+    correct: false
+  - text: Книга написана.
+    correct: false
+  - text: Книга буде написана.
+    correct: true
+  - text: Книга пишеться.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якому відмінку стоїть слово "закритим" у реченні "Засідання оголошено
+    закритим"?
+  options:
+  - text: У називному
+    correct: false
+  - text: У знахідному
+    correct: false
+  - text: В орудному
+    correct: true
+  - text: У місцевому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Форма -но/-то узгоджується з підметом у роді та числі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: В офіційно-діловому стилі переважає конструкція з -но/-то.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Агент у пасивній конструкції виражається орудним відмінком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Зворотна форма (-ся) підкреслює результат дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Конструкція з 3-ю особою множини є найбільш формальною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: У конструкції -но/-то об'єкт стоїть у знахідному відмінку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Дієприкметник узгоджується з іменником у роді, числі та відмінку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Українська мова має тільки дві форми пасивного стану.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: У наукових текстах часто використовується зворотна форма (-ся).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Форма "було написано" є майбутнім часом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Агент у конструкції -но/-то зазвичай не вказується.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Форма "картина намальована від художника" є правильною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: У художньому стилі часто використовують дієприкметникові конструкції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Конструкція "Мені сказали" є прикладом зворотної форми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Усі чотири форми пасивного стану можна вживати в будь-якому стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пасивного стану
+  statement: Дієслово "будується" є прикладом зворотної пасивної конструкції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

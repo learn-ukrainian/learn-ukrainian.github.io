@@ -1,0 +1,994 @@
+module: 39-reported-statements
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/39-reported-statements.md
+generated: '2025-12-29T00:22:01.457407'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  cloze: 1
+  unjumble: 8
+  quiz: 14
+  translate: 8
+  true-false: 14
+item_count: 67
+items:
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Він сказав він прийде завтра на нашу зустріч.
+  error: сказав він
+  answer: сказав, що він
+  sentence_corrected: Він сказав, що він прийде завтра на нашу зустріч.
+  options:
+  - сказав він
+  - сказав, що він
+  - 'сказав: він'
+  - сказав й він
+  original_explanation: Потрібен сполучник «що» у непрямій мові.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Вона сказала, що я люблю цю книгу. (якщо мовець — вона)
+  error: я люблю
+  answer: вона любить
+  sentence_corrected: Вона сказала, що вона любить цю книгу. (якщо мовець — вона)
+  options:
+  - я люблю
+  - вона любить
+  - я любить
+  - вона люблю
+  original_explanation: Займенник має відповідати мовцю.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Він сказав, що працював тут. (якщо він ще працює там)
+  error: працював
+  answer: працює
+  sentence_corrected: Він сказав, що працює тут. (якщо він ще працює там)
+  options:
+  - працював
+  - працює
+  - працюватиме
+  - буде працювати
+  original_explanation: Зсув часу не потрібен, якщо дія актуальна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: 'Вона сказала: що вона прийде завтра.'
+  error: 'сказала: що'
+  answer: сказала, що
+  sentence_corrected: Вона сказала, що вона прийде завтра.
+  options:
+  - 'сказала: що'
+  - сказала, що
+  - сказала — що
+  - сказала; що
+  original_explanation: Двокрапка для прямої мови, кома для непрямої.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Він говорив, що він приїхав вчора. (непряма мова в минулому)
+  error: вчора
+  answer: напередодні
+  sentence_corrected: Він говорив, що він приїхав напередодні. (непряма мова в минулому)
+  options:
+  - вчора
+  - напередодні
+  - завтра
+  - сьогодні
+  original_explanation: «Вчора» → «напередодні» в минулому контексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Вона зауважила що погода гарна сьогодні надворі.
+  error: зауважила що
+  answer: зауважила, що
+  sentence_corrected: Вона зауважила, що погода гарна сьогодні надворі.
+  options:
+  - зауважила що
+  - зауважила, що
+  - 'зауважила: що'
+  - зауважила — що
+  original_explanation: Потрібна кома перед «що».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Він заявив що збори відбудуться тут. (розповідь в минулому)
+  error: тут
+  answer: там
+  sentence_corrected: Він заявив що збори відбудуться там. (розповідь в минулому)
+  options:
+  - тут
+  - там
+  - сюди
+  - туди
+  original_explanation: «Тут» → «там» при переході до непрямої мови.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилку
+  sentence_with_error: Мама сказала, що приготую вечерю. (мовець — мама)
+  error: приготую
+  answer: приготує
+  sentence_corrected: Мама сказала, що приготує вечерю. (мовець — мама)
+  options:
+  - приготую
+  - приготує
+  - приготуємо
+  - приготували
+  original_explanation: Дієслово має відповідати особі мовця (вона → приготує).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Він сказав, ___ він прийде завтра на зустріч.
+  answer: що
+  complete_sentence: Він сказав, що він прийде завтра на зустріч.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Вона сказала, що ___ любить цю книгу.
+  answer: вона
+  complete_sentence: Вона сказала, що вона любить цю книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Марія пояснила, ___ вона запізнюється через затор.
+  answer: що
+  complete_sentence: Марія пояснила, що вона запізнюється через затор.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Петро сказав, що приїде ___ дня на нашу вечірку.
+  answer: наступного
+  complete_sentence: Петро сказав, що приїде наступного дня на нашу вечірку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Вона додала, що буде чекати на нас ___.
+  answer: там
+  complete_sentence: Вона додала, що буде чекати на нас там.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Шеф ___, що проект має бути завершений.
+  answer: заявив
+  complete_sentence: Шеф заявив, що проект має бути завершений.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Він зауважив, ___ погода сьогодні гарна.
+  answer: що
+  complete_sentence: Він зауважив, що погода сьогодні гарна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Вона сказала, що ___ книга цікава.
+  answer: ця
+  complete_sentence: Вона сказала, що ця книга цікава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Друг ___, що бачив цей фільм раніше.
+  answer: зауважив
+  complete_sentence: Друг зауважив, що бачив цей фільм раніше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Вона ___, що не була там тієї ночі.
+  answer: заперечила
+  complete_sentence: Вона заперечила, що не була там тієї ночі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Свідок ___, що бачив це на власні очі.
+  answer: стверджує
+  complete_sentence: Свідок стверджує, що бачив це на власні очі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Він ___, що помилився у своїх розрахунках.
+  answer: визнав
+  complete_sentence: Він визнав, що помилився у своїх розрахунках.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Лікар ___, що потрібно приймати ліки тричі на день.
+  answer: пояснив
+  complete_sentence: Лікар пояснив, що потрібно приймати ліки тричі на день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення
+  sentence_template: Директор ___, що збори перенесено на наступний тиждень.
+  answer: повідомив
+  complete_sentence: Директор повідомив, що збори перенесено на наступний тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Переказ розмови
+  passage_template: Учора я розмовляв із другом. Він {сказав|сказала|скажу|скаже},
+    що їде у відпустку. Він {пояснив|пояснила|пояснять|пояснюю}, що планує поїхати
+    на море. Він {додав|додала|додам|додають}, що це буде {наступного|того|цього|попереднього}
+    тижня. Я запитав, куди саме. Він був дуже {зацікавлений|зацікавлена|сумний|злий}
+    цією подорожжю. Він {відповів|відповіла|відповім|відповідаю}, що їде в Одесу.
+    Він {зауважив|зауважила|зауважу|зауважать}, що там чудові пляжі. Він {стверджував|стверджувала|стверджую|стверджують},
+    що знайомі рекомендували саме це місце. Я {зауважив|зауважила|зауважу|зауважують},
+    що також хотів би поїхати туди. Потім він {додав|додала|додам|додають}, що візьме
+    багато книжок. Він {пояснив|пояснила|пояснюю|пояснять}, що любить читати на пляжі.
+    Я {погодився|погодилася|погоджуюсь|погодяться}, що це гарна ідея. Він {пообіцяв|пообіцяла|пообіцяю|пообіцяють},
+    що повернеться через два тижні. Він {запевнив|запевнила|запевню|запевняють}, що
+    обов'язково розкаже про подорож.
+  blanks:
+  - id: 1
+    answer: сказав
+    options:
+    - сказав
+    - сказала
+    - скажу
+    - скаже
+  - id: 2
+    answer: пояснив
+    options:
+    - пояснив
+    - пояснила
+    - пояснять
+    - пояснюю
+  - id: 3
+    answer: додав
+    options:
+    - додав
+    - додала
+    - додам
+    - додають
+  - id: 4
+    answer: наступного
+    options:
+    - наступного
+    - того
+    - цього
+    - попереднього
+  - id: 5
+    answer: зацікавлений
+    options:
+    - зацікавлений
+    - зацікавлена
+    - сумний
+    - злий
+  - id: 6
+    answer: відповів
+    options:
+    - відповів
+    - відповіла
+    - відповім
+    - відповідаю
+  - id: 7
+    answer: зауважив
+    options:
+    - зауважив
+    - зауважила
+    - зауважу
+    - зауважать
+  - id: 8
+    answer: стверджував
+    options:
+    - стверджував
+    - стверджувала
+    - стверджую
+    - стверджують
+  - id: 9
+    answer: зауважив
+    options:
+    - зауважив
+    - зауважила
+    - зауважу
+    - зауважують
+  - id: 10
+    answer: додав
+    options:
+    - додав
+    - додала
+    - додам
+    - додають
+  - id: 11
+    answer: пояснив
+    options:
+    - пояснив
+    - пояснила
+    - пояснюю
+    - пояснять
+  - id: 12
+    answer: погодився
+    options:
+    - погодився
+    - погодилася
+    - погоджуюсь
+    - погодяться
+  - id: 13
+    answer: пообіцяв
+    options:
+    - пообіцяв
+    - пообіцяла
+    - пообіцяю
+    - пообіцяють
+  - id: 14
+    answer: запевнив
+    options:
+    - запевнив
+    - запевнила
+    - запевню
+    - запевняють
+  complete_passage: Учора я розмовляв із другом. Він {сказав|сказала|скажу|скаже},
+    що їде у відпустку. Він {пояснив|пояснила|пояснять|пояснюю}, що планує поїхати
+    на море. Він {додав|додала|додам|додають}, що це буде {наступного|того|цього|попереднього}
+    тижня. Я запитав, куди саме. Він був дуже {зацікавлений|зацікавлена|сумний|злий}
+    цією подорожжю. Він {відповів|відповіла|відповім|відповідаю}, що їде в Одесу.
+    Він {зауважив|зауважила|зауважу|зауважать}, що там чудові пляжі. Він {стверджував|стверджувала|стверджую|стверджують},
+    що знайомі рекомендували саме це місце. Я {зауважив|зауважила|зауважу|зауважують},
+    що також хотів би поїхати туди. Потім він {додав|додала|додам|додають}, що візьме
+    багато книжок. Він {пояснив|пояснила|пояснюю|пояснять}, що любить читати на пляжі.
+    Я {погодився|погодилася|погоджуюсь|погодяться}, що це гарна ідея. Він {пообіцяв|пообіцяла|пообіцяю|пообіцяють},
+    що повернеться через два тижні. Він {запевнив|запевнила|запевню|запевняють}, що
+    обов'язково розкаже про подорож.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Він сказав, що вона прийде завтра ввечері на нашу святкову вечерю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вона пояснила, що потрібно більше часу для завершення цього важливого проекту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Директор заявив, що збори перенесено на наступний тиждень через його відрядження.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Він додав, що буде чекати на відповідь до кінця робочого дня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вона зауважила, що погода сьогодні надзвичайно гарна для тривалої прогулянки
+    парком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Свідок стверджує, що він бачив цю людину там того самого вечора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Мама сказала, що вечеря буде готова о сьомій годині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Лікар пояснив, що потрібно приймати ліки тричі на день.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Яка основна функція сполучника «що» у непрямій мові в українських складних
+    реченнях?
+  options:
+  - text: Вводить пряму цитату з лапками
+    correct: false
+  - text: З'єднує головне речення з підрядним
+    correct: true
+  - text: Замінює дієслово мовлення
+    correct: false
+  - text: Вказує на час дії в реченні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як правильно перетворити пряму мову «Я прийду завтра» на непряму, якщо
+    суб'єкт — він?
+  options:
+  - text: Він сказав, що він прийде завтра.
+    correct: true
+  - text: Він сказав, що я прийду завтра.
+    correct: false
+  - text: 'Він сказав: «Я прийду завтра.»'
+    correct: false
+  - text: Він сказав, що він прийду.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Коли в українській непрямій мові обов'язково потрібен зсув часу дієслова
+    до минулого?
+  options:
+  - text: Завжди, як в англійській мові
+    correct: false
+  - text: Коли дія вже неактуальна на момент мовлення
+    correct: true
+  - text: Ніколи, час не змінюється
+    correct: false
+  - text: Тільки з дієсловом «бути»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Яке дієслово введення використовується для офіційних заяв і повідомлень
+    у непрямій мові?
+  options:
+  - text: сказати
+    correct: false
+  - text: заявити
+    correct: true
+  - text: говорити
+    correct: false
+  - text: зауважити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як змінюється слово «завтра» при переході до непрямої мови, якщо розповідь
+    ведеться в минулому часі?
+  options:
+  - text: наступного дня
+    correct: true
+  - text: завтра (не змінюється)
+    correct: false
+  - text: того дня
+    correct: false
+  - text: напередодні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Яка різниця між дієсловами «стверджувати» та «сказати» у введенні непрямої
+    мови в українській?
+  options:
+  - text: Немає різниці, вони синоніми
+    correct: false
+  - text: «Стверджувати» може означати сумнів у правдивості
+    correct: true
+  - text: «Стверджувати» — неформальне
+    correct: false
+  - text: «Сказати» — тільки для офіційних контекстів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як правильно передати непряму мову з модальним дієсловом «Я можу допомогти
+    тобі з цим»?
+  options:
+  - text: Він сказав, що може допомогти мені з цим.
+    correct: true
+  - text: Він сказав, що міг допомогти.
+    correct: false
+  - text: 'Він сказав: «Я можу допомогти.»'
+    correct: false
+  - text: Він сказав, що я можу допомогти.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: У якому порядку слід здійснювати перетворення прямої мови на непряму в
+    українській мові?
+  options:
+  - text: Дієслово введення → що → зміна займенників → зміна часу
+    correct: true
+  - text: Зміна часу → зміна займенників → що → дієслово
+    correct: false
+  - text: Зміна займенників → дієслово → що → час
+    correct: false
+  - text: Немає порядку, все одночасно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як змінюється займенник «мій» при переході до непрямої мови, якщо мовець
+    — чоловік?
+  options:
+  - text: На «його»
+    correct: true
+  - text: На «їхній»
+    correct: false
+  - text: Не змінюється
+    correct: false
+  - text: На «наш»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: У якому реченні правильно передано непряму мову з дієсловом «пояснити»?
+  options:
+  - text: Вчитель пояснив, що завдання складне.
+    correct: true
+  - text: 'Вчитель пояснив: завдання складне.'
+    correct: false
+  - text: Вчитель пояснив завдання складне.
+    correct: false
+  - text: Вчитель пояснив, завдання складне.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Яке дієслово найкраще передає відтінок визнання помилки у непрямій мові?
+  options:
+  - text: сказати
+    correct: false
+  - text: говорити
+    correct: false
+  - text: визнати
+    correct: true
+  - text: зауважити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як змінюється вказівне слово «тут» при переході до непрямої мови в минулому
+    контексті?
+  options:
+  - text: На «там»
+    correct: true
+  - text: Не змінюється
+    correct: false
+  - text: На «тоді»
+    correct: false
+  - text: На «сюди»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Яке речення демонструє правильне використання непрямої мови з кількома
+    дієсловами введення?
+  options:
+  - text: Він сказав, що прийде, і додав, що принесе подарунок.
+    correct: true
+  - text: Він сказав що прийде і додав що принесе.
+    correct: false
+  - text: Він сказав і додав, що прийде принесе подарунок.
+    correct: false
+  - text: Він сказав, додав, що прийде подарунок.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи непрямої мови
+  question: Як правильно передати слово «сьогодні» в непрямій мові, коли розповідь
+    ведеться в минулому?
+  options:
+  - text: того дня
+    correct: true
+  - text: наступного дня
+    correct: false
+  - text: напередодні
+    correct: false
+  - text: тепер
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: He said that he would come tomorrow evening to our place.
+  answer: ''
+  options:
+  - text: Він сказав, що прийде завтра ввечері до нас.
+    correct: true
+  - text: Він сказав, я прийду завтра.
+    correct: false
+  - text: Він сказав що він прийде.
+    correct: false
+  - text: 'Він сказав: що прийде.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: She explained that she needed more time for this project.
+  answer: ''
+  options:
+  - text: Вона пояснила, що їй потрібно більше часу для цього проекту.
+    correct: true
+  - text: Вона пояснила що мені потрібно час.
+    correct: false
+  - text: Вона пояснила, я потрібно час.
+    correct: false
+  - text: 'Вона пояснила: що потрібно час.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: The director announced that the meeting was postponed until next
+    week.
+  answer: ''
+  options:
+  - text: Директор заявив, що збори перенесено на наступний тиждень.
+    correct: true
+  - text: Директор заявив що збори перенесено.
+    correct: false
+  - text: Директор заявив, збори перенесено.
+    correct: false
+  - text: 'Директор заявив: що збори.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: He added that he would wait for a response until Friday.
+  answer: ''
+  options:
+  - text: Він додав, що буде чекати на відповідь до п'ятниці.
+    correct: true
+  - text: Він додав що чекатиме відповідь.
+    correct: false
+  - text: Він додав, я буду чекати.
+    correct: false
+  - text: Він додав чекати до п'ятниці.
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: She noted that the weather was nice today for a walk.
+  answer: ''
+  options:
+  - text: Вона зауважила, що погода сьогодні гарна для прогулянки.
+    correct: true
+  - text: Вона зауважила що погода гарна.
+    correct: false
+  - text: Вона зауважила, погода гарна.
+    correct: false
+  - text: 'Вона зауважила: що погода.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: The witness claims that he saw this person there that same evening.
+  answer: ''
+  options:
+  - text: Свідок стверджує, що він бачив цю людину там того самого вечора.
+    correct: true
+  - text: Свідок стверджує що бачив людину.
+    correct: false
+  - text: Свідок стверджує, я бачив.
+    correct: false
+  - text: 'Свідок стверджує: що бачив.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: Mom said that dinner would be ready at seven.
+  answer: ''
+  options:
+  - text: Мама сказала, що вечеря буде готова о сьомій.
+    correct: true
+  - text: Мама сказала що вечеря готова.
+    correct: false
+  - text: Мама сказала, вечеря готова.
+    correct: false
+  - text: 'Мама сказала: що вечеря.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад непрямої мови
+  source_sentence: He admitted that he had made a mistake in his calculations.
+  answer: ''
+  options:
+  - text: Він визнав, що помилився у своїх розрахунках.
+    correct: true
+  - text: Він визнав що помилився розрахунках.
+    correct: false
+  - text: Він визнав, помилився.
+    correct: false
+  - text: 'Він визнав: що помилився.'
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: В українській непрямій мові сполучник «що» обов'язковий у письмових текстах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Зсув часів у непрямій мові завжди обов'язковий, як в англійській.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: При переході до непрямої мови займенник «я» завжди змінюється.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Слово «завтра» в непрямій мові в минулому стає «наступного дня».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Дієслова «сказати» і «заявити» мають однакове значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: У розмовному стилі сполучник «що» можна опускати.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Модальні дієслова в непрямій мові завжди змінюють форму.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: «Стверджувати» може виражати сумнів у правдивості інформації.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Слово «тут» в непрямій мові змінюється на «там».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Після дієслова введення завжди ставиться двокрапка.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: «Він сказав, що працює тут» — зсув часу не потрібен, якщо він ще працює.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Непряма мова передає точну форму слів мовця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: Дієслово «визнати» використовується, коли хтось погоджується з фактом
+    або помилкою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила непрямої мови
+  statement: У непрямій мові можна використовувати кілька дієслів введення в одному
+    реченні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

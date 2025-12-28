@@ -1,5 +1,7 @@
 # Review Content Quality
 
+> **CRITICAL:** Follow this checklist EXACTLY. Do not improvise. Do not invent new criteria. Do not skip steps. Your goal is strict compliance verification.
+
 > **⚠️ ALWAYS use `.venv/bin/python` - NEVER use `python3` or `python` directly!**
 
 Evaluate module content for educational quality, coherence, and pedagogical soundness.
@@ -77,21 +79,49 @@ Parse arguments: $ARGUMENTS
    - Exclude: Frontmatter, Activities, Vocabulary, Self-Assessment
 3. Extract metadata (title, level, module number, topic)
 
-### Locate Activities (YAML-First Check)
+### Locate Activities (YAML-Mandatory Check)
 
-**Check for YAML activities file first:**
+**New Logic (STRICT ENFORCEMENT):**
+1. **Check for YAML file** (`activities/{module-slug}.yaml`).
+2. **REGARDLESS of identical YAML content**, you MUST scan the Markdown file for forbidden activity headers:
+   - `## quiz`
+   - `## match-up`
+   - `## fill-in`
+   - `## true-false`
+   - `## anagram`
+   - `## group-sort`
+   - `## unjumble`
+   - `## error-correction`
+   - `## cloze`
+   - `## mark-the-words`
+   - `## dialogue-reorder`
+   - `## select`
+   - `## translate`
+   - `## Activities`
+   - `## Вправи`
 
-```
-curriculum/l2-uk-en/{level}/activities/{module-slug}.yaml
-```
+**Scenario A (CRITICAL: Duplicate Activities):**
+- **Condition:** YAML exists AND *any* of the above headers exist in the Markdown.
+- **Verdict:** ⚠️ **DUPLICATE DETECTED**
+- **Action:** You MUST flag this as "Duplicate Activities".
+- **Required Fix:** "Remove inline activities from Markdown (keep Vocabulary)" (Safe Fix).
 
-Example: `curriculum/l2-uk-en/b1/activities/11-aspect-in-imperatives.yaml`
+**Scenario B (Legacy: Only Inline exists):**
+- **Flag:** "Legacy Format"
+- **Action Item:** "Migrate activities to YAML" (High Priority).
+- **Note:** This is a blocking issue for finalization.
 
-**Priority order:**
-1. **If YAML file exists:** Read activities from YAML file (preferred format)
-2. **If no YAML file:** Read activities embedded in `.md` file (legacy format)
+**Scenario C (Correct: Only YAML exists):**
+- **Status:** ✅ PASS (Proceed to evaluate YAML content).
+
+**Scenario D (Missing: Neither exists):**
+- **Status:** ❌ FAIL (Missing activities).
 
 **YAML Activity File Structure:**
+For the **COMPLETE** schema of all 12+ activity types (quiz, match-up, fill-in, etc.), you **MUST** read:
+`docs/l2-uk-en/YAML-ACTIVITY-WORKFLOW.md`
+
+**Partial Example (Quiz only):**
 ```yaml
 module: 11-aspect-in-imperatives
 level: B1
@@ -99,18 +129,8 @@ activities:
   - type: quiz
     title: "Вибір аспекту"
     items:
-      - question: "..."
-        answer: "..."
-        options: ["...", "...", "..."]
-  - type: fill-in
-    title: "..."
-    items:
-      - prompt: "..."
-        answer: "..."
-        options: ["...", "...", "..."]
+# ... (see YAML-ACTIVITY-WORKFLOW.md for full syntax)
 ```
-
-**Note:** Some B1 modules are in transition - they may have a YAML file being built while the MD still has embedded activities. Always check for YAML file first.
 
 ### Evaluate Quality
 
@@ -289,6 +309,7 @@ Flag if:
 - **Undefined Terms:** Using concepts not yet taught.
 - **False Friends:** Using high-level grammar (cases) in A1 without explanation.
 - **Russianisms/Surzhik:** Any detection of mixed Ukrainian-Russian forms (unless explicitly teaching *about* Surzhik).
+- **Inline Activities:** Activities defined in Markdown (Scenario B) instead of YAML. (Exception: If actively migrating).
 
 **10. Content Richness Quality (B1+ Critical)**
 
@@ -424,6 +445,7 @@ For each module, output:
 For each module with action items, categorize fixes:
 
 **Safe Fixes (Auto-apply):**
+- **Remove Duplicate Activities:** If YAML exists (Scenario A), DELETE the inline activities section from the Markdown file.
 - Remove leftover editing notes/meta-commentary
 - Fix typos and repetition errors
 - Delete redundant paragraphs (exact duplicates)
@@ -437,10 +459,11 @@ For each module with action items, categorize fixes:
 - Subjective improvements
 
 For safe fixes:
-1. Apply the fix to the module file
-2. Run `.venv/bin/python scripts/audit_module.py {file_path}` to verify still passes
-3. If audit fails, revert the fix
-4. Mark fix status in review: ✅ FIXED or ❌ SKIPPED
+1. Apply the fix to the module file.
+2. **If removing activities:** Verify YAML file exists and is valid first.
+3. Run `.venv/bin/python scripts/audit_module.py {file_path}` to verify still passes.
+4. If audit fails, revert the fix.
+5. Mark fix status in review: ✅ FIXED or ❌ SKIPPED
 
 **Step 5: Save Review Files**
 

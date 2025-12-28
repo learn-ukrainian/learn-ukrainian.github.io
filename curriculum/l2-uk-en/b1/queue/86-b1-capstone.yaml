@@ -1,0 +1,729 @@
+module: 86-b1-capstone
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/86-b1-capstone.md
+generated: '2025-12-29T00:22:05.105401'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 12
+  fill-in: 14
+  unjumble: 10
+  quiz: 10
+  true-false: 10
+item_count: 56
+items:
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Я вчора читав цю книгу від початку до кінця.
+  error: читав
+  answer: прочитав
+  sentence_corrected: Я вчора прочитав цю книгу від початку до кінця.
+  options:
+  - читав
+  - прочитав
+  - читатиму
+  - почитав
+  original_explanation: 'Якщо вказано результат (від початку до кінця), потрібен доконаний
+    вид: «прочитав».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Вона щодня приходила до офісу о восьмій годині ранку.
+  error: приходила
+  answer: приходить
+  sentence_corrected: Вона щодня приходить до офісу о восьмій годині ранку.
+  options:
+  - приходила
+  - приходить
+  - прийшла
+  - приходитиме
+  original_explanation: «Щодня» вказує на теперішній час — потрібно «приходить».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Якщо б я мав час, я допоможу тобі з цим проектом.
+  error: допоможу
+  answer: допоміг би
+  sentence_corrected: Якщо б я мав час, я допоміг би тобі з цим проектом.
+  options:
+  - допоможу
+  - допоміг би
+  - допомагаю
+  - допомогу
+  original_explanation: В умовному способі (якщо б...) потрібна форма «допоміг би».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Текст, написаний студентом, був дуже цікавим для читання.
+  error: цікавим
+  answer: цікавий
+  sentence_corrected: Текст, написаний студентом, був дуже цікавий для читання.
+  options:
+  - цікавим
+  - цікавий
+  - цікаве
+  - цікава
+  original_explanation: 'Після «був» потрібен називний відмінок: «цікавий», не орудний.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Я хочу, що він прийшов на зустріч о третій годині.
+  error: що
+  answer: щоб
+  sentence_corrected: Я хочу, щоб він прийшов на зустріч о третій годині.
+  options:
+  - що
+  - щоб
+  - коли
+  - якщо
+  original_explanation: Для вираження бажання потрібен сполучник «щоб» + минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Літак відходить за годину, тому ми повинні поспішати.
+  error: відходить
+  answer: відлітає
+  sentence_corrected: Літак відлітає за годину, тому ми повинні поспішати.
+  options:
+  - відходить
+  - відлітає
+  - відпливає
+  - від'їжджає
+  original_explanation: Для літаків використовується «відлітати», не «відходити».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Це той студент, хто отримав найкращу оцінку на іспиті.
+  error: хто
+  answer: який
+  sentence_corrected: Це той студент, який отримав найкращу оцінку на іспиті.
+  options:
+  - хто
+  - який
+  - що
+  - котрий
+  original_explanation: У підрядних означальних реченнях використовується «який»,
+    не «хто».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Читаючи книгу, музика грала на фоні дуже голосно.
+  error: музика
+  answer: я
+  sentence_corrected: Читаючи книгу, я грала на фоні дуже голосно.
+  options:
+  - музика
+  - я
+  - він
+  - вона
+  original_explanation: 'Дієприслівник має стосуватися підмета: «Читаючи книгу, я
+    слухав музику».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Не відкрий вікно, бо на вулиці дуже холодно сьогодні.
+  error: відкрий
+  answer: відкривай
+  sentence_corrected: Не відкривай вікно, бо на вулиці дуже холодно сьогодні.
+  options:
+  - відкрий
+  - відкривай
+  - відкриваєш
+  - відкриєш
+  original_explanation: 'Для заборони використовується недоконаний вид: «Не відкривай».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Він виходив з дому, коли почав сильний дощ із градом.
+  error: почав
+  answer: почався
+  sentence_corrected: Він виходив з дому, коли почався сильний дощ із градом.
+  options:
+  - почав
+  - почався
+  - починав
+  - починався
+  original_explanation: Дощ «почався» (зворотна форма), не «почав».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Вона закінчивши роботу і пішла додому відпочивати після важкого
+    дня.
+  error: закінчивши роботу і пішла
+  answer: закінчивши роботу, пішла
+  sentence_corrected: Вона закінчивши роботу, пішла додому відпочивати після важкого
+    дня.
+  options:
+  - закінчивши роботу і пішла
+  - закінчивши роботу, пішла
+  - закінчила роботу пішла
+  - закінчивши роботи пішла
+  original_explanation: Дієприслівник відокремлюється комою, сполучник «і» зайвий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматичні помилки B1
+  sentence_with_error: Книга переклали українською мовою минулого року у Львові.
+  error: Книга переклали
+  answer: Книгу переклали
+  sentence_corrected: Книгу переклали українською мовою минулого року у Львові.
+  options:
+  - Книга переклали
+  - Книгу переклали
+  - Книги переклали
+  - Книзі переклали
+  original_explanation: 'Об''єкт дії стоїть у знахідному відмінку: «Книгу переклали».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Вчора увечері я довго _______ над цією проблемою, але так і не
+    знайшов рішення.
+  answer: думав
+  complete_sentence: Вчора увечері я довго думавдумав_ над цією проблемою, але так
+    і не знайшов рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Нарешті я _______ рішення, яке мені сподобалось — це було після
+    години роздумів.
+  answer: прийняв
+  complete_sentence: Нарешті я прийнявприйняв_ рішення, яке мені сподобалось — це
+    було після години роздумів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Щодня вона _______ статті для сайту — це її основна робота.
+  answer: пише
+  complete_sentence: Щодня вона пишепише_ статті для сайту — це її основна робота.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Коли ти _______ цей звіт, надішли його мені електронною поштою.
+  answer: напишеш
+  complete_sentence: Коли ти напишешнапишеш_ цей звіт, надішли його мені електронною
+    поштою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Не _______ у цю кімнату — там працюють!
+  answer: заходь
+  complete_sentence: Не заходьзаходь_ у цю кімнату — там працюють!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: _______ у кімнату і сядь на стілець — я зараз повернуся.
+  answer: Зайди
+  complete_sentence: ЗайдиЗайди_ у кімнату і сядь на стілець — я зараз повернуся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Він завжди _______ пізно, тому ми ніколи не снідаємо разом.
+  answer: прокидається
+  complete_sentence: Він завжди прокидаєтьсяпрокидається_ пізно, тому ми ніколи не
+    снідаємо разом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Вона ще не _______ звіт — зробить це завтра вранці.
+  answer: написала
+  complete_sentence: Вона ще не написаланаписала_ звіт — зробить це завтра вранці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Коли я був студентом, я _______ багато книг щомісяця — тепер
+    немає часу.
+  answer: читав
+  complete_sentence: Коли я був студентом, я читавчитав_ багато книг щомісяця — тепер
+    немає часу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: За вихідні я _______ усю книгу від першої до останньої сторінки.
+  answer: прочитав
+  complete_sentence: За вихідні я прочитавпрочитав_ усю книгу від першої до останньої
+    сторінки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Вона довго _______ до університету, бо жила далеко від центру.
+  answer: їздила
+  complete_sentence: Вона довго їздилаїздила_ до університету, бо жила далеко від
+    центру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Він не _______ вчора на заняття, бо був хворий на грип.
+  answer: прийшов
+  complete_sentence: Він не прийшовприйшов_ вчора на заняття, бо був хворий на грип.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Ми завжди _______ на ці збори о дев'ятій ранку — це традиція.
+  answer: приходимо
+  complete_sentence: Ми завжди приходимоприходимо_ на ці збори о дев'ятій ранку —
+    це традиція.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вид дієслова у контексті
+  sentence_template: Коли ти _______ додому, зателефонуй мені — я хвилююся.
+  answer: прийдеш
+  complete_sentence: Коли ти прийдешприйдеш_ додому, зателефонуй мені — я хвилююся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: я / одразу / приїду / коли / додому / зателефоную / тобі / сьогодні
+    / вечері / після / я / увечері
+  answer: Коли я приїду додому після вечері сьогодні увечері, я одразу зателефоную
+    тобі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: він / не / прийшов / на / заняття / тому / що / був / хворий / сьогодні
+    / і / вчора
+  answer: Він не прийшов на заняття тому, що був хворий сьогодні і вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: якби / я / мав / більше / часу / вільного / я / б / читав / більше
+    / книг / щодня
+  answer: Якби я мав більше вільного часу, я б читав більше книг щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: це / той / дуже / талановитий / студент / який / отримав / найкращу
+    / оцінку / на / іспиті / вчора
+  answer: Це той дуже талановитий студент, який отримав найкращу оцінку на іспиті
+    вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: незважаючи / на / те / що / сильно / йшов / дощ / ми / пішли / на
+    / довгу / прогулянку
+  answer: Незважаючи на те, що сильно йшов дощ, ми пішли на довгу прогулянку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: книга / написана / видатним / відомим / українським / автором / стала
+    / бестселером / минулого / року / в / Україні
+  answer: Книга, написана видатним відомим українським автором, стала бестселером
+    минулого року в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: вона / дуже / хоче / щоб / її / діти / вивчали / українську / мову
+    / з / раннього / дитинства
+  answer: Вона дуже хоче, щоб її діти вивчали українську мову з раннього дитинства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: уважно / прочитавши / цю / важливу / статтю / він / зрозумів / важливість
+    / цієї / проблеми / для / України
+  answer: Уважно прочитавши цю важливу статтю, він зрозумів важливість цієї проблеми
+    для України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: хоча / він / дуже / багато / працює / він / завжди / знаходить /
+    вільний / час / для / сім'ї
+  answer: Хоча він дуже багато працює, він завжди знаходить вільний час для сім'ї.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складні речення B1
+  jumbled_words: перш / ніж / прийняти / важливе / рішення / вам / обов'язково / потрібно
+    / добре / подумати / про / наслідки
+  answer: Перш ніж прийняти важливе рішення, вам обов'язково потрібно добре подумати
+    про наслідки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Згідно з текстом, скільки ІТ-спеціалістів працювало в Україні десять років
+    тому, до стрімкого зростання галузі?
+  options:
+  - text: Триста тисяч
+    correct: false
+  - text: П'ятдесят тисяч
+    correct: true
+  - text: Сто тисяч
+    correct: false
+  - text: Двісті тисяч
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Які три фактори пояснюють розвиток української ІТ-галузі згідно з текстом
+    про технологічний сектор країни?
+  options:
+  - text: Державні субсидії, низькі податки, велике населення
+    correct: false
+  - text: Сильна технічна освіта, нижчі зарплати, висока мотивація молоді
+    correct: true
+  - text: Англійська мова, географія, клімат
+    correct: false
+  - text: Дешева електроенергія, швидкий інтернет, сприятливе законодавство
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: У яких саме містах України, згідно з текстом, розташовані офіси найбільших
+    ІТ-компаній?
+  options:
+  - text: Київ, Львів, Харків, Одеса, Дніпро
+    correct: true
+  - text: Тільки Київ та Львів
+    correct: false
+  - text: Київ, Харків, Запоріжжя
+    correct: false
+  - text: Львів, Одеса, Вінниця
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Коли була заснована компанія Grammarly, яка допомагає мільйонам людей
+    писати англійською без помилок?
+  options:
+  - text: 2005 році
+    correct: false
+  - text: 2009 році
+    correct: true
+  - text: 2012 році
+    correct: false
+  - text: 2015 році
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Як називається український стартап, який створює популярне програмне забезпечення
+    саме для комп'ютерів Mac?
+  options:
+  - text: Grammarly
+    correct: false
+  - text: GitLab
+    correct: false
+  - text: MacPaw
+    correct: true
+  - text: SoftServe
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Яке ставлення автора статті до майбутнього української ІТ-галузі після
+    війни та всіх випробувань?
+  options:
+  - text: Песимістичне — автор вважає, що галузь занепадає
+    correct: false
+  - text: Нейтральне — автор не висловлює думки
+    correct: false
+  - text: Оптимістичне — автор вважає майбутнє перспективним
+    correct: true
+  - text: Невизначене — автор не знає, що буде
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Що означає слово «стійкість» у контексті реакції ІТ-індустрії на виклики,
+    спричинені війною 2022 року?
+  options:
+  - text: Здатність швидко рости
+    correct: false
+  - text: Здатність заробляти гроші
+    correct: false
+  - text: Здатність витримувати труднощі та продовжувати роботу
+    correct: true
+  - text: Здатність створювати нові продукти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Хто є засновником платформи GitLab, яка використовується мільйонами розробників
+    у всьому світі?
+  options:
+  - text: Команда з Кремнієвої долини
+    correct: false
+  - text: Український розробник Дмитро Запорожець
+    correct: true
+  - text: Британська компанія
+    correct: false
+  - text: Команда Grammarly
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Що демонструють українські ІТ-фахівці, окрім високої технічної майстерності,
+    згідно з висновками автора статті?
+  options:
+  - text: Знання іноземних мов
+    correct: false
+  - text: Бажання працювати за кордоном
+    correct: false
+  - text: Здатність долати складнощі
+    correct: true
+  - text: Креативність у дизайні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумковий тест на розуміння тексту
+  question: Яка цитата айтішників завершує статтю та демонструє їхню наполегливість
+    і впевненість у перемозі?
+  options:
+  - text: «Ми найкращі програмісти у світі»
+    correct: false
+  - text: «Технології — це майбутнє»
+    correct: false
+  - text: «Ми писали код під обстрілами, і ми будемо писати його після перемоги»
+    correct: true
+  - text: «Україна стане технологічним лідером Європи»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: На рівні B1 ви повинні вміти розуміти головні думки стандартних текстів
+    на знайомі теми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: На рівні B1 ви повинні вміти писати тексти на будь-яку тему без словника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: Вид дієслова (доконаний/недоконаний) — це ключова граматична категорія
+    рівня B1.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: На рівні B1 ви повинні знати всі дієслова руху з усіма префіксами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: Рівень B2 зосереджений на вивченні кирилиці та базових фраз.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: Дієприслівники на -ючи описують одночасні дії, а на -вши — попередні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: Сполучник «хоча» використовується для вираження причини дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: На рівні B1 ви повинні вміти спілкуватися в більшості ситуацій під час
+    подорожі Україною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: Пасивний дієприкметник «написаний» вживається з чоловічим родом, «написана»
+    — з жіночим.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Самооцінка B1
+  statement: На рівні B1 ви повинні знати близько 3,500 українських слів (разом з
+    A1 та A2).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

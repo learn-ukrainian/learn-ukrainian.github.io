@@ -1,0 +1,1410 @@
+module: 16-register-formal-informal
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/16-register-formal-informal.md
+generated: '2025-12-28T20:26:10.121882'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Шановний пан Коваленко! (у листі)
+  error: пан
+  answer: пане
+  sentence_corrected: Шановний пане Коваленко! (у листі)
+  options:
+  - пан
+  - пане
+  - панове
+  - пана
+  original_explanation: У звертанні використовується кличний відмінок — «пане», а
+    не «пан».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Привіт, пане директоре!
+  error: Привіт
+  answer: Добрий день
+  sentence_corrected: Добрий день, пане директоре!
+  options:
+  - Привіт
+  - Добрий день
+  - Здоров
+  - Гей
+  original_explanation: Не можна змішувати неформальне «Привіт» з формальним «пане
+    директоре».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Прошу вас надати документи. (до однієї особи)
+  error: вас
+  answer: Вас
+  sentence_corrected: Прошу Вас надати документи. (до однієї особи)
+  options:
+  - вас
+  - Вас
+  - тебе
+  - їх
+  original_explanation: При звертанні до однієї особи «Вас» пишеться з великої літери.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Шановний пані Петренко!
+  error: Шановний
+  answer: Шановна
+  sentence_corrected: Шановна пані Петренко!
+  options:
+  - Шановний
+  - Шановна
+  - Шановне
+  - Шановні
+  original_explanation: '"Шановна" узгоджується з "пані" (жіночий рід).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: До побачення, Андрію! Бувай! (в офіційному листі)
+  error: Бувай
+  answer: До зустрічі
+  sentence_corrected: До побачення, Андрію! До зустрічі! (в офіційному листі)
+  options:
+  - Бувай
+  - До зустрічі
+  - Па-па
+  - Поки
+  original_explanation: В офіційному листі «Бувай» недоречне, краще «До зустрічі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Слухай, пане Петренко, скинь документи.
+  error: Слухай
+  answer: Будьте ласкаві
+  sentence_corrected: Будьте ласкаві, пане Петренко, скинь документи.
+  options:
+  - Слухай
+  - Будьте ласкаві
+  - Гей
+  - Ей
+  original_explanation: Формальне звертання «пане» не поєднується з неформальним «Слухай».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Дякую тобі, пане директоре!
+  error: тобі
+  answer: Вам
+  sentence_corrected: Дякую Вам, пане директоре!
+  options:
+  - тобі
+  - Вам
+  - вам
+  - йому
+  original_explanation: До «пане директоре» звертаються на «Ви», тому «Вам», а не
+    «тобі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Ваша пропозиція класна! (в офіційному листі)
+  error: класна
+  answer: чудова
+  sentence_corrected: Ваша пропозиція чудова! (в офіційному листі)
+  options:
+  - класна
+  - чудова
+  - крута
+  - норм
+  original_explanation: '"Класна" — розмовне слово, в офіційному листі краще "чудова"
+    або "прийнятна".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Скиньте, будь ласка, документи. (в офіційному листі)
+  error: Скиньте
+  answer: Надішліть
+  sentence_corrected: Надішліть, будь ласка, документи. (в офіційному листі)
+  options:
+  - Скиньте
+  - Надішліть
+  - Закиньте
+  - Перекиньте
+  original_explanation: '"Скинути" — розмовне, в офіційному листі використовують "надіслати".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: З повага, Марія Петренко.
+  error: повага
+  answer: повагою
+  sentence_corrected: З повагою, Марія Петренко.
+  options:
+  - повага
+  - повагою
+  - поваги
+  - повазі
+  original_explanation: Правильний вираз — «З повагою» (орудний відмінок).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Шановний друже Іване!
+  error: друже
+  answer: пане
+  sentence_corrected: Шановний пане Іване!
+  options:
+  - друже
+  - пане
+  - колего
+  - товаришу
+  original_explanation: У формальному звертанні використовують «пане», а не «друже».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Добрий день, ти можеш допомогти? (до незнайомого)
+  error: ти
+  answer: Ви
+  sentence_corrected: Добрий день, Ви можеш допомогВи? (до незнайомого)
+  options:
+  - ти
+  - Ви
+  - він
+  - вона
+  original_explanation: До незнайомого звертаються на «Ви», а не на «ти».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Прошу Вас скинути фото. (в офіційному листі)
+  error: скинути
+  answer: надіслати
+  sentence_corrected: Прошу Вас надіслати фото. (в офіційному листі)
+  options:
+  - скинути
+  - надіслати
+  - закинути
+  - перекинути
+  original_explanation: '"Скинути" — розмовне, в офіційному контексті — "надіслати".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Дякую за допомога! (у листі)
+  error: допомога
+  answer: допомогу
+  sentence_corrected: Дякую за допомогу! (у листі)
+  options:
+  - допомога
+  - допомогу
+  - допомозі
+  - допомогою
+  original_explanation: Правильний відмінок — «Дякую за допомогу» (знахідний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Шановна пане Коваленко!
+  error: Шановна
+  answer: Шановний
+  sentence_corrected: Шановний пане Коваленко!
+  options:
+  - Шановна
+  - Шановний
+  - Шановне
+  - Шановні
+  original_explanation: '"Шановний" узгоджується з "пане" (чоловічий рід).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у регістрі та звертаннях
+  sentence_with_error: Ми чекаємо твоя відповідь. (в офіційному листі)
+  error: твоя
+  answer: Вашу
+  sentence_corrected: Ми чекаємо Вашу відповідь. (в офіційному листі)
+  options:
+  - твоя
+  - Вашу
+  - моя
+  - його
+  original_explanation: В офіційному листі використовують «Вашу» (від «Ви» з великої
+    літери).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) Шановний _____ Коваленко!
+  answer: пане
+  complete_sentence: (Офіційний лист) Шановний пане__ Коваленко!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Другу) _____, як справи?
+  answer: Привіт
+  complete_sentence: (Другу) Привіт__, як справи?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Начальнику) Чи могли б _____ розглянути моє прохання?
+  answer: Ви
+  complete_sentence: (Начальнику) Чи могли б Ви__ розглянути моє прохання?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) Дякую _____ за відповідь.
+  answer: Вам
+  complete_sentence: (Офіційний лист) Дякую Вам__ за відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Другу) _____, можеш скинути мені фото?
+  answer: Слухай
+  complete_sentence: (Другу) Слухай__, можеш скинути мені фото?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) Будьте _____, надішліть документи.
+  answer: ласкаві
+  complete_sentence: (Офіційний лист) Будьте ласкаві__, надішліть документи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Другу) _____, побачимось завтра!
+  answer: Бувай
+  complete_sentence: (Другу) Бувай__, побачимось завтра!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) З _____, Марія Петренко.
+  answer: повагою
+  complete_sentence: (Офіційний лист) З повагою__, Марія Петренко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (До викладача) Добрий день, Ольго _____!
+  answer: Петрівно
+  complete_sentence: (До викладача) Добрий день, Ольго Петрівно__!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) _____ дякуємо за співпрацю.
+  answer: Заздалегідь
+  complete_sentence: (Офіційний лист) Заздалегідь__ дякуємо за співпрацю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (До незнайомого) Чи не могли б _____ допомогти мені?
+  answer: Ви
+  complete_sentence: (До незнайомого) Чи не могли б Ви__ допомогти мені?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (До друга) Що _____ про це думаєш?
+  answer: ти
+  complete_sentence: (До друга) Що ти__ про це думаєш?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) Прошу _____ надати інформацію.
+  answer: Вас
+  complete_sentence: (Офіційний лист) Прошу Вас__ надати інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (До групи колег) Шановні колеги, прошу _____ увагу.
+  answer: вашу
+  complete_sentence: (До групи колег) Шановні колеги, прошу вашу__ увагу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (До друга) _____, домовились!
+  answer: Ок
+  complete_sentence: (До друга) Ок__, домовились!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильної форми звертання
+  sentence_template: (Офіційний лист) Маю _____ повідомити Вас...
+  answer: честь
+  complete_sentence: (Офіційний лист) Маю честь__ повідомити Вас...
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановний _____ директоре! (пан)
+  answer: пане
+  complete_sentence: Шановний пане__ директоре! (пан)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановна _____ Маріє! (пані)
+  answer: пані
+  complete_sentence: Шановна пані__ Маріє! (пані)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Добрий день, _____ Петровичу! (Іван)
+  answer: Іване
+  complete_sentence: Добрий день, Іване__ Петровичу! (Іван)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____, як справи? (Андрій)
+  answer: Андрію
+  complete_sentence: Андрію__, як справи? (Андрій)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановний _____ ! (колега)
+  answer: колего
+  complete_sentence: Шановний колего__ ! (колега)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____ мій! (друг)
+  answer: Друже
+  complete_sentence: Друже__ мій! (друг)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановна _____ ! (Ольга)
+  answer: Ольго
+  complete_sentence: Шановна Ольго__ ! (Ольга)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____ Іванівно! (Марія)
+  answer: Маріє
+  complete_sentence: Маріє__ Іванівно! (Марія)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановний _____ професоре! (пан)
+  answer: пане
+  complete_sentence: Шановний пане__ професоре! (пан)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____, допоможи! (Оксана)
+  answer: Оксано
+  complete_sentence: Оксано__, допоможи! (Оксана)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановний _____ голово! (пан)
+  answer: пане
+  complete_sentence: Шановний пане__ голово! (пан)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Добрий день, _____ ! (Наталія)
+  answer: Наталіє
+  complete_sentence: Добрий день, Наталіє__ ! (Наталія)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____, як справи? (Сергій)
+  answer: Сергію
+  complete_sentence: Сергію__, як справи? (Сергій)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановний _____ декане! (пан)
+  answer: пане
+  complete_sentence: Шановний пане__ декане! (пан)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: _____, слухай! (Тарас)
+  answer: Тарасе
+  complete_sentence: Тарасе__, слухай! (Тарас)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть кличний відмінок
+  sentence_template: Шановна _____ Вікторівно! (Олена)
+  answer: Олено
+  complete_sentence: Шановна Олено__ Вікторівно! (Олена)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Шановний пане Коваленко!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Дякую Вас за відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Прошу Вас надати інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Будьте ласкаві допомогти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: З повагою, Марія Петренко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Дозвольте звернутися до Вас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Маю честь повідомити Вам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Будьте ласкаві ознайомитися з документом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: До побачення, до зустрічі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Буду вдячна за Вашу відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Шановна пані директоре!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Чи могли б Ви допомогти?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Заздалегідь дякуємо за співпрацю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Чекаємо на Ваше рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Прошу надіслати документи до середи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формальні звертання та фрази
+  jumbled_words: []
+  answer: Прошу зв'язатися зі мною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Коли слід писати «Ви» з великої літери?
+  options:
+  - text: Завжди
+    correct: false
+  - text: При звертанні до групи людей
+    correct: false
+  - text: При ввічливому звертанні до однієї особи
+    correct: true
+  - text: Ніколи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке звертання доречне при першій зустрічі з незнайомим дорослим?
+  options:
+  - text: Ти
+    correct: false
+  - text: Ви
+    correct: true
+  - text: Залежить від настрою
+    correct: false
+  - text: Можна будь-яке
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Хто зазвичай ініціює перехід на «ти»?
+  options:
+  - text: Молодший за віком
+    correct: false
+  - text: Старший за віком або вищий за статусом
+    correct: true
+  - text: Будь-хто
+    correct: false
+  - text: Тільки жінка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яка форма звертання є найбільш формальною?
+  options:
+  - text: Пан Коваленко
+    correct: false
+  - text: Іване Петровичу
+    correct: false
+  - text: Вельмишановний добродію
+    correct: true
+  - text: Шановний пане
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: У якому відмінку стоїть слово «пане» у звертанні «Пане директоре»?
+  options:
+  - text: У називному
+    correct: false
+  - text: У родовому
+    correct: false
+  - text: У кличному
+    correct: true
+  - text: У давальному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке привітання є формальним?
+  options:
+  - text: Привіт!
+    correct: false
+  - text: Добрий день!
+    correct: true
+  - text: Здоров!
+    correct: false
+  - text: Привіточки!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Як правильно звернутися до начальника у робочому листі?
+  options:
+  - text: Привіт, Петро!
+    correct: false
+  - text: Шановний пане Петренко!
+    correct: true
+  - text: Гей, Петро!
+    correct: false
+  - text: Слухай, Петро!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке прощання є неформальним?
+  options:
+  - text: До побачення
+    correct: false
+  - text: На все добре
+    correct: false
+  - text: Бувай
+    correct: true
+  - text: До зустрічі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке слово є формальним відповідником до «скинути» (надіслати)?
+  options:
+  - text: Закинути
+    correct: false
+  - text: Надіслати
+    correct: true
+  - text: Перекинути
+    correct: false
+  - text: Відкинути
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: У якій ситуації доречно використовувати «ти»?
+  options:
+  - text: На співбесіді
+    correct: false
+  - text: У листі до декана
+    correct: false
+  - text: У розмові з другом
+    correct: true
+  - text: На прийомі у лікаря
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Як правильно написати у листі — «прошу вас» чи «прошу Вас»?
+  options:
+  - text: Завжди «прошу вас»
+    correct: false
+  - text: Завжди «прошу Вас»
+    correct: false
+  - text: '"Прошу Вас" — до однієї особи, "прошу вас" — до групи'
+    correct: true
+  - text: Не має значення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яка форма подяки є найбільш офіційною?
+  options:
+  - text: Дякую
+    correct: false
+  - text: Дякс
+    correct: false
+  - text: Щиро вдячний/вдячна
+    correct: true
+  - text: Спасибі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Що означає «перейти на ти»?
+  options:
+  - text: Почати сваритися
+    correct: false
+  - text: Перейти від формального до неформального звертання
+    correct: true
+  - text: Закінчити розмову
+    correct: false
+  - text: Познайомитися
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке звертання використовують до викладача?
+  options:
+  - text: Тільки ім'я
+    correct: false
+  - text: Ім'я по батькові
+    correct: true
+  - text: Тільки прізвище
+    correct: false
+  - text: Прізвисько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яка помилка у реченні «Шановний пане директоре! Привіт!»?
+  options:
+  - text: Неправильний відмінок
+    correct: false
+  - text: Змішування формального і неформального регістрів
+    correct: true
+  - text: Орфографічна помилка
+    correct: false
+  - text: Помилки немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи системи звертань ти/Ви
+  question: Яке слово є формальним відповідником до «глянути»?
+  options:
+  - text: Подивитися
+    correct: false
+  - text: Ознайомитися
+    correct: true
+  - text: Зиркнути
+    correct: false
+  - text: Поглянути
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно закінчити офіційний лист?
+  options:
+  - text: Бувай!
+    correct: false
+  - text: З повагою,
+    correct: true
+  - text: Па-па!
+    correct: false
+  - text: Поки!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якій ситуації НЕ слід переходити на «ти»?
+  options:
+  - text: Після пропозиції співрозмовника
+    correct: false
+  - text: З другом дитинства
+    correct: false
+  - text: При першій зустрічі з начальником
+    correct: true
+  - text: З родичем
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма звертання поєднує повагу та особистий контакт?
+  options:
+  - text: Тільки прізвище
+    correct: false
+  - text: Ім'я по батькові
+    correct: true
+  - text: Тільки ім'я
+    correct: false
+  - text: Прізвисько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно звернутися до жінки в офіційному листі?
+  options:
+  - text: Шановний пані Петренко!
+    correct: false
+  - text: Шановна пані Петренко!
+    correct: true
+  - text: Шановне пані Петренко!
+    correct: false
+  - text: Шановні пані Петренко!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що означає вираз «перестрахуватися» у контексті вибору регістру?
+  options:
+  - text: Використати «ти»
+    correct: false
+  - text: Використати «Ви»
+    correct: true
+  - text: Не відповідати
+    correct: false
+  - text: Перейти на інший регістр
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке слово є розмовним відповідником до «необхідно»?
+  options:
+  - text: Потрібно
+    correct: false
+  - text: Треба
+    correct: true
+  - text: Слід
+    correct: false
+  - text: Варто
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Коли «ви» пишеться з малої літери?
+  options:
+  - text: Завжди
+    correct: false
+  - text: При звертанні до групи людей
+    correct: true
+  - text: Ніколи
+    correct: false
+  - text: У неофіційних листах
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка помилка у фразі «Скиньте, будь ласка, звіт»? (в офіційному листі)
+  options:
+  - text: Помилки немає
+    correct: false
+  - text: «Скиньте» — розмовне слово
+    correct: true
+  - text: Немає «Ви»
+    correct: false
+  - text: Неправильний відмінок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке звертання найбільш доречне до незнайомого старшого чоловіка на вулиці?
+  options:
+  - text: Гей, ти!
+    correct: false
+  - text: Пробачте, будь ласка
+    correct: true
+  - text: Слухай!
+    correct: false
+  - text: Привіт!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно запропонувати перехід на «ти»?
+  options:
+  - text: Просто почати говорити на «ти»
+    correct: false
+  - text: Запитати «Може, перейдемо на ти?»
+    correct: true
+  - text: Написати в листі
+    correct: false
+  - text: Ніколи не пропонувати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке слово НЕ є формальним?
+  options:
+  - text: Надіслати
+    correct: false
+  - text: Ознайомитися
+    correct: false
+  - text: Глянути
+    correct: true
+  - text: Повідомити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: У якому відмінку стоїть слово «директоре» у звертанні «Пане директоре!»?
+  options:
+  - text: У називному
+    correct: false
+  - text: У родовому
+    correct: false
+  - text: У кличному
+    correct: true
+  - text: У давальному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка фраза є найбільш формальною для початку прохання?
+  options:
+  - text: Слухай, мені треба...
+    correct: false
+  - text: Дозвольте звернутися до Вас із проханням.
+    correct: true
+  - text: Можеш допомогти?
+    correct: false
+  - text: Мені треба...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно написати подяку в офіційному листі?
+  options:
+  - text: Дякую тобі!
+    correct: false
+  - text: Щиро вдячний/вдячна Вам за допомогу.
+    correct: true
+  - text: Дякс!
+    correct: false
+  - text: Спасибі!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що характерно для неформального тону спілкування?
+  options:
+  - text: Складні речення
+    correct: false
+  - text: Ввічливі конструкції
+    correct: false
+  - text: Скорочення та емоційні вигуки
+    correct: true
+  - text: Звертання з титулами
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке завершення листа НЕ є формальним?
+  options:
+  - text: З повагою
+    correct: false
+  - text: З найкращими побажаннями
+    correct: false
+  - text: Бувай
+    correct: true
+  - text: До зустрічі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Ви" завжди пишеться з великої літери.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: Перехід на «ти» ініціює старший за віком або вищий за статусом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Привіт" можна використовувати в офіційному листі.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: У кличному відмінку «пан» стає «пане».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Скинути" і "надіслати" — це синоніми з однаковим стилістичним забарвленням.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: До начальника на роботі завжди звертаються на «Ви».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Бувай" — це формальне прощання.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: Ім'я по батькові використовують для вираження поваги та близькості одночасно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Добродій" — це запозичення з російської мови.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: Якщо сумніваєтеся, краще використати «ти».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Шановний" використовують на початку офіційних листів.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"Вельмишановний" — це найвищий ступінь формальності у звертанні.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: Змішування формального і неформального регістрів в одному тексті є нормою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: У розмовній мові замість «необхідно» кажуть «треба».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: '"З повагою" — це стандартне завершення офіційного листа.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила мовного етикету
+  statement: До дитини завжди звертаються на «Ви».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

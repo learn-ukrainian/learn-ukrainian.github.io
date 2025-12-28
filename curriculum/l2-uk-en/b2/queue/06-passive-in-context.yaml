@@ -1,0 +1,1412 @@
+module: 06-passive-in-context
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/06-passive-in-context.md
+generated: '2025-12-28T20:26:04.552672'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'В офіційному документі: Рішення прийняли на засіданні.'
+  error: прийняли
+  answer: прийнято
+  sentence_corrected: 'В офіційному документі: Рішення прийнято на засіданні.'
+  options:
+  - прийняли
+  - прийнято
+  - приймається
+  - прийняте
+  original_explanation: В офіційно-діловому стилі використовується форма -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У науковій статті: Нам сказали результати експерименту.'
+  error: сказали
+  answer: повідомлено
+  sentence_corrected: 'У науковій статті: Нам повідомлено результати експерименту.'
+  options:
+  - сказали
+  - повідомлено
+  - говориться
+  - сказане
+  original_explanation: Науковий стиль уникає третьої особи множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У розмові: Заяву вашу зареєстровано вчора.'
+  error: зареєстровано
+  answer: зареєстрували
+  sentence_corrected: 'У розмові: Заяву вашу зареєстрували вчора.'
+  options:
+  - зареєстровано
+  - зареєстрували
+  - реєструється
+  - зареєстрована
+  original_explanation: У розмовному мовленні форма -но/-то звучить неприродно.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У художньому тексті: Листа написано красиво.'
+  error: написано
+  answer: написаний
+  sentence_corrected: 'У художньому тексті: Листа написаний красиво.'
+  options:
+  - написано
+  - написаний
+  - пишеться
+  - написали
+  original_explanation: Художній текст потребує дієприкметникової форми.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У протоколі: Питання обговорювали всебічно.'
+  error: обговорювали
+  answer: обговорено
+  sentence_corrected: 'У протоколі: Питання обговорено всебічно.'
+  options:
+  - обговорювали
+  - обговорено
+  - обговорюється
+  - обговорене
+  original_explanation: Протоколи вимагають форми -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У технічній інструкції: Прилад увімкнуто автоматично.'
+  error: увімкнуто
+  answer: вмикається
+  sentence_corrected: 'У технічній інструкції: Прилад вмикається автоматично.'
+  options:
+  - увімкнуто
+  - вмикається
+  - увімкнули
+  - увімкнений
+  original_explanation: Технічна документація описує процеси формою -ся.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У SMS другові: Угоду підписано сьогодні.'
+  error: підписано
+  answer: підписали
+  sentence_corrected: 'У SMS другові: Угоду підписали сьогодні.'
+  options:
+  - підписано
+  - підписали
+  - підписується
+  - підписана
+  original_explanation: У неформальному спілкуванні використовується третя особа множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У наказі: Іваненка призначили на посаду.'
+  error: призначили
+  answer: призначено
+  sentence_corrected: 'У наказі: Іваненка призначено на посаду.'
+  options:
+  - призначили
+  - призначено
+  - призначається
+  - призначений
+  original_explanation: У наказах використовується форма -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У дослідженні: Дані порівняли з попередніми.'
+  error: порівняли
+  answer: порівнюються
+  sentence_corrected: 'У дослідженні: Дані порівнюються з попередніми.'
+  options:
+  - порівняли
+  - порівнюються
+  - порівняно
+  - порівняні
+  original_explanation: Науковий стиль віддає перевагу формі -ся.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У рецензії: Роман написано талановито.'
+  error: написано
+  answer: написаний
+  sentence_corrected: 'У рецензії: Роман написаний талановито.'
+  options:
+  - написано
+  - написаний
+  - пишеться
+  - написали
+  original_explanation: У рецензіях використовується художній стиль.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У постанові: Зміни вносяться з 1 січня.'
+  error: вносяться
+  answer: внесено
+  sentence_corrected: 'У постанові: Зміни внесено з 1 січня.'
+  options:
+  - вносяться
+  - внесено
+  - внесли
+  - внесені
+  original_explanation: Офіційні постанови вимагають форми -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У розмові: Результати повідомлено вчора.'
+  error: повідомлено
+  answer: повідомили
+  sentence_corrected: 'У розмові: Результати повідомили вчора.'
+  options:
+  - повідомлено
+  - повідомили
+  - повідомляється
+  - повідомлене
+  original_explanation: У розмовному стилі використовується третя особа множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У науковій доповіді: Кажуть, що гіпотеза правильна.'
+  error: Кажуть
+  answer: Стверджується
+  sentence_corrected: 'У науковій доповіді: Стверджується, що гіпотеза правильна.'
+  options:
+  - Кажуть
+  - Стверджується
+  - Сказано
+  - Сказали
+  original_explanation: Науковий стиль уникає розмовних форм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У юридичному документі: Угоду підписують сторони.'
+  error: підписують
+  answer: підписано
+  sentence_corrected: 'У юридичному документі: Угоду підписано сторони.'
+  options:
+  - підписують
+  - підписано
+  - підписується
+  - підписана
+  original_explanation: Юридичні документи вимагають форми -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'У поезії: Квіти полито дощем.'
+  error: полито
+  answer: политі
+  sentence_corrected: 'У поезії: Квіти политі дощем.'
+  options:
+  - полито
+  - политі
+  - поливаються
+  - полили
+  original_explanation: Поезія використовує дієприкметникові форми.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте регістрові помилки
+  sentence_with_error: 'В академічному тексті: Проблему вирішили успішно.'
+  error: вирішили
+  answer: вирішується
+  sentence_corrected: 'В академічному тексті: Проблему вирішується успішно.'
+  options:
+  - вирішили
+  - вирішується
+  - вирішено
+  - вирішена
+  original_explanation: Академічний текст віддає перевагу формі -ся.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'В офіційному листі до міністерства: Вашу заяву _____.'
+  answer: розглянуто
+  complete_sentence: 'В офіційному листі до міністерства: Вашу заяву розглянуто__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У науковій статті: Дані _____ за допомогою спеціального програмного
+    забезпечення.'
+  answer: обробляються
+  complete_sentence: 'У науковій статті: Дані обробляються__ за допомогою спеціального
+    програмного забезпечення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У художньому тексті: _____ вітром листя кружляло в повітрі.'
+  answer: Підняте
+  complete_sentence: 'У художньому тексті: Підняте__ вітром листя кружляло в повітрі.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У розмові з другом: _____, що завтра буде свято.'
+  answer: Сказали
+  complete_sentence: 'У розмові з другом: Сказали__, що завтра буде свято.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У протоколі засідання: Питання _____ всебічно.'
+  answer: обговорено
+  complete_sentence: 'У протоколі засідання: Питання обговорено__ всебічно.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У технічній інструкції: Прилад _____ автоматично.'
+  answer: вмикається
+  complete_sentence: 'У технічній інструкції: Прилад вмикається__ автоматично.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У юридичному документі: Угоду _____ обома сторонами.'
+  answer: підписано
+  complete_sentence: 'У юридичному документі: Угоду підписано__ обома сторонами.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У повсякденній розмові: _____ воду на весь день.'
+  answer: Відключили
+  complete_sentence: 'У повсякденній розмові: Відключили__ воду на весь день.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У наказі директора: На посаду _____ Іваненка О.П.'
+  answer: призначено
+  complete_sentence: 'У наказі директора: На посаду призначено__ Іваненка О.П.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У дослідженні: Результати _____ з попередніми даними.'
+  answer: порівнюються
+  complete_sentence: 'У дослідженні: Результати порівнюються__ з попередніми даними.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У поезії: _____ дощем квіти схилилися.'
+  answer: Змиті
+  complete_sentence: 'У поезії: Змиті__ дощем квіти схилилися.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У SMS другові: _____, що екзамен перенесли.'
+  answer: Написали
+  complete_sentence: 'У SMS другові: Написали__, що екзамен перенесли.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У постанові уряду: Зміни _____ з 1 січня.'
+  answer: набирають чинності
+  complete_sentence: 'У постанові уряду: Зміни набирають чинності__ з 1 січня.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'В академічній праці: Особлива увага _____ методології.'
+  answer: приділяється
+  complete_sentence: 'В академічній праці: Особлива увага приділяється__ методології.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У літературному описі: _____ снігом поля здавалися безкрайніми.'
+  answer: Вкриті
+  complete_sentence: 'У літературному описі: Вкриті__ снігом поля здавалися безкрайніми.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму пасиву
+  sentence_template: 'У неформальному листі: _____, що ти приїдеш.'
+  answer: Чули
+  complete_sentence: 'У неформальному листі: Чули__, що ти приїдеш.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У наказі міністра: На посаду директора _____ Коваленко О.П.'
+  answer: призначено
+  complete_sentence: 'У наказі міністра: На посаду директора призначено__ Коваленко
+    О.П.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У науковому журналі: Дослідження _____ протягом трьох років.'
+  answer: проводиться
+  complete_sentence: 'У науковому журналі: Дослідження проводиться__ протягом трьох
+    років.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У поетичному тексті: _____ вітром листя кружляло.'
+  answer: Підняте
+  complete_sentence: 'У поетичному тексті: Підняте__ вітром листя кружляло.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У розмові з сусідкою: _____, що ціни знову підвищать.'
+  answer: Кажуть
+  complete_sentence: 'У розмові з сусідкою: Кажуть__, що ціни знову підвищать.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У статуті організації: Рішення про виключення _____ загальними
+    зборами.'
+  answer: приймається
+  complete_sentence: 'У статуті організації: Рішення про виключення приймається__
+    загальними зборами.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У технічному описі: Система _____ автоматично після увімкнення.'
+  answer: активується
+  complete_sentence: 'У технічному описі: Система активується__ автоматично після
+    увімкнення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У судовому рішенні: Вирок _____ іменем України.'
+  answer: ухвалено
+  complete_sentence: 'У судовому рішенні: Вирок ухвалено__ іменем України.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У СМС: _____ мені, що зустріч о 5-й.'
+  answer: Написали
+  complete_sentence: 'У СМС: Написали__ мені, що зустріч о 5-й.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У доповіді: Особлива увага _____ питанням безпеки.'
+  answer: приділяється
+  complete_sentence: 'У доповіді: Особлива увага приділяється__ питанням безпеки.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У романі: _____ роками хата чекала господарів.'
+  answer: Покинута
+  complete_sentence: 'У романі: Покинута__ роками хата чекала господарів.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У законі: Порядок застосування _____ Кабінетом Міністрів.'
+  answer: визначається
+  complete_sentence: 'У законі: Порядок застосування визначається__ Кабінетом Міністрів.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У чаті: _____, що автобус запізниться.'
+  answer: Попередили
+  complete_sentence: 'У чаті: Попередили__, що автобус запізниться.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У дисертації: Гіпотеза _____ експериментально.'
+  answer: підтверджується
+  complete_sentence: 'У дисертації: Гіпотеза підтверджується__ експериментально.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'В оповіданні: _____ часом спогади повертаються.'
+  answer: Забуті
+  complete_sentence: 'В оповіданні: Забуті__ часом спогади повертаються.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У розпорядженні: Термін виконання _____ до 1 лютого.'
+  answer: продовжено
+  complete_sentence: 'У розпорядженні: Термін виконання продовжено__ до 1 лютого.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення відповідно до контексту
+  sentence_template: 'У телефонній розмові: _____, що екзамен скасували.'
+  answer: Почув
+  complete_sentence: 'У телефонній розмові: Почув__, що екзамен скасували.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Рішення прийнято на засіданні ради.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: У цьому дослідженні дані аналізуються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Написаний рукою лист лежав на столі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Мені сказали, що буде засідання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Рішення про затвердження бюджету прийнято одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Експеримент проводиться в лабораторних умовах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Забутий світом острів зберігав свої таємниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: По телевізору показали, що трапилось.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Протокол підписано всіма присутніми членами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Результати порівнюються з попередніми даними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Зігріті сонцем квіти розпустилися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Кажуть, що завтра буде тепло.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Справу закрито за відсутністю доказів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Гіпотеза перевіряється експериментально.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Покинута хата стояла на краю села.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення у правильному порядку
+  jumbled_words: []
+  answer: Передали по радіо, що буде дощ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка пасивна форма є типовою для офіційно-ділового стилю?
+  options:
+  - text: Книгу читають.
+    correct: false
+  - text: Книгу прочитано.
+    correct: true
+  - text: Книга читається.
+    correct: false
+  - text: Прочитана книга лежить на столі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка пасивна форма найчастіше використовується в наукових текстах?
+  options:
+  - text: Дані проаналізовано.
+    correct: false
+  - text: Дані проаналізували.
+    correct: false
+  - text: Дані аналізуються.
+    correct: true
+  - text: Проаналізовані дані.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: У якому реченні використано розмовний пасив?
+  options:
+  - text: Рішення прийнято.
+    correct: false
+  - text: Сказали, що буде дощ.
+    correct: true
+  - text: Рішення приймається.
+    correct: false
+  - text: Прийняте рішення важливе.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка форма пасиву надає тексту книжного, художнього звучання?
+  options:
+  - text: -но/-то
+    correct: false
+  - text: -ся
+    correct: false
+  - text: -ний/-тий
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яке речення є стилістично невідповідним для офіційного документа?
+  options:
+  - text: Наказ видано.
+    correct: false
+  - text: Рішення прийнято.
+    correct: false
+  - text: Мені сказали прийти.
+    correct: true
+  - text: Протокол підписано.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: У науковій статті правильно написати...
+  options:
+  - text: Результати отримали вчора.
+    correct: false
+  - text: Результати отримано вчора.
+    correct: false
+  - text: Результати отримуються протягом експерименту.
+    correct: true
+  - text: Отримані результати важливі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яке речення найкраще підходить для художнього тексту?
+  options:
+  - text: Листа написано.
+    correct: false
+  - text: Листа написали.
+    correct: false
+  - text: Лист пишеться.
+    correct: false
+  - text: Написаний від руки лист торкнув серце.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка форма пасиву підкреслює процес, а не результат?
+  options:
+  - text: -но/-то
+    correct: false
+  - text: -ся
+    correct: true
+  - text: -ний/-тий
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: У протоколі засідання правильно написати...
+  options:
+  - text: Питання обговорили.
+    correct: false
+  - text: Питання обговорюється.
+    correct: false
+  - text: Обговорене питання.
+    correct: false
+  - text: Питання обговорено.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яке речення є типовим для технічної документації?
+  options:
+  - text: Прилад налаштовано.
+    correct: false
+  - text: Прилад налаштували.
+    correct: false
+  - text: Прилад налаштовується автоматично.
+    correct: true
+  - text: Налаштований прилад працює добре.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: У повсякденній розмові природно сказати...
+  options:
+  - text: Магазин закрито.
+    correct: false
+  - text: Магазин закривається.
+    correct: false
+  - text: Закрили магазин.
+    correct: true
+  - text: Закритий магазин.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка форма НЕ підходить для наукового стилю?
+  options:
+  - text: Дані аналізуються.
+    correct: false
+  - text: Гіпотеза перевіряється.
+    correct: false
+  - text: Нам сказали результати.
+    correct: true
+  - text: Експеримент проводиться.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Для юридичного документа найкраще використати...
+  options:
+  - text: Угоду підписали.
+    correct: false
+  - text: Угода підписується.
+    correct: false
+  - text: Підписана угода.
+    correct: false
+  - text: Угоду підписано.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яке речення демонструє змішування регістрів?
+  options:
+  - text: Рішення прийнято. Документи передано.
+    correct: false
+  - text: Дані аналізуються. Результати порівнюються.
+    correct: false
+  - text: Рішення прийнято. Мені сказали чекати.
+    correct: true
+  - text: Кажуть, буде дощ. Передали по радіо.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: У рецензії на книгу доречно написати...
+  options:
+  - text: Роман написано.
+    correct: false
+  - text: Роман пишеться.
+    correct: false
+  - text: Написаний талановито роман вражає.
+    correct: true
+  - text: Написали роман.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення регістру за пасивною формою
+  question: Яка форма найкраще передає невідомість агента дії?
+  options:
+  - text: -но/-то
+    correct: false
+  - text: -ся
+    correct: false
+  - text: -ний/-тий
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете офіційний лист до міністерства. Яку форму використати?
+  options:
+  - text: Нам повідомили про зміни.
+    correct: false
+  - text: Про зміни повідомлено.
+    correct: true
+  - text: Про зміни повідомляється.
+    correct: false
+  - text: Повідомлене про зміни.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете наукову статтю. Як описати процес дослідження?
+  options:
+  - text: Дані зібрали протягом року.
+    correct: false
+  - text: Дані зібрано протягом року.
+    correct: false
+  - text: Дані збираються протягом року.
+    correct: true
+  - text: Зібрані дані протягом року.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви описуєте картину в музейному каталозі. Яку форму обрати?
+  options:
+  - text: Картину написали в 1920 році.
+    correct: false
+  - text: Картину написано в 1920 році.
+    correct: false
+  - text: Картина пишеться в 1920 році.
+    correct: false
+  - text: Написана в 1920 році картина вражає.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви розповідаєте другові новину. Яку форму використати?
+  options:
+  - text: Повідомлено, що магазин закривається.
+    correct: false
+  - text: Магазин закривається.
+    correct: false
+  - text: Сказали, що магазин закривають.
+    correct: true
+  - text: Закритий магазин.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви готуєте протокол засідання. Як зафіксувати рішення?
+  options:
+  - text: Вирішили затвердити бюджет.
+    correct: false
+  - text: Вирішено затвердити бюджет.
+    correct: true
+  - text: Вирішується затвердити бюджет.
+    correct: false
+  - text: Затверджений бюджет.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете інструкцію до приладу. Як описати його роботу?
+  options:
+  - text: Прилад увімкнули.
+    correct: false
+  - text: Прилад увімкнуто.
+    correct: false
+  - text: Прилад вмикається натисканням кнопки.
+    correct: true
+  - text: Увімкнений прилад.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете пост у соціальній мережі. Яку форму обрати?
+  options:
+  - text: Оголошено, що буде концерт.
+    correct: false
+  - text: Оголошується концерт.
+    correct: false
+  - text: Оголосили, що буде концерт.
+    correct: true
+  - text: Оголошений концерт.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви готуєте юридичний висновок. Як оформити рішення?
+  options:
+  - text: Справу закрили.
+    correct: false
+  - text: Справу закрито за відсутністю доказів.
+    correct: true
+  - text: Справа закривається.
+    correct: false
+  - text: Закрита справа.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете рецензію на книгу. Як описати стиль автора?
+  options:
+  - text: Мову збагатили народною мудрістю.
+    correct: false
+  - text: Мову збагачено народною мудрістю.
+    correct: false
+  - text: Мова, збагачена народною мудрістю, звучить.
+    correct: true
+  - text: Мова збагачується.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви телефонуєте другові. Як передати новину?
+  options:
+  - text: Повідомлено, що екзамен перенесли.
+    correct: false
+  - text: Екзамен переноситься.
+    correct: false
+  - text: Сказали, що екзамен перенесли.
+    correct: true
+  - text: Перенесений екзамен.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви готуєте наказ директора. Яку форму використати?
+  options:
+  - text: Призначили Петренка на посаду.
+    correct: false
+  - text: Петренка призначено на посаду.
+    correct: true
+  - text: Петренко призначається.
+    correct: false
+  - text: Призначений Петренко.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете дослідницький звіт. Як описати результати?
+  options:
+  - text: Результати отримали минулого тижня.
+    correct: false
+  - text: Результати отримано.
+    correct: false
+  - text: Результати отримуються й аналізуються.
+    correct: true
+  - text: Отримані результати.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви описуєте пейзаж у художньому творі. Яку форму обрати?
+  options:
+  - text: Поля вкрили снігом.
+    correct: false
+  - text: Поля вкрито снігом.
+    correct: false
+  - text: Поля вкриваються снігом.
+    correct: false
+  - text: Вкриті снігом поля здавалися безкрайніми.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви обговорюєте новини з колегою. Яку форму використати?
+  options:
+  - text: Оголошено підвищення зарплат.
+    correct: false
+  - text: Зарплати підвищуються.
+    correct: false
+  - text: Чули, що зарплати підвищать?
+    correct: true
+  - text: Підвищені зарплати.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви готуєте постанову уряду. Яку форму використати?
+  options:
+  - text: Зміни ввели з 1 січня.
+    correct: false
+  - text: Зміни введено з 1 січня.
+    correct: true
+  - text: Зміни вводяться.
+    correct: false
+  - text: Введені зміни.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз контексту та вибір форми
+  question: Ви пишете тези до конференції. Як описати методологію?
+  options:
+  - text: Ми застосували комбінований підхід.
+    correct: false
+  - text: Застосовано комбінований підхід.
+    correct: false
+  - text: Застосовується комбінований підхід.
+    correct: true
+  - text: Застосований підхід.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Форма -но/-то є найбільш поширеною в офіційно-діловому стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: У науковому тексті можна вільно використовувати третю особу множини.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Дієприкметникова форма (-ний/-тий) надає тексту книжного звучання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Рефлексивний пасив з -ся акцентує увагу на результаті дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: В одному тексті можна змішувати різні регістри пасиву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Форма третьої особи множини є найприроднішою для розмовного мовлення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: У технічній документації переважає форма -но/-то.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Вибір пасивної форми залежить від контексту та адресата.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Форма "Мені сказали" є прийнятною в офіційному листі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: У протоколах засідань використовується форма -но/-то.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Рефлексивний пасив з -ся є типовим для художньої літератури.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Форма "Рішення прийнято" є нейтральною і підходить для будь-якого стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: У наукових статтях часто використовується форма "досліджується".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Третя особа множини завжди вказує на конкретного агента.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: Вибір пасивної форми впливає на тон повідомлення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила регістрової відповідності
+  statement: У юридичних документах допускається використання розмовних форм.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

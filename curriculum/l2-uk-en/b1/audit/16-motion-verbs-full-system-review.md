@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 97.3% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 98.2% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 96% (grammar)
 - **Grammar:** ✅ Validated (7/57 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **96.2%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -46,17 +52,4 @@
 | **Поглиблення** | ⚪️ | 678 | Skipped |
 | **Діалоги** | ✅ | 222 | Included in Core |
 | **Підсумок** | ✅ | 215 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Односпрямовані чи різноспрямовані дієслова?** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Пари дієслів руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Оберіть правильне дієслово** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Правда чи неправда?** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Типи руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Розставте слова в правильному порядку** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Виправте помилки** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Дієслова руху в контексті** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть дієслова руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Розставте репліки діалогу в правильному порядку** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Оберіть усі правильні варіанти** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Перекладіть речення** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

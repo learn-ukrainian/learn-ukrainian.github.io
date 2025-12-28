@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.3% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 100% (grammar)
-- **Grammar:** ✅ Validated ([View Audit](84-b1-grammar-integration-grammar.yaml))
+- **Grammar:** ✅ Validated (14/94 confirmed)
 
 ## Richness Details
 **Score:** 100% (minimum: 95%)
@@ -36,6 +36,12 @@
 | questions | 17 | 5 | 100% | 5% | 5.0% |
 | proverbs | 3 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **100.0%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

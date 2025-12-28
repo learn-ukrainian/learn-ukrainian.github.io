@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1563/1500
+- **Words:** ✅ 1554/1500
 - **Activities:** ✅ 15/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -37,6 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **97.9%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (15 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -45,5 +51,5 @@
 | **Пояснення** | ⚪️ | 223 | Skipped |
 | **Практика** | ⚪️ | 855 | Skipped |
 | **Діалоги** | ✅ | 145 | Included in Core |
-| **Підсумок** | ✅ | 208 | Included in Core |
+| **Підсумок** | ✅ | 199 | Included in Core |
 | **Словник** | ⚪️ | 0 | Skipped |

@@ -1,0 +1,1432 @@
+module: 14-stylistic-connectors
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/14-stylistic-connectors.md
+generated: '2025-12-28T20:34:33.606191'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Хоча він працював, але не встиг закінчити проєкт.
+  error: але
+  answer: (видалити)
+  sentence_corrected: Хоча він працював, (видалити) не встиг закінчити проєкт.
+  options:
+  - але
+  - (видалити)
+  - однак
+  - проте
+  original_explanation: Після допустового сполучника «хоча» не потрібно «але» — це
+    плеоназм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Завдяки хворобі він пропустив заняття.
+  error: Завдяки
+  answer: Через
+  sentence_corrected: Через хворобі він пропустив заняття.
+  options:
+  - Завдяки
+  - Через
+  - Зате
+  - Попри
+  original_explanation: '"Завдяки" вживається лише з позитивними причинами. Хвороба
+    — негативна причина.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Несмотря на те що він готувався, іспит здався важким.
+  error: Несмотря
+  answer: Незважаючи
+  sentence_corrected: Незважаючи на те що він готувався, іспит здався важким.
+  options:
+  - Несмотря
+  - Незважаючи
+  - Незважая
+  - Несмотречи
+  original_explanation: '"Несмотря" — калька з російської. Правильно українською:
+    "незважаючи".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: 'В офіційному листі написали: «Зате ми встигли вчасно».'
+  error: Зате
+  answer: Проте
+  sentence_corrected: 'В офіційному листі написали: «Проте ми встигли вчасно».'
+  options:
+  - Зате
+  - Проте
+  - Та
+  - Хоч
+  original_explanation: Сполучник «зате» занадто розмовний для офіційного листа. Краще
+    «проте».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Він прийшов, причому однак вчасно.
+  error: однак
+  answer: (видалити)
+  sentence_corrected: Він прийшов, причому (видалити) вчасно.
+  options:
+  - однак
+  - (видалити)
+  - але
+  - проте
+  original_explanation: Не можна поєднувати «причому» з «однак» — це різні за функцією
+    сполучники.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Оскільки час обмежений, зате ми встигнемо.
+  error: зате
+  answer: проте
+  sentence_corrected: Оскільки час обмежений, проте ми встигнемо.
+  options:
+  - зате
+  - проте
+  - однак
+  - тому
+  original_explanation: Після причинового сполучника логічно вживати наслідковий,
+    а не компенсаційний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Факти доведені, тому теорія правильна — це науковий висновок.
+  error: тому
+  answer: отже
+  sentence_corrected: Факти доведені, отже теорія правильна — це науковий висновок.
+  options:
+  - тому
+  - отже
+  - зате
+  - хоча
+  original_explanation: Для наукового висновку краще вживати книжний «отже» замість
+    нейтрального «тому».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Втім він не здався, попри критику.
+  error: Втім
+  answer: Однак
+  sentence_corrected: Однак він не здався, попри критику.
+  options:
+  - Втім
+  - Однак
+  - Зате
+  - Причому
+  original_explanation: '"Втім" виражає м''яке обмеження, а тут потрібне чітке протиставлення
+    — "однак".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Позаяк він студент, тому отримує стипендію.
+  error: тому
+  answer: (видалити)
+  sentence_corrected: Позаяк він студент, (видалити) отримує стипендію.
+  options:
+  - тому
+  - (видалити)
+  - отже
+  - відтак
+  original_explanation: '"Позаяк" вже виражає причину, "тому" створює тавтологію.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Він не прийшов, натомість однак зателефонував.
+  error: однак
+  answer: (видалити)
+  sentence_corrected: Він не прийшов, натомість (видалити) зателефонував.
+  options:
+  - однак
+  - (видалити)
+  - але
+  - проте
+  original_explanation: '"Натомість" вже виражає альтернативу, "однак" зайве.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Дарма що він намагався, однак нічого не вийшло.
+  error: однак
+  answer: (видалити)
+  sentence_corrected: Дарма що він намагався, (видалити) нічого не вийшло.
+  options:
+  - однак
+  - (видалити)
+  - але
+  - проте
+  original_explanation: Допустовий сполучник «дарма що» не потребує протиставлення
+    в головній частині.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Тим більше він фахівець, йому довіряють.
+  error: Тим більше
+  answer: Оскільки
+  sentence_corrected: Оскільки він фахівець, йому довіряють.
+  options:
+  - Тим більше
+  - Оскільки
+  - Зате
+  - Навпаки
+  original_explanation: '"Тим більше що" підсилює аргумент, а тут потрібна пряма причина
+    — "оскільки".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Завдяки тому що він допоміг, через це проєкт завершено.
+  error: через це
+  answer: (видалити)
+  sentence_corrected: Завдяки тому що він допоміг, (видалити) проєкт завершено.
+  options:
+  - через це
+  - (видалити)
+  - тому
+  - відтак
+  original_explanation: '"Завдяки тому що" вже вказує на причину, "через це" — зайвий
+    повтор.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Він працює повільно, однак зате якісно.
+  error: зате
+  answer: (видалити)
+  sentence_corrected: Він працює повільно, однак (видалити) якісно.
+  options:
+  - зате
+  - (видалити)
+  - але
+  - проте
+  original_explanation: Не можна поєднувати «однак» і «зате» — вони виконують подібну
+    функцію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Внаслідок того що він захворів, зате відпочив.
+  error: зате
+  answer: проте
+  sentence_corrected: Внаслідок того що він захворів, проте відпочив.
+  options:
+  - зате
+  - проте
+  - однак
+  - втім
+  original_explanation: Після причинового зв'язку логічно вживати протиставлення,
+    а не компенсацію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у вживанні сполучників
+  sentence_with_error: Крім того він талановитий, до того ж працьовитий.
+  error: до того ж
+  answer: і
+  sentence_corrected: Крім того він талановитий, і працьовитий.
+  options:
+  - до того ж
+  - і
+  - а також
+  - та
+  original_explanation: Не варто поєднувати два сполучники приєднання підряд. Краще
+    просте «і».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Економіка зростає, _____ проблеми залишаються.
+  answer: однак
+  complete_sentence: Економіка зростає, однак__ проблеми залишаються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Машина стара, _____ надійна.
+  answer: зате
+  complete_sentence: Машина стара, зате__ надійна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Він не поїхав до Києва, _____ залишився вдома.
+  answer: натомість
+  complete_sentence: Він не поїхав до Києва, натомість__ залишився вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Факти доведені, _____ теорія правильна.
+  answer: отже
+  complete_sentence: Факти доведені, отже__ теорія правильна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Вона талановита, _____ працьовита.
+  answer: до того ж
+  complete_sentence: Вона талановита, до того ж__ працьовита.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: _____ він фахівець, йому довіряють.
+  answer: Оскільки
+  complete_sentence: Оскільки__ він фахівець, йому довіряють.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Треба діяти, _____ час обмежений.
+  answer: тим більше що
+  complete_sentence: Треба діяти, тим більше що__ час обмежений.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Плани амбітні, _____ реалістичні.
+  answer: втім
+  complete_sentence: Плани амбітні, втім__ реалістичні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Закон ухвалено, _____ він набуває чинності.
+  answer: відтак
+  complete_sentence: Закон ухвалено, відтак__ він набуває чинності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Я не втомився, _____ почуваюся бадьорим.
+  answer: навпаки
+  complete_sentence: Я не втомився, навпаки__ почуваюся бадьорим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: _____ він хворів, пропустив заняття.
+  answer: Через те що
+  complete_sentence: Через те що__ він хворів, пропустив заняття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: _____ вона допомогла, проєкт завершено вчасно.
+  answer: Завдяки тому що
+  complete_sentence: Завдяки тому що__ вона допомогла, проєкт завершено вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Він погодився, _____ без вагань.
+  answer: причому
+  complete_sentence: Він погодився, причому__ без вагань.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: Сталася аварія, _____ рух перекрито.
+  answer: внаслідок чого
+  complete_sentence: Сталася аварія, внаслідок чого__ рух перекрито.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: _____ критикували, він не здався.
+  answer: Попри те що
+  complete_sentence: Попри те що__ критикували, він не здався.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний сполучник
+  sentence_template: _____ вона попереджала, він не послухав.
+  answer: Дарма що
+  complete_sentence: Дарма що__ вона попереджала, він не послухав.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Офіційний лист) Заяву розглянуто, _____ рішення відкладено.
+  answer: однак
+  complete_sentence: (Офіційний лист) Заяву розглянуто, однак__ рішення відкладено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Наукова стаття) Гіпотеза підтверджена, _____ потрібні додаткові
+    дослідження.
+  answer: проте
+  complete_sentence: (Наукова стаття) Гіпотеза підтверджена, проте__ потрібні додаткові
+    дослідження.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Розмова) Погода погана, _____ настрій гарний!
+  answer: зате
+  complete_sentence: (Розмова) Погода погана, зате__ настрій гарний!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Публіцистика) Реформа успішна. _____, є й критичні голоси.
+  answer: Втім
+  complete_sentence: (Публіцистика) Реформа успішна. Втім__, є й критичні голоси.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Офіційний документ) Договір підписано, _____ зобов'язання набувають
+    чинності.
+  answer: відтак
+  complete_sentence: (Офіційний документ) Договір підписано, відтак__ зобов'язання
+    набувають чинності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Науковий висновок) Дані проаналізовано, _____ гіпотеза валідна.
+  answer: отже
+  complete_sentence: (Науковий висновок) Дані проаналізовано, отже__ гіпотеза валідна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Розмова) Не хвилюйся, _____ все одно встигнемо!
+  answer: тим паче
+  complete_sentence: (Розмова) Не хвилюйся, тим паче__ все одно встигнемо!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Офіційне повідомлення) Сталася аварія, _____ рух обмежено.
+  answer: внаслідок чого
+  complete_sentence: (Офіційне повідомлення) Сталася аварія, внаслідок чого__ рух
+    обмежено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Науковий текст) _____ дослідження обмежене, висновки значущі.
+  answer: Хоча
+  complete_sentence: (Науковий текст) Хоча__ дослідження обмежене, висновки значущі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Публіцистика) _____ скептики сумнівалися, результат вражаючий.
+  answer: Попри те що
+  complete_sentence: (Публіцистика) Попри те що__ скептики сумнівалися, результат
+    вражаючий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Офіційний лист) _____ часові обмеження, завдання виконано.
+  answer: Незважаючи на
+  complete_sentence: (Офіційний лист) Незважаючи на__ часові обмеження, завдання виконано.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Розмова) _____ казали що не вийде, а вийшло!
+  answer: Дарма що
+  complete_sentence: (Розмова) Дарма що__ казали що не вийде, а вийшло!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Наукова стаття) _____ обсяг вибірки невеликий, результати статистично
+    значущі.
+  answer: Хоча
+  complete_sentence: (Наукова стаття) Хоча__ обсяг вибірки невеликий, результати статистично
+    значущі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Публіцистика) Економіка зростає, _____ соціальні проблеми залишаються.
+  answer: проте
+  complete_sentence: (Публіцистика) Економіка зростає, проте__ соціальні проблеми
+    залишаються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Офіційний протокол) _____, рішення прийнято одноголосно.
+  answer: Таким чином
+  complete_sentence: (Офіційний протокол) Таким чином__, рішення прийнято одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть сполучник відповідно до регістру
+  sentence_template: (Розмова) Він не прийшов, _____ хоч би зателефонував!
+  answer: натомість
+  complete_sentence: (Розмова) Він не прийшов, натомість__ хоч би зателефонував!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Економіка зростає, однак проблеми залишаються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Вона талановита, до того ж працьовита.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Факти доведені, отже теорія правильна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Він не поїхав, натомість залишився вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Плани амбітні, втім реалістичні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Машина стара, зате надійна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Треба діяти, тим більше що час обмежений.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Закон ухвалено, відтак він набуває чинності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Він погодився, причому без вагань.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Я не втомився, навпаки почуваюся бадьорим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Хоча він хворий, прийшов на роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Оскільки він фахівець, йому довіряють.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Завдяки тому що вона допомогла, проєкт завершено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Попри те що критикували, він не здався.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Проєкт вдалий, крім того він економічний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі сполучниками
+  jumbled_words: []
+  answer: Сталася аварія, внаслідок чого рух перекрито.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник найкраще підходить для офіційно-ділового стилю?
+  options:
+  - text: зате
+    correct: false
+  - text: однак
+    correct: true
+  - text: тим паче
+    correct: false
+  - text: хоч
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Що виражає сполучник «втім»?
+  options:
+  - text: Пряму причину
+    correct: false
+  - text: М'яке протиставлення або обмеження
+    correct: true
+  - text: Логічний наслідок
+    correct: false
+  - text: Категоричну допустовість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник є розмовним варіантом компенсації?
+  options:
+  - text: проте
+    correct: false
+  - text: однак
+    correct: false
+  - text: зате
+    correct: true
+  - text: натомість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Чим відрізняється «завдяки тому що» від «через те що»?
+  options:
+  - text: Нічим, це синоніми
+    correct: false
+  - text: '"Завдяки" — позитивна причина, "через" — негативна або нейтральна'
+    correct: true
+  - text: '"Завдяки" — офіційне, "через" — розмовне'
+    correct: false
+  - text: '"Завдяки" — наслідок, "через" — причина'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Яка помилка в реченні «Хоча він працював, але не встиг»?
+  options:
+  - text: Неправильний час дієслова
+    correct: false
+  - text: Плеоназм — «але» зайве після «хоча»
+    correct: true
+  - text: Неправильний порядок слів
+    correct: false
+  - text: Помилки немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник виражає логічний висновок у науковому тексті?
+  options:
+  - text: тому
+    correct: false
+  - text: отже
+    correct: true
+  - text: зате
+    correct: false
+  - text: хоч
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Що означає сполучник «натомість»?
+  options:
+  - text: Протиставлення
+    correct: false
+  - text: Заміну або альтернативу
+    correct: true
+  - text: Причину
+    correct: false
+  - text: Наслідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник має зневажливий відтінок?
+  options:
+  - text: хоча
+    correct: false
+  - text: незважаючи на те що
+    correct: false
+  - text: дарма що
+    correct: true
+  - text: попри те що
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: У якому регістрі найдоречніший сполучник «тим паче»?
+  options:
+  - text: Офіційно-діловому
+    correct: false
+  - text: Науковому
+    correct: false
+  - text: Розмовному
+    correct: true
+  - text: Офіційному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Яка функція сполучника «причому»?
+  options:
+  - text: Вираження протиставлення
+    correct: false
+  - text: Уточнення або додавання несподіваної деталі
+    correct: true
+  - text: Вираження причини
+    correct: false
+  - text: Вираження наслідку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник є архаїчним варіантом «оскільки»?
+  options:
+  - text: через те що
+    correct: false
+  - text: позаяк
+    correct: true
+  - text: тому що
+    correct: false
+  - text: завдяки тому що
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Чим відрізняється «відтак» від «тому»?
+  options:
+  - text: '"Відтак" — книжний, формальний; "тому" — нейтральний, розмовний'
+    correct: true
+  - text: Нічим, це повні синоніми
+    correct: false
+  - text: '"Відтак" — причина, "тому" — наслідок'
+    correct: false
+  - text: '"Відтак" — допустовий, "тому" — протиставний'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник найкраще підходить для журналістського тексту?
+  options:
+  - text: зате
+    correct: false
+  - text: хоч
+    correct: false
+  - text: втім
+    correct: true
+  - text: тим паче
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Яке твердження про «навпаки» є правильним?
+  options:
+  - text: Виражає м'яке обмеження
+    correct: false
+  - text: Виражає протилежність, контраст
+    correct: true
+  - text: Виражає додаткову інформацію
+    correct: false
+  - text: Виражає причину
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Яка конструкція є суржиком (змішанням мов)?
+  options:
+  - text: Незважаючи на те що
+    correct: false
+  - text: Несмотря на те що
+    correct: true
+  - text: Попри те що
+    correct: false
+  - text: Хоча
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Теоретичні основи стилістичних сполучників
+  question: Який сполучник найкраще виражає підсилення аргументу?
+  options:
+  - text: крім того
+    correct: false
+  - text: тим більше
+    correct: true
+  - text: причому
+    correct: false
+  - text: до того ж
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Компанія працює ефективно, проте є резерви для покращення»
+    сполучник «проте» виражає...
+  options:
+  - text: причину
+    correct: false
+  - text: нейтральне протиставлення
+    correct: true
+  - text: компенсацію
+    correct: false
+  - text: наслідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Чому в офіційному документі краще писати «однак» замість «зате»?
+  options:
+  - text: '"Зате" граматично неправильний'
+    correct: false
+  - text: '"Однак" — книжний, "зате" — розмовний'
+    correct: true
+  - text: Немає різниці
+    correct: false
+  - text: '"Однак" коротший'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Він погодився, причому без вагань» сполучник «причому»...
+  options:
+  - text: протиставляє дві частини
+    correct: false
+  - text: уточнює несподівану деталь
+    correct: true
+  - text: вказує на причину
+    correct: false
+  - text: виражає допустовість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Яка помилка в реченні «Завдяки хворобі він відпочив»?
+  options:
+  - text: Неправильний відмінок
+    correct: false
+  - text: '"Завдяки" вживається лише з позитивними причинами'
+    correct: true
+  - text: Потрібен інший час дієслова
+    correct: false
+  - text: Помилки немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У тексті «Плани амбітні, втім реалістичні» сполучник «втім» виражає...
+  options:
+  - text: різке протиставлення
+    correct: false
+  - text: м'яке обмеження попереднього твердження
+    correct: true
+  - text: причину
+    correct: false
+  - text: наслідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Чому «отже» краще за «тому» в науковому висновку?
+  options:
+  - text: '"Отже" коротший'
+    correct: false
+  - text: '"Отже" — книжний, виражає логічний висновок'
+    correct: true
+  - text: '"Тому" граматично неправильний'
+    correct: false
+  - text: Немає різниці
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Попри критику, він не здався» сполучник «попри» виражає...
+  options:
+  - text: причину
+    correct: false
+  - text: допустовість з емоційним наголосом на перешкоді
+    correct: true
+  - text: наслідок
+    correct: false
+  - text: компенсацію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Яку функцію виконує «тим більше що» в реченні «Треба діяти, тим більше
+    що час обмежений»?
+  options:
+  - text: Протиставлення
+    correct: false
+  - text: Підсилення попереднього аргументу
+    correct: true
+  - text: Причина
+    correct: false
+  - text: Альтернатива
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Він не поїхав, натомість залишився вдома» сполучник «натомість»
+    виражає...
+  options:
+  - text: протиставлення
+    correct: false
+  - text: альтернативу, заміну однієї дії іншою
+    correct: true
+  - text: причину
+    correct: false
+  - text: допустовість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Чому неправильно писати «Хоча він працював, але не встиг»?
+  options:
+  - text: Неправильний час дієслова
+    correct: false
+  - text: Плеоназм — «але» зайве після допустового «хоча»
+    correct: true
+  - text: Неправильний порядок слів
+    correct: false
+  - text: Речення занадто довге
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Дарма що він намагався, нічого не вийшло» сполучник «дарма
+    що»...
+  options:
+  - text: виражає нейтральну допустовість
+    correct: false
+  - text: має зневажливий відтінок, вказує на марність
+    correct: true
+  - text: виражає причину
+    correct: false
+  - text: підсилює аргумент
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Який сполучник найкраще підходить для журналістського переходу до контраргументу?
+  options:
+  - text: зате
+    correct: false
+  - text: втім
+    correct: true
+  - text: тим паче
+    correct: false
+  - text: хоч
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Відтак угоду підписано» сполучник «відтак» виражає...
+  options:
+  - text: протиставлення
+    correct: false
+  - text: формальний результат, наслідок
+    correct: true
+  - text: причину
+    correct: false
+  - text: допустовість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Чому «незважаючи на те що» доречніший за «хоч» в офіційному листі?
+  options:
+  - text: '"Хоч" граматично неправильний'
+    correct: false
+  - text: '"Незважаючи на те що" — формальний, "хоч" — розмовний'
+    correct: true
+  - text: Немає різниці
+    correct: false
+  - text: '"Незважаючи на те що" коротший'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: У реченні «Я не втомився, навпаки почуваюся бадьорим» сполучник «навпаки»...
+  options:
+  - text: виражає м'яке обмеження
+    correct: false
+  - text: виражає протилежність до попереднього твердження
+    correct: true
+  - text: додає інформацію
+    correct: false
+  - text: вказує на причину
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз вживання сполучників у тексті
+  question: Яке твердження про «позаяк» є правильним?
+  options:
+  - text: Це сучасний нейтральний сполучник
+    correct: false
+  - text: Це архаїчний сполучник, що надає урочистого або іронічного забарвлення
+    correct: true
+  - text: Це розмовний варіант «тому що»
+    correct: false
+  - text: Це калька з російської
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «зате» є нейтральним і підходить для офіційних документів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Після сполучника «хоча» не потрібно вживати «але» в головній частині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «завдяки тому що» вживається лише з позитивними причинами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучники «отже» і «тому» є повними синонімами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «втім» виражає м'яке протиставлення або обмеження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «позаяк» є сучасним і широко вживаним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «дарма що» має нейтральний відтінок.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «натомість» виражає альтернативу або заміну.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У науковому стилі краще використовувати «тим паче» замість «тим більше».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «причому» завжди відокремлюється комами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Конструкція «несмотря на те що» є правильною українською.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «відтак» підходить для розмовного мовлення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «навпаки» виражає протилежність до попереднього твердження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучники «крім того» і «до того ж» виконують однакову функцію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «однак» є розмовним варіантом «але».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Сполучник «попри те що» має емоційний відтінок і наголошує на труднощах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

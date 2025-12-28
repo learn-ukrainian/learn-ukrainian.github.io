@@ -18,7 +18,7 @@ objectives:
   - "Learner understands який agreement patterns"
   - "Learner can use який in all seven cases"
   - "Learner can combine sentences using який"
-vocabulary_count: 20
+vocabulary_count: 25
 ---
 
 # Підрядні означальні: який
@@ -297,6 +297,8 @@ vocabulary_count: 20
 
 **Юля:** Страви, **які** там готують, мають чудові відгуки від критиків!
 
+---
+
 # Підсумок
 
 **Що ви навчилися:**
@@ -346,6 +348,12 @@ vocabulary_count: 20
 > - 📖 [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) — детальна стаття на Вікіпедії
 > - 📺 [Ukrainian Relative Clauses](https://www.youtube.com/results?search_query=ukrainian+relative+clauses) — відео пояснення та приклади
 > - 🎧 [Ukrainian Grammar Podcast](https://www.youtube.com/results?search_query=ukrainian+grammar+podcast) — подкаст уроки для аудіального навчання
+
+---
+
+
+
+---
 
 # Словник
 

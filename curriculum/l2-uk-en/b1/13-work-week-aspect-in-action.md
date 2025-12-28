@@ -375,6 +375,10 @@ vocabulary_count: 27
 > - 🎧 [Ukrainian Lessons Podcast - Aspect](https://www.ukrainianlessons.com/) — подкаст уроки
 > - 💼 [Ukrainian Business Language](https://www.ukrainianlessons.com/business-ukrainian) — професійна українська
 
+---
+
+
+
 # Словник
 
 | Слово | Вимова | Переклад | ЧМ | Примітка |

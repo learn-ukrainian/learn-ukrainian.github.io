@@ -19,7 +19,7 @@ objectives:
   - "Learner understands difference between де, куди, звідки"
   - "Learner can form relative clauses describing places"
   - "Learner can choose correct place relative for context"
-vocabulary_count: 20
+vocabulary_count: 25
 ---
 
 # Підрядні означальні: де, куди, звідки
@@ -310,6 +310,8 @@ vocabulary_count: 20
 >
 > Якщо ви хочете сказати, що людина повинна залишатися в рідному місці, використовуйте це прислів'я. Наприклад, на роботі: "Олег переїхав до столиці, але повернувся. Він каже: «Де народився, там і пригодився»."
 
+---
+
 # Підсумок
 
 **Що ви навчилися:**
@@ -343,6 +345,12 @@ vocabulary_count: 20
 > - 📖 [Підрядне означальне речення](https://uk.wikipedia.org/wiki/Підрядне_означальне_речення) — Вікіпедія
 > - 📺 [Ukrainian Place Relatives](https://www.youtube.com/results?search_query=ukrainian+where+direction) — відео пояснення
 > - 🎧 [Ukrainian Grammar](https://www.youtube.com/results?search_query=ukrainian+grammar) — подкаст уроки
+
+---
+
+
+
+---
 
 # Словник
 

@@ -19,7 +19,7 @@ objectives:
   - "Learner can use all directional prefixes correctly"
   - "Learner can apply figurative motion expressions"
   - "Learner can integrate motion verbs in complex narratives"
-vocabulary_count: 35
+vocabulary_count: 38
 ---
 
 # Контрольна точка: Дієслова руху
@@ -512,13 +512,7 @@ vocabulary_count: 35
 ---
 
 
-# Вправи
-
-<!-- Activities are loaded from YAML: activities/25-checkpoint-motion-verbs.yaml -->
-
----
-
-# Підсумок# Підсумок
+# Підсумок
 
 **Що ви навчилися:**
 
@@ -546,6 +540,10 @@ vocabulary_count: 35
 > - [ ] Використовувати дієслова нести/вести/везти?
 >
 > Якщо ви відповіли «так» на всі питання — ви готові до фази B1.3!
+
+---
+
+
 
 ---
 

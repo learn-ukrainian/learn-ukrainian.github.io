@@ -582,30 +582,22 @@ Participles agree with noun in gender, number, case:
 
 ---
 
-#### Module 10: Adverbial Participles Advanced
-**Grammar:** Complex constructions with дієприслівники
+#### Module 10: B2.1a Checkpoint - Passive Voice System
+**Type:** Checkpoint  
+**Covers:** M01-M09 (Passive Voice System)
 
-**Formation Review:**
-- Imperfective: -учи/-ючи (читаючи - while reading)
-- Perfective: -вши/-ши (прочитавши - having read)
+**Required Skill Groups:**
+1. Identify all 4 passive voice types (participle, -но/-то, -ся, 3rd person plural)
+2. Form past passive participles with correct agreement
+3. Use impersonal -но/-то in official/formal contexts
+4. Use reflexive passive -ся for processes and scientific writing
+5. Use 3rd person plural passive in colloquial speech
+6. Select appropriate passive form by register
+7. Recognize active participles (-учий/-ючий) and convert to relative clauses
+8. Recognize -лий forms and their lexicalized uses
+9. Transform between participles and relative clauses
 
-**Complex Patterns:**
-- Прочитавши листа, вона заплакала. (Having read the letter, she cried.)
-- Працюючи в офісі, він почув новину. (Working in the office, he heard the news.)
-- Не знаючи правди, вони прийняли рішення. (Not knowing the truth, they made a decision.)
-
-**Stylistic Notes:**
-- More common in writing than speech
-- Subject of participle = subject of main clause
-- Used for simultaneity or anteriority
-
-**Vocabulary (25 words):**
-читаючи, пишучи, говорячи, слухаючи, думаючи, знаючи, розуміючи, бачачи, чуючи, йдучи, прочитавши, написавши, сказавши, зробивши, дізнавшись, побачивши, почувши, зрозумівши, вирішивши, закінчивши, почавши, отримавши, прийшовши, повернувшись, виявившись
-
-**Signature Activity Concepts:**
-1. Combine: Two sentences → one with adverbial participle
-2. Quiz: Imperfective vs perfective participle
-3. Transform: Adverbial clause → participle construction
+**Note:** Checkpoints consolidate previously taught material and do not introduce new vocabulary. The module vocabulary section reviews key terms from M01-M09.
 
 ---
 

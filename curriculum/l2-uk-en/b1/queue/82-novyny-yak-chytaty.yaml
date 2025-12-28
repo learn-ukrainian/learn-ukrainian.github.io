@@ -1,0 +1,633 @@
+module: 82-novyny-yak-chytaty
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/82-novyny-yak-chytaty.md
+generated: '2025-12-29T00:22:04.742552'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 10
+  true-false: 12
+item_count: 50
+items:
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Лід — це останній абзац статті, який містить висновки автора.
+  error: останній
+  answer: перший
+  sentence_corrected: Лід — це перший абзац статті, який містить висновки автора.
+  options:
+  - останній
+  - перший
+  - середній
+  - другий
+  original_explanation: Лід — це перший абзац новини, що містить найважливішу інформацію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Факти — це суб'єктивна оцінка автора, яку неможливо перевірити.
+  error: суб'єктивна
+  answer: об'єктивна
+  sentence_corrected: Факти — це об'єктивна оцінка автора, яку неможливо перевірити.
+  options:
+  - суб'єктивна
+  - об'єктивна
+  - особиста
+  - емоційна
+  original_explanation: Факти — об'єктивна інформація, яку можна перевірити.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Слова «на мою думку» та «вважає» вказують на факти в тексті.
+  error: факти
+  answer: думки
+  sentence_corrected: Слова «на мою думку» та «вважає» вказують на думки в тексті.
+  options:
+  - факти
+  - думки
+  - заголовки
+  - цитати
+  original_explanation: Ці слова — маркери думок, не фактів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Принцип «прямої піраміди» означає, що головна інформація на
+    початку статті.
+  error: прямої
+  answer: перевернутої
+  sentence_corrected: Принцип «перевернутої піраміди» означає, що головна інформація
+    на початку статті.
+  options:
+  - прямої
+  - перевернутої
+  - великої
+  - маленької
+  original_explanation: Правильна назва — «перевернута піраміда».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Ексклюзивна новина — це матеріал, який публікують усі видання
+    одночасно.
+  error: усі видання одночасно
+  answer: лише одне видання
+  sentence_corrected: Ексклюзивна новина — це матеріал, який публікують лише одне
+    видання.
+  options:
+  - усі видання одночасно
+  - лише одне видання
+  - закордонні видання
+  - державні видання
+  original_explanation: Ексклюзив — новина, яку має лише одне видання.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Анонімні коментарі в соцмережах є надійним джерелом інформації
+    для журналістів.
+  error: надійним
+  answer: ненадійним
+  sentence_corrected: Анонімні коментарі в соцмережах є ненадійним джерелом інформації
+    для журналістів.
+  options:
+  - надійним
+  - ненадійним
+  - головним
+  - єдиним
+  original_explanation: Анонімні коментарі — ненадійне джерело, їх неможливо перевірити.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: У редакційній колонці автор може подавати лише факти без власної
+    думки.
+  error: лише факти без власної думки
+  answer: власну думку та оцінки
+  sentence_corrected: У редакційній колонці автор може подавати власну думку та оцінки.
+  options:
+  - лише факти без власної думки
+  - власну думку та оцінки
+  - лише заголовки
+  - лише цитати
+  original_explanation: Колонка — авторський жанр, де журналіст висловлює власну позицію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у реченнях про новини
+  sentence_with_error: Для отримання повної картини достатньо читати одне новинне
+    видання щодня.
+  error: одне
+  answer: кілька
+  sentence_corrected: Для отримання повної картини достатньо читати кілька новинне
+    видання щодня.
+  options:
+  - одне
+  - кілька
+  - жодного
+  - п'ять
+  original_explanation: Порівняння різних видань дає повнішу картину події.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: _____ статті містить найважливішу інформацію в першому абзаці.
+  answer: Лід
+  complete_sentence: Лід__ статті містить найважливішу інформацію в першому абзаці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: Журналіст обов'язково вказує _____ інформації у своїй статті.
+  answer: джерело
+  complete_sentence: Журналіст обов'язково вказує джерело__ інформації у своїй статті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: На відміну від факту, _____ є суб'єктивною оцінкою автора.
+  answer: думка
+  complete_sentence: На відміну від факту, думка__ є суб'єктивною оцінкою автора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: «Експерти вважають» — це типовий маркер _____ у тексті новини.
+  answer: думки
+  complete_sentence: «Експерти вважають» — це типовий маркер думки__ у тексті новини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: _____ — це перший рядок статті, який привертає увагу читача.
+  answer: Заголовок
+  complete_sentence: Заголовок__ — це перший рядок статті, який привертає увагу читача.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: Журналіст використовує _____ для дослівного відтворення слів
+    співрозмовника.
+  answer: цитату
+  complete_sentence: Журналіст використовує цитату__ для дослівного відтворення слів
+    співрозмовника.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: _____ новина — це матеріал, який має лише одне видання.
+  answer: Ексклюзивна
+  complete_sentence: Ексклюзивна__ новина — це матеріал, який має лише одне видання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: Короткий _____ головних новин допомагає швидко дізнатися про
+    події.
+  answer: огляд
+  complete_sentence: Короткий огляд__ головних новин допомагає швидко дізнатися про
+    події.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: _____ повідомлення означає, що подія щойно сталася.
+  answer: Термінове
+  complete_sentence: Термінове__ повідомлення означає, що подія щойно сталася.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: У _____ автор може висловлювати власну точку зору на подію.
+  answer: колонці
+  complete_sentence: У колонці__ автор може висловлювати власну точку зору на подію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: _____ працюють над створенням газети чи новинного сайту.
+  answer: Редакція
+  complete_sentence: Редакція__ працюють над створенням газети чи новинного сайту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски лексикою новин
+  sentence_template: Детальний _____ теми допомагає читачам зрозуміти складні питання.
+  answer: аналіз
+  complete_sentence: Детальний аналіз__ теми допомагає читачам зрозуміти складні питання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Лід — це перший абзац новини, що містить найважливішу інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Заголовок привертає увагу та передає головну думку статті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Факти — це об'єктивна інформація, яку можна перевірити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Читаючи новини, важливо відрізняти факти від думок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Надійне джерело — це офіційна установа або експерт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Порівнюйте різні видання, щоб отримати повну картину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: Лід відповідає на питання хто, що, де, коли.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про читання новин
+  jumbled_words: []
+  answer: 'Принцип перевернутої піраміди означає: головна інформація на початку.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: У журналістиці лід відіграє особливу роль, бо він містить найважливішу
+    інформацію статті. Що таке лід у новині?
+  options:
+  - text: Останній абзац статті з висновками
+    correct: false
+  - text: Перший абзац з ключовою інформацією
+    correct: true
+  - text: Підпис автора під статтею
+    correct: false
+  - text: Рекламне оголошення в тексті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Українські заголовки мають особливості, які допомагають економити місце
+    та привертати увагу читача. Яка особливість українських заголовків?
+  options:
+  - text: Вони завжди написані великими літерами
+    correct: false
+  - text: Вони часто пропускають дієслово «бути»
+    correct: true
+  - text: Вони обов'язково містять цитату
+    correct: false
+  - text: Вони завжди мають знак питання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Критичне читання новин передбачає вміння відрізняти об'єктивну інформацію
+    від суб'єктивних оцінок автора. Що є ознакою факту в новині?
+  options:
+  - text: Слова «на мою думку»
+    correct: false
+  - text: Оцінні прикметники «чудовий», «жахливий»
+    correct: false
+  - text: Конкретні числа, дати та імена
+    correct: true
+  - text: Прогнози на майбутнє
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Читаючи новину, важливо розуміти, звідки журналіст отримав інформацію
+    та наскільки вона надійна. Що вказує на надійність джерела?
+  options:
+  - text: Анонімні коментарі в соцмережах
+    correct: false
+  - text: Посилання на офіційні документи чи установи
+    correct: true
+  - text: Чутки від невідомих осіб
+    correct: false
+  - text: Особиста думка автора статті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Принцип побудови новини допомагає читачам швидко отримати головну інформацію,
+    не читаючи весь текст. Як називається цей принцип?
+  options:
+  - text: «Пряма піраміда»
+    correct: false
+  - text: «Перевернута піраміда»
+    correct: true
+  - text: «Журналістський квадрат»
+    correct: false
+  - text: «Новинний трикутник»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Деякі слова в тексті вказують на те, що автор висловлює думку, а не факт.
+    Яке слово є маркером думки?
+  options:
+  - text: «Вчора о 15:00»
+    correct: false
+  - text: «За даними звіту»
+    correct: false
+  - text: «Експерти вважають»
+    correct: true
+  - text: «Президент заявив»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Редакційна колонка відрізняється від звичайної новини своїм змістом та
+    форматом, бо автор має право на власну позицію. Чим колонка відрізняється від
+    новини?
+  options:
+  - text: Колонка завжди коротша за новину
+    correct: false
+  - text: У колонці автор висловлює власну думку
+    correct: true
+  - text: Колонка не має заголовка
+    correct: false
+  - text: Колонка публікується лише онлайн
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Щоб отримати об'єктивну картину події, досвідчені читачі використовують
+    кілька джерел інформації. Чому важливо порівнювати різні видання?
+  options:
+  - text: Щоб знайти найдешевшу підписку
+    correct: false
+  - text: Щоб побачити різні точки зору на подію
+    correct: true
+  - text: Щоб витратити більше часу на читання
+    correct: false
+  - text: Щоб підтримати всі видання фінансово
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Лід статті має відповідати на кілька ключових питань, щоб читач зрозумів
+    головне. На які питання відповідає лід?
+  options:
+  - text: Скільки коштує газета та хто її власник
+    correct: false
+  - text: Хто, що, де, коли, чому, як
+    correct: true
+  - text: Яка погода та який курс валют
+    correct: false
+  - text: Хто автор та скільки він заробляє
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння стратегій читання новин
+  question: Термінове повідомлення має особливу функцію в новинному потоці та привертає
+    увагу читачів одразу. Що означає «термінове повідомлення»?
+  options:
+  - text: Реклама з обмеженою пропозицією
+    correct: false
+  - text: Новина про подію, що щойно сталася
+    correct: true
+  - text: Повідомлення про завтрашню погоду
+    correct: false
+  - text: Нагадування про оплату підписки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Лід — це перший абзац новини, який містить найважливішу інформацію та
+    відповідає на ключові питання статті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: В українських заголовках завжди присутнє дієслово «бути» для граматичної
+    повноти речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Факт — це об'єктивна інформація, яку можна перевірити за допомогою документів
+    або інших джерел.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Слова «експерти вважають» та «аналітики прогнозують» завжди вказують
+    на факти, а не на думки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Принцип «перевернутої піраміди» означає, що найважливіша інформація подається
+    на початку статті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Редакційна колонка та новинна стаття — це один і той самий журналістський
+    жанр без відмінностей.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Надійне джерело інформації — це офіційний документ, державна установа
+    або експерт із зазначеним іменем.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Щоб бути критичним читачем, достатньо читати лише одне новинне видання
+    щодня.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Цитата в лапках у новині означає дослівне відтворення того, що сказала
+    людина.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Оцінні слова «чудовий», «жахливий», «найкращий» є ознаками об'єктивного
+    факту в новині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Дайджест новин — це короткий огляд найважливіших подій за певний період
+    часу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про читання новин
+  statement: Ексклюзивна новина — це матеріал, який одночасно публікують усі видання
+    країни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

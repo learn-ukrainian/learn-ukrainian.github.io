@@ -422,11 +422,7 @@ With these terms, you can now follow sentence analysis in Ukrainian grammar book
 
 ---
 
-# Вправи
 
-<!-- Activities loaded from 04-sentence-structure.activities.yaml -->
-
----
 
 # Словник
 

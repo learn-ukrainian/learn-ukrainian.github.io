@@ -1,0 +1,1432 @@
+module: 15-register-introduction
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/15-register-introduction.md
+generated: '2025-12-28T20:30:14.784565'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: У науковій статті написано, що це класний результат.
+  error: класний
+  answer: значний
+  sentence_corrected: У науковій статті написано, що це значний результат.
+  options:
+  - класний
+  - значний
+  - суперовий
+  - офігенний
+  original_explanation: У науковому стилі не використовують розмовну лексику "класний".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Відповідно до наказу, ми типу маємо це зробити.
+  error: типу
+  answer: зобов'язані
+  sentence_corrected: Відповідно до наказу, ми зобов'язані маємо це зробити.
+  options:
+  - типу
+  - зобов'язані
+  - мусимо
+  - повинні
+  original_explanation: Слово "типу" — розмовне, в офіційному стилі недоречне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: У новинах написали, що відповідно до вищезазначеного події
+    розвивались.
+  error: відповідно до вищезазначеного
+  answer: як повідомляється
+  sentence_corrected: У новинах написали, що як повідомляється події розвивались.
+  options:
+  - відповідно до вищезазначеного
+  - як повідомляється
+  - згідно з постановою
+  - на підставі
+  original_explanation: Канцеляризм недоречний у публіцистичному стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: У романі герой сказав, що методологія його кохання базувалась
+    на аналізі.
+  error: методологія
+  answer: таємниця
+  sentence_corrected: У романі герой сказав, що таємниця його кохання базувалась на
+    аналізі.
+  options:
+  - методологія
+  - таємниця
+  - система
+  - структура
+  original_explanation: Науковий термін недоречний у художньому тексті про кохання.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Ну слухай, рішення прийнято на підставі чинного законодавства.
+  error: на підставі чинного законодавства
+  answer: так вирішили
+  sentence_corrected: Ну слухай, рішення прийнято так вирішили.
+  options:
+  - на підставі чинного законодавства
+  - так вирішили
+  - згідно з наказом
+  - відповідно до постанови
+  original_explanation: Канцеляризми недоречні в розмовному стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Наказую типу затвердити план роботи.
+  error: типу
+  answer: (видалити)
+  sentence_corrected: Наказую (видалити) затвердити план роботи.
+  options:
+  - типу
+  - (видалити)
+  - ніби
+  - немов
+  original_explanation: Розмовна частка "типу" неприпустима в офіційному документі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Дослідження показує, що ну це дуже цікаво.
+  error: ну
+  answer: (видалити)
+  sentence_corrected: Дослідження показує, що (видалити) це дуже цікаво.
+  options:
+  - ну
+  - (видалити)
+  - от
+  - ж
+  original_explanation: Частка "ну" недоречна в науковому стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Сенсація! Гіпотеза про кореляцію підтверджена!
+  error: Гіпотеза про кореляцію підтверджена
+  answer: Вчені зробили відкриття
+  sentence_corrected: Сенсація! Вчені зробили відкриття!
+  options:
+  - Гіпотеза про кореляцію підтверджена
+  - Вчені зробили відкриття
+  - Методологія дослідження
+  - Результати аналізу
+  original_explanation: Надто наукова термінологія для сенсаційного заголовка.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Згідно з постановою, сонце золоте сідало за обрій.
+  error: Згідно з постановою
+  answer: (видалити)
+  sentence_corrected: (видалити), сонце золоте сідало за обрій.
+  options:
+  - Згідно з постановою
+  - (видалити)
+  - Відповідно до наказу
+  - На підставі рішення
+  original_explanation: Канцеляризм абсолютно недоречний у художньому описі природи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Ну і типу як справи, шановний пане директоре?
+  error: Ну і типу
+  answer: (видалити)
+  sentence_corrected: (видалити) як справи, шановний пане директоре?
+  options:
+  - Ну і типу
+  - (видалити)
+  - От і
+  - Короче
+  original_explanation: Розмовні слова несумісні з офіційним звертанням.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: У документі зазначено, що серце завмирало від передчуття.
+  error: серце завмирало від передчуття
+  answer: очікується позитивний результат
+  sentence_corrected: У документі зазначено, що очікується позитивний результат.
+  options:
+  - серце завмирало від передчуття
+  - очікується позитивний результат
+  - душа тремтіла
+  - емоції переповнювали
+  original_explanation: Художня образність недоречна в офіційному документі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Він прийшов і каже таке, що методологія дослідження базувалась
+    на аналізі.
+  error: методологія дослідження базувалась на аналізі
+  answer: йому сказали дивні речі
+  sentence_corrected: Він прийшов і каже таке, що йому сказали дивні речі.
+  options:
+  - методологія дослідження базувалась на аналізі
+  - йому сказали дивні речі
+  - гіпотеза підтвердилась
+  - кореляція існує
+  original_explanation: Наукова термінологія недоречна в розмовному переказі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Публіцистичний стиль характеризується вищезазначеними особливостями.
+  error: вищезазначеними
+  answer: такими
+  sentence_corrected: Публіцистичний стиль характеризується такими особливостями.
+  options:
+  - вищезазначеними
+  - такими
+  - нижчепідписаними
+  - згаданими вище
+  original_explanation: Канцеляризм "вищезазначений" недоречний у публіцистиці.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: У розмовному стилі використовуються конструкції на зразок "відповідно
+    до".
+  error: відповідно до
+  answer: ну типу
+  sentence_corrected: У розмовному стилі використовуються конструкції на зразок "ну
+    типу".
+  options:
+  - відповідно до
+  - '"ну типу"'
+  - '"згідно з"'
+  - '"на підставі"'
+  original_explanation: '"Відповідно до" — офіційно-діловий маркер, не розмовний.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: Коли сонце зайшло, було видано наказ про початок ночі.
+  error: було видано наказ про початок ночі
+  answer: ніч опустилась на землю
+  sentence_corrected: Коли сонце зайшло, ніч опустилась на землю.
+  options:
+  - було видано наказ про початок ночі
+  - ніч опустилась на землю
+  - прийнято рішення
+  - затверджено план
+  original_explanation: Офіційний канцеляризм абсурдний у художньому описі природи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стильові помилки
+  sentence_with_error: На підставі вищезазначеного, офігенна погода сьогодні.
+  error: офігенна
+  answer: сприятлива
+  sentence_corrected: На підставі вищезазначеного, сприятлива погода сьогодні.
+  options:
+  - офігенна
+  - сприятлива
+  - класна
+  - крута
+  original_explanation: Розмовне "офігенна" несумісне з офіційними конструкціями.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Текст наказу належить до _____ стилю.
+  answer: офіційно-ділового
+  complete_sentence: Текст наказу належить до офіційно-ділового__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Дисертація написана в _____ стилі.
+  answer: науковому
+  complete_sentence: Дисертація написана в науковому__ стилі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Роман Сергія Жадана написаний у _____ стилі.
+  answer: художньому
+  complete_sentence: Роман Сергія Жадана написаний у художньому__ стилі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Новина в газеті — це приклад _____ стилю.
+  answer: публіцистичного
+  complete_sentence: Новина в газеті — це приклад публіцистичного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Діалог друзів — це приклад _____ стилю.
+  answer: розмовного
+  complete_sentence: Діалог друзів — це приклад розмовного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Слово "вищезазначений" характерне для _____ стилю.
+  answer: офіційно-ділового
+  complete_sentence: Слово "вищезазначений" характерне для офіційно-ділового__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Термін "методологія" типовий для _____ стилю.
+  answer: наукового
+  complete_sentence: Термін "методологія" типовий для наукового__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Заголовок "Сенсація дня!" характерний для _____ стилю.
+  answer: публіцистичного
+  complete_sentence: Заголовок "Сенсація дня!" характерний для публіцистичного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Порівняння "як срібний місяць" типове для _____ стилю.
+  answer: художнього
+  complete_sentence: Порівняння "як срібний місяць" типове для художнього__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Частка "ну" характерна для _____ стилю.
+  answer: розмовного
+  complete_sentence: Частка "ну" характерна для розмовного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: _____ стиль використовує стандартні формули та кліше.
+  answer: Офіційно-діловий
+  complete_sentence: Офіційно-діловий__ стиль використовує стандартні формули та кліше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: _____ стиль характеризується образністю та індивідуальністю.
+  answer: Художній
+  complete_sentence: Художній__ стиль характеризується образністю та індивідуальністю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: _____ стиль поєднує інформативність з експресивністю.
+  answer: Публіцистичний
+  complete_sentence: Публіцистичний__ стиль поєднує інформативність з експресивністю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: _____ стиль характеризується спонтанністю та невимушеністю.
+  answer: Розмовний
+  complete_sentence: Розмовний__ стиль характеризується спонтанністю та невимушеністю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: _____ стиль використовує терміни та абстрактну лексику.
+  answer: Науковий
+  complete_sentence: Науковий__ стиль використовує терміни та абстрактну лексику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення стилю за контекстом
+  sentence_template: Конструкція "з метою" характерна для _____ стилю.
+  answer: офіційно-ділового
+  complete_sentence: Конструкція "з метою" характерна для офіційно-ділового__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: У науковому стилі замість "класний результат" краще сказати _____
+    результат.
+  answer: значний
+  complete_sentence: У науковому стилі замість "класний результат" краще сказати значний__
+    результат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: В офіційному документі замість "ми вирішили" краще написати "рішення
+    _____".
+  answer: прийнято
+  complete_sentence: В офіційному документі замість "ми вирішили" краще написати "рішення
+    прийнято__".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: У художньому тексті замість "сонце світило" краще написати "золоте
+    сонце _____".
+  answer: сяяло
+  complete_sentence: У художньому тексті замість "сонце світило" краще написати "золоте
+    сонце сяяло__".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: У публіцистичному стилі замість "важлива подія" краще написати
+    "_____ подія".
+  answer: безпрецедентна
+  complete_sentence: У публіцистичному стилі замість "важлива подія" краще написати
+    "безпрецедентна__ подія".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: У розмовному стилі замість "я не розумію" можна сказати "та я
+    не _____".
+  answer: втямлю
+  complete_sentence: У розмовному стилі замість "я не розумію" можна сказати "та я
+    не втямлю__".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: _____ — це усталений вираз офіційно-ділового стилю.
+  answer: Кліше
+  complete_sentence: Кліше__ — це усталений вираз офіційно-ділового стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: _____ — це образний засіб художнього стилю.
+  answer: Метафора
+  complete_sentence: Метафора__ — це образний засіб художнього стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: _____ — це спеціальне слово наукового стилю.
+  answer: Термін
+  complete_sentence: Термін__ — це спеціальне слово наукового стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: Риторичне питання — це засіб _____ стилю.
+  answer: публіцистичного
+  complete_sentence: Риторичне питання — це засіб публіцистичного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: Неповні речення характерні для _____ стилю.
+  answer: розмовного
+  complete_sentence: Неповні речення характерні для розмовного__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: '"Вищезазначений" — це _____ офіційно-ділового стилю.'
+  answer: канцеляризм
+  complete_sentence: '"Вищезазначений" — це канцеляризм__ офіційно-ділового стилю.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: '"Гіпотеза" — це _____ наукового стилю.'
+  answer: термін
+  complete_sentence: '"Гіпотеза" — це термін__ наукового стилю.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: '"Як зоря вранішня" — це _____ художнього стилю.'
+  answer: порівняння
+  complete_sentence: '"Як зоря вранішня" — це порівняння__ художнього стилю.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: '"Сенсація!" — це маркер _____ стилю.'
+  answer: публіцистичного
+  complete_sentence: '"Сенсація!" — це маркер публіцистичного__ стилю.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: '"Ну типу" — це маркер _____ стилю.'
+  answer: розмовного
+  complete_sentence: '"Ну типу" — це маркер розмовного__ стилю.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стильові маркери в контексті
+  sentence_template: Пасивні конструкції (-но/-то) типові для _____ стилю.
+  answer: офіційно-ділового
+  complete_sentence: Пасивні конструкції (-но/-то) типові для офіційно-ділового__
+    стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Відповідно до чинного законодавства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Гіпотеза підтверджена експериментально.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Сенсаційна подія сталась вчора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Тиха ніч опустилась на місто.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Слухай, ну вчора таке було.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: На виконання наказу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Дослідження свідчать про результати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Чому представники влади відмовчуються?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Золоте сонце сідало за обрій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Ну і що далі та?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Згідно з постанови.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Проведено порівняльний аналіз.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Це обурило громадську думку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Її серце тріпотіло від радості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: Ну ти це бачив?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення різних стилів
+  jumbled_words: []
+  answer: План роботи затверджено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Який функціональний стиль характеризується використанням канцеляризмів
+    та кліше?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Який стиль використовується в наукових статтях та дисертаціях?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Який стиль характеризується найбільшою образністю та індивідуальністю?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Який стиль використовується в щоденному неофіційному спілкуванні?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: true
+  - text: Офіційно-діловий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Який стиль поєднує інформативність з експресивністю?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: До якого стилю належить текст "Відповідно до наказу № 123..."?
+  options:
+  - text: Офіційно-діловий
+    correct: true
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: До якого стилю належить текст "Гіпотеза підтверджена експериментально"?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: До якого стилю належить текст "Сенсація! Невідома картина Шевченка знайдена!"?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: До якого стилю належить текст "Ніч лежала над містом, як чорне оксамитове
+    покривало"?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: true
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: До якого стилю належить текст "Ну, я пішов. Бувай!"?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Яка основна функція офіційно-ділового стилю?
+  options:
+  - text: Естетичний вплив
+    correct: false
+  - text: Регулювання відносин
+    correct: true
+  - text: Передача знань
+    correct: false
+  - text: Розвага
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Яка основна функція художнього стилю?
+  options:
+  - text: Передача інформації
+    correct: false
+  - text: Регулювання відносин
+    correct: false
+  - text: Естетичний вплив
+    correct: true
+  - text: Переконання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Що є характерною ознакою наукового стилю?
+  options:
+  - text: Емоційність
+    correct: false
+  - text: Термінологічність
+    correct: true
+  - text: Образність
+    correct: false
+  - text: Невимушеність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Що є характерною ознакою розмовного стилю?
+  options:
+  - text: Стандартність
+    correct: false
+  - text: Об'єктивність
+    correct: false
+  - text: Спонтанність
+    correct: true
+  - text: Точність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Яке слово є маркером офіційно-ділового стилю?
+  options:
+  - text: Вражаючий
+    correct: false
+  - text: Вищезазначений
+    correct: true
+  - text: Чудовий
+    correct: false
+  - text: Класний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення функціонального стилю
+  question: Яке слово є маркером розмовного стилю?
+  options:
+  - text: Відповідно
+    correct: false
+  - text: Методологія
+    correct: false
+  - text: Типу
+    correct: true
+  - text: Безпрецедентний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Наказую затвердити план роботи на 2024
+    рік"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Результати експерименту підтверджують
+    гіпотезу"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Скандал у парламенті! Депутати покинули
+    зал!"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Ніч опустилась на місто, як темна завіса"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: true
+  - text: Офіційно-діловий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Ну і шо, ти йдеш чи ні?"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Відповідно до чинного законодавства..."?'
+  options:
+  - text: Офіційно-діловий
+    correct: true
+  - text: Науковий
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Методологія дослідження базувалась на
+    порівняльному аналізі"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Його серце тріпотіло від радості"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: true
+  - text: Офіційно-діловий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Чи замислювались ви, що чекає на нас
+    завтра?"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Ну, типу, я вже йду"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Рішення прийнято одноголосно"?'
+  options:
+  - text: Офіційно-діловий
+    correct: true
+  - text: Науковий
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Кореляція між змінними є статистично
+    значущою"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Безпрецедентна перемога національної
+    збірної!"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Сонце заходило, фарбуючи небо в рожеві
+    кольори"?'
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Художній
+    correct: true
+  - text: Офіційно-діловий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "Слухай, ти чула новину?"?'
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз текстів за стилями
+  question: 'До якого стилю належить текст: "На підставі вищезазначеного наказую..."?'
+  options:
+  - text: Офіційно-діловий
+    correct: true
+  - text: Науковий
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Офіційно-діловий стиль характеризується емоційністю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Науковий стиль використовує спеціальну термінологію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Публіцистичний стиль поєднує інформативність з експресивністю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Художній стиль є найбільш стандартизованим.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Розмовний стиль характеризується ретельною підготовкою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Канцеляризми типові для офіційно-ділового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Метафори та порівняння характерні для наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Риторичні питання типові для публіцистичного стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: В українській мові існує три функціональні стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Розмовний стиль використовує неповні речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Науковий стиль характеризується суб'єктивністю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Офіційно-діловий стиль використовує пасивні конструкції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Художній стиль служить естетичній функції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Публіцистичний стиль не використовує оцінну лексику.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Термін "гіпотеза" належить до наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики стилів
+  statement: Частки "ну", "от", "ж" характерні для офіційно-ділового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,612 @@
+module: 80-ukrainian-cuisine
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/80-ukrainian-cuisine.md
+generated: '2025-12-29T00:22:04.600126'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 10
+  true-false: 12
+item_count: 50
+items:
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Я хочу замовити борщ зі сметана.
+  error: сметана
+  answer: сметаною
+  sentence_corrected: Я хочу замовити борщ зі сметаною.
+  options:
+  - сметана
+  - сметаною
+  - сметани
+  - сметану
+  original_explanation: Після прийменника "з/зі" потрібен орудний відмінок — "зі сметаною".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Вареники варить у воді п'ять хвилин.
+  error: варить
+  answer: варять
+  sentence_corrected: Вареники варять у воді п'ять хвилин.
+  options:
+  - варить
+  - варять
+  - варити
+  - варила
+  original_explanation: '"Вареники" — множина, тому дієслово теж у множині: "вареники
+    варять".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Мій улюблена страва — це борщ.
+  error: улюблена
+  answer: улюблена
+  sentence_corrected: Мій улюблена страва — це борщ.
+  options:
+  - улюблений
+  - улюблена
+  - улюблене
+  - улюблені
+  original_explanation: '"Страва" — жіночий рід, тому прикметник теж у жіночому роді:
+    "улюблена страва". Це речення насправді правильне!'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: На Святвечір готують дванадцять пісні страви.
+  error: пісні
+  answer: пісних
+  sentence_corrected: На Святвечір готують дванадцять пісних страви.
+  options:
+  - пісні
+  - пісних
+  - пісна
+  - пісну
+  original_explanation: 'Після числівника "дванадцять" потрібен родовий відмінок множини:
+    "дванадцять пісних страв".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Деруни смажать в олії до золотистого кольору.
+  error: в
+  answer: на
+  sentence_corrected: Деруни смажать на олії до золотистого кольору.
+  options:
+  - в
+  - на
+  - з
+  - до
+  original_explanation: Правильно говорити "смажити НА олії", а не "в олії".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Голубці тушкувати в томатному соусі.
+  error: тушкувати
+  answer: тушкують
+  sentence_corrected: Голубці тушкують в томатному соусі.
+  options:
+  - тушкувати
+  - тушкують
+  - тушкує
+  - тушкувала
+  original_explanation: 'Потрібна особова форма дієслова: "Голубці тушкують", а не
+    інфінітив.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Паску печуть напередодні Великодень.
+  error: Великодень
+  answer: Великодня
+  sentence_corrected: Паску печуть напередодні Великодня.
+  options:
+  - Великодень
+  - Великодня
+  - Великоднем
+  - Великодню
+  original_explanation: 'Після "напередодні" потрібен родовий відмінок: "напередодні
+    Великодня".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в реченнях про їжу
+  sentence_with_error: Борщ — це суп з буряк та капуста.
+  error: буряк
+  answer: буряка
+  sentence_corrected: Борщ — це суп з буряка та капуста.
+  options:
+  - буряк
+  - буряка
+  - буряком
+  - буряку
+  original_explanation: 'Після прийменника "з" потрібен родовий відмінок: "з буряка
+    та капусти".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Мама _____ борщ кожної неділі для всієї родини.
+  answer: готує
+  complete_sentence: Мама готує__ борщ кожної неділі для всієї родини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Вареники треба _____ у воді, поки вони не спливуть.
+  answer: варити
+  complete_sentence: Вареники треба варити__ у воді, поки вони не спливуть.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Деруни _____ на олії до золотистого кольору.
+  answer: смажать
+  complete_sentence: Деруни смажать__ на олії до золотистого кольору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Паску традиційно _____ у духовці напередодні Великодня.
+  answer: печуть
+  complete_sentence: Паску традиційно печуть__ у духовці напередодні Великодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Голубці треба _____ повільно в томатному соусі.
+  answer: тушкувати
+  complete_sentence: Голубці треба тушкувати__ повільно в томатному соусі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Борщ дуже _____, особливо зі сметаною та пампушками!
+  answer: смачний
+  complete_sentence: Борщ дуже смачний__, особливо зі сметаною та пампушками!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Галушки — це дуже _____ страва, після неї не хочеться їсти.
+  answer: ситна
+  complete_sentence: Галушки — це дуже ситна__ страва, після неї не хочеться їсти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: На Святвечір їмо тільки _____ страви, без м'яса.
+  answer: пісні
+  complete_sentence: На Святвечір їмо тільки пісні__ страви, без м'яса.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Вареники з вишнями — це _____ страва, яку люблять діти.
+  answer: солодка
+  complete_sentence: Вареники з вишнями — це солодка__ страва, яку люблять діти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: Бринза — доволі _____ сир, тому її додають обережно.
+  answer: солона
+  complete_sentence: Бринза — доволі солона__ сир, тому її додають обережно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: 'У вареників може бути різна _____: картопля, сир, капуста.'
+  answer: начинка
+  complete_sentence: 'У вареників може бути різна начинка__: картопля, сир, капуста.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Кулінарна лексика в контексті
+  sentence_template: До м'яса часто подають _____ — картоплю або кашу.
+  answer: гарнір
+  complete_sentence: До м'яса часто подають гарнір__ — картоплю або кашу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Борщ — найвідоміша українська страва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Вареники подають зі сметаною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: На Святвечір готують дванадцять пісних страв.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Кутя — головна різдвяна страва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Паска — символ Великодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Деруни смажать на олії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: Банош — кукурудзяна каша з бринзою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про українську кухню
+  jumbled_words: []
+  answer: ЮНЕСКО включила культуру приготування борщу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Яка українська страва була включена до списку нематеріальної культурної
+    спадщини ЮНЕСКО у 2022 році як символ української культури?
+  options:
+  - text: Вареники
+    correct: false
+  - text: Борщ
+    correct: true
+  - text: Голубці
+    correct: false
+  - text: Деруни
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Скільки пісних страв традиційно готують на Святвечір в Україні, і що символізує
+    ця кількість?
+  options:
+  - text: Сім страв, символ семи днів тижня
+    correct: false
+  - text: Десять страв, символ десяти заповідей
+    correct: false
+  - text: Дванадцять страв, символ дванадцяти апостолів
+    correct: true
+  - text: П'ять страв, символ п'яти хлібів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Яка традиційна українська страва є пшеничною кашею з медом, маком та горіхами,
+    яку готують на Різдво?
+  options:
+  - text: Узвар
+    correct: false
+  - text: Кутя
+    correct: true
+  - text: Галушки
+    correct: false
+  - text: Холодець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Що таке банош і в якому регіоні України його традиційно готують?
+  options:
+  - text: Рибний суп з Одеси
+    correct: false
+  - text: Кукурудзяна каша з бринзою та шкварками з Карпат
+    correct: true
+  - text: М'ясна страва з Харкова
+    correct: false
+  - text: Картопляні млинці з Полтавщини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Яка страва відома завдяки творам Миколи Гоголя і походить з Полтавщини?
+  options:
+  - text: Борщ
+    correct: false
+  - text: Вареники
+    correct: false
+  - text: Галушки
+    correct: true
+  - text: Деруни
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Яка страва є традиційним солодким хлібом з родзинками та глазур'ю, що
+    символізує Великдень?
+  options:
+  - text: Кутя
+    correct: false
+  - text: Паска
+    correct: true
+  - text: Пампушки
+    correct: false
+  - text: Узвар
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Чому південна українська кухня відрізняється від інших регіонів?
+  options:
+  - text: Через вплив російської кухні
+    correct: false
+  - text: Через близькість до Чорного моря та єврейський, грецький і турецький вплив
+    correct: true
+  - text: Через гірський клімат
+    correct: false
+  - text: Через відсутність сільського господарства
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Який напій традиційно подають до куті на Святвечір?
+  options:
+  - text: Компот з яблук
+    correct: false
+  - text: Узвар
+    correct: true
+  - text: Молоко
+    correct: false
+  - text: Чай
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Що таке крашанки і коли їх готують в Україні?
+  options:
+  - text: Солодкі булочки на Різдво
+    correct: false
+  - text: Розмальовані яйця на Великдень
+    correct: true
+  - text: М'ясні пиріжки на Масляну
+    correct: false
+  - text: Картопляна страва на Івана Купала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння української кухні
+  question: Яка страва є курячим рулетом з маслом і стала символом української кухні
+    за кордоном?
+  options:
+  - text: Полтавські галушки
+    correct: false
+  - text: Київська котлета
+    correct: true
+  - text: Одеська юшка
+    correct: false
+  - text: Львівський сирник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Борщ — це російська страва, яку пізніше запозичили українці.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Українська кухня базується на натуральних продуктах завдяки родючим чорноземам
+    країни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Існує лише один рецепт борщу, який використовують по всій Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Вареники можуть бути як солоні (з картоплею, сиром), так і солодкі (з
+    вишнями).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Закарпатська кухня має угорський вплив через географічну близькість.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Пампушки — це солодкі булочки, які подають з кавою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Бринза — це солений сир з овечого молока, основа багатьох карпатських
+    страв.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Форшмак — традиційна українська страва з картоплі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: На Святвечір можна їсти м'ясні страви.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Писанки — це яйця, розписані воском, відомі по всьому світу як мистецький
+    витвір.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Деруни — це картопляні млинці, які особливо популярні в Західній Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про українську кухню
+  statement: Перший тост в Україні завжди виголошують за здоров'я.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

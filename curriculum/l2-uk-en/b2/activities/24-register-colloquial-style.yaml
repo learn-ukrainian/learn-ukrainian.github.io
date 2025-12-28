@@ -1,0 +1,1450 @@
+# B2-24: Розмовний стиль
+# Activities: 14+ with 16+ items each
+
+# Activity 1: Quiz - Основи розмовного стилю
+- type: quiz
+  title: Основи розмовного стилю
+  items:
+    - question: Яка функція частки «ж/же» в українській мові?
+      options:
+        - text: Вираження заперечення
+          correct: false
+        - text: Підсилення, емфаза
+          correct: true
+        - text: Вираження питання
+          correct: false
+        - text: Вираження часу
+          correct: false
+      explanation: Частка «ж/же» використовується для підсилення та емфази.
+
+    - question: Яке слово є скороченою формою від «комп'ютер»?
+      options:
+        - text: комп
+          correct: true
+        - text: компік
+          correct: false
+        - text: комплект
+          correct: false
+        - text: компас
+          correct: false
+      explanation: '"Комп" — це розмовне скорочення від "комп''ютер".'
+
+    - question: Яка функція частки «бо» у реченні «Не йди, бо впадеш»?
+      options:
+        - text: Підсилення
+          correct: false
+        - text: Попередження про наслідки
+          correct: true
+        - text: Запитання
+          correct: false
+        - text: Згода
+          correct: false
+      explanation: Частка «бо» виражає причину або попередження про наслідки.
+
+    - question: Яке слово є наповнювачем (filler) у розмовній мові?
+      options:
+        - text: книга
+          correct: false
+        - text: типу
+          correct: true
+        - text: працювати
+          correct: false
+        - text: гарний
+          correct: false
+      explanation: '"Типу" — це типовий наповнювач, який заповнює паузи в мовленні.'
+
+    - question: Що означає вигук «жесть» у розмовній мові?
+      options:
+        - text: Щось хороше
+          correct: false
+        - text: Щось дуже погане або інтенсивне
+          correct: true
+        - text: Нудне
+          correct: false
+        - text: Звичайне
+          correct: false
+      explanation: '"Жесть" виражає сильну емоційну реакцію на щось негативне або шокуюче.'
+
+    - question: У якому контексті доречно використовувати розмовний стиль?
+      options:
+        - text: В офіційному листі до директора
+          correct: false
+        - text: У повідомленні другу
+          correct: true
+        - text: У науковій статті
+          correct: false
+        - text: У юридичному документі
+          correct: false
+      explanation: Розмовний стиль доречний у неформальному спілкуванні з друзями та близькими.
+
+    - question: Яке значення має частка «таки» у реченні «Я таки прийшов»?
+      options:
+        - text: Заперечення
+          correct: false
+        - text: Все ж таки, всупереч очікуванням
+          correct: true
+        - text: Питання
+          correct: false
+        - text: Наказ
+          correct: false
+      explanation: '"Таки" означає "все ж таки", вказує на результат всупереч очікуванням.'
+
+    - question: Яке скорочення відповідає слову «інформація»?
+      options:
+        - text: інф
+          correct: false
+        - text: інфа
+          correct: true
+        - text: інформ
+          correct: false
+        - text: інформашка
+          correct: false
+      explanation: '"Інфа" — розмовне скорочення від "інформація".'
+
+    - question: Який вигук виражає позитивне здивування?
+      options:
+        - text: капець
+          correct: false
+        - text: ого
+          correct: true
+        - text: жесть
+          correct: false
+        - text: фігня
+          correct: false
+      explanation: '"Ого" виражає здивування, часто позитивне.'
+
+    - question: Яка помилка найчастіше трапляється при використанні розмовного стилю?
+      options:
+        - text: Використання у формальному контексті
+          correct: true
+        - text: Використання з друзями
+          correct: false
+        - text: Використання в чаті
+          correct: false
+        - text: Використання у соцмережах
+          correct: false
+      explanation: Найпоширеніша помилка — вживання розмовного стилю в офіційних ситуаціях.
+
+    - question: Що означає розмовне слово «норм»?
+      options:
+        - text: Ненормально
+          correct: false
+        - text: Нормально, добре
+          correct: true
+        - text: Норма права
+          correct: false
+        - text: Нормативний документ
+          correct: false
+      explanation: '"Норм" — скорочення від "нормально", означає "добре, все гаразд".'
+
+    - question: Яка частка додає відтінок наполягання у реченні «Скажи ж мені!»?
+      options:
+        - text: бо
+          correct: false
+        - text: ж
+          correct: true
+        - text: таки
+          correct: false
+        - text: ну
+          correct: false
+      explanation: Частка «ж» підсилює прохання, додає наполягання.
+
+    - question: Яке слово НЕ є наповнювачем?
+      options:
+        - text: типу
+          correct: false
+        - text: ну
+          correct: false
+        - text: книга
+          correct: true
+        - text: коротше
+          correct: false
+      explanation: '"Книга" — це іменник, а не наповнювач. Наповнювачі: типу, ну, коротше.'
+
+    - question: Що означає «чувак» у розмовній мові?
+      options:
+        - text: Дівчина
+          correct: false
+        - text: Хлопець, чоловік (неформально)
+          correct: true
+        - text: Старша людина
+          correct: false
+        - text: Дитина
+          correct: false
+      explanation: '"Чувак" — неформальне звертання до хлопця чи чоловіка.'
+
+    - question: У якому реченні частка «бо» використана правильно?
+      options:
+        - text: Бо я прийшов.
+          correct: false
+        - text: Поспішай, бо запізнишся.
+          correct: true
+        - text: Він бо знає.
+          correct: false
+        - text: Ми бо друзі.
+          correct: false
+      explanation: '"Бо" виражає причину або попередження: "Поспішай, бо запізнишся."'
+
+    - question: Яке значення має вигук «капець»?
+      options:
+        - text: Щось чудове
+          correct: false
+        - text: Катастрофа, біда
+          correct: true
+        - text: Нейтральна реакція
+          correct: false
+        - text: Запитання
+          correct: false
+      explanation: '"Капець" виражає негативну реакцію — катастрофу, проблему.'
+
+# Activity 2: Match-up - Скорочення та повні форми
+- type: match-up
+  title: Скорочення та повні форми
+  pairs:
+    - left: тел
+      right: телефон
+    - left: комп
+      right: "комп'ютер"
+    - left: інфа
+      right: інформація
+    - left: норм
+      right: нормально
+    - left: універ
+      right: університет
+    - left: фотка
+      right: фотографія
+    - left: презенташка
+      right: презентація
+    - left: док
+      right: документ
+    - left: дякс
+      right: дякую
+    - left: сорі
+      right: вибач
+    - left: окей
+      right: добре
+    - left: кавуха
+      right: кава
+    - left: відосик
+      right: відео
+    - left: прога
+      right: програма
+    - left: батя
+      right: батько
+    - left: мама
+      right: мати
+
+# Activity 3: Fill-in - Частки в контексті
+- type: fill-in
+  title: Частки в контексті
+  items:
+    - sentence: Скажи _____ мені правду!
+      answer: ж
+      options:
+        - ж
+        - бо
+        - таки
+        - ну
+
+    - sentence: Не йди туди, _____ впадеш.
+      answer: бо
+      options:
+        - бо
+        - ж
+        - таки
+        - от
+
+    - sentence: Я _____ прийшов, хоча не хотів.
+      answer: таки
+      options:
+        - таки
+        - ж
+        - бо
+        - ну
+
+    - sentence: _____, я не знаю, що робити.
+      answer: Ну
+      options:
+        - Ну
+        - Бо
+        - Таки
+        - Ого
+
+    - sentence: Він _____ це зробив!
+      answer: таки
+      options:
+        - таки
+        - бо
+        - ж
+        - от
+
+    - sentence: Чому _____ ти не сказав раніше?
+      answer: ж
+      options:
+        - ж
+        - бо
+        - таки
+        - типу
+
+    - sentence: Вчись, _____ не здаси іспит.
+      answer: бо
+      options:
+        - бо
+        - ж
+        - таки
+        - ну
+
+    - sentence: Вона _____ права була.
+      answer: таки
+      options:
+        - таки
+        - бо
+        - ж
+        - от
+
+    - sentence: Я _____ казав тобі про це!
+      answer: ж
+      options:
+        - ж
+        - бо
+        - таки
+        - ну
+
+    - sentence: Дивись уважно, _____ не побачиш.
+      answer: бо
+      options:
+        - бо
+        - ж
+        - таки
+        - от
+
+    - sentence: _____, давай поговоримо.
+      answer: Ну
+      options:
+        - Ну
+        - Бо
+        - Таки
+        - Ого
+
+    - sentence: Де _____ він?
+      answer: ж
+      options:
+        - ж
+        - бо
+        - таки
+        - типу
+
+    - sentence: Він _____ не прийшов.
+      answer: таки
+      options:
+        - таки
+        - бо
+        - ж
+        - ну
+
+    - sentence: Поспішай, _____ запізнишся на поїзд.
+      answer: бо
+      options:
+        - бо
+        - ж
+        - таки
+        - от
+
+    - sentence: Ми _____ встигли на літак!
+      answer: таки
+      options:
+        - таки
+        - бо
+        - ж
+        - ну
+
+    - sentence: То що _____ ти хочеш?
+      answer: ж
+      options:
+        - ж
+        - бо
+        - таки
+        - типу
+
+# Activity 4: True-false - Правила розмовного стилю
+- type: true-false
+  title: Правила розмовного стилю
+  items:
+    - statement: Частка «ж/же» використовується для підсилення та емфази.
+      correct: true
+      explanation: Правильно. «Ж/же» додає емоційне підсилення до речення.
+
+    - statement: Розмовний стиль доречний в офіційному листуванні.
+      correct: false
+      explanation: Неправильно. Розмовний стиль недоречний в офіційному контексті.
+
+    - statement: Слово «типу» є наповнювачем у розмовній мові.
+      correct: true
+      explanation: 'Правильно. "Типу" — один з найпоширеніших наповнювачів.'
+
+    - statement: Частка «бо» виражає підсилення.
+      correct: false
+      explanation: 'Неправильно. "Бо" виражає причину або попередження, а не підсилення.'
+
+    - statement: Скорочення «комп» означає «компанія».
+      correct: false
+      explanation: "Неправильно. «Комп» — скорочення від «комп'ютер»."
+
+    - statement: Вигук «ого» виражає здивування.
+      correct: true
+      explanation: 'Правильно. "Ого" — вигук здивування, часто позитивного.'
+
+    - statement: Надмірне вживання наповнювачів вважається ознакою високої мовної культури.
+      correct: false
+      explanation: Неправильно. Надмір наповнювачів сприймається як невпевненість.
+
+    - statement: Частка «таки» означає «все ж таки, всупереч очікуванням».
+      correct: true
+      explanation: 'Правильно. "Таки" вказує на результат всупереч очікуванням.'
+
+    - statement: Слово «жесть» виражає позитивну реакцію.
+      correct: false
+      explanation: 'Неправильно. "Жесть" зазвичай виражає негативну або шокуючу реакцію.'
+
+    - statement: У розмовній мові можна використовувати скорочення «інфа» замість «інформація».
+      correct: true
+      explanation: 'Правильно. "Інфа" — типове розмовне скорочення.'
+
+    - statement: Перехід на розмовний стиль у спілкуванні — сигнал довіри.
+      correct: true
+      explanation: Правильно. Неформальна мова сигналізує про близькість та довіру.
+
+    - statement: Слово «чувак» — формальне звертання.
+      correct: false
+      explanation: 'Неправильно. "Чувак" — неформальне, сленгове звертання.'
+
+    - statement: Повна відсутність наповнювачів у розмові звучить природно.
+      correct: false
+      explanation: Неправильно. Повна відсутність наповнювачів звучить занадто формально.
+
+    - statement: Вигук «класно» виражає позитивну оцінку.
+      correct: true
+      explanation: 'Правильно. "Класно" означає "cool, great" — позитивна реакція.'
+
+    - statement: Частку «бо» можна використовувати на початку речення для підсилення.
+      correct: false
+      explanation: 'Неправильно. "Бо" виражає причину/попередження, не підсилення.'
+
+    - statement: Скорочення доречні тільки в неформальному контексті.
+      correct: true
+      explanation: Правильно. У формальному спілкуванні слід використовувати повні форми.
+
+# Activity 5: Group-sort - Позитивні та негативні вигуки
+- type: group-sort
+  title: Позитивні та негативні вигуки
+  groups:
+    - name: Позитивні вигуки
+      items:
+        - класно
+        - круто
+        - прикольно
+        - кльово
+        - офігенно
+        - супер
+        - чудово
+        - зашибісь
+    - name: Негативні вигуки
+      items:
+        - жесть
+        - капець
+        - фігня
+        - халепа
+        - лишенько
+        - трындець
+        - біда
+        - кошмар
+    - name: Вигуки здивування
+      items:
+        - ого
+        - ой
+        - оце так
+        - ух ти
+        - от це так
+        - ні фіга собі
+        - ну і ну
+        - хм
+
+# Activity 6: Unjumble - Речення з частками
+- type: unjumble
+  title: Речення з частками
+  items:
+    - scrambled: мені / ж / скажи / правду
+      answer: Скажи ж мені правду.
+
+    - scrambled: бо / запізнишся / поспішай
+      answer: Поспішай, бо запізнишся.
+
+    - scrambled: прийшов / я / таки
+      answer: Я таки прийшов.
+
+    - scrambled: не / що / ну / знаю
+      answer: Ну, не знаю.
+
+    - scrambled: ж / казав / я / тобі
+      answer: Я ж казав тобі.
+
+    - scrambled: впадеш / бо / не йди
+      answer: Не йди, бо впадеш.
+
+    - scrambled: таки / зробив / він / це
+      answer: Він таки це зробив.
+
+    - scrambled: там / ж / хто / був
+      answer: Хто ж там був?
+
+    - scrambled: встигли / ми / таки / на / потяг
+      answer: Ми таки встигли на потяг.
+
+    - scrambled: все / ну / добре
+      answer: Ну, все добре.
+
+    - scrambled: бо / вчись / не здаси
+      answer: Вчись, бо не здаси.
+
+    - scrambled: права / вона / таки / була
+      answer: Вона таки була права.
+
+    - scrambled: ж / ти / чому / не сказав
+      answer: Чому ж ти не сказав?
+
+    - scrambled: бо / не побачиш / дивись
+      answer: Дивись, бо не побачиш.
+
+    - scrambled: таки / вдалося / йому / це
+      answer: Йому таки це вдалося.
+
+    - scrambled: же / він / знає / все
+      answer: Він же все знає.
+
+# Activity 7: Error-correction - Помилки у вживанні розмовного стилю
+- type: error-correction
+  title: Помилки у вживанні розмовного стилю
+  items:
+    - sentence: Шановний пане директоре! Ну, типу, хотів запитати про відпустку.
+      error: типу
+      answer: просто
+      options:
+        - типу
+        - просто
+        - начебто
+        - ніби
+      explanation: В офіційному листуванні наповнювач «типу» недоречний. Краще прибрати або замінити.
+
+    - sentence: Я бо прийшов вчасно.
+      error: бо
+      answer: таки
+      options:
+        - бо
+        - таки
+        - ж
+        - же
+      explanation: '"Бо" виражає причину/попередження, для підсилення використовуйте "таки".'
+
+    - sentence: Він ж не знає про це.
+      error: ж
+      answer: же
+      options:
+        - ж
+        - же
+        - бо
+        - таки
+      explanation: Після голосного вживається «же», після приголосного — «ж».
+
+    - sentence: Ну, типу, як би, я, типу, хотів сказати...
+      error: типу
+      answer: я
+      options:
+        - типу
+        - я
+        - хотів
+        - сказати
+      explanation: Надмір наповнювачів ускладнює розуміння. Залиште один-два.
+
+    - sentence: Це класний інформація.
+      error: класний
+      answer: класна
+      options:
+        - класний
+        - класна
+        - класне
+        - класні
+      explanation: '"Інформація" — жіночий рід, потрібно "класна інформація".'
+
+    - sentence: Скинь мені на тел інформацію.
+      error: інформацію
+      answer: інфу
+      options:
+        - інформацію
+        - інфу
+        - інформації
+        - інформацій
+      explanation: У розмовному стилі послідовність стилю важлива — якщо «тел», то і «інфу».
+
+    - sentence: Привіт! Маю честь повідомити Вам про зустріч.
+      error: честь
+      answer: хочу
+      options:
+        - честь
+        - хочу
+        - можу
+        - мушу
+      explanation: '"Маю честь" — занадто формально після неформального "Привіт!".'
+
+    - sentence: Він таки бо прийшов.
+      error: бо
+      answer: ∅
+      options:
+        - бо
+        - ∅
+        - ж
+        - же
+      explanation: Не можна поєднувати «таки» і «бо» — вони мають різні функції. Видаліть «бо».
+
+    - sentence: Капец, це була чудова презентація!
+      error: Капец
+      answer: Класно
+      options:
+        - Капец
+        - Класно
+        - Супер
+        - Круто
+      explanation: '"Капець" — негативна реакція. Для позитивної використовуйте "класно" чи "круто".'
+
+    - sentence: Шановний друже! Дозвольте запросити Вас на каву.
+      error: Шановний
+      answer: Привіт
+      options:
+        - Шановний
+        - Привіт
+        - Дорогий
+        - Любий
+      explanation: '"Шановний друже" — змішування регістрів. До друга краще "Привіт!".'
+
+    - sentence: Це ого гарна ідея!
+      error: ого
+      answer: дуже
+      options:
+        - ого
+        - дуже
+        - така
+        - справді
+      explanation: '"Ого" — вигук, не прикметник. Правильно: "Ого, це гарна ідея!"'
+
+    - sentence: Він жесть добре співає.
+      error: жесть
+      answer: дуже
+      options:
+        - жесть
+        - дуже
+        - класно
+        - круто
+      explanation: '"Жесть" — вигук, не прислівник. Правильно: "Він дуже добре співає."'
+
+    - sentence: Дякую Вам, чувак!
+      error: Вам
+      answer: тобі
+      options:
+        - Вам
+        - тобі
+        - вам
+        - йому
+      explanation: '"Чувак" — неформальне звертання, потребує "ти": "Дякую тобі, чувак!"'
+
+    - sentence: 'Вона сказала: «Бо я не хочу».'
+      error: Бо
+      answer: Ну
+      options:
+        - Бо
+        - Ну
+        - Та
+        - Ой
+      explanation: '"Бо" не вживається на початку речення як вступне слово. Використовуйте "Ну".'
+
+    - sentence: Ну, типу, Шановний пане, дозвольте запитати.
+      error: типу
+      answer: ∅
+      options:
+        - типу
+        - ∅
+        - начебто
+        - ніби
+      explanation: Змішування регістрів — наповнювачі несумісні з офіційним звертанням.
+
+    - sentence: Він прийшов, таки бо хотів побачити.
+      error: таки бо
+      answer: бо
+      options:
+        - таки бо
+        - бо
+        - таки
+        - ж
+      explanation: '"Таки" і "бо" мають різні функції і не поєднуються. Залиште "бо".'
+
+# Activity 8: Cloze - Розмовний діалог
+- type: cloze
+  title: Розмовний діалог
+  passage: |
+    — {Привіт|Добридень|Вітаю|Привіт}! Як справи?
+    — {Норм|Нормально|Добре|Норм}, а в тебе?
+    — Теж {норм|нормально|добре|норм}. {Слухай|Послухай|Скажи|Слухай}, що робиш увечері?
+    — Ще не знаю. А що?
+    — Та {може|можливо|мабуть|може} кіно підемо? Там новий фільм, кажуть, {прикольний|цікавий|гарний|прикольний}.
+    — {Ого|Ой|Хм|Ого}, який?
+    — {Ну|Та|От|Ну}, {типу|начебто|ніби|типу}, той {новий|старий|цікавий|новий} український.
+    — А, знаю! {Класно|Добре|Гаразд|Класно}, {давай|добре|окей|давай}.
+    — {Круто|Супер|Чудово|Круто}! Я квитки візьму.
+    — {Дякс|Дякую|Спасибі|Дякс}! Скинь {адресу|адрес|місце|адресу}.
+    — {Окей|Добре|Гаразд|Окей}, {бувай|до побачення|на все добре|бувай}!
+
+# Activity 9: Mark-the-words - Знайдіть маркери розмовного стилю
+- type: mark-the-words
+  title: Знайдіть маркери розмовного стилю
+  instruction: Натисніть на всі слова, що є маркерами розмовного стилю (скорочення, частки, наповнювачі, вигуки).
+  text: "— *Привіт*! *Слухай*, я *типу* хотів тебе запитати. Мій *комп* завис, *жесть*! Можеш *скинути* мені *інфу* про ту *прогу*? *Дякс*! *Ну* *от*, *бувай*!"
+
+# Activity 10: Dialogue-reorder - Неформальна розмова
+- type: dialogue-reorder
+  title: Неформальна розмова
+  lines:
+    - order: 1
+      speaker: Андрій
+      text: Привіт! Як справи?
+    - order: 2
+      speaker: Оксана
+      text: Норм, а в тебе?
+    - order: 3
+      speaker: Андрій
+      text: Теж норм. Слухай, що робиш у суботу?
+    - order: 4
+      speaker: Оксана
+      text: Ще не знаю. А що?
+    - order: 5
+      speaker: Андрій
+      text: Та може кавуху? Давно не бачились.
+    - order: 6
+      speaker: Оксана
+      text: О, класна ідея! О котрій?
+    - order: 7
+      speaker: Андрій
+      text: Давай о третій?
+    - order: 8
+      speaker: Оксана
+      text: Добре, домовились!
+    - order: 9
+      speaker: Андрій
+      text: Круто! Скину адресу.
+    - order: 10
+      speaker: Оксана
+      text: Окей, бувай!
+    - order: 11
+      speaker: Андрій
+      text: Бувай!
+
+# Activity 11: Select - Доречність розмовного стилю
+- type: select
+  title: Доречність розмовного стилю
+  items:
+    - question: У яких ситуаціях доречно використовувати скорочення (комп, інфа, тел)?
+      options:
+        - text: У повідомленні другу
+          correct: true
+        - text: В офіційному листі
+          correct: false
+        - text: У робочому чаті з колегами
+          correct: true
+        - text: У науковій статті
+          correct: false
+
+    - question: Які частки використовуються для підсилення?
+      options:
+        - text: ж/же
+          correct: true
+        - text: бо
+          correct: false
+        - text: таки
+          correct: false
+        - text: і
+          correct: false
+
+    - question: Які слова є наповнювачами (fillers)?
+      options:
+        - text: типу
+          correct: true
+        - text: ну
+          correct: true
+        - text: коротше
+          correct: true
+        - text: книга
+          correct: false
+
+    - question: Які вигуки виражають позитивну реакцію?
+      options:
+        - text: класно
+          correct: true
+        - text: круто
+          correct: true
+        - text: жесть
+          correct: false
+        - text: капець
+          correct: false
+
+    - question: У яких контекстах частка «бо» використовується правильно?
+      options:
+        - text: Не йди, бо впадеш.
+          correct: true
+        - text: Поспішай, бо запізнишся.
+          correct: true
+        - text: Бо я прийшов.
+          correct: false
+        - text: Він бо знає.
+          correct: false
+
+    - question: Які скорочення використовуються в молодіжному мовленні?
+      options:
+        - text: універ
+          correct: true
+        - text: фотка
+          correct: true
+        - text: документація
+          correct: false
+        - text: презенташка
+          correct: true
+
+    - question: Які елементи створюють неформальний тон тексту?
+      options:
+        - text: Скорочення слів
+          correct: true
+        - text: Частки (ну, ж, бо)
+          correct: true
+        - text: Офіційні звертання
+          correct: false
+        - text: Емоційні вигуки
+          correct: true
+
+    - question: Коли можна використовувати вигук «жесть»?
+      options:
+        - text: Для опису негативної ситуації
+          correct: true
+        - text: У розмові з другом
+          correct: true
+        - text: В офіційному документі
+          correct: false
+        - text: Для опису шокуючої новини
+          correct: true
+
+    - question: Які форми прощання є неформальними?
+      options:
+        - text: бувай
+          correct: true
+        - text: па-па
+          correct: true
+        - text: до побачення
+          correct: false
+        - text: поки
+          correct: true
+
+    - question: У яких реченнях частка «таки» використана правильно?
+      options:
+        - text: Я таки прийшов.
+          correct: true
+        - text: Він таки зробив це.
+          correct: true
+        - text: Таки прийшов.
+          correct: false
+        - text: Вона таки права.
+          correct: true
+
+    - question: Які вигуки виражають здивування?
+      options:
+        - text: ого
+          correct: true
+        - text: ой
+          correct: true
+        - text: класно
+          correct: false
+        - text: оце так
+          correct: true
+
+    - question: Які помилки найчастіше трапляються при вживанні розмовного стилю?
+      options:
+        - text: Використання в офіційному контексті
+          correct: true
+        - text: Надмір наповнювачів
+          correct: true
+        - text: Змішування регістрів
+          correct: true
+        - text: Використання з друзями
+          correct: false
+
+    - question: Які слова є розмовними відповідниками до «надіслати»?
+      options:
+        - text: скинути
+          correct: true
+        - text: кинути
+          correct: true
+        - text: відправити
+          correct: false
+        - text: закинути
+          correct: true
+
+    - question: У яких випадках варто уникати розмовного стилю?
+      options:
+        - text: В офіційному листуванні
+          correct: true
+        - text: На співбесіді
+          correct: true
+        - text: У розмові з другом
+          correct: false
+        - text: У науковій доповіді
+          correct: true
+
+    - question: Які елементи характерні для молодіжного сленгу?
+      options:
+        - text: Запозичення з англійської (окей, сорі)
+          correct: true
+        - text: Скорочення (комп, інфа)
+          correct: true
+        - text: Офіційні звертання
+          correct: false
+        - text: Нові значення слів (круто, класно)
+          correct: true
+
+    - question: Які частки додають емоційного забарвлення?
+      options:
+        - text: ж/же
+          correct: true
+        - text: таки
+          correct: true
+        - text: і
+          correct: false
+        - text: бо
+          correct: true
+
+# Activity 12: Translate - Формальне vs розмовне
+- type: translate
+  title: Формальне vs розмовне
+  items:
+    - source: "Send me the information, please."
+      options:
+        - text: Скинь мені інфу.
+          correct: true
+        - text: Надішліть мені інформацію, будь ласка.
+          correct: false
+        - text: Прошу надіслати мені інформацію.
+          correct: false
+        - text: Відправте мені дані.
+          correct: false
+      explanation: Розмовний варіант використовує «скинь» та «інфу».
+
+    - source: "How are you? (informal)"
+      options:
+        - text: Як Ваші справи?
+          correct: false
+        - text: Як справи?
+          correct: true
+        - text: Як Ви себе почуваєте?
+          correct: false
+        - text: Як поживаєте?
+          correct: false
+      explanation: Неформальне привітання — «Як справи?» без «Ваші».
+
+    - source: "That's cool!"
+      options:
+        - text: Це прекрасно!
+          correct: false
+        - text: Класно!
+          correct: true
+        - text: Це чудово!
+          correct: false
+        - text: Це добре!
+          correct: false
+      explanation: '"Класно" — розмовний еквівалент "cool".'
+
+    - source: "I told you so! (with emphasis)"
+      options:
+        - text: Я казав тобі.
+          correct: false
+        - text: Я ж казав!
+          correct: true
+        - text: Я говорив тобі.
+          correct: false
+        - text: Я повідомляв тебе.
+          correct: false
+      explanation: Частка «ж» додає емфазу — «I told you so!»
+
+    - source: "Hurry up, or you'll be late!"
+      options:
+        - text: Поспішай, бо запізнишся!
+          correct: true
+        - text: Поспішай, а то запізнишся!
+          correct: false
+        - text: Поспішайте, інакше запізнитеся!
+          correct: false
+        - text: Поспішай, щоб не запізнитися!
+          correct: false
+      explanation: '"Бо" виражає попередження — "or you''ll...".'
+
+    - source: "Wow! (surprise)"
+      options:
+        - text: Вражаюче!
+          correct: false
+        - text: Ого!
+          correct: true
+        - text: Чудово!
+          correct: false
+        - text: Прекрасно!
+          correct: false
+      explanation: '"Ого" — розмовний вигук здивування.'
+
+    - source: "He actually did it!"
+      options:
+        - text: Він це зробив!
+          correct: false
+        - text: Він таки це зробив!
+          correct: true
+        - text: Він справді це зробив!
+          correct: false
+        - text: Він дійсно це зробив!
+          correct: false
+      explanation: '"Таки" = "actually, after all".'
+
+    - source: "Bye! (informal)"
+      options:
+        - text: До побачення!
+          correct: false
+        - text: Бувай!
+          correct: true
+        - text: На все добре!
+          correct: false
+        - text: До зустрічі!
+          correct: false
+      explanation: '"Бувай" — неформальне прощання.'
+
+    - source: "My computer crashed. Disaster!"
+      options:
+        - text: "Мій комп'ютер завис. Катастрофа!"
+          correct: false
+        - text: Мій комп завис. Жесть!
+          correct: true
+        - text: "Мій комп'ютер зламався. Проблема!"
+          correct: false
+        - text: Комп завис. Погано!
+          correct: false
+      explanation: Розмовний стиль — «комп» + «жесть».
+
+    - source: "Well, I don't know."
+      options:
+        - text: Я не знаю.
+          correct: false
+        - text: Ну, не знаю.
+          correct: true
+        - text: Не маю уявлення.
+          correct: false
+        - text: Мені невідомо.
+          correct: false
+      explanation: '"Ну" — типовий наповнювач = "well".'
+
+    - source: "Thanks! (very informal)"
+      options:
+        - text: Дякую Вам!
+          correct: false
+        - text: Дякс!
+          correct: true
+        - text: Щиро вдячний!
+          correct: false
+        - text: Дякую!
+          correct: false
+      explanation: '"Дякс" — дуже неформальне скорочення "дякую".'
+
+    - source: "Look! (to get attention, informal)"
+      options:
+        - text: Зверніть увагу!
+          correct: false
+        - text: Слухай!
+          correct: true
+        - text: Подивіться!
+          correct: false
+        - text: Дозвольте звернутися!
+          correct: false
+      explanation: '"Слухай" — неформальний спосіб привернути увагу.'
+
+    - source: "That's nonsense!"
+      options:
+        - text: Це нісенітниця!
+          correct: false
+        - text: Це фігня!
+          correct: true
+        - text: Це абсурд!
+          correct: false
+        - text: Це дурниці!
+          correct: false
+      explanation: '"Фігня" — розмовне слово для "nonsense".'
+
+    - source: "OK, deal!"
+      options:
+        - text: Добре, домовлено.
+          correct: false
+        - text: Окей, домовились!
+          correct: true
+        - text: Гаразд, згода.
+          correct: false
+        - text: Прийнято.
+          correct: false
+      explanation: '"Окей" + "домовились" — типова розмовна згода.'
+
+    - source: "Why didn't you tell me? (with reproach)"
+      options:
+        - text: Чому ви мені не сказали?
+          correct: false
+        - text: Чому ж ти не сказав?
+          correct: true
+        - text: Чому не повідомили?
+          correct: false
+        - text: Чому не інформували?
+          correct: false
+      explanation: Частка «ж» додає відтінок докору.
+
+    - source: "He's a cool dude."
+      options:
+        - text: Він гарна людина.
+          correct: false
+        - text: Він класний чувак.
+          correct: true
+        - text: Він чудовий чоловік.
+          correct: false
+        - text: Він приємний пан.
+          correct: false
+      explanation: '"Класний чувак" — розмовний еквівалент "cool dude".'
+
+# Activity 13: Fill-in - Вигуки в контексті
+- type: fill-in
+  title: Вигуки в контексті
+  items:
+    - sentence: "_____! Це дуже гарна новина!"
+      answer: Ого
+      options:
+        - Ого
+        - Жесть
+        - Капець
+        - Фігня
+
+    - sentence: "_____! Мій телефон розбився!"
+      answer: Капець
+      options:
+        - Капець
+        - Класно
+        - Ого
+        - Круто
+
+    - sentence: "Цей фільм був _____!"
+      answer: прикольний
+      options:
+        - прикольний
+        - жесть
+        - капець
+        - фігня
+
+    - sentence: "Він виграв мільйон! _____!"
+      answer: Круто
+      options:
+        - Круто
+        - Жесть
+        - Капець
+        - Фігня
+
+    - sentence: "_____! Я забув ключі вдома!"
+      answer: Ой
+      options:
+        - Ой
+        - Класно
+        - Круто
+        - Ого
+
+    - sentence: "Ця їжа — _____! Несмачно зовсім."
+      answer: фігня
+      options:
+        - фігня
+        - класно
+        - круто
+        - прикольно
+
+    - sentence: "_____! Яка гарна машина!"
+      answer: Ого
+      options:
+        - Ого
+        - Жесть
+        - Капець
+        - Фігня
+
+    - sentence: "Концерт був _____! Всім сподобалось."
+      answer: класний
+      options:
+        - класний
+        - жесть
+        - капець
+        - фігня
+
+    - sentence: "_____! Я здав іспит на відмінно!"
+      answer: Супер
+      options:
+        - Супер
+        - Жесть
+        - Капець
+        - Ой
+
+    - sentence: "Ситуація на роботі — повний _____."
+      answer: капець
+      options:
+        - капець
+        - клас
+        - супер
+        - круто
+
+    - sentence: "_____, яка класна ідея!"
+      answer: Ого
+      options:
+        - Ого
+        - Жесть
+        - Капець
+        - Фігня
+
+    - sentence: "Він _____! Молодець!"
+      answer: круто
+      options:
+        - круто
+        - жесть
+        - капець
+        - фігня
+
+    - sentence: "_____, я спізнився на зустріч!"
+      answer: Ой
+      options:
+        - Ой
+        - Класно
+        - Круто
+        - Супер
+
+    - sentence: "Ця музика — _____! Мені подобається."
+      answer: кльово
+      options:
+        - кльово
+        - жесть
+        - капець
+        - фігня
+
+    - sentence: "_____, а це що таке?"
+      answer: Ого
+      options:
+        - Ого
+        - Жесть
+        - Капець
+        - Фігня
+
+    - sentence: "Результати тесту — _____! Всі провалилися."
+      answer: жесть
+      options:
+        - жесть
+        - клас
+        - супер
+        - круто
+
+# Activity 14: Quiz - Контекстуальний вибір
+- type: quiz
+  title: Контекстуальний вибір регістру
+  items:
+    - question: Який вигук найкраще підходить для опису негативної ситуації?
+      options:
+        - text: класно
+          correct: false
+        - text: жесть
+          correct: true
+        - text: круто
+          correct: false
+        - text: супер
+          correct: false
+      explanation: '"Жесть" виражає негативну або шокуючу реакцію.'
+
+    - question: Яке привітання доречне для повідомлення другу?
+      options:
+        - text: Шановний друже!
+          correct: false
+        - text: Привіт!
+          correct: true
+        - text: Добридень!
+          correct: false
+        - text: Вельмишановний!
+          correct: false
+      explanation: '"Привіт" — стандартне неформальне привітання.'
+
+    - question: Яка частка підходить для речення «Скажи ___ мені правду»?
+      options:
+        - text: бо
+          correct: false
+        - text: ж
+          correct: true
+        - text: таки
+          correct: false
+        - text: ну
+          correct: false
+      explanation: Частка «ж» підсилює прохання.
+
+    - question: Який наповнювач найчастіше вживається на початку речення?
+      options:
+        - text: типу
+          correct: false
+        - text: ну
+          correct: true
+        - text: коротше
+          correct: false
+        - text: як би
+          correct: false
+      explanation: '"Ну" — найтиповіший наповнювач на початку речення.'
+
+    - question: Яке слово є розмовним скороченням від «університет»?
+      options:
+        - text: уні
+          correct: false
+        - text: універ
+          correct: true
+        - text: унік
+          correct: false
+        - text: унів
+          correct: false
+      explanation: '"Універ" — стандартне розмовне скорочення.'
+
+    - question: Який вигук виражає позитивне здивування?
+      options:
+        - text: капець
+          correct: false
+        - text: ого
+          correct: true
+        - text: жесть
+          correct: false
+        - text: фігня
+          correct: false
+      explanation: '"Ого" виражає здивування, часто позитивне.'
+
+    - question: Яка частка виражає попередження у реченні «Не йди, ___ впадеш»?
+      options:
+        - text: ж
+          correct: false
+        - text: бо
+          correct: true
+        - text: таки
+          correct: false
+        - text: ну
+          correct: false
+      explanation: '"Бо" виражає причину або попередження.'
+
+    - question: Яке прощання є найбільш неформальним?
+      options:
+        - text: До побачення
+          correct: false
+        - text: Бувай
+          correct: true
+        - text: На все добре
+          correct: false
+        - text: До зустрічі
+          correct: false
+      explanation: '"Бувай" — типове неформальне прощання.'
+
+    - question: Яке слово означає «dude, guy» у розмовній мові?
+      options:
+        - text: пан
+          correct: false
+        - text: чувак
+          correct: true
+        - text: добродій
+          correct: false
+        - text: колега
+          correct: false
+      explanation: '"Чувак" — неформальне звертання до хлопця.'
+
+    - question: Яка частка означає «все ж таки, всупереч очікуванням»?
+      options:
+        - text: ж
+          correct: false
+        - text: таки
+          correct: true
+        - text: бо
+          correct: false
+        - text: ну
+          correct: false
+      explanation: '"Таки" вказує на результат всупереч очікуванням.'
+
+    - question: Яке скорочення означає «фотографія»?
+      options:
+        - text: фото
+          correct: false
+        - text: фотка
+          correct: true
+        - text: фотик
+          correct: false
+        - text: фотос
+          correct: false
+      explanation: '"Фотка" — розмовне скорочення від "фотографія".'
+
+    - question: Яке слово є наповнювачем?
+      options:
+        - text: книга
+          correct: false
+        - text: типу
+          correct: true
+        - text: стіл
+          correct: false
+        - text: гарний
+          correct: false
+      explanation: '"Типу" — типовий наповнювач у молодіжному мовленні.'
+
+    - question: Яка реакція доречна на хорошу новину?
+      options:
+        - text: Жесть!
+          correct: false
+        - text: Класно!
+          correct: true
+        - text: Капець!
+          correct: false
+        - text: Фігня!
+          correct: false
+      explanation: '"Класно" виражає позитивну реакцію.'
+
+    - question: У якому реченні частка вжита правильно?
+      options:
+        - text: Бо я прийшов.
+          correct: false
+        - text: Я ж казав тобі!
+          correct: true
+        - text: Він таки бо знає.
+          correct: false
+        - text: Ну бо він прийшов.
+          correct: false
+      explanation: '"Я ж казав тобі!" — правильне вживання підсилювальної частки.'
+
+    - question: Яке слово означає «nonsense» у розмовній мові?
+      options:
+        - text: класно
+          correct: false
+        - text: фігня
+          correct: true
+        - text: круто
+          correct: false
+        - text: супер
+          correct: false
+      explanation: '"Фігня" — розмовне слово для "nonsense, rubbish".'
+
+    - question: Яке скорочення використовується для «документ»?
+      options:
+        - text: доку
+          correct: false
+        - text: док
+          correct: true
+        - text: документ
+          correct: false
+        - text: дока
+          correct: false
+      explanation: '"Док" — розмовне скорочення від "документ".'

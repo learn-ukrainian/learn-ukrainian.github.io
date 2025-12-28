@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 97.2% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 99% (cultural)
-- **Grammar:** ✅ Validated ([View Audit](81-ukrainski-sviata-ta-festyvali-grammar.yaml))
+- **Grammar:** ✅ Validated (8/58 confirmed)
 
 ## Richness Details
 **Score:** 99% (minimum: 95%)
@@ -34,6 +34,12 @@
 | realworld | 6 | - | 100% | 7% | 6.7% |
 | questions | 29 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **99.5%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

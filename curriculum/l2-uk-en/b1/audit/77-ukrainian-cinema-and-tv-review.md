@@ -3,7 +3,7 @@
 **Overall Status:** ✅ PASS
 
 ## Gates
-- **Words:** ✅ 1634/1500
+- **Words:** ✅ 1678/1500
 - **Activities:** ✅ 12/12
 - **Density:** ✅ All > 14
 - **Unique_types:** ✅ 12/4 types
@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 99.7% (target 85-100% (B1.7-8 Ukraine))
+- **Immersion:** 🇺🇦 99.6% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)
 - **Grammar:** ✅ Validated (8/50 confirmed)
 
@@ -35,6 +35,12 @@
 | questions | 31 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **98.1%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -42,4 +48,4 @@
 | **Презентація** | ⚪️ | 819 | Skipped |
 | **Практика** | ⚪️ | 485 | Skipped |
 | **Підсумок** | ✅ | 199 | Included in Core |
-| **Словник** | ⚪️ | 0 | Skipped |
+| **Словник** | ⚪️ | 44 | Skipped |

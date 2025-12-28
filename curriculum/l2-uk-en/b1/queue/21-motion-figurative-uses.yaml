@@ -1,0 +1,570 @@
+module: 21-motion-figurative-uses
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/21-motion-figurative-uses.md
+generated: '2025-12-29T00:21:59.979972'
+scope: error-correction, fill-in, quiz, unjumble
+activity_counts:
+  error-correction: 6
+  fill-in: 8
+  unjumble: 6
+  quiz: 16
+item_count: 36
+items:
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Ми довго думали і прийшли до висновку, що це насправді дуже
+    погана ідея.
+  error: прийшли
+  answer: дійшли
+  sentence_corrected: Ми довго думали і дійшли до висновку, що це насправді дуже погана
+    ідея.
+  options:
+  - прийшли
+  - дійшли
+  - вийшли
+  - зайшли
+  original_explanation: Хоча "прийти до висновку" іноді вживається, стилістично правильніше
+    "дійти висновку" (reach/arrive at a conclusion).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Він дуже сильно розлютився і пішов з себе, коли дізнався всю
+    гірку правду.
+  error: пішов
+  answer: вийшов
+  sentence_corrected: Він дуже сильно розлютився і вийшов з себе, коли дізнався всю
+    гірку правду.
+  options:
+  - пішов
+  - вийшов
+  - зайшов
+  - прийшов
+  original_explanation: Правильна ідіома — "вийти з себе" (to lose one's temper).
+    З себе не "йдуть", а "виходять" (як з приміщення).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: На жаль, ця проблема зайшла в сліпу вулицю і ми абсолютно не
+    знаємо виходу.
+  error: сліпу вулицю
+  answer: глухий кут
+  sentence_corrected: На жаль, ця проблема зайшла в глухий кут і ми абсолютно не знаємо
+    виходу.
+  options:
+  - сліпу вулицю
+  - глухий кут
+  - темний прохід
+  - закриту кімнату
+  original_explanation: Український відповідник англійського "dead end" — це "глухий
+    кут".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Я не можу перейти без твоїх корисних порад у цій складній життєвій
+    ситуації.
+  error: перейти
+  answer: обійтися
+  sentence_corrected: Я не можу обійтися без твоїх корисних порад у цій складній життєвій
+    ситуації.
+  options:
+  - перейти
+  - обійтися
+  - зайти
+  - вийти
+  original_explanation: '"Do without" — це "обійтися без".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Це нове червоне плаття тобі зовсім не ходить, краще одягни
+    щось синє.
+  error: ходить
+  answer: йде
+  sentence_corrected: Це нове червоне плаття тобі зовсім не йде, краще одягни щось
+    синє.
+  options:
+  - ходить
+  - йде
+  - біжить
+  - стоїть
+  original_explanation: Одяг "йде" (пасує), а не "ходить".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у виразах
+  sentence_with_error: Час гуляє дуже швидко, коли ми веселимося разом із найкращими
+    друзями.
+  error: гуляє
+  answer: іде
+  sentence_corrected: Час іде дуже швидко, коли ми веселимося разом із найкращими
+    друзями.
+  options:
+  - гуляє
+  - іде
+  - стоїть
+  - сидить
+  original_explanation: Час "іде", "біжить" або "летить", але не "гуляє".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: Вибач, я вчора був дуже втомлений і роздратований, тому раптово
+    [___] з себе і наговорив тобі зайвого.
+  answer: вийшов
+  complete_sentence: Вибач, я вчора був дуже втомлений і роздратований, тому раптово
+    [вийшов] з себе і наговорив тобі зайвого.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: Ми довго думали над цим складним питанням і нарешті [___] логічного
+    висновку, що це найкращий варіант для нас.
+  answer: дійшли
+  complete_sentence: Ми довго думали над цим складним питанням і нарешті [дійшли]
+    логічного висновку, що це найкращий варіант для нас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: Я дуже люблю міцну каву і ніяк не можу [___] без неї вранці перед
+    початком робочого дня.
+  answer: обійтися
+  complete_sentence: Я дуже люблю міцну каву і ніяк не можу [обійтися] без неї вранці
+    перед початком робочого дня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: На жаль, ці старі методи навчання вже давно [___] в минуле і
+    більше не використовуються в сучасних школах.
+  answer: відійшли
+  complete_sentence: На жаль, ці старі методи навчання вже давно [відійшли] в минуле
+    і більше не використовуються в сучасних школах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: '[___], що ми зовсім даремно хвилювалися через погану погоду,
+    бо цілий день світило яскраве сонце.'
+  answer: Виходить
+  complete_sentence: '[Виходить], що ми зовсім даремно хвилювалися через погану погоду,
+    бо цілий день світило яскраве сонце.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: Вона дуже серйозна і відповідальна людина, тому [___] до цього
+    важливого завдання максимально професійно.
+  answer: підійшла
+  complete_sentence: Вона дуже серйозна і відповідальна людина, тому [підійшла] до
+    цього важливого завдання максимально професійно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: У мене вдома кран протікає вже тиждень, але ніяк руки не [___]
+    його нарешті поремонтувати.
+  answer: доходять
+  complete_sentence: У мене вдома кран протікає вже тиждень, але ніяк руки не [доходять]
+    його нарешті поремонтувати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильне слово
+  sentence_template: Цей яскравий стиль одягу був популярним у 90-х роках, але вже
+    давно і безповоротно [___] з моди.
+  answer: вийшов
+  complete_sentence: Цей яскравий стиль одягу був популярним у 90-х роках, але вже
+    давно і безповоротно [вийшов] з моди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: На жаль, ця ситуація зайшла в глухий кут, і ми не бачимо виходу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: Я не можу обійтися без твоєї підтримки сьогодні, тому що це дуже важливо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: Ми дійшли висновку, що треба терміново змінювати план, бо старий не працює.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: Ці старі речі вже давно вийшли з моди, і їх ніхто не носить.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: Треба дуже відповідально підійти до цієї важливої роботи, щоб отримати гарний
+    результат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з ідіомами
+  jumbled_words: []
+  answer: Він вийшов із себе, коли почув неприємні новини про свій невдалий проєкт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, чому саме фізичний рух є ідеальною моделлю для опису
+    складних абстрактних понять у мові?
+  options:
+  - text: Бо це фундаментальний досвід людини, який ми засвоюємо з раннього дитинства.
+    correct: true
+  - text: Бо дієслова руху найпростіші для вивчення в іноземній мові.
+    correct: false
+  - text: Бо рух — це єдине, що існує в нашому світі реально, а все інше ілюзія.
+    correct: false
+  - text: Бо українці люблять багато подорожувати і рухатися світом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Які дві основні когнітивні моделі сприйняття часу детально описуються
+    в наведеному тексті про метафори?
+  options:
+  - text: Час рухається повз нас, або ми самі рухаємося крізь час.
+    correct: true
+  - text: Час стоїть на місці, або час біжить по колу.
+    correct: false
+  - text: Час — це ріка, або час — це висока гора.
+    correct: false
+  - text: Час можна зупинити, або час можна значно прискорити.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що конкретно означає поширена метафора "зайти в глухий кут" у контексті
+    складної дискусії або переговорів?
+  options:
+  - text: Знайти правильне і швидке рішення проблеми.
+    correct: false
+  - text: Вичерпати всі аргументи і не мати можливості рухатися далі.
+    correct: true
+  - text: Заблукати в незнайомому місті під час розмови.
+    correct: false
+  - text: Закінчити розмову гучною сваркою і піти геть.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст пояснює значення ідіоматичного виразу "обійти гострі кути" у
+    спілкуванні між людьми?
+  options:
+  - text: Фізично обійти небезпечні предмети в кімнаті.
+    correct: false
+  - text: Уникнути конфліктів або неприємних тем у складній розмові.
+    correct: true
+  - text: Зробити ремонт у квартирі і прибрати всі кути.
+    correct: false
+  - text: Говорити дуже тихо і повільно, щоб нікого не чути.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, на думку автора тексту, дозволяє глибше зрозуміти використання цих
+    численних метафор руху в мові?
+  options:
+  - text: Українську національну кухню та давні традиції.
+    correct: false
+  - text: Українську ментальність, яка високо цінує динаміку та активний рух.
+    correct: true
+  - text: Складні граматичні правила відмінювання іменників та прикметників.
+    correct: false
+  - text: Історію стародавнього світу та великі війни минулого.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яка метафора використовується для опису емоційної рівноваги та спокою
+    в українській мові згідно з текстом?
+  options:
+  - text: Перебування "вдома", у своєму тілі (прийти в себе).
+    correct: true
+  - text: Польот у космос або на іншу планету.
+    correct: false
+  - text: Плавання в холодній воді океану.
+    correct: false
+  - text: Сон у м'якому ліжку вранці.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст описує процес пошуку істини або вирішення проблеми за допомогою
+    дієслів руху?
+  options:
+  - text: Як гру в шахи або шашки.
+    correct: false
+  - text: 'Як рух по шляху: можна дійти висновку або зайти в кут.'
+    correct: true
+  - text: Як будівництво високого будинку.
+    correct: false
+  - text: Як приготування складної страви.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що означає метафора "піти напролом", згадана в тексті як протилежність
+    до "обійти гострі кути"?
+  options:
+  - text: Сховатися від небезпеки та чекати.
+    correct: false
+  - text: Діяти рішуче і прямо, долаючи перешкоди (to go straight through).
+    correct: true
+  - text: Йти дуже повільно і обережно.
+    correct: false
+  - text: Відмовитися від своєї мети.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Він дуже сильно розсердився, почервонів і **вийшов** із кімнати,
+    грюкнувши дверима так, що задрижали вікна" значення дієслова:'
+  options:
+  - text: Буквальне (фізичний вихід з приміщення)
+    correct: true
+  - text: Переносне (зміна емоційного стану)
+    correct: false
+  - text: Граматична помилка
+    correct: false
+  - text: Метафоричне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Він абсолютно **вийшов** із себе, коли дізнався про критичну
+    помилку свого колеги у важливому фінансовому звіті" значення дієслова:'
+  options:
+  - text: Переносне (втрата емоційного контролю)
+    correct: true
+  - text: Буквальне (вихід з власного тіла)
+    correct: false
+  - text: Невизначене
+    correct: false
+  - text: Опис фізичного руху
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Після довгої та виснажливої прогулянки горами ми нарешті **дійшли**
+    додому втомлені, але дуже щасливі" це:'
+  options:
+  - text: Буквальне значення (фізичне переміщення)
+    correct: true
+  - text: Переносне значення (логічний висновок)
+    correct: false
+  - text: Метафора життя
+    correct: false
+  - text: Сленг
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Після довгих дискусій та аналізу всіх фактів ми **дійшли**
+    висновку, що початковий план треба терміново змінити" це:'
+  options:
+  - text: Буквальне значення (прогулянка до висновку)
+    correct: false
+  - text: Переносне значення (результат мислення)
+    correct: true
+  - text: Помилка у вживанні слова
+    correct: false
+  - text: Опис дороги
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Кожного літнього вечора яскраве червоне сонце повільно **заходить**
+    за горизонт на заході, забарвлюючи небо" це:'
+  options:
+  - text: Умовно-буквальне (природний рух світила)
+    correct: true
+  - text: Переносне значення (сонце пішло в гості)
+    correct: false
+  - text: Абсолютна абстракція
+    correct: false
+  - text: Метафора смерті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "На жаль, наші складні переговори з іноземними партнерами **зайшли**
+    в глухий кут і повністю зупинилися на невизначений термін" це:'
+  options:
+  - text: Переносне значення (безвихідь)
+    correct: true
+  - text: Буквальне значення (реальний кут)
+    correct: false
+  - text: Географічний опис
+    correct: false
+  - text: Помилка навігації
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Маленькі діти вперше **пішли** до школи першого вересня з
+    великими букетами осінніх квітів для вчителів" це:'
+  options:
+  - text: Буквальне (або соціальне "почали вчитися")
+    correct: true
+  - text: Тільки переносне
+    correct: false
+  - text: Тільки метафора
+    correct: false
+  - text: Ідіома
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Буквальне чи переносне?
+  question: 'У реченні "Тобі надзвичайно **йде** ця нова блакитна сорочка, вона прекрасно
+    пасує до кольору твоїх очей" це:'
+  options:
+  - text: Буквальне (сорочка не ходить)
+    correct: false
+  - text: Переносне (пасує, виглядає гарно)
+    correct: true
+  - text: Граматична помилка
+    correct: false
+  - text: Сленг
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null

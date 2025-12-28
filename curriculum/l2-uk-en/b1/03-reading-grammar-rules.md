@@ -488,11 +488,7 @@ With these terms, you can now read grammar explanations in Ukrainian textbooks a
 
 ---
 
-# Вправи
 
-<!-- Activities loaded from 03-reading-grammar-rules.activities.yaml -->
-
----
 
 # Словник
 

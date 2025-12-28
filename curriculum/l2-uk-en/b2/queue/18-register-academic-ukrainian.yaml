@@ -1,0 +1,1409 @@
+module: 18-register-academic-ukrainian
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/18-register-academic-ukrainian.md
+generated: '2025-12-28T20:43:16.788213'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Я провів дослідження і виявив цікаві результати.
+  error: Я провів
+  answer: Було проведено
+  sentence_corrected: Було проведено дослідження і виявив цікаві результати.
+  options:
+  - Я провів
+  - Було проведено
+  - Ми провели
+  - Провели ми
+  original_explanation: У науковому стилі використовують безособові конструкції замість
+    займенника «я».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Дуже багато вчених погоджуються з цією думкою.
+  error: Дуже багато
+  answer: Значна кількість
+  sentence_corrected: Значна кількість вчених погоджуються з цією думкою.
+  options:
+  - Дуже багато
+  - Значна кількість
+  - Купа
+  - Тонна
+  original_explanation: Розмовне «дуже багато» замінюється на нейтральне «значна кількість».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Усі знають, що глобальне потепління є реальним.
+  error: Усі знають
+  answer: Численні дослідження свідчать
+  sentence_corrected: Численні дослідження свідчать, що глобальне потепління є реальним.
+  options:
+  - Усі знають
+  - Численні дослідження свідчать
+  - Кажуть
+  - Відомо
+  original_explanation: Необґрунтовані узагальнення замінюються посиланнями на дослідження.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Це точно доводить нашу гіпотезу.
+  error: точно доводить
+  answer: вказує на підтвердження
+  sentence_corrected: Це вказує на підтвердження нашу гіпотезу.
+  options:
+  - точно доводить
+  - вказує на підтвердження
+  - абсолютно підтверджує
+  - повністю доказує
+  original_explanation: Науковий стиль уникає категоричних тверджень, використовуючи
+    хеджування.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Короче кажучи, результати цікаві.
+  error: Короче кажучи
+  answer: Таким чином
+  sentence_corrected: Таким чином, результати цікаві.
+  options:
+  - Короче кажучи
+  - Таким чином
+  - Ну от
+  - Загалом
+  original_explanation: Розмовне «короче» замінюється на академічне «таким чином».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Один чувак написав про це в статті.
+  error: Один чувак написав
+  answer: Дослідник Іваненко (2022) зазначає
+  sentence_corrected: Дослідник Іваненко (2022) зазначає про це в статті.
+  options:
+  - Один чувак написав
+  - Дослідник Іваненко (2022) зазначає
+  - Якийсь автор пише
+  - Десь я читав
+  original_explanation: Неформальне посилання замінюється правильним академічним цитуванням.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Я думаю, що ця теорія крута.
+  error: крута
+  answer: має значний пояснювальний потенціал
+  sentence_corrected: Я думаю, що ця теорія має значний пояснювальний потенціал.
+  options:
+  - крута
+  - має значний пояснювальний потенціал
+  - класна
+  - топова
+  original_explanation: Розмовна оцінка замінюється академічним формулюванням.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Результати показують, що ми мали рацію.
+  error: ми мали рацію
+  answer: гіпотезу підтверджено
+  sentence_corrected: Результати показують, що гіпотезу підтверджено.
+  options:
+  - ми мали рацію
+  - гіпотезу підтверджено
+  - ми правильно думали
+  - наша ідея правильна
+  original_explanation: Особисте твердження замінюється безособовим науковим.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Треба ще багато вивчати цю тему.
+  error: Треба ще багато вивчати
+  answer: Проблема потребує подальшого дослідження
+  sentence_corrected: Проблема потребує подальшого дослідження цю тему.
+  options:
+  - Треба ще багато вивчати
+  - Проблема потребує подальшого дослідження
+  - Ще треба подивитися
+  - Потрібно ще працювати
+  original_explanation: Розмовна конструкція замінюється академічним формулюванням.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: У моїй роботі я розглядаю проблему забруднення.
+  error: У моїй роботі я
+  answer: У роботі
+  sentence_corrected: У роботі розглядаю проблему забруднення.
+  options:
+  - У моїй роботі я
+  - У роботі
+  - В моїй статті я
+  - У нашій роботі ми
+  original_explanation: Присвійний займенник «моїй» і особовий «я» є зайвими в науковому
+    стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Десь я читав, що це правда.
+  error: Десь я читав
+  answer: Згідно з дослідженнями
+  sentence_corrected: Згідно з дослідженнями, що це правда.
+  options:
+  - Десь я читав
+  - Згідно з дослідженнями
+  - Хтось писав
+  - Кажуть
+  original_explanation: Невизначене посилання замінюється конкретним.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Ну, я думаю так, що проблема серйозна.
+  error: Ну, я думаю так, що
+  answer: На нашу думку,
+  sentence_corrected: На нашу думку, проблема серйозна.
+  options:
+  - Ну, я думаю так, що
+  - На нашу думку,
+  - Ну от, мені здається
+  - Я вважаю, що
+  original_explanation: Розмовні частки та конструкції замінюються академічними.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Вчені тут подивилися на це і виявили закономірність.
+  error: тут подивилися на це
+  answer: проаналізували матеріал
+  sentence_corrected: Вчені проаналізували матеріал і виявили закономірність.
+  options:
+  - тут подивилися на це
+  - проаналізували матеріал
+  - глянули
+  - поспостерігали
+  original_explanation: Розмовне «подивилися» замінюється на академічне «проаналізували».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Результати дуже класні та цікаві.
+  error: дуже класні та цікаві
+  answer: мають наукове та практичне значення
+  sentence_corrected: Результати мають наукове та практичне значення.
+  options:
+  - дуже класні та цікаві
+  - мають наукове та практичне значення
+  - топові
+  - круті
+  original_explanation: Емоційні оцінки замінюються нейтральними академічними.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Отже, можна сказати, що я довів свою думку.
+  error: я довів свою думку
+  answer: гіпотезу обґрунтовано
+  sentence_corrected: Отже, можна сказати, що гіпотезу обґрунтовано.
+  options:
+  - я довів свою думку
+  - гіпотезу обґрунтовано
+  - ми правильно думали
+  - моя ідея правильна
+  original_explanation: Особове формулювання замінюється безособовим науковим.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки
+  sentence_with_error: Тема роботи актуальна, бо всім це потрібно знати.
+  error: бо всім це потрібно знати
+  answer: оскільки проблема недостатньо досліджена
+  sentence_corrected: Тема роботи актуальна, оскільки проблема недостатньо досліджена.
+  options:
+  - бо всім це потрібно знати
+  - оскільки проблема недостатньо досліджена
+  - тому що це важливо
+  - бо це цікаво
+  original_explanation: Розмовне обґрунтування замінюється академічним.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: У статті _____ питання впливу технологій на освіту.
+  answer: розглядається
+  complete_sentence: У статті розглядається__ питання впливу технологій на освіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ дослідження зумовлена недостатньою вивченістю проблеми.
+  answer: Актуальність
+  complete_sentence: Актуальність__ дослідження зумовлена недостатньою вивченістю
+    проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ роботи полягає в аналізі мовних тенденцій.
+  answer: Мета
+  complete_sentence: Мета__ роботи полягає в аналізі мовних тенденцій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Було _____ опитування серед студентів.
+  answer: проведено
+  complete_sentence: Було проведено__ опитування серед студентів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Як _____ дослідник Іваненко (2022), ця проблема є актуальною.
+  answer: зазначає
+  complete_sentence: Як зазначає__ дослідник Іваненко (2022), ця проблема є актуальною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ чином, можна зробити висновок про підтвердження гіпотези.
+  answer: Таким
+  complete_sentence: Таким__ чином, можна зробити висновок про підтвердження гіпотези.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Результати _____ на статистично значущу кореляцію.
+  answer: вказують
+  complete_sentence: Результати вказують__ на статистично значущу кореляцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ дослідження є комунікативна поведінка молоді.
+  answer: Об'єктом
+  complete_sentence: Об'єктом__ дослідження є комунікативна поведінка молоді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Методологічну _____ становить системний підхід.
+  answer: основу
+  complete_sentence: Методологічну основу__ становить системний підхід.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ напрямом подальших досліджень є розширення вибірки.
+  answer: Перспективним
+  complete_sentence: Перспективним__ напрямом подальших досліджень є розширення вибірки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Отримані _____ свідчать про зміни в мовленнєвій практиці.
+  answer: результати
+  complete_sentence: Отримані результати__ свідчать про зміни в мовленнєвій практиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: На нашу _____, ця гіпотеза потребує перевірки.
+  answer: думку
+  complete_sentence: На нашу думку__, ця гіпотеза потребує перевірки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Згідно з _____ Петренка (2023), тенденція зберігається.
+  answer: дослідженням
+  complete_sentence: Згідно з дослідженням__ Петренка (2023), тенденція зберігається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: Проведений _____ дозволяє стверджувати про наявність зв'язку.
+  answer: аналіз
+  complete_sentence: Проведений аналіз__ дозволяє стверджувати про наявність зв'язку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____, спостерігається тенденція до скорочення речень.
+  answer: Зокрема
+  complete_sentence: Зокрема__, спостерігається тенденція до скорочення речень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Академічні конструкції
+  sentence_template: _____ цього, варто зазначити ще кілька важливих аспектів.
+  answer: Крім
+  complete_sentence: Крім__ цього, варто зазначити ще кілька важливих аспектів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____ припустити, що ця тенденція збережеться.
+  answer: Можна
+  complete_sentence: Можна__ припустити, що ця тенденція збережеться.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: На нашу _____, ця гіпотеза потребує подальшої перевірки.
+  answer: думку
+  complete_sentence: На нашу думку__, ця гіпотеза потребує подальшої перевірки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____, це пов'язано з економічними факторами.
+  answer: Імовірно
+  complete_sentence: Імовірно__, це пов'язано з економічними факторами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Результати _____ на можливий зв'язок між змінними.
+  answer: вказують
+  complete_sentence: Результати вказують__ на можливий зв'язок між змінними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Як _____, це явище спостерігається у більшості випадків.
+  answer: правило
+  complete_sentence: Як правило__, це явище спостерігається у більшості випадків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____ мірою це підтверджує нашу гіпотезу.
+  answer: Певною
+  complete_sentence: Певною__ мірою це підтверджує нашу гіпотезу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____, існує зв'язок між цими явищами.
+  answer: Очевидно
+  complete_sentence: Очевидно__, існує зв'язок між цими явищами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Отримані дані _____ підтверджувати гіпотезу.
+  answer: можуть
+  complete_sentence: Отримані дані можуть__ підтверджувати гіпотезу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Це _____ бути наслідком впливу зовнішніх факторів.
+  answer: може
+  complete_sentence: Це може__ бути наслідком впливу зовнішніх факторів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____ трапляються випадки відхилення від норми.
+  answer: Рідко
+  complete_sentence: Рідко__ трапляються випадки відхилення від норми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Дослідження _____ на потенційний негативний вплив.
+  answer: вказує
+  complete_sentence: Дослідження вказує__ на потенційний негативний вплив.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____ зробити обережний висновок про наявність тенденції.
+  answer: Можна
+  complete_sentence: Можна__ зробити обережний висновок про наявність тенденції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Результати _____ інтерпретувати обережно.
+  answer: слід
+  complete_sentence: Результати слід__ інтерпретувати обережно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: _____ погляду теоретичної значущості, ці дані важливі.
+  answer: З точки
+  complete_sentence: З точки__ погляду теоретичної значущості, ці дані важливі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Гіпотеза _____ підтвердження в подальших дослідженнях.
+  answer: потребує
+  complete_sentence: Гіпотеза потребує__ підтвердження в подальших дослідженнях.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Хеджування та обережні твердження
+  sentence_template: Дані _____ свідчити про наявність кореляції.
+  answer: можуть
+  complete_sentence: Дані можуть__ свідчити про наявність кореляції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Актуальність теми дослідження зумовлена недостатньою вивченістю проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Мета роботи полягає в аналізі мовних тенденцій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Було проведено опитування 500 респондентів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Таким чином можна зробити висновок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Як зазначає дослідник Іваненко (2022).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Результати дослідження свідчать про суттєві зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Об'єктом дослідження є комунікативна поведінка молоді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Методологічну основу становить системний підхід.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Дані вказують на статистично значущу кореляцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Перспективним напрямом подальших досліджень є розширення вибірки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Було здійснено контент-аналіз 1000 публікацій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Проведений аналіз дозволяє стверджувати про наявність зв'язку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Отримані результати підтверджують висунуту гіпотезу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Згідно з дослідженням Петренка (2023) тенденція зберігається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Практичне значення роботи визначається науковою новизною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Наукові речення
+  jumbled_words: []
+  answer: Таким чином висунуту гіпотезу підтверджено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яка головна характеристика наукового стилю української мови?
+  options:
+  - text: Емоційність та експресивність
+    correct: false
+  - text: Об'єктивність та точність
+    correct: true
+  - text: Розмовність та простота
+    correct: false
+  - text: Художність та образність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Чому в наукових текстах уникають займенника «я»?
+  options:
+  - text: Це граматична помилка
+    correct: false
+  - text: Для підкреслення об'єктивності дослідження
+    correct: true
+  - text: Це застаріла норма
+    correct: false
+  - text: Так простіше писати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Що означає термін «хеджування» в науковому тексті?
+  options:
+  - text: Використання складних термінів
+    correct: false
+  - text: Пом'якшення категоричності тверджень
+    correct: true
+  - text: Цитування інших авторів
+    correct: false
+  - text: Структурування тексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Який компонент наукової статті йде першим?
+  options:
+  - text: Висновки
+    correct: false
+  - text: Методологія
+    correct: false
+  - text: Актуальність дослідження
+    correct: true
+  - text: Результати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яка конструкція типова для наукового стилю?
+  options:
+  - text: Я провів експеримент
+    correct: false
+  - text: Було проведено експеримент
+    correct: true
+  - text: Ми тут зробили дослід
+    correct: false
+  - text: Експеримент я вже провів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Що таке «номіналізація» в науковому стилі?
+  options:
+  - text: Використання чисел
+    correct: false
+  - text: Перевага іменників над дієсловами
+    correct: true
+  - text: Називання авторів
+    correct: false
+  - text: Перелік термінів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яке слово краще використати в науковому тексті замість «дуже багато»?
+  options:
+  - text: Купа
+    correct: false
+  - text: Значна кількість
+    correct: true
+  - text: Багацько
+    correct: false
+  - text: Тонна
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Як правильно ввести цитату в науковому тексті?
+  options:
+  - text: Один чувак написав, що...
+    correct: false
+  - text: Як зазначає дослідник (Іваненко, 2022)...
+    correct: true
+  - text: Десь я читав, що...
+    correct: false
+  - text: Кажуть, що...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Що означає «предмет дослідження» в науковій роботі?
+  options:
+  - text: Фізичний об'єкт, який вивчають
+    correct: false
+  - text: Конкретний аспект об'єкта дослідження
+    correct: true
+  - text: Тема роботи
+    correct: false
+  - text: Висновки дослідження
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яке речення найкраще підходить для наукового стилю?
+  options:
+  - text: Соціальні мережі точно шкодять молоді.
+    correct: false
+  - text: Результати вказують на потенційний негативний вплив.
+    correct: true
+  - text: Всі знають, що соціальні мережі погані.
+    correct: false
+  - text: Я думаю, що мережі шкодять.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Що таке «анотація» наукової статті?
+  options:
+  - text: Список літератури
+    correct: false
+  - text: Стислий виклад змісту статті
+    correct: true
+  - text: Вступ до статті
+    correct: false
+  - text: Висновки дослідження
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яка функція виразу «таким чином» у науковому тексті?
+  options:
+  - text: Вводить приклад
+    correct: false
+  - text: Сигналізує про підсумок
+    correct: true
+  - text: Вводить цитату
+    correct: false
+  - text: Починає новий розділ
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Чому важливо використовувати посилання в наукових текстах?
+  options:
+  - text: Щоб збільшити обсяг тексту
+    correct: false
+  - text: Щоб підтвердити твердження та уникнути плагіату
+    correct: true
+  - text: Це просто традиція
+    correct: false
+  - text: Для прикраси тексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Який вираз використовують для обережного твердження?
+  options:
+  - text: Це абсолютно точно
+    correct: false
+  - text: Можна припустити, що
+    correct: true
+  - text: Я впевнений, що
+    correct: false
+  - text: Усі погоджуються, що
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Що означає термін «методологія» в науковому дослідженні?
+  options:
+  - text: Результати дослідження
+    correct: false
+  - text: Система методів та підходів дослідження
+    correct: true
+  - text: Тема дослідження
+    correct: false
+  - text: Список літератури
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики наукового стилю
+  question: Яка середня довжина речення в науковому стилі порівняно з розмовним?
+  options:
+  - text: Коротша
+    correct: false
+  - text: Довша
+    correct: true
+  - text: Однакова
+    correct: false
+  - text: Залежить від теми
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що входить до вступної частини наукової статті?
+  options:
+  - text: Висновки та рекомендації
+    correct: false
+  - text: Актуальність, мета та завдання
+    correct: true
+  - text: Бібліографія та додатки
+    correct: false
+  - text: Результати експерименту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Де розміщують ключові слова в науковій статті?
+  options:
+  - text: У висновках
+    correct: false
+  - text: Після анотації
+    correct: true
+  - text: У бібліографії
+    correct: false
+  - text: На початку тексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Яка функція анотації в науковій статті?
+  options:
+  - text: Детально описати методологію
+    correct: false
+  - text: Стисло викласти зміст та результати
+    correct: true
+  - text: Перелічити використані джерела
+    correct: false
+  - text: Представити автора дослідження
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що таке наукова гіпотеза?
+  options:
+  - text: Остаточний висновок дослідження
+    correct: false
+  - text: Припущення, яке перевіряється в дослідженні
+    correct: true
+  - text: Опис методів дослідження
+    correct: false
+  - text: Список використаної літератури
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Яку роль виконує бібліографія в науковій роботі?
+  options:
+  - text: Збільшує обсяг тексту
+    correct: false
+  - text: Демонструє обізнаність у темі та джерела тверджень
+    correct: true
+  - text: Прикрашає текст
+    correct: false
+  - text: Замінює власні висновки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Де формулюють практичне значення роботи?
+  options:
+  - text: У висновках
+    correct: false
+  - text: У вступі після мети та завдань
+    correct: true
+  - text: У бібліографії
+    correct: false
+  - text: У додатках
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що таке наукова новизна дослідження?
+  options:
+  - text: Те, що робота написана нещодавно
+    correct: false
+  - text: Внесок дослідження в науку
+    correct: true
+  - text: Використання нових методів
+    correct: false
+  - text: Велика кількість джерел
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Яка структура висновків наукової роботи?
+  options:
+  - text: Повтор усього тексту
+    correct: false
+  - text: Стислий підсумок відповідно до завдань
+    correct: true
+  - text: Нові гіпотези
+    correct: false
+  - text: Перелік помилок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що таке контент-аналіз у науковому дослідженні?
+  options:
+  - text: Перевірка орфографії
+    correct: false
+  - text: Метод систематичного аналізу текстів
+    correct: true
+  - text: Редагування статті
+    correct: false
+  - text: Написання анотації
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що означає репрезентативність вибірки?
+  options:
+  - text: Вибірка дуже велика
+    correct: false
+  - text: Вибірка відображає характеристики генеральної сукупності
+    correct: true
+  - text: Вибірка зручна для дослідника
+    correct: false
+  - text: Вибірка містить лише студентів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Яка функція розділу «Обговорення» в науковій статті?
+  options:
+  - text: Переказ результатів
+    correct: false
+  - text: Інтерпретація результатів та порівняння з іншими дослідженнями
+    correct: true
+  - text: Опис методів
+    correct: false
+  - text: Формулювання мети
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що таке рецензування наукової статті?
+  options:
+  - text: Редагування тексту автором
+    correct: false
+  - text: Незалежна експертна оцінка якості роботи
+    correct: true
+  - text: Переклад статті
+    correct: false
+  - text: Публікація в журналі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що означає термін «апробація результатів»?
+  options:
+  - text: Написання статті
+    correct: false
+  - text: Представлення результатів на конференціях та в публікаціях
+    correct: true
+  - text: Проведення експерименту
+    correct: false
+  - text: Збір даних
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Яка різниця між монографією та статтею?
+  options:
+  - text: Монографія коротша
+    correct: false
+  - text: Монографія — це велике дослідження однієї теми
+    correct: true
+  - text: Стаття важливіша
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що таке DOI наукової статті?
+  options:
+  - text: Назва журналу
+    correct: false
+  - text: Унікальний цифровий ідентифікатор публікації
+    correct: true
+  - text: Прізвище автора
+    correct: false
+  - text: Рік публікації
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура наукового тексту
+  question: Що входить до апарату дослідження?
+  options:
+  - text: Тільки висновки
+    correct: false
+  - text: Мета, завдання, об'єкт, предмет, методи
+    correct: true
+  - text: Тільки бібліографія
+    correct: false
+  - text: Тільки анотація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: У науковому стилі часто використовують займенник «я».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Хеджування допомагає пом'якшити категоричність тверджень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: В анотації наукової статті розміщують список літератури.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Конструкція «було проведено» є типовою для наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Мета дослідження формулюється в кінці статті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Науковий стиль характеризується емоційністю та експресивністю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Посилання на джерела є обов'язковими в наукових текстах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: «Об'єкт» і «предмет» дослідження — це одне й те саме.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Вираз «таким чином» вводить підсумок у науковому тексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: У науковому стилі можна писати «дуже багато» та «купа».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Гіпотеза — це твердження, яке потребує перевірки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Номіналізація означає перевагу дієслів над іменниками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Вираз «можна припустити, що» є прикладом хеджування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Методологія описує результати дослідження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: Ключові слова допомагають знайти статтю в базах даних.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила наукового стилю
+  statement: У науковому тексті можна писати «усі знають, що».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

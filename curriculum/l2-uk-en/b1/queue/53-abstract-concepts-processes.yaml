@@ -1,0 +1,581 @@
+module: 53-abstract-concepts-processes
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/53-abstract-concepts-processes.md
+generated: '2025-12-29T00:22:02.669853'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  unjumble: 8
+  quiz: 8
+  true-false: 12
+item_count: 50
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Економіка переживає зростання на 5%.
+  error: переживає
+  answer: демонструє
+  sentence_corrected: Економіка демонструє зростання на 5%.
+  options:
+  - переживає
+  - демонструє
+  - досягає
+  - внести
+  original_explanation: 'Зростання не "переживають". Правильно: "демонструє зростання".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Ми досягли великої зміни в компанії.
+  error: досягли
+  answer: внесли
+  sentence_corrected: Ми внесли великої зміни в компанії.
+  options:
+  - досягли
+  - внесли
+  - переживали
+  - спостерігали
+  original_explanation: 'Зміни не "досягають". Правильно: "внесли зміни".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: У країні спостерігається криза.
+  error: спостерігається
+  answer: є
+  sentence_corrected: У країні є криза.
+  options:
+  - спостерігається
+  - є
+  - досягається
+  - вноситься
+  original_explanation: 'Криза не "спостерігається". Правильно: "є криза", "настала
+    криза".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Компанія досягла трансформації.
+  error: досягла
+  answer: пережила
+  sentence_corrected: Компанія пережила трансформації.
+  options:
+  - досягла
+  - пережила
+  - спостерігала
+  - внесла
+  original_explanation: 'Трансформацію не "досягають". Правильно: "пережила трансформацію".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Йде процес розвитку.
+  error: Йде
+  answer: Відбувається
+  sentence_corrected: Відбувається процес розвитку.
+  options:
+  - Йде
+  - Відбувається
+  - Спостерігається
+  - Досягається
+  original_explanation: 'Хоча "йде процес" іноді вживається, формальніше: "відбувається
+    процес розвитку".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Уряд переживає реформу.
+  error: переживає
+  answer: проводить
+  sentence_corrected: Уряд проводить реформу.
+  options:
+  - переживає
+  - проводить
+  - досягає
+  - спостерігає
+  original_explanation: 'Реформу не "переживають". Правильно: "проводить реформу".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Спостерігається процес модернізації.
+  error: Спостерігається
+  answer: Відбувається
+  sentence_corrected: Відбувається процес модернізації.
+  options:
+  - Спостерігається
+  - Відбувається
+  - Досягається
+  - Переживається
+  original_explanation: 'Процес не "спостерігається". Правильно: "відбувається процес".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Компанія досягла прискорення продажів.
+  error: досягла
+  answer: забезпечила
+  sentence_corrected: Компанія забезпечила прискорення продажів.
+  options:
+  - досягла
+  - забезпечила
+  - пережила
+  - спостерігала
+  original_explanation: 'Прискорення не "досягають". Правильно: "забезпечила прискорення".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Економіка демонструє стабільне _____ на рівні 4% на рік.
+  answer: зростання
+  complete_sentence: Економіка демонструє стабільне зростання__ на рівні 4% на рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Після кризи почалося _____ економіки.
+  answer: відновлення
+  complete_sentence: Після кризи почалося відновлення__ економіки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Компанія переживає цифрову _____.
+  answer: трансформацію
+  complete_sentence: Компанія переживає цифрову трансформацію__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Уряд планує провести _____ освітньої системи.
+  answer: реформу
+  complete_sentence: Уряд планує провести реформу__ освітньої системи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Спостерігається _____ цін на енергоносії.
+  answer: підвищення
+  complete_sentence: Спостерігається підвищення__ цін на енергоносії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Ми досягли значного _____ у переговорах.
+  answer: прогресу
+  complete_sentence: Ми досягли значного прогресу__ у переговорах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: IT-сектор показує стрімкий _____.
+  answer: розвиток
+  complete_sentence: IT-сектор показує стрімкий розвиток__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Після _____ 2008 року економіка відновлювалася кілька років.
+  answer: кризи
+  complete_sentence: Після кризи__ 2008 року економіка відновлювалася кілька років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ до нових умов — важливий навик.
+  answer: Адаптація
+  complete_sentence: Адаптація__ до нових умов — важливий навик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Цифрова _____ змінила всі сфери життя.
+  answer: революція
+  complete_sentence: Цифрова революція__ змінила всі сфери життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ темпів зростання турбує аналітиків.
+  answer: Сповільнення
+  complete_sentence: Сповільнення__ темпів зростання турбує аналітиків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Експерти очікують _____ курсу валюти.
+  answer: стабілізацію
+  complete_sentence: Експерти очікують стабілізацію__ курсу валюти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: _____ виробництва призвело до безробіття.
+  answer: Скорочення
+  complete_sentence: Скорочення__ виробництва призвело до безробіття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Це тривалий _____, який потребує терпіння.
+  answer: процес
+  complete_sentence: Це тривалий процес__, який потребує терпіння.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Економіка демонструє стабільне зростання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Компанія переживає фінансову кризу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ми досягли значного прогресу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Потрібно провести освітню реформу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: У системі відбулися суттєві зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Галузь переживає цифрову трансформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Спостерігається покращення ситуації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Планують здійснити модернізацію виробництва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке слово означає "поступові, природні зміни з часом"?
+  options:
+  - text: революція
+    correct: false
+  - text: еволюція
+    correct: true
+  - text: криза
+    correct: false
+  - text: реформа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке слово є антонімом до "зростання"?
+  options:
+  - text: підвищення
+    correct: false
+  - text: розширення
+    correct: false
+  - text: спадання
+    correct: true
+  - text: збільшення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке слово використовується для опису різкого, докорінного перетворення?
+  options:
+  - text: адаптація
+    correct: false
+  - text: стабілізація
+    correct: false
+  - text: еволюція
+    correct: false
+  - text: революція
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Що означає слово "модернізація"?
+  options:
+  - text: повернення до старого
+    correct: false
+  - text: оновлення, осучаснення
+    correct: true
+  - text: погіршення стану
+    correct: false
+  - text: стабільність без змін
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке дієслово найкраще поєднується зі словом "прогрес"?
+  options:
+  - text: переживати прогрес
+    correct: false
+  - text: досягти прогресу
+    correct: true
+  - text: внести прогрес
+    correct: false
+  - text: спостерігати за прогресом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке слово означає "пристосування до нових умов"?
+  options:
+  - text: трансформація
+    correct: false
+  - text: модернізація
+    correct: false
+  - text: адаптація
+    correct: true
+  - text: революція
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Що є антонімом до "прогрес"?
+  options:
+  - text: розвиток
+    correct: false
+  - text: регрес
+    correct: true
+  - text: процес
+    correct: false
+  - text: зміна
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики процесів
+  question: Яке слово описує період труднощів в економіці?
+  options:
+  - text: підйом
+    correct: false
+  - text: стабілізація
+    correct: false
+  - text: криза
+    correct: true
+  - text: прискорення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Еволюція" та "революція" — це синоніми, їх можна замінювати.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "переживати кризу".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "досягти зміни".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Прогрес" та "регрес" — це антоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "спостерігається зростання".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Модернізація" означає повернення до старих методів.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Слово "криза" завжди має негативне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "переживати зростання".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Підйом" та "занепад" — це антоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: У формальному стилі краще використовувати іменники замість дієслів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Трансформація" — це завжди негативний процес.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Стабілізація" означає припинення будь-яких змін.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

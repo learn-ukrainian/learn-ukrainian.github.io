@@ -1,0 +1,502 @@
+module: 40-reported-questions-commands
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/40-reported-questions-commands.md
+generated: '2025-12-29T00:22:01.532835'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 8
+  unjumble: 8
+  quiz: 8
+  true-false: 8
+item_count: 40
+items:
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він попросив, щоб я допомагаю йому завтра.
+  error: допомагаю
+  answer: допоміг
+  sentence_corrected: Він попросив, щоб я допоміг йому завтра.
+  options:
+  - допоміг
+  - допомогти
+  - допоможу
+  - допомагав
+  original_explanation: Після «щоб» використовується минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він запитав, я прийду чи ні сьогодні.
+  error: Він запитав, я
+  answer: Він запитав, чи я
+  sentence_corrected: Він запитав, чи я прийду чи ні сьогодні.
+  options:
+  - Він запитав, чи я
+  - 'Він запитав: я'
+  - Він запитав я
+  - Він запитав, що я
+  original_explanation: Потрібен сполучник «чи» для загальних питань.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Вона запитала, де живу я тепер у цьому місті.
+  error: де живу я
+  answer: де я живу
+  sentence_corrected: Вона запитала, де я живу тепер у цьому місті.
+  options:
+  - де я живу
+  - де живе я
+  - де живуть я
+  - де я живеш
+  original_explanation: У непрямих питаннях порядок слів завжди прямий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Мама сказала, щоб я закриваю вікно зараз.
+  error: закриваю
+  answer: закрив
+  sentence_corrected: Мама сказала, щоб я закрив вікно зараз.
+  options:
+  - закрив
+  - закрию
+  - закривати
+  - закривав
+  original_explanation: Після «щоб» використовується минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він поцікавився чи вона знає про це?
+  error: поцікавився чи
+  answer: поцікавився, чи
+  sentence_corrected: Він поцікавився, чи вона знає про це?
+  options:
+  - поцікавився, чи
+  - 'поцікавився: чи'
+  - поцікавився; чи
+  - поцікавився — чи
+  original_explanation: Потрібна кома перед «чи».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Директор наказав, щоб всі приходять вчасно.
+  error: приходять
+  answer: приходили
+  sentence_corrected: Директор наказав, щоб всі приходили вчасно.
+  options:
+  - приходили
+  - приходять
+  - приходити
+  - прийдуть
+  original_explanation: Після «щоб» використовується минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Він запитав, коли я прийду завтра?
+  error: прийду завтра?
+  answer: прийду завтра.
+  sentence_corrected: Він запитав, коли я прийду завтра.
+  options:
+  - прийду завтра.
+  - прийду завтра!
+  - прийду завтра...
+  - прийду завтра;
+  original_explanation: Непряме питання закінчується крапкою, не знаком питання.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайдіть і виправте помилку
+  sentence_with_error: Вона попросила, щоб він допомагає їй з проєктом.
+  error: допомагає
+  answer: допоміг
+  sentence_corrected: Вона попросила, щоб він допоміг їй з проєктом.
+  options:
+  - допоміг
+  - допомагає
+  - допомагати
+  - допоможе
+  original_explanation: Після «щоб» використовується минулий час.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Він запитав, _____ я прийду завтра на зустріч.
+  answer: чи
+  complete_sentence: Він запитав, чи__ я прийду завтра на зустріч.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Вона попросила, _____ я допоміг їй із завданням.
+  answer: щоб
+  complete_sentence: Вона попросила, щоб__ я допоміг їй із завданням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Він поцікавився, _____ я працюю зараз.
+  answer: де
+  complete_sentence: Він поцікавився, де__ я працюю зараз.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Мама сказала, щоб я _____ вікно в кімнаті.
+  answer: закрив
+  complete_sentence: Мама сказала, щоб я закрив__ вікно в кімнаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Лікар порадив, щоб пацієнт _____ більше.
+  answer: відпочивав
+  complete_sentence: Лікар порадив, щоб пацієнт відпочивав__ більше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Він запитав, _____ коштує ця книга.
+  answer: скільки
+  complete_sentence: Він запитав, скільки__ коштує ця книга.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Директор наказав, щоб усі _____ о дев'ятій.
+  answer: зібрались
+  complete_sentence: Директор наказав, щоб усі зібрались__ о дев'ятій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть речення правильним сполучником або формою дієслова
+  sentence_template: Друг поцікавився, _____ я дізнався про новини.
+  answer: як
+  complete_sentence: Друг поцікавився, як__ я дізнався про новини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Він запитав, чи я прийду завтра ввечері на їхню святкову вечерю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Вона попросила, щоб я допоміг їй із цим складним домашнім завданням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Директор наказав, щоб усі працівники зібрались о дев'ятій ранку на нараду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Вона поцікавилась, де він працює вже три роки в цьому місті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Лікар порадив, щоб пацієнт більше відпочивав і менше нервував через роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Батьки суворо заборонили, щоб дитина дивилась телевізор занадто пізно ввечері
+    після школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Журналіст запитав, чому президент прийняв таке рішення під час засідання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з розсипаних слів
+  jumbled_words: []
+  answer: Вчитель порадив, щоб учні готувалися до іспиту заздалегідь і систематично.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Який сполучник використовується для непрямих загальних питань (так/ні)
+    в українській мові?
+  options:
+  - text: що
+    correct: false
+  - text: чи
+    correct: true
+  - text: який
+    correct: false
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Як правильно перетворити пряме питання «Ти прийдеш?» на непряме від третьої
+    особи?
+  options:
+  - text: Він запитав, чи я прийду.
+    correct: true
+  - text: Він запитав, я прийду?
+    correct: false
+  - text: Він запитав що я прийду.
+    correct: false
+  - text: 'Він запитав: «Ти прийдеш?»'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Який час дієслова використовується після «щоб» у непрямих наказах в українській
+    мові?
+  options:
+  - text: Теперішній час
+    correct: false
+  - text: Минулий час
+    correct: true
+  - text: Майбутній час
+    correct: false
+  - text: Інфінітив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Як правильно передати наказ «Допоможи мені з цим завданням!» у непрямій
+    мові?
+  options:
+  - text: Він попросив, щоб я допоміг йому з цим завданням.
+    correct: true
+  - text: Він попросив, щоб я допомагаю йому.
+    correct: false
+  - text: Він попросив допомогти мені.
+    correct: false
+  - text: 'Він попросив: «Допоможи мені!»'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яке дієслово введення найкраще підходить для передачі ввічливого прохання
+    в непрямій мові?
+  options:
+  - text: попросити
+    correct: true
+  - text: наказати
+    correct: false
+  - text: вимагати
+    correct: false
+  - text: заборонити
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Як правильно передати непряме питання «Де ти живеш?» від третьої особи
+    чоловічого роду?
+  options:
+  - text: Він запитав, де я живу.
+    correct: true
+  - text: Він запитав, чи я живу.
+    correct: false
+  - text: 'Він запитав: де я живу?'
+    correct: false
+  - text: Він запитав, де живу я.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яка структура непрямого наказу є правильною згідно з граматичними правилами
+    української мови?
+  options:
+  - text: дієслово введення + щоб + підмет + дієслово в минулому часі
+    correct: true
+  - text: дієслово введення + що + інфінітив
+    correct: false
+  - text: дієслово введення + чи + теперішній час
+    correct: false
+  - text: дієслово введення + щоб + майбутній час
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Виберіть правильну відповідь
+  question: Яке дієслово введення використовується для передачі категоричної вимоги
+    в офіційній непрямій мові?
+  options:
+  - text: попросити
+    correct: false
+  - text: порадити
+    correct: false
+  - text: вимагати
+    correct: true
+  - text: поцікавитись
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після сполучника «щоб» дієслово стоїть у минулому часі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Для загальних непрямих питань використовується сполучник «що».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: У непрямих питаннях порядок слів завжди прямий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: '"Поцікавитись" — це дієслово для передачі наказів.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Непряме питання закінчується знаком питання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: '"Вимагати" виражає категоричність вимоги.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: У розмовній мові сполучник «чи» можна опускати.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: '"Благати" — це нейтральне дієслово для прохань.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

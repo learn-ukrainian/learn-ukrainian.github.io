@@ -1,0 +1,586 @@
+module: 65-relationships
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/65-relationships.md
+generated: '2025-12-29T00:22:03.515628'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 8
+  true-false: 12
+item_count: 48
+items:
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вони зробили шлюб минулого місяця.
+  error: зробили
+  answer: уклали
+  sentence_corrected: Вони уклали шлюб минулого місяця.
+  options:
+  - зробили
+  - уклали
+  - мали
+  - давали
+  original_explanation: Правильна колокація — "укласти шлюб", а не "зробити шлюб".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Після зради він будував сім'ю наново.
+  error: будував
+  answer: створював
+  sentence_corrected: Після зради він створював сім'ю наново.
+  options:
+  - будував
+  - створював
+  - мав
+  - робив
+  original_explanation: Правильна колокація — "створювати сім'ю", а не "будувати сім'ю".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: У них відносини з дитинства.
+  error: відносини
+  answer: стосунки
+  sentence_corrected: У них стосунки з дитинства.
+  options:
+  - відносини
+  - стосунки
+  - зв'язки
+  - дружби
+  original_explanation: Для особистих взаємин використовуємо "стосунки", не "відносини".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вони мали примирення після суперечки.
+  error: мали
+  answer: досягли
+  sentence_corrected: Вони досягли примирення після суперечки.
+  options:
+  - мали
+  - досягли
+  - робили
+  - давали
+  original_explanation: Правильна колокація — "досягти примирення", а не "мати примирення".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він дав їй турботу та підтримку.
+  error: дав
+  answer: виявив
+  sentence_corrected: Він виявив їй турботу та підтримку.
+  options:
+  - дав
+  - виявив
+  - мав
+  - робив
+  original_explanation: Правильна колокація — "виявити турботу", а не "дати турботу".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вона зробила конфлікт із сусідами.
+  error: зробила
+  answer: мала
+  sentence_corrected: Вона мала конфлікт із сусідами.
+  options:
+  - зробила
+  - мала
+  - давала
+  - будувала
+  original_explanation: Правильна колокація — "мати конфлікт", а не "зробити конфлікт".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Вони будували дружбу багато років.
+  error: будували
+  answer: розвивали
+  sentence_corrected: Вони розвивали дружбу багато років.
+  options:
+  - будували
+  - розвивали
+  - мали
+  - давали
+  original_explanation: Правильна колокація — "розвивати дружбу", а не "будувати дружбу".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в колокаціях
+  sentence_with_error: Він мав шлюб з нею п'ять років.
+  error: мав шлюб
+  answer: був у шлюбі
+  sentence_corrected: Він був у шлюбі з нею п'ять років.
+  options:
+  - мав шлюб
+  - був у шлюбі
+  - робив шлюб
+  - давав шлюб
+  original_explanation: Правильно — "бути в шлюбі", а не "мати шлюб".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Після зради вона втратила _____ до свого партнера і не могла
+    йому більше вірити.
+  answer: довіру
+  complete_sentence: Після зради вона втратила довіру__ до свого партнера і не могла
+    йому більше вірити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Вони _____ шлюб минулого року і тепер живуть разом у новій квартирі.
+  answer: уклали
+  complete_sentence: Вони уклали__ шлюб минулого року і тепер живуть разом у новій
+    квартирі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: У нас була невелика _____, але ми швидко помирилися і все забули.
+  answer: суперечка
+  complete_sentence: У нас була невелика суперечка__, але ми швидко помирилися і все
+    забули.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Батьківська _____ не має меж — вони завжди думають про своїх
+    дітей.
+  answer: турбота
+  complete_sentence: Батьківська турбота__ не має меж — вони завжди думають про своїх
+    дітей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Після серйозного конфлікту вони нарешті досягли _____ і знову
+    почали спілкуватися.
+  answer: примирення
+  complete_sentence: Після серйозного конфлікту вони нарешті досягли примирення__
+    і знову почали спілкуватися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Наша _____ триває вже двадцять років — ми познайомилися ще в
+    школі.
+  answer: дружба
+  complete_sentence: Наша дружба__ триває вже двадцять років — ми познайомилися ще
+    в школі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Між ними з'явилася емоційна _____ — вони майже не розмовляють.
+  answer: відстань
+  complete_sentence: Між ними з'явилася емоційна відстань__ — вони майже не розмовляють.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: У здорових _____ важливі повага та відкрите спілкування між партнерами.
+  answer: стосунках
+  complete_sentence: У здорових стосунках__ важливі повага та відкрите спілкування
+    між партнерами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Дипломатичні _____ між країнами значно покращилися після підписання
+    угоди.
+  answer: відносини
+  complete_sentence: Дипломатичні відносини__ між країнами значно покращилися після
+    підписання угоди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Він — мій життєвий _____, ми разом уже десять років.
+  answer: партнер
+  complete_sentence: Він — мій життєвий партнер__, ми разом уже десять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Без взаємної _____ неможливо побудувати здорові стосунки в родині.
+  answer: поваги
+  complete_sentence: Без взаємної поваги__ неможливо побудувати здорові стосунки в
+    родині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір слова з контексту
+  sentence_template: Вони хочуть _____ сім'ю і мати дітей у майбутньому.
+  answer: створити
+  complete_sentence: Вони хочуть створити__ сім'ю і мати дітей у майбутньому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: У нас дуже міцні стосунки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вони уклали шлюб минулого року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я втратила довіру до нього.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Після конфлікту вони досягли примирення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вони хочуть створити сім'ю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Батьківська турбота не має меж.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Взаємна повага важлива у стосунках.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Наша дружба триває двадцять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яке слово означає особисті взаємини між людьми, такі як романтичні чи
+    родинні зв'язки?
+  options:
+  - text: відносини
+    correct: false
+  - text: стосунки
+    correct: true
+  - text: зв'язок
+    correct: false
+  - text: дружба
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яке слово використовується для офіційних, формальних зв'язків між країнами
+    чи компаніями?
+  options:
+  - text: стосунки
+    correct: false
+  - text: дружба
+    correct: false
+  - text: відносини
+    correct: true
+  - text: близькість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Що означає слово "примирення" після конфлікту між людьми, які хочуть відновити
+    стосунки?
+  options:
+  - text: betrayal
+    correct: false
+  - text: divorce
+    correct: false
+  - text: reconciliation
+    correct: true
+  - text: argument
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яка різниця між словами "конфлікт" і "суперечка", коли йдеться про проблеми
+    між людьми?
+  options:
+  - text: Це повні синоніми
+    correct: false
+  - text: '"Конфлікт" — серйозніший, "суперечка" — коротший спір'
+    correct: true
+  - text: '"Суперечка" формальніше'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яке дієслово найкраще поєднується зі словом "шлюб" для опису офіційного
+    одруження?
+  options:
+  - text: мати шлюб
+    correct: false
+  - text: робити шлюб
+    correct: false
+  - text: укласти шлюб
+    correct: true
+  - text: давати шлюб
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яке слово означає "faithfulness" або "fidelity" у контексті шлюбу та партнерства?
+  options:
+  - text: довіра
+    correct: false
+  - text: відданість
+    correct: false
+  - text: вірність
+    correct: true
+  - text: турбота
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Що таке "зрада" у контексті романтичних стосунків, коли партнер порушує
+    довіру?
+  options:
+  - text: support
+    correct: false
+  - text: care
+    correct: false
+  - text: betrayal
+    correct: true
+  - text: respect
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння лексики стосунків
+  question: Яке слово найкраще описує емоційну теплоту та інтимність у стосунках між
+    людьми?
+  options:
+  - text: відстань
+    correct: false
+  - text: конфлікт
+    correct: false
+  - text: близькість
+    correct: true
+  - text: розлучення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Стосунки" та "відносини" — це повні синоніми, їх можна завжди замінювати.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "укласти шлюб" для опису офіційного одруження в Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Конфлікт" та "суперечка" означають те саме — короткий спір між людьми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "будувати довіру" для опису поступового створення
+    взаємної довіри.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "мати шлюб" для опису того, що люди одружені.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Примирення" означає "divorce" — офіційне розірвання шлюбу.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "зберігати вірність" для опису вірності партнеру в
+    стосунках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Зв''язок" можна використовувати як для емоційних, так і для ділових
+    контактів.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Близькість" та "відстань" — це антоніми, що описують протилежні стани
+    у стосунках.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Можна сказати "створити сім'ю" для опису одруження та народження дітей.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: '"Турбота" та "підтримка" — це синоніми, їх можна завжди замінювати.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила використання
+  statement: Правильно говорити "досягти примирення" після конфлікту між людьми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

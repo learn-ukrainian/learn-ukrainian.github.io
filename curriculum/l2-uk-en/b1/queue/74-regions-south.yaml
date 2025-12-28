@@ -1,0 +1,608 @@
+module: 74-regions-south
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/74-regions-south.md
+generated: '2025-12-29T00:22:04.147374'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 12
+  unjumble: 8
+  quiz: 10
+  true-false: 12
+item_count: 50
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Одесу засновано у 1654 році як головний порт.
+  error: '1654'
+  answer: '1794'
+  sentence_corrected: Одесу засновано у 1794 році як головний порт.
+  options:
+  - '1654'
+  - '1794'
+  - '1856'
+  - '1918'
+  original_explanation: Одесу засновано у 1794 році за наказом Катерини II.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Миколаїв називають містом рибалок через його промисловість.
+  error: рибалок
+  answer: корабелів
+  sentence_corrected: Миколаїв називають містом корабелів через його промисловість.
+  options:
+  - рибалок
+  - корабелів
+  - туристів
+  - фермерів
+  original_explanation: Миколаїв — місто корабелів, там будують кораблі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Азовське море є найглибшим морем України.
+  error: найглибшим
+  answer: наймілкішим
+  sentence_corrected: Азовське море є наймілкішим морем України.
+  options:
+  - найглибшим
+  - наймілкішим
+  - найбільшим
+  - найхолоднішим
+  original_explanation: Азовське море мілке та тепле.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Херсон славиться своїми яблуками на всю Україну.
+  error: яблуками
+  answer: кавунами
+  sentence_corrected: Херсон славиться своїми кавунами на всю Україну.
+  options:
+  - яблуками
+  - кавунами
+  - грушами
+  - сливами
+  original_explanation: Херсонські кавуни — знаменитий бренд.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Греки з'явилися на півдні України лише у XIX столітті.
+  error: XIX столітті
+  answer: античні часи
+  sentence_corrected: Греки з'явилися на півдні України лише у античні часи.
+  options:
+  - XIX столітті
+  - античні часи
+  - XX столітті
+  - XVIII столітті
+  original_explanation: Греки заснували колонії на Чорному морі ще в античні часи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Болгари є корінним народом Криму.
+  error: Болгари
+  answer: Татари
+  sentence_corrected: Татари є корінним народом Криму.
+  options:
+  - Болгари
+  - Татари
+  - Греки
+  - Українці
+  original_explanation: Кримські татари — корінний народ півострова.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Одеса розташована на узбережжі Азовського моря.
+  error: Азовського
+  answer: Чорного
+  sentence_corrected: Одеса розташована на узбережжі Чорного моря.
+  options:
+  - Азовського
+  - Чорного
+  - Балтійського
+  - Середземного
+  original_explanation: Одеса розташована на узбережжі Чорного моря.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: На півдні України ростуть ліси замість степів.
+  error: ліси
+  answer: степи
+  sentence_corrected: На півдні України ростуть степи замість степів.
+  options:
+  - ліси
+  - степи
+  - тундри
+  - болота
+  original_explanation: Південь України — це степовий регіон.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Одеса — головний _____ України на Чорному морі.
+  answer: порт
+  complete_sentence: Одеса — головний порт__ України на Чорному морі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ море — найбільше море південної України.
+  answer: Чорне
+  complete_sentence: Чорне__ море — найбільше море південної України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Миколаїв називають «містом _____» через суднобудівні заводи.
+  answer: корабелів
+  complete_sentence: Миколаїв називають «містом корабелів__» через суднобудівні заводи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Херсонські _____ — знаменитий бренд української продукції.
+  answer: кавуни
+  complete_sentence: Херсонські кавуни__ — знаменитий бренд української продукції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ — це трав'яниста рівнина, характерна для півдня України.
+  answer: Степ
+  complete_sentence: Степ__ — це трав'яниста рівнина, характерна для півдня України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: 'Південна Україна — регіон _____ народів: греків, болгар, татар.'
+  answer: багатьох
+  complete_sentence: 'Південна Україна — регіон багатьох__ народів: греків, болгар,
+    татар.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Українське _____ має давню традицію — понад двісті років.
+  answer: виноробство
+  complete_sentence: Українське виноробство__ має давню традицію — понад двісті років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Одеський _____ відомий на весь світ завдяки письменникам.
+  answer: гумор
+  complete_sentence: Одеський гумор__ відомий на весь світ завдяки письменникам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Кримські _____ — корінний народ півострова.
+  answer: татари
+  complete_sentence: Кримські татари__ — корінний народ півострова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Потьомкінські _____ — символ Одеси, відомий завдяки кіно.
+  answer: сходи
+  complete_sentence: Потьомкінські сходи__ — символ Одеси, відомий завдяки кіно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: На півдні вирощують пшеницю, ячмінь та _____.
+  answer: виноград
+  complete_sentence: На півдні вирощують пшеницю, ячмінь та виноград__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ господарство — основа економіки південних степів.
+  answer: Сільське
+  complete_sentence: Сільське__ господарство — основа економіки південних степів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Одеса — це головний порт України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Південна Україна — це регіон степів і морів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Миколаїв називають містом корабелів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Херсон славиться своїми кавунами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Це багатонаціональний регіон різних народів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Чорне море — найбільше море півдня України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Одеський гумор відомий на весь світ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Південну Україну
+  jumbled_words: []
+  answer: Кримські татари — корінний народ Криму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Одеса є головним портом України і центром культурного життя на півдні.
+    Коли було засновано це унікальне місто на березі Чорного моря?
+  options:
+  - text: 1654 року
+    correct: false
+  - text: 1794 року
+    correct: true
+  - text: 1856 року
+    correct: false
+  - text: 1918 року
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Південна Україна славиться своїм теплим кліматом та родючими землями.
+    Яка сільськогосподарська культура є основною для цього регіону?
+  options:
+  - text: Картопля
+    correct: false
+  - text: Пшениця
+    correct: true
+  - text: Цукровий буряк
+    correct: false
+  - text: Льон
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Одеський гумор відомий на весь світ завдяки особливому стилю жартів та
+    мовної гри. Який письменник прославив цей гумор?
+  options:
+  - text: Тарас Шевченко
+    correct: false
+  - text: Михайло Жванецький
+    correct: true
+  - text: Іван Франко
+    correct: false
+  - text: Леся Українка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Миколаїв є важливим промисловим центром південної України. Чому це місто
+    називають «містом корабелів»?
+  options:
+  - text: Там багато моряків
+    correct: false
+  - text: Там будують кораблі
+    correct: true
+  - text: Там ловлять рибу
+    correct: false
+  - text: Там продають човни
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Херсонська область відома не лише портом, а й особливим сільськогосподарським
+    продуктом. Який фрукт став символом Херсона?
+  options:
+  - text: Яблуко
+    correct: false
+  - text: Кавун
+    correct: true
+  - text: Груша
+    correct: false
+  - text: Слива
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Південна Україна є регіоном багатьох народів, які століттями жили тут
+    разом. Хто є корінним народом Криму?
+  options:
+  - text: Греки
+    correct: false
+  - text: Болгари
+    correct: false
+  - text: Татари
+    correct: true
+  - text: Молдовани
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Чорне море є найбільшим водоймищем південної України. Що сталося з Кримом
+    у 2014 році?
+  options:
+  - text: Його приєднали до ЄС
+    correct: false
+  - text: Його окупувала Росія
+    correct: true
+  - text: Він отримав незалежність
+    correct: false
+  - text: Там було землетрус
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Грецькі колонії на узбережжі Чорного моря існували ще в античні часи.
+    Яка з цих колоній була заснована греками?
+  options:
+  - text: Київ
+    correct: false
+  - text: Ольвія
+    correct: true
+  - text: Львів
+    correct: false
+  - text: Харків
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Архітектура Одеси відображає її багатонаціональну історію. Хто будував
+    це місто?
+  options:
+  - text: Тільки українці
+    correct: false
+  - text: Італійці, французи, греки
+    correct: true
+  - text: Тільки росіяни
+    correct: false
+  - text: Тільки турки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння Південної України
+  question: Азовське море є частиною південного регіону України. Чим воно відрізняється
+    від Чорного моря?
+  options:
+  - text: Воно глибше
+    correct: false
+  - text: Воно мілке і тепле
+    correct: true
+  - text: Воно солоніше
+    correct: false
+  - text: Воно холодне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Одесу засновано у 1794 році як порт на Чорному морі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Миколаїв — найбільше місто південної України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Кримські татари — корінний народ Криму.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Азовське море глибше за Чорне.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Херсон славиться своїми кавунами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Греки з'явилися на півдні України лише у XIX столітті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Одеський гумор прославив письменник Михайло Жванецький.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Миколаїв називають «містом корабелів».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Степи на півдні України називали «диким полем».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: У 2014 році Крим став незалежною державою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Потьомкінські сходи зробив знаменитими фільм Ейзенштейна.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Південну Україну
+  statement: Болгари переселилися на південь України у XX столітті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

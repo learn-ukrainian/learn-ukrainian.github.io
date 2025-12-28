@@ -1,0 +1,866 @@
+module: 29-purpose-shchob-infinitive
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/29-purpose-shchob-infinitive.md
+generated: '2025-12-29T00:22:00.688646'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 14
+  cloze: 1
+  unjumble: 8
+  quiz: 14
+  true-false: 14
+item_count: 59
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я прийшов, щоб я допоможу тобі з роботою сьогодні вранці.
+  error: допоможу
+  answer: допомогти
+  sentence_corrected: Я прийшов, щоб я допомогти тобі з роботою сьогодні вранці.
+  options:
+  - допоможу
+  - допомогти
+  - допоміг
+  - допомагав
+  original_explanation: Однаковий підмет потребує інфінітива, не особової форми.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вона вчиться, щоб стала хорошим спеціалістом у майбутньому
+    році.
+  error: стала
+  answer: стати
+  sentence_corrected: Вона вчиться, щоб стати хорошим спеціалістом у майбутньому році.
+  options:
+  - стала
+  - стати
+  - стане
+  - ставала
+  original_explanation: Однаковий підмет потребує інфінітива, не минулого часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він працює допізна, щоб він завершить проект до встановленого
+    дедлайну.
+  error: завершить
+  answer: завершити
+  sentence_corrected: Він працює допізна, щоб він завершити проект до встановленого
+    дедлайну.
+  options:
+  - завершить
+  - завершити
+  - завершив
+  - завершував
+  original_explanation: Однаковий підмет потребує інфінітива, не майбутнього часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ми зібралися, щоб ми обговорили деталі нового важливого проекту.
+  error: обговорили
+  answer: обговорити
+  sentence_corrected: Ми зібралися, щоб ми обговорити деталі нового важливого проекту.
+  options:
+  - обговорили
+  - обговорити
+  - обговоримо
+  - обговорювали
+  original_explanation: Однаковий підмет потребує інфінітива, не минулого часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вона поїхала, щоб вона відпочила від міської суєти влітку.
+  error: відпочила
+  answer: відпочити
+  sentence_corrected: Вона поїхала, щоб вона відпочити від міської суєти влітку.
+  options:
+  - відпочила
+  - відпочити
+  - відпочине
+  - відпочивала
+  original_explanation: Однаковий підмет потребує інфінітива, не минулого часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я зупинився, щоб я подумаю над важливим рішенням уважно сьогодні.
+  error: подумаю
+  answer: подумати
+  sentence_corrected: Я зупинився, щоб я подумати над важливим рішенням уважно сьогодні.
+  options:
+  - подумаю
+  - подумати
+  - подумав
+  - думав
+  original_explanation: Однаковий підмет потребує інфінітива, не майбутнього часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він встав рано, щоб встигнув на ранковий потяг вчасно до міста.
+  error: встигнув
+  answer: встигнути
+  sentence_corrected: Він встав рано, щоб встигнути на ранковий потяг вчасно до міста.
+  options:
+  - встигнув
+  - встигнути
+  - встигне
+  - встигав
+  original_explanation: Однаковий підмет потребує інфінітива, не минулого часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ми тренуємося, щоб ми перемогли у змаганнях наступного місяця
+    восени.
+  error: перемогли
+  answer: перемогти
+  sentence_corrected: Ми тренуємося, щоб ми перемогти у змаганнях наступного місяця
+    восени.
+  options:
+  - перемогли
+  - перемогти
+  - переможемо
+  - перемагали
+  original_explanation: Однаковий підмет потребує інфінітива, не минулого часу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Я прийшов, щоб ___ тобі з домашнім завданням.
+  answer: допомогти
+  complete_sentence: Я прийшов, щоб допомогти тобі з домашнім завданням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Вона вчиться щодня, щоб ___ хорошим спеціалістом.
+  answer: стати
+  complete_sentence: Вона вчиться щодня, щоб стати хорошим спеціалістом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Він працює допізна, щоб ___ проект до кінця тижня.
+  answer: завершити
+  complete_sentence: Він працює допізна, щоб завершити проект до кінця тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Ми зустрілися, щоб ___ деталі майбутньої подорожі.
+  answer: обговорити
+  complete_sentence: Ми зустрілися, щоб обговорити деталі майбутньої подорожі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Вона поїхала в Карпати, щоб ___ від міської суєти.
+  answer: відпочити
+  complete_sentence: Вона поїхала в Карпати, щоб відпочити від міської суєти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Я зупинився на хвилину, щоб ___ над важливим рішенням.
+  answer: подумати
+  complete_sentence: Я зупинився на хвилину, щоб подумати над важливим рішенням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Він встав дуже рано, щоб ___ на ранковий рейс.
+  answer: встигнути
+  complete_sentence: Він встав дуже рано, щоб встигнути на ранковий рейс.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Вони прийшли на свято, щоб ___ іменинника щиро.
+  answer: привітати
+  complete_sentence: Вони прийшли на свято, щоб привітати іменинника щиро.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Я читаю багато книг, щоб ___ світ краще.
+  answer: розуміти
+  complete_sentence: Я читаю багато книг, щоб розуміти світ краще.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Вона вийшла на балкон, щоб ___ свіжим повітрям.
+  answer: подихати
+  complete_sentence: Вона вийшла на балкон, щоб подихати свіжим повітрям.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Ми тренуємося кожного дня, щоб ___ у чемпіонаті.
+  answer: перемогти
+  complete_sentence: Ми тренуємося кожного дня, щоб перемогти у чемпіонаті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Він працює на двох роботах, щоб ___ велику родину.
+  answer: забезпечити
+  complete_sentence: Він працює на двох роботах, щоб забезпечити велику родину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Я вивчаю українську, щоб ___ з бабусею рідною мовою.
+  answer: спілкуватися
+  complete_sentence: Я вивчаю українську, щоб спілкуватися з бабусею рідною мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильну форму
+  sentence_template: Вона заощаджує гроші вже рік, щоб ___ нову квартиру.
+  answer: купити
+  complete_sentence: Вона заощаджує гроші вже рік, щоб купити нову квартиру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Щоб плюс інфінітив у контексті
+  passage_template: 'Минулого тижня я вирішив поїхати в Карпати, щоб [___:1] від міської
+    суєти. Я встав дуже рано, щоб [___:2] на ранковий автобус вчасно. По дорозі я
+    зупинився на заправці, щоб [___:3] каву та перекусити.
+
+
+    Коли я приїхав до гір, перше, що зробив, це пішов у ліс, щоб [___:4] свіжим повітрям.
+    Потім я знайшов гарне місце біля річки, щоб [___:5] намет для ночівлі. Увечері
+    я розпалив вогнище, щоб [___:6] вечерю на природі.
+
+
+    На наступний день я вирушив у похід, щоб [___:7] на вершину гори. Підйом був важким,
+    але я не здавався, щоб [___:8] своєї мети. На вершині я зупинився на годину, щоб
+    [___:9] краєвидами навколо.
+
+
+    Перед поверненням додому я зайшов у місцеве село, щоб [___:10] сувеніри для друзів.
+    Я також відвідав стару церкву, щоб [___:11] місцеву архітектуру. Ця подорож допомогла
+    мені відпочити та [___:12] нових сил на роботу. Я обов''язково повернуся сюди,
+    щоб [___:13] ще більше місць. Тепер я раджу всім друзям їхати в Карпати, щоб [___:14]
+    справжню красу української природи.
+
+    '
+  blanks:
+  - options:
+    - відпочити
+    - відпочину
+    - відпочив
+    - відпочивав
+    answer: відпочити
+  - options:
+    - встигнути
+    - встигну
+    - встиг
+    - встигав
+    answer: встигнути
+  - options:
+    - випити
+    - вип'ю
+    - випив
+    - пив
+    answer: випити
+  - options:
+    - подихати
+    - подихаю
+    - подихав
+    - дихав
+    answer: подихати
+  - options:
+    - поставити
+    - поставлю
+    - поставив
+    - ставив
+    answer: поставити
+  - options:
+    - приготувати
+    - приготую
+    - приготував
+    - готував
+    answer: приготувати
+  - options:
+    - піднятися
+    - піднімусь
+    - піднявся
+    - піднімався
+    answer: піднятися
+  - options:
+    - досягти
+    - досягну
+    - досяг
+    - досягав
+    answer: досягти
+  - options:
+    - помилуватися
+    - помилуюся
+    - помилувався
+    - милувався
+    answer: помилуватися
+  - options:
+    - купити
+    - куплю
+    - купив
+    - купував
+    answer: купити
+  - options:
+    - оглянути
+    - огляну
+    - оглянув
+    - оглядав
+    answer: оглянути
+  - options:
+    - набратися
+    - наберуся
+    - набрався
+    - набирався
+    answer: набратися
+  - options:
+    - відкрити
+    - відкрию
+    - відкрив
+    - відкривав
+    answer: відкрити
+  - options:
+    - побачити
+    - побачу
+    - побачив
+    - бачив
+    answer: побачити
+  complete_passage: 'Минулого тижня я вирішив поїхати в Карпати, щоб [___:1] від міської
+    суєти. Я встав дуже рано, щоб [___:2] на ранковий автобус вчасно. По дорозі я
+    зупинився на заправці, щоб [___:3] каву та перекусити.
+
+
+    Коли я приїхав до гір, перше, що зробив, це пішов у ліс, щоб [___:4] свіжим повітрям.
+    Потім я знайшов гарне місце біля річки, щоб [___:5] намет для ночівлі. Увечері
+    я розпалив вогнище, щоб [___:6] вечерю на природі.
+
+
+    На наступний день я вирушив у похід, щоб [___:7] на вершину гори. Підйом був важким,
+    але я не здавався, щоб [___:8] своєї мети. На вершині я зупинився на годину, щоб
+    [___:9] краєвидами навколо.
+
+
+    Перед поверненням додому я зайшов у місцеве село, щоб [___:10] сувеніри для друзів.
+    Я також відвідав стару церкву, щоб [___:11] місцеву архітектуру. Ця подорож допомогла
+    мені відпочити та [___:12] нових сил на роботу. Я обов''язково повернуся сюди,
+    щоб [___:13] ще більше місць. Тепер я раджу всім друзям їхати в Карпати, щоб [___:14]
+    справжню красу української природи.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Я прийшов сюди сьогодні вранці, щоб допомогти тобі з дуже важливою роботою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Вона вчиться щодня, щоб обов'язково стати хорошим лікарем у майбутньому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Він старанно працює допізна кожного дня, щоб вчасно завершити дуже важливий
+    проект.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Ми зібралися сьогодні вранці у великому залі офісу, щоб обговорити деталі
+    нового контракту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Вона поїхала за кордон минулого року до Німеччини, щоб здобути вищу освіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Я зупинився там на одну хвилину, щоб уважно подумати над єдиним правильним
+    рішенням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Він встав дуже рано сьогодні вранці, щоб встигнути на ранковий рейс до столиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Розставте слова в правильному порядку
+  jumbled_words: []
+  answer: Ми тренуємося дуже старанно кожного дня без вихідних, щоб перемогти у важливих
+    змаганнях.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про приїзд із наміром надати
+    допомогу з роботою?
+  options:
+  - text: допомогти
+    correct: true
+  - text: допоможу
+    correct: false
+  - text: допоміг
+    correct: false
+  - text: допомагав
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про навчання з метою здобуття
+    професії лікаря?
+  options:
+  - text: стати
+    correct: true
+  - text: стане
+    correct: false
+  - text: стала
+    correct: false
+  - text: ставала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про роботу допізна з метою
+    вчасного завершення проекту?
+  options:
+  - text: завершити
+    correct: true
+  - text: завершить
+    correct: false
+  - text: завершив
+    correct: false
+  - text: завершував
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про збори з метою обговорення
+    важливого питання?
+  options:
+  - text: обговорити
+    correct: true
+  - text: обговоримо
+    correct: false
+  - text: обговорили
+    correct: false
+  - text: обговорювали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про поїздку за кордон з
+    метою здобуття вищої освіти?
+  options:
+  - text: здобути
+    correct: true
+  - text: здобуде
+    correct: false
+  - text: здобула
+    correct: false
+  - text: здобувала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про зупинку з метою милування
+    красивим краєвидом?
+  options:
+  - text: подивитися
+    correct: true
+  - text: подивлюся
+    correct: false
+  - text: подивився
+    correct: false
+  - text: дивився
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про ранній підйом з метою
+    потрапити на потяг?
+  options:
+  - text: встигнути
+    correct: true
+  - text: встигне
+    correct: false
+  - text: встиг
+    correct: false
+  - text: встигав
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про прихід гостей з метою
+    привітання з днем народження?
+  options:
+  - text: привітати
+    correct: true
+  - text: привітають
+    correct: false
+  - text: привітали
+    correct: false
+  - text: привітували
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про читання книг з метою
+    розширення знань?
+  options:
+  - text: знати
+    correct: true
+  - text: знаю
+    correct: false
+  - text: знав
+    correct: false
+  - text: дізнаюся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про вихід надвір з метою
+    подихати свіжим повітрям?
+  options:
+  - text: подихати
+    correct: true
+  - text: подихає
+    correct: false
+  - text: подихала
+    correct: false
+  - text: дихала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про тренування з метою
+    перемоги у змаганнях?
+  options:
+  - text: перемогти
+    correct: true
+  - text: переможемо
+    correct: false
+  - text: перемогли
+    correct: false
+  - text: перемагали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про роботу з метою забезпечення
+    родини?
+  options:
+  - text: забезпечити
+    correct: true
+  - text: забезпечить
+    correct: false
+  - text: забезпечив
+    correct: false
+  - text: забезпечував
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про вивчення мови з метою
+    спілкування з місцевими?
+  options:
+  - text: спілкуватися
+    correct: true
+  - text: спілкуюся
+    correct: false
+  - text: спілкувався
+    correct: false
+  - text: поспілкуюся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Конструкція щоб + інфінітив
+  question: Яку форму дієслова потрібно вставити в речення про заощадження грошей
+    з метою придбання автомобіля?
+  options:
+  - text: купити
+    correct: true
+  - text: купить
+    correct: false
+  - text: купила
+    correct: false
+  - text: купувала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Конструкція щоб плюс інфінітив використовується, коли підмет обох речень
+    однаковий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після щоб завжди потрібно використовувати інфінітив доконаного виду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Вона вчиться, щоб стала лікарем" є граматично правильним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "для того щоб" є формальнішим варіантом простого "щоб" у реченнях
+    мети.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення мети з щоб може стояти перед головним реченням для наголосу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Я прийшов допомогти" без щоб є граматично неправильним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "з метою" використовується в офіційному стилі замість простого
+    щоб.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після щоб не можна використовувати заперечення не перед інфінітивом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Вона працює, щоб заробляти" використовує недоконаний вид для
+    регулярної дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Вираз "заради" використовується для емоційного підкреслення мети.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Конструкція щоб плюс інфінітив може виражати бажання іншої особи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Для того щоб перемогти, треба тренуватися" є правильним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Після щоб час інфінітива залежить від часу головного дієслова.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда?
+  statement: Речення "Я не прийшов, щоб сваритися" заперечує мету, а не дію приходу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

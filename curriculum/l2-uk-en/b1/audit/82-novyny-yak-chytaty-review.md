@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 99.5% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 97% (grammar)
-- **Grammar:** ✅ Validated ([View Audit](82-novyny-yak-chytaty-grammar.yaml))
+- **Grammar:** ✅ Validated (8/50 confirmed)
 
 ## Richness Details
 **Score:** 97% (minimum: 95%)
@@ -36,6 +36,12 @@
 | questions | 48 | 5 | 100% | 5% | 5.0% |
 | proverbs | 10 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **97.5%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 95.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (grammar)
-- **Grammar:** ✅ Validated ([View Audit](86-b1-capstone-grammar.yaml))
+- **Grammar:** ✅ Validated (12/56 confirmed)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -36,6 +36,12 @@
 | questions | 46 | 5 | 100% | 5% | 5.0% |
 | proverbs | 6 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.2%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

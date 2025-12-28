@@ -1,0 +1,1410 @@
+module: 23-register-media-journalistic
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/23-register-media-journalistic.md
+generated: '2025-12-28T20:44:18.009443'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Наш президент підписав цей новий закон вчора.
+  error: Наш
+  answer: Президент
+  sentence_corrected: Президент президент підписав цей новий закон вчора.
+  options:
+  - Наш
+  - Президент
+  - Цей
+  - Вчора
+  original_explanation: У заголовках уникають займенників та артиклеподібних слів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Законопроект було ухвалено депутатами.
+  error: було
+  answer: ухвалено
+  sentence_corrected: Законопроект ухвалено ухвалено депутатами.
+  options:
+  - було
+  - ухвалено
+  - депутатами
+  - Законопроект
+  original_explanation: У заголовках уникають допоміжного дієслова "було".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: За словами міністра сказав, реформа необхідна.
+  error: сказав
+  answer: ∅
+  sentence_corrected: За словами міністра ∅, реформа необхідна.
+  options:
+  - сказав
+  - ∅
+  - міністра
+  - реформа
+  original_explanation: '"За словами" вже вказує на джерело, "сказав" зайве.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Скандальна реформа ухвалена, як повідомляє нейтральне агентство.
+  error: Скандальна
+  answer: Реформа
+  sentence_corrected: Реформа реформа ухвалена, як повідомляє нейтральне агентство.
+  options:
+  - Скандальна
+  - Реформа
+  - нейтральне
+  - ухвалена
+  original_explanation: У нейтральному заголовку не повинно бути оцінних слів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: За словами експерту, ситуація покращиться.
+  error: експерту
+  answer: експерта
+  sentence_corrected: За словами експерта, ситуація покращиться.
+  options:
+  - експерту
+  - експерта
+  - експертом
+  - експерти
+  original_explanation: Конструкція "за словами" вимагає родового відмінка — експерта.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Міністр визнав успіхи реформи.
+  error: визнав
+  answer: відзначив
+  sentence_corrected: Міністр відзначив успіхи реформи.
+  options:
+  - визнав
+  - відзначив
+  - зізнався
+  - стверджував
+  original_explanation: '"Визнав" має негативний відтінок, "відзначив" — позитивний.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Відповідно до думки експертів, ситуація складна.
+  error: Відповідно до думки
+  answer: На думку
+  sentence_corrected: На думку експертів, ситуація складна.
+  options:
+  - Відповідно до думки
+  - На думку
+  - За думкою
+  - Думкою
+  original_explanation: Правильна конструкція — "на думку експертів".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Як повідомляють прес-служба, захід відбудеться.
+  error: повідомляють
+  answer: повідомляє
+  sentence_corrected: Як повідомляє прес-служба, захід відбудеться.
+  options:
+  - повідомляють
+  - повідомляє
+  - повідомив
+  - повідомлять
+  original_explanation: '"Прес-служба" — однина, отже "повідомляє".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Президент заявив, шо закон підписано.
+  error: шо
+  answer: що
+  sentence_corrected: Президент заявив, що закон підписано.
+  options:
+  - шо
+  - що
+  - як
+  - бо
+  original_explanation: Орфографічна помилка — правильно "що".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Згідно до звіту, показники зросли.
+  error: до
+  answer: зі
+  sentence_corrected: Згідно зі звіту, показники зросли.
+  options:
+  - до
+  - зі
+  - з
+  - для
+  original_explanation: Правильна конструкція — "згідно зі звітом".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: За даних МВФ, інфляція знизиться.
+  error: даних
+  answer: даними
+  sentence_corrected: За даними МВФ, інфляція знизиться.
+  options:
+  - даних
+  - даними
+  - дані
+  - данні
+  original_explanation: Правильна конструкція — "за даними" (орудний відмінок).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: На думку експерта, реформа потрібна, стверджує він.
+  error: стверджує він
+  answer: ∅
+  sentence_corrected: На думку експерта, реформа потрібна, ∅.
+  options:
+  - стверджує він
+  - ∅
+  - каже
+  - зазначає
+  original_explanation: '"На думку" вже вказує на джерело, повторна атрибуція зайва.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Історичний законопроєкт ухвалено, повідомляє опозиція.
+  error: Історичний
+  answer: Законопроєкт
+  sentence_corrected: Законопроєкт законопроєкт ухвалено, повідомляє опозиція.
+  options:
+  - Історичний
+  - Законопроєкт
+  - ухвалено
+  - опозиція
+  original_explanation: Опозиція навряд чи назве законопроєкт "історичним" — невідповідність
+    джерела та оцінки.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Уряд стверджує про успіхи реформи.
+  error: стверджує про
+  answer: заявляє про
+  sentence_corrected: Уряд заявляє про успіхи реформи.
+  options:
+  - стверджує про
+  - заявляє про
+  - стверджує
+  - говорить за
+  original_explanation: '"Стверджувати" не вживається з "про", краще "заявляє про"
+    або "стверджує, що".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Як повідомляється з джерел, рішення прийнято.
+  error: з джерел
+  answer: ∅
+  sentence_corrected: Як повідомляється ∅, рішення прийнято.
+  options:
+  - з джерел
+  - ∅
+  - від джерел
+  - через джерела
+  original_explanation: '"Як повідомляється" — безособова конструкція, "з джерел"
+    є тавтологією.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в заголовках
+  sentence_with_error: Критики нібито стверджують, що реформа провальна.
+  error: нібито
+  answer: ∅
+  sentence_corrected: Критики ∅ стверджують, що реформа провальна.
+  options:
+  - нібито
+  - ∅
+  - буцімто
+  - начебто
+  original_explanation: '"Нібито" виражає сумнів журналіста у словах критиків — упередженість.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ експертів, економічна ситуація покращиться.
+  answer: За словами
+  complete_sentence: За словами__ експертів, економічна ситуація покращиться.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ аналітиків, реформа матиме позитивні наслідки.
+  answer: На думку
+  complete_sentence: На думку__ аналітиків, реформа матиме позитивні наслідки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ звітом МВФ, інфляція знизиться.
+  answer: Згідно зі
+  complete_sentence: Згідно зі__ звітом МВФ, інфляція знизиться.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ прес-служба парламенту, голосування відбудеться завтра.
+  answer: Як повідомляє
+  complete_sentence: Як повідомляє__ прес-служба парламенту, голосування відбудеться
+    завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ міністерства, програму вже запущено.
+  answer: За даними
+  complete_sentence: За даними__ міністерства, програму вже запущено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: Реформа необхідна, _____ міністр освіти.
+  answer: зазначив
+  complete_sentence: Реформа необхідна, зазначив__ міністр освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: «Це історичний момент», — _____ президент.
+  answer: заявив
+  complete_sentence: «Це історичний момент», — заявив__ президент.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ очікується, закон набуде чинності з січня.
+  answer: Як
+  complete_sentence: Як__ очікується, закон набуде чинності з січня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: Критики _____, що реформа недосконала.
+  answer: стверджують
+  complete_sentence: Критики стверджують__, що реформа недосконала.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ опитуванням, 60% підтримують зміни.
+  answer: За
+  complete_sentence: За__ опитуванням, 60% підтримують зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: Представник опозиції _____ на недоліках реформи.
+  answer: наголосив
+  complete_sentence: Представник опозиції наголосив__ на недоліках реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ джерела в уряді, рішення вже прийнято.
+  answer: За інформацією
+  complete_sentence: За інформацією__ джерела в уряді, рішення вже прийнято.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: Експерт _____, що ризики існують.
+  answer: попередив
+  complete_sentence: Експерт попередив__, що ризики існують.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ чинного законодавства, це порушення.
+  answer: Відповідно до
+  complete_sentence: Відповідно до__ чинного законодавства, це порушення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: Прем'єр-міністр _____ успіхи реформи.
+  answer: відзначив
+  complete_sentence: Прем'єр-міністр відзначив__ успіхи реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Конструкції атрибуції
+  sentence_template: _____ повідомляється, переговори тривають.
+  answer: Як
+  complete_sentence: Як__ повідомляється, переговори тривають.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Перший абзац новини називається _____.
+  answer: лід
+  complete_sentence: Перший абзац новини називається лід__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Принцип "перевернутої _____" означає, що найважливіше — на початку.
+  answer: піраміди
+  complete_sentence: Принцип "перевернутої піраміди__" означає, що найважливіше —
+    на початку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Заголовок повинен бути не довшим за _____ слів.
+  answer: 6-10
+  complete_sentence: Заголовок повинен бути не довшим за 6-10__ слів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Лід-абзац відповідає на питання хто, що, коли, де, _____.
+  answer: чому
+  complete_sentence: Лід-абзац відповідає на питання хто, що, коли, де, чому__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Стиль заголовків називають _____ стилем.
+  answer: телеграфним
+  complete_sentence: Стиль заголовків називають телеграфним__ стилем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це офіційне повідомлення організації для ЗМІ.
+  answer: Прес-реліз
+  complete_sentence: Прес-реліз__ — це офіційне повідомлення організації для ЗМІ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це коротка прес-конференція.
+  answer: Брифінг
+  complete_sentence: Брифінг__ — це коротка прес-конференція.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: Правило "двох _____" — базовий стандарт перевірки фактів.
+  answer: джерел
+  complete_sentence: Правило "двох джерел__" — базовий стандарт перевірки фактів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це показник популярності медіа.
+  answer: Рейтинг
+  complete_sentence: Рейтинг__ — це показник популярності медіа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це журналіст, який працює на місці події.
+  answer: Кореспондент
+  complete_sentence: Кореспондент__ — це журналіст, який працює на місці події.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це передача в реальному часі.
+  answer: Трансляція
+  complete_sentence: Трансляція__ — це передача в реальному часі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це унікальний матеріал, який має тільки одне видання.
+  answer: Ексклюзив
+  complete_sentence: Ексклюзив__ — це унікальний матеріал, який має тільки одне видання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це заперечення раніше опублікованої інформації.
+  answer: Спростування
+  complete_sentence: Спростування__ — це заперечення раніше опублікованої інформації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це суспільна реакція на подію.
+  answer: Резонанс
+  complete_sentence: Резонанс__ — це суспільна реакція на подію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це глядачі, слухачі та читачі медіа.
+  answer: Аудиторія
+  complete_sentence: Аудиторія__ — це глядачі, слухачі та читачі медіа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Структура новинного тексту
+  sentence_template: _____ — це вплив на свідомість через медіа.
+  answer: Маніпуляція
+  complete_sentence: Маніпуляція__ — це вплив на свідомість через медіа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Президент підписав закон про освіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Ціни на газ зростають.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: У Львові відкрито нову лікарню.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Освітньої реформи основні зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Рада ухвалила бюджет на рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Україна перемогла на Олімпіаді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Дипломатичні переговори тривають у Брюсселі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Міністерство оголосили про підвищення зарплат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Уряд підписав угоду з ЄС.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: У Київ карантин продовжено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: На трасі М-06 сталася аварія.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Розпочато будівництво нового мосту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Українські спортсмени здобули медалі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Уряд запускає реформу у IT-сферу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Ціни на продукти знизились.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть заголовки
+  jumbled_words: []
+  answer: Вибори призначено на жовтень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яка основна особливість синтаксису новинних заголовків?
+  options:
+  - text: Використання складних речень
+    correct: false
+  - text: Телеграфний стиль — максимум інформації за мінімум слів
+    correct: true
+  - text: Обов'язкове вживання займенників
+    correct: false
+  - text: Використання художніх засобів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Який заголовок є граматично правильним для новини?
+  options:
+  - text: Наш президент підписав цей важливий закон
+    correct: false
+  - text: Президент підписав закон
+    correct: true
+  - text: Президентом було підписано закон
+    correct: false
+  - text: Президент, який є головою держави, підписав закон
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: 'Яка функція двокрапки у заголовку "Освіта: основні зміни"?'
+  options:
+  - text: Позначення прямої мови
+    correct: false
+  - text: Структурування інформації — тема та пояснення
+    correct: true
+  - text: Виділення емоційного акценту
+    correct: false
+  - text: Граматична помилка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Який принцип лежить в основі структури лід-абзацу?
+  options:
+  - text: Хронологічний виклад
+    correct: false
+  - text: Принцип 5W+H — хто, що, коли, де, чому, як
+    correct: true
+  - text: Від часткового до загального
+    correct: false
+  - text: Емоційний вплив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Що означає принцип "перевернутої піраміди" в журналістиці?
+  options:
+  - text: Найважливіше — в кінці тексту
+    correct: false
+  - text: Найважливіше — на початку тексту
+    correct: true
+  - text: Рівномірний розподіл інформації
+    correct: false
+  - text: Хронологічний порядок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яка конструкція атрибуції є правильною?
+  options:
+  - text: За словами міністра, реформа необхідна
+    correct: true
+  - text: Міністр за словами, реформа необхідна
+    correct: false
+  - text: Реформа за словами міністра необхідна
+    correct: false
+  - text: Словами міністра, реформа необхідна
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яке дієслово атрибуції є найбільш нейтральним?
+  options:
+  - text: Визнав
+    correct: false
+  - text: Зазначив
+    correct: true
+  - text: Зізнався
+    correct: false
+  - text: Стверджував
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Що таке маркер упередженості в медіатексті?
+  options:
+  - text: Цитата експерта
+    correct: false
+  - text: Статистичні дані
+    correct: false
+  - text: Мовний засіб, що виражає приховану оцінку
+    correct: true
+  - text: Посилання на джерело
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яке слово є маркером позитивної оцінки?
+  options:
+  - text: Скандальний
+    correct: false
+  - text: Так званий
+    correct: false
+  - text: Історичний
+    correct: true
+  - text: Суперечливий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яке слово є маркером негативної оцінки?
+  options:
+  - text: Безпрецедентний
+    correct: false
+  - text: Реформатор
+    correct: false
+  - text: Буцімто
+    correct: true
+  - text: Довгоочікуваний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Який жанр журналістики має найбільшу нейтральність?
+  options:
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: false
+  - text: Новина
+    correct: true
+  - text: Репортаж
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Що характеризує репортаж на відміну від новини?
+  options:
+  - text: Більша нейтральність
+    correct: false
+  - text: Наочність, деталі, емоції
+    correct: true
+  - text: Відсутність цитат
+    correct: false
+  - text: Коротший обсяг
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Що означає конструкція "як повідомляє прес-служба"?
+  options:
+  - text: Пряма цитата
+    correct: false
+  - text: Інституційна атрибуція — джерелом є організація
+    correct: true
+  - text: Особиста думка автора
+    correct: false
+  - text: Непідтверджена інформація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Яка мовна особливість характерна для прес-релізу?
+  options:
+  - text: Критичний тон
+    correct: false
+  - text: Представлення інформації вигідно для організації
+    correct: true
+  - text: Нейтральна подача фактів
+    correct: false
+  - text: Різні точки зору
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Що означає "правило двох джерел" у журналістиці?
+  options:
+  - text: Новина має бути коротшою за два абзаци
+    correct: false
+  - text: Факт повинен бути підтверджений двома незалежними джерелами
+    correct: true
+  - text: Потрібно цитувати двох експертів
+    correct: false
+  - text: Новина має бути в двох версіях
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Граматика новинних заголовків
+  question: Який заголовок є прикладом негативної упередженості?
+  options:
+  - text: Парламент ухвалив закон
+    correct: false
+  - text: Скандальний закон ухвалено всупереч протестам
+    correct: true
+  - text: Закон про освіту набув чинності
+    correct: false
+  - text: Депутати проголосували за законопроєкт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр характеризується нейтральною подачею фактів без оцінок?
+  options:
+  - text: Коментар
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Новина
+    correct: true
+  - text: Редакційна стаття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр передбачає відкриту оцінку та позицію автора?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: true
+  - text: Інтерв'ю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр використовує формат "питання-відповідь"?
+  options:
+  - text: Репортаж
+    correct: false
+  - text: Новина
+    correct: false
+  - text: Коментар
+    correct: false
+  - text: Інтерв'ю
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр показує подію зсередини з деталями та емоціями?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: true
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр виражає офіційну позицію видання?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: До якого жанру належить текст з конструкцією "Ми вважаємо, що..."?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Інтерв'ю
+    correct: false
+  - text: Редакційна стаття
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: До якого жанру належить текст "Ми на місці події. Тут панує напруга..."?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: true
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр зазвичай не підписується іменем автора?
+  options:
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: true
+  - text: Інтерв'ю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: У якому жанрі найчастіше використовують риторичні питання?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: true
+  - text: Інтерв'ю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр вимагає мінімум двох незалежних джерел?
+  options:
+  - text: Новина
+    correct: true
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: false
+  - text: Репортаж
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: До якого жанру належить текст "– Пане міністре, як ви оцінюєте ситуацію?"?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Інтерв'ю
+    correct: true
+  - text: Коментар
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр зазвичай має найбільший обсяг?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: true
+  - text: Коментар
+    correct: false
+  - text: Заголовок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: До якого жанру належить текст "Це рішення може мати серйозні наслідки..."?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: true
+  - text: Інтерв'ю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр використовує конструкцію "За нашими спостереженнями"?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: true
+  - text: Коментар
+    correct: false
+  - text: Редакційна стаття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: Який жанр найчастіше використовує пряму мову?
+  options:
+  - text: Новина
+    correct: false
+  - text: Коментар
+    correct: false
+  - text: Інтерв'ю
+    correct: true
+  - text: Редакційна стаття
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення жанрів журналістики
+  question: До якого жанру належить текст "Чому влада ігнорує голос народу?"?
+  options:
+  - text: Новина
+    correct: false
+  - text: Репортаж
+    correct: false
+  - text: Коментар
+    correct: true
+  - text: Інтерв'ю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: У заголовках зазвичай уникають займенників та артиклеподібних слів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Лід-абзац повинен містити найменш важливу інформацію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Конструкція "за словами" вимагає родового відмінка.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Дієслово "визнав" є нейтральним дієсловом атрибуції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Слово "скандальний" у заголовку є маркером упередженості.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Новина повинна подавати різні точки зору на подію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Прес-реліз завжди є об'єктивним джерелом інформації.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Двокрапка у заголовку використовується для структурування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Репортаж та новина — це синоніми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Правило двох джерел означає цитування двох експертів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Конструкція "як повідомляється" вказує на невідоме джерело.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Слово "історичний" у заголовку є нейтральним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Пасивний стан часто використовується у заголовках для економії місця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Коментар та редакційна стаття повинні бути нейтральними.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: Конструкція "на думку" передає суб'єктивну оцінку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила медійного регістру
+  statement: У лід-абзаці слід уникати конкретних дат та імен.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

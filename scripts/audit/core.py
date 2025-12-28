@@ -432,29 +432,32 @@ def validate_tone(content: str) -> list[str]:
 
 def validate_checkpoint_format(content: str) -> list[str]:
     """Validate checkpoint modules follow Skill-based format.
-    
+
     Required structure (per checkpoint design guide):
     - H1: # Checkpoint - [Name] or # Контрольна точка
-    - ## Skill N: [Name] sections (at least 1)
+    - ## Skill N: [Name] or ## Навичка N: [Name] sections (at least 1)
     - Each skill has: ### Model:, ### Practice:, ### Self-Check
-    
+      (or Ukrainian equivalents: ### Модель:, ### Практика:, ### Самоперевірка:)
+
     Alternative structures (Діагностика/Аналіз/Поглиблення) are flagged as errors
     requiring rewrite to Skill-based format.
-    
+
     See: docs/l2-uk-en/CHECKPOINT-DESIGN-GUIDE.md
     """
     errors = []
-    
+
     # Check for alternative (incorrect) structure that needs rewrite
     has_diagnostika = bool(re.search(r'^## Діагностика', content, re.MULTILINE))
     has_analiz = bool(re.search(r'^## Аналіз', content, re.MULTILINE))
     has_pogliblennya = bool(re.search(r'^## Поглиблення', content, re.MULTILINE))
-    
+
     alternative_structure = has_diagnostika or has_analiz or has_pogliblennya
-    
-    # Check for at least one Skill section  
-    skill_matches = re.findall(r'^## Skill\s*\d*:', content, re.MULTILINE)
-    
+
+    # Check for at least one Skill section (English or Ukrainian)
+    # Matches: "## Skill N:", "## Skill:", "## Навичка N:", "## Навичка:"
+    skill_pattern = r'^## (?:Skill|Навичка)\s*\d*:'
+    skill_matches = re.findall(skill_pattern, content, re.MULTILINE)
+
     # Flag alternative structure as error if no Skill sections
     if alternative_structure and not skill_matches:
         alt_sections = []
@@ -466,28 +469,34 @@ def validate_checkpoint_format(content: str) -> list[str]:
             alt_sections.append("Поглиблення")
         errors.append(f"REWRITE REQUIRED: Checkpoint uses incorrect '{'/'.join(alt_sections)}' structure instead of Skill-based format (## Skill N: → ### Model: → ### Practice: → ### Self-Check)")
     elif not skill_matches:
-        errors.append("Checkpoint missing '## Skill N:' sections (need at least 1)")
-    
+        errors.append("Checkpoint missing '## Skill N:' or '## Навичка N:' sections (need at least 1)")
+
     # Check for bold-style headers (old format)
     bold_model = len(re.findall(r'^\*\*Model:', content, re.MULTILINE))
     bold_practice = len(re.findall(r'^\*\*Practice:', content, re.MULTILINE))
-    
+
     if bold_model > 0 or bold_practice > 0:
         errors.append(f"Checkpoint uses **bold:** format ({bold_model} Model, {bold_practice} Practice) - convert to ### H3 headers")
-    
+
     # Check each Skill section structure (H3 headers required)
-    skill_sections = re.split(r'^## Skill\s*\d*:', content, flags=re.MULTILINE)[1:]
+    # Split by either English or Ukrainian skill headers
+    skill_sections = re.split(skill_pattern, content, flags=re.MULTILINE)[1:]
     for i, section in enumerate(skill_sections, 1):
         section_end = re.search(r'^##\s', section, re.MULTILINE)
         section_text = section[:section_end.start()] if section_end else section
-        
-        if not re.search(r'^### Model', section_text, re.MULTILINE):
-            errors.append(f"Skill {i} missing '### Model:' H3 header")
-        if not re.search(r'^### Practice', section_text, re.MULTILINE):
-            errors.append(f"Skill {i} missing '### Practice:' H3 header")
-        if not re.search(r'^### Self-Check', section_text, re.MULTILINE):
-            errors.append(f"Skill {i} missing '### Self-Check' H3 header")
-    
+
+        # Accept English or Ukrainian headers
+        has_model = re.search(r'^### (?:Model|Модель)', section_text, re.MULTILINE)
+        has_practice = re.search(r'^### (?:Practice|Практика)', section_text, re.MULTILINE)
+        has_selfcheck = re.search(r'^### (?:Self-Check|Самоперевірка)', section_text, re.MULTILINE)
+
+        if not has_model:
+            errors.append(f"Skill {i} missing '### Model:' or '### Модель:' H3 header")
+        if not has_practice:
+            errors.append(f"Skill {i} missing '### Practice:' or '### Практика:' H3 header")
+        if not has_selfcheck:
+            errors.append(f"Skill {i} missing '### Self-Check' or '### Самоперевірка' H3 header")
+
     return errors
 
 
@@ -521,13 +530,14 @@ def validate_checkpoint_coverage(content: str, frontmatter_str: str) -> list[str
     if objectives_match:
         objective_items = re.findall(r'-\s+"?([^"\n]+)"?', objectives_match.group(1))
         
-        # Count how many objectives are reflected in Skill sections
-        skill_count = len(re.findall(r'^## Skill \d+:', content, re.MULTILINE))
+        # Count how many objectives are reflected in Skill sections (English or Ukrainian)
+        skill_pattern = r'^## (?:Skill|Навичка)\s*\d*:'
+        skill_count = len(re.findall(skill_pattern, content, re.MULTILINE))
         objective_count = len(objective_items)
         
         # Warning if there are objectives but no corresponding skill sections
         if objective_count > 0 and skill_count < 1:
-            errors.append(f"Checkpoint has {objective_count} objectives but no '## Skill N:' sections")
+            errors.append(f"Checkpoint has {objective_count} objectives but no '## Skill N:' or '## Навичка N:' sections")
     
     return errors
 

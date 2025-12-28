@@ -1,0 +1,1415 @@
+module: 11-multi-clause-sentences
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/11-multi-clause-sentences.md
+generated: '2025-12-28T19:58:53.393761'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Я знаю що він прийде.
+  error: знаю що
+  answer: знаю, що
+  sentence_corrected: Я знаю, що він прийде.
+  options:
+  - знаю що
+  - знаю, що
+  - знаю; що
+  - знаю: що
+  original_explanation: Перед сполучником "що" завжди ставиться кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Книга яку я читаю цікава.
+  error: Книга яку
+  answer: Книга, яку
+  sentence_corrected: Книга, яку я читаю цікава.
+  options:
+  - Книга яку
+  - Книга, яку
+  - Книга; яку
+  - Книга — яку
+  original_explanation: Означальне підрядне виділяється комами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Він сказав, що книга яку вона читала цікава.
+  error: книга яку
+  answer: книга, яку
+  sentence_corrected: Він сказав, що книга, яку вона читала цікава.
+  options:
+  - книга яку
+  - книга, яку
+  - книга; яку
+  - книга: яку
+  original_explanation: Вкладене підрядне потрібно виділити комами з обох боків.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Я знаю, що він прийде, і що допоможе.
+  error: прийде, і
+  answer: прийде і
+  sentence_corrected: Я знаю, що він прийде і що допоможе.
+  options:
+  - прийде, і
+  - прийде і
+  - прийде; і
+  - прийде — і
+  original_explanation: Між однорідними підрядними зі сполучником "і" кома не ставиться.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Він прийшов і ми почали працювати.
+  error: прийшов і
+  answer: прийшов, і
+  sentence_corrected: Він прийшов, і ми почали працювати.
+  options:
+  - прийшов і
+  - прийшов, і
+  - прийшов; і
+  - прийшов — і
+  original_explanation: У складносурядному реченні перед "і" потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Коли він прийшов ми зраділи.
+  error: прийшов ми
+  answer: прийшов, ми
+  sentence_corrected: Коли він прийшов, ми зраділи.
+  options:
+  - прийшов ми
+  - прийшов, ми
+  - прийшов; ми
+  - прийшов — ми
+  original_explanation: Після підрядного перед головним ставиться кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Він хотів допомогти але не зміг.
+  error: допомогти але
+  answer: допомогти, але
+  sentence_corrected: Він хотів допомогти, але не зміг.
+  options:
+  - допомогти але
+  - допомогти, але
+  - допомогти; але
+  - допомогти: але
+  original_explanation: Перед протиставним сполучником "але" потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Хоча йшов дощ ми продовжували гуляти.
+  error: дощ ми
+  answer: дощ, ми
+  sentence_corrected: Хоча йшов дощ, ми продовжували гуляти.
+  options:
+  - дощ ми
+  - дощ, ми
+  - дощ; ми
+  - дощ — ми
+  original_explanation: Між підрядним та головним реченням потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Він працював щоб заробити.
+  error: працював щоб
+  answer: працював, щоб
+  sentence_corrected: Він працював, щоб заробити.
+  options:
+  - працював щоб
+  - працював, щоб
+  - працював; щоб
+  - працював: щоб
+  original_explanation: Перед цільовим сполучником "щоб" ставиться кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Місто де я народився красиве.
+  error: Місто де
+  answer: Місто, де
+  sentence_corrected: Місто, де я народився красиве.
+  options:
+  - Місто де
+  - Місто, де
+  - Місто; де
+  - Місто — де
+  original_explanation: Означальне підрядне виділяється комами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Він не прийшов тому що захворів.
+  error: прийшов тому
+  answer: прийшов, тому
+  sentence_corrected: Він не прийшов, тому що захворів.
+  options:
+  - прийшов тому
+  - прийшов, тому
+  - прийшов; тому
+  - прийшов: тому
+  original_explanation: Перед складеним причиновим сполучником "тому що" потрібна
+    кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Вона зрозуміла що помилилася.
+  error: зрозуміла що
+  answer: зрозуміла, що
+  sentence_corrected: Вона зрозуміла, що помилилася.
+  options:
+  - зрозуміла що
+  - зрозуміла, що
+  - зрозуміла; що
+  - зрозуміла: що
+  original_explanation: Перед з''ясувальним сполучником "що" потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Якщо ти хочеш щоб тебе поважали поважай інших.
+  error: хочеш щоб
+  answer: хочеш, щоб
+  sentence_corrected: Якщо ти хочеш, щоб тебе поважали поважай інших.
+  options:
+  - хочеш щоб
+  - хочеш, щоб
+  - хочеш; щоб
+  - хочеш: щоб
+  original_explanation: Перед кожним сполучником підрядності потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Людина котра прийшла знайома мені.
+  error: Людина котра
+  answer: Людина, котра
+  sentence_corrected: Людина, котра прийшла знайома мені.
+  options:
+  - Людина котра
+  - Людина, котра
+  - Людина; котра
+  - Людина — котра
+  original_explanation: Означальне підрядне виділяється комами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Я думаю що він знає що робити.
+  error: думаю що
+  answer: думаю, що
+  sentence_corrected: Я думаю, що він знає що робити.
+  options:
+  - думаю що
+  - думаю, що
+  - думаю; що
+  - думаю: що
+  original_explanation: Перед з''ясувальним сполучником "що" потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у пунктуації та структурі
+  sentence_with_error: Сонце зайшло і стало темно.
+  error: зайшло і
+  answer: зайшло, і
+  sentence_corrected: Сонце зайшло, і стало темно.
+  options:
+  - зайшло і
+  - зайшло, і
+  - зайшло; і
+  - зайшло — і
+  original_explanation: У складносурядному реченні перед "і" потрібна кома, якщо немає
+    спільного члена.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Я знаю, _____ він прийде.
+  answer: що
+  complete_sentence: Я знаю, що__ він прийде.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Книга, _____ я читаю, дуже цікава.
+  answer: яку
+  complete_sentence: Книга, яку__ я читаю, дуже цікава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: _____ він прийшов, ми почали працювати.
+  answer: Коли
+  complete_sentence: Коли__ він прийшов, ми почали працювати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Він не прийшов, _____ захворів.
+  answer: бо
+  complete_sentence: Він не прийшов, бо__ захворів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: _____ ти хочеш, залишайся.
+  answer: Якщо
+  complete_sentence: Якщо__ ти хочеш, залишайся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Було так темно, _____ нічого не було видно.
+  answer: що
+  complete_sentence: Було так темно, що__ нічого не було видно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Він працював наполегливо, _____ досягти успіху.
+  answer: щоб
+  complete_sentence: Він працював наполегливо, щоб__ досягти успіху.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: _____ йшов дощ, ми продовжували гуляти.
+  answer: Хоча
+  complete_sentence: Хоча__ йшов дощ, ми продовжували гуляти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Я піду туди, _____ ти скажеш.
+  answer: куди
+  complete_sentence: Я піду туди, куди__ ти скажеш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Він говорив, _____ знав усе на світі.
+  answer: наче
+  complete_sentence: Він говорив, наче__ знав усе на світі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Сонце зайшло, _____ стало темно.
+  answer: і
+  complete_sentence: Сонце зайшло, і__ стало темно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Він хотів допомогти, _____ не зміг.
+  answer: але
+  complete_sentence: Він хотів допомогти, але__ не зміг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: _____ ти йдеш, _____ залишаєшся.
+  answer: Або
+  complete_sentence: Або__ ти йдеш, Або__ залишаєшся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Місто, _____ я народився, знаходиться на півдні.
+  answer: де
+  complete_sentence: Місто, де__ я народився, знаходиться на півдні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Вони працювали день і ніч, _____ завершити проєкт.
+  answer: аби
+  complete_sentence: Вони працювали день і ніч, аби__ завершити проєкт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте правильний сполучник
+  sentence_template: Він не знає, _____ робити далі.
+  answer: що
+  complete_sentence: Він не знає, що__ робити далі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Я знаю, що він прийде" — це _____ підрядне речення.'
+  answer: з'ясувальне
+  complete_sentence: '"Я знаю, що він прийде" — це з''ясувальне__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Книга, яку я читаю, цікава" — це _____ підрядне речення.'
+  answer: означальне
+  complete_sentence: '"Книга, яку я читаю, цікава" — це означальне__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Коли він прийшов, ми почали" — це _____ підрядне речення.'
+  answer: часове
+  complete_sentence: '"Коли він прийшов, ми почали" — це часове__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Він не прийшов, бо захворів" — це _____ підрядне речення.'
+  answer: причинове
+  complete_sentence: '"Він не прийшов, бо захворів" — це причинове__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Якщо хочеш, залишайся" — це _____ підрядне речення.'
+  answer: умовне
+  complete_sentence: '"Якщо хочеш, залишайся" — це умовне__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Він працював, щоб заробити" — це _____ підрядне речення.'
+  answer: цільове
+  complete_sentence: '"Він працював, щоб заробити" — це цільове__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Хоча йшов дощ, ми гуляли" — це _____ підрядне речення.'
+  answer: допустове
+  complete_sentence: '"Хоча йшов дощ, ми гуляли" — це допустове__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Місто, де я народився, красиве" — це _____ підрядне речення.'
+  answer: означальне
+  complete_sentence: '"Місто, де я народився, красиве" — це означальне__ підрядне
+    речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Він говорив, наче знав усе" — це _____ підрядне речення.'
+  answer: порівняльне
+  complete_sentence: '"Він говорив, наче знав усе" — це порівняльне__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Було так темно, що нічого не видно" — це _____ підрядне речення.'
+  answer: наслідкове
+  complete_sentence: '"Було так темно, що нічого не видно" — це наслідкове__ підрядне
+    речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Я піду, куди скажеш" — це _____ підрядне речення.'
+  answer: місця
+  complete_sentence: '"Я піду, куди скажеш" — це місця__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Людина, котра прийшла, знайома" — це _____ підрядне речення.'
+  answer: означальне
+  complete_sentence: '"Людина, котра прийшла, знайома" — це означальне__ підрядне
+    речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Після того як він пішов, стало тихо" — це _____ підрядне речення.'
+  answer: часове
+  complete_sentence: '"Після того як він пішов, стало тихо" — це часове__ підрядне
+    речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Я запізнився, оскільки був затор" — це _____ підрядне речення.'
+  answer: причинове
+  complete_sentence: '"Я запізнився, оскільки був затор" — це причинове__ підрядне
+    речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Перш ніж іти, подзвони" — це _____ підрядне речення.'
+  answer: часове
+  complete_sentence: '"Перш ніж іти, подзвони" — це часове__ підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте тип підрядного речення
+  sentence_template: '"Він працював так наполегливо, що досяг успіху" — це _____ підрядне
+    речення.'
+  answer: наслідкове
+  complete_sentence: '"Він працював так наполегливо, що досяг успіху" — це наслідкове__
+    підрядне речення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Я знаю, що він прийде.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Книга, яку я читаю, цікава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Коли він прийшов, ми почали.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він не прийшов, бо захворів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він працював, щоб заробити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Хоча йшов дощ, ми гуляли.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він сказав, що книга цікава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Сонце зайшло, і стало темно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він хотів допомогти, але не зміг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Якщо ти хочеш, залишайся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Місто, де я народився, красиве.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Я думаю, що він знає правду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Або ти йдеш, або залишаєшся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Він говорив, наче знав усе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Я запізнився, тому що був затор.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складні речення
+  jumbled_words: []
+  answer: Після того як він пішов, стало тихо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення є складносурядним з єднальним сполучником?
+  options:
+  - text: Він прийшов, і ми почали працювати.
+    correct: true
+  - text: Він прийшов, коли ми працювали.
+    correct: false
+  - text: Він прийшов, щоб допомогти.
+    correct: false
+  - text: Він прийшов, але запізнився.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення містить послідовне підпорядкування?
+  options:
+  - text: Я знаю, що він прийде і що допоможе.
+    correct: false
+  - text: Він сказав, що книга, яку вона читала, цікава.
+    correct: true
+  - text: Коли він прийшов, ми зраділи.
+    correct: false
+  - text: Якщо хочеш, залишайся.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Скільки підрядних речень у реченні "Я думаю, що він знає, де вона живе"?
+  options:
+  - text: Одне
+    correct: false
+  - text: Два
+    correct: true
+  - text: Три
+    correct: false
+  - text: Жодного
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення є прикладом однорідного підпорядкування?
+  options:
+  - text: Я знаю, що він прийде, і що він допоможе.
+    correct: true
+  - text: Коли він прийшов, ми дізналися, що сталося.
+    correct: false
+  - text: Він сказав, що книга, яку читає, цікава.
+    correct: false
+  - text: Якщо хочеш, щоб тебе поважали, поважай інших.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Який сполучник є протиставним?
+  options:
+  - text: і
+    correct: false
+  - text: але
+    correct: true
+  - text: або
+    correct: false
+  - text: та
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення є складнопідрядним з означальним підрядним?
+  options:
+  - text: Я знаю, що він прийде.
+    correct: false
+  - text: Книга, яку я читаю, цікава.
+    correct: true
+  - text: Коли він прийшов, ми почали.
+    correct: false
+  - text: Він прийшов, щоб допомогти.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Коли НЕ ставиться кома у складносурядному реченні?
+  options:
+  - text: Між частинами з різними підметами
+    correct: false
+  - text: Якщо частини мають спільний другорядний член
+    correct: true
+  - text: Перед сполучником "але"
+    correct: false
+  - text: Між двома простими реченнями
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення містить неоднорідне (паралельне) підпорядкування?
+  options:
+  - text: Я знаю, що він прийде і що допоможе.
+    correct: false
+  - text: Коли він прийшов, ми дізналися, що сталося.
+    correct: true
+  - text: Він сказав, що книга, яку читає, цікава.
+    correct: false
+  - text: Він хоче, щоб усе було готово.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Який знак ставиться між частинами з власними комами?
+  options:
+  - text: Кома
+    correct: false
+  - text: Крапка з комою
+    correct: true
+  - text: Двокрапка
+    correct: false
+  - text: Тире
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення містить вкладене підрядне?
+  options:
+  - text: Я знаю, що він прийде.
+    correct: false
+  - text: Він сказав, що книга, яку вона читала, цікава.
+    correct: true
+  - text: Коли він прийшов, ми почали.
+    correct: false
+  - text: Я знаю, що він прийде і що допоможе.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Який тип підрядного відповідає на питання "чому?"
+  options:
+  - text: Умовне
+    correct: false
+  - text: Причинове
+    correct: true
+  - text: Часове
+    correct: false
+  - text: Наслідкове
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Скільки розділових знаків потрібно у реченні "Він сказав що книга яку
+    вона читала цікава"?
+  options:
+  - text: Одна кома
+    correct: false
+  - text: Дві коми
+    correct: false
+  - text: Три коми
+    correct: true
+  - text: Чотири коми
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення є безсполучниковим?
+  options:
+  - text: Сонце зайшло, і стало темно.
+    correct: false
+  - text: Прийшла весна — птахи прилетіли.
+    correct: true
+  - text: Я знаю, що він прийде.
+    correct: false
+  - text: Він хотів, але не зміг.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Який сполучник вводить цільове підрядне?
+  options:
+  - text: бо
+    correct: false
+  - text: коли
+    correct: false
+  - text: щоб
+    correct: true
+  - text: хоча
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Яке речення є стилістично кращим для офіційного тексту?
+  options:
+  - text: Він прийшов. Він допоміг. Ми закінчили.
+    correct: false
+  - text: Коли він прийшов і допоміг, ми закінчили.
+    correct: true
+  - text: Він прийшов і допоміг і ми закінчили.
+    correct: false
+  - text: Він прийшов, допоміг, закінчили.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу складного речення
+  question: Скільки рівнів вкладеності рекомендовано для читабельності?
+  options:
+  - text: 1
+    correct: false
+  - text: 2-3
+    correct: true
+  - text: 5-6
+    correct: false
+  - text: Без обмежень
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Скільки типів складних речень існує в українській мові?
+  options:
+  - text: Один
+    correct: false
+  - text: Два
+    correct: false
+  - text: Три
+    correct: true
+  - text: Чотири
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке речення є прикладом неоднорідного підпорядкування?
+  options:
+  - text: Я знаю, що він прийде і що допоможе.
+    correct: false
+  - text: Коли він прийшов, ми дізналися, що сталося.
+    correct: true
+  - text: Він сказав, що книга, яку читає, цікава.
+    correct: false
+  - text: Якщо хочеш, залишайся.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Коли між однорідними підрядними ставиться кома?
+  options:
+  - text: Завжди
+    correct: false
+  - text: Ніколи
+    correct: false
+  - text: Якщо між ними немає сполучника "і"
+    correct: true
+  - text: Тільки перед "що"
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Скільки ком потрібно у реченні з вкладеним підрядним?
+  options:
+  - text: Одна
+    correct: false
+  - text: Дві
+    correct: false
+  - text: Три
+    correct: true
+  - text: Залежить від речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Який сполучник НЕ є сполучником підрядності?
+  options:
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: але
+    correct: true
+  - text: коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Що таке послідовне підпорядкування?
+  options:
+  - text: Підрядні залежать від головного паралельно
+    correct: false
+  - text: Підрядні утворюють ланцюжок залежності
+    correct: true
+  - text: Підрядні однакового типу
+    correct: false
+  - text: Підрядні без сполучників
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке питання допомагає визначити цільове підрядне?
+  options:
+  - text: Чому?
+    correct: false
+  - text: Коли?
+    correct: false
+  - text: Для чого? Навіщо?
+    correct: true
+  - text: Який?
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: У якому реченні правильно розставлені коми?
+  options:
+  - text: Книга яку я читаю цікава.
+    correct: false
+  - text: Книга, яку, я читаю, цікава.
+    correct: false
+  - text: Книга, яку я читаю, цікава.
+    correct: true
+  - text: Книга яку я читаю, цікава.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке речення містить спільний другорядний член?
+  options:
+  - text: Він прийшов, і ми почали.
+    correct: false
+  - text: У лісі росли гриби і цвіли квіти.
+    correct: true
+  - text: Вона читала, і він писав.
+    correct: false
+  - text: День був сонячний, і ми пішли гуляти.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Що відрізняє безсполучникове речення від інших?
+  options:
+  - text: Наявність сполучника
+    correct: false
+  - text: Відсутність сполучника
+    correct: true
+  - text: Наявність підрядного
+    correct: false
+  - text: Кількість частин
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Скільки рівнів вкладеності рекомендовано для читабельного тексту?
+  options:
+  - text: 1
+    correct: false
+  - text: 2-3
+    correct: true
+  - text: 5-6
+    correct: false
+  - text: Необмежено
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке речення є складносурядним з розділовим сполучником?
+  options:
+  - text: Він прийшов, і ми почали.
+    correct: false
+  - text: Він хотів, але не зміг.
+    correct: false
+  - text: Або ти йдеш, або залишаєшся.
+    correct: true
+  - text: Він прийшов, коли ми працювали.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Який знак ставиться між частинами, що мають внутрішні коми?
+  options:
+  - text: Кома
+    correct: false
+  - text: Крапка з комою
+    correct: true
+  - text: Двокрапка
+    correct: false
+  - text: Тире
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке питання відповідає допустовому підрядному?
+  options:
+  - text: Чому?
+    correct: false
+  - text: За якої умови?
+    correct: false
+  - text: Незважаючи на що?
+    correct: true
+  - text: Коли?
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: У якому реченні є три підрядних?
+  options:
+  - text: Я знаю, що він прийде.
+    correct: false
+  - text: Коли він прийшов, ми дізналися, що сталося.
+    correct: false
+  - text: Він сказав, що книга, яку вона читала, коли була молодою, цікава.
+    correct: true
+  - text: Я знаю, що він прийде і що допоможе.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про складні речення
+  question: Яке речення граматично неправильне?
+  options:
+  - text: Я знаю, що він прийде.
+    correct: false
+  - text: Книга, яку я читаю, цікава.
+    correct: false
+  - text: Якщо що він прийде, я буду радий.
+    correct: true
+  - text: Коли він прийшов, ми почали.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Перед сполучником "що" завжди ставиться кома.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Між однорідними підрядними зі сполучником "і" ставиться кома.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: У складносурядному реченні кома ставиться перед сполучником "але".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Вкладене підрядне виділяється комами з обох боків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Якщо частини мають спільний другорядний член, кома не потрібна.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Крапка з комою ставиться перед кожним сполучником підрядності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Двокрапка може вводити пояснювальну частину.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: У безсполучниковому реченні між частинами може бути тире.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Перед сполучником "і" у складносурядному реченні кома не потрібна.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Означальні підрядні завжди виділяються комами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Послідовне підпорядкування — це коли підрядні залежать одне від одного.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Однорідне підпорядкування — це коли підрядні різного типу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: У складному реченні може бути необмежена кількість підрядних.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Сполучник "оскільки" вводить причинове підрядне.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Перед сполучником "як" завжди ставиться кома.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила пунктуації у складних реченнях
+  statement: Між частинами складносурядного речення завжди ставиться кома.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

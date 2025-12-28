@@ -57,10 +57,10 @@ def extract_vocabulary(filepath: Path):
         content = f.read()
 
     # Find vocabulary section
-    # Matches: # Vocabulary ... table ... end
+    # Matches: # Vocabulary OR # Словник ... table ... end
     # Simplified regex to capture the table block
     vocab_match = re.search(
-        r'# Vocabulary\n\n(.*?)(?=\n#|\Z)', 
+        r'# (?:Vocabulary|Словник)\n\n(.*?)(?=\n#|\Z)', 
         content, 
         re.DOTALL
     )

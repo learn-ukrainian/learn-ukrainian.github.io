@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 93.1% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 92.2% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 98% (grammar)
 - **Grammar:** ✅ Validated (8/58 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 2 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **98.8%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -47,17 +53,4 @@
 | **Практика** | ⚪️ | 62 | Skipped |
 | **Діалоги** | ✅ | 409 | Included in Core |
 | **Підсумок** | ✅ | 237 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Розуміння префіксів** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Префікси та значення** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Вибір дієслова з правильним префіксом** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Правила префіксів та прийменників** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Класифікація дієслів за префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Складання речень про рух** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Виправлення помилок з префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Маршрут через місто** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Префіксальні дієслова у тексті** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Інструкції водієві** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Множинний вибір про префікси** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Переклад речень з префіксами** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |

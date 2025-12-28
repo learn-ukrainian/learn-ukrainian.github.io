@@ -1,0 +1,1600 @@
+module: 03-reading-grammar-rules
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/03-reading-grammar-rules.md
+generated: '2025-12-29T00:21:58.426612'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
+activity_counts:
+  error-correction: 14
+  fill-in: 28
+  cloze: 1
+  unjumble: 14
+  quiz: 28
+  translate: 14
+  true-false: 14
+item_count: 113
+items:
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Використовується" означає "means".'
+  error: means
+  answer: is used
+  sentence_corrected: '"Використовується" означає "is used".'
+  options:
+  - means
+  - is used
+  - shows
+  - expresses
+  original_explanation: '"Використовується" = is used.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Суфікс стоїть перед коренем.
+  error: перед
+  answer: після
+  sentence_corrected: Суфікс стоїть після коренем.
+  options:
+  - перед
+  - після
+  - замість
+  - без
+  original_explanation: Суфікс — після кореня, префікс — перед.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Наприклад" означає "therefore".'
+  error: therefore
+  answer: for example
+  sentence_corrected: '"Наприклад" означає "for example".'
+  options:
+  - therefore
+  - for example
+  - however
+  - similar to
+  original_explanation: '"Наприклад" = for example.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Подібно до" показує контраст.'
+  error: контраст
+  answer: схожість
+  sentence_corrected: '"Подібно до" показує схожість.'
+  options:
+  - контраст
+  - схожість
+  - різницю
+  - протилежність
+  original_explanation: '"Подібно до" = similar to, схожість.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Отже" означає "for example".'
+  error: for example
+  answer: therefore
+  sentence_corrected: '"Отже" означає "therefore".'
+  options:
+  - for example
+  - therefore
+  - however
+  - similar to
+  original_explanation: '"Отже" = therefore.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: Префікс стоїть після кореня.
+  error: після
+  answer: перед
+  sentence_corrected: Префікс стоїть перед кореня.
+  options:
+  - після
+  - перед
+  - замість
+  - без
+  original_explanation: Префікс — перед коренем.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Виняток" означає "rule".'
+  error: rule
+  answer: exception
+  sentence_corrected: '"Виняток" означає "exception".'
+  options:
+  - rule
+  - exception
+  - form
+  - stem
+  original_explanation: '"Виняток" = exception.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Означає" в граматиці значить "is used".'
+  error: is used
+  answer: means
+  sentence_corrected: '"Означає" в граматиці значить "means".'
+  options:
+  - is used
+  - means
+  - shows
+  - indicates
+  original_explanation: '"Означає" = means.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"На відміну від" показує схожість.'
+  error: схожість
+  answer: контраст
+  sentence_corrected: '"На відміну від" показує контраст.'
+  options:
+  - схожість
+  - контраст
+  - рівність
+  - тотожність
+  original_explanation: '"На відміну від" = in contrast to.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Тобто" означає "therefore".'
+  error: therefore
+  answer: that is
+  sentence_corrected: '"Тобто" означає "that is".'
+  options:
+  - therefore
+  - that is
+  - for example
+  - however
+  original_explanation: '"Тобто" = that is; "отже" = therefore.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Основа" означає "root".'
+  error: root
+  answer: stem
+  sentence_corrected: '"Основа" означає "stem".'
+  options:
+  - root
+  - stem
+  - suffix
+  - prefix
+  original_explanation: '"Основа" = stem; "корінь" = root.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Корінь" означає "stem".'
+  error: stem
+  answer: root
+  sentence_corrected: '"Корінь" означає "root".'
+  options:
+  - stem
+  - root
+  - suffix
+  - prefix
+  original_explanation: '"Корінь" = root; "основа" = stem.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Правило" означає "exception".'
+  error: exception
+  answer: rule
+  sentence_corrected: '"Правило" означає "rule".'
+  options:
+  - exception
+  - rule
+  - form
+  - stem
+  original_explanation: '"Правило" = rule.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок
+  sentence_with_error: '"Показує" в граматиці значить "is used".'
+  error: is used
+  answer: shows
+  sentence_corrected: '"Показує" в граматиці значить "shows".'
+  options:
+  - is used
+  - shows
+  - means
+  - indicates
+  original_explanation: '"Показує" = shows.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"X ___ після прийменника" означає "is used".'
+  answer: використовується
+  complete_sentence: '"X використовується після прийменника" означає "is used".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"X ___ завершену дію" означає "means".'
+  answer: означає
+  complete_sentence: '"X означає завершену дію" означає "means".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"Цей суфікс ___ зменшення" означає "shows".'
+  answer: показує
+  complete_sentence: '"Цей суфікс показує зменшення" означає "shows".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"Давальний відмінок ___ адресата" означає "expresses".'
+  answer: виражає
+  complete_sentence: '"Давальний відмінок виражає адресата" означає "expresses".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"Закінчення ___ жіночий рід" означає "indicates".'
+  answer: вказує на
+  complete_sentence: '"Закінчення вказує на жіночий рід" означає "indicates".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___ ці два речення" означає "compare".'
+  answer: Порівняйте
+  complete_sentence: '"Порівняйте ці два речення" означає "compare".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___ на закінчення" означає "pay attention".'
+  answer: Зверніть увагу
+  complete_sentence: '"Зверніть увагу на закінчення" означає "pay attention".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___, це прислівник" означає "that is".'
+  answer: Тобто
+  complete_sentence: '"Тобто, це прислівник" означає "that is".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___ англійської" означає "in contrast to".'
+  answer: На відміну від
+  complete_sentence: '"На відміну від англійської" означає "in contrast to".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___ російської" означає "similar to".'
+  answer: Подібно до
+  complete_sentence: '"Подібно до російської" означає "similar to".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___, це іменник" означає "therefore".'
+  answer: Отже
+  complete_sentence: '"Отже, це іменник" означає "therefore".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___: книга → книги" означає "for example".'
+  answer: Наприклад
+  complete_sentence: '"Наприклад: книга → книги" означає "for example".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"___ утворюється множина" означає "thus".'
+  answer: Таким чином
+  complete_sentence: '"Таким чином утворюється множина" означає "thus".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пояснювальні конструкції
+  sentence_template: '"Ця форма ___ для опису" означає "is used".'
+  answer: вживається
+  complete_sentence: '"Ця форма вживається для опису" означає "is used".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: Найменша частина слова — ___.
+  answer: корінь
+  complete_sentence: Найменша частина слова — корінь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: Частина перед коренем — ___.
+  answer: префікс
+  complete_sentence: Частина перед коренем — префікс.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: Частина після кореня — ___.
+  answer: суфікс
+  complete_sentence: Частина після кореня — суфікс.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: Слово без закінчення — ___.
+  answer: основа
+  complete_sentence: Слово без закінчення — основа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Root" українською — ___.'
+  answer: корінь
+  complete_sentence: '"Root" українською — корінь.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Suffix" українською — ___.'
+  answer: суфікс
+  complete_sentence: '"Suffix" українською — суфікс.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Prefix" українською — ___.'
+  answer: префікс
+  complete_sentence: '"Prefix" українською — префікс.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Exception" українською — ___.'
+  answer: виняток
+  complete_sentence: '"Exception" українською — виняток.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Rule" українською — ___.'
+  answer: правило
+  complete_sentence: '"Rule" українською — правило.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Form" українською — ___.'
+  answer: форма
+  complete_sentence: '"Form" українською — форма.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: '"Stem" українською — ___.'
+  answer: основа
+  complete_sentence: '"Stem" українською — основа.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: У слові "прочитати" ___ — "про-".
+  answer: префікс
+  complete_sentence: У слові "прочитати" префікс — "про-".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: У слові "прочитати" ___ — "чит-".
+  answer: корінь
+  complete_sentence: У слові "прочитати" корінь — "чит-".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частини слова
+  sentence_template: Це не правило, а ___.
+  answer: виняток
+  complete_sentence: Це не правило, а виняток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Читання граматичного тексту
+  passage_template: 'Прикметник {узгоджується} з іменником за родом, числом і відмінком.
+    {Наприклад}, «гарна книга» — жіночий рід. {Зверніть увагу} на закінчення: -а для
+    жіночого роду. {На відміну від} англійської, українська має граматичний рід. {Подібно
+    до} російської, українська має сім відмінків. Це загальне {правило}, але є {винятки}.
+    {Отже}, це стандартна {форма} для прикметника. {Таким чином} утворюється узгодження.
+    Доконаний вид {означає} завершену дію. Давальний відмінок {виражає} адресата.
+    Закінчення -а {вказує на} жіночий рід. {Порівняйте} ці два речення і знайдіть
+    відмінності.'
+  blanks:
+  - id: 1
+    answer: узгоджується
+    options:
+    - узгоджується
+    - відрізняється
+    - змінюється
+  - id: 2
+    answer: Наприклад
+    options:
+    - Наприклад
+    - Отже
+    - Тобто
+  - id: 3
+    answer: Зверніть увагу
+    options:
+    - Зверніть увагу
+    - Порівняйте
+    - Напишіть
+  - id: 4
+    answer: На відміну від
+    options:
+    - На відміну від
+    - Подібно до
+    - Наприклад
+  - id: 5
+    answer: Подібно до
+    options:
+    - Подібно до
+    - На відміну від
+    - Тобто
+  - id: 6
+    answer: правило
+    options:
+    - правило
+    - виняток
+    - форма
+  - id: 7
+    answer: винятки
+    options:
+    - винятки
+    - правила
+    - форми
+  - id: 8
+    answer: Отже
+    options:
+    - Отже
+    - Наприклад
+    - Однак
+  - id: 9
+    answer: форма
+    options:
+    - форма
+    - виняток
+    - правило
+  - id: 10
+    answer: Таким чином
+    options:
+    - Таким чином
+    - Наприклад
+    - Тобто
+  - id: 11
+    answer: означає
+    options:
+    - означає
+    - використовується
+    - показує
+  - id: 12
+    answer: виражає
+    options:
+    - виражає
+    - показує
+    - означає
+  - id: 13
+    answer: вказує на
+    options:
+    - вказує на
+    - означає
+    - показує
+  - id: 14
+    answer: Порівняйте
+    options:
+    - Порівняйте
+    - Напишіть
+    - Прочитайте
+  complete_passage: 'Прикметник {узгоджується} з іменником за родом, числом і відмінком.
+    {Наприклад}, «гарна книга» — жіночий рід. {Зверніть увагу} на закінчення: -а для
+    жіночого роду. {На відміну від} англійської, українська має граматичний рід. {Подібно
+    до} російської, українська має сім відмінків. Це загальне {правило}, але є {винятки}.
+    {Отже}, це стандартна {форма} для прикметника. {Таким чином} утворюється узгодження.
+    Доконаний вид {означає} завершену дію. Давальний відмінок {виражає} адресата.
+    Закінчення -а {вказує на} жіночий рід. {Порівняйте} ці два речення і знайдіть
+    відмінності.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Родовий відмінок використовується після прийменника без для позначення відсутності
+    чогось.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Доконаний вид означає, що дія завершена і має результат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Порівняйте ці два речення і зверніть увагу на відмінності у закінченнях
+    слів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Корінь є найменша значуща частина слова, від якої утворюються інші споріднені
+    слова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Префікс — це частина слова, яка стоїть перед коренем і змінює значення дієслова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Суфікс стоїть після кореня і утворює нові слова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Наприклад, слово книга у родовому відмінку має форму книги із закінченням
+    -и.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: На відміну від англійської, українська мова має сім відмінків для іменників.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Подібно до інших слов'янських мов, українська має розвинену систему дієслівного
+    виду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Тобто прислівник — це частина мови, яка описує дію або прикметник, наприклад
+    швидко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Отже, це іменник жіночого роду, бо закінчується на -а.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Таким чином утворюється множина іменників чоловічого роду додаванням закінчення
+    -и або -і.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Це виняток із загального правила, тому потрібно запам'ятати цю форму окремо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Граматичні пояснення
+  jumbled_words: []
+  answer: Основа слова — це слово без закінчення, наприклад книг-.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Коли граматика каже "родовий відмінок використовується після 'без'", що
+    вона пояснює?
+  options:
+  - text: коли вживати родовий відмінок
+    correct: true
+  - text: що означає родовий відмінок
+    correct: false
+  - text: як утворити родовий відмінок
+    correct: false
+  - text: чому існує родовий відмінок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Якщо підручник пише "доконаний вид означає завершену дію", що він пояснює?
+  options:
+  - text: коли вживати доконаний вид
+    correct: false
+  - text: що означає доконаний вид
+    correct: true
+  - text: як утворити доконаний вид
+    correct: false
+  - text: де вживати доконаний вид
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Інструкція "порівняйте ці два речення" просить вас зробити що?
+  options:
+  - text: порівняти речення
+    correct: true
+  - text: написати речення
+    correct: false
+  - text: прочитати речення
+    correct: false
+  - text: перекласти речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Коли бачите "зверніть увагу на закінчення", що від вас очікують?
+  options:
+  - text: уважно подивитися на закінчення
+    correct: true
+  - text: змінити закінчення
+    correct: false
+  - text: видалити закінчення
+    correct: false
+  - text: додати закінчення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Слово "наприклад" у граматичному тексті підручника означає яку конструкцію?
+  options:
+  - text: for example
+    correct: true
+  - text: in contrast
+    correct: false
+  - text: therefore
+    correct: false
+  - text: however
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Фраза "на відміну від англійської" у граматичному поясненні показує що?
+  options:
+  - text: контраст з англійською
+    correct: true
+  - text: схожість з англійською
+    correct: false
+  - text: переклад на англійську
+    correct: false
+  - text: походження з англійської
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Коли підручник пише "отже, це іменник", що означає слово "отже"?
+  options:
+  - text: for example
+    correct: false
+  - text: however
+    correct: false
+  - text: therefore
+    correct: true
+  - text: similar to
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Фраза "подібно до російської" у граматичному поясненні показує яке відношення?
+  options:
+  - text: контраст з російською
+    correct: false
+  - text: схожість з російською
+    correct: true
+  - text: переклад на російську
+    correct: false
+  - text: походження з російської
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Слово "тобто" у граматичному тексті означає яку конструкцію англійською?
+  options:
+  - text: for example
+    correct: false
+  - text: that is, in other words
+    correct: true
+  - text: therefore
+    correct: false
+  - text: however
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Фраза "таким чином утворюється множина" у підручнику означає що?
+  options:
+  - text: thus the plural is formed
+    correct: true
+  - text: the plural does not form
+    correct: false
+  - text: compare the plural
+    correct: false
+  - text: note the plural
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Коли граматика пише "виражає адресата", вона пояснює що?
+  options:
+  - text: коли вживати форму
+    correct: false
+  - text: що форма означає
+    correct: true
+  - text: як утворити форму
+    correct: false
+  - text: де знайти форму
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Інструкція "вживається для опису" у граматиці пояснює яку функцію?
+  options:
+  - text: коли використовувати форму
+    correct: true
+  - text: що означає форма
+    correct: false
+  - text: як написати форму
+    correct: false
+  - text: чому існує форма
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Слово "вказує на" у граматичному тексті означає яку конструкцію?
+  options:
+  - text: is used
+    correct: false
+  - text: means
+    correct: false
+  - text: indicates
+    correct: true
+  - text: compares
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Пояснювальні конструкції
+  question: Фраза "показує зменшувальне значення" у граматиці пояснює яку характеристику?
+  options:
+  - text: коли використовувати
+    correct: false
+  - text: яке значення має
+    correct: true
+  - text: як утворити
+    correct: false
+  - text: де знайти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Найменша значуща частина слова, від якої утворюються інші слова — це що?
+  options:
+  - text: корінь
+    correct: true
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: закінчення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Частина слова, яка стоїть перед коренем і змінює значення — це що?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: true
+  - text: закінчення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Частина слова, яка стоїть після кореня і утворює нові слова — це що?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: true
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Частина слова без закінчення у словотворенні — це яка частина?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Англійське граматичне слово "root" українською перекладається як що?
+  options:
+  - text: корінь
+    correct: true
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Англійське граматичне слово "suffix" українською перекладається як що?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: true
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Англійське граматичне слово "prefix" українською перекладається як що?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: true
+  - text: основа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Коли граматика каже "це виняток", що вона означає?
+  options:
+  - text: це не підпорядковується правилу
+    correct: true
+  - text: це підпорядковується правилу
+    correct: false
+  - text: це нове правило
+    correct: false
+  - text: це старе правило
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Коли граматика каже "це правило", що вона означає?
+  options:
+  - text: це виняток
+    correct: false
+  - text: це закономірність
+    correct: true
+  - text: це помилка
+    correct: false
+  - text: це питання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: У дієслові "написати" яка частина слова є коренем?
+  options:
+  - text: на-
+    correct: false
+  - text: -пис-
+    correct: true
+  - text: -а-
+    correct: false
+  - text: -ти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: У дієслові "написати" яка частина слова є префіксом?
+  options:
+  - text: на-
+    correct: true
+  - text: -пис-
+    correct: false
+  - text: -а-
+    correct: false
+  - text: -ти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Англійське граматичне слово "stem" українською перекладається як що?
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Слово "форма" у граматичному контексті означає яке поняття?
+  options:
+  - text: exception
+    correct: false
+  - text: form
+    correct: true
+  - text: root
+    correct: false
+  - text: suffix
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Словотвір
+  question: Коли інструкція каже "утворіть форму", вона просить що?
+  options:
+  - text: create the form
+    correct: true
+  - text: find the form
+    correct: false
+  - text: delete the form
+    correct: false
+  - text: compare the form
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: is used
+  answer: ''
+  options:
+  - text: використовується
+    correct: true
+  - text: означає
+    correct: false
+  - text: показує
+    correct: false
+  - text: виражає
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: means
+  answer: ''
+  options:
+  - text: використовується
+    correct: false
+  - text: означає
+    correct: true
+  - text: показує
+    correct: false
+  - text: виражає
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: compare
+  answer: ''
+  options:
+  - text: порівняйте
+    correct: true
+  - text: напишіть
+    correct: false
+  - text: прочитайте
+    correct: false
+  - text: знайдіть
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: pay attention
+  answer: ''
+  options:
+  - text: зверніть увагу
+    correct: true
+  - text: порівняйте
+    correct: false
+  - text: напишіть
+    correct: false
+  - text: знайдіть
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: for example
+  answer: ''
+  options:
+  - text: наприклад
+    correct: true
+  - text: тобто
+    correct: false
+  - text: отже
+    correct: false
+  - text: однак
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: therefore
+  answer: ''
+  options:
+  - text: наприклад
+    correct: false
+  - text: тобто
+    correct: false
+  - text: отже
+    correct: true
+  - text: однак
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: in contrast to
+  answer: ''
+  options:
+  - text: на відміну від
+    correct: true
+  - text: подібно до
+    correct: false
+  - text: наприклад
+    correct: false
+  - text: тобто
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: similar to
+  answer: ''
+  options:
+  - text: на відміну від
+    correct: false
+  - text: подібно до
+    correct: true
+  - text: наприклад
+    correct: false
+  - text: тобто
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: root
+  answer: ''
+  options:
+  - text: корінь
+    correct: true
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: suffix
+  answer: ''
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: true
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: prefix
+  answer: ''
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: true
+  - text: основа
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: exception
+  answer: ''
+  options:
+  - text: правило
+    correct: false
+  - text: виняток
+    correct: true
+  - text: форма
+    correct: false
+  - text: основа
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: rule
+  answer: ''
+  options:
+  - text: правило
+    correct: true
+  - text: виняток
+    correct: false
+  - text: форма
+    correct: false
+  - text: основа
+    correct: false
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: translate
+  title: Переклад термінів
+  source_sentence: stem
+  answer: ''
+  options:
+  - text: корінь
+    correct: false
+  - text: суфікс
+    correct: false
+  - text: префікс
+    correct: false
+  - text: основа
+    correct: true
+  validate:
+    source_valid: null
+    answer_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Використовується" означає "is used".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Означає" означає "is used".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Порівняйте" — це інструкція.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Наприклад" означає "therefore".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Корінь" означає "root".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Суфікс" стоїть перед коренем.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"На відміну від" показує контраст.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Подібно до" показує контраст.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Виняток" означає "exception".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Правило" означає "exception".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Зверніть увагу" означає "pay attention".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Тобто" означає "therefore".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Основа" означає "stem".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Граматичні конструкції
+  statement: '"Префікс" стоїть після кореня.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

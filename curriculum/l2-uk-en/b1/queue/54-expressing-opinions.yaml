@@ -1,0 +1,1150 @@
+module: 54-expressing-opinions
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/54-expressing-opinions.md
+generated: '2025-12-29T00:22:02.755388'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 14
+  fill-in: 28
+  unjumble: 14
+  quiz: 28
+  true-false: 14
+item_count: 98
+items:
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Я погоджуюся на вашу думку.
+  error: на
+  answer: з
+  sentence_corrected: Я погоджуюся з вашу думку.
+  options:
+  - на
+  - з
+  - до
+  - про
+  original_explanation: 'Правильно: погоджуватися з думкою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Сумніваюся з успіху цього проєкту.
+  error: з
+  answer: в
+  sentence_corrected: Сумніваюся в успіху цього проєкту.
+  options:
+  - з
+  - в
+  - на
+  - до
+  original_explanation: 'Правильно: сумніватися в чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Заперечую з цих змін.
+  error: з
+  answer: проти
+  sentence_corrected: Заперечую проти цих протимін.
+  options:
+  - з
+  - проти
+  - на
+  - до
+  original_explanation: 'Правильно: заперечувати проти чогось.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Він впевнений з перемозі.
+  error: з
+  answer: в
+  sentence_corrected: Він впевнений в перемові.
+  options:
+  - з
+  - в
+  - на
+  - до
+  original_explanation: 'Правильно: впевнений у/в чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Не погоджуюся на це твердження.
+  error: на
+  answer: з
+  sentence_corrected: Не погоджуюся з це твердження.
+  options:
+  - на
+  - з
+  - до
+  - про
+  original_explanation: 'Правильно: не погоджуватися з чимось.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Переконаний про необхідність реформ.
+  error: про
+  answer: в
+  sentence_corrected: Переконаний в необхідність реформ.
+  options:
+  - про
+  - в
+  - на
+  - до
+  original_explanation: 'Правильно: переконаний у чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Погоджуюся до вашого рішення.
+  error: до
+  answer: з
+  sentence_corrected: Погоджуюся з вашого рішення.
+  options:
+  - до
+  - з
+  - на
+  - про
+  original_explanation: 'Правильно: погоджуватися з рішенням.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Сумніваюся на ефективності методу.
+  error: на
+  answer: в
+  sentence_corrected: Сумніваюся в ефективності методу.
+  options:
+  - на
+  - в
+  - з
+  - до
+  original_explanation: 'Правильно: сумніватися в чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Він заперечує на запропоновані зміни.
+  error: на
+  answer: проти
+  sentence_corrected: Він заперечує проти запропоновані зміни.
+  options:
+  - на
+  - проти
+  - з
+  - до
+  original_explanation: 'Правильно: заперечувати проти чогось.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Не впевнений з правильності вибору.
+  error: з
+  answer: в
+  sentence_corrected: Не впевнений в правильності вибору.
+  options:
+  - з
+  - в
+  - на
+  - до
+  original_explanation: 'Правильно: впевнений/не впевнений у чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Я погоджуюся до його аналізу.
+  error: до
+  answer: з
+  sentence_corrected: Я погоджуюся з його аналізу.
+  options:
+  - до
+  - з
+  - на
+  - про
+  original_explanation: 'Правильно: погоджуватися з чимось.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Сумніваюся до успіху проєкту.
+  error: до
+  answer: в
+  sentence_corrected: Сумніваюся в успіху проєкту.
+  options:
+  - до
+  - в
+  - з
+  - на
+  original_explanation: 'Правильно: сумніватися в чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Заперечую на таких пропозицій.
+  error: на
+  answer: проти
+  sentence_corrected: Заперечую проти таких пропозицій.
+  options:
+  - на
+  - проти
+  - з
+  - до
+  original_explanation: 'Правильно: заперечувати проти чогось.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у колокаціях
+  sentence_with_error: Переконаний з правильності рішення.
+  error: з
+  answer: в
+  sentence_corrected: Переконаний в правильності рішення.
+  options:
+  - з
+  - в
+  - на
+  - до
+  original_explanation: 'Правильно: переконаний у чомусь.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, це найкраще рішення для компанії.
+  answer: Вважаю
+  complete_sentence: Вважаю__, це найкраще рішення для компанії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, що реформа необхідна для розвитку.
+  answer: Переконаний
+  complete_sentence: Переконаний__, що реформа необхідна для розвитку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____ в ефективності цього підходу.
+  answer: Сумніваюся
+  complete_sentence: Сумніваюся__ в ефективності цього підходу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, це занадто ризиковано для нас.
+  answer: Як на мене
+  complete_sentence: Як на мене__, це занадто ризиковано для нас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: Експерти _____ нову політику уряду.
+  answer: критикують
+  complete_sentence: Експерти критикують__ нову політику уряду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: Громадськість _____ рішення про зниження податків.
+  answer: схвалює
+  complete_sentence: Громадськість схвалює__ рішення про зниження податків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____ з вашою думкою щодо цього питання.
+  answer: Погоджуюся
+  complete_sentence: Погоджуюся__ з вашою думкою щодо цього питання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, що зміни потрібні в освітній системі.
+  answer: Очевидно
+  complete_sentence: Очевидно__, що зміни потрібні в освітній системі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, це правильний напрямок розвитку.
+  answer: Безперечно
+  complete_sentence: Безперечно__, це правильний напрямок розвитку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, він зробив правильний вибір.
+  answer: Мені здається
+  complete_sentence: Мені здається__, він зробив правильний вибір.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: Міжнародна спільнота _____ порушення прав людини.
+  answer: засуджує
+  complete_sentence: Міжнародна спільнота засуджує__ порушення прав людини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____, що результати будуть позитивними.
+  answer: Припускаю
+  complete_sentence: Припускаю__, що результати будуть позитивними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____ проти запропонованих змін.
+  answer: Заперечую
+  complete_sentence: Заперечую__ проти запропонованих змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного виразу
+  sentence_template: _____ цю ініціативу повністю.
+  answer: Підтримую
+  complete_sentence: Підтримую__ цю ініціативу повністю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Я погоджуюся _____ вашою думкою.
+  answer: з
+  complete_sentence: Я погоджуюся з__ вашою думкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Сумніваюся _____ успіху цього проєкту.
+  answer: в
+  complete_sentence: Сумніваюся в__ успіху цього проєкту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Заперечую _____ таких змін.
+  answer: проти
+  complete_sentence: Заперечую проти__ таких змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Він впевнений _____ своїй правоті.
+  answer: у
+  complete_sentence: Він впевнений у__ своїй правоті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Не погоджуюся _____ цим твердженням.
+  answer: з
+  complete_sentence: Не погоджуюся з__ цим твердженням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Переконаний _____ необхідності реформ.
+  answer: у
+  complete_sentence: Переконаний у__ необхідності реформ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Вона сумнівається _____ правильності рішення.
+  answer: в
+  complete_sentence: Вона сумнівається в__ правильності рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Ніхто не заперечує _____ важливості освіти.
+  answer: проти
+  complete_sentence: Ніхто не заперечує проти__ важливості освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Погоджуюся _____ вашим аналізом ситуації.
+  answer: з
+  complete_sentence: Погоджуюся з__ вашим аналізом ситуації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Впевнений _____ перемозі нашої команди.
+  answer: в
+  complete_sentence: Впевнений в__ перемозі нашої команди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Я заперечую _____ запропонованого плану.
+  answer: проти
+  complete_sentence: Я заперечую проти__ запропонованого плану.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Він не впевнений _____ правильності вибору.
+  answer: в
+  complete_sentence: Він не впевнений в__ правильності вибору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Погоджуюся _____ рішенням керівництва.
+  answer: з
+  complete_sentence: Погоджуюся з__ рішенням керівництва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Колокації з прийменниками
+  sentence_template: Сумніваюся _____ ефективності нового методу.
+  answer: в
+  complete_sentence: Сумніваюся в__ ефективності нового методу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Я вважаю, що це правильне рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: На мою думку, потрібні зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Я переконаний, що це спрацює.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Я сумніваюся, що це можливо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Я погоджуюся з вашою думкою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Експерти критикують нову політику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Очевидно, що потрібні зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Як на мене, це занадто дорого.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Мені здається, що він правий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Я підтримую цю ініціативу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Міжнародна спільнота засуджує насильство.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Безперечно, це найкращий варіант.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Не погоджуюся з цим твердженням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складання речень з виразами думки
+  jumbled_words: []
+  answer: Заперечую проти таких змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово використовується для вираження обдуманого переконання у формальному
+    контексті?
+  options:
+  - text: гадати
+  - text: вважати
+    correct: true
+  - text: думати
+  - text: припускати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово виражає найменший рівень впевненості серед дієслів думки?
+  options:
+  - text: вважати
+  - text: думати
+  - text: гадати
+  - text: припускати
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово є найпоширенішим та нейтральним для вираження думки?
+  options:
+  - text: вважати
+  - text: думати
+    correct: true
+  - text: гадати
+  - text: припускати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке слово означає абсолютну впевненість у своїй позиції?
+  options:
+  - text: сумніватися
+  - text: гадати
+  - text: переконаний
+    correct: true
+  - text: припускати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке слово використовується, коли ви не впевнені в правильності чогось?
+  options:
+  - text: впевнений
+  - text: переконаний
+  - text: сумніватися
+    correct: true
+  - text: погоджуватися
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово виражає підтримку чиєїсь ідеї або пропозиції?
+  options:
+  - text: критикувати
+  - text: заперечувати
+  - text: підтримувати
+    correct: true
+  - text: засуджувати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово означає виражати сильне моральне несхвалення?
+  options:
+  - text: критикувати
+  - text: заперечувати
+  - text: оцінювати
+  - text: засуджувати
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово використовується для конструктивної критики?
+  options:
+  - text: засуджувати
+  - text: критикувати
+    correct: true
+  - text: заперечувати
+  - text: сумніватися
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Який прислівник виражає абсолютну впевненість без сумніву?
+  options:
+  - text: очевидно
+  - text: зрозуміло
+  - text: безперечно
+    correct: true
+  - text: можливо
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Який вираз є найм'якішим способом висловити думку?
+  options:
+  - text: я переконаний
+  - text: на мою думку
+  - text: мені здається
+    correct: true
+  - text: безперечно
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово означає формально схвалювати щось?
+  options:
+  - text: критикувати
+  - text: схвалювати
+    correct: true
+  - text: засуджувати
+  - text: заперечувати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Який вираз є найбільш формальним для вираження особистої думки?
+  options:
+  - text: як на мене
+  - text: думаю
+  - text: з мого погляду
+    correct: true
+  - text: здається
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Яке дієслово використовується, щоб виразити незгоду з пропозицією?
+  options:
+  - text: погоджуватися
+  - text: підтримувати
+  - text: заперечувати
+    correct: true
+  - text: схвалювати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Дієслова думки — вибір правильного слова
+  question: Який вираз є розмовним і неформальним для вираження думки?
+  options:
+  - text: вважаю
+  - text: з мого погляду
+  - text: як на мене
+    correct: true
+  - text: я переконаний
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з дієсловом «погоджуватися»?
+  options:
+  - text: погоджуватися на думку
+  - text: погоджуватися з думкою
+    correct: true
+  - text: погоджуватися до думки
+  - text: погоджуватися про думку
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з дієсловом «сумніватися»?
+  options:
+  - text: сумніватися з успіху
+  - text: сумніватися на успіх
+  - text: сумніватися в успіху
+    correct: true
+  - text: сумніватися до успіху
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з дієсловом «заперечувати»?
+  options:
+  - text: заперечувати з змін
+  - text: заперечувати на зміни
+  - text: заперечувати проти змін
+    correct: true
+  - text: заперечувати до змін
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна конструкція з «переконаний»?
+  options:
+  - text: переконаний в що
+  - text: переконаний, що
+    correct: true
+  - text: переконаний про що
+  - text: переконаний до чого
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з дієсловом «підтримувати»?
+  options:
+  - text: підтримувати з ідею
+  - text: підтримувати на ідею
+  - text: підтримувати ідею
+    correct: true
+  - text: підтримувати про ідею
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна конструкція з «вважати»?
+  options:
+  - text: вважати про те
+  - text: вважати, що
+    correct: true
+  - text: вважати до того
+  - text: вважати на те
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з «критикувати»?
+  options:
+  - text: гостро критикувати
+    correct: true
+  - text: сильно критикувати
+  - text: великий критикувати
+  - text: багато критикувати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з «впевнений»?
+  options:
+  - text: впевнений з перемоги
+  - text: впевнений на перемогу
+  - text: впевнений у перемозі
+    correct: true
+  - text: впевнений до перемоги
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Як правильно сказати «схвалювати рішення»?
+  options:
+  - text: схвалювати з рішенням
+  - text: схвалювати на рішення
+  - text: схвалювати рішення
+    correct: true
+  - text: схвалювати про рішення
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з «рішуче»?
+  options:
+  - text: рішуче підтримувати
+  - text: рішуче засуджувати
+    correct: true
+  - text: рішуче думати
+  - text: рішуче гадати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна конструкція з «не погоджуватися»?
+  options:
+  - text: не погоджуватися на твердження
+  - text: не погоджуватися з твердженням
+    correct: true
+  - text: не погоджуватися до твердження
+  - text: не погоджуватися про твердження
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна колокація з «оцінювати»?
+  options:
+  - text: гостро оцінювати
+  - text: великий оцінювати
+  - text: об'єктивно оцінювати
+    correct: true
+  - text: сильно оцінювати
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Яка правильна конструкція з «мені здається»?
+  options:
+  - text: мені здається про те
+  - text: мені здається до того
+  - text: мені здається, що
+    correct: true
+  - text: мені здається на те
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Колокації з дієсловами думки
+  question: Як правильно почати формальну думку в офіційному документі?
+  options:
+  - text: як на мене
+  - text: думаю
+  - text: вважаю, що
+    correct: true
+  - text: здається
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Вираз «як на мене» є формальним і використовується в офіційних документах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Слово «безперечно» виражає абсолютну впевненість без сумніву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Дієслово «гадати» виражає сильнішу впевненість, ніж «вважати».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: «Критикувати» означає те саме, що й «засуджувати».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Вираз «мені здається» є найм'якішим способом висловити думку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: 'Правильна колокація: «погоджуватися на думку».'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: «З мого погляду» є формальним виразом для офіційних ситуацій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Дієслово «підтримувати» означає виражати незгоду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: 'Правильна колокація: «сумніватися в успіху».'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: «Очевидно» виражає низьку впевненість.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Вираз «припускаю» виражає найменший рівень впевненості серед дієслів
+    думки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: Дієслово «заперечувати» використовується з прийменником «проти».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: «Схвалювати» означає критикувати рішення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про вирази думки
+  statement: В українському публічному дискурсі «засуджувати» має сильніше значення,
+    ніж «критикувати».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

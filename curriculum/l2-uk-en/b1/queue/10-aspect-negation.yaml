@@ -1,0 +1,655 @@
+module: 10-aspect-negation
+level: B1
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/10-aspect-negation.md
+generated: '2025-12-29T00:21:59.167978'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 10
+  unjumble: 8
+  quiz: 14
+  true-false: 8
+item_count: 48
+items:
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я не прочитав цієї книги взагалі ніколи.
+  error: не прочитав
+  answer: не читав
+  sentence_corrected: Я не читав цієї книги взагалі ніколи.
+  options:
+  - не прочитав
+  - не читав
+  - ще не прочитав
+  - ще не читав
+  original_explanation: 'Для загального заперечення (взагалі ніколи) використовується
+    НДВ: "не читав". ДВ "не прочитав" можна тільки з "ще не".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я ще не писав звіт, але напишу завтра.
+  error: ще не писав
+  answer: ще не написав
+  sentence_corrected: Я ще не написав звіт, але напишу завтра.
+  options:
+  - ще не писав
+  - ще не написав
+  - не писав
+  - не написав
+  original_explanation: 'Після "ще не" з очікуванням завершення використовується ДВ:
+    "ще не написав".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не читай випадково фінал книги!
+  error: читай
+  answer: прочитай
+  sentence_corrected: Не прочитай випадково фінал книги!
+  options:
+  - читай
+  - прочитай
+  - читати
+  - прочитати
+  original_explanation: 'Конкретне попередження проти одноразової дії вимагає ДВ:
+    "Не прочитай!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не прочитай погані книги взагалі!
+  error: прочитай
+  answer: читай
+  sentence_corrected: Не читай погані книги взагалі!
+  options:
+  - прочитай
+  - читай
+  - прочитати
+  - читати
+  original_explanation: 'Загальна заборона вимагає НДВ: "Не читай!" ДВ тільки для
+    конкретних попереджень.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Він ще не робив домашнє завдання.
+  error: ще не робив
+  answer: ще не зробив
+  sentence_corrected: Він ще не зробив домашнє завдання.
+  options:
+  - ще не робив
+  - ще не зробив
+  - не робив
+  - не зробив
+  original_explanation: 'Після "ще не" використовується ДВ, якщо дія очікується: "ще
+    не зробив".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Я ніколи не спізнився на заняття.
+  error: не спізнився
+  answer: не запізнювався
+  sentence_corrected: Я ніколи не запізнювався на заняття.
+  options:
+  - не спізнився
+  - не запізнювався
+  - ще не спізнився
+  - ще не запізнювався
+  original_explanation: 'Постійна якість або звичка в запереченні вимагає НДВ: "ніколи
+    не запізнювався".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не забудьте ключі вдома завжди!
+  error: Не забудьте
+  answer: Не забувайте
+  sentence_corrected: Не забувайте ключі вдома завжди!
+  options:
+  - Не забудьте
+  - Не забувайте
+  - Не забути
+  - Не забувати
+  original_explanation: 'Загальна порада (завжди) вимагає НДВ: "Не забувайте". ДВ
+    "Не забудьте" тільки для конкретних нагадувань.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок заперечення
+  sentence_with_error: Не забувай взяти парасольку сьогодні!
+  error: Не забувай
+  answer: Не забудь
+  sentence_corrected: Не забудь взяти парасольку сьогодні!
+  options:
+  - Не забувай
+  - Не забудь
+  - Не забувати
+  - Не забути
+  original_explanation: 'Конкретне нагадування (сьогодні) вимагає ДВ: "Не забудь!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Я ___ цієї книги взагалі ніколи. (загальне заперечення)
+  answer: не читав
+  complete_sentence: Я не читав цієї книги взагалі ніколи. (загальне заперечення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Я ___ цієї книги, але планую прочитати скоро. (очікується завершення)
+  answer: ще не прочитав
+  complete_sentence: Я ще не прочитав цієї книги, але планую прочитати скоро. (очікується
+    завершення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: ___ випадково наступний розділ! (конкретне попередження)
+  answer: Не прочитай
+  complete_sentence: Не прочитай випадково наступний розділ! (конкретне попередження)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: ___ погані книги! (загальна порада)
+  answer: Не читай
+  complete_sentence: Не читай погані книги! (загальна порада)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Він ___ домашнє завдання, але має зробити до завтра. (очікується
+    завершення)
+  answer: ще не зробив
+  complete_sentence: Він ще не зробив домашнє завдання, але має зробити до завтра.
+    (очікується завершення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Вона ___ на заняття весь семестр. (постійна якість)
+  answer: ніколи не запізнювалася
+  complete_sentence: Вона ніколи не запізнювалася на заняття весь семестр. (постійна
+    якість)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: ___ взяти парасольку сьогодні! (конкретне нагадування)
+  answer: Не забудь
+  complete_sentence: Не забудь взяти парасольку сьогодні! (конкретне нагадування)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: ___ ключі вдома! (загальна порада)
+  answer: Не забувай
+  complete_sentence: Не забувай ключі вдома! (загальна порада)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Я ___ усіх потрібних матеріалів для презентації. (очікується
+    знайти)
+  answer: ще не знайшов
+  complete_sentence: Я ще не знайшов усіх потрібних матеріалів для презентації. (очікується
+    знайти)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заперечні форми дієслів
+  sentence_template: Він ___ де живе ця людина. (поточний стан незнання)
+  answer: не знає
+  complete_sentence: Він не знає де живе ця людина. (поточний стан незнання)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Я взагалі ніколи не читав цієї книги, хоча чув про неї багато разів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Я ще не прочитав цієї цікавої книги, але обов'язково прочитаю її наступного
+    тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Не читай цю книгу, вона погана і не варта твого часу взагалі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Не прочитай випадково фінал книги, бо це зіпсує тобі все враження.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Він ще не зробив домашнє завдання з математики, але зробить його сьогодні
+    ввечері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Не забувай свої ключі вдома, тому що це завжди створює проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Не забудь взяти парасольку сьогодні, бо синоптики обіцяють дощ після обіду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення із запереченням
+  jumbled_words: []
+  answer: Я ще не знайшов усіх потрібних матеріалів для своєї курсової роботи, на
+    жаль.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: Яке заперечення є граматично правильним для передачі загального заперечення
+    в реченні "Я ніколи не робив цього"?
+  options:
+  - text: Я не робив цього. (НДВ - загальне заперечення)
+    correct: true
+  - text: Я не зробив цього. (ДВ потрібен лише з "ще не")
+    correct: false
+  - text: Я ще не робив цього. (Це означає інше - очікується зробити)
+    correct: false
+  - text: Я ще не зробив цього. (Це означає "поки не зробив, але зроблю")
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильну форму дієслова для доповнення речення: "Я ___ цієї
+    книги" (в контексті, що я взагалі ніколи не читав).'
+  options:
+  - text: не читав (НДВ - загальне заперечення)
+    correct: true
+  - text: не прочитав (ДВ без "ще не" неправильно для загального заперечення)
+    correct: false
+  - text: ще не читав (НДВ після "ще не" рідко використовується)
+    correct: false
+  - text: ще не прочитав (Це означає "планую прочитати")
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильне пояснення значення речення: "Я ще не прочитав цієї
+    книги" в даному контексті.'
+  options:
+  - text: Я ніколи не читав цієї книги взагалі
+    correct: false
+  - text: Я поки не закінчив читати, але планую прочитати
+    correct: true
+  - text: Я не хочу читати цю книгу
+    correct: false
+  - text: Я читав, але не закінчив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильну форму дієслова для конкретного застереження: "Не ___
+    випадково фінал книги!" (дія, якої слід уникнути).'
+  options:
+  - text: читай (НДВ для загальної заборони, не для попередження)
+    correct: false
+  - text: прочитай (ДВ - конкретне попередження проти одноразової дії)
+    correct: true
+  - text: читати (інфінітив не підходить для наказової форми)
+    correct: false
+  - text: прочитати (інфінітив не підходить для наказової форми)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Яка форма наказового способу є правильною для вираження загальної заборони:
+    "___ цих книг!"?'
+  options:
+  - text: Не читай (НДВ - загальна заборона)
+    correct: true
+  - text: Не прочитай (ДВ для конкретного попередження, не для загальної заборони)
+    correct: false
+  - text: Не читати (інфінітив не підходить)
+    correct: false
+  - text: Не прочитати (інфінітив не підходить)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: Чим відрізняються "Він не робив домашнє завдання" і "Він ще не зробив
+    домашнє завдання"?
+  options:
+  - text: Означають абсолютно те саме
+    correct: false
+  - text: Перше - загальне заперечення (взагалі не робив), друге - поки не зробив,
+      але зробить
+    correct: true
+  - text: Перше - він зробить пізніше, друге - він не зробить зовсім
+    correct: false
+  - text: Різниця тільки в стилі, немає різниці в значенні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильну форму дієслова для речення із загальним запереченням:
+    "Я ___ цю вправу" (взагалі ніколи не робив).'
+  options:
+  - text: не робив (НДВ - загальне заперечення)
+    correct: true
+  - text: не зробив (ДВ потрібен тільки з "ще не" або для конкретного факту)
+    correct: false
+  - text: ще не робив (Рідко використовується, краще "ще не зробив")
+    correct: false
+  - text: ще не зробив (Це означає "планую зробити")
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильне тлумачення значення речення: "Я вже не прочитаю це
+    до завтра" в даному контексті.'
+  options:
+  - text: Я читаю зараз, але повільно
+    correct: false
+  - text: Я ніколи не читав цього
+    correct: false
+  - text: Неможливо встигнути прочитати до завтра
+    correct: true
+  - text: Я не хочу читати це взагалі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильну форму дієслова для конкретного нагадування: "___ взяти
+    ключі сьогодні!" (зробити це обов''язково).'
+  options:
+  - text: Не забувай (НДВ - для загальної поради)
+    correct: false
+  - text: Не забудь (ДВ - конкретне нагадування про сьогодні)
+    correct: true
+  - text: Не забувати (інфінітив)
+    correct: false
+  - text: Не забути (інфінітив)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Яка форма є правильною для речення, де дія очікується: "Я ___ усіх потрібних
+    джерел для курсової"?'
+  options:
+  - text: не шукав (НДВ - загальне заперечення, не підходить)
+    correct: false
+  - text: не знаходив (НДВ - загальне заперечення)
+    correct: false
+  - text: ще не шукав (Означає "ще не почав шукати", не те саме)
+    correct: false
+  - text: ще не знайшов (ДВ після "ще не" - очікується знайти)
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: Проаналізуйте наведені варіанти та оберіть речення, у якому граматично
+    правильно використано вид дієслова з запереченням.
+  options:
+  - text: Я ніколи не запізнювався на заняття. (НДВ - постійна якість)
+    correct: true
+  - text: Я ще не запізнювався на заняття. (Дивно - краще "ще не спізнився")
+    correct: false
+  - text: Я не спізнився на заняття взагалі ніколи. (ДВ без "ще не" для загального
+      заперечення неправильно)
+    correct: false
+  - text: Я ще не запізнюватимусь на заняття. (Майбутній час після "ще не" рідко використовується
+      так)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: 'Оберіть правильну форму дієслова для застереження від одноразової дії:
+    "___ телефон!" (конкретна ситуація).'
+  options:
+  - text: Не кидай (НДВ - для загальної заборони кидати)
+    correct: false
+  - text: Не впусти (ДВ - конкретне попередження)
+    correct: true
+  - text: Не кидати (інфінітив)
+    correct: false
+  - text: Не впустити (інфінітив)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: Оберіть із наведених варіантів речення, яке описує очікувану дію, яку
+    суб'єкт планує виконати в майбутньому.
+  options:
+  - text: Я не писав звіт. (Загальне заперечення)
+    correct: false
+  - text: Я ще не написав звіт. (ДВ після "ще не" - очікується написати)
+    correct: true
+  - text: Я не пишу звіт. (Теперішній час - зараз не пишу)
+    correct: false
+  - text: Я ніколи не писав звіти. (Постійна якість)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Заперечення і вид
+  question: Який вид дієслова зазвичай використовується в українській мові для формування
+    загальних негативних питань?
+  options:
+  - text: Недоконаний вид для загальних питань (Ти не читав цієї книги?)
+    correct: true
+  - text: Завжди доконаний вид
+    correct: false
+  - text: Тільки теперішній час
+    correct: false
+  - text: Не можна ставити негативні питання в українській мові
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: Заперечення в українській мові завжди вимагає недоконаного виду без винятків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: '"Я не читав" і "Я ще не прочитав" означають абсолютно те саме.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: Після "ще не" зазвичай використовується доконаний вид, якщо дія очікується.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: У попередженнях проти конкретних одноразових дій (наприклад, "Не впусти
+    телефон!") використовується доконаний вид.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: Для загальних заборон (наприклад, "Не читай погані книги!") завжди використовується
+    недоконаний вид.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: '"Вже не" завжди вимагає доконаного виду.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: У реченні "Я ніколи не запізнювався" правильно використано недоконаний
+    вид.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи неправда про заперечення
+  statement: Негативні питання завжди вимагають доконаного виду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

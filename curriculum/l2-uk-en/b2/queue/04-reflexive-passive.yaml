@@ -1,0 +1,1413 @@
+module: 04-reflexive-passive
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/04-reflexive-passive.md
+generated: '2025-12-28T19:51:23.796282'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Документи готується до відправки.
+  error: готується
+  answer: готуються
+  sentence_corrected: Документи готуються до відправки.
+  options:
+  - готується
+  - готуються
+  - готувався
+  - готувати
+  original_explanation: 'Дієслово узгоджується з підметом у числі: документи (множ.)
+    → готуються.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Проблема вирішується наукові.
+  error: наукові
+  answer: науковцями
+  sentence_corrected: Проблема вирішується науковцями.
+  options:
+  - наукові
+  - науковцями
+  - науковців
+  - науковці
+  original_explanation: 'Агент виражається орудним відмінком: науковцями (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Стаття публікувався в журналі.
+  error: публікувався
+  answer: публікувалася
+  sentence_corrected: Стаття публікувалася в журналі.
+  options:
+  - публікувався
+  - публікувалася
+  - публікувалось
+  - публікувались
+  original_explanation: 'Дієслово узгоджується з підметом у роді: стаття (жін.) →
+    публікувалася.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Закон застосовується судів.
+  error: судів
+  answer: судами
+  sentence_corrected: Закон застосовується судами.
+  options:
+  - судів
+  - судами
+  - судам
+  - суди
+  original_explanation: 'Агент виражається орудним відмінком: судами (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Результати аналізуватися щодня.
+  error: аналізуватися
+  answer: аналізуються
+  sentence_corrected: Результати аналізуються щодня.
+  options:
+  - аналізуватися
+  - аналізуються
+  - аналізувалися
+  - аналізуватимуться
+  original_explanation: Для теперішнього часу потрібна особова форма дієслова.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Новини транслюється о восьмій.
+  error: транслюється
+  answer: транслюються
+  sentence_corrected: Новини транслюються о восьмій.
+  options:
+  - транслюється
+  - транслюються
+  - транслювалося
+  - транслювати
+  original_explanation: 'Дієслово узгоджується з підметом у числі: новини (множ.)
+    → транслюються.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дослідження проводяться лабораторія.
+  error: лабораторія
+  answer: лабораторією
+  sentence_corrected: Дослідження проводяться лабораторією.
+  options:
+  - лабораторія
+  - лабораторією
+  - лабораторії
+  - лабораторію
+  original_explanation: 'Агент виражається орудним відмінком: лабораторією (ким? чим?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Книга читається легкий.
+  error: легкий
+  answer: легко
+  sentence_corrected: Книга читається легко.
+  options:
+  - легкий
+  - легко
+  - легка
+  - легкою
+  original_explanation: Потрібен прислівник (як?), а не прикметник.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Продукти виробляються компанії.
+  error: компанії
+  answer: компанією
+  sentence_corrected: Продукти виробляються компанією.
+  options:
+  - компанії
+  - компанією
+  - компанія
+  - компаній
+  original_explanation: 'Агент виражається орудним відмінком: компанією (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Рішення приймаються комітет.
+  error: комітет
+  answer: комітетом
+  sentence_corrected: Рішення приймаються комітетом.
+  options:
+  - комітет
+  - комітетом
+  - комітету
+  - комітеті
+  original_explanation: 'Агент виражається орудним відмінком: комітетом (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Заявка розглядається редакції.
+  error: редакції
+  answer: редакцією
+  sentence_corrected: Заявка розглядається редакцією.
+  options:
+  - редакції
+  - редакцією
+  - редакція
+  - редакцій
+  original_explanation: 'Агент виражається орудним відмінком: редакцією (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Технології впроваджується поступово.
+  error: впроваджується
+  answer: впроваджуються
+  sentence_corrected: Технології впроваджуються поступово.
+  options:
+  - впроваджується
+  - впроваджуються
+  - впроваджувалися
+  - впроваджувати
+  original_explanation: 'Дієслово узгоджується з підметом у числі: технології (множ.)
+    → впроваджуються.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дані збираються дослідник.
+  error: дослідник
+  answer: дослідником
+  sentence_corrected: Дані збираються дослідником.
+  options:
+  - дослідник
+  - дослідником
+  - дослідника
+  - досліднику
+  original_explanation: 'Агент виражається орудним відмінком: дослідником (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Проєкт фінансується організації.
+  error: організації
+  answer: організацією
+  sentence_corrected: Проєкт фінансується організацією.
+  options:
+  - організації
+  - організацією
+  - організація
+  - організацій
+  original_explanation: 'Агент виражається орудним відмінком: організацією (ким?).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Проблеми вирішується швидко.
+  error: вирішується
+  answer: вирішуються
+  sentence_corrected: Проблеми вирішуються швидко.
+  options:
+  - вирішується
+  - вирішуються
+  - вирішувалися
+  - вирішувати
+  original_explanation: 'Дієслово узгоджується з підметом у числі: проблеми (множ.)
+    → вирішуються.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Експерименти проводиться регулярно.
+  error: проводиться
+  answer: проводяться
+  sentence_corrected: Експерименти проводяться регулярно.
+  options:
+  - проводиться
+  - проводяться
+  - проводилися
+  - проводити
+  original_explanation: 'Дієслово узгоджується з підметом у числі: експерименти (множ.)
+    → проводяться.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Наукове дослідження _____ протягом трьох років.
+  answer: проводиться
+  complete_sentence: Наукове дослідження проводиться__ протягом трьох років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Нові технології _____ українськими інженерами.
+  answer: розробляються
+  complete_sentence: Нові технології розробляються__ українськими інженерами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Результати експерименту _____ в наукових журналах.
+  answer: публікуються
+  complete_sentence: Результати експерименту публікуються__ в наукових журналах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Електроенергія _____ від електростанції до споживачів.
+  answer: передається
+  complete_sentence: Електроенергія передається__ від електростанції до споживачів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Ця книга _____ легко завдяки простому стилю автора.
+  answer: читається
+  complete_sentence: Ця книга читається__ легко завдяки простому стилю автора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Дані про клієнтів _____ на захищених серверах.
+  answer: зберігаються
+  complete_sentence: Дані про клієнтів зберігаються__ на захищених серверах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Проблема забруднення довкілля _____ вченими всього світу.
+  answer: досліджується
+  complete_sentence: Проблема забруднення довкілля досліджується__ вченими всього
+    світу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Закони _____ до всіх громадян без винятку.
+  answer: застосовуються
+  complete_sentence: Закони застосовуються__ до всіх громадян без винятку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Товари _____ протягом трьох робочих днів.
+  answer: доставляються
+  complete_sentence: Товари доставляються__ протягом трьох робочих днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Новини _____ щогодини на центральному каналі.
+  answer: транслюються
+  complete_sentence: Новини транслюються__ щогодини на центральному каналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Рішення _____ на засіданні комітету щотижня.
+  answer: приймаються
+  complete_sentence: Рішення приймаються__ на засіданні комітету щотижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Якість продукції _____ на кожному етапі виробництва.
+  answer: контролюється
+  complete_sentence: Якість продукції контролюється__ на кожному етапі виробництва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Мова _____ з покоління в покоління.
+  answer: передається
+  complete_sentence: Мова передається__ з покоління в покоління.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Програмне забезпечення _____ автоматично щомісяця.
+  answer: оновлюється
+  complete_sentence: Програмне забезпечення оновлюється__ автоматично щомісяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Усі документи _____ редакцією перед публікацією.
+  answer: перевіряються
+  complete_sentence: Усі документи перевіряються__ редакцією перед публікацією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Опис процесів
+  sentence_template: Ситуація на ринку постійно _____.
+  answer: змінюється
+  complete_sentence: Ситуація на ринку постійно змінюється__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Закон застосовується _____.
+  answer: судами
+  complete_sentence: Закон застосовується судами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Дослідження проводиться _____.
+  answer: науковцями
+  complete_sentence: Дослідження проводиться науковцями__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Стаття публікується _____.
+  answer: видавництвом
+  complete_sentence: Стаття публікується видавництвом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Товари виробляються _____.
+  answer: компанією
+  complete_sentence: Товари виробляються компанією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Проєкт фінансується _____.
+  answer: інвесторами
+  complete_sentence: Проєкт фінансується інвесторами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Рішення приймається _____.
+  answer: комітетом
+  complete_sentence: Рішення приймається комітетом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Дані аналізуються _____.
+  answer: експертами
+  complete_sentence: Дані аналізуються експертами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Новини транслюються _____.
+  answer: каналом
+  complete_sentence: Новини транслюються каналом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Документи перевіряються _____.
+  answer: редакцією
+  complete_sentence: Документи перевіряються редакцією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Система розробляється _____.
+  answer: інженерами
+  complete_sentence: Система розробляється інженерами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Питання обговорюються _____.
+  answer: спеціалістами
+  complete_sentence: Питання обговорюються спеціалістами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Послуги надаються _____.
+  answer: організацією
+  complete_sentence: Послуги надаються організацією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Проблема вирішується _____.
+  answer: командою
+  complete_sentence: Проблема вирішується командою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Текст редагується _____.
+  answer: редактором
+  complete_sentence: Текст редагується редактором__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Конференція організовується _____.
+  answer: університетом
+  complete_sentence: Конференція організовується університетом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть агента (орудний відмінок)
+  sentence_template: Програма створюється _____.
+  answer: програмістами
+  complete_sentence: Програма створюється програмістами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Проблема активно досліджується науковцями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Нові продукти виробляються компанією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Експерименти проводяться у лабораторії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Дані зберігаються автоматично щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Результати ретельно аналізуються вченими.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Статті публікуються у наукових журналах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Нові технології впроваджуються поступово.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Проблеми швидко вирішуються командою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Питання обговорюються на міжнародних конференціях.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Закони застосовуються всіма судами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ця книга читається легко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Якість контролюється на всіх етапах виробництва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Програмне забезпечення оновлюється регулярно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Проєкти фінансуються міжнародними інвесторами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Усі документи перевіряються редакцією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ця галузь розвивається швидко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яка основна функція рефлексивного пасиву з -ся в українській мові?
+  options:
+  - text: Підкреслити результат дії
+    correct: false
+  - text: Підкреслити процес дії
+    correct: true
+  - text: Вказати на минулу дію
+    correct: false
+  - text: Виразити наказ
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Як утворюється рефлексивний пасив у теперішньому часі для слова «досліджувати»?
+  options:
+  - text: досліджено
+    correct: false
+  - text: досліджується
+    correct: true
+  - text: досліджений
+    correct: false
+  - text: дослідили
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: У якому регістрі рефлексивний пасив з -ся використовується найчастіше?
+  options:
+  - text: Розмовний
+    correct: false
+  - text: Художній
+    correct: false
+  - text: Науковий
+    correct: true
+  - text: Епістолярний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яким відмінком виражається агент дії в рефлексивному пасиві?
+  options:
+  - text: Називним
+    correct: false
+  - text: Родовим
+    correct: false
+  - text: Давальним
+    correct: false
+  - text: Орудним
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яке речення є прикладом рефлексивного пасиву з -ся?
+  options:
+  - text: Будинок побудовано.
+    correct: false
+  - text: Будинок побудований.
+    correct: false
+  - text: Будинок будується.
+    correct: true
+  - text: Будинок будували.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яка різниця між «Рішення прийнято» та «Рішення приймається»?
+  options:
+  - text: Немає різниці
+    correct: false
+  - text: Перше — процес, друге — результат
+    correct: false
+  - text: Перше — результат, друге — процес
+    correct: true
+  - text: Обидва вказують на процес
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Коли в реченні з рефлексивним пасивом слід опустити агента?
+  options:
+  - text: Завжди
+    correct: false
+  - text: Коли агент невідомий або неважливий
+    correct: true
+  - text: Ніколи
+    correct: false
+  - text: Тільки в науковому стилі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яке дієслово правильно узгоджене з підметом у рефлексивному пасиві?
+  options:
+  - text: Документи готується.
+    correct: false
+  - text: Документи готуються.
+    correct: true
+  - text: Документи готувався.
+    correct: false
+  - text: Документи готуватися.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яка форма пасиву краща для технічної документації?
+  options:
+  - text: -но/-то
+    correct: false
+  - text: -ся
+    correct: true
+  - text: -ний/-тий
+    correct: false
+  - text: Активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Чим відрізняється зворотне -ся від пасивного -ся?
+  options:
+  - text: Нічим, це одне й те саме
+    correct: false
+  - text: У зворотному суб'єкт діє на себе, у пасивному — дію виконує хтось інший
+    correct: true
+  - text: Зворотне використовується тільки з людьми
+    correct: false
+  - text: Пасивне не може мати агента
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яке речення найкраще підходить для наукової статті?
+  options:
+  - text: Ми проводимо експеримент.
+    correct: false
+  - text: Експеримент проводиться щодня.
+    correct: true
+  - text: Експеримент проведено.
+    correct: false
+  - text: Проводили експеримент.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яка форма рефлексивного пасиву вживається в минулому часі для «публікувати»
+    (жіночий рід)?
+  options:
+  - text: публікувалася
+    correct: true
+  - text: публікується
+    correct: false
+  - text: публікувався
+    correct: false
+  - text: опубліковано
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: У якому реченні правильно виражений агент?
+  options:
+  - text: Закон застосовується судів.
+    correct: false
+  - text: Закон застосовується суди.
+    correct: false
+  - text: Закон застосовується судами.
+    correct: true
+  - text: Закон застосовується судам.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яке речення є граматично неправильним?
+  options:
+  - text: Дані аналізуються щодня.
+    correct: false
+  - text: Результати публікуються в журналі.
+    correct: false
+  - text: Успіх досягається важкою працею.
+    correct: true
+  - text: Проблема вирішується поступово.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Коли краще використовувати -ся пасив замість -но/-то?
+  options:
+  - text: Для завершених дій
+    correct: false
+  - text: Для регулярних або тривалих дій
+    correct: true
+  - text: Для офіційних документів
+    correct: false
+  - text: Для розмовного мовлення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Утворення рефлексивного пасиву
+  question: Яка форма майбутнього часу рефлексивного пасиву правильна для «зберігати»?
+  options:
+  - text: буде зберігатися
+    correct: true
+  - text: зберігатиме
+    correct: false
+  - text: буде зберігано
+    correct: false
+  - text: зберігатиметься його
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для опису тривалого наукового процесу?
+  options:
+  - text: Проблему досліджено.
+    correct: false
+  - text: Проблема досліджується.
+    correct: true
+  - text: Проблема досліджена.
+    correct: false
+  - text: Проблему дослідили.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати в офіційному документі про завершену дію?
+  options:
+  - text: Рішення приймається.
+    correct: false
+  - text: Рішення прийнято.
+    correct: true
+  - text: Рішення приймали.
+    correct: false
+  - text: Рішення приймають.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для опису властивості об'єкта?
+  options:
+  - text: Книгу прочитано.
+    correct: false
+  - text: Книга прочитана.
+    correct: false
+  - text: Книга читається легко.
+    correct: true
+  - text: Книгу читають.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати в технічній документації?
+  options:
+  - text: Налаштування змінено.
+    correct: false
+  - text: Налаштування змінюються в меню.
+    correct: true
+  - text: Налаштування змінені.
+    correct: false
+  - text: Налаштування змінили.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для регулярної дії?
+  options:
+  - text: Збори проведено.
+    correct: false
+  - text: Збори проводяться щотижня.
+    correct: true
+  - text: Збори проведені.
+    correct: false
+  - text: Збори провели.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати, коли агент важливий?
+  options:
+  - text: Закон застосовується судами.
+    correct: true
+  - text: Закон застосовано.
+    correct: false
+  - text: Закон застосований.
+    correct: false
+  - text: Закон застосували.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яка форма найкраща для наукової статті про методологію?
+  options:
+  - text: Ми використовуємо метод.
+    correct: false
+  - text: Метод використовується.
+    correct: true
+  - text: Метод використано.
+    correct: false
+  - text: Використали метод.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для опису поточних новин?
+  options:
+  - text: Переговори проведено.
+    correct: false
+  - text: Переговори ведуться.
+    correct: true
+  - text: Переговори проведені.
+    correct: false
+  - text: Переговори провели.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для завершеної одноразової дії?
+  options:
+  - text: Лист надсилається.
+    correct: false
+  - text: Лист надіслано.
+    correct: true
+  - text: Лист надсилають.
+    correct: false
+  - text: Лист надсилався.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яка форма найкраща для розмовного мовлення?
+  options:
+  - text: Проблема вирішується.
+    correct: false
+  - text: Проблему вирішено.
+    correct: false
+  - text: Проблему вирішили.
+    correct: true
+  - text: Проблема вирішена.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для опису автоматичного процесу?
+  options:
+  - text: Дані збережено.
+    correct: false
+  - text: Дані зберігаються автоматично.
+    correct: true
+  - text: Дані збережені.
+    correct: false
+  - text: Дані зберегли.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Коли краще опустити агента?
+  options:
+  - text: Коли агент — конкретна особа
+    correct: false
+  - text: Коли агент невідомий або неважливий
+    correct: true
+  - text: Завжди
+    correct: false
+  - text: Ніколи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для опису виробничого процесу?
+  options:
+  - text: Продукцію виготовлено.
+    correct: false
+  - text: Продукція виготовляється.
+    correct: true
+  - text: Продукція виготовлена.
+    correct: false
+  - text: Продукцію виготовили.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яка форма найкраща для художнього опису?
+  options:
+  - text: Книга написана талановитим автором.
+    correct: true
+  - text: Книга пишеться талановитим автором.
+    correct: false
+  - text: Книгу написано.
+    correct: false
+  - text: Книгу написали.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яку форму краще використати для майбутньої регулярної дії?
+  options:
+  - text: Дослідження буде проводитися.
+    correct: true
+  - text: Дослідження буде проведено.
+    correct: false
+  - text: Дослідження проведуть.
+    correct: false
+  - text: Дослідження буде проведене.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вибір правильної пасивної форми
+  question: Яка форма найкраща для оголошення про прийом документів?
+  options:
+  - text: Заявки приймаються до кінця місяця.
+    correct: true
+  - text: Заявки прийнято до кінця місяця.
+    correct: false
+  - text: Заявки прийняті до кінця місяця.
+    correct: false
+  - text: Заявки приймуть до кінця місяця.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Рефлексивний пасив з -ся завжди вказує на завершену дію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Агент у рефлексивному пасиві виражається орудним відмінком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: У розмовному мовленні рефлексивний пасив вживається дуже часто.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Дієслово з -ся узгоджується з підметом у роді та числі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Рефлексивний пасив не може вживатися в минулому часі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Науковий стиль активно використовує рефлексивний пасив.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Речення «Книга читається легко» є прикладом зворотного значення -ся.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Форма -но/-то підкреслює процес, а -ся — результат.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Агент може бути опущений, якщо він неважливий або невідомий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Рефлексивний пасив утворюється тільки від перехідних дієслів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Речення «Кіт миється» — приклад рефлексивного пасиву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: У технічній документації -ся пасив використовується для опису функцій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Рефлексивний пасив можна використовувати в майбутньому часі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Усі дієслова з -ся мають пасивне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: У публіцистичному стилі -ся пасив вживається для опису поточних подій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила рефлексивного пасиву
+  statement: Рефлексивний пасив завжди вимагає вказівки агента.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

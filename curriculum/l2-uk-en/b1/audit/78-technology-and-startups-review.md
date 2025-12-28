@@ -16,7 +16,7 @@
 - **Pedagogy:** ✅ Level-appropriate
 - **Immersion:** 🇺🇦 95.9% (target 85-100% (B1.7-8 Ukraine))
 - **Richness:** ✅ 98% (cultural)
-- **Grammar:** ✅ Validated ([View Audit](78-technology-and-startups-grammar.yaml))
+- **Grammar:** ✅ Validated (8/52 confirmed)
 
 ## Richness Details
 **Score:** 98% (minimum: 95%)
@@ -34,6 +34,12 @@
 | realworld | 3 | - | 100% | 7% | 6.7% |
 | questions | 24 | 4 | 100% | 7% | 6.7% |
 | **TOTAL** | | | | | **98.2%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
 
 ## Section Audit
 | Section | Status | Count | Notes |

@@ -1,0 +1,1406 @@
+module: 08-active-participles-past
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/08-active-participles-past.md
+generated: '2025-12-28T20:26:21.159563'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Студент, прочитавший книгу, здав екзамен.
+  error: прочитавший
+  answer: який прочитав
+  sentence_corrected: Студент, який прочитав книгу, здав екзамен.
+  options:
+  - прочитавший
+  - який прочитав
+  - що прочитав
+  - прочитавша
+  original_explanation: Форма на -вший — русизм. Правильно — підрядне означальне речення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Людина, приїхавша з Києва, працює тут.
+  error: приїхавша
+  answer: яка приїхала
+  sentence_corrected: Людина, яка приїхала з Києва, працює тут.
+  options:
+  - приїхавша
+  - яка приїхала
+  - що приїхала
+  - приїхавший
+  original_explanation: Форма на -вша — русизм. Правильно — підрядне означальне речення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Документ, підписавший директор, чинний.
+  error: підписавший
+  answer: який підписав
+  sentence_corrected: Документ, який підписав директор, чинний.
+  options:
+  - підписавший
+  - який підписав
+  - що підписав
+  - підписана
+  original_explanation: 'Неправильна конструкція. Правильно: "Документ, який підписав
+    директор".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Автор, написавший роман, отримав премію.
+  error: написавший
+  answer: який написав
+  sentence_corrected: Автор, який написав роман, отримав премію.
+  options:
+  - написавший
+  - який написав
+  - що написав
+  - написавша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Учений, досліджувавший проблему, опублікував результати.
+  error: досліджувавший
+  answer: який досліджував
+  sentence_corrected: Учений, який досліджував проблему, опублікував результати.
+  options:
+  - досліджувавший
+  - який досліджував
+  - що досліджував
+  - дослідивший
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Працівник, виконавший завдання, отримав премію.
+  error: виконавший
+  answer: який виконав
+  sentence_corrected: Працівник, який виконав завдання, отримав премію.
+  options:
+  - виконавший
+  - який виконав
+  - що виконав
+  - виконавша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Спортсмен, перемігший на змаганнях, став чемпіоном.
+  error: перемігший
+  answer: який переміг
+  sentence_corrected: Спортсмен, який переміг на змаганнях, став чемпіоном.
+  options:
+  - перемігший
+  - який переміг
+  - що переміг
+  - перемігша
+  original_explanation: Форма на -ший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Художник, намалювавший картину, став відомим.
+  error: намалювавший
+  answer: який намалював
+  sentence_corrected: Художник, який намалював картину, став відомим.
+  options:
+  - намалювавший
+  - який намалював
+  - що намалював
+  - намалювавша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Журналіст, взявший інтерв'ю, опублікував статтю.
+  error: взявший
+  answer: який узяв
+  sentence_corrected: Журналіст, який узяв інтерв'ю, опублікував статтю.
+  options:
+  - взявший
+  - який узяв
+  - що узяв
+  - взявша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Компанія, створивша продукт, стала лідером.
+  error: створивша
+  answer: яка створила
+  sentence_corrected: Компанія, яка створила продукт, стала лідером.
+  options:
+  - створивша
+  - яка створила
+  - що створила
+  - створивший
+  original_explanation: Форма на -вша — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Організація, проводивша конференцію, отримала грант.
+  error: проводивша
+  answer: яка проводила
+  sentence_corrected: Організація, яка проводила конференцію, отримала грант.
+  options:
+  - проводивша
+  - яка проводила
+  - що проводила
+  - проводивший
+  original_explanation: Форма на -вша — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Учитель, пояснивший тему, отримав подяку.
+  error: пояснивший
+  answer: який пояснив
+  sentence_corrected: Учитель, який пояснив тему, отримав подяку.
+  options:
+  - пояснивший
+  - який пояснив
+  - що пояснив
+  - пояснивша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Лікар, вилікувавший пацієнта, став героєм.
+  error: вилікувавший
+  answer: який вилікував
+  sentence_corrected: Лікар, який вилікував пацієнта, став героєм.
+  options:
+  - вилікувавший
+  - який вилікував
+  - що вилікував
+  - вилікувавша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Політик, промовивший на мітингу, отримав підтримку.
+  error: промовивший
+  answer: який промовив
+  sentence_corrected: Політик, який промовив на мітингу, отримав підтримку.
+  options:
+  - промовивший
+  - який промовив
+  - що промовив
+  - промовивша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Режисер, знявший фільм, отримав нагороду.
+  error: знявший
+  answer: який зняв
+  sentence_corrected: Режисер, який зняв фільм, отримав нагороду.
+  options:
+  - знявший
+  - який зняв
+  - що зняв
+  - знявша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте русизми
+  sentence_with_error: Архітектор, спроектувавший будівлю, став відомим.
+  error: спроектувавший
+  answer: який спроектував
+  sentence_corrected: Архітектор, який спроектував будівлю, став відомим.
+  options:
+  - спроектувавший
+  - який спроектував
+  - що спроектував
+  - спроектувавша
+  original_explanation: Форма на -вший — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ президент виступив із промовою.
+  answer: Новообраний
+  complete_sentence: Новообраний__ президент виступив із промовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ документ потребує підпису.
+  answer: Вищезгаданий
+  complete_sentence: Вищезгаданий__ документ потребує підпису.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ рік був складним для економіки.
+  answer: Минулий
+  complete_sentence: Минулий__ рік був складним для економіки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ покоління матиме кращі можливості.
+  answer: Майбутнє
+  complete_sentence: Майбутнє__ покоління матиме кращі можливості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Ми працюватимемо над _____ проєктом.
+  answer: новоствореним
+  complete_sentence: Ми працюватимемо над новоствореним__ проєктом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ директор звільнився минулого місяця.
+  answer: Колишній
+  complete_sentence: Колишній__ директор звільнився минулого місяця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ крок буде вирішальним.
+  answer: Наступний
+  complete_sentence: Наступний__ крок буде вирішальним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ події змінили ситуацію.
+  answer: Недавні
+  complete_sentence: Недавні__ події змінили ситуацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ традиції збереглися до сьогодні.
+  answer: Давні
+  complete_sentence: Давні__ традиції збереглися до сьогодні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ етап завершено успішно.
+  answer: Попередній
+  complete_sentence: Попередній__ етап завершено успішно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Це була _____ спроба.
+  answer: остання
+  complete_sentence: Це була остання__ спроба.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Вона стала _____ жінкою-космонавткою.
+  answer: першою
+  complete_sentence: Вона стала першою__ жінкою-космонавткою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ гості вже прибули.
+  answer: Новоприбулі
+  complete_sentence: Новоприбулі__ гості вже прибули.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ стан справ незадовільний.
+  answer: Теперішній
+  complete_sentence: Теперішній__ стан справ незадовільний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: _____ міністр розпочав реформи.
+  answer: Новопризначений
+  complete_sentence: Новопризначений__ міністр розпочав реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски
+  sentence_template: Я, _____, підтверджую отримання документа.
+  answer: нижчепідписаний
+  complete_sentence: Я, нижчепідписаний__, підтверджую отримання документа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Я _____ над цим проєктом. (працювати)
+  answer: працюватиму
+  complete_sentence: Я працюватиму__ над цим проєктом. (працювати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Вона _____ на концерті. (співати)
+  answer: співатиме
+  complete_sentence: Вона співатиме__ на концерті. (співати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ми _____ за свободу. (боротися)
+  answer: боротимемося
+  complete_sentence: Ми боротимемося__ за свободу. (боротися)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Вони _____ нові методи. (вивчати)
+  answer: вивчатимуть
+  complete_sentence: Вони вивчатимуть__ нові методи. (вивчати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ти _____ цю книгу. (читати)
+  answer: читатимеш
+  complete_sentence: Ти читатимеш__ цю книгу. (читати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Він _____ про майбутнє. (мріяти)
+  answer: мріятиме
+  complete_sentence: Він мріятиме__ про майбутнє. (мріяти)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ви _____ українською. (говорити)
+  answer: говоритимете
+  complete_sentence: Ви говоритимете__ українською. (говорити)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Я _____ статтю. (писати)
+  answer: писатиму
+  complete_sentence: Я писатиму__ статтю. (писати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Вона _____ на вечірку. (приходити)
+  answer: приходитиме
+  complete_sentence: Вона приходитиме__ на вечірку. (приходити)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ми _____ результати. (аналізувати)
+  answer: аналізуватимемо
+  complete_sentence: Ми аналізуватимемо__ результати. (аналізувати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Вони _____ над проєктом. (думати)
+  answer: думатимуть
+  complete_sentence: Вони думатимуть__ над проєктом. (думати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ти _____ уважно. (слухати)
+  answer: слухатимеш
+  complete_sentence: Ти слухатимеш__ уважно. (слухати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Він _____ документи. (готувати)
+  answer: готуватиме
+  complete_sentence: Він готуватиме__ документи. (готувати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Ви _____ на конференції. (виступати)
+  answer: виступатимете
+  complete_sentence: Ви виступатимете__ на конференції. (виступати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Я _____ новини. (дивитися)
+  answer: дивитимуся
+  complete_sentence: Я дивитимуся__ новини. (дивитися)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Синтетичний майбутній
+  sentence_template: Вона _____ про поїздку. (розповідати)
+  answer: розповідатиме
+  complete_sentence: Вона розповідатиме__ про поїздку. (розповідати)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вищезгаданий документ уже підписано.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Новообраний президент виступив із промовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Минулий рік був складним для економіки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Майбутнє покоління матиме кращі можливості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Колишній директор працював у цій компанії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Попередній етап завершено успішно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Давні традиції збереглися до сьогодні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Наступний крок буде вирішальним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Теперішній стан справ незадовільний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ми боротимемося за свободу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Вони співатимуть на концерті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ти працюватимеш завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Новостворена комісія працюватиме над проєктом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Новопризначений міністр розпочав реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Недавні події змінили ситуацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Це була остання спроба.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Яка форма є русизмом?
+  options:
+  - text: колишній
+    correct: false
+  - text: прочитавший
+    correct: true
+  - text: минулий
+    correct: false
+  - text: майбутній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Як правильно сказати "the person who arrived"?
+  options:
+  - text: людина, приїхавша
+    correct: false
+  - text: людина, яка приїхала
+    correct: true
+  - text: людина, що приїхавший
+    correct: false
+  - text: людина приїхала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Що означає "вищезгаданий"?
+  options:
+  - text: above-mentioned
+    correct: true
+  - text: below-mentioned
+    correct: false
+  - text: previously unknown
+    correct: false
+  - text: newly created
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: У якому регістрі найчастіше вживається "новопризначений"?
+  options:
+  - text: розмовний
+    correct: false
+  - text: художній
+    correct: false
+  - text: офіційно-діловий
+    correct: true
+  - text: науковий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Що таке синтетичний майбутній час?
+  options:
+  - text: буду + інфінітив
+    correct: false
+  - text: форма на -иму/-тиму
+    correct: true
+  - text: минулий час дієслова
+    correct: false
+  - text: наказовий спосіб
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Яка форма "боротися" у синтетичному майбутньому часі (він)?
+  options:
+  - text: буде боротися
+    correct: false
+  - text: боротиметься
+    correct: true
+  - text: боровся
+    correct: false
+  - text: борючись
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Чому "писавший" — це русизм?
+  options:
+  - text: Бо це неправильне дієслово
+    correct: false
+  - text: Бо така форма не властива українській мові
+    correct: true
+  - text: Бо це минулий час
+    correct: false
+  - text: Бо це наказовий спосіб
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Як замінити русизм "людина, зробивша помилку"?
+  options:
+  - text: людина, яка зробила помилку
+    correct: true
+  - text: людина зробила помилку
+    correct: false
+  - text: людина, що зробивший
+    correct: false
+  - text: зробивша помилку людина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Що означає "нижчепідписаний"?
+  options:
+  - text: той, хто підписався нижче
+    correct: true
+  - text: той, хто не підписався
+    correct: false
+  - text: той, хто підписався першим
+    correct: false
+  - text: той, хто відмовився підписати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Яке слово НЕ є складеним прикметником?
+  options:
+  - text: новопризначений
+    correct: false
+  - text: вищезгаданий
+    correct: false
+  - text: колишній
+    correct: true
+  - text: новостворений
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: У якому реченні використано правильну форму?
+  options:
+  - text: Студент, прочитавший книгу, здав екзамен.
+    correct: false
+  - text: Студент, який прочитав книгу, здав екзамен.
+    correct: true
+  - text: Студент, що прочитавший книгу, здав екзамен.
+    correct: false
+  - text: Прочитавший книгу студент здав екзамен.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Що означає "попередній"?
+  options:
+  - text: previous
+    correct: true
+  - text: next
+    correct: false
+  - text: current
+    correct: false
+  - text: future
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Коли краще використовувати синтетичний майбутній час?
+  options:
+  - text: у розмовному мовленні
+    correct: false
+  - text: у літературному та офіційному стилях
+    correct: true
+  - text: тільки в минулому часі
+    correct: false
+  - text: ніколи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Яка форма "співати" (ми) у синтетичному майбутньому часі?
+  options:
+  - text: будемо співати
+    correct: false
+  - text: співатимемо
+    correct: true
+  - text: співаємо
+    correct: false
+  - text: співали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Що означає "так званий"?
+  options:
+  - text: so-called
+    correct: true
+  - text: well-known
+    correct: false
+  - text: above-mentioned
+    correct: false
+  - text: newly created
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння дієприкметникових форм
+  question: Яке слово означає "newly elected"?
+  options:
+  - text: новоприбулий
+    correct: false
+  - text: новопризначений
+    correct: false
+  - text: новообраний
+    correct: true
+  - text: новостворений
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "читати" (я) у синтетичному майбутньому?
+  options:
+  - text: читатиму
+    correct: true
+  - text: буду читати
+    correct: false
+  - text: читаю
+    correct: false
+  - text: читав
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "писати" (вона) у синтетичному майбутньому?
+  options:
+  - text: писатиме
+    correct: true
+  - text: буде писати
+    correct: false
+  - text: пише
+    correct: false
+  - text: писала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "говорити" (ви) у синтетичному майбутньому?
+  options:
+  - text: говоритимете
+    correct: true
+  - text: будете говорити
+    correct: false
+  - text: говорите
+    correct: false
+  - text: говорили
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "працювати" (вони) у синтетичному майбутньому?
+  options:
+  - text: працюватимуть
+    correct: true
+  - text: будуть працювати
+    correct: false
+  - text: працюють
+    correct: false
+  - text: працювали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "жити" (ти) у синтетичному майбутньому?
+  options:
+  - text: житимеш
+    correct: true
+  - text: будеш жити
+    correct: false
+  - text: живеш
+    correct: false
+  - text: жив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "вчити" (ми) у синтетичному майбутньому?
+  options:
+  - text: вчитимемо
+    correct: true
+  - text: будемо вчити
+    correct: false
+  - text: вчимо
+    correct: false
+  - text: вчили
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "мріяти" (він) у синтетичному майбутньому?
+  options:
+  - text: мріятиме
+    correct: true
+  - text: буде мріяти
+    correct: false
+  - text: мріє
+    correct: false
+  - text: мріяв
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Який суфікс використовується для синтетичного майбутнього?
+  options:
+  - text: -иму/-тиму
+    correct: true
+  - text: -ла/-ло
+    correct: false
+  - text: -ти
+    correct: false
+  - text: -вши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: У якому стилі частіше вживається синтетичний майбутній?
+  options:
+  - text: літературний
+    correct: true
+  - text: розмовний
+    correct: false
+  - text: діалектний
+    correct: false
+  - text: жаргонний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "кричати" (я) у синтетичному майбутньому?
+  options:
+  - text: кричатиму
+    correct: true
+  - text: буду кричати
+    correct: false
+  - text: кричу
+    correct: false
+  - text: кричав
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "співати" (вони) у синтетичному майбутньому?
+  options:
+  - text: співатимуть
+    correct: true
+  - text: будуть співати
+    correct: false
+  - text: співають
+    correct: false
+  - text: співали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "думати" (ми) у синтетичному майбутньому?
+  options:
+  - text: думатимемо
+    correct: true
+  - text: будемо думати
+    correct: false
+  - text: думаємо
+    correct: false
+  - text: думали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "слухати" (ти) у синтетичному майбутньому?
+  options:
+  - text: слухатимеш
+    correct: true
+  - text: будеш слухати
+    correct: false
+  - text: слухаєш
+    correct: false
+  - text: слухав
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "вивчати" (вона) у синтетичному майбутньому?
+  options:
+  - text: вивчатиме
+    correct: true
+  - text: буде вивчати
+    correct: false
+  - text: вивчає
+    correct: false
+  - text: вивчала
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Яка форма "розповідати" (ви) у синтетичному майбутньому?
+  options:
+  - text: розповідатимете
+    correct: true
+  - text: будете розповідати
+    correct: false
+  - text: розповідаєте
+    correct: false
+  - text: розповідали
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Синтетичний майбутній час
+  question: Чи правильна форма "боротимуся"?
+  options:
+  - text: Так, це я боротимуся
+    correct: true
+  - text: Ні, це неправильно
+    correct: false
+  - text: Так, це він боротимуся
+    correct: false
+  - text: Так, це ми боротимуся
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Форма "прочитавший" є нормативною в українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Колишній" — це прикметник, а не дієприкметник.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Синтетичний майбутній час утворюється додаванням "буду".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Новопризначений" типовий для офіційно-ділового стилю.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Форми на -вший/-ший властиві українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Вищезгаданий" означає "той, про кого згадали вище".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Боротимемося" — це аналітичний майбутній час.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Майбутній" може бути і прикметником, і іменником.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Підрядне означальне речення замінює русизми на -вший.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Теперішній" означає "future".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Широко вживаний" — це складений прикметник.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: В українській мові активні дієприкметники минулого часу не використовуються.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Нижчепідписаний" вживається в офіційних документах.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Синтетичний майбутній частіший у розмовному мовленні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Попередній" і "наступний" — антоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: '"Давній" означає "recent".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -21,7 +21,7 @@ objectives:
   - "Master complex travel narratives"
   - "Correctly use prepositions with specific motion prefixes"
   - "Understand and use high-frequency motion idioms"
-vocabulary_count: 22
+vocabulary_count: 34
 ---
 
 # Дієслова руху: практика та інтеграція
@@ -270,9 +270,7 @@ vocabulary_count: 22
 
 ---
 
-# Activities
 
-<!-- Activities are loaded from YAML: activities/24-motion-practice-integration.yaml -->
 
 ---
 

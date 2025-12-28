@@ -14,7 +14,7 @@
 - **Structure:** ✅ Valid Structure
 - **Lint:** ✅ Clean Format
 - **Pedagogy:** ✅ Level-appropriate
-- **Immersion:** 🇺🇦 96.5% (target 85-100% (B1.2 Motion))
+- **Immersion:** 🇺🇦 95.7% (target 85-100% (B1.2 Motion))
 - **Richness:** ✅ 99% (grammar)
 - **Grammar:** ✅ Validated (5/55 confirmed)
 
@@ -37,6 +37,12 @@
 | proverbs | 1 | 1 | 100% | 5% | 5.0% |
 | **TOTAL** | | | | | **99.1%** |
 
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (12 interactive elements)
+
 ## Section Audit
 | Section | Status | Count | Notes |
 |---|---|---|---|
@@ -47,17 +53,4 @@
 | **Практика** | ⚪️ | 199 | Skipped |
 | **Діалоги** | ✅ | 444 | Included in Core |
 | **Підсумок** | ✅ | 247 | Included in Core |
-| **Вправи** | ⚪️ | 0 | Skipped |
-| **quiz: Префікси наближення та віддалення** | ⚪️ | 0 | Skipped (using YAML) |
-| **match-up: Дієслова руху та їхні значення** | ⚪️ | 0 | Skipped (using YAML) |
-| **fill-in: Доповніть речення правильними дієсловами** | ⚪️ | 0 | Skipped (using YAML) |
-| **true-false: Правда чи неправда про префікси руху** | ⚪️ | 0 | Skipped (using YAML) |
-| **group-sort: Розподіліть дієслова за префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **unjumble: Складіть речення в правильному порядку** | ⚪️ | 0 | Skipped (using YAML) |
-| **error-correction: Знайдіть і виправте помилки** | ⚪️ | 0 | Skipped (using YAML) |
-| **cloze: Доповніть текст про поїздку** | ⚪️ | 0 | Skipped (using YAML) |
-| **mark-the-words: Знайдіть дієслова з префіксами** | ⚪️ | 0 | Skipped (using YAML) |
-| **dialogue-reorder: Розташуйте діалог у правильному порядку** | ⚪️ | 0 | Skipped (using YAML) |
-| **select: Оберіть усі правильні варіанти** | ⚪️ | 0 | Skipped (using YAML) |
-| **translate: Оберіть правильний переклад** | ⚪️ | 0 | Skipped (using YAML) |
 | **Словник** | ⚪️ | 0 | Skipped |
