@@ -14,11 +14,12 @@ Before submitting a C1 literature module, verify all items from `c1-module-templ
 
 ### Literature-Specific Requirements
 - [ ] **Literary analysis:** Close reading, stylistic analysis, thematic interpretation
-- [ ] **Primary texts:** Full poems or 500-800 word prose excerpts
+- [ ] **Primary texts:** Full poems or 500-800 word prose excerpts using `[!quote]` callouts
 - [ ] **Comparative analysis:** 2+ texts compared (same author different works, or different authors)
 - [ ] **Historical context:** Author's era, literary movement, political context
 - [ ] **Rhetorical devices:** Identify and analyze метафора, іронія, символ, etc.
 - [ ] **Critical essay:** Writing task with model answer
+- [ ] **NO CONVERSATIONAL DIALOGS:** Literature modules focus on TEXTUAL ANALYSIS. Do NOT add conversational dialogs between learners or fictional scenarios. If a literary work contains dialogue (e.g., drama, prose), analyze it—don't simulate it.
 
 ---
 
@@ -276,6 +277,37 @@ vocabulary_focus:
 
 ## Literature-Specific Activities
 
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not literary content recall.**
+
+The lesson teaches both Ukrainian AND literary analysis. Activities practice only Ukrainian using the literary content as context.
+
+**✅ CORRECT:** "Згідно з текстом аналізу, який стилістичний засіб автор виділяє?" (requires reading Ukrainian)
+**❌ WRONG:** "Що символізує образ каменярів у Франка?" (tests literary recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian analysis text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND literary analysis/theory |
+| **Activities** | Practice ONLY Ukrainian language skills using literary content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension of analysis text — "Згідно з текстом..."
+- **mark-the-words**: Test recognition of literary devices IN THE TEXT — find metaphors, identify verbs, etc.
+- **fill-in**: Test literary vocabulary/collocations — "[___] засіб" (стилістичний)
+- **match-up**: Test vocabulary — match Ukrainian terms to Ukrainian definitions
+- **group-sort**: Test categorization using module vocabulary
+- **cloze**: Test vocabulary in literary context
+- **error-correction**: Test grammar, NOT literary interpretation
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.
@@ -297,26 +329,28 @@ vocabulary_focus:
 
 ---
 
-### Close Reading
+### Close Reading (Language-Focused)
 
 ```markdown
-## quiz: Літературознавчий аналіз
+## quiz: Розуміння літературознавчого тексту
 
-1. Який стилістичний засіб використано у рядку: "Реве та стогне Дніпр широкий"?
-   - [ ] Метафора
-   - [x] Персоніфікація
-   - [ ] Гіпербола
-   - [ ] Літота
-   > Дніпр "реве" і "стогне" — це персоніфікація (надання людських якостей неживому).
+> **Instruction:** Відповідайте на питання на основі прочитаного аналізу в модулі.
 
-2. Що символізує образ "каменярів" у Франка?
-   - [ ] Будівельників
-   - [ ] Ремісників
-   - [x] Борців за прогрес і свободу
-   - [ ] Засуджених
-   > "Каменярі" — це символ тих, хто будує майбутнє своєю працею.
+1. Згідно з текстом модуля, який стилістичний засіб автор аналізу виділяє в рядку "Реве та стогне Дніпр широкий"?
+   - [ ] Автор класифікує це як метафору
+   - [x] Автор визначає це як персоніфікацію
+   - [ ] Автор називає це гіперболою
+   - [ ] Автор не аналізує цей рядок
+   > У тексті аналізу чітко зазначено, що Дніпр "реве" і "стогне" — персоніфікація.
 
-[12+ literary analysis questions]
+2. Як у тексті модуля автор інтерпретує образ "каменярів" у Франка?
+   - [ ] Текст описує каменярів як буквальних будівельників
+   - [ ] Автор не згадує цей образ
+   - [x] Автор тлумачить каменярів як символ борців за прогрес
+   - [ ] Текст подає суперечливі інтерпретації
+   > У розділі аналізу автор чітко формулює символічне значення образу.
+
+[All questions must reference "згідно з текстом" or "у тексті модуля" — tests READING COMPREHENSION of the analysis, not literary recall]
 ```
 
 ### Device Identification

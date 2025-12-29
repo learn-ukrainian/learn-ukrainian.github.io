@@ -15,11 +15,12 @@ Before submitting a C1 biography module, verify all items from `c1-module-templa
 ### Biography-Specific Requirements
 - [ ] **CBI pedagogy:** Content-Based Instruction (vocabulary through narrative)
 - [ ] **Extended narrative:** 800-1000 word biographical account
-- [ ] **Primary sources:** Include quotes, letters, or speeches from the figure
+- [ ] **Primary sources (≥2):** Include quotes, letters, or speeches from the figure using `[!quote]` callouts
 - [ ] **Historical context:** Place figure in their era's political/cultural context
 - [ ] **Legacy section:** Connect to modern Ukraine
 - [ ] **Gender/era balance:** Follow curriculum diversity requirements
 - [ ] **Decolonization lens:** Ukrainian perspective, not Russian imperial framing
+- [ ] **NO DIALOGS:** Biography modules are READING-CENTRIC. Do NOT include conversational dialogs—focus on narrative, primary sources, and analysis. Fictional dialogs with historical figures are inappropriate.
 
 ---
 
@@ -166,9 +167,22 @@ vocabulary_focus:
 
 ## Biography-Specific Activities
 
-### Activity Format Quick Reference
+### CRITICAL: Language Practice, Not Biographical Recall
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+<critical>
+
+**Activities test LANGUAGE SKILLS, not biographical facts.**
+
+The lesson teaches both Ukrainian AND the figure's life/achievements. Activities practice only Ukrainian using the biography as context.
+
+**✅ CORRECT:** "Згідно з текстом, який головний внесок автор виділяє?" (requires reading Ukrainian)
+**❌ WRONG:** "У якому році народився Шевченко?" (tests recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+</critical>
+
+### Activity Format Quick Reference
 
 | Activity | Format |
 |----------|--------|
@@ -187,92 +201,139 @@ vocabulary_focus:
 
 ---
 
-### Chronology & Comprehension
+### 1. Reading Comprehension (quiz)
+
+**Purpose:** Test understanding of Ukrainian biography text, NOT recall of facts.
 
 ```markdown
-## quiz: Біографія [Figure Name]
+## quiz: Розуміння біографії
 
-1. У якому році народився/народилася [Figure]?
-   - [ ] [Wrong year]
-   - [x] [Correct year]
-   - [ ] [Wrong year]
-   - [ ] [Wrong year]
-   > [Brief context about birthplace/circumstances]
+> **Instruction:** Відповідайте на питання на основі прочитаного тексту.
 
-2. Який головний внесок [Figure] у [domain]?
-   - [x] [Correct contribution]
+1. Згідно з текстом, що автор виділяє як головний внесок цієї постаті?
+   - [x] [Answer from text]
    - [ ] [Distractor]
    - [ ] [Distractor]
    - [ ] [Distractor]
-   > [Explanation of contribution's significance]
+   > Текст чітко формулює цей внесок у розділі "Головні досягнення".
 
-[12+ comprehension questions]
+2. Як автор характеризує вплив цієї постаті на українську культуру?
+   - [ ] [Distractor]
+   - [x] [Answer from text]
+   - [ ] [Distractor]
+   - [ ] [Distractor]
+   > У тексті зазначено: "[quote from text]".
+
+[All questions must reference "згідно з текстом" or "у тексті"]
 ```
 
-### Primary Source Analysis
+### 2. Primary Source Linguistic Analysis (select)
+
+**Purpose:** Test close reading and linguistic features of primary sources.
 
 ```markdown
-## select: Аналіз первинного джерела
+## select: Лінгвістичний аналіз джерела
 
-Прочитайте уривок із [letter/speech/work] [Figure]:
+Прочитайте уривок із листа/промови/твору:
 
 > "[150-200 word excerpt]"
 
-Виберіть усі правильні твердження:
+Виберіть усі правильні твердження про мову тексту:
 
-- [x] Автор підтримує [position]
-- [ ] Автор критикує [position]
-- [x] Текст написаний для [audience]
-- [ ] Текст є об'єктивним описом подій
-- [x] Лексика вказує на [register/attitude]
+- [x] Автор використовує емоційно забарвлену лексику
+- [ ] Текст написаний офіційним регістром
+- [x] У тексті є елементи публіцистичного стилю
+- [ ] Лексика тексту нейтральна
+- [x] Автор звертається до читача безпосередньо
 
-> Аналіз: [Explanation of correct answers]
+[Test LINGUISTIC analysis, not interpretation of content]
 ```
 
-### Vocabulary in Biographical Context
+### 3. Vocabulary in Biographical Context (fill-in)
+
+**Purpose:** Test vocabulary and collocations from module.
 
 ```markdown
 ## fill-in: Біографічна лексика
 
-1. [Figure] [___] у боротьбі за незалежність.
-   - [x] брав/брала участь
-   - [ ] робив/робила участь
-   - [ ] мав/мала участь
-   > "Брати участь" — фіксований вираз для participation.
+1. Ця постать [___] визначну роль у розвитку української культури.
+   > [!answer] відіграла
+   > [!options] відіграла | зробила | мала | дала
+   > Відіграти роль = to play a role (fixed collocation).
 
-2. Його/Її [___] залишається актуальною досі.
-   - [x] спадщина
-   - [ ] наслідок
-   - [ ] залишок
-   > "Спадщина" — legacy, intellectual/cultural inheritance.
+2. Його/Її творча [___] охоплює понад 50 років.
+   > [!answer] спадщина
+   > [!options] спадщина | наслідок | залишок | результат
+   > Спадщина = legacy, intellectual/cultural inheritance.
 
-[12+ biographical vocabulary items]
+3. Він/Вона [___] участь у національно-визвольному русі.
+   > [!answer] брав/брала
+   > [!options] брав/брала | робив/робила | мав/мала | давав/давала
+   > Брати участь = to participate (fixed expression).
+
+[12+ items testing MODULE VOCABULARY, not biographical facts]
 ```
 
-### Era Categorization
+### 4. Grammar in Biographical Text (error-correction)
+
+**Purpose:** Test grammar using biography content as context.
 
 ```markdown
-## group-sort: Постаті за епохами
+## error-correction: Граматика в біографічному тексті
 
-- group: Княжа доба (до 1340)
-  - Ярослав Мудрий
-  - Анна Ярославна
-  - Нестор-літописець
+1. Тарас Шевченко народився в родина кріпаків.
+   > [!error] родина
+   > [!answer] родині
+   > [!options] родина | родині | родиною | родину
+   > [!explanation] Прийменник "в" + місцевий відмінок: в чому? → в родині.
 
-- group: Козацька доба (1500-1764)
-  - Богдан Хмельницький
-  - Іван Мазепа
-  - Пилип Орлик
+2. Вона присвячувала все своє життя боротьба за права жінок.
+   > [!error] боротьба
+   > [!answer] боротьбі
+   > [!options] боротьба | боротьбі | боротьбою | боротьбу
+   > [!explanation] "Присвятити + давальний відмінок": чому? → боротьбі.
 
-- group: Імперська доба (1764-1917)
-  - Тарас Шевченко
-  - Леся Українка
-  - Михайло Грушевський
+[Focus on GRAMMAR errors, not biographical inaccuracies]
+```
 
-- group: Сучасність (1991-)
-  - [Contemporary figures]
+### 5. Vocabulary Matching (match-up)
 
-[20+ figures across 5-6 eras]
+**Purpose:** Test recognition of biographical vocabulary.
+
+```markdown
+## match-up: Біографічна лексика
+
+| Слово | Значення |
+|-------|----------|
+| спадщина | те, що залишилося після когось |
+| внесок | те, що хтось дав суспільству |
+| постать | видатна особа |
+| сучасник | людина тієї ж епохи |
+| наставник | той, хто навчає |
+
+[Match Ukrainian words to Ukrainian definitions — tests vocabulary, not translation]
+```
+
+### 6. Register Identification (group-sort)
+
+**Purpose:** Test register awareness using quotes from module.
+
+```markdown
+## group-sort: Визначте регістр цитат
+
+### Офіційний регістр
+- "Цим засвідчуємо, що..."
+- "На підставі вищезазначеного..."
+
+### Публіцистичний регістр
+- "Чому ми маємо пам'ятати..."
+- "Її внесок неможливо переоцінити..."
+
+### Розмовний регістр
+- "Та він же геній!"
+- "Оце так талант!"
+
+[Test REGISTER identification using module content]
 ```
 
 ---

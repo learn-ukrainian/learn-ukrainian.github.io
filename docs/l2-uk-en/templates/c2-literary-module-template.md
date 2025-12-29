@@ -19,6 +19,7 @@ Before submitting a C2 literary module, verify all items from `c2-module-templat
 - [ ] **Ukrainian critical terminology:** All analysis in Ukrainian
 - [ ] **Canon awareness:** Connect to Ukrainian literary tradition
 - [ ] **Meta-linguistic commentary:** Explain stylistic and creative choices
+- [ ] **NO CONVERSATIONAL DIALOGS:** C2 literary modules are ANALYTICAL. Do NOT include tourist dialogs or conversational scenarios. If analyzing dramatic dialogue, quote and analyze the text—don't simulate conversations.
 
 ---
 
@@ -281,6 +282,37 @@ vocabulary_focus:
 ---
 
 ## Literary-Specific Activities
+
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not literary theory recall.**
+
+The lesson teaches both Ukrainian AND literary mastery. Activities practice only Ukrainian using literary content as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор визначає поняття фокалізації?" (requires reading Ukrainian)
+**❌ WRONG:** "Що таке фокалізація?" (tests definition recall, not reading comprehension)
+
+**Key Test:** Can the learner answer without reading the Ukrainian analysis text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND literary theory/criticism |
+| **Activities** | Practice ONLY Ukrainian language skills using literary content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension of theoretical text — "Згідно з текстом модуля..."
+- **fill-in**: Test literary terminology/collocations in context
+- **match-up**: Test vocabulary — Ukrainian terms ↔ Ukrainian definitions
+- **cloze**: Test vocabulary in literary analysis context
+- **group-sort**: Test categorization using module vocabulary
+- **mark-the-words**: Test grammar recognition in literary text
+- **error-correction**: Test grammar, NOT theoretical errors
+
+</critical>
+
+---
 
 ### Activity Format Quick Reference
 

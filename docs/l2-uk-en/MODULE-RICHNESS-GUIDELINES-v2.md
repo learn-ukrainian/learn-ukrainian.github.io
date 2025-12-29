@@ -191,6 +191,40 @@
 - English-Ukrainian contrasts (Language Link boxes)
 - Metalinguistic analysis
 
+### Activity Pedagogy: Language Practice, Not Content Testing
+
+<critical>
+
+**FUNDAMENTAL PRINCIPLE:** Activities exist to practice Ukrainian language skills, NOT to test content knowledge.
+
+**The content (history, culture, literature, biography) is the VEHICLE for language learning.**
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND subject matter (history, culture, etc.) |
+| **Activities** | Practice ONLY Ukrainian language skills using the content as context |
+
+**✅ CORRECT Activity Approach:**
+- "Згідно з текстом, яка була причина повстання?" — Tests **reading comprehension** (must read Ukrainian to answer)
+- "Заповніть пропуски словами з тексту" — Tests **vocabulary** in context
+- "Знайдіть дієслова в пасивному стані" — Tests **grammar recognition**
+- "Виправте граматичні помилки" — Tests **grammatical accuracy**
+
+**❌ WRONG Activity Approach:**
+- "У якому році почалося повстання?" — Tests **historical recall** (could answer without reading Ukrainian)
+- "Хто був гетьманом після Хмельницького?" — Tests **content knowledge**, not language
+- "Правда чи міф: Мазепа зрадив Петра I" — Tests **historical facts**, not comprehension
+
+**Key Test:** Can the learner answer this question WITHOUT reading the Ukrainian text? If yes, it's testing content, not language.
+
+**For Non-Grammar Modules (History, Culture, Biography, etc.):**
+1. **Quiz questions** must be answerable ONLY by reading the module text
+2. **Fill-in/Cloze** should use module vocabulary in grammatically challenging contexts
+3. **Match-up** should test vocabulary recognition, not factual associations
+4. **Error-correction** should focus on grammar/spelling, using content as sentence context
+
+</critical>
+
 ### Activity Requirements by Level
 
 | Level | Activities | Items/Activity | Types | Stage Sequencing |

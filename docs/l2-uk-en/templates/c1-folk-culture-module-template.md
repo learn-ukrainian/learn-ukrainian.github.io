@@ -19,6 +19,7 @@ Before submitting a C1 folk culture module, verify all items from `c1-module-tem
 - [ ] **Historical context:** Pre-Christian origins, Christian syncretism, Soviet era changes
 - [ ] **Modern relevance:** How traditions continue or are revived today
 - [ ] **Vocabulary immersion:** Traditional terminology embedded in cultural narrative
+- [ ] **NO TOURIST DIALOGS:** Folk culture modules present AUTHENTIC MATERIALS. Do NOT add fictional tourist scenarios. If a folk song has dialogue form, quote the song—don't simulate conversations about it.
 
 ---
 
@@ -213,6 +214,37 @@ vocabulary_focus:
 
 ## Folk Culture-Specific Activities
 
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not folk culture recall.**
+
+The lesson teaches both Ukrainian AND folk culture. Activities practice only Ukrainian using cultural content as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор описує функцію рушника?" (requires reading Ukrainian)
+**❌ WRONG:** "Що символізує калина в українській культурі?" (tests cultural recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND folk culture knowledge |
+| **Activities** | Practice ONLY Ukrainian language skills using cultural content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension — "Згідно з текстом модуля..."
+- **cloze**: Test vocabulary in folk song/text context
+- **match-up**: Test vocabulary — Ukrainian terms ↔ Ukrainian definitions
+- **fill-in**: Test vocabulary/collocations from module
+- **group-sort**: Test categorization using module vocabulary
+- **mark-the-words**: Test grammar recognition in authentic folk text
+- **error-correction**: Test grammar, NOT cultural facts
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.
@@ -304,26 +336,28 @@ vocabulary_focus:
 [20+ regional elements across 4-5 regions]
 ```
 
-### Symbolism Analysis
+### Reading Comprehension (Language-Focused)
 
 ```markdown
-## quiz: Символіка
+## quiz: Розуміння тексту
 
-1. Що символізує калина в українській культурі?
-   - [ ] Смерть
-   - [x] Україну, дівочу красу, рідний край
-   - [ ] Зиму
-   - [ ] Війну
-   > Калина — один із найголовніших українських символів, що з'являється в піснях, вишивках, живописі.
+> **Instruction:** Відповідайте на питання на основі прочитаного тексту модуля.
 
-2. Яка функція рушника у весільному обряді?
-   - [ ] Декоративна
-   - [ ] Практична
-   - [x] Символічна — поєднання молодих, оберіг
-   - [ ] Гігієнічна
-   > Рушник символізує поєднання родин і є оберегом молодої пари.
+1. Згідно з текстом, як автор характеризує роль калини в українській культурі?
+   - [ ] Автор зазначає, що калина має лише декоративне значення
+   - [x] Автор виділяє калину як один із найголовніших національних символів
+   - [ ] Автор пише, що символіка калини прийшла з інших культур
+   - [ ] Автор не згадує калину в тексті
+   > Текст чітко формулює значення калини в розділі про символіку.
 
-[12+ symbolism questions]
+2. Як у тексті модуля описано функцію рушника у весільному обряді?
+   - [ ] Текст зосереджується лише на практичній функції
+   - [ ] Автор називає рушник сучасним винаходом
+   - [x] Автор підкреслює символічну функцію — поєднання молодих та оберіг
+   - [ ] У тексті не згадується рушник
+   > У розділі про весільні обряди автор детально пояснює символіку рушника.
+
+[All questions must begin with "Згідно з текстом" — tests READING COMPREHENSION, not cultural recall]
 ```
 
 ---

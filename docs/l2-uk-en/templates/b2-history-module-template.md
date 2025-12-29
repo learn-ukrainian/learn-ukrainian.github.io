@@ -1,10 +1,12 @@
 # B2 History Module Template
 
-**Purpose:** Reference template for B2 Ukrainian history modules (M71-95: Medieval to Present, Decolonization Focus)
+**Purpose:** Reference template for B2 Ukrainian history modules (M71-131: Origins to Present, Decolonization Focus)
 
 **Based on:** `b2-module-template.md` — inherits all B2 quality standards
 
-**Related Issue:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305)
+**Related Issues:** [#305](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/305), [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
+
+> **Note:** Synthesis modules (M83, M107, M119, M125, M131) use `b2-synthesis-module-template.md` instead.
 
 ---
 
@@ -16,9 +18,10 @@ Before submitting a B2 history module, verify all items from `b2-module-template
 - [ ] **CBI pedagogy:** Content-Based Instruction with Narrative Arc (NOT TTT)
 - [ ] **Extended narrative:** 500+ word historical account (main text)
 - [ ] **Decolonization lens:** Ukraine-centric perspective, not Russian imperial framing
-- [ ] **Primary sources:** Include translated excerpts from historical documents
+- [ ] **Primary sources (≥2):** MANDATORY — include at least 2 excerpts from historical documents using `[!quote]` callout format
 - [ ] **Vocabulary in context:** Historical terms embedded in narrative, not listed
 - [ ] **Engagement boxes:** Historical context, myth-busting, modern relevance
+- [ ] **NO DIALOGS:** History modules are READING-CENTRIC. Do NOT include conversational dialogs — they waste space and distract from historical content. Use primary source excerpts instead.
 
 ---
 
@@ -144,9 +147,22 @@ vocabulary_focus:
 
 ## History-Specific Activities
 
-### Activity Format Quick Reference
+### CRITICAL: Language Practice, Not Content Testing
 
-**CRITICAL:** Use these exact formats for MDX generation to work correctly.
+<critical>
+
+**Activities test LANGUAGE SKILLS, not historical knowledge.**
+
+The lesson teaches both Ukrainian AND history. Activities practice only Ukrainian using the historical content as context.
+
+**✅ CORRECT:** "Згідно з текстом, яка була головна причина повстання?" (requires reading Ukrainian)
+**❌ WRONG:** "У якому році почалося повстання?" (tests recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite the activity.
+
+</critical>
+
+### Activity Format Quick Reference
 
 | Activity | Format |
 |----------|--------|
@@ -165,75 +181,129 @@ vocabulary_focus:
 
 ---
 
-### Comprehension with Analysis
+### 1. Reading Comprehension (quiz)
+
+**Purpose:** Test understanding of Ukrainian text, NOT recall of historical facts.
 
 ```markdown
 ## quiz: Розуміння тексту
 
-1. Яка була головна причина козацького повстання під проводом Богдана Хмельницького проти Речі Посполитої у 1648 році?
+> **Instruction:** Відповідайте на питання на основі прочитаного тексту.
+
+1. Згідно з текстом, яка була головна причина козацького повстання?
    - [ ] Релігійні переслідування
    - [x] Соціально-економічне гноблення козацтва та селянства
    - [ ] Особиста образа гетьмана
-   - [ ] Підбурювання з боку Московського царства
-   > Хоча всі фактори відігравали роль, основною причиною було гноблення козацтва.
+   - [ ] Підбурювання з боку іноземних держав
+   > Текст наголошує на соціально-економічних факторах як основній причині.
 
-[10+ comprehension questions testing understanding of narrative]
+2. Як автор описує роль Запорозької Січі?
+   - [ ] Як релігійний центр
+   - [x] Як осередок козацької демократії
+   - [ ] Як торговельний порт
+   - [ ] Як військову фортецю
+   > У тексті Січ названа "осередком козацької демократії".
+
+[All questions must reference "згідно з текстом" or "у тексті"]
 ```
 
-### Vocabulary in Historical Context
+### 2. Vocabulary in Context (fill-in)
+
+**Purpose:** Test vocabulary and collocations from module.
 
 ```markdown
 ## fill-in: Історична лексика в контексті
 
 1. Запорозька Січ була [___] козацької демократії.
-   - [ ] прикладом (example)
-   - [x] осередком (center)
-   - [ ] причиною (cause)
+   > [!answer] осередком
+   > [!options] прикладом | осередком | причиною | символом
    > Осередок = центр, місце зосередження.
 
 2. Козаки [___] спротив польському пануванню.
-   - [x] чинили (offered/put up)
-   - [ ] робили (did)
-   - [ ] давали (gave)
+   > [!answer] чинили
+   > [!options] чинили | робили | давали | мали
    > Чинити спротив = to resist (fixed collocation).
 
-[10+ items using historical vocabulary]
+3. Повстання [___] владу Речі Посполитої.
+   > [!answer] підірвало
+   > [!options] підірвало | зробило | дало | мало
+   > Підірвати владу = to undermine power.
+
+[10+ items testing MODULE VOCABULARY, not content knowledge]
 ```
 
-### Source Analysis
+### 3. Grammar in Historical Sentences (error-correction)
+
+**Purpose:** Test grammar using historical content as context.
+
+```markdown
+## error-correction: Граматика в історичних реченнях
+
+1. Богдан Хмельницький очолив козацьке повстання проти польський панування.
+   > [!error] польський
+   > [!answer] польського
+   > [!options] польський | польського | польському | польським
+   > [!explanation] Прийменник "проти" вимагає родового відмінка: проти чого? → польського панування.
+
+2. Козаки здобувши низку перемог над ворогом.
+   > [!error] здобувши
+   > [!answer] здобули
+   > [!options] здобувши | здобули | здобувати | здобуває
+   > [!explanation] Дієприслівник не може бути присудком. Потрібна особова форма дієслова.
+
+[Focus on GRAMMAR errors, not historical inaccuracies]
+```
+
+### 4. Source Analysis (select)
+
+**Purpose:** Test close reading of primary source in Ukrainian.
 
 ```markdown
 ## select: Аналіз первинного джерела
 
-Прочитайте уривок і виберіть усі правильні твердження:
+Прочитайте уривок і виберіть усі правильні твердження про текст:
 
-> "..." [Primary source excerpt]
+> "..." [Primary source excerpt from module]
 
-- [x] Автор підтримує [position]
-- [ ] Автор критикує [position]
-- [x] Текст написаний для [audience]
-- [ ] Текст є об'єктивним описом подій
-- [x] Лексика вказує на [register/bias]
+- [x] Автор використовує офіційний регістр
+- [ ] Текст написаний розмовним стилем
+- [x] У тексті є приклади пасивного стану
+- [ ] Автор звертається до читача напряму
+- [x] Лексика вказує на публіцистичний стиль
 
-[Multi-select questions requiring close reading]
+[Test LINGUISTIC ANALYSIS of source, not historical interpretation]
 ```
 
-### Myth vs. Reality
+### 5. Vocabulary Matching (match-up)
+
+**Purpose:** Test recognition of historical vocabulary.
 
 ```markdown
-## true-false: Міфи та реальність
+## match-up: Історична лексика
 
-1. Переяславська рада 1654 року означала добровільне приєднання України до Росії.
-   - [ ] Правда
-   - [x] Міф
-   > Це радянський міф. Насправді угода передбачала військовий союз, а не підданство.
+| Слово | Значення |
+|-------|----------|
+| гетьман | козацький вождь |
+| повстання | збройний спротив владі |
+| панування | контроль, влада над територією |
+| спротив | протидія, опір |
+| осередок | центр, місце зосередження |
 
-2. Козацька Україна мала власну державність і дипломатію.
-   - [x] Правда
-   - [ ] Міф
-   > Гетьманщина була квазідержавним утворенням із власною армією, адміністрацією та зовнішньою політикою.
+[Match Ukrainian words to Ukrainian definitions — tests vocabulary, not translation]
+```
 
-[14+ items challenging misconceptions]
+### 6. Mark the Words (mark-the-words)
+
+**Purpose:** Test grammar recognition in authentic historical text.
+
+```markdown
+## mark-the-words: Знайдіть пасивні конструкції
+
+Знайдіть усі форми пасивного стану в уривку:
+
+> Запорозька Січ *була заснована* в XVI столітті. Козаки *обиралися* на посади демократичним шляхом. Гетьман *був обраний* радою старшин.
+
+[Test GRAMMAR recognition using historical content]
 ```
 
 ---
@@ -356,10 +426,17 @@ vocabulary_focus:
 ## Related Documentation
 
 - **Base template:** `docs/l2-uk-en/templates/b2-module-template.md`
-- **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M71-95 history progression)
+- **Synthesis template:** `docs/l2-uk-en/templates/b2-synthesis-module-template.md` (for M83, M107, M119, M125, M131)
+- **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M71-131 history progression)
+- **Restructure proposal:** `docs/l2-uk-en/B2-HISTORY-RESTRUCTURE-PROPOSAL.md`
+- **Gemini expansion:** `docs/l2-uk-en/B2-GEMINI-EXPANSION-PROPOSAL.md` (detailed module specs)
 - **Decolonization guidelines:** Referenced in curriculum plan
 
 ---
 
-**Last Updated:** 2025-12-24
-**Template Version:** 1.0
+**Last Updated:** 2025-12-29
+**Template Version:** 1.2
+
+**Changelog:**
+- v1.2 (2025-12-29): Updated module range M71-131, added reference to synthesis template
+- v1.1 (2025-12-29): Added NO DIALOGS rule, made primary sources mandatory (≥2)

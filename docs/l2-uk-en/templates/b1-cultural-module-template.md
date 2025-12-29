@@ -242,6 +242,39 @@ immersion_target: 90-95%
 
 ---
 
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not cultural knowledge.**
+
+The lesson teaches both Ukrainian AND cultural content. Activities practice only Ukrainian using the cultural content as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор описує українську музичну сцену?" (requires reading Ukrainian)
+**❌ WRONG:** "У якому році Kalush Orchestra виграли Євробачення?" (tests recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND cultural knowledge |
+| **Activities** | Practice ONLY Ukrainian language skills using cultural content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension — "Згідно з текстом, що автор виділяє як...?"
+- **true-false**: Test comprehension of statements in the text — "У тексті зазначено, що..."
+- **match-up**: Test vocabulary recognition — match Ukrainian terms to Ukrainian definitions
+- **fill-in**: Test vocabulary/collocations — "Цей гурт ____ популярність після..."
+- **cloze**: Test vocabulary in extended context
+- **group-sort**: Test categorization using module vocabulary
+- **select**: Test reading comprehension (multiple correct)
+- **error-correction**: Test grammar, NOT cultural facts
+- **unjumble**: Test word order and grammar
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation.
@@ -269,20 +302,20 @@ See `b1-grammar-module-template.md` for full examples.
 
 **Activity Mix for Cultural Modules:**
 
-| Activity Type | Count | Priority | Purpose |
+| Activity Type | Count | Priority | Purpose (LANGUAGE focus) |
 |--------------|-------|----------|---------|
-| quiz | 10-14 items | HIGH | Reading comprehension, cultural facts |
-| true-false | 10-12 items | HIGH | Fact verification |
-| match-up | 12+ items | HIGH | Connect terms to descriptions |
-| fill-in | 12+ items | HIGH | Vocabulary in context |
-| cloze | 14+ blanks | HIGH | Passage completion |
-| group-sort | 16+ items | MEDIUM | Categorization (regions, genres, eras) |
-| select | 8+ items | MEDIUM | Multiple correct answers |
-| mark-the-words | 8+ words | MEDIUM | Identify cultural terms |
-| unjumble | 8+ items | LOW | Sentence construction |
-| error-correction | 8+ items | LOW | Common misconceptions |
-| dialogue-reorder | 6-8 turns | LOW | Conversation ordering |
-| translate | 8+ items | LOW | Cultural phrases |
+| quiz | 10-14 items | HIGH | Reading comprehension — "Згідно з текстом..." |
+| true-false | 10-12 items | HIGH | Comprehension of text statements |
+| match-up | 12+ items | HIGH | Vocabulary — Ukrainian terms ↔ Ukrainian definitions |
+| fill-in | 12+ items | HIGH | Vocabulary/collocations in context |
+| cloze | 14+ blanks | HIGH | Vocabulary in extended passage |
+| group-sort | 16+ items | MEDIUM | Categorization using module vocabulary |
+| select | 8+ items | MEDIUM | Multi-select reading comprehension |
+| mark-the-words | 8+ words | MEDIUM | Grammar recognition (verbs, nouns, etc.) |
+| unjumble | 8+ items | LOW | Word order and grammar |
+| error-correction | 8+ items | LOW | Grammar errors, NOT cultural mistakes |
+| dialogue-reorder | 6-8 turns | LOW | Discourse flow and logic |
+| translate | 8+ items | LOW | Vocabulary in translation context |
 
 **WHY this mix:** Cultural modules prioritize comprehension (quiz, true-false, match-up, cloze) over production (unjumble, error-correction).
 
@@ -630,9 +663,10 @@ immersion_target: 90-95%
 **Activity creation for cultural modules:**
 
 - Prioritize reading comprehension (quiz, true-false, match-up, cloze)
-- Use authentic cultural content in all activities
-- Quiz questions should test cultural knowledge, not just vocabulary
-- Error-correction should address common misconceptions about Ukrainian culture
+- Use authentic cultural content as CONTEXT for language practice
+- Quiz questions should test READING COMPREHENSION, not cultural recall — always frame as "Згідно з текстом..."
+- Error-correction should test GRAMMAR, not cultural misconceptions
+- All activities must require reading the Ukrainian text to answer correctly
 
 **Common mistakes to avoid:**
 
