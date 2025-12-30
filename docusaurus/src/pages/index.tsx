@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        480 modules aligned with CEFR and Ukrainian State Standards.
+        604 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -147,42 +147,42 @@ export default function Home(): ReactNode {
                 level="A1"
                 name="Beginner"
                 description="Cyrillic alphabet, basic phrases, simple grammar"
-                modules={30}
+                modules={34}
                 color="#2E7D32"
               />
               <LevelCard
                 level="A2"
                 name="Elementary"
                 description="All 7 cases, verb aspects, comparison"
-                modules={50}
+                modules={57}
                 color="#1565C0"
               />
               <LevelCard
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, complex sentences"
-                modules={80}
+                modules={86}
                 color="#E65100"
               />
               <LevelCard
                 level="B2"
                 name="Upper-Intermediate"
                 description="Grammar mastery, phraseology, history, biographies"
-                modules={125}
+                modules={145}
                 color="#C2185B"
               />
               <LevelCard
                 level="C1"
                 name="Advanced"
                 description="Academic focus, stylistics, folk culture, literature"
-                modules={115}
+                modules={182}
                 color="#7B1FA2"
               />
               <LevelCard
                 level="C2"
                 name="Mastery"
                 description="Stylistic perfection, literary mastery, professional prep"
-                modules={80}
+                modules={100}
                 color="#C62828"
               />
             </div>
