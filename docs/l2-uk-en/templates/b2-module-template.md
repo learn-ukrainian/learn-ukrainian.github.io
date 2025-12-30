@@ -444,22 +444,26 @@ register: "науковий"  # Options: офіційно-діловий, нау
 - M51-60: Synonyms and antonyms
 - M61-70: Collocations and set expressions
 
-### B2.3: Ukrainian History (M71-95)
+### B2.3: Ukrainian History (M71-131)
 
-**Focus:** Medieval to present history, vocabulary through narrative
-**Pedagogy:** CBI (Historical narratives)
-**Activities:** 10-12 (comprehension, vocabulary in context)
+**Focus:** Origins to present history, vocabulary through narrative, decolonization
+**Pedagogy:** CBI (Historical narratives) + Synthesis modules
+**Activities:** 10-14 (comprehension, vocabulary in context, cross-era analysis)
 **Word count:** 1800+
 **Passages:** 500+ word historical accounts
 
-**Example modules:**
-- M71-80: Kyivan Rus, Cossack era
-- M81-90: Soviet period, Holodomor, decolonization
-- M91-95: Independence, modern Ukraine
+**Phase breakdown:**
+- M71-83: Origins → Commonwealth (Trypillia to Lithuania)
+- M84-107: Cossack Era & Empire (Sich, Mazepa, Shevchenko)
+- M108-119: Trauma & Resistance (Executed Renaissance, Holodomor, WWII)
+- M120-125: Independence Era (1991-2013)
+- M126-131: Revolution & War (2014-present)
 
-**Critical:** Decolonization content (Pereiaslav Treaty myths, Holodomor recognition)
+**Synthesis modules:** M83, M107, M119, M125, M131 (cross-era analysis)
 
-### B2.4: Skills & Capstone (M96-110)
+**Critical:** Decolonization content — see `b2-synthesis-module-template.md` and GitHub issue #332
+
+### B2.4: Skills & Capstone (M132-145)
 
 **Focus:** Integrated skills, final assessment
 **Pedagogy:** CBI + Skills integration
@@ -467,9 +471,9 @@ register: "науковий"  # Options: офіційно-діловий, нау
 **Word count:** 1800+
 
 **Example modules:**
-- M96-105: Reading comprehension, writing skills, listening
-- M106-109: Grammar/vocab review
-- M110: Final exam (checkpoint with full assessment)
+- M132-140: Reading comprehension, writing skills, listening
+- M141-144: Grammar/vocab review
+- M145: Final capstone (comprehensive assessment)
 
 ---
 

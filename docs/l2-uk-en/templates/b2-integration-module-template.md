@@ -518,11 +518,14 @@ objectives:
 ## Related Documentation
 
 - **Base template:** `docs/l2-uk-en/templates/b2-module-template.md`
-- **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M96-110 specifications)
+- **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md` (M132-145 Skills & Capstone)
 - **B1 Integration Template:** `docs/l2-uk-en/templates/b1-integration-module-template.md`
 - **Activity Reference:** `docs/ACTIVITY-MARKDOWN-REFERENCE.md`
 
 ---
 
-**Last Updated:** 2025-12-24
-**Template Version:** 1.0
+**Last Updated:** 2025-12-29
+**Template Version:** 1.1
+
+**Changelog:**
+- v1.1 (2025-12-29): Updated module range M132-145 (was M96-110)

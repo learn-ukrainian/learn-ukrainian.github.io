@@ -1,0 +1,882 @@
+module: 46-proverbs-nature-time-caution
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/46-proverbs-nature-time-caution.md
+generated: '2025-12-30T00:18:57.358941'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 20
+  unjumble: 10
+  quiz: 20
+  true-false: 10
+item_count: 68
+items:
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Готуй сани взимку, а воза влітку.
+  error: взимку
+  answer: влітку
+  sentence_corrected: Готуй сани влітку, а воза влітку.
+  options:
+  - взимку
+  - влітку
+  - восени
+  - навесні
+  original_explanation: Правильна форма — «Готуй сани влітку, а воза взимку». Сани
+    для зими готують влітку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Що посадиш, те й пожнеш.
+  error: посадиш
+  answer: посієш
+  sentence_corrected: Що посієш, те й пожнеш.
+  options:
+  - посадиш
+  - посієш
+  - посіяв
+  - посадив
+  original_explanation: Правильна форма — «Що посієш, те й пожнеш». Використовується
+    дієслово «сіяти».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Одна ластівка літа не робить.
+  error: літа
+  answer: весни
+  sentence_corrected: Одна ластівка весни не робить.
+  options:
+  - літа
+  - весни
+  - осені
+  - зими
+  original_explanation: Правильна форма — «Одна ластівка весни не робить». Ластівки
+    — символ весни.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Не кажи гоп, поки не переможеш.
+  error: переможеш
+  answer: перескочиш
+  sentence_corrected: Не кажи гоп, поки не перескочиш.
+  options:
+  - переможеш
+  - перескочиш
+  - перейдеш
+  - перебіжиш
+  original_explanation: Правильна форма — «Не кажи гоп, поки не перескочиш».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: П'ять разів відміряй, один раз відріж.
+  error: П'ять
+  answer: Сім
+  sentence_corrected: Сім разів відміряй, один раз відріж.
+  options:
+  - П'ять
+  - Сім
+  - Три
+  - Десять
+  original_explanation: Правильна форма — «Сім разів відміряй, один раз відріж».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Обіцянка — іграшка.
+  error: іграшка
+  answer: цяцянка
+  sentence_corrected: Обіцянка — цяцянка.
+  options:
+  - іграшка
+  - цяцянка
+  - забавка
+  - лялька
+  original_explanation: Правильна форма — «Обіцянка — цяцянка». «Цяцянка» — діалектне
+    слово.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Краще синиця в руках, ніж орел у небі.
+  error: орел
+  answer: журавель
+  sentence_corrected: Краще синиця в руках, ніж журавель у небі.
+  options:
+  - орел
+  - журавель
+  - сокіл
+  - лелека
+  original_explanation: Правильна форма — «Краще синиця в руках, ніж журавель у небі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Обережного Бог береже.
+  error: Обережного
+  answer: Береженого
+  sentence_corrected: Береженого Бог береже.
+  options:
+  - Обережного
+  - Береженого
+  - Розумного
+  - Доброго
+  original_explanation: Правильна форма — «Береженого Бог береже».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Готуй сани влітку, _____.
+  answer: а воза взимку
+  complete_sentence: Готуй сани влітку, а воза взимку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Що посієш, _____.
+  answer: те й пожнеш
+  complete_sentence: Що посієш, те й пожнеш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Краще пізно, _____.
+  answer: ніж ніколи
+  complete_sentence: Краще пізно, ніж ніколи__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Ранок вечора _____.
+  answer: мудріший
+  complete_sentence: Ранок вечора мудріший__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Вода камінь _____.
+  answer: точить
+  complete_sentence: Вода камінь точить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Одна ластівка весни _____.
+  answer: не робить
+  complete_sentence: Одна ластівка весни не робить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Не кажи гоп, _____.
+  answer: поки не перескочиш
+  complete_sentence: Не кажи гоп, поки не перескочиш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Сім разів відміряй, _____.
+  answer: один раз відріж
+  complete_sentence: Сім разів відміряй, один раз відріж__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Обіцянка — _____.
+  answer: цяцянка
+  complete_sentence: Обіцянка — цяцянка__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Береженого Бог _____.
+  answer: береже
+  complete_sentence: Береженого Бог береже__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Колега вже розповідає про підвищення, хоча ще нічого не підтверджено.
+    _____.
+  answer: Не кажи гоп, поки не перескочиш
+  complete_sentence: Колега вже розповідає про підвищення, хоча ще нічого не підтверджено.
+    Не кажи гоп, поки не перескочиш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Підприємець почав готуватися до святкового сезону ще влітку.
+    _____.
+  answer: Готуй сани влітку, а воза взимку
+  complete_sentence: Підприємець почав готуватися до святкового сезону ще влітку.
+    Готуй сани влітку, а воза взимку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Менеджер чекає на ідеальний проєкт замість того, щоб працювати
+    над реальним. _____.
+  answer: Краще синиця в руках, ніж журавель у небі
+  complete_sentence: Менеджер чекає на ідеальний проєкт замість того, щоб працювати
+    над реальним. Краще синиця в руках, ніж журавель у небі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Перед покупкою машини варто все ретельно перевірити. _____.
+  answer: Сім разів відміряй, один раз відріж
+  complete_sentence: Перед покупкою машини варто все ретельно перевірити. Сім разів
+    відміряй, один раз відріж__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Студент не вчився цілий семестр і провалив іспит. _____.
+  answer: Що посієш, те й пожнеш
+  complete_sentence: Студент не вчився цілий семестр і провалив іспит. Що посієш,
+    те й пожнеш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Політик обіцяв багато, але не виконав нічого. _____.
+  answer: Обіцянка — цяцянка
+  complete_sentence: Політик обіцяв багато, але не виконав нічого. Обіцянка — цяцянка__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Письменник працює над романом уже десять років, але не здається.
+    _____.
+  answer: Вода камінь точить
+  complete_sentence: Письменник працює над романом уже десять років, але не здається.
+    Вода камінь точить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Один вдалий місяць — це ще не тенденція. _____.
+  answer: Одна ластівка весни не робить
+  complete_sentence: Один вдалий місяць — це ще не тенденція. Одна ластівка весни
+    не робить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Бабуся нарешті почала користуватися смартфоном у 80 років. _____.
+  answer: Краще пізно, ніж ніколи
+  complete_sentence: Бабуся нарешті почала користуватися смартфоном у 80 років. Краще
+    пізно, ніж ніколи__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Друг попередив мене про складного клієнта перед зустріччю. _____.
+  answer: Попереджений — значить озброєний
+  complete_sentence: Друг попередив мене про складного клієнта перед зустріччю. Попереджений
+    — значить озброєний__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Готуй сани влітку, а воза взимку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Що посієш, те й пожнеш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Час — гроші.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Краще пізно, ніж ніколи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Ранок вечора мудріший.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Вода камінь точить.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Не кажи гоп, поки не перескочиш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Сім разів відміряй, один раз відріж.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Береженого Бог береже.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Краще синиця в руках, ніж журавель у небі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке значення має прислів'я «Готуй сани влітку, а воза взимку» у переносному
+    сенсі?
+  options:
+  - text: Транспорт потрібно ремонтувати в певну пору року.
+    correct: false
+  - text: Плануй і готуйся до майбутнього заздалегідь.
+    correct: true
+  - text: Зимою краще їздити на санях, а влітку — на возі.
+    correct: false
+  - text: Сани і вози потребують різного догляду.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Коли найдоречніше використати прислів'я «Не кажи гоп, поки не перескочиш»?
+  options:
+  - text: Коли хтось боїться стрибати через перешкоду.
+    correct: false
+  - text: Коли людина хвалиться успіхом до його досягнення.
+    correct: true
+  - text: Коли спортсмен готується до змагань зі стрибків.
+    correct: false
+  - text: Коли хтось не може перестрибнути через калюжу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Краще синиця в руках, ніж журавель у небі»?
+  options:
+  - text: Синиці корисніші за журавлів.
+    correct: false
+  - text: Краще мати щось реальне, ніж гнатися за недосяжним.
+    correct: true
+  - text: Пташок краще не тримати в руках.
+    correct: false
+  - text: Журавлі живуть тільки в небі, а синиці — на землі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: У якій ситуації найкраще використати прислів'я «Сім разів відміряй, один
+    раз відріж»?
+  options:
+  - text: Коли хтось шиє одяг і помиляється з розміром.
+    correct: false
+  - text: Коли людина збирається прийняти важливе рішення.
+    correct: true
+  - text: Коли потрібно порізати папір на сім частин.
+    correct: false
+  - text: Коли хтось вимірює довжину стіни.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке прислів'я найкраще описує ситуацію, коли один успіх ще не означає
+    тенденції?
+  options:
+  - text: Що посієш, те й пожнеш.
+    correct: false
+  - text: Вода камінь точить.
+    correct: false
+  - text: Одна ластівка весни не робить.
+    correct: true
+  - text: Весна покаже, хто де орав.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Ранок вечора мудріший» у переносному значенні?
+  options:
+  - text: Вранці люди розумніші, ніж увечері.
+    correct: false
+  - text: Не приймай важливих рішень увечері, почекай до ранку.
+    correct: true
+  - text: Ранкові справи важливіші за вечірні.
+    correct: false
+  - text: Мудрі люди встають рано вранці.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Коли використовують прислів'я «Обіцянка — цяцянка»?
+  options:
+  - text: Коли хтось дарує іграшку дитині.
+    correct: false
+  - text: Коли вказують на ненадійність пустих обіцянок.
+    correct: true
+  - text: Коли діти граються з цяцянками.
+    correct: false
+  - text: Коли хтось обіцяє купити подарунок.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке прислів'я найкраще підходить для поради людині, яка псує стосунки
+    при звільненні?
+  options:
+  - text: Береженого Бог береже.
+    correct: false
+  - text: Не плюй у криницю.
+    correct: true
+  - text: Довіряй, але перевіряй.
+    correct: false
+  - text: Попереджений — значить озброєний.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Вода камінь точить»?
+  options:
+  - text: Вода небезпечна для каменів.
+    correct: false
+  - text: Наполегливість і терпіння ведуть до успіху.
+    correct: true
+  - text: Камені треба мити водою.
+    correct: false
+  - text: Водоспади руйнують гірські породи.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: У якому контексті найдоречніше сказати «Час — гроші»?
+  options:
+  - text: Коли хтось запізнюється на зустріч і витрачає чужий час.
+    correct: true
+  - text: Коли обговорюють курс валют.
+    correct: false
+  - text: Коли хтось купує новий годинник.
+    correct: false
+  - text: Коли рахують зарплату за годину роботи.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Ваш друг хвалиться новою роботою, хоча ще не підписав контракт. Яке прислів'я
+    найкраще підходить?
+  options:
+  - text: Час — гроші.
+    correct: false
+  - text: Не кажи гоп, поки не перескочиш.
+    correct: true
+  - text: Вода камінь точить.
+    correct: false
+  - text: Краще пізно, ніж ніколи.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Колега чекає на ідеальну пропозицію роботи, відмовляючись від непоганих
+    варіантів. Що порадити?
+  options:
+  - text: Готуй сани влітку, а воза взимку.
+    correct: false
+  - text: Ранок вечора мудріший.
+    correct: false
+  - text: Краще синиця в руках, ніж журавель у небі.
+    correct: true
+  - text: Весна покаже, хто де орав.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Ваша подруга хоче прийняти важливе рішення о півночі після важкого дня.
+    Як порадити?
+  options:
+  - text: Ранок вечора мудріший.
+    correct: true
+  - text: Час — гроші.
+    correct: false
+  - text: Що посієш, те й пожнеш.
+    correct: false
+  - text: Обіцянка — цяцянка.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Керівник компанії хоче зробити висновки про успіх на основі одного хорошого
+    місяця. Яке прислів'я?
+  options:
+  - text: Одна ластівка весни не робить.
+    correct: true
+  - text: Вода камінь точить.
+    correct: false
+  - text: Готуй сани влітку.
+    correct: false
+  - text: Береженого Бог береже.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Письменник отримує відмови вже п'ять років, але продовжує писати. Яке
+    прислів'я описує його підхід?
+  options:
+  - text: Обіцянка — цяцянка.
+    correct: false
+  - text: Вода камінь точить.
+    correct: true
+  - text: Не плюй у криницю.
+    correct: false
+  - text: Краще пізно, ніж ніколи.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Співробітник звільняється зі скандалом, ображаючи колег. Яке прислів'я
+    підходить як застереження?
+  options:
+  - text: Не плюй у криницю.
+    correct: true
+  - text: Сім разів відміряй.
+    correct: false
+  - text: Довіряй, але перевіряй.
+    correct: false
+  - text: Весна покаже, хто де орав.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Студент не готувався до іспиту і отримав погану оцінку. Яке прислів'я
+    підходить?
+  options:
+  - text: Що посієш, те й пожнеш.
+    correct: true
+  - text: Одна ластівка весни не робить.
+    correct: false
+  - text: Попереджений — значить озброєний.
+    correct: false
+  - text: Ранок вечора мудріший.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Хтось поспішає з покупкою квартири без перевірки документів. Яке прислів'я
+    дати як пораду?
+  options:
+  - text: Час — гроші.
+    correct: false
+  - text: Краще пізно, ніж ніколи.
+    correct: false
+  - text: Сім разів відміряй, один раз відріж.
+    correct: true
+  - text: Вода камінь точить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Батько вирішив вивчати нову мову у 65 років. Яке прислів'я підтримає його?
+  options:
+  - text: Краще пізно, ніж ніколи.
+    correct: true
+  - text: Готуй сани влітку.
+    correct: false
+  - text: Не кажи гоп.
+    correct: false
+  - text: Обіцянка — цяцянка.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Подруга попередила вас про складну клієнтку перед зустріччю. Яке прислів'я
+    описує цінність цієї інформації?
+  options:
+  - text: Довіряй, але перевіряй.
+    correct: false
+  - text: Попереджений — значить озброєний.
+    correct: true
+  - text: Береженого Бог береже.
+    correct: false
+  - text: Не плюй у криницю.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Готуй сани влітку» використовують для поради планувати заздалегідь.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Не кажи гоп» заохочує людей бути сміливими та діяти швидко.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Краще синиця в руках» радить цінувати реальне замість примарного.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Обіцянка — цяцянка» означає, що обіцянки — це цінні подарунки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Ранок вечора мудріший» радить відкласти важливі рішення до
+    ранку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Вода камінь точить» означає, що вода небезпечна для будівель.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Довіряй, але перевіряй» каже, що довіра виключає контроль.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Весна покаже, хто де орав» означає, що результати покажуть
+    правду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Не плюй у криницю» застерігає від руйнування стосунків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Одна ластівка весни не робить» заохочує швидко святкувати
+    перший успіх.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

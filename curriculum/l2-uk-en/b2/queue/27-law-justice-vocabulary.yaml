@@ -1,0 +1,1116 @@
+module: 27-law-justice-vocabulary
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/27-law-justice-vocabulary.md
+generated: '2025-12-29T22:46:06.889109'
+scope: error-correction, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 80
+items:
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Суддя виніс рішення у кримінальній справі.
+  error: рішення
+  answer: вирок
+  sentence_corrected: Суддя виніс вирок у кримінальній справі.
+  options:
+  - рішення
+  - вирок
+  - позов
+  - скаргу
+  original_explanation: У кримінальних справах виносять вирок, а рішення — у цивільних.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Позивач подав апеляцію до місцевого суду.
+  error: місцевого
+  answer: апеляційного
+  sentence_corrected: Позивач подав апеляцію до апеляційного суду.
+  options:
+  - місцевого
+  - апеляційного
+  - касаційного
+  - Верховного
+  original_explanation: Апеляцію подають до апеляційного суду, а не місцевого.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Прокурор захищав інтереси обвинуваченого.
+  error: Прокурор
+  answer: Адвокат
+  sentence_corrected: Адвокат захищав інтереси обвинуваченого.
+  options:
+  - Прокурор
+  - Адвокат
+  - Суддя
+  - Свідок
+  original_explanation: Прокурор обвинувачує, а адвокат захищає.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Обвинуваченого визнали невинуватим і призначили покарання.
+  error: невинуватим
+  answer: винним
+  sentence_corrected: Обвинуваченого визнали винним і призначили покарання.
+  options:
+  - невинуватим
+  - винним
+  - свідком
+  - потерпілим
+  original_explanation: Покарання призначають, якщо визнають винним.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Відповідач подав позов проти позивача.
+  error: позов
+  answer: зустрічний позов
+  sentence_corrected: Відповідач подав зустрічний позов проти позивача.
+  options:
+  - позов
+  - зустрічний позов
+  - апеляцію
+  - скаргу
+  original_explanation: Відповідач може подати зустрічний позов.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Свідок дав показання на користь свого клієнта.
+  error: Свідок
+  answer: Адвокат
+  sentence_corrected: Адвокат дав показання на користь свого клієнта.
+  options:
+  - Свідок
+  - Адвокат
+  - Прокурор
+  - Суддя
+  original_explanation: У свідка немає клієнта, у адвоката є.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Суд призначив штраф у виді позбавлення волі.
+  error: штраф
+  answer: покарання
+  sentence_corrected: Суд призначив покарання у виді позбавлення волі.
+  options:
+  - штраф
+  - покарання
+  - рішення
+  - вирок
+  original_explanation: Позбавлення волі — це покарання, а не штраф.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Касаційний суд розглядає справи першої інстанції.
+  error: Касаційний
+  answer: Місцевий
+  sentence_corrected: Місцевий суд розглядає справи першої інстанції.
+  options:
+  - Касаційний
+  - Місцевий
+  - Апеляційний
+  - Верховний
+  original_explanation: Справи першої інстанції розглядають місцеві суди.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Потерпілий скоїв злочин проти обвинуваченого.
+  error: Потерпілий
+  answer: Обвинувачений
+  sentence_corrected: Обвинувачений скоїв злочин проти обвинуваченого.
+  options:
+  - Потерпілий
+  - Обвинувачений
+  - Свідок
+  - Адвокат
+  original_explanation: Злочин скоює обвинувачений, а не потерпілий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Після вироку справа набрала слабкої сили.
+  error: слабкої
+  answer: законної
+  sentence_corrected: Після вироку справа набрала законної сили.
+  options:
+  - слабкої
+  - законної
+  - судової
+  - правової
+  original_explanation: Рішення набирає законної сили.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Присяжні винесли рішення у цивільній справі.
+  error: рішення
+  answer: вердикт
+  sentence_corrected: Присяжні винесли вердикт у цивільній справі.
+  options:
+  - рішення
+  - вердикт
+  - позов
+  - апеляцію
+  original_explanation: Присяжні виносять вердикт.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Слідчий представляв обвинувачення у суді.
+  error: Слідчий
+  answer: Прокурор
+  sentence_corrected: Прокурор представляв обвинувачення у суді.
+  options:
+  - Слідчий
+  - Прокурор
+  - Адвокат
+  - Суддя
+  original_explanation: У суді обвинувачення підтримує прокурор.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Підсудний подав позов про захист честі.
+  error: Підсудний
+  answer: Позивач
+  sentence_corrected: Позивач подав позов про захист честі.
+  options:
+  - Підсудний
+  - Позивач
+  - Відповідач
+  - Обвинувачений
+  original_explanation: Позов подає позивач у цивільній справі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Адвокат пред'явив підозру обвинуваченому.
+  error: Адвокат
+  answer: Слідчий
+  sentence_corrected: Слідчий пред'явив підозру обвинуваченому.
+  options:
+  - Адвокат
+  - Слідчий
+  - Суддя
+  - Прокурор
+  original_explanation: Підозру пред'являє слідчий.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Верховний Суд є судом першої інстанції.
+  error: першої
+  answer: найвищої
+  sentence_corrected: Верховний Суд є судом найвищої інстанції.
+  options:
+  - першої
+  - найвищої
+  - другої
+  - третьої
+  original_explanation: Верховний Суд — найвищий суд у системі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Юридична мова
+  sentence_with_error: Амністія — це індивідуальне звільнення від покарання.
+  error: Амністія
+  answer: Помилування
+  sentence_corrected: Помилування — це індивідуальне звільнення від покарання.
+  options:
+  - Амністія
+  - Помилування
+  - Касація
+  - Апеляція
+  original_explanation: Помилування — індивідуальне, амністія — для групи осіб.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Суддя виніс вирок обвинуваченому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Позивач подав позов до суду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Прокурор підтримував обвинувачення у справі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Адвокат захищав інтереси клієнта.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Свідок дав показання у суді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Рішення набрало законної сили.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Відповідач подав апеляцію до суду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Суд призначив покарання у виді ув'язнення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Досудове розслідування тривало три місяці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Слідчий зібрав докази проти підозрюваного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Обвинувачений частково визнав провину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Кожен підозрюваний має права на адвоката.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Суд відклав справу на тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Його засудили за шахрайство.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Суд зобов'язав відповідача відшкодувати збитки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Юридичні речення
+  jumbled_words: []
+  answer: Презумпція невинуватості діє до вироку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Який суд є найвищим у системі судоустрою України?
+  options:
+  - text: Конституційний Суд
+    correct: false
+  - text: Апеляційний суд
+    correct: false
+  - text: Верховний Суд
+    correct: true
+  - text: Місцевий суд
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Яка функція Конституційного Суду?
+  options:
+  - text: Розглядати кримінальні справи
+    correct: false
+  - text: Перевіряти відповідність законів Конституції
+    correct: true
+  - text: Виносити вироки
+    correct: false
+  - text: Призначати покарання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Хто підтримує обвинувачення у кримінальному процесі?
+  options:
+  - text: Адвокат
+    correct: false
+  - text: Суддя
+    correct: false
+  - text: Прокурор
+    correct: true
+  - text: Свідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Що таке апеляція?
+  options:
+  - text: Початок судового процесу
+    correct: false
+  - text: Оскарження рішення суду
+    correct: true
+  - text: Визнання провини
+    correct: false
+  - text: Звернення до поліції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Як називається особа, яка подає позов у цивільній справі?
+  options:
+  - text: Відповідач
+    correct: false
+  - text: Обвинувачений
+    correct: false
+  - text: Позивач
+    correct: true
+  - text: Потерпілий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Яке рішення виносить суд у кримінальній справі?
+  options:
+  - text: Позов
+    correct: false
+  - text: Скаргу
+    correct: false
+  - text: Рішення
+    correct: false
+  - text: Вирок
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Що означає 'презумпція невинуватості'?
+  options:
+  - text: Винуватість доведена
+    correct: false
+  - text: Особа невинувата до вироку суду
+    correct: true
+  - text: Особа визнала провину
+    correct: false
+  - text: Суддя сумнівається
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Хто захищає інтереси обвинуваченого?
+  options:
+  - text: Прокурор
+    correct: false
+  - text: Потерпілий
+    correct: false
+  - text: Адвокат
+    correct: true
+  - text: Свідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Скільки рівнів має судова система України?
+  options:
+  - text: Два
+    correct: false
+  - text: Три
+    correct: true
+  - text: Чотири
+    correct: false
+  - text: П'ять
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Яка справа стосується майнових відносин?
+  options:
+  - text: Кримінальна
+    correct: false
+  - text: Цивільна
+    correct: true
+  - text: Адміністративна
+    correct: false
+  - text: Конституційна
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Що таке касація?
+  options:
+  - text: Перша інстанція
+    correct: false
+  - text: Друга інстанція
+    correct: false
+  - text: Перевірка правильності застосування закону
+    correct: true
+  - text: Звернення до поліції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Хто є потерпілим?
+  options:
+  - text: Особа, яка скоїла злочин
+    correct: false
+  - text: Особа, якій злочином завдано шкоди
+    correct: true
+  - text: Особа, яка судить
+    correct: false
+  - text: Особа, яка захищає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Що означає 'справа набрала законної сили'?
+  options:
+  - text: Справу закрито без розгляду
+    correct: false
+  - text: Рішення стало обов'язковим
+    correct: true
+  - text: Справу передано до іншого суду
+    correct: false
+  - text: Справу відкладено
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Де розглядаються більшість справ першої інстанції?
+  options:
+  - text: У Верховному Суді
+    correct: false
+  - text: В апеляційних судах
+    correct: false
+  - text: У місцевих судах
+    correct: true
+  - text: У Конституційному Суді
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Що таке алібі?
+  options:
+  - text: Визнання провини
+    correct: false
+  - text: Доказ відсутності на місці злочину
+    correct: true
+  - text: Свідчення очевидця
+    correct: false
+  - text: Документ про арешт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Судова система України
+  question: Яке покарання передбачає позбавлення волі?
+  options:
+  - text: Штраф
+    correct: false
+  - text: Умовний термін
+    correct: false
+  - text: Ув'язнення
+    correct: true
+  - text: Громадські роботи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто керує судовим процесом?
+  options:
+  - text: Прокурор
+    correct: false
+  - text: Адвокат
+    correct: false
+  - text: Суддя
+    correct: true
+  - text: Секретар
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Проти кого подається позов у цивільній справі?
+  options:
+  - text: Позивача
+    correct: false
+  - text: Відповідача
+    correct: true
+  - text: Свідка
+    correct: false
+  - text: Прокурора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто дає показання у справі?
+  options:
+  - text: Суддя
+    correct: false
+  - text: Прокурор
+    correct: false
+  - text: Свідок
+    correct: true
+  - text: Адвокат
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Як називається особа, яку судять у кримінальному процесі?
+  options:
+  - text: Позивач
+    correct: false
+  - text: Відповідач
+    correct: false
+  - text: Підсудний
+    correct: true
+  - text: Потерпілий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто представляє інтереси держави в обвинуваченні?
+  options:
+  - text: Адвокат
+    correct: false
+  - text: Суддя
+    correct: false
+  - text: Прокурор
+    correct: true
+  - text: Нотаріус
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто бере участь у винесенні рішення в суді присяжних?
+  options:
+  - text: Тільки суддя
+    correct: false
+  - text: Присяжні
+    correct: true
+  - text: Тільки прокурор
+    correct: false
+  - text: Тільки адвокат
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Як називається представник сторони в цивільному процесі?
+  options:
+  - text: Прокурор
+    correct: false
+  - text: Слідчий
+    correct: false
+  - text: Адвокат
+    correct: true
+  - text: Потерпілий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто проводить досудове розслідування?
+  options:
+  - text: Суддя
+    correct: false
+  - text: Слідчий
+    correct: true
+  - text: Адвокат
+    correct: false
+  - text: Нотаріус
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто оформляє заповіт?
+  options:
+  - text: Суддя
+    correct: false
+  - text: Нотаріус
+    correct: true
+  - text: Адвокат
+    correct: false
+  - text: Прокурор
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Що робить медіатор?
+  options:
+  - text: Виносить вирок
+    correct: false
+  - text: Допомагає сторонам домовитись
+    correct: true
+  - text: Підтримує обвинувачення
+    correct: false
+  - text: Захищає підсудного
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто подає позовну заяву?
+  options:
+  - text: Відповідач
+    correct: false
+  - text: Позивач
+    correct: true
+  - text: Суддя
+    correct: false
+  - text: Прокурор
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Як називається особа, якій пред'явлено обвинувачення?
+  options:
+  - text: Позивач
+    correct: false
+  - text: Потерпілий
+    correct: false
+  - text: Обвинувачений
+    correct: true
+  - text: Свідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто виносить вердикт?
+  options:
+  - text: Адвокат
+    correct: false
+  - text: Прокурор
+    correct: false
+  - text: Присяжні
+    correct: true
+  - text: Свідок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Як звертаються до судді?
+  options:
+  - text: Пане адвокате
+    correct: false
+  - text: Шановний суд
+    correct: true
+  - text: Пане прокуроре
+    correct: false
+  - text: Шановний колего
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Хто може оскаржити рішення суду?
+  options:
+  - text: Тільки позивач
+    correct: false
+  - text: Будь-яка сторона процесу
+    correct: true
+  - text: Тільки суддя
+    correct: false
+  - text: Тільки прокурор
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Учасники судового процесу
+  question: Що таке запобіжний захід?
+  options:
+  - text: Покарання після вироку
+    correct: false
+  - text: Обмеження до винесення вироку
+    correct: true
+  - text: Виправдання підсудного
+    correct: false
+  - text: Закриття справи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Верховний Суд — найвищий суд у системі судоустрою України.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Конституційний Суд розглядає кримінальні справи.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Місцеві суди — це суди першої інстанції.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Апеляцію подають до місцевого суду.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Прокурор підтримує обвинувачення у кримінальному процесі.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Адвокат представляє інтереси держави.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: У цивільній справі суд виносить рішення.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: У кримінальній справі суд виносить рішення.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Презумпція невинуватості означає невинуватість до вироку.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Позивач — це особа в кримінальному процесі.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Свідок дає показання у суді.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Касаційний суд розглядає справи першої інстанції.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Потерпілий — особа, якій злочином завдано шкоди.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Вердикт виносить суддя.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Медіація — альтернатива судовому процесу.
+  answer: true
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Судова система
+  statement: Нотаріус може виносити вироки.
+  answer: false
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,1408 @@
+module: 28-economics-business-vocabulary
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/28-economics-business-vocabulary.md
+generated: '2025-12-29T22:44:02.834692'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Україна імпортує зерно на Європу.
+  error: на
+  answer: до
+  sentence_corrected: Україдо імпортує зерно до Європу.
+  options:
+  - на
+  - до
+  - в
+  - для
+  original_explanation: Експортувати/імпортувати "до" (куди?) або "з" (звідки?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Інфляція зменшилась на 4,5%.
+  error: зменшилась на
+  answer: знизилась до
+  sentence_corrected: Інфляція знизилась до 4,5%.
+  options:
+  - зменшилась на
+  - знизилась до
+  - впала на
+  - стала
+  original_explanation: '"Знизилась до" означає поточний рівень. "Зменшилась на" означає
+    різницю.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: ВВП становить 5% зростання.
+  error: становить 5% зростання
+  answer: зріс на 5%
+  sentence_corrected: ВВП зріс на 5%.
+  options:
+  - становить 5% зростання
+  - зріс на 5%
+  - дорівнює 5%
+  - став 5%
+  original_explanation: 'Правильно: "ВВП зріс на 5%" або "зростання ВВП становить
+    5%".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Компанія взяла кредита в банку.
+  error: кредита
+  answer: кредит
+  sentence_corrected: Компанія взяла кредит в банку.
+  options:
+  - кредита
+  - кредит
+  - кредиту
+  - кредитом
+  original_explanation: '"Взяти" + знахідний відмінок: взяти (що?) кредит.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Банк видав кредиту малому бізнесу.
+  error: кредиту
+  answer: кредит
+  sentence_corrected: Банк видав кредит малому бізнесу.
+  options:
+  - кредиту
+  - кредит
+  - кредита
+  - кредитом
+  original_explanation: '"Видати" + знахідний відмінок: видати (що?) кредит.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Інфляція сягає рекордних показників.
+  error: сягає
+  answer: досягла
+  sentence_corrected: Інфляція досягла рекордних показників.
+  options:
+  - сягає
+  - досягла
+  - зробила
+  - стала
+  original_explanation: 'Для минулого результату використовуємо доконаний вид: "досягла".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Курс валюти девальвував на 10%.
+  error: девальвував на
+  answer: знизився на
+  sentence_corrected: Курс валюти знизився на 10%.
+  options:
+  - девальвував на
+  - знизився на
+  - впав на
+  - девальвувався на
+  original_explanation: Курс "знизився" або "впав". "Девальвація" — іменник, дієслово
+    рідко використовується.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Податок на імпорту товарів становить 5%.
+  error: імпорту
+  answer: імпортні
+  sentence_corrected: Податок на імпортні товарів становить 5%.
+  options:
+  - імпорту
+  - імпортні
+  - імпортовані
+  - імпорт
+  original_explanation: Прикметник "імпортні товари", а не іменник у родовому відмінку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Акції торгують на біржі.
+  error: торгують
+  answer: торгуються
+  sentence_corrected: Акції торгуються на біржі.
+  options:
+  - торгують
+  - торгуються
+  - продають
+  - торгують ними
+  original_explanation: 'Пасивна форма: "акції торгуються" (не "хтось торгує акції").'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Облікова ставка дорівнює до 13%.
+  error: дорівнює до
+  answer: становить
+  sentence_corrected: Облікова ставка становить 13%.
+  options:
+  - дорівнює до
+  - становить
+  - дорівнює
+  - є
+  original_explanation: '"Становить + число" або "дорівнює + числу" (без "до").'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Держава субсидує сільське господарство.
+  error: субсидує
+  answer: субсидіює
+  sentence_corrected: Держава субсидіює сільське господарство.
+  options:
+  - субсидує
+  - субсидіює
+  - субсидірує
+  - субсидьює
+  original_explanation: 'Правильне дієслово: "субсидіювати" → "субсидіює".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Компанія інвестирує в технології.
+  error: інвестирує
+  answer: інвестує
+  sentence_corrected: Компанія інвестує в технології.
+  options:
+  - інвестирує
+  - інвестує
+  - інвестіює
+  - інвестирування
+  original_explanation: 'Правильне дієслово: "інвестувати" → "інвестує".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Безробіття знизилось до рекордних показників.
+  error: знизилось до рекордних
+  answer: знизилось до рекордно низьких
+  sentence_corrected: Безробіття знизилось до рекордно низьких показників.
+  options:
+  - знизилось до рекордних
+  - знизилось до рекордно низьких
+  - досягло рекордних
+  - впало до рекордних
+  original_explanation: 'Для безробіття: "рекордно низьких" (бо зниження — добре).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Прибуток компанії зменшився на 10 мільйонів.
+  error: на 10 мільйонів
+  answer: на 10 мільйонів гривень
+  sentence_corrected: Прибуток компанії зменшився на 10 мільйонів гривень.
+  options:
+  - на 10 мільйонів
+  - на 10 мільйонів гривень
+  - до 10 мільйонів
+  - у 10 мільйонів
+  original_explanation: Потрібно вказати валюту для ясності.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Україна експортує товарів на 50 мільярдів.
+  error: товарів
+  answer: товари
+  sentence_corrected: Україна експортує товари на 50 мільярдів.
+  options:
+  - товарів
+  - товари
+  - товарами
+  - товару
+  original_explanation: '"Експортувати" + знахідний відмінок: експортувати (що?) товари.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в економічних текстах
+  sentence_with_error: Мито накладене на імпорту.
+  error: імпорту
+  answer: імпорт
+  sentence_corrected: Мито накладене на імпорт.
+  options:
+  - імпорту
+  - імпорт
+  - імпортні товари
+  - імпортом
+  original_explanation: '"Накласти на" + знахідний відмінок: на (що?) імпорт.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: ВВП України _____ на 5% порівняно з минулим роком.
+  answer: зріс
+  complete_sentence: ВВП України зріс__ на 5% порівняно з минулим роком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Інфляція _____ до рекордно низького рівня.
+  answer: знизилась
+  complete_sentence: Інфляція знизилась__ до рекордно низького рівня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Національний банк _____ облікову ставку.
+  answer: знизив
+  complete_sentence: Національний банк знизив__ облікову ставку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Курс гривні _____ до 41,50 за долар.
+  answer: зміцнився
+  complete_sentence: Курс гривні зміцнився__ до 41,50 за долар.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Компанія _____ прибуток у розмірі 10 мільйонів.
+  answer: отримала
+  complete_sentence: Компанія отримала__ прибуток у розмірі 10 мільйонів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Україна _____ сільськогосподарську продукцію до ЄС.
+  answer: експортує
+  complete_sentence: Україна експортує__ сільськогосподарську продукцію до ЄС.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Держава _____ субсидії фермерам.
+  answer: надає
+  complete_sentence: Держава надає__ субсидії фермерам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Безробіття _____ 8% населення.
+  answer: становить
+  complete_sentence: Безробіття становить__ 8% населення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Інвестор _____ гроші в акції технологічних компаній.
+  answer: вклав
+  complete_sentence: Інвестор вклав__ гроші в акції технологічних компаній.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Дефіцит бюджету _____ за рахунок зовнішніх запозичень.
+  answer: покривається
+  complete_sentence: Дефіцит бюджету покривається__ за рахунок зовнішніх запозичень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Ціни на енергоносії _____ на 15%.
+  answer: зросли
+  complete_sentence: Ціни на енергоносії зросли__ на 15%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Банк _____ кредит малому бізнесу.
+  answer: видав
+  complete_sentence: Банк видав__ кредит малому бізнесу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Санкції _____ на імпорт технологій.
+  answer: накладено
+  complete_sentence: Санкції накладено__ на імпорт технологій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Акції компанії _____ на біржі.
+  answer: торгуються
+  complete_sentence: Акції компанії торгуються__ на біржі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Рівень зайнятості _____ рекордних показників.
+  answer: досяг
+  complete_sentence: Рівень зайнятості досяг__ рекордних показників.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть пропуски в економічних новинах
+  sentence_template: Мито на імпортні товари _____ 10%.
+  answer: становить
+  complete_sentence: Мито на імпортні товари становить__ 10%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Ціни на енергоносії різко _____.
+  answer: зросли
+  complete_sentence: Ціни на енергоносії різко зросли__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Курс гривні _____ на 2%.
+  answer: знизився
+  complete_sentence: Курс гривні знизився__ на 2%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Уряд _____ нові санкції на імпорт.
+  answer: запровадив
+  complete_sentence: Уряд запровадив__ нові санкції на імпорт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Компанія _____ прибуток у розмірі мільйона гривень.
+  answer: отримала
+  complete_sentence: Компанія отримала__ прибуток у розмірі мільйона гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Банк _____ кредит під 15% річних.
+  answer: надав
+  complete_sentence: Банк надав__ кредит під 15% річних.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Інвестори _____ 5 мільярдів у новий проєкт.
+  answer: вклали
+  complete_sentence: Інвестори вклали__ 5 мільярдів у новий проєкт.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Парламент _____ бюджет на наступний рік.
+  answer: ухвалив
+  complete_sentence: Парламент ухвалив__ бюджет на наступний рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Національний банк _____ валютні резерви.
+  answer: збільшив
+  complete_sentence: Національний банк збільшив__ валютні резерви.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Безробіття _____ до рекордно низького рівня.
+  answer: впало
+  complete_sentence: Безробіття впало__ до рекордно низького рівня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Економіка _____ після кризи.
+  answer: відновилась
+  complete_sentence: Економіка відновилась__ після кризи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Держава _____ підтримку малому бізнесу.
+  answer: надає
+  complete_sentence: Держава надає__ підтримку малому бізнесу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Акції компанії _____ на біржі.
+  answer: торгуються
+  complete_sentence: Акції компанії торгуються__ на біржі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Інфляція _____ на низькому рівні.
+  answer: утримується
+  complete_sentence: Інфляція утримується__ на низькому рівні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Ринок _____ ознаки стабілізації.
+  answer: демонструє
+  complete_sentence: Ринок демонструє__ ознаки стабілізації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Експорт _____ нових рекордів.
+  answer: досяг
+  complete_sentence: Експорт досяг__ нових рекордів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильне дієслово
+  sentence_template: Торговельний баланс _____ позитивним.
+  answer: залишається
+  complete_sentence: Торговельний баланс залишається__ позитивним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: ВВП України зріс на 5% у минулому році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Національний банк знизив облікову ставку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Україна експортує зерно до Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Інфляція становить 4,5% річних.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Компанія отримала кредит для розширення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Ціни на товари зросли на 10%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Курс гривні впав до 41 за долар.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Дефіцит бюджету становить 25% ВВП.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Держава надає фінансову допомогу фермерам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Інвестор вклав гроші в акції на біржі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: На Росію накладено санкції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Безробіття впало до рекордно низьких показників.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Уряд субсидіює сільське господарство.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Приватизація проводилась в 90-х роках.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: Монополія контролює весь ринок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть економічні речення
+  jumbled_words: []
+  answer: ОВДП — це українські державні облігації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке ВВП?
+  options:
+  - text: Валютний внутрішній продукт
+    correct: false
+  - text: Валовий внутрішній продукт
+    correct: true
+  - text: Великий внутрішній прибуток
+    correct: false
+  - text: Валовий імпортний продукт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що означає «інфляція»?
+  options:
+  - text: Зниження цін
+    correct: false
+  - text: Зростання цін
+    correct: true
+  - text: Стабільність цін
+    correct: false
+  - text: Курс валюти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Як називається продаж товарів за кордон?
+  options:
+  - text: Імпорт
+    correct: false
+  - text: Експорт
+    correct: true
+  - text: Транзит
+    correct: false
+  - text: Торгівля
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке «дефіцит бюджету»?
+  options:
+  - text: Коли доходи перевищують витрати
+    correct: false
+  - text: Коли витрати перевищують доходи
+    correct: true
+  - text: Коли бюджет збалансований
+    correct: false
+  - text: Коли немає боргів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Як називається плата за користування кредитом?
+  options:
+  - text: Податок
+    correct: false
+  - text: Процент
+    correct: true
+  - text: Мито
+    correct: false
+  - text: Субсидія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке «облікова ставка»?
+  options:
+  - text: Ставка податку
+    correct: false
+  - text: Ставка кредитування центрального банку
+    correct: true
+  - text: Курс валюти
+    correct: false
+  - text: Ставка страхування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що означає «девальвація»?
+  options:
+  - text: Зростання курсу валюти
+    correct: false
+  - text: Падіння курсу валюти
+    correct: true
+  - text: Стабілізація валюти
+    correct: false
+  - text: Обмін валюти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Як називається податок на імпортні товари?
+  options:
+  - text: ПДВ
+    correct: false
+  - text: Мито
+    correct: true
+  - text: Акциз
+    correct: false
+  - text: Субсидія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке «монополія»?
+  options:
+  - text: Конкуренція багатьох компаній
+    correct: false
+  - text: Контроль ринку однією компанією
+    correct: true
+  - text: Державна власність
+    correct: false
+  - text: Міжнародна торгівля
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що означає «приватизація»?
+  options:
+  - text: Передача приватної власності державі
+    correct: false
+  - text: Передача державної власності у приватні руки
+    correct: true
+  - text: Заборона приватного бізнесу
+    correct: false
+  - text: Регулювання приватних компаній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Як називається частка власності в компанії?
+  options:
+  - text: Облігація
+    correct: false
+  - text: Акція
+    correct: true
+  - text: Депозит
+    correct: false
+  - text: Кредит
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке «санкції» в економіці?
+  options:
+  - text: Заохочення торгівлі
+    correct: false
+  - text: Обмеження торгівлі
+    correct: true
+  - text: Митні пільги
+    correct: false
+  - text: Субсидії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Як називається повна заборона торгівлі?
+  options:
+  - text: Санкція
+    correct: false
+  - text: Ембарго
+    correct: true
+  - text: Мито
+    correct: false
+  - text: Квота
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що таке «облігація»?
+  options:
+  - text: Частка власності в компанії
+    correct: false
+  - text: Боргове зобов'язання
+    correct: true
+  - text: Банківський рахунок
+    correct: false
+  - text: Страховий поліс
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Яка протилежність інфляції?
+  options:
+  - text: Рецесія
+    correct: false
+  - text: Дефляція
+    correct: true
+  - text: Стагнація
+    correct: false
+  - text: Девальвація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Економічні поняття та термінологія
+  question: Що означає «зайнятість»?
+  options:
+  - text: Відсоток безробітних
+    correct: false
+  - text: Відсоток працюючих
+    correct: true
+  - text: Кількість вакансій
+    correct: false
+  - text: Рівень зарплат
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Яке правильне формулювання про зростання ВВП?
+  options:
+  - text: ВВП зріс до 5%.
+    correct: false
+  - text: ВВП зріс на 5%.
+    correct: true
+  - text: ВВП зріс у 5%.
+    correct: false
+  - text: ВВП зріс при 5%.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як правильно сказати про рівень інфляції?
+  options:
+  - text: Інфляція дорівнює до 5%.
+    correct: false
+  - text: Інфляція становить 5%.
+    correct: true
+  - text: Інфляція є 5%.
+    correct: false
+  - text: Інфляція має 5%.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Що є джерелом доходів державного бюджету?
+  options:
+  - text: Субсидії
+    correct: false
+  - text: Податки
+    correct: true
+  - text: Кредити
+    correct: false
+  - text: Інвестиції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як називається ситуація, коли витрати бюджету перевищують доходи?
+  options:
+  - text: Профіцит
+    correct: false
+  - text: Дефіцит
+    correct: true
+  - text: Баланс
+    correct: false
+  - text: Борг
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Яке дієслово правильно описує рух акцій на біржі?
+  options:
+  - text: Акції торгують
+    correct: false
+  - text: Акції торгуються
+    correct: true
+  - text: Акції продають
+    correct: false
+  - text: Акції є
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як правильно описати напрямок експорту?
+  options:
+  - text: Експортувати на Європу
+    correct: false
+  - text: Експортувати до Європи
+    correct: true
+  - text: Експортувати в Європу
+    correct: false
+  - text: Експортувати для Європи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Що означає «облікова ставка НБУ»?
+  options:
+  - text: Ставка податку
+    correct: false
+  - text: Ставка кредитування центрального банку
+    correct: true
+  - text: Курс валюти
+    correct: false
+  - text: Рівень інфляції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Яка різниця між акцією та облігацією?
+  options:
+  - text: Акція — борг, облігація — власність
+    correct: false
+  - text: Акція — власність, облігація — борг
+    correct: true
+  - text: Це синоніми
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Що таке «девальвація»?
+  options:
+  - text: Зростання курсу валюти
+    correct: false
+  - text: Падіння курсу валюти
+    correct: true
+  - text: Зростання інфляції
+    correct: false
+  - text: Зниження податків
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Яке слово правильно вживати для державної допомоги компаніям?
+  options:
+  - text: Кредит
+    correct: false
+  - text: Субсидія
+    correct: true
+  - text: Податок
+    correct: false
+  - text: Мито
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як правильно сказати про надання кредиту банком?
+  options:
+  - text: Банк дав кредита
+    correct: false
+  - text: Банк надав кредит
+    correct: true
+  - text: Банк зробив кредит
+    correct: false
+  - text: Банк видав кредиту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Що є протилежністю приватизації?
+  options:
+  - text: Лібералізація
+    correct: false
+  - text: Націоналізація
+    correct: true
+  - text: Модернізація
+    correct: false
+  - text: Глобалізація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як правильно описати ситуацію стабільності на ринку?
+  options:
+  - text: Ринок стабілізувався
+    correct: true
+  - text: Ринок став стабільний
+    correct: false
+  - text: Ринок зробився стабільним
+    correct: false
+  - text: Ринок є стабільний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Що означає «ембарго»?
+  options:
+  - text: Часткові обмеження торгівлі
+    correct: false
+  - text: Повна заборона торгівлі
+    correct: true
+  - text: Митні пільги
+    correct: false
+  - text: Торговельна угода
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Як правильно вживати дієслово «субсидіювати»?
+  options:
+  - text: Уряд субсидує фермерів
+    correct: false
+  - text: Уряд субсидіює фермерів
+    correct: true
+  - text: Уряд субсидірує фермерів
+    correct: false
+  - text: Уряд субсидіє фермерів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка економічної лексики
+  question: Яке правильне завершення речення «Безробіття впало...»?
+  options:
+  - text: '...до рекордних показників'
+    correct: false
+  - text: '...до рекордно низьких показників'
+    correct: true
+  - text: '...на рекордні показники'
+    correct: false
+  - text: '...у рекордні показники'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: ВВП — це валовий внутрішній продукт, сума всіх товарів і послуг країни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Інфляція — це зниження цін на товари та послуги.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Експорт — це продаж товарів за кордон.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Дефіцит бюджету означає, що доходи перевищують витрати.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Облікова ставка НБУ впливає на вартість кредитів в економіці.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Девальвація означає зміцнення національної валюти.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Акція — це частка власності в компанії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Облігація — це боргове зобов'язання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Монополія — це ситуація, коли на ринку багато конкурентів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Мито — це податок на імпортні товари.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Приватизація — це передача приватної власності державі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Санкції — це економічні обмеження щодо країни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Ембарго — це повна заборона торгівлі певними товарами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Субсидія — це податок, який платять компанії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Безробіття вимірюється як відсоток працездатного населення без роботи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Перевірте правильність тверджень
+  statement: Дефляція — це загальне зниження цін в економіці.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

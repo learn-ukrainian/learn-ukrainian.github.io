@@ -1,8 +1,8 @@
 # B2 Media Content Assignment
 
-**Status:** Needs External Resources Added
+**Status:** Needs External Resources Added (145-module structure)
 **Created:** 2025-12-14
-**Updated:** 2025-12-16
+**Updated:** 2025-12-29 (Updated for 145 modules, biographies moved to C1)
 **GitHub Issue:** #136
 
 This document assigns media content to B2 modules.
@@ -43,7 +43,7 @@ This document assigns media content to B2 modules.
 
 ## ⚠️ IMPORTANT: External Resources Not Yet Added
 
-**Current state:** 0/135 B2 modules have `> [!resources]` sections.
+**Current state:** 0/145 B2 modules have `> [!resources]` sections.
 
 ### Verified Resource Sites
 
@@ -84,9 +84,10 @@ yt-dlp "ytsearch5:Ukrainian literature Шевченко Франко" --print "%
 | B2.1 | M01-30 | Passive Voice, Participles, Register | `Ukrainian passive voice -но -то register formal official academic` |
 | B2.1b | M31-40 | Numerals, Word Formation, Syntax | `Ukrainian numeral declension word formation suffixes` |
 | B2.2 | M41-70 | Grammar Completion, Proverbs, Idioms, Synonyms | `Ukrainian aspect secondary imperfectivization idioms proverbs фразеологізми synonyms` |
-| B2.3 | M71-95 | Ukrainian History | `Ukrainian history Kyivan Rus Козаки Хмельницький Голодомор` |
-| B2.4 | M96-120 | Biographies | `Ukrainian Шевченко Франко Леся Українка biography` |
-| B2.5 | M121-135 | Advanced Skills | `Ukrainian academic writing B2 advanced` |
+| B2.3 | M71-131 | Ukrainian History (61 modules) | `Ukrainian history Kyivan Rus Козаки Хмельницький Голодомор independence Maidan` |
+| B2.4 | M132-145 | Skills & Capstone | `Ukrainian academic writing B2 advanced` |
+
+> **Note:** Biographies (65 modules) moved to C1. B2.3 History now includes 5 synthesis modules (M83, M107, M119, M125, M131).
 
 ---
 
@@ -155,12 +156,13 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 | Phase | Primary Media | Secondary | Immersion |
 |-------|--------------|-----------|-----------|
-| B2.1 (M01-30) | Grammar diagrams, register examples | Audio dialogues | 65-70% |
-| B2.1b (M31-40) | Tables, charts | Audio examples | 70-75% |
-| B2.2 (M41-70) | Grammar charts, cultural images, idiom illustrations | Folk song clips | 75-80% |
-| B2.3 (M71-95) | Historical maps, photos, portraits | Documentary clips | 80-85% |
-| B2.4 (M96-120) | Biographical photos, artwork | Interview clips | 80-85% |
-| B2.5 (M121-135) | Mixed per skill focus | Presentation examples | 85-90% |
+| B2.1 (M01-30) | Grammar diagrams, register examples | Audio dialogues | 100% |
+| B2.1b (M31-40) | Tables, charts | Audio examples | 100% |
+| B2.2 (M41-70) | Grammar charts, cultural images, idiom illustrations | Folk song clips | 100% |
+| B2.3 (M71-131) | Historical maps, photos, portraits, primary sources | Documentary clips | 100% |
+| B2.4 (M132-145) | Mixed per skill focus | Presentation examples | 100% |
+
+> **Note:** B2 uses 100% immersion throughout. All instructions, explanations, and content in Ukrainian.
 
 ---
 
@@ -184,8 +186,8 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 | Channel | URL | Content Type | Status | B2 Use |
 |---------|-----|--------------|--------|--------|
-| Комікс Історик | youtube.com/@komikistoryk | Animated history, culture | ❓ TBD | B2.3 M71-95 history modules |
-| Реальна історія | youtube.com/@realnaistoriia | Historical analysis | ❓ TBD | B2.3 M71-95 history modules |
+| Комікс Історик | youtube.com/@komikistoryk | Animated history, culture | ❓ TBD | B2.3 M71-131 history modules |
+| Реальна історія | youtube.com/@realnaistoriia | Historical analysis | ❓ TBD | B2.3 M71-131 history modules |
 | **Історія мови** | youtube.com/@Istoria-Movy | Ukrainian language development | ❓ TBD | **PURE GOLD** B2.1-B2.3 |
 
 **Note:** Історія мови is exceptionally valuable for B2 linguistic content - covers language history, dialectology, and standardization.
@@ -194,14 +196,14 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 | Channel | URL | Content Type | Status | B2 Use |
 |---------|-----|--------------|--------|--------|
-| Радіо Хартія (Zhadan) | youtube.com/@RadioKhartia | Literary discussions, culture | ❓ TBD | B2.4 M96-120 biographies |
+| Радіо Хартія (Zhadan) | youtube.com/@RadioKhartia | Literary discussions, culture | ❓ TBD | B2.3 history context, C1 biographies |
 | Жовті кеди | youtube.com/@ZhovtiKedy | Talk show, colloquial speech | ❓ TBD | B2.1 M24 colloquial register |
 
 #### Science & Technology Channels
 
 | Channel | URL | Content Type | Status | B2 Use |
 |---------|-----|--------------|--------|--------|
-| Alpha Centauri | youtube.com/@theACentauri | Space, astronomy | ❓ TBD | B2.5 M122-123 science/tech |
+| Alpha Centauri | youtube.com/@theACentauri | Space, astronomy | ❓ TBD | B2.4 M132-145 skills modules |
 | Цікава наука | youtube.com/@... | Science education | ❓ TBD | B2.1 technical register |
 
 #### Food & Lifestyle Channels
@@ -220,10 +222,10 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 | Source | Content | Status | Modules |
 |--------|---------|--------|---------|
-| Ukraїner Regional Series | All oblasts of Ukraine | ❓ TBD | B2.3 M71-95 |
+| Ukraїner Regional Series | All oblasts of Ukraine | ❓ TBD | B2.3 M71-131 |
 | "Незвідані міста" (Ukraїner) | City explorations | ❓ TBD | B2.2 cultural modules |
 | Національна рада з телебачення | Archive broadcasts | ❓ TBD | B2.3 historical modules |
-| Довженко-Центр | Classic Ukrainian cinema | ❓ TBD | B2.4 cultural biographies |
+| Довженко-Центр | Classic Ukrainian cinema | ❓ TBD | B2.3 history, C1 biographies |
 
 ---
 
@@ -486,7 +488,9 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 ---
 
-## Phase B2.3: Ukrainian History (M71-95)
+## Phase B2.3: Ukrainian History (M71-131)
+
+> **61 modules covering:** Origins → Commonwealth (M71-83), Cossack Era & Empire (M84-107), Trauma & Resistance (M108-119), Independence Era (M120-125), Revolution & War (M126-131). Includes 5 synthesis modules (M83, M107, M119, M125, M131).
 
 ### Module Media Assignments
 
@@ -530,9 +534,11 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 ---
 
-## Phase B2.4: Biographies (M96-120)
+## ~~Phase B2.4: Biographies~~ → MOVED TO C1
 
-### Women (M96-108)
+> **⚠️ DEPRECATED:** Biographies (65 modules) moved to C1 for deeper treatment. This section retained for reference when building C1 modules. See `docs/l2-uk-en/C1-CURRICULUM-PLAN.md`.
+
+### Women (Moved to C1 M36-55)
 
 | # | Person | Era | Required Media | Source | Status |
 |---|--------|-----|----------------|--------|--------|
@@ -550,7 +556,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | 107 | Ліна Костенко | Contemporary | Portrait, book covers | Contemporary | ❓ TBD |
 | 108 | Квітка Цісик | Contemporary | Performance photos, album art | Estate | ❓ TBD |
 
-### Men (M109-119)
+### Men (Moved to C1 M56-100)
 
 | # | Person | Era | Required Media | Source | Status |
 |---|--------|-----|----------------|--------|--------|
@@ -579,25 +585,26 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 
 ---
 
-## Phase B2.5: Advanced Skills & Capstone (M121-135)
+## Phase B2.4: Skills & Capstone (M132-145)
+
+> **14 modules:** Academic reading (M132-133), Formal writing (M134-135), Listening (M136-137), Speaking (M138-139), Integrated skills (M140), Review (M141-144), Capstone (M145).
 
 | # | Title | Required Media | Source | Status |
 |---|-------|----------------|--------|--------|
-| 121 | Medicine Advanced | Medical diagrams, anatomy | 🎨 Self-created | Planned |
-| 122 | Technology & AI | Tech diagrams, screenshots | 🎨 Self-created | Planned |
-| 123 | Science & Research | Scientific method diagram | 🎨 Self-created | Planned |
-| 124 | Arts & Literature | Literary timeline | 🎨 Self-created | Planned |
-| 125 | Psychology & Mind | Psychology concepts | 🎨 Self-created | Planned |
-| 126 | Ukrainian Mentality | Cultural comparison chart | 🎨 Self-created | Planned |
-| 127 | Diaspora | World map with communities | 🎨 Self-created | Planned |
-| 128 | Religion in Ukraine | Religious map, architecture photos | Wikimedia | 🔓 CC |
-| 129 | Academic Writing | Essay structure diagram | 🎨 Self-created | Planned |
-| 130 | Text Analysis | Analysis template | 🎨 Self-created | Planned |
-| 131 | Capstone: Project | Research guide | 🎨 Self-created | Planned |
-| 132 | Capstone: Presentation | Presentation template | 🎨 Self-created | Planned |
-| 133 | B2 Review I | Review materials | Various | Mixed |
-| 134 | B2 Review II | Review materials | Various | Mixed |
-| 135 | B2 Final Exam | Exam materials | 🎨 Self-created | Planned |
+| 132 | Academic Reading I | Text analysis diagrams | 🎨 Self-created | Planned |
+| 133 | Academic Reading II | Complex argument charts | 🎨 Self-created | Planned |
+| 134 | Formal Writing I | Essay structure diagram | 🎨 Self-created | Planned |
+| 135 | Formal Writing II | Document templates | 🎨 Self-created | Planned |
+| 136 | Listening - Lectures | Note-taking templates | 🎨 Self-created | Planned |
+| 137 | Listening - Debates | Argument mapping | 🎨 Self-created | Planned |
+| 138 | Speaking - Presentations | Presentation templates | 🎨 Self-created | Planned |
+| 139 | Speaking - Debates | Debate structure diagram | 🎨 Self-created | Planned |
+| 140 | Integrated Skills | Multi-skill task guide | 🎨 Self-created | Planned |
+| 141 | Grammar Review | Grammar summary charts | 🎨 Self-created | Planned |
+| 142 | Vocabulary Review | Vocabulary networks | 🎨 Self-created | Planned |
+| 143 | B2 Review I | Review materials | Various | Mixed |
+| 144 | B2 Review II | Review materials | Various | Mixed |
+| 145 | B2 Capstone | Exam materials, rubrics | 🎨 Self-created | Planned |
 
 ---
 

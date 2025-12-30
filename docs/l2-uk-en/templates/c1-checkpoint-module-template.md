@@ -325,6 +325,36 @@ Each skill from the phase gets its own section with Model → Practice → Self-
 
 ## Checkpoint-Specific Activities
 
+### CRITICAL: Language Practice, Not Content Recall
+
+<critical>
+
+**Checkpoint activities test LANGUAGE SKILLS demonstrated through phase content.**
+
+Checkpoints assess whether learners can USE Ukrainian at C1 level, not whether they memorized facts from the modules. Activities test linguistic competence using phase content as context.
+
+**✅ CORRECT:** "Згідно з текстом модуля про Шевченка, як автор характеризує його вплив?" (requires reading comprehension)
+**❌ WRONG:** "У якому році народився Шевченко?" (tests biographical recall, not language)
+
+**Key Test:** Can the learner answer without reading Ukrainian? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Checkpoint Model Texts** | Review phase content through Ukrainian |
+| **Checkpoint Activities** | Assess LANGUAGE PROFICIENCY using phase content as context |
+
+**Checkpoint Activity Focus:**
+- **quiz**: Test reading comprehension across phase topics
+- **cloze**: Test vocabulary/grammar integration in extended passages
+- **match-up**: Test terminology from entire phase
+- **group-sort**: Test categorization skills (concepts from multiple modules)
+- **error-correction**: Test grammar mastery, NOT factual accuracy
+- **writing tasks**: Test production ability with Model Answers
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.

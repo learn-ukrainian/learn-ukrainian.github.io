@@ -1,0 +1,1306 @@
+module: 48-set-expressions-ii-objects-abstract
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/48-set-expressions-ii-objects-abstract.md
+generated: '2025-12-30T00:45:27.276957'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 26
+  true-false: 16
+item_count: 106
+items:
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У ситуації є одна ложка меду, яка псує все.
+  error: меду
+  answer: дьогтю
+  sentence_corrected: У ситуації є одна ложка дьогтю, яка псує все.
+  options:
+  - меду
+  - дьогтю
+  - смоли
+  - цукру
+  original_explanation: Правильна форма — «ложка дьогтю», а не "меду".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Головний камінь падіння в переговорах — ціна.
+  error: падіння
+  answer: спотикання
+  sentence_corrected: Головний камінь спотикання в переговорах — ціна.
+  options:
+  - падіння
+  - спотикання
+  - котіння
+  - лежання
+  original_explanation: Правильна форма — «камінь спотикання».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Він справжня кістка в шиї для всього відділу.
+  error: шиї
+  answer: горлі
+  sentence_corrected: Він справжня кістка в горлі для всього відділу.
+  options:
+  - шиї
+  - горлі
+  - носі
+  - вусі
+  original_explanation: Правильна форма — «кістка в горлі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Спадщина стала яблуком сварки між родичами.
+  error: сварки
+  answer: розбрату
+  sentence_corrected: Спадщина стала яблуком розбрату між родичами.
+  options:
+  - сварки
+  - розбрату
+  - конфлікту
+  - бійки
+  original_explanation: Правильна форма — «яблуко розбрату».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Директор сказав, що його ворота відчинені.
+  error: ворота
+  answer: двері
+  sentence_corrected: Директор сказав, що його двері відчинені.
+  options:
+  - ворота
+  - двері
+  - вікна
+  - хвіртка
+  original_explanation: Правильна форма — «двері відчинені».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У нього точно стеля поїхала від стресу.
+  error: стеля
+  answer: дах
+  sentence_corrected: У нього точно дах поїхала від стресу.
+  options:
+  - стеля
+  - дах
+  - підлога
+  - стіна
+  original_explanation: Правильна форма — «дах поїхав».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Нарешті сніг скреслив — справа зрушила!
+  error: сніг
+  answer: лід
+  sentence_corrected: Нарешті лід скреслив — справа зрушила!
+  options:
+  - сніг
+  - лід
+  - вода
+  - мороз
+  original_explanation: Правильна форма — «лід скреслив».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Наші зусилля — лише крапля в озері.
+  error: озері
+  answer: морі
+  sentence_corrected: Наші зусилля — лише крапля в морі.
+  options:
+  - озері
+  - морі
+  - річці
+  - океані
+  original_explanation: Правильна форма — «крапля в морі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Завтра іспит! — Ні пера ні пуху!
+  error: Ні пера ні пуху
+  answer: Ні пуху ні пера
+  sentence_corrected: Завтра іспит! — Ні пуху ні пера!
+  options:
+  - Ні пера ні пуху
+  - Ні пуху ні пера
+  - Ні пір'я ні пуху
+  - Ні хвоста ні пера
+  original_explanation: Правильний порядок — «ні пуху ні пера».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Йому все як з качки вода — не реагує.
+  error: качки
+  answer: гуски
+  sentence_corrected: Йому все як з гуски вода — не реагує.
+  options:
+  - качки
+  - гуски
+  - курки
+  - індика
+  original_explanation: Правильна форма — «як з гуски вода».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Його ідея — ні в паркан ні в ворота.
+  error: паркан
+  answer: тин
+  sentence_corrected: Його ідея — ні в тин ні в ворота.
+  options:
+  - паркан
+  - тин
+  - стіну
+  - огорожу
+  original_explanation: Правильна форма — «ні в тин ні в ворота».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Отримав від дверей поворот в університеті.
+  error: дверей
+  answer: воріт
+  sentence_corrected: Отримав від воріт поворот в університеті.
+  options:
+  - дверей
+  - воріт
+  - вікна
+  - порогу
+  original_explanation: Правильна форма — «від воріт поворот».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Година від години заглядаю в це кафе.
+  error: Година від години
+  answer: Час від часу
+  sentence_corrected: Час від часу заглядаю в це кафе.
+  options:
+  - Година від години
+  - Час від часу
+  - День від дня
+  - Хвилина від хвилини
+  original_explanation: Правильна форма — «час від часу».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Швидко чи повільно правда вийде назовні.
+  error: Швидко чи повільно
+  answer: Рано чи пізно
+  sentence_corrected: Рано чи пізно правда вийде назовні.
+  options:
+  - Швидко чи повільно
+  - Рано чи пізно
+  - Зараз чи потім
+  - Сьогодні чи завтра
+  original_explanation: Правильна форма — «рано чи пізно».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Так чи сяк, ми маємо завершити проєкт.
+  error: сяк
+  answer: інакше
+  sentence_corrected: Так чи інакше, ми маємо завершити проєкт.
+  options:
+  - сяк
+  - інакше
+  - інак
+  - ніяк
+  original_explanation: Правильна форма — «так чи інакше».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Інвестувати все в одну компанію — це бавитися з вогнем.
+  error: бавитися
+  answer: грати
+  sentence_corrected: Інвестувати все в одну компанію — це грати з вогнем.
+  options:
+  - бавитися
+  - грати
+  - гратися
+  - жартувати
+  original_explanation: Правильна форма — «грати з вогнем».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Нова квартира чудова, але є одна _____ — сусіди дуже гучні.
+  answer: ложка дьогтю
+  complete_sentence: Нова квартира чудова, але є одна ложка дьогтю__ — сусіди дуже
+    гучні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Головний _____ в переговорах — питання ціни.
+  answer: камінь спотикання
+  complete_sentence: Головний камінь спотикання__ в переговорах — питання ціни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Цей законопроєкт — справжня _____ для опозиції.
+  answer: кістка в горлі
+  complete_sentence: Цей законопроєкт — справжня кістка в горлі__ для опозиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Спадщина бабусі стала _____ між братами.
+  answer: яблуком розбрату
+  complete_sentence: Спадщина бабусі стала яблуком розбрату__ між братами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Директор сказав, що його _____ для всіх пропозицій.
+  answer: двері відчинені
+  complete_sentence: Директор сказав, що його двері відчинені__ для всіх пропозицій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Він продав усе і поїхав жити в ліс — у нього точно _____.
+  answer: дах поїхав
+  complete_sentence: Він продав усе і поїхав жити в ліс — у нього точно дах поїхав__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Місяць переговорів — і нарешті _____! Партнери погодилися.
+  answer: лід скреслив
+  complete_sentence: Місяць переговорів — і нарешті лід скреслив__! Партнери погодилися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Наші пожертви — лише _____. Потрібно набагато більше.
+  answer: крапля в морі
+  complete_sentence: Наші пожертви — лише крапля в морі__. Потрібно набагато більше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Завтра іспит! — _____! — До біса!
+  answer: Ні пуху ні пера
+  complete_sentence: Завтра іспит! — Ні пуху ні пера__! — До біса!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Скільки йому не кажи — _____! Він не реагує.
+  answer: як з гуски вода
+  complete_sentence: Скільки йому не кажи — як з гуски вода__! Він не реагує.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Його пропозиція — _____! Це неможливо реалізувати.
+  answer: ні в тин ні в ворота
+  complete_sentence: Його пропозиція — ні в тин ні в ворота__! Це неможливо реалізувати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Подавав документи в університет — і всюди _____.
+  answer: від воріт поворот
+  complete_sentence: Подавав документи в університет — і всюди від воріт поворот__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: _____ я заглядаю в це кафе — тут смачна кава.
+  answer: Час від часу
+  complete_sentence: Час від часу__ я заглядаю в це кафе — тут смачна кава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: _____ правда вийде назовні. Не варто брехати.
+  answer: Рано чи пізно
+  complete_sentence: Рано чи пізно__ правда вийде назовні. Не варто брехати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: _____, ми маємо завершити проєкт до п''ятниці.
+  answer: Так чи інакше
+  complete_sentence: Так чи інакше__, ми маємо завершити проєкт до п''ятниці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Інвестувати всі гроші в одну компанію — це _____.
+  answer: грати з вогнем
+  complete_sentence: Інвестувати всі гроші в одну компанію — це грати з вогнем__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Як нова робота?» — «Гарна, але є одна _____ — далеко їздити».
+  answer: ложка дьогтю
+  complete_sentence: «Як нова робота?» — «Гарна, але є одна ложка дьогтю__ — далеко
+    їздити».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Чому проєкт не рухається?» — «Головний _____ — бюджет».
+  answer: камінь спотикання
+  complete_sentence: «Чому проєкт не рухається?» — «Головний камінь спотикання__ —
+    бюджет».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Цей менеджер дуже заважає!» — «Так, він справжня _____».
+  answer: кістка в горлі
+  complete_sentence: «Цей менеджер дуже заважає!» — «Так, він справжня кістка в горлі__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Через що вони посварилися?» — «Гроші стали _____ між ними».
+  answer: яблуком розбрату
+  complete_sentence: «Через що вони посварилися?» — «Гроші стали яблуком розбрату__
+    між ними».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Директор прийме мою пропозицію?» — «Він каже, що його _____».
+  answer: двері відчинені
+  complete_sentence: «Директор прийме мою пропозицію?» — «Він каже, що його двері
+    відчинені__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Він продав усе і поїхав в гори!» — «У нього точно _____».
+  answer: дах поїхав
+  complete_sentence: «Він продав усе і поїхав в гори!» — «У нього точно дах поїхав__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Є прогрес у справі?» — «Так, нарешті _____!»
+  answer: лід скреслив
+  complete_sentence: «Є прогрес у справі?» — «Так, нарешті лід скреслив__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Наші зусилля достатні?» — «Ні, це лише _____».
+  answer: крапля в морі
+  complete_sentence: «Наші зусилля достатні?» — «Ні, це лише крапля в морі__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Завтра співбесіда!» — «_____!» — «До біса!»
+  answer: Ні пуху ні пера
+  complete_sentence: «Завтра співбесіда!» — «Ні пуху ні пера__!» — «До біса!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Скільки йому не кажи!» — «Знаю, йому все _____».
+  answer: як з гуски вода
+  complete_sentence: «Скільки йому не кажи!» — «Знаю, йому все як з гуски вода__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Його ідея абсурдна!» — «Так, _____!»
+  answer: ні в тин ні в ворота
+  complete_sentence: «Його ідея абсурдна!» — «Так, ні в тин ні в ворота__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Подавав на грант — і що?» — «_____. Не прийняли».
+  answer: Від воріт поворот
+  complete_sentence: «Подавав на грант — і що?» — «Від воріт поворот__. Не прийняли».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Ти часто ходиш у це кафе?» — «_____, коли є час».
+  answer: Час від часу
+  complete_sentence: «Ти часто ходиш у це кафе?» — «Час від часу__, коли є час».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Вони дізнаються правду?» — «_____, обов''язково».
+  answer: Рано чи пізно
+  complete_sentence: «Вони дізнаються правду?» — «Рано чи пізно__, обов''язково».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Що робити?» — «_____, треба завершити до п''ятниці».
+  answer: Так чи інакше
+  complete_sentence: «Що робити?» — «Так чи інакше__, треба завершити до п''ятниці».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Хочу вкласти всі гроші в цю справу!» — «Не варто _____!»
+  answer: грати з вогнем
+  complete_sentence: «Хочу вкласти всі гроші в цю справу!» — «Не варто грати з вогнем__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Ложка дьогтю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Камінь спотикання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Кістка в горлі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Яблуко розбрату.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Двері відчинені.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Дах поїхав.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Лід скреслив.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Крапля в морі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Ні пуху ні пера.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Як з гуски вода.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Ні в тин ні в ворота.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Від воріт поворот.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Час від часу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Рано чи пізно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Так чи інакше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Грати з вогнем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Яке значення має вираз «ложка дьогтю» у контексті оцінки ситуації?
+  options:
+  - text: Дуже погана ситуація без жодних позитивів.
+    correct: false
+  - text: Дрібний недолік у загалом хорошій ситуації.
+    correct: true
+  - text: Повна невдача в усьому.
+    correct: false
+  - text: Смачна страва з незвичним інгредієнтом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Коли найдоречніше використати вираз «камінь спотикання» в діловому контексті?
+  options:
+  - text: Коли хтось упав на вулиці через камінь.
+    correct: false
+  - text: Коли є перешкода в досягненні мети або домовленості.
+    correct: true
+  - text: Коли будують дорогу з каменів.
+    correct: false
+  - text: Коли хтось колекціонує камені як хобі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що означає вираз «кістка в горлі» як характеристика когось?
+  options:
+  - text: Людина, яка часто хворіє на горло.
+    correct: false
+  - text: Хтось або щось, що дуже дратує, постійно заважає.
+    correct: true
+  - text: Людина, яка любить їсти рибу.
+    correct: false
+  - text: Хтось, хто погано говорить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: У якій ситуації найкраще використати вираз «яблуко розбрату»?
+  options:
+  - text: Коли хтось їсть яблуко на перерві.
+    correct: false
+  - text: Коли щось є причиною конфлікту між людьми.
+    correct: true
+  - text: Коли в саду багато яблук.
+    correct: false
+  - text: Коли хтось кидає яблука.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Який фразеологізм найкраще описує готовність прийняти пропозиції та вислухати?
+  options:
+  - text: Дах поїхав.
+    correct: false
+  - text: Двері відчинені.
+    correct: true
+  - text: Кістка в горлі.
+    correct: false
+  - text: Від воріт поворот.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що означає вираз «дах поїхав» про поведінку людини?
+  options:
+  - text: Людина переїхала в новий будинок.
+    correct: false
+  - text: Людина поводиться нерозумно, збожеволіла.
+    correct: true
+  - text: Дах будинку потребує ремонту.
+    correct: false
+  - text: Людина працює на даху.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Коли вживають вираз «лід скреслив» у контексті справи?
+  options:
+  - text: Коли замерзла вода в морозильнику.
+    correct: false
+  - text: Коли справа зрушила з мертвої точки, почався прогрес.
+    correct: true
+  - text: Коли почалася зима і замерзла річка.
+    correct: false
+  - text: Коли хтось ковзається на льоду.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Яке значення має вираз «крапля в морі» про кількість чогось?
+  options:
+  - text: Дуже багато, як море.
+    correct: false
+  - text: Дуже мало, незначна частина.
+    correct: true
+  - text: Достатньо для потреб.
+    correct: false
+  - text: Солона вода.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що означає традиційне побажання «ні пуху ні пера» перед важливою справою?
+  options:
+  - text: Побажання не забруднитися пір''ям.
+    correct: false
+  - text: Побажання успіху (з мисливських традицій).
+    correct: true
+  - text: Побажання знайти птаха.
+    correct: false
+  - text: Побажання гарної погоди.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Коли використовують вираз «як з гуски вода» про реакцію людини?
+  options:
+  - text: Коли людина любить плавати, як гуска.
+    correct: false
+  - text: Коли людина байдужа до критики, зауважень.
+    correct: true
+  - text: Коли людина боїться води.
+    correct: false
+  - text: Коли хтось миється у ванні.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що означає вираз «ні в тин ні в ворота» як оцінка пропозиції?
+  options:
+  - text: Пропозиція дуже гарна.
+    correct: false
+  - text: Пропозиція — нісенітниця, не підходить.
+    correct: true
+  - text: Пропозиція про ремонт паркану.
+    correct: false
+  - text: Пропозиція про нові ворота.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: У якому контексті найдоречніше сказати «від воріт поворот»?
+  options:
+  - text: Коли хтось розвертається біля воріт.
+    correct: false
+  - text: Коли отримали відмову, не прийняли.
+    correct: true
+  - text: Коли ворота зачинені через ремонт.
+    correct: false
+  - text: Коли хтось відкриває ворота.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що означає вираз «час від часу» про частоту дії?
+  options:
+  - text: Постійно, щодня.
+    correct: false
+  - text: Іноді, періодично.
+    correct: true
+  - text: Ніколи.
+    correct: false
+  - text: Тільки вночі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Коли вживають вираз «рано чи пізно» про майбутню подію?
+  options:
+  - text: Коли подія точно не станеться.
+    correct: false
+  - text: Коли подія неминуча, обов''язково станеться.
+    correct: true
+  - text: Коли подія запланована на ранок.
+    correct: false
+  - text: Коли подія залежить від погоди.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: Що застерігає вираз «грати з вогнем» у контексті рішень?
+  options:
+  - text: Не варто розводити вогонь у будинку.
+    correct: false
+  - text: Не варто ризикувати, це небезпечно.
+    correct: true
+  - text: Не варто грати у настільні ігри.
+    correct: false
+  - text: Не варто готувати на вогні.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів з предметами
+  question: 'Який вираз найкраще завершить речення: «Так чи інакше, ми маємо...»?'
+  options:
+  - text: '...почекати нових вказівок.'
+    correct: false
+  - text: '...завершити це завдання незалежно від обставин.'
+    correct: true
+  - text: '...відмінити всі плани.'
+    correct: false
+  - text: '...запитати дозволу.'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Нова квартира має все, крім однієї проблеми — шумні сусіди. Який вираз
+    описує ситуацію?
+  options:
+  - text: Крапля в морі.
+    correct: false
+  - text: Ложка дьогтю.
+    correct: true
+  - text: Яблуко розбрату.
+    correct: false
+  - text: Кістка в горлі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Переговори тривають місяць, але питання ціни не вирішене. Як описати цю
+    проблему?
+  options:
+  - text: Ложка дьогтю.
+    correct: false
+  - text: Камінь спотикання.
+    correct: true
+  - text: Крапля в морі.
+    correct: false
+  - text: Лід скреслив.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваш друг завтра складає важливий іспит. Що побажати йому традиційно?
+  options:
+  - text: Грати з вогнем!
+    correct: false
+  - text: Ні пуху ні пера!
+    correct: true
+  - text: Від воріт поворот!
+    correct: false
+  - text: Як з гуски вода!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Скільки колезі не кажуть про помилки — він не реагує. Як описати його?
+  options:
+  - text: Йому все як з гуски вода.
+    correct: true
+  - text: У нього дах поїхав.
+    correct: false
+  - text: Він камінь спотикання.
+    correct: false
+  - text: Він крапля в морі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Спадщина бабусі викликала сварку між родичами. Як описати ситуацію?
+  options:
+  - text: Спадщина — ложка дьогтю.
+    correct: false
+  - text: Спадщина — яблуко розбрату.
+    correct: true
+  - text: Спадщина — крапля в морі.
+    correct: false
+  - text: Спадщина — камінь спотикання.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Після місяця застою проєкт нарешті почав рухатися. Як описати це?
+  options:
+  - text: Дах поїхав.
+    correct: false
+  - text: Лід скреслив.
+    correct: true
+  - text: Двері відчинені.
+    correct: false
+  - text: Крапля в морі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Колега пропонує абсурдну ідею, яку неможливо реалізувати. Як оцінити її?
+  options:
+  - text: Ложка дьогтю!
+    correct: false
+  - text: Ні в тин ні в ворота!
+    correct: true
+  - text: Крапля в морі!
+    correct: false
+  - text: Рано чи пізно!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Подавали документи в університет, але не прийняли. Як описати результат?
+  options:
+  - text: Отримали ложку дьогтю.
+    correct: false
+  - text: Отримали від воріт поворот.
+    correct: true
+  - text: Отримали яблуко розбрату.
+    correct: false
+  - text: Отримали камінь спотикання.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Друг хоче інвестувати всі заощадження в ризиковану справу. Як застерегти
+    його?
+  options:
+  - text: Це ложка дьогтю!
+    correct: false
+  - text: Це грати з вогнем!
+    correct: true
+  - text: Це крапля в морі!
+    correct: false
+  - text: Це яблуко розбрату!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Правда рано чи пізно стане відомою. Як сказати це іншими словами?
+  options:
+  - text: Правда — ложка дьогтю.
+    correct: false
+  - text: Правда вийде назовні неминуче.
+    correct: true
+  - text: Правда — крапля в морі.
+    correct: false
+  - text: Правда — камінь спотикання.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «ложка дьогтю» вживають, коли ситуація повністю погана без жодних
+    позитивів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «камінь спотикання» вживають для опису перешкоди в досягненні мети.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «кістка в горлі» має позитивне значення — щось приємне.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «яблуко розбрату» походить з давньогрецької міфології.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «двері відчинені» означає готовність прийняти та вислухати.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «дах поїхав» є ввічливим способом описати розумну людину.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «лід скреслив» означає, що справа закінчилася невдачею.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «крапля в морі» вживають, коли чогось дуже мало порівняно з потребою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: На побажання «ні пуху ні пера» традиційно відповідають «Дякую».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «як з гуски вода» означає, що людина уважно слухає критику.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «ні в тин ні в ворота» вживають для критики безглуздої пропозиції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «від воріт поворот» описує ситуацію, коли когось прийняли з радістю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «час від часу» означає постійно, щодня.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «рано чи пізно» підкреслює неминучість події.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «так чи інакше» можна вжити для підкреслення рішучості.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «грати з вогнем» є позитивним — означає бути сміливим.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

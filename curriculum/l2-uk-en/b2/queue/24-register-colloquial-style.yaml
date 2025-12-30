@@ -1,0 +1,1414 @@
+module: 24-register-colloquial-style
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/24-register-colloquial-style.md
+generated: '2025-12-29T22:44:03.154171'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Шановний пане директоре! Ну, типу, хотів запитати про відпустку.
+  error: типу
+  answer: просто
+  sentence_corrected: Шановний пане директоре! Ну, просто, хотів запитати про відпустку.
+  options:
+  - типу
+  - просто
+  - начебто
+  - ніби
+  original_explanation: В офіційному листуванні наповнювач «типу» недоречний. Краще
+    прибрати або замінити.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Я бо прийшов вчасно.
+  error: бо
+  answer: таки
+  sentence_corrected: Я таки прийшов вчасно.
+  options:
+  - бо
+  - таки
+  - ж
+  - же
+  original_explanation: '"Бо" виражає причину/попередження, для підсилення використовуйте
+    "таки".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Він ж не знає про це.
+  error: ж
+  answer: же
+  sentence_corrected: Він же не знає про це.
+  options:
+  - ж
+  - же
+  - бо
+  - таки
+  original_explanation: Після голосного вживається «же», після приголосного — «ж».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Ну, типу, як би, я, типу, хотів сказати...
+  error: типу
+  answer: я
+  sentence_corrected: Ну, я, як би, я, я, хотів сказати...
+  options:
+  - типу
+  - я
+  - хотів
+  - сказати
+  original_explanation: Надмір наповнювачів ускладнює розуміння. Залиште один-два.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Це класний інформація.
+  error: класний
+  answer: класна
+  sentence_corrected: Це класна інформація.
+  options:
+  - класний
+  - класна
+  - класне
+  - класні
+  original_explanation: '"Інформація" — жіночий рід, потрібно "класна інформація".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Скинь мені на тел інформацію.
+  error: інформацію
+  answer: інфу
+  sentence_corrected: Скинь мені на тел інфу.
+  options:
+  - інформацію
+  - інфу
+  - інформації
+  - інформацій
+  original_explanation: У розмовному стилі послідовність стилю важлива — якщо «тел»,
+    то і «інфу».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Привіт! Маю честь повідомити Вам про зустріч.
+  error: честь
+  answer: хочу
+  sentence_corrected: Привіт! Маю хочу повідомити Вам про зустріч.
+  options:
+  - честь
+  - хочу
+  - можу
+  - мушу
+  original_explanation: '"Маю честь" — занадто формально після неформального "Привіт!".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Він таки бо прийшов.
+  error: бо
+  answer: ∅
+  sentence_corrected: Він таки ∅ прийшов.
+  options:
+  - бо
+  - ∅
+  - ж
+  - же
+  original_explanation: Не можна поєднувати «таки» і «бо» — вони мають різні функції.
+    Видаліть «бо».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Капец, це була чудова презентація!
+  error: Капец
+  answer: Класно
+  sentence_corrected: Класно, це була чудова презентація!
+  options:
+  - Капец
+  - Класно
+  - Супер
+  - Круто
+  original_explanation: '"Капець" — негативна реакція. Для позитивної використовуйте
+    "класно" чи "круто".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Шановний друже! Дозвольте запросити Вас на каву.
+  error: Шановний
+  answer: Привіт
+  sentence_corrected: Привіт друже! Дозвольте запросити Вас на каву.
+  options:
+  - Шановний
+  - Привіт
+  - Дорогий
+  - Любий
+  original_explanation: '"Шановний друже" — змішування регістрів. До друга краще "Привіт!".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Це ого гарна ідея!
+  error: ого
+  answer: дуже
+  sentence_corrected: Це дуже гарна ідея!
+  options:
+  - ого
+  - дуже
+  - така
+  - справді
+  original_explanation: '"Ого" — вигук, не прикметник. Правильно: "Ого, це гарна ідея!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Він жесть добре співає.
+  error: жесть
+  answer: дуже
+  sentence_corrected: Він дуже добре співає.
+  options:
+  - жесть
+  - дуже
+  - класно
+  - круто
+  original_explanation: '"Жесть" — вигук, не прислівник. Правильно: "Він дуже добре
+    співає."'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Дякую Вам, чувак!
+  error: Вам
+  answer: тобі
+  sentence_corrected: Дякую тобі, чувак!
+  options:
+  - Вам
+  - тобі
+  - вам
+  - йому
+  original_explanation: '"Чувак" — неформальне звертання, потребує "ти": "Дякую тобі,
+    чувак!"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: 'Вона сказала: «Бо я не хочу».'
+  error: Бо
+  answer: Ну
+  sentence_corrected: 'Вона сказала: «Ну я не хочу».'
+  options:
+  - Бо
+  - Ну
+  - Та
+  - Ой
+  original_explanation: '"Бо" не вживається на початку речення як вступне слово. Використовуйте
+    "Ну".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Ну, типу, Шановний пане, дозвольте запитати.
+  error: типу
+  answer: ∅
+  sentence_corrected: Ну, ∅, Шановний пане, дозвольте запитати.
+  options:
+  - типу
+  - ∅
+  - начебто
+  - ніби
+  original_explanation: Змішування регістрів — наповнювачі несумісні з офіційним звертанням.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки у вживанні розмовного стилю
+  sentence_with_error: Він прийшов, таки бо хотів побачити.
+  error: таки бо
+  answer: бо
+  sentence_corrected: Він прийшов, бо хотів побачити.
+  options:
+  - таки бо
+  - бо
+  - таки
+  - ж
+  original_explanation: '"Таки" і "бо" мають різні функції і не поєднуються. Залиште
+    "бо".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Скажи _____ мені правду!
+  answer: ж
+  complete_sentence: Скажи ж__ мені правду!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Не йди туди, _____ впадеш.
+  answer: бо
+  complete_sentence: Не йди туди, бо__ впадеш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Я _____ прийшов, хоча не хотів.
+  answer: таки
+  complete_sentence: Я таки__ прийшов, хоча не хотів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: _____, я не знаю, що робити.
+  answer: Ну
+  complete_sentence: Ну__, я не знаю, що робити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Він _____ це зробив!
+  answer: таки
+  complete_sentence: Він таки__ це зробив!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Чому _____ ти не сказав раніше?
+  answer: ж
+  complete_sentence: Чому ж__ ти не сказав раніше?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Вчись, _____ не здаси іспит.
+  answer: бо
+  complete_sentence: Вчись, бо__ не здаси іспит.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Вона _____ права була.
+  answer: таки
+  complete_sentence: Вона таки__ права була.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Я _____ казав тобі про це!
+  answer: ж
+  complete_sentence: Я ж__ казав тобі про це!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Дивись уважно, _____ не побачиш.
+  answer: бо
+  complete_sentence: Дивись уважно, бо__ не побачиш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: _____, давай поговоримо.
+  answer: Ну
+  complete_sentence: Ну__, давай поговоримо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Де _____ він?
+  answer: ж
+  complete_sentence: Де ж__ він?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Він _____ не прийшов.
+  answer: таки
+  complete_sentence: Він таки__ не прийшов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Поспішай, _____ запізнишся на поїзд.
+  answer: бо
+  complete_sentence: Поспішай, бо__ запізнишся на поїзд.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: Ми _____ встигли на літак!
+  answer: таки
+  complete_sentence: Ми таки__ встигли на літак!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Частки в контексті
+  sentence_template: То що _____ ти хочеш?
+  answer: ж
+  complete_sentence: То що ж__ ти хочеш?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____! Це дуже гарна новина!
+  answer: Ого
+  complete_sentence: Ого__! Це дуже гарна новина!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____! Мій телефон розбився!
+  answer: Капець
+  complete_sentence: Капець__! Мій телефон розбився!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Цей фільм був _____!
+  answer: прикольний
+  complete_sentence: Цей фільм був прикольний__!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Він виграв мільйон! _____!
+  answer: Круто
+  complete_sentence: Він виграв мільйон! Круто__!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____! Я забув ключі вдома!
+  answer: Ой
+  complete_sentence: Ой__! Я забув ключі вдома!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Ця їжа — _____! Несмачно зовсім.
+  answer: фігня
+  complete_sentence: Ця їжа — фігня__! Несмачно зовсім.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____! Яка гарна машина!
+  answer: Ого
+  complete_sentence: Ого__! Яка гарна машина!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Концерт був _____! Всім сподобалось.
+  answer: класний
+  complete_sentence: Концерт був класний__! Всім сподобалось.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____! Я здав іспит на відмінно!
+  answer: Супер
+  complete_sentence: Супер__! Я здав іспит на відмінно!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Ситуація на роботі — повний _____.
+  answer: капець
+  complete_sentence: Ситуація на роботі — повний капець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____, яка класна ідея!
+  answer: Ого
+  complete_sentence: Ого__, яка класна ідея!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Він _____! Молодець!
+  answer: круто
+  complete_sentence: Він круто__! Молодець!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____, я спізнився на зустріч!
+  answer: Ой
+  complete_sentence: Ой__, я спізнився на зустріч!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Ця музика — _____! Мені подобається.
+  answer: кльово
+  complete_sentence: Ця музика — кльово__! Мені подобається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: _____, а це що таке?
+  answer: Ого
+  complete_sentence: Ого__, а це що таке?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вигуки в контексті
+  sentence_template: Результати тесту — _____! Всі провалилися.
+  answer: жесть
+  complete_sentence: Результати тесту — жесть__! Всі провалилися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Скажи ж мені правду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Поспішай, бо запізнишся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Я таки прийшов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Ну, не знаю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Я ж казав тобі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Не йди, бо впадеш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Він таки це зробив.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Хто ж там був?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Ми таки встигли на потяг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Ну, все добре.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Вчись, бо не здаси.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Вона таки була права.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Чому ж ти не сказав?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Дивись, бо не побачиш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Йому таки це вдалося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з частками
+  jumbled_words: []
+  answer: Він же все знає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яка функція частки «ж/же» в українській мові?
+  options:
+  - text: Вираження заперечення
+    correct: false
+  - text: Підсилення, емфаза
+    correct: true
+  - text: Вираження питання
+    correct: false
+  - text: Вираження часу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке слово є скороченою формою від «комп'ютер»?
+  options:
+  - text: комп
+    correct: true
+  - text: компік
+    correct: false
+  - text: комплект
+    correct: false
+  - text: компас
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яка функція частки «бо» у реченні «Не йди, бо впадеш»?
+  options:
+  - text: Підсилення
+    correct: false
+  - text: Попередження про наслідки
+    correct: true
+  - text: Запитання
+    correct: false
+  - text: Згода
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке слово є наповнювачем (filler) у розмовній мові?
+  options:
+  - text: книга
+    correct: false
+  - text: типу
+    correct: true
+  - text: працювати
+    correct: false
+  - text: гарний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Що означає вигук «жесть» у розмовній мові?
+  options:
+  - text: Щось хороше
+    correct: false
+  - text: Щось дуже погане або інтенсивне
+    correct: true
+  - text: Нудне
+    correct: false
+  - text: Звичайне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: У якому контексті доречно використовувати розмовний стиль?
+  options:
+  - text: В офіційному листі до директора
+    correct: false
+  - text: У повідомленні другу
+    correct: true
+  - text: У науковій статті
+    correct: false
+  - text: У юридичному документі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке значення має частка «таки» у реченні «Я таки прийшов»?
+  options:
+  - text: Заперечення
+    correct: false
+  - text: Все ж таки, всупереч очікуванням
+    correct: true
+  - text: Питання
+    correct: false
+  - text: Наказ
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке скорочення відповідає слову «інформація»?
+  options:
+  - text: інф
+    correct: false
+  - text: інфа
+    correct: true
+  - text: інформ
+    correct: false
+  - text: інформашка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Який вигук виражає позитивне здивування?
+  options:
+  - text: капець
+    correct: false
+  - text: ого
+    correct: true
+  - text: жесть
+    correct: false
+  - text: фігня
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яка помилка найчастіше трапляється при використанні розмовного стилю?
+  options:
+  - text: Використання у формальному контексті
+    correct: true
+  - text: Використання з друзями
+    correct: false
+  - text: Використання в чаті
+    correct: false
+  - text: Використання у соцмережах
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Що означає розмовне слово «норм»?
+  options:
+  - text: Ненормально
+    correct: false
+  - text: Нормально, добре
+    correct: true
+  - text: Норма права
+    correct: false
+  - text: Нормативний документ
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яка частка додає відтінок наполягання у реченні «Скажи ж мені!»?
+  options:
+  - text: бо
+    correct: false
+  - text: ж
+    correct: true
+  - text: таки
+    correct: false
+  - text: ну
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке слово НЕ є наповнювачем?
+  options:
+  - text: типу
+    correct: false
+  - text: ну
+    correct: false
+  - text: книга
+    correct: true
+  - text: коротше
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Що означає «чувак» у розмовній мові?
+  options:
+  - text: Дівчина
+    correct: false
+  - text: Хлопець, чоловік (неформально)
+    correct: true
+  - text: Старша людина
+    correct: false
+  - text: Дитина
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: У якому реченні частка «бо» використана правильно?
+  options:
+  - text: Бо я прийшов.
+    correct: false
+  - text: Поспішай, бо запізнишся.
+    correct: true
+  - text: Він бо знає.
+    correct: false
+  - text: Ми бо друзі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Основи розмовного стилю
+  question: Яке значення має вигук «капець»?
+  options:
+  - text: Щось чудове
+    correct: false
+  - text: Катастрофа, біда
+    correct: true
+  - text: Нейтральна реакція
+    correct: false
+  - text: Запитання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Який вигук найкраще підходить для опису негативної ситуації?
+  options:
+  - text: класно
+    correct: false
+  - text: жесть
+    correct: true
+  - text: круто
+    correct: false
+  - text: супер
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке привітання доречне для повідомлення другу?
+  options:
+  - text: Шановний друже!
+    correct: false
+  - text: Привіт!
+    correct: true
+  - text: Добридень!
+    correct: false
+  - text: Вельмишановний!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яка частка підходить для речення «Скажи ___ мені правду»?
+  options:
+  - text: бо
+    correct: false
+  - text: ж
+    correct: true
+  - text: таки
+    correct: false
+  - text: ну
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Який наповнювач найчастіше вживається на початку речення?
+  options:
+  - text: типу
+    correct: false
+  - text: ну
+    correct: true
+  - text: коротше
+    correct: false
+  - text: як би
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке слово є розмовним скороченням від «університет»?
+  options:
+  - text: уні
+    correct: false
+  - text: універ
+    correct: true
+  - text: унік
+    correct: false
+  - text: унів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Який вигук виражає позитивне здивування?
+  options:
+  - text: капець
+    correct: false
+  - text: ого
+    correct: true
+  - text: жесть
+    correct: false
+  - text: фігня
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яка частка виражає попередження у реченні «Не йди, ___ впадеш»?
+  options:
+  - text: ж
+    correct: false
+  - text: бо
+    correct: true
+  - text: таки
+    correct: false
+  - text: ну
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке прощання є найбільш неформальним?
+  options:
+  - text: До побачення
+    correct: false
+  - text: Бувай
+    correct: true
+  - text: На все добре
+    correct: false
+  - text: До зустрічі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке слово означає «dude, guy» у розмовній мові?
+  options:
+  - text: пан
+    correct: false
+  - text: чувак
+    correct: true
+  - text: добродій
+    correct: false
+  - text: колега
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яка частка означає «все ж таки, всупереч очікуванням»?
+  options:
+  - text: ж
+    correct: false
+  - text: таки
+    correct: true
+  - text: бо
+    correct: false
+  - text: ну
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке скорочення означає «фотографія»?
+  options:
+  - text: фото
+    correct: false
+  - text: фотка
+    correct: true
+  - text: фотик
+    correct: false
+  - text: фотос
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке слово є наповнювачем?
+  options:
+  - text: книга
+    correct: false
+  - text: типу
+    correct: true
+  - text: стіл
+    correct: false
+  - text: гарний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яка реакція доречна на хорошу новину?
+  options:
+  - text: Жесть!
+    correct: false
+  - text: Класно!
+    correct: true
+  - text: Капець!
+    correct: false
+  - text: Фігня!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: У якому реченні частка вжита правильно?
+  options:
+  - text: Бо я прийшов.
+    correct: false
+  - text: Я ж казав тобі!
+    correct: true
+  - text: Він таки бо знає.
+    correct: false
+  - text: Ну бо він прийшов.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке слово означає «nonsense» у розмовній мові?
+  options:
+  - text: класно
+    correct: false
+  - text: фігня
+    correct: true
+  - text: круто
+    correct: false
+  - text: супер
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Контекстуальний вибір регістру
+  question: Яке скорочення використовується для «документ»?
+  options:
+  - text: доку
+    correct: false
+  - text: док
+    correct: true
+  - text: документ
+    correct: false
+  - text: дока
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Частка «ж/же» використовується для підсилення та емфази.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Розмовний стиль доречний в офіційному листуванні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Слово «типу» є наповнювачем у розмовній мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Частка «бо» виражає підсилення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Скорочення «комп» означає «компанія».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Вигук «ого» виражає здивування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Надмірне вживання наповнювачів вважається ознакою високої мовної культури.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Частка «таки» означає «все ж таки, всупереч очікуванням».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Слово «жесть» виражає позитивну реакцію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: У розмовній мові можна використовувати скорочення «інфа» замість «інформація».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Перехід на розмовний стиль у спілкуванні — сигнал довіри.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Слово «чувак» — формальне звертання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Повна відсутність наповнювачів у розмові звучить природно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Вигук «класно» виражає позитивну оцінку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Частку «бо» можна використовувати на початку речення для підсилення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила розмовного стилю
+  statement: Скорочення доречні тільки в неформальному контексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

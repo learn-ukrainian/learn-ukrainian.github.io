@@ -1,0 +1,1410 @@
+module: 37-word-formation-adverbs-integration
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/37-word-formation-adverbs-integration.md
+generated: '2025-12-29T18:39:56.403251'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Він говорить швидо і голосно.
+  error: швидо
+  answer: швидко
+  sentence_corrected: Він говорить швидко і голосно.
+  options:
+  - швидо
+  - швидко
+  - швидке
+  - швидкий
+  original_explanation: Правильно — "швидко" (суфікс -о, не -о без -к-).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Вона каже, що справи йдуть добро.
+  error: добро
+  answer: добре
+  sentence_corrected: Вона каже, що справи йдуть добре.
+  options:
+  - добро
+  - добре
+  - доброно
+  - добрісно
+  original_explanation: Правильно — "добре" (прислівник, не іменник "добро").
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Він говорить поукраїнськи дуже гарно.
+  error: поукраїнськи
+  answer: по-українськи
+  sentence_corrected: Він говорить по-українськи дуже гарно.
+  options:
+  - поукраїнськи
+  - по-українськи
+  - по українськи
+  - українськи
+  original_explanation: Прислівники на по-...-ськи пишуться через дефіс.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Треба подивитися на проблему поновому.
+  error: поновому
+  answer: по-новому
+  sentence_corrected: Треба подивитися на проблему по-новому.
+  options:
+  - поновому
+  - по-новому
+  - по новому
+  - новому
+  original_explanation: Прислівники на по-...-ому пишуться через дефіс.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Мій хлопчичок вже ходить до школи.
+  error: хлопчичок
+  answer: хлопчик
+  sentence_corrected: Мій хлопчик вже ходить до школи.
+  options:
+  - хлопчичок
+  - хлопчик
+  - хлопчишок
+  - хлопченок
+  original_explanation: Правильний демінутив від "хлопець" — "хлопчик".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Моя доньочка ще маленька.
+  error: доньочка
+  answer: донечка
+  sentence_corrected: Моя донечка ще маленька.
+  options:
+  - доньочка
+  - донечка
+  - доненька
+  - донечонька
+  original_explanation: Правильний демінутив від "донька" — "донечка".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Іди сюди, сонячко моє!
+  error: сонячко
+  answer: сонечко
+  sentence_corrected: Іди сюди, сонечко моє!
+  options:
+  - сонячко
+  - сонечко
+  - соненько
+  - сонечник
+  original_explanation: Правильний демінутив від "сонце" — "сонечко".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Який вітріще надворі сьогодні!
+  error: вітріще
+  answer: вітрище
+  sentence_corrected: Який вітрище надворі сьогодні!
+  options:
+  - вітріще
+  - вітрище
+  - вітерище
+  - вітрисько
+  original_explanation: Правильний аугментатив від "вітер" — "вітрище".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Минулої зими був страшний холодіще.
+  error: холодіще
+  answer: холодище
+  sentence_corrected: Минулої зими був страшний холодище.
+  options:
+  - холодіще
+  - холодище
+  - холодисько
+  - холоднище
+  original_explanation: Правильний аугментатив від "холод" — "холодище".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Він рідкісно відвідує бабусю.
+  error: рідкісно
+  answer: рідко
+  sentence_corrected: Він рідко відвідує бабусю.
+  options:
+  - рідкісно
+  - рідко
+  - рідке
+  - по-рідку
+  original_explanation: Правильно — "рідко" (від "рідкий" + -о).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Вона завждий допомагає іншим.
+  error: завждий
+  answer: завжди
+  sentence_corrected: Вона завжди допомагає іншим.
+  options:
+  - завждий
+  - завжди
+  - завждісно
+  - по-завжди
+  original_explanation: '"Завжди" — це прислівник, не прикметник.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Він інколе буває в селі.
+  error: інколе
+  answer: інколи
+  sentence_corrected: Він інколи буває в селі.
+  options:
+  - інколе
+  - інколи
+  - інколісно
+  - по-інколи
+  original_explanation: Правильно — "інколи" (sometimes).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Магазин знаходиться близьке від дому.
+  error: близьке
+  answer: близько
+  sentence_corrected: Магазин знаходиться близько від дому.
+  options:
+  - близьке
+  - близько
+  - близечко
+  - по-близьку
+  original_explanation: Правильно — "близько" (прислівник, не прикметник).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Село розташоване далече від міста.
+  error: далече
+  answer: далеко
+  sentence_corrected: Село розташоване далеко від міста.
+  options:
+  - далече
+  - далеко
+  - далечі
+  - подалеку
+  original_explanation: Правильно — "далеко" (прислівник місця).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Вона вирішила жити поіншому.
+  error: поіншому
+  answer: по-іншому
+  sentence_corrected: Вона вирішила жити по-іншому.
+  options:
+  - поіншому
+  - по-іншому
+  - по іншому
+  - іншому
+  original_explanation: Прислівники на по-...-ому пишуться через дефіс.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прислівниках та демінутивах
+  sentence_with_error: Бідна моя ніжечка болить!
+  error: ніжечка
+  answer: ніженька
+  sentence_corrected: Бідна моя ніженька болить!
+  options:
+  - ніжечка
+  - ніженька
+  - ніжонька
+  - ніженочка
+  original_explanation: Правильний демінутив від "нога" — "ніженька".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Він ___ біжить до школи.
+  answer: швидко
+  complete_sentence: Він швидко біжить до школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Життя в селі тече ___.
+  answer: повільно
+  complete_sentence: Життя в селі тече повільно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Справи йдуть ___, дякую.
+  answer: добре
+  complete_sentence: Справи йдуть добре, дякую.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Вона співає дуже ___.
+  answer: гарно
+  complete_sentence: Вона співає дуже гарно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Село розташоване ___ від міста.
+  answer: далеко
+  complete_sentence: Село розташоване далеко від міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Магазин знаходиться ___ від дому.
+  answer: близько
+  complete_sentence: Магазин знаходиться близько від дому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Вона ___ говорить українською мовою.
+  answer: гарно
+  complete_sentence: Вона гарно говорить українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Він ___ відвідує бабусю в селі.
+  answer: часто
+  complete_sentence: Він часто відвідує бабусю в селі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Вони ___ скаржаться на життя.
+  answer: рідко
+  complete_sentence: Вони рідко скаржаться на життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Бабуся ___ зберігає традиції.
+  answer: завжди
+  complete_sentence: Бабуся завжди зберігає традиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Йому ___ на душі після тієї новини.
+  answer: погано
+  complete_sentence: Йому погано на душі після тієї новини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Вона говорить ___, тобто українською мовою.
+  answer: по-українськи
+  complete_sentence: Вона говорить по-українськи, тобто українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Треба подивитися на проблему ___.
+  answer: по-новому
+  complete_sentence: Треба подивитися на проблему по-новому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Вона вирішила жити ___.
+  answer: по-іншому
+  complete_sentence: Вона вирішила жити по-іншому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: ___ буває важко, але ми справляємося.
+  answer: Інколи
+  complete_sentence: Інколи буває важко, але ми справляємося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний прислівник
+  sentence_template: Я живу ___, у цьому селі.
+  answer: тут
+  complete_sentence: Я живу тут, у цьому селі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Мій ___ Михайлик вже ходить до школи (від "хлопець").
+  answer: хлопчик
+  complete_sentence: Мій хлопчик Михайлик вже ходить до школи (від "хлопець").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Моя ___ Оленка дуже весела (від "донька").
+  answer: донечка
+  complete_sentence: Моя донечка Оленка дуже весела (від "донька").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Іди сюди, ___ моє! (від "сонце").
+  answer: сонечко
+  complete_sentence: Іди сюди, сонечко моє! (від "сонце").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Бідна моя ___ болить (від "нога").
+  answer: ніженька
+  complete_sentence: Бідна моя ніженька болить (від "нога").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Який ___ надворі! (від "вітер" — збільшувальна форма).
+  answer: вітрище
+  complete_sentence: Який вітрище надворі! (від "вітер" — збільшувальна форма).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Минулої зими був страшний ___ (від "холод" — збільшувальна форма).
+  answer: холодище
+  complete_sentence: Минулої зими був страшний холодище (від "холод" — збільшувальна
+    форма).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Був такий ___, що річка замерзла (від "мороз" — збільшувальна
+    форма).
+  answer: морозище
+  complete_sentence: Був такий морозище, що річка замерзла (від "мороз" — збільшувальна
+    форма).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Вона говорить ___ дуже добре (модель по-...-ськи).
+  answer: по-українськи
+  complete_sentence: Вона говорить по-українськи дуже добре (модель по-...-ськи).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Треба подивитися на проблему ___ (модель по-...-ому).
+  answer: по-новому
+  complete_sentence: Треба подивитися на проблему по-новому (модель по-...-ому).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Вона вирішила жити ___ (модель по-...-ому).
+  answer: по-іншому
+  complete_sentence: Вона вирішила жити по-іншому (модель по-...-ому).
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Він ___ біжить до школи (від "швидкий").
+  answer: швидко
+  complete_sentence: Він швидко біжить до школи (від "швидкий").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Вона співає дуже ___ (від "гарний").
+  answer: гарно
+  complete_sentence: Вона співає дуже гарно (від "гарний").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Справи йдуть ___ (від "добрий").
+  answer: добре
+  complete_sentence: Справи йдуть добре (від "добрий").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Він ___ відвідує бабусю (від "рідкий").
+  answer: рідко
+  complete_sentence: Він рідко відвідує бабусю (від "рідкий").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Вона ___ зберігає традиції (прислівник частоти "always").
+  answer: завжди
+  complete_sentence: Вона завжди зберігає традиції (прислівник частоти "always").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть демінутиви та аугментативи
+  sentence_template: Він ___ буває в селі (прислівник частоти "sometimes").
+  answer: інколи
+  complete_sentence: Він інколи буває в селі (прислівник частоти "sometimes").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Він швидко біжить до школи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Життя в селі тече повільно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Справи йдуть добре, дякую.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Вона дуже гарно співає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Він вільно говорить по-українськи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Треба вирішити цю проблему по-новому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Село розташоване далеко від міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Він часто відвідує бабусю в селі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Вони рідко скаржаться на життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Бабуся завжди зберігає традиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Я живу тут, в цьому селі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Він працює там, у великому місті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Магазин знаходиться близько від дому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Йому погано після тієї новини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Вона вирішила жити по-іншому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прислівниками
+  jumbled_words: []
+  answer: Інколи буває важко, але ми справляємося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник утворюється від прикметника "швидкий" за допомогою суфікса
+    -о?
+  options:
+  - text: швидо
+    correct: false
+  - text: швидко
+    correct: true
+  - text: швидке
+    correct: false
+  - text: пошвидку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Яка модель використовується для творення прислівника "по-українськи"?
+  options:
+  - text: прикм. + -о
+    correct: false
+  - text: по- + прикм. + -ськи
+    correct: true
+  - text: по- + прикм. + -ому
+    correct: false
+  - text: прикм. + -е
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник утворюється від прикметника "добрий"?
+  options:
+  - text: добро
+    correct: false
+  - text: добре
+    correct: true
+  - text: доброно
+    correct: false
+  - text: по-доброму
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Як правильно написати прислівник "по-новому"?
+  options:
+  - text: поновому
+    correct: false
+  - text: по новому
+    correct: false
+  - text: по-новому
+    correct: true
+  - text: по-ново
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який суфікс використовується для творення демінутива "хлопчик" від "хлопець"?
+  options:
+  - text: -ик
+    correct: false
+  - text: -чик
+    correct: true
+  - text: -ок
+    correct: false
+  - text: -ечок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Яке слово є аугментативом (збільшувальною формою) від "вітер"?
+  options:
+  - text: вітерець
+    correct: false
+  - text: вітерок
+    correct: false
+  - text: вітрище
+    correct: true
+  - text: вітерочок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник означає "in a different way"?
+  options:
+  - text: по-старому
+    correct: false
+  - text: по-новому
+    correct: false
+  - text: по-іншому
+    correct: true
+  - text: по-різному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який демінутив утворюється від іменника "донька"?
+  options:
+  - text: доньчик
+    correct: false
+  - text: донечка
+    correct: true
+  - text: доньочка
+    correct: false
+  - text: доненька
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник частоти означає "always"?
+  options:
+  - text: часто
+    correct: false
+  - text: рідко
+    correct: false
+  - text: завжди
+    correct: true
+  - text: інколи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який термін означає "наука про творення слів"?
+  options:
+  - text: суфікс
+    correct: false
+  - text: словотвір
+    correct: true
+  - text: морфологія
+    correct: false
+  - text: синтаксис
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Як правильно утворити прислівник від "гарний"?
+  options:
+  - text: гарне
+    correct: false
+  - text: гарно
+    correct: true
+  - text: по-гарному
+    correct: false
+  - text: гарнісно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який демінутив утворюється від "сонце"?
+  options:
+  - text: сонячко
+    correct: false
+  - text: сонечко
+    correct: true
+  - text: сонечник
+    correct: false
+  - text: соненько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник місця означає "here"?
+  options:
+  - text: там
+    correct: false
+  - text: тут
+    correct: true
+  - text: далеко
+    correct: false
+  - text: близько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Як утворити аугментатив від "холод"?
+  options:
+  - text: холодок
+    correct: false
+  - text: холодець
+    correct: false
+  - text: холодище
+    correct: true
+  - text: холоднище
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Який прислівник означає "rarely"?
+  options:
+  - text: часто
+    correct: false
+  - text: завжди
+    correct: false
+  - text: інколи
+    correct: false
+  - text: рідко
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Творення прислівників від прикметників
+  question: Що таке суфікс у словотворенні?
+  options:
+  - text: Частина слова перед коренем
+    correct: false
+  - text: Частина слова після кореня
+    correct: true
+  - text: Закінчення слова
+    correct: false
+  - text: Корінь слова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Яка модель творення прислівників є найпоширенішою в українській мові?
+  options:
+  - text: по-...-ськи
+    correct: false
+  - text: -о/-е
+    correct: true
+  - text: по-...-ому
+    correct: false
+  - text: -існо
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як утворити прислівник від прикметника "добрий"?
+  options:
+  - text: добро
+    correct: false
+  - text: добре
+    correct: true
+  - text: по-доброму
+    correct: false
+  - text: добрісно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як правильно написати прислівник "по-українськи"?
+  options:
+  - text: Разом
+    correct: false
+  - text: Через дефіс
+    correct: true
+  - text: Окремо
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який суфікс використовується для творення аугментативів?
+  options:
+  - text: -ик/-чик
+    correct: false
+  - text: -ечка/-ечко
+    correct: false
+  - text: -ище
+    correct: true
+  - text: -енька
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який демінутив правильний від "сонце"?
+  options:
+  - text: сонячко
+    correct: false
+  - text: сонечко
+    correct: true
+  - text: соненько
+    correct: false
+  - text: сонечник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Що означає прислівник "по-новому"?
+  options:
+  - text: По-старому
+    correct: false
+  - text: Так само
+    correct: false
+  - text: На новий лад
+    correct: true
+  - text: Зовсім
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прислівник означає "sometimes"?
+  options:
+  - text: завжди
+    correct: false
+  - text: рідко
+    correct: false
+  - text: часто
+    correct: false
+  - text: інколи
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Що таке "словотвір" у лінгвістиці?
+  options:
+  - text: Наука про звуки
+    correct: false
+  - text: Наука про творення слів
+    correct: true
+  - text: Наука про речення
+    correct: false
+  - text: Наука про значення слів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який демінутив правильний від "донька"?
+  options:
+  - text: доньочка
+    correct: false
+  - text: донечка
+    correct: true
+  - text: доненька
+    correct: false
+  - text: донечонька
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Для яких стилів характерні демінутиви?
+  options:
+  - text: Науковий та офіційний
+    correct: false
+  - text: Розмовний та художній
+    correct: true
+  - text: Тільки офіційний
+    correct: false
+  - text: Тільки науковий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як правильно написати прислівник "по-іншому"?
+  options:
+  - text: поіншому
+    correct: false
+  - text: по іншому
+    correct: false
+  - text: по-іншому
+    correct: true
+  - text: іншому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прислівник утворюється від "повільний"?
+  options:
+  - text: повільне
+    correct: false
+  - text: повільно
+    correct: true
+  - text: по-повільному
+    correct: false
+  - text: повілно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Що означає аугментатив "морозище"?
+  options:
+  - text: Маленький мороз
+    correct: false
+  - text: Дуже сильний мороз
+    correct: true
+  - text: Легкий мороз
+    correct: false
+  - text: Весняний мороз
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прислівник місця означає "there"?
+  options:
+  - text: тут
+    correct: false
+  - text: там
+    correct: true
+  - text: далеко
+    correct: false
+  - text: близько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який демінутив правильний від "хлопець"?
+  options:
+  - text: хлопчичок
+    correct: false
+  - text: хлопчик
+    correct: true
+  - text: хлопченок
+    correct: false
+  - text: хлопчишок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Яка функція прислівників на по-...-ськи?
+  options:
+  - text: Позначення часу
+    correct: false
+  - text: Позначення мови та культурних особливостей
+    correct: true
+  - text: Позначення кількості
+    correct: false
+  - text: Позначення причини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "швидко" утворений від прикметника "швидкий" за допомогою
+    суфікса -о.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "добре" має суфікс -о.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівники на по-...-ськи пишуться через дефіс.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "по-новому" пишеться разом (поновому).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: '"Хлопчик" — це демінутив від "хлопець".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: '"Вітрище" — це демінутив від "вітер".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "завжди" означає "always".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "тут" утворений від прикметника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Суфікс -ище використовується для творення аугментативів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: '"Сонечко" — це аугментатив від "сонце".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "рідко" означає "often".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: '"Словотвір" — це наука про творення слів.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівники на -о є найпоширенішою моделлю в українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: '"Донечка" — це демінутив від "донька".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Прислівник "по-іншому" означає "in the same way".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прислівників
+  statement: Демінутиви характерні для наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

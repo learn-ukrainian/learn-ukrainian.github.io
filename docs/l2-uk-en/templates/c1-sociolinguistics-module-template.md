@@ -351,6 +351,36 @@ vocabulary_focus:
 
 ## Sociolinguistics-Specific Activities
 
+### CRITICAL: Language Practice, Not Terminology Recall
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not stylistics/sociolinguistics terminology recall.**
+
+The lesson teaches both Ukrainian AND stylistic/sociolinguistic concepts. Activities practice only Ukrainian using these concepts as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор пояснює функцію метафори у цьому уривку?" (requires reading Ukrainian)
+**❌ WRONG:** "Що таке метафора?" (tests definition recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND stylistic/sociolinguistic concepts |
+| **Activities** | Practice ONLY Ukrainian language skills using stylistics content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension of analysis text — "Згідно з текстом модуля..."
+- **fill-in**: Test terminology/collocations from module
+- **match-up**: Test vocabulary — Ukrainian terms ↔ Ukrainian definitions
+- **group-sort**: Test categorization (devices, dialects, registers) using module vocabulary
+- **mark-the-words**: Test recognition of stylistic features in Ukrainian text
+- **error-correction**: Test grammar (including Surzhyk correction), NOT terminology
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.

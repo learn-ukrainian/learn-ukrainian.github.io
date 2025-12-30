@@ -12,7 +12,8 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 
 ## When to Use This Skill
 
-- Creating B2 history modules (M26-40): Ukrainian history from Kyivan Rus to present
+- Creating B2 history modules (M71-131): Ukrainian history from Origins to Present
+- Creating B2 synthesis modules (M83, M107, M119, M125, M131): Cross-era analysis
 - Creating C1 biography modules (M36-100): 65 Ukrainian historical & cultural figures
 - Working with primary sources and historical documents
 - Ensuring decolonization perspective and historical accuracy
@@ -23,10 +24,13 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 
 | Level | Template | Modules |
 |-------|----------|---------|
-| B2 | `docs/l2-uk-en/templates/b2-history-module-template.md` | M26-40 |
-| C1 | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100 |
+| B2 History | `docs/l2-uk-en/templates/b2-history-module-template.md` | M71-131 (excl. synthesis) |
+| B2 Synthesis | `docs/l2-uk-en/templates/b2-synthesis-module-template.md` | M83, M107, M119, M125, M131 |
+| C1 Biography | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100 |
 
 **CRITICAL:** Read the template BEFORE creating a module.
+
+> **Note:** Synthesis modules replace traditional checkpoints in B2.3 History. They test cross-era analysis and historical argumentation, not recall. See GitHub issue #332.
 
 ---
 
@@ -79,9 +83,13 @@ Every historical/biographical module must include:
 
 | Phase | Modules | Era |
 |-------|---------|-----|
-| B2.3 | M26-30 | Kyivan Rus and medieval Ukraine |
-| B2.3 | M31-35 | Cossack era (Hetmanate) |
-| B2.3 | M36-40 | Imperial era to independence |
+| B2.3a | M71-83 | Origins → Commonwealth (Trypillia to Lithuania) |
+| B2.3b | M84-107 | Cossack Era & Empire (Sich to 1920s) |
+| B2.3c | M108-119 | Trauma & Resistance (Executed Renaissance to Diaspora) |
+| B2.3d | M120-125 | Independence Era (1991-2013) |
+| B2.3e | M126-131 | Revolution & War (2014-present) |
+
+**Synthesis Modules:** M83, M107, M119, M125, M131 — cross-era analysis
 
 ---
 

@@ -1,0 +1,1416 @@
+module: 36-word-formation-adjective-formation
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/36-word-formation-adjective-formation.md
+generated: '2025-12-29T18:16:40.383892'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це україніанський національний музей.
+  error: україніанський
+  answer: український
+  sentence_corrected: Це український національний музей.
+  options:
+  - україніанський
+  - український
+  - українальний
+  - україняний
+  original_explanation: Правильно — "український" (від "Україна" + суфікс -ський).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Він має німечинську освіту.
+  error: німечинську
+  answer: німецьку
+  sentence_corrected: Він має німецьку освіту.
+  options:
+  - німечинську
+  - німецьку
+  - німеччинську
+  - німецяку
+  original_explanation: Правильно — "німецьку" (від "Німеччина" з чергуванням ч→ц).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це синьожовтий прапор України.
+  error: синьожовтий
+  answer: синьо-жовтий
+  sentence_corrected: Це синьо-жовтий прапор України.
+  options:
+  - синьожовтий
+  - синьо-жовтий
+  - синьо жовтий
+  - синій-жовтий
+  original_explanation: Прикметники на позначення кольорів пишуться через дефіс —
+    "синьо-жовтий".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Вона має темно-волосе волосся.
+  error: темно-волосе
+  answer: темноволосе
+  sentence_corrected: Вона має темноволосе волосся.
+  options:
+  - темно-волосе
+  - темноволосе
+  - темно волосе
+  - темне-волосе
+  original_explanation: Прикметники зовнішності пишуться разом — "темноволосе" (від
+    "темний" + "волосся").
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це націяльний парк.
+  error: націяльний
+  answer: національний
+  sentence_corrected: Це національний парк.
+  options:
+  - націяльний
+  - національний
+  - націонний
+  - національний
+  original_explanation: Правильно — "національний" (від "нація" + суфікс -альний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Вона працює в центряній бібліотеці.
+  error: центряній
+  answer: центральній
+  sentence_corrected: Вона працює в центральній бібліотеці.
+  options:
+  - центряній
+  - центральній
+  - центровій
+  - центрійній
+  original_explanation: Правильно — "центральній" (від "центр" + суфікс -альний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Він козакський гетьман.
+  error: козакський
+  answer: козацький
+  sentence_corrected: Він козацький гетьман.
+  options:
+  - козакський
+  - козацький
+  - козачий
+  - козаковий
+  original_explanation: Правильно — "козацький" (від "козак" з чергуванням к→ц).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це професіяний підхід.
+  error: професіяний
+  answer: професійний
+  sentence_corrected: Це професійний підхід.
+  options:
+  - професіяний
+  - професійний
+  - професіальний
+  - професійський
+  original_explanation: Правильно — "професійний" (від "професія" + суфікс -ний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Науково технічний прогрес важливий.
+  error: технічний
+  answer: науково-технічний
+  sentence_corrected: Науково науково-технічний прогрес важливий.
+  options:
+  - технічний
+  - науково-технічний
+  - науковотехнічний
+  - науковий-технічний
+  original_explanation: Складні прикметники від двох рівноправних понять пишуться
+    через дефіс — "науково-технічний".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Він добро-сердечна людина.
+  error: добро-сердечна
+  answer: добросердечна
+  sentence_corrected: Він добросердечна людина.
+  options:
+  - добро-сердечна
+  - добросердечна
+  - добра-сердечна
+  - добре-сердечна
+  original_explanation: Прикметники якості характеру пишуться разом — "добросердечна".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це містова рада.
+  error: містова
+  answer: міська
+  sentence_corrected: Це міська рада.
+  options:
+  - містова
+  - міська
+  - місточна
+  - містяна
+  original_explanation: Правильно — "міська" (від "місто" + суфікс -ський).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це селовий побут.
+  error: селовий
+  answer: сільський
+  sentence_corrected: Це сільський побут.
+  options:
+  - селовий
+  - сільський
+  - селяний
+  - селочний
+  original_explanation: Правильно — "сільський" (від "село" з чергуванням е→і + суфікс
+    -ський).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Музика має музикований характер.
+  error: музикований
+  answer: музикальний
+  sentence_corrected: Музика має музикальний характер.
+  options:
+  - музикований
+  - музикальний
+  - музиковий
+  - музичальний
+  original_explanation: Правильно — "музикальний" або "музичний" (від "музика" + суфікс
+    -альний/-ний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це системовий підхід.
+  error: системовий
+  answer: системний
+  sentence_corrected: Це системний підхід.
+  options:
+  - системовий
+  - системний
+  - системальний
+  - систематий
+  original_explanation: Правильно — "системний" (від "система" + суфікс -ний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це комплексовий аналіз.
+  error: комплексовий
+  answer: комплексний
+  sentence_corrected: Це комплексний аналіз.
+  options:
+  - комплексовий
+  - комплексний
+  - комплексальний
+  - комплексичний
+  original_explanation: Правильно — "комплексний" (від "комплекс" + суфікс -ний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у прикметниках
+  sentence_with_error: Це первіснє поселення.
+  error: первіснє
+  answer: первісне
+  sentence_corrected: Це первісне поселення.
+  options:
+  - первіснє
+  - первісне
+  - первісньє
+  - первіснеє
+  original_explanation: Правильно — "первісне" (середній рід від "первісний").
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ музей мистецтва (від "нація").
+  answer: національний
+  complete_sentence: Це національний музей мистецтва (від "нація").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Він працює в ___ раді (від "місто").
+  answer: міській
+  complete_sentence: Він працює в міській раді (від "місто").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Вона носить ___ вишиванку (від "Україна").
+  answer: українську
+  complete_sentence: Вона носить українську вишиванку (від "Україна").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ побут населення (від "село").
+  answer: сільський
+  complete_sentence: Це сільський побут населення (від "село").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Він має ___ досвід у цій галузі (від "професія").
+  answer: професійний
+  complete_sentence: Він має професійний досвід у цій галузі (від "професія").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Вона працює в ___ бібліотеці (від "центр").
+  answer: центральній
+  complete_sentence: Вона працює в центральній бібліотеці (від "центр").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ автомобіль виробництва (від "Німеччина").
+  answer: німецький
+  complete_sentence: Це німецький автомобіль виробництва (від "Німеччина").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Вона має ___ освіту (від "музика").
+  answer: музичну
+  complete_sentence: Вона має музичну освіту (від "музика").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ принцип роботи (від "основа").
+  answer: основний
+  complete_sentence: Це основний принцип роботи (від "основа").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Він займає ___ посаду (від "голова").
+  answer: головну
+  complete_sentence: Він займає головну посаду (від "голова").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ матеріал для вивчення (від "додаток").
+  answer: додатковий
+  complete_sentence: Це додатковий матеріал для вивчення (від "додаток").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Вона виконує ___ функції (від "допомога").
+  answer: допоміжні
+  complete_sentence: Вона виконує допоміжні функції (від "допомога").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ завдання для студентів (від "складність").
+  answer: складне
+  complete_sentence: Це складне завдання для студентів (від "складність").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Рішення виявилося ___ (від "простота").
+  answer: простим
+  complete_sentence: Рішення виявилося простим (від "простота").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Потрібен ___ підхід до проблеми (від "система").
+  answer: системний
+  complete_sentence: Потрібен системний підхід до проблеми (від "система").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть правильний суфікс для утворення прикметника
+  sentence_template: Це ___ дослідження питання (від "комплекс").
+  answer: комплексне
+  complete_sentence: Це комплексне дослідження питання (від "комплекс").
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Державний прапор України має _____ кольори.
+  answer: синьо-жовті
+  complete_sentence: Державний прапор України має синьо-жовті__ кольори.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Вона має _____ волосся та світлі очі.
+  answer: темноволосе
+  complete_sentence: Вона має темноволосе__ волосся та світлі очі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Це _____ підхід до вивчення історії.
+  answer: науково-історичний
+  complete_sentence: Це науково-історичний__ підхід до вивчення історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Він — _____ людина, яка завжди допомагає.
+  answer: добросердечна
+  complete_sentence: Він — добросердечна__ людина, яка завжди допомагає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Музей представляє _____ колекцію.
+  answer: різноманітну
+  complete_sentence: Музей представляє різноманітну__ колекцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Це _____ культура українського народу.
+  answer: самобутня
+  complete_sentence: Це самобутня__ культура українського народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Художник має _____ стиль малювання.
+  answer: своєрідний
+  complete_sentence: Художник має своєрідний__ стиль малювання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Це _____ дівчина з українськими традиціями.
+  answer: чорноброва
+  complete_sentence: Це чорноброва__ дівчина з українськими традиціями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: У нього _____ очі — як небо.
+  answer: синьоокі
+  complete_sentence: У нього синьоокі__ очі — як небо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Експонат має _____ цінність.
+  answer: історико-культурну
+  complete_sentence: Експонат має історико-культурну__ цінність.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Регіон переживає _____ зміни.
+  answer: соціально-економічні
+  complete_sentence: Регіон переживає соціально-економічні__ зміни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Це _____ дослідження проблеми.
+  answer: медико-біологічне
+  complete_sentence: Це медико-біологічне__ дослідження проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Вона носить _____ блузку.
+  answer: світло-синю
+  complete_sentence: Вона носить світло-синю__ блузку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Фотографія має _____ тони.
+  answer: чорно-білі
+  complete_sentence: Фотографія має чорно-білі__ тони.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Це _____ скульптура античної доби.
+  answer: білолиця
+  complete_sentence: Це білолиця__ скульптура античної доби.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть складні прикметники
+  sentence_template: Вона — _____ мисткиня з великим талантом.
+  answer: темноока
+  complete_sentence: Вона — темноока__ мисткиня з великим талантом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Це самобутнє українське мистецтво.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Національний музей розташований у центральному районі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Синьо-жовтий прапор майорів на будівлі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Це відома професійна темноволоса художниця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: На виставці представлені різноманітні роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Добросердечні люди завжди допомагають іншим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Він вивчає німецьку мову в університеті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Регіон зберіг традиційний сільський побут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Ця проблема потребує системний підхід.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Науковці провели це комплексне дослідження.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Як функціонує міська бібліотека?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Це є основний принцип нашої роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Головний директор музею виголосив промову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Студентам надали допоміжні матеріали.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Це завдання виявилось дуже складне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з прикметниками
+  jumbled_words: []
+  answer: Українська культура має своєрідний характер.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який суфікс використано для творення прикметника "український" від іменника
+    "Україна"?
+  options:
+  - text: -ний
+    correct: false
+  - text: -ський
+    correct: true
+  - text: -альний
+    correct: false
+  - text: -овий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Яке чергування приголосних відбувається при творенні прикметника "німецький"
+    від "Німеччина"?
+  options:
+  - text: ч → ц
+    correct: true
+  - text: к → ц
+    correct: false
+  - text: г → з
+    correct: false
+  - text: Без чергування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який прикметник утворений від іменника "місто" за допомогою суфікса -ський?
+  options:
+  - text: містовий
+    correct: false
+  - text: міський
+    correct: true
+  - text: місточний
+    correct: false
+  - text: містяний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який суфікс використовується для творення прикметника "національний" від
+    "нація"?
+  options:
+  - text: -ський
+    correct: false
+  - text: -ний
+    correct: false
+  - text: -альний
+    correct: true
+  - text: -овий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який тип складного прикметника "синьо-жовтий" — через дефіс чи разом?
+  options:
+  - text: Через дефіс, бо позначає два кольори
+    correct: true
+  - text: Разом, бо це одне слово
+    correct: false
+  - text: Окремо, бо це два слова
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Як пишеться складний прикметник "темноволосий" — разом чи через дефіс?
+  options:
+  - text: Через дефіс (темно-волосий)
+    correct: false
+  - text: Разом (темноволосий)
+    correct: true
+  - text: Окремо (темно волосий)
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який прикметник означає "який має властивості системи"?
+  options:
+  - text: систематичний
+    correct: false
+  - text: системний
+    correct: true
+  - text: системовий
+    correct: false
+  - text: системальний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Чим відрізняється "музикальний" від "музичний"?
+  options:
+  - text: Значенням
+    correct: false
+  - text: Регістром (стилем)
+    correct: true
+  - text: Частиною мови
+    correct: false
+  - text: Нічим не відрізняється
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який суфікс використовується для творення прикметників від географічних
+    назв на -к, -г, -х?
+  options:
+  - text: -ський
+    correct: false
+  - text: -цький
+    correct: true
+  - text: -ний
+    correct: false
+  - text: -альний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Як утворюється прикметник "сільський" від іменника "село"?
+  options:
+  - text: село + -ський = сельський
+    correct: false
+  - text: село + -ський = сільський (з чергуванням е→і)
+    correct: true
+  - text: село + -ний = сільний
+    correct: false
+  - text: село + -овий = селовий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який складний прикметник означає "який має добре серце"?
+  options:
+  - text: добросерцевий
+    correct: false
+  - text: добросердечний
+    correct: true
+  - text: добре-сердечний
+    correct: false
+  - text: добросердний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Як пишеться складний прикметник "науково-публіцистичний"?
+  options:
+  - text: Разом (науковопубліцистичний)
+    correct: false
+  - text: Через дефіс (науково-публіцистичний)
+    correct: true
+  - text: Окремо (науково публіцистичний)
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Що означає прикметник "самобутній"?
+  options:
+  - text: Сам побутовий
+    correct: false
+  - text: Оригінальний, унікальний
+    correct: true
+  - text: Сам по собі існуючий
+    correct: false
+  - text: Побутовий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який прикметник є антонімом до "первісний"?
+  options:
+  - text: кінцевий
+    correct: false
+  - text: вторинний
+    correct: true
+  - text: останній
+    correct: false
+  - text: завершальний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Як утворюється прикметник "професійний" від іменника "професія"?
+  options:
+  - text: професія + -ний = професіяний
+    correct: false
+  - text: професія + -ний = професійний (з чергуванням)
+    correct: true
+  - text: професія + -альний = професіальний
+    correct: false
+  - text: професія + -ський = професійський
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розпізнавання словотвірних моделей
+  question: Який прикметник означає "такий, що охоплює всі аспекти"?
+  options:
+  - text: системний
+    correct: false
+  - text: комплексний
+    correct: true
+  - text: складний
+    correct: false
+  - text: повний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який суфікс є найпродуктивнішим для творення прикметників від назв країн?
+  options:
+  - text: -ний
+    correct: false
+  - text: -ський/-цький
+    correct: true
+  - text: -альний
+    correct: false
+  - text: -овий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: При творенні якого прикметника відбувається чергування к→ц?
+  options:
+  - text: український
+    correct: false
+  - text: німецький
+    correct: false
+  - text: козацький
+    correct: true
+  - text: міський
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який принцип визначає написання складного прикметника через дефіс?
+  options:
+  - text: Два рівноправні поняття
+    correct: true
+  - text: Ознака + частина тіла
+    correct: false
+  - text: Якість характеру
+    correct: false
+  - text: Будь-які два слова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як пишеться прикметник "білолиций"?
+  options:
+  - text: Через дефіс
+    correct: false
+  - text: Разом
+    correct: true
+  - text: Окремо
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Чим відрізняються "комплексний" і "системний"?
+  options:
+  - text: Однакові за значенням
+    correct: false
+  - text: '"Комплексний" — всебічний, "системний" — упорядкований'
+    correct: true
+  - text: '"Системний" — всебічний, "комплексний" — упорядкований'
+    correct: false
+  - text: Різняться лише стилем
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прикметник є книжним варіантом?
+  options:
+  - text: музичний
+    correct: false
+  - text: музикальний
+    correct: true
+  - text: музиковий
+    correct: false
+  - text: музикований
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Від якого слова утворений прикметник "самобутній"?
+  options:
+  - text: сам + бути
+    correct: true
+  - text: сам + побут
+    correct: false
+  - text: само + бутній
+    correct: false
+  - text: самий + бути
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Яке чергування відбувається при творенні "сільський" від "село"?
+  options:
+  - text: о→і
+    correct: false
+  - text: е→і
+    correct: true
+  - text: е→є
+    correct: false
+  - text: Без чергування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прикметник означає "початковий, первинний"?
+  options:
+  - text: вторинний
+    correct: false
+  - text: первісний
+    correct: true
+  - text: основний
+    correct: false
+  - text: головний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як пишеться складний прикметник "темно-зелений"?
+  options:
+  - text: Разом
+    correct: false
+  - text: Через дефіс
+    correct: true
+  - text: Окремо
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який суфікс використовується у прикметнику "професійний"?
+  options:
+  - text: -ський
+    correct: false
+  - text: -альний
+    correct: false
+  - text: -ний
+    correct: true
+  - text: -овий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прикметник НЕ є складним?
+  options:
+  - text: різноманітний
+    correct: false
+  - text: синьо-жовтий
+    correct: false
+  - text: національний
+    correct: true
+  - text: добросердечний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як правильно утворити прикметник від "Львів"?
+  options:
+  - text: львовий
+    correct: false
+  - text: львівський
+    correct: true
+  - text: львівний
+    correct: false
+  - text: львівальний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прикметник означає "особливий, відмінний від інших"?
+  options:
+  - text: самобутній
+    correct: false
+  - text: своєрідний
+    correct: true
+  - text: різноманітний
+    correct: false
+  - text: комплексний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Як пишеться прикметник "історико-культурний"?
+  options:
+  - text: Разом
+    correct: false
+  - text: Через дефіс
+    correct: true
+  - text: Окремо
+    correct: false
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань зі словотворення
+  question: Який прикметник є антонімом до "основний"?
+  options:
+  - text: головний
+    correct: false
+  - text: допоміжний
+    correct: true
+  - text: центральний
+    correct: false
+  - text: системний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "український" утворений від іменника "Україна" за допомогою
+    суфікса -ський.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "німецький" має суфікс -ецький.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Складні прикметники на позначення кольорів пишуться через дефіс.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "темноволосий" пишеться через дефіс.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Суфікс -альний є книжним варіантом суфікса -ний.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: '"Музикальний" і "музичний" — це синоніми з різним стилістичним забарвленням.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "козацький" утворений без чергування приголосних.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: '"Комплексний" і "системний" мають однакове значення.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "самобутній" означає "оригінальний, унікальний".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Складні прикметники типу "науково-технічний" пишуться разом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "сільський" утворений від "село" з чергуванням е→і.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Суфікс -ський є найпродуктивнішим для творення прикметників від географічних
+    назв.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: '"Первісний" і "вторинний" — це антоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: Прикметник "добросердечний" пишеться через дефіс.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: При творенні прикметника "професійний" від "професія" відбувається чергування.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила творення прикметників
+  statement: '"Різноманітний" — це простий, а не складний прикметник.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

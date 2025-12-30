@@ -1,0 +1,200 @@
+module: 71-trypillian-civilization
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/71-trypillian-civilization.md
+generated: '2025-12-30T10:00:00.000000'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Трипільська культура існувало на території України.
+  error: існувало
+  answer: існувала
+  sentence_corrected: Трипільська культура існувала на території України.
+  options:
+  - існувало
+  - існувала
+  - існували
+  - існує
+  original_explanation: Культура — жіночий рід, тому потрібна форма "існувала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Хвойка відкрив невідомий раніше культуру.
+  error: невідомий
+  answer: невідому
+  sentence_corrected: Хвойка відкрив невідому раніше культуру.
+  options:
+  - невідомий
+  - невідому
+  - невідоме
+  - невідомі
+  original_explanation: Культура — жіночий рід у знахідному відмінку, потрібна форма "невідому".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Кераміка прикрашувалося спіральним орнаментом.
+  error: прикрашувалося
+  answer: прикрашалася
+  sentence_corrected: Кераміка прикрашалася спіральним орнаментом.
+  options:
+  - прикрашувалося
+  - прикрашалася
+  - прикрашувалися
+  - прикрашався
+  original_explanation: Кераміка — жіночий рід, потрібна форма "прикрашалася".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Відкриття Хвойки мав величезне значення.
+  error: мав
+  answer: мало
+  sentence_corrected: Відкриття Хвойки мало величезне значення.
+  options:
+  - мав
+  - мало
+  - мала
+  - мали
+  original_explanation: Відкриття — середній рід, потрібна форма "мало".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Поселення Тальянки було одне з найбільших.
+  error: одне
+  answer: одним
+  sentence_corrected: Поселення Тальянки було одним з найбільших.
+  options:
+  - одне
+  - одним
+  - одна
+  - один
+  original_explanation: Потрібен орудний відмінок — "було одним з найбільших".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Території охоплювала від Карпат до Дніпро.
+  error: Дніпро
+  answer: Дніпра
+  sentence_corrected: Території охоплювала від Карпат до Дніпра.
+  options:
+  - Дніпро
+  - Дніпра
+  - Дніпру
+  - Дніпром
+  original_explanation: 'Після прийменника "до" потрібен родовий відмінок: "до Дніпра".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Російська імперія не була зацікавлений у дослідженнях.
+  error: зацікавлений
+  answer: зацікавлена
+  sentence_corrected: Російська імперія не була зацікавлена у дослідженнях.
+  options:
+  - зацікавлений
+  - зацікавлена
+  - зацікавлене
+  - зацікавлені
+  original_explanation: Імперія — жіночий рід, потрібна форма "зацікавлена".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Статуетки богині-матері стала популярним символом.
+  error: стала
+  answer: стали
+  sentence_corrected: Статуетки богині-матері стали популярним символом.
+  options:
+  - стала
+  - стали
+  - стало
+  - став
+  original_explanation: Статуетки — множина, потрібна форма "стали".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Трипілля спростовує міф про молоду нація.
+  error: нація
+  answer: націю
+  sentence_corrected: Трипілля спростовує міф про молоду націю.
+  options:
+  - нація
+  - націю
+  - нації
+  - нацією
+  original_explanation: 'Після прийменника "про" потрібен знахідний відмінок: "про націю".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Хвойка проводив розкопки біля село Трипілля.
+  error: село
+  answer: села
+  sentence_corrected: Хвойка проводив розкопки біля села Трипілля.
+  options:
+  - село
+  - села
+  - селу
+  - селом
+  original_explanation: 'Після прийменника "біля" потрібен родовий відмінок: "біля села".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Культура охоплювала величезний простори.
+  error: величезний простори
+  answer: величезні простори
+  sentence_corrected: Культура охоплювала величезні простори.
+  options:
+  - величезний простори
+  - величезні простори
+  - величезного простору
+  - величезним просторам
+  original_explanation: Простори — множина, потрібна форма "величезні простори".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null

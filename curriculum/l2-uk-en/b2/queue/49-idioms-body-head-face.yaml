@@ -1,0 +1,1194 @@
+module: 49-idioms-body-head-face
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/49-idioms-body-head-face.md
+generated: '2025-12-30T00:35:06.840104'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 32
+  unjumble: 16
+  quiz: 26
+  true-false: 16
+item_count: 98
+items:
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Голова йде крутом від цих новин.
+  error: крутом
+  answer: обертом
+  sentence_corrected: Голова йде обертом від цих новин.
+  options:
+  - крутом
+  - обертом
+  - колом
+  - навколо
+  original_explanation: Правильна форма — «Голова йде обертом». Варіант «голова йде
+    колом» також існує, але «крутом» — помилка.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Тримати язик у роті — важлива навичка.
+  error: у роті
+  answer: за зубами
+  sentence_corrected: Тримати язик за зубами — важлива навичка.
+  options:
+  - у роті
+  - за зубами
+  - за губами
+  - на місці
+  original_explanation: Правильна форма — «Тримати язик за зубами».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Він любить набивати кишені своїми успіхами.
+  error: кишені
+  answer: гудзі
+  sentence_corrected: Він любить набивати гудзі своїми успіхами.
+  options:
+  - кишені
+  - гудзі
+  - ціну
+  - очі
+  original_explanation: Правильна форма — «Набивати гудзі». «Набивати кишені» — інший
+    вираз (збагачуватися).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: На лекції студент клював головою від втоми.
+  error: головою
+  answer: носом
+  sentence_corrected: На лекції студент клював носом від втоми.
+  options:
+  - головою
+  - носом
+  - очима
+  - вухами
+  original_explanation: Правильна форма — «Клювати носом».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У неї великий язик — все всім розповідає.
+  error: великий
+  answer: довгий
+  sentence_corrected: У неї довгий язик — все всім розповідає.
+  options:
+  - великий
+  - довгий
+  - широкий
+  - товстий
+  original_explanation: Правильна форма — «Довгий язик».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У журналіста дуже злий язик.
+  error: злий
+  answer: гострий
+  sentence_corrected: У журналіста дуже гострий язик.
+  options:
+  - злий
+  - гострий
+  - поганий
+  - важкий
+  original_explanation: Правильна форма — «Гострий язик». «Злий на язик» також існує,
+    але правильний варіант — «злий на язик», а не «злий язик».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Вона крутила голову над задачею цілий день.
+  error: крутила
+  answer: ламала
+  sentence_corrected: Вона ламала голову над задачею цілий день.
+  options:
+  - крутила
+  - ламала
+  - била
+  - тримала
+  original_explanation: Правильна форма — «Ламати голову».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Він загубив голову від страху.
+  error: загубив
+  answer: втратив
+  sentence_corrected: Він втратив голову від страху.
+  options:
+  - загубив
+  - втратив
+  - забув
+  - покинув
+  original_explanation: Правильна форма — «Втратити голову».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Голова йде _____.
+  answer: обертом
+  complete_sentence: Голова йде обертом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Тримати язик _____.
+  answer: за зубами
+  complete_sentence: Тримати язик за зубами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Набивати _____.
+  answer: гудзі
+  complete_sentence: Набивати гудзі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Клювати _____.
+  answer: носом
+  complete_sentence: Клювати носом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Довгий _____.
+  answer: язик
+  complete_sentence: Довгий язик__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Гострий _____.
+  answer: язик
+  complete_sentence: Гострий язик__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Ламати _____.
+  answer: голову
+  complete_sentence: Ламати голову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Втратити _____.
+  answer: голову
+  complete_sentence: Втратити голову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Язик без _____.
+  answer: кісток
+  complete_sentence: Язик без кісток__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Морочити комусь _____.
+  answer: голову
+  complete_sentence: Морочити комусь голову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: З'їхати з _____.
+  answer: глузду
+  complete_sentence: З'їхати з глузду__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Закохатися по _____.
+  answer: вуха
+  complete_sentence: Закохатися по вуха__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Мати голову на _____.
+  answer: плечах
+  complete_sentence: Мати голову на плечах__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Тримати рот на _____.
+  answer: замку
+  complete_sentence: Тримати рот на замку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Сушити собі _____.
+  answer: голову
+  complete_sentence: Сушити собі голову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть фразеологізм
+  sentence_template: Не забивати собі _____.
+  answer: голову
+  complete_sentence: Не забивати собі голову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після трьох годин переговорів у мене _____.
+  answer: голова йшла обертом
+  complete_sentence: Після трьох годин переговорів у мене голова йшла обертом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: «Нікому не кажи!» — попросила подруга. «Обіцяю _____», — відповіла
+    я.
+  answer: тримати язик за зубами
+  complete_sentence: «Нікому не кажи!» — попросила подруга. «Обіцяю тримати язик за
+    зубами__», — відповіла я.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Він постійно хвалиться своєю машиною і квартирою. Любить _____.
+  answer: набивати гудзі
+  complete_sentence: Він постійно хвалиться своєю машиною і квартирою. Любить набивати
+    гудзі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: На лекції студент _____ — не спав усю ніч перед іспитом.
+  answer: клював носом
+  complete_sentence: На лекції студент клював носом__ — не спав усю ніч перед іспитом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Секретарка все всім розповідає. У неї _____.
+  answer: довгий язик
+  complete_sentence: Секретарка все всім розповідає. У неї довгий язик__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Журналістка славиться своїми дошкульними запитаннями. У неї _____.
+  answer: гострий язик
+  complete_sentence: Журналістка славиться своїми дошкульними запитаннями. У неї гострий
+    язик__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Інженер цілу ніч _____ над технічною проблемою, але знайшов рішення.
+  answer: ламав голову
+  complete_sentence: Інженер цілу ніч ламав голову__ над технічною проблемою, але
+    знайшов рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Коли почалася пожежа, деякі люди _____ і почали панікувати.
+  answer: втратили голову
+  complete_sentence: Коли почалася пожежа, деякі люди втратили голову__ і почали панікувати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Богдан _____ від нової колеги — не може думати ні про що інше.
+  answer: втратив голову
+  complete_sentence: Богдан втратив голову__ від нової колеги — не може думати ні
+    про що інше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Вона не пліткує і завжди _____ — їй можна довіряти секрети.
+  answer: тримає язик за зубами
+  complete_sentence: Вона не пліткує і завжди тримає язик за зубами__ — їй можна довіряти
+    секрети.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Він дуже розумний і завжди приймає правильні рішення. У нього
+    _____.
+  answer: голова на плечах
+  complete_sentence: Він дуже розумний і завжди приймає правильні рішення. У нього
+    голова на плечах__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Не слухай його критику — він просто _____ тобі.
+  answer: морочить голову
+  complete_sentence: Не слухай його критику — він просто морочить голову__ тобі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після новини про підвищення і премію у неї _____ від радості.
+  answer: голова йшла обертом
+  complete_sentence: Після новини про підвищення і премію у неї голова йшла обертом__
+    від радості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Не турбуйся про дрібниці — не _____ цим.
+  answer: забивай собі голову
+  complete_sentence: Не турбуйся про дрібниці — не забивай собі голову__ цим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Він так сильно закохався, що _____ по вуха.
+  answer: закохався
+  complete_sentence: Він так сильно закохався, що закохався__ по вуха.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Від такої кількості завдань у мене _____ — не знаю, за що братися.
+  answer: голова йде колом
+  complete_sentence: Від такої кількості завдань у мене голова йде колом__ — не знаю,
+    за що братися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Голова йде обертом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Тримати язик за зубами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Набивати гудзі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Клювати носом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Довгий язик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Гострий язик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Ламати голову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Втратити голову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Язик без кісток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Морочити комусь голову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: З'їхати з глузду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Закохатися по вуха.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Мати голову на плечах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Тримати рот на замку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Сушити собі голову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізм
+  jumbled_words: []
+  answer: Не забивати собі голову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке значення має фразеологізм «голова йде обертом» у переносному сенсі?
+  options:
+  - text: У людини паморочиться голова від хвороби.
+    correct: false
+  - text: Людина приголомшена або розгублена від надміру інформації чи вражень.
+    correct: true
+  - text: Людина крутить головою, щоб щось побачити.
+    correct: false
+  - text: Людина думає про багато речей одночасно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли найдоречніше використати фразеологізм «тримати язик за зубами»?
+  options:
+  - text: Коли хтось говорить з повним ротом.
+    correct: false
+  - text: Коли треба зберегти таємницю або не розголошувати інформацію.
+    correct: true
+  - text: Коли людина має проблеми з вимовою.
+    correct: false
+  - text: Коли хтось занадто голосно розмовляє.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає фразеологізм «набивати гудзі»?
+  options:
+  - text: Пришивати декоративні елементи на одяг.
+    correct: false
+  - text: Хвалитися та перебільшувати свої досягнення.
+    correct: true
+  - text: Збирати колекцію старовинних гудзиків.
+    correct: false
+  - text: Носити одяг з великою кількістю гудзиків.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: У якій ситуації найкраще використати фразеологізм «клювати носом»?
+  options:
+  - text: Коли хтось дрімає або засинає сидячи.
+    correct: true
+  - text: Коли людина занадто цікава і всюди сує носа.
+    correct: false
+  - text: Коли хтось їсть дуже повільно.
+    correct: false
+  - text: Коли людина киває головою під час розмови.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке з цих тверджень про фразеологізм «довгий язик» є правильним?
+  options:
+  - text: Це комплімент людині, яка добре говорить.
+    correct: false
+  - text: Це опис людини, яка занадто багато говорить і не вміє зберігати таємниці.
+    correct: true
+  - text: Це медичний термін про проблеми з мовленням.
+    correct: false
+  - text: Це похвала за красномовство.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає фразеологізм «гострий язик» у переносному значенні?
+  options:
+  - text: Людина має проблеми з язиком через хворобу.
+    correct: false
+  - text: Людина вміє дошкульно, їдко висловлюватися.
+    correct: true
+  - text: Людина говорить дуже тихо.
+    correct: false
+  - text: Людина часто кусає язика під час їжі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли використовують фразеологізм «ламати голову»?
+  options:
+  - text: Коли хтось отримав травму голови.
+    correct: false
+  - text: Коли людина напружено думає над складною проблемою.
+    correct: true
+  - text: Коли хтось масажує голову від болю.
+    correct: false
+  - text: Коли людина змінює зачіску.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке прислів'я найкраще описує ситуацію, коли людина сильно закохалася?
+  options:
+  - text: Голова йде обертом.
+    correct: false
+  - text: Втратити голову.
+    correct: true
+  - text: Ламати голову.
+    correct: false
+  - text: Тримати язик за зубами.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яку людину можна охарактеризувати як таку, що має «довгий язик»?
+  options:
+  - text: Людина, яка красиво говорить публічні промови.
+    correct: false
+  - text: Людина, яка розповідає всім чужі секрети.
+    correct: true
+  - text: Людина, яка знає багато іноземних мов.
+    correct: false
+  - text: Людина, яка мовчить більшість часу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що спільного у фразеологізмів «довгий язик» і «гострий язик»?
+  options:
+  - text: Обидва описують позитивні риси характеру.
+    correct: false
+  - text: Обидва стосуються манери мовлення та спілкування.
+    correct: true
+  - text: Обидва означають одне й те саме.
+    correct: false
+  - text: Обидва використовуються лише в офіційному мовленні.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Чим відрізняється «втратити голову» від «голова йде обертом»?
+  options:
+  - text: Нічим, це синоніми.
+    correct: false
+  - text: «Втратити голову» означає втрату контролю або закоханість, «голова йде обертом»
+      — приголомшення.
+    correct: true
+  - text: Обидва вживаються лише в медичному контексті.
+    correct: false
+  - text: Перше — позитивне, друге — негативне.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Який фразеологізм найкраще описує журналіста, який вміє ставити незручні
+    питання?
+  options:
+  - text: Довгий язик.
+    correct: false
+  - text: Тримати язик за зубами.
+    correct: false
+  - text: Гострий язик.
+    correct: true
+  - text: Клювати носом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: У якому контексті найдоречніше сказати «набивати гудзі»?
+  options:
+  - text: Коли хтось хвалиться досягненнями, яких насправді немає.
+    correct: true
+  - text: Коли людина скромно розповідає про свої успіхи.
+    correct: false
+  - text: Коли хтось купує дорогий одяг.
+    correct: false
+  - text: Коли людина допомагає іншим безкорисливо.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке походження має фразеологізм «клювати носом»?
+  options:
+  - text: Від спостереження за птахами, які клюють зерно.
+    correct: true
+  - text: Від старовинного обряду на весіллях.
+    correct: false
+  - text: Від медичного терміна.
+    correct: false
+  - text: Від назви старовинного танцю.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає вираз «голова йде обертом» після отримання хороших новин?
+  options:
+  - text: Людині стало погано від радості.
+    correct: false
+  - text: Людина настільки приголомшена позитивними подіями, що не може опам'ятатися.
+    correct: true
+  - text: Людина не вірить у хороші новини.
+    correct: false
+  - text: Людина хоче поділитися новинами з усіма.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Який фразеологізм підходить для опису людини, яка панікує в стресовій
+    ситуації?
+  options:
+  - text: Тримати язик за зубами.
+    correct: false
+  - text: Набивати гудзі.
+    correct: false
+  - text: Втратити голову.
+    correct: true
+  - text: Клювати носом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваш колега отримав стільки завдань, що не знає, за що братися. Який фразеологізм
+    описує його стан?
+  options:
+  - text: Тримати язик за зубами.
+    correct: false
+  - text: Голова йде обертом.
+    correct: true
+  - text: Клювати носом.
+    correct: false
+  - text: Набивати гудзі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Подруга попросила не розповідати її секрет нікому. Яким фразеологізмом
+    ви опишете свою обіцянку?
+  options:
+  - text: Буду набивати гудзі.
+    correct: false
+  - text: Буду тримати язик за зубами.
+    correct: true
+  - text: Буду ламати голову.
+    correct: false
+  - text: Буду клювати носом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Колега постійно хвалиться своїми досягненнями, хоча вони не такі вже й
+    великі. Який фразеологізм підходить?
+  options:
+  - text: Він любить набивати гудзі.
+    correct: true
+  - text: Він має гострий язик.
+    correct: false
+  - text: Він тримає язик за зубами.
+    correct: false
+  - text: Він клює носом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: На нудній нараді ваш сусід почав засинати. Який фразеологізм описує цю
+    ситуацію?
+  options:
+  - text: Він втратив голову.
+    correct: false
+  - text: Він ламає голову.
+    correct: false
+  - text: Він клює носом.
+    correct: true
+  - text: Він має довгий язик.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Секретарка розповіла всьому офісу конфіденційну інформацію. Який фразеологізм
+    її характеризує?
+  options:
+  - text: Вона має гострий язик.
+    correct: false
+  - text: Вона має довгий язик.
+    correct: true
+  - text: Вона тримає язик за зубами.
+    correct: false
+  - text: У неї голова йде обертом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Журналіст славиться своїми дошкульними питаннями на прес-конференціях.
+    Який фразеологізм його характеризує?
+  options:
+  - text: Він має довгий язик.
+    correct: false
+  - text: Він має гострий язик.
+    correct: true
+  - text: Він клює носом.
+    correct: false
+  - text: Він набиває гудзі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Інженер цілу ніч думав над складною технічною проблемою. Який фразеологізм
+    підходить?
+  options:
+  - text: Він клював носом.
+    correct: false
+  - text: Він ламав голову.
+    correct: true
+  - text: Він набивав гудзі.
+    correct: false
+  - text: Він тримав язик за зубами.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Після отримання поганих новин чоловік запанікував і не міг тверезо мислити.
+    Який фразеологізм описує його стан?
+  options:
+  - text: Він втратив голову.
+    correct: true
+  - text: Він клював носом.
+    correct: false
+  - text: У нього довгий язик.
+    correct: false
+  - text: Він набивав гудзі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Хлопець познайомився з дівчиною і тепер може думати тільки про неї. Який
+    фразеологізм підходить?
+  options:
+  - text: Він ламає голову.
+    correct: false
+  - text: Він втратив голову.
+    correct: true
+  - text: Він клює носом.
+    correct: false
+  - text: У нього голова йде обертом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Керівник порадив не розповідати про плани реорганізації до офіційного
+    оголошення. Який фразеологізм він використав?
+  options:
+  - text: Не набивайте гудзі.
+    correct: false
+  - text: Не клюйте носом.
+    correct: false
+  - text: Тримайте язик за зубами.
+    correct: true
+  - text: Не ламайте голову.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «голова йде обертом» використовують, коли людина відчуває
+    приголомшення від подій чи інформації.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «тримати язик за зубами» означає говорити дуже тихо.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Людина з «гострим язиком» завжди говорить неправду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «клювати носом» описує сонну людину, яка засинає сидячи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «набивати гудзі» має позитивне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: «Довгий язик» і «гострий язик» означають одне й те саме.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «ламати голову» використовують, коли хтось напружено думає
+    над проблемою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «втратити голову» завжди означає закоханість.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Соматичні фразеологізми — це вирази з назвами частин тіла.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «тримати язик за зубами» можна використовувати як пораду
+    зберегти секрет.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Людина, яка «клює носом», дуже уважно слухає співрозмовника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «голова йде обертом» може описувати як негативні, так і
+    позитивні емоції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «набивати гудзі» походить з часів, коли кількість гудзиків вказувала
+    на багатство.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «гострий язик» завжди вживається в негативному контексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вирази «ламати голову» і «сушити голову» є синонімами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «втратити голову» можна використовувати в офіційному діловому
+    листі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

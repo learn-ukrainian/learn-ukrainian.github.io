@@ -1,0 +1,1412 @@
+module: 33-word-formation-person-suffixes
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/33-word-formation-person-suffixes.md
+generated: '2025-12-29T18:41:12.057618'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Бібліотекер допоміг мені знайти книгу.
+  error: Бібліотекер
+  answer: Бібліотекар
+  sentence_corrected: Бібліотекар допоміг мені знайти книгу.
+  options:
+  - Бібліотекер
+  - Бібліотекар
+  - Бібліотекір
+  - Бібліотекор
+  original_explanation: Правильна форма — "бібліотекар" (суфікс -ар, не -ер).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Читатель залишив позитивний відгук про книгу.
+  error: Читатель
+  answer: Читач
+  sentence_corrected: Читач залишив позитивний відгук про книгу.
+  options:
+  - Читатель
+  - Читач
+  - Читальник
+  - Читець
+  original_explanation: Українська форма — "читач" (суфікс -ач). "Читатель" — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Робочий заводу отримав премію за якісну роботу.
+  error: Робочий
+  answer: Робітник
+  sentence_corrected: Робітник заводу отримав премію за якісну роботу.
+  options:
+  - Робочий
+  - Робітник
+  - Роботник
+  - Роботар
+  original_explanation: Правильна форма — "робітник" (суфікс -ник). "Робочий" — прикметник.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Слухатель курсів отримав сертифікат.
+  error: Слухатель
+  answer: Слухач
+  sentence_corrected: Слухач курсів отримав сертифікат.
+  options:
+  - Слухатель
+  - Слухач
+  - Слухальник
+  - Слухець
+  original_explanation: Українська форма — "слухач" (суфікс -ач). "Слухатель" — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Викладач університету провів цікаву лекцію.
+  error: none
+  answer: correct
+  sentence_corrected: Викладач університету провів цікаву лекцію.
+  options:
+  - Викладач
+  - Викладатель
+  - Викладник
+  - correct
+  original_explanation: Речення правильне. "Викладач" — правильна українська форма.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Науковник опублікував статтю у журналі.
+  error: Науковник
+  answer: Науковець
+  sentence_corrected: Науковець опублікував статтю у журналі.
+  options:
+  - Науковник
+  - Науковець
+  - Науковач
+  - Науковар
+  original_explanation: Правильна форма — "науковець" (суфікс -овець).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Письмовник презентував свою нову книгу.
+  error: Письмовник
+  answer: Письменник
+  sentence_corrected: Письменник презентував свою нову книгу.
+  options:
+  - Письмовник
+  - Письменник
+  - Письмар
+  - Письмач
+  original_explanation: Правильна форма — "письменник" (суфікс -ник).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Глядатель аплодував артистам стоячи.
+  error: Глядатель
+  answer: Глядач
+  sentence_corrected: Глядач аплодував артистам стоячи.
+  options:
+  - Глядатель
+  - Глядач
+  - Глядальник
+  - Глядець
+  original_explanation: Українська форма — "глядач" (суфікс -ач). "Глядатель" — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Споживатель має право на якісний товар.
+  error: Споживатель
+  answer: Споживач
+  sentence_corrected: Споживач має право на якісний товар.
+  options:
+  - Споживатель
+  - Споживач
+  - Споживальник
+  - Споживець
+  original_explanation: Українська форма — "споживач" (суфікс -ач). "Споживатель"
+    — русизм.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Дослідник здобув грант на дослідження.
+  error: none
+  answer: correct
+  sentence_corrected: Дослідник здобув грант на дослідження.
+  options:
+  - Дослідник
+  - Дослідач
+  - Дослідатель
+  - correct
+  original_explanation: Речення правильне. "Дослідник" — правильна українська форма.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Воротарь відбив пенальті у фінальному матчі.
+  error: Воротарь
+  answer: Воротар
+  sentence_corrected: Воротар відбив пенальті у фінальному матчі.
+  options:
+  - Воротарь
+  - Воротар
+  - Воротер
+  - Воротач
+  original_explanation: Правильна форма — "воротар" (без м'якого знака).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Працювальник компанії пройшов курси.
+  error: Працювальник
+  answer: Працівник
+  sentence_corrected: Працівник компанії пройшов курси.
+  options:
+  - Працювальник
+  - Працівник
+  - Працювач
+  - Працяр
+  original_explanation: Правильна форма — "працівник" (суфікс -ник).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Творитель нової ідеї отримав патент.
+  error: Творитель
+  answer: Творець
+  sentence_corrected: Творець нової ідеї отримав патент.
+  options:
+  - Творитель
+  - Творець
+  - Творач
+  - Творник
+  original_explanation: Українська форма — "творець" (суфікс -ець). "Творитель" —
+    неприродна форма.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Представник профспілки захищає права робітників.
+  error: none
+  answer: correct
+  sentence_corrected: Представник профспілки захищає права робітників.
+  options:
+  - Представник
+  - Представлятель
+  - Представач
+  - correct
+  original_explanation: Речення правильне. "Представник" — правильна українська форма.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Журналістка написала статтю про подію.
+  error: none
+  answer: correct
+  sentence_corrected: Журналістка написала статтю про подію.
+  options:
+  - Журналістка
+  - Журналісточка
+  - Журналістиня
+  - correct
+  original_explanation: Речення правильне. "Журналістка" — правильна форма жіночого
+    роду.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у словотворенні назв осіб
+  sentence_with_error: Мистецник створив унікальний твір.
+  error: Мистецник
+  answer: Митець
+  sentence_corrected: Митець створив унікальний твір.
+  options:
+  - Мистецник
+  - Митець
+  - Мистецар
+  - Мистецач
+  original_explanation: Правильна форма — "митець" (суфікс -ець).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто працює в бібліотеці, — це _____.
+  answer: бібліотекар
+  complete_sentence: Той, хто працює в бібліотеці, — це бібліотекар__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто читає книги, — це _____.
+  answer: читач
+  complete_sentence: Той, хто читає книги, — це читач__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто працює на заводі, — це _____.
+  answer: робітник
+  complete_sentence: Той, хто працює на заводі, — це робітник__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто викладає в університеті, — це _____.
+  answer: викладач
+  complete_sentence: Той, хто викладає в університеті, — це викладач__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто пише книги, — це _____.
+  answer: письменник
+  complete_sentence: Той, хто пише книги, — це письменник__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто дивиться телепередачі, — це _____.
+  answer: глядач
+  complete_sentence: Той, хто дивиться телепередачі, — це глядач__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто слухає лекції, — це _____.
+  answer: слухач
+  complete_sentence: Той, хто слухає лекції, — це слухач__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто працює з каменем, — це _____.
+  answer: каменяр
+  complete_sentence: Той, хто працює з каменем, — це каменяр__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто займається наукою, — це _____.
+  answer: науковець
+  complete_sentence: Той, хто займається наукою, — це науковець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто споживає товари, — це _____.
+  answer: споживач
+  complete_sentence: Той, хто споживає товари, — це споживач__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто доглядає за вівцями, — це _____.
+  answer: вівчар
+  complete_sentence: Той, хто доглядає за вівцями, — це вівчар__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто займається дослідженнями, — це _____.
+  answer: дослідник
+  complete_sentence: Той, хто займається дослідженнями, — це дослідник__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто створює нове, — це _____.
+  answer: творець
+  complete_sentence: Той, хто створює нове, — це творець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто працює в компанії, — це _____.
+  answer: працівник
+  complete_sentence: Той, хто працює в компанії, — це працівник__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто стоїть на воротах, — це _____.
+  answer: воротар
+  complete_sentence: Той, хто стоїть на воротах, — це воротар__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворіть назву особи
+  sentence_template: Той, хто пише для журналу, — це _____.
+  answer: журналіст
+  complete_sentence: Той, хто пише для журналу, — це журналіст__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Бібліотекар" утворено за моделлю іменник + _____.'
+  answer: -ар
+  complete_sentence: '"Бібліотекар" утворено за моделлю іменник + -ар__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Читач" утворено за моделлю дієслово + _____.'
+  answer: -ач
+  complete_sentence: '"Читач" утворено за моделлю дієслово + -ач__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Робітник" утворено за моделлю іменник + _____.'
+  answer: -ник
+  complete_sentence: '"Робітник" утворено за моделлю іменник + -ник__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Творець" утворено за моделлю дієслово + _____.'
+  answer: -ець
+  complete_sentence: '"Творець" утворено за моделлю дієслово + -ець__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Каменяр" утворено від слова _____ з суфіксом -яр.'
+  answer: камінь
+  complete_sentence: '"Каменяр" утворено від слова камінь__ з суфіксом -яр.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Викладач" утворено від слова _____ з суфіксом -ач.'
+  answer: викладати
+  complete_sentence: '"Викладач" утворено від слова викладати__ з суфіксом -ач.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Письменник" утворено від слова _____ з суфіксом -ник.'
+  answer: письмо
+  complete_sentence: '"Письменник" утворено від слова письмо__ з суфіксом -ник.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Науковець" утворено від слова _____ з суфіксом -овець.'
+  answer: наука
+  complete_sentence: '"Науковець" утворено від слова наука__ з суфіксом -овець.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: Суфікс -ар/-яр утворює назви осіб від _____.'
+  answer: іменників
+  complete_sentence: Суфікс -ар/-яр утворює назви осіб від іменників__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: Суфікс -ач утворює назви осіб від _____.'
+  answer: дієслів
+  complete_sentence: Суфікс -ач утворює назви осіб від дієслів__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Споживач" позначає того, хто _____.'
+  answer: споживає
+  complete_sentence: '"Споживач" позначає того, хто споживає__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Воротар" позначає того, хто охороняє _____.'
+  answer: ворота
+  complete_sentence: '"Воротар" позначає того, хто охороняє ворота__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: Іменники з суфіксом -ач мають _____ рід.'
+  answer: чоловічий
+  complete_sentence: Іменники з суфіксом -ач мають чоловічий__ рід.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Дослідник" — це той, хто займається _____.'
+  answer: дослідженнями
+  complete_sentence: '"Дослідник" — це той, хто займається дослідженнями__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: Суфікс -яр є варіантом суфікса -ар для основ на _____ приголосний.'
+  answer: м'який
+  complete_sentence: Суфікс -яр є варіантом суфікса -ар для основ на м'який__ приголосний.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте словотвірну модель
+  sentence_template: '"Журналіст" утворено з суфіксом _____, поширеним у європейських
+    мовах.'
+  answer: -іст
+  complete_sentence: '"Журналіст" утворено з суфіксом -іст__, поширеним у європейських
+    мовах.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Бібліотекар допоміг мені знайти рідкісну книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Викладач університету провів цікаву лекцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Читачі залишили позитивні відгуки про книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Науковець опублікував статтю у науковому журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Воротар відбив пенальті у фінальному матчі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Письменник презентував свою нову книгу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Слухачі курсів отримали сертифікати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Робітники заводу отримали премію за якісну роботу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Глядачі аплодували артистам стоячи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Журналіст взяв інтерв'ю у відомого письменника.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Споживач має право на якісний товар.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Дослідники роблять важливі відкриття для суспільства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Творець нової ідеї отримав патент.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Працівники компанії пройшли курси підвищення кваліфікації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Митці створюють твори, які надихають людей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення з назвами осіб
+  jumbled_words: []
+  answer: Представник профспілки захищає права робітників.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який суфікс використовується для утворення назв осіб від іменників, що
+    позначають професію?
+  options:
+  - text: -ість
+    correct: false
+  - text: -ар/-яр
+    correct: true
+  - text: -ння
+    correct: false
+  - text: -ок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Від якого слова утворено іменник «читач»?
+  options:
+  - text: читання
+    correct: false
+  - text: читати
+    correct: true
+  - text: читальня
+    correct: false
+  - text: читаний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який суфікс використано у слові «робітник»?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: false
+  - text: -ник
+    correct: true
+  - text: -ець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Яке слово позначає того, хто слухає?
+  options:
+  - text: слухання
+    correct: false
+  - text: слух
+    correct: false
+  - text: слухач
+    correct: true
+  - text: слухавка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який суфікс утворює назви осіб від дієслів?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: true
+  - text: -ник
+    correct: false
+  - text: -іст
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Від якого слова утворено іменник «воротар»?
+  options:
+  - text: ворота
+    correct: true
+  - text: воротити
+    correct: false
+  - text: вратар
+    correct: false
+  - text: ворог
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Яке слово НЕ є назвою особи?
+  options:
+  - text: письменник
+    correct: false
+  - text: читач
+    correct: false
+  - text: словник
+    correct: true
+  - text: робітник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який суфікс використано у слові «науковець»?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: false
+  - text: -ник
+    correct: false
+  - text: -овець
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Від якого слова утворено іменник «викладач»?
+  options:
+  - text: виклад
+    correct: false
+  - text: викладати
+    correct: true
+  - text: викладка
+    correct: false
+  - text: викладення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Яке слово позначає того, хто працює з каменем?
+  options:
+  - text: каменяр
+    correct: true
+  - text: камінник
+    correct: false
+  - text: каменач
+    correct: false
+  - text: камінщик
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який рід мають іменники з суфіксом -ач?
+  options:
+  - text: Жіночий
+    correct: false
+  - text: Середній
+    correct: false
+  - text: Чоловічий
+    correct: true
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Від якого слова утворено іменник «письменник»?
+  options:
+  - text: писати
+    correct: false
+  - text: письмо
+    correct: true
+  - text: писання
+    correct: false
+  - text: писар
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Яке слово позначає того, хто споживає товари?
+  options:
+  - text: споживання
+    correct: false
+  - text: споживач
+    correct: true
+  - text: споживчий
+    correct: false
+  - text: спожива
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Який суфікс використано у слові «журналіст»?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: false
+  - text: -ник
+    correct: false
+  - text: -іст
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Від якого слова утворено іменник «творець»?
+  options:
+  - text: творіння
+    correct: false
+  - text: творити
+    correct: true
+  - text: творчість
+    correct: false
+  - text: твір
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типу суфікса для назв осіб
+  question: Яке слово позначає того, хто доглядає за вівцями?
+  options:
+  - text: вівчар
+    correct: true
+  - text: вівник
+    correct: false
+  - text: вівач
+    correct: false
+  - text: вівець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Який суфікс найчастіше використовується для творення назв виконавців дії
+    від дієслів?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: true
+  - text: -ник
+    correct: false
+  - text: -ець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яка пара слів правильно ілюструє відношення «базове слово — назва особи»?
+  options:
+  - text: читання — читач
+    correct: false
+  - text: читати — читач
+    correct: true
+  - text: читальня — читач
+    correct: false
+  - text: читаний — читач
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке слово НЕ є назвою особи?
+  options:
+  - text: письменник
+    correct: false
+  - text: словник
+    correct: true
+  - text: робітник
+    correct: false
+  - text: працівник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Який рід мають усі назви осіб з суфіксом -ар/-яр?
+  options:
+  - text: Жіночий
+    correct: false
+  - text: Середній
+    correct: false
+  - text: Чоловічий
+    correct: true
+  - text: Залежить від контексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке слово є русизмом?
+  options:
+  - text: читач
+    correct: false
+  - text: читатель
+    correct: true
+  - text: слухач
+    correct: false
+  - text: глядач
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Від якого типу слів утворюються назви осіб з суфіксом -ар/-яр?
+  options:
+  - text: Від дієслів
+    correct: false
+  - text: Від іменників
+    correct: true
+  - text: Від прикметників
+    correct: false
+  - text: Від прислівників
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке слово утворено за іншою моделлю, ніж решта?
+  options:
+  - text: читач
+    correct: false
+  - text: слухач
+    correct: false
+  - text: бібліотекар
+    correct: true
+  - text: споживач
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яка правильна форма від дієслова «споживати»?
+  options:
+  - text: споживатель
+    correct: false
+  - text: споживач
+    correct: true
+  - text: споживальник
+    correct: false
+  - text: споживець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Який суфікс використано у слові «науковець»?
+  options:
+  - text: -ець
+    correct: false
+  - text: -овець
+    correct: true
+  - text: -ник
+    correct: false
+  - text: -ач
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яка різниця між «письменник» і «писар»?
+  options:
+  - text: Це синоніми
+    correct: false
+  - text: '"Письменник" — автор книг, "писар" — той, хто переписує'
+    correct: true
+  - text: '"Писар" — автор книг, "письменник" — той, хто переписує'
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке слово утворено від іменника «камінь»?
+  options:
+  - text: камінник
+    correct: false
+  - text: каменяр
+    correct: true
+  - text: камінач
+    correct: false
+  - text: камінець
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Який суфікс позначає рід занять або роль?
+  options:
+  - text: -ар
+    correct: false
+  - text: -ач
+    correct: false
+  - text: -ник
+    correct: true
+  - text: -ість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке речення містить помилку у назві особи?
+  options:
+  - text: Читач залишив відгук про книгу.
+    correct: false
+  - text: Слухатель курсів отримав сертифікат.
+    correct: true
+  - text: Викладач провів лекцію.
+    correct: false
+  - text: Науковець опублікував статтю.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Скільки основних суфіксів для творення назв осіб розглянуто в модулі?
+  options:
+  - text: Один
+    correct: false
+  - text: Два
+    correct: false
+  - text: Три
+    correct: true
+  - text: Чотири
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Яке слово є запозиченням, а не українським словотворенням?
+  options:
+  - text: бібліотекар
+    correct: false
+  - text: читач
+    correct: false
+  - text: майстер
+    correct: true
+  - text: робітник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про назви осіб
+  question: Від якого слова утворено іменник «дослідник»?
+  options:
+  - text: дослід
+    correct: false
+  - text: дослідити
+    correct: true
+  - text: дослідження
+    correct: false
+  - text: досліджувати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -ар/-яр використовується для утворення назв осіб від іменників.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -ач утворює назви осіб від прикметників.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Словник" — це назва особи, яка працює зі словами.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Іменники з суфіксом -ач мають чоловічий рід.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -ник може утворювати назви осіб як від іменників, так і від дієслів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Воротар" утворено від дієслова "воротити".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -яр є варіантом суфікса -ар для основ на м'який приголосний.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Письменник" утворено від дієслова "писати".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -овець/-івець є варіантом суфікса -ник.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Глядач" — це той, хто глядить (дивиться).'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Журналіст" утворено за українською словотвірною моделлю.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Усі назви осіб з суфіксом -ар мають чоловічий рід.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Творець" і "творач" — це синоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Від одного кореня можна утворити назви осіб з різними суфіксами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: '"Майстер" — це українське слово з суфіксом -ер.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила словотворення назв осіб
+  statement: Суфікс -ач завжди додається до основи дієслова.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,1556 @@
+module: 26-politics-government-vocabulary
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/26-politics-government-vocabulary.md
+generated: '2025-12-29T22:47:23.566757'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 113
+items:
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Президент ухвалив новий закон про освіту.
+  error: ухвалив
+  answer: підписав
+  sentence_corrected: Президент підписав новий закон про освіту.
+  options:
+  - ухвалив
+  - підписав
+  - прийняв
+  - видав
+  original_explanation: Закони ухвалює парламент, а Президент їх підписує.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Кабінет Міністрів видав указ про підвищення зарплат.
+  error: указ
+  answer: постанову
+  sentence_corrected: Кабінет Міністрів видав постанову про підвищення зарплат.
+  options:
+  - указ
+  - постанову
+  - закон
+  - рішення
+  original_explanation: Укази видає Президент, а Кабінет Міністрів — постанови.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Верховна Рада призначила нового Президента.
+  error: призначила
+  answer: обрала
+  sentence_corrected: Верховна Рада обрала нового Президента.
+  options:
+  - призначила
+  - обрала
+  - затвердила
+  - встановила
+  original_explanation: Президента обирають громадяни на виборах, а не призначає парламент.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Опозиція сформувала уряд після виборів.
+  error: Опозиція
+  answer: Коаліція
+  sentence_corrected: Коаліція сформувала уряд після виборів.
+  options:
+  - Опозиція
+  - Коаліція
+  - Партія
+  - Фракція
+  original_explanation: Уряд формує коаліція (більшість), а не опозиція.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Прем'єр-міністр є Верховним Головнокомандувачем Збройних Сил.
+  error: Прем'єр-міністр
+  answer: Президент
+  sentence_corrected: Президент є Верховним Головнокомандувачем Збройних Сил.
+  options:
+  - Прем'єр-міністр
+  - Президент
+  - Міністр оборони
+  - Спікер
+  original_explanation: Верховним Головнокомандувачем є Президент України.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Конституційний Суд ухвалює закони.
+  error: ухвалює закони
+  answer: перевіряє закони на відповідність Конституції
+  sentence_corrected: Конституційний Суд перевіряє закони на відповідність Конституції.
+  options:
+  - ухвалює закони
+  - перевіряє закони на відповідність Конституції
+  - призначає суддів
+  - розглядає справи
+  original_explanation: Конституційний Суд не ухвалює закони, а перевіряє їх конституційність.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Депутати обираються на 4 роки.
+  error: 4 роки
+  answer: 5 років
+  sentence_corrected: Депутати обираються на 5 років.
+  options:
+  - 4 роки
+  - 5 років
+  - 6 років
+  - 7 років
+  original_explanation: Термін повноважень народних депутатів — 5 років.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Для подолання вето потрібна проста більшість голосів.
+  error: проста більшість
+  answer: дві третини
+  sentence_corrected: Для подолання вето потрібна дві третини голосів.
+  options:
+  - проста більшість
+  - дві третини
+  - три чверті
+  - одноголосність
+  original_explanation: Для подолання вето потрібні голоси двох третин депутатів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Референдум проводить Кабінет Міністрів.
+  error: Кабінет Міністрів
+  answer: Центральна виборча комісія
+  sentence_corrected: Референдум проводить Центральна виборча комісія.
+  options:
+  - Кабінет Міністрів
+  - Центральна виборча комісія
+  - Президент
+  - Парламент
+  original_explanation: Референдум організовує Центральна виборча комісія.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Санкції — це нагороди для дипломатів.
+  error: нагороди
+  answer: обмежувальні заходи
+  sentence_corrected: Санкції — це обмежувальні заходи для дипломатів.
+  options:
+  - нагороди
+  - обмежувальні заходи
+  - премії
+  - звання
+  original_explanation: Санкції — це обмежувальні заходи, а не нагороди.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Посол представляє уряд іншої країни.
+  error: уряд іншої країни
+  answer: свою країну в іншій державі
+  sentence_corrected: Посол представляє свою країну в іншій державі.
+  options:
+  - уряд іншої країни
+  - свою країну в іншій державі
+  - міжнародну організацію
+  - парламент
+  original_explanation: Посол представляє свою країну в іншій державі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Корупція — це законний спосіб вирішення проблем.
+  error: законний
+  answer: протиправний
+  sentence_corrected: Корупція — це протиправний спосіб вирішення проблем.
+  options:
+  - законний
+  - протиправний
+  - нормальний
+  - звичайний
+  original_explanation: Корупція — це зловживання владою, що є злочином.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Демократія означає владу однієї партії.
+  error: однієї партії
+  answer: народу
+  sentence_corrected: Демократія означає владу народу.
+  options:
+  - однієї партії
+  - народу
+  - президента
+  - уряду
+  original_explanation: Демократія — це народовладдя, влада належить народу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Права людини можуть бути скасовані законом.
+  error: скасовані
+  answer: обмежені
+  sentence_corrected: Права людини можуть бути обмежені законом.
+  options:
+  - скасовані
+  - обмежені
+  - змінені
+  - передані
+  original_explanation: Фундаментальні права людини є невідчужуваними, їх можна лише
+    обмежити в певних випадках.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Свобода слова означає право говорити будь-що без наслідків.
+  error: без наслідків
+  answer: з відповідальністю за зміст
+  sentence_corrected: Свобода слова означає право говорити будь-що з відповідальністю
+    за зміст.
+  options:
+  - без наслідків
+  - з відповідальністю за зміст
+  - анонімно
+  - таємно
+  original_explanation: Свобода слова не звільняє від відповідальності за наклеп чи
+    розпалювання ненависті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки в політичних текстах
+  sentence_with_error: Переговори завершуються завжди угодою.
+  error: завжди
+  answer: не завжди
+  sentence_corrected: Переговори завершуються не завжди угодою.
+  options:
+  - завжди
+  - не завжди
+  - ніколи
+  - рідко
+  original_explanation: Переговори не завжди завершуються успішно.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Верховна Рада ухвалила новий {blank} про освіту.
+  answer: закон
+  complete_sentence: Верховна Рада ухвалила новий закон про освіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Президент наклав {blank} на законопроект.
+  answer: вето
+  complete_sentence: Президент наклав вето на законопроект.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: '{blank} — це об''єднання фракцій з більшістю голосів у парламенті.'
+  answer: Коаліція
+  complete_sentence: Коаліція — це об'єднання фракцій з більшістю голосів у парламенті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Кабінет Міністрів прийняв {blank} про підвищення пенсій.
+  answer: постанову
+  complete_sentence: Кабінет Міністрів прийняв постанову про підвищення пенсій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: На {blank} за кандидата проголосували 60% виборців.
+  answer: виборах
+  complete_sentence: На виборах за кандидата проголосували 60% виборців.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Новий {blank} призначений главою Міністерства освіти.
+  answer: міністр
+  complete_sentence: Новий міністр призначений главою Міністерства освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: '{blank} критикує дії уряду та пропонує альтернативи.'
+  answer: Опозиція
+  complete_sentence: Опозиція критикує дії уряду та пропонує альтернативи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Президент видав {blank} про мобілізацію.
+  answer: указ
+  complete_sentence: Президент видав указ про мобілізацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Україна та ЄС підписали {blank} про асоціацію.
+  answer: угоду
+  complete_sentence: Україна та ЄС підписали угоду про асоціацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: За порушення Конституції можуть накласти {blank}.
+  answer: санкції
+  complete_sentence: За порушення Конституції можуть накласти санкції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: '{blank} України гарантує права і свободи громадян.'
+  answer: Конституція
+  complete_sentence: Конституція України гарантує права і свободи громадян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Після {blank} відбулось формування нового уряду.
+  answer: виборів
+  complete_sentence: Після виборів відбулось формування нового уряду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: '{blank} проводять переговори з іншими країнами.'
+  answer: Дипломати
+  complete_sentence: Дипломати проводять переговори з іншими країнами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Парламент проголосував за {blank} конституційних змін.
+  answer: ухвалення
+  complete_sentence: Парламент проголосував за ухвалення конституційних змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Уряд оголосив про початок широкої {blank}.
+  answer: реформи
+  complete_sentence: Уряд оголосив про початок широкої реформи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Політична лексика в контексті
+  sentence_template: Представник {blank} виступив із заявою від імені держави.
+  answer: уряду
+  complete_sentence: Представник уряду виступив із заявою від імені держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Україна та ЄС підписали {blank} про асоціацію.
+  answer: угоду
+  complete_sentence: Україна та ЄС підписали угоду про асоціацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: '{blank} України в США виступив із заявою.'
+  answer: Посол
+  complete_sentence: Посол України в США виступив із заявою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Країни ЄС накладали {blank} на агресора.
+  answer: санкції
+  complete_sentence: Країни ЄС накладали санкції на агресора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: '{blank} між країнами тривали три дні.'
+  answer: Переговори
+  complete_sentence: Переговори між країнами тривали три дні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Президенти підписали {blank} про припинення вогню.
+  answer: угоду
+  complete_sentence: Президенти підписали угоду про припинення вогню.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Міністр закордонних справ займається {blank}.
+  answer: дипломатією
+  complete_sentence: Міністр закордонних справ займається дипломатією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Країна опинилась у глибокій політичній {blank}.
+  answer: кризі
+  complete_sentence: Країна опинилась у глибокій політичній кризі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Збройний {blank} триває вже третій рік.
+  answer: конфлікт
+  complete_sentence: Збройний конфлікт триває вже третій рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Росія розпочала повномасштабну {blank} проти України.
+  answer: війну
+  complete_sentence: Росія розпочала повномасштабну війну проти України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: '{blank} — це представник держави в іншій країні.'
+  answer: Дипломат
+  complete_sentence: Дипломат — це представник держави в іншій країні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Сторони досягли {blank} після тривалих переговорів.
+  answer: компромісу
+  complete_sentence: Сторони досягли компромісу після тривалих переговорів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: ООН закликала до мирного {blank} конфлікту.
+  answer: врегулювання
+  complete_sentence: ООН закликала до мирного врегулювання конфлікту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Україна є {blank} ООН з 1945 року.
+  answer: членом
+  complete_sentence: Україна є членом ООН з 1945 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: '{blank} права людини є невід''ємними.'
+  answer: Фундаментальні
+  complete_sentence: Фундаментальні права людини є невід'ємними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: Суверенітет означає незалежність і {blank} держави.
+  answer: самостійність
+  complete_sentence: Суверенітет означає незалежність і самостійність держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Дипломатична лексика
+  sentence_template: '{blank} слова гарантується Конституцією.'
+  answer: Свобода
+  complete_sentence: Свобода слова гарантується Конституцією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Політична новина
+  passage_template: 'Учора {Верховна|Державна|Національна|Головна} Рада {ухвалила|відхилила|відклала|ігнорувала}
+    важливий {законопроект|указ|постанову|рішення} про реформу системи охорони здоров''я.
+    За рішення {проголосували|виступили|критикували|підтримали} 267 {депутатів|міністрів|суддів|послів}.
+
+
+    {Опозиція|Коаліція|Уряд|Президент} критикувала окремі положення документа. Лідер
+    {опозиційної|правлячої|нової|старої} фракції заявив, що закон не вирішує головних
+    проблем.
+
+
+    {Президент|Прем''єр-міністр|Спікер|Міністр} має 15 днів, щоб {підписати|ухвалити|прийняти|видати}
+    закон або накласти {вето|санкції|обмеження|заборону}. Якщо вето буде накладено,
+    парламент може його подолати {двома третинами|простою більшістю|одноголосно|половиною}
+    голосів.
+
+
+    Експерти називають голосування "{перемогою|поразкою|компромісом|провалом} {коаліції|опозиції|уряду|президента}".
+    Це вже третій важливий {законопроект|указ|вирок|договір}, який {уряд|опозиція|президент|суд}
+    провів через парламент цього місяця. {Демократія|Диктатура|Анархія|Монархія} потребує
+    активної участі громадян.
+
+    '
+  blanks:
+  - options:
+    - Верховна
+    - Державна
+    - Національна
+    - Головна
+    answer: Верховна
+  - options:
+    - ухвалила
+    - відхилила
+    - відклала
+    - ігнорувала
+    answer: ухвалила
+  - options:
+    - законопроект
+    - указ
+    - постанову
+    - рішення
+    answer: законопроект
+  - options:
+    - проголосували
+    - виступили
+    - критикували
+    - підтримали
+    answer: проголосували
+  - options:
+    - депутатів
+    - міністрів
+    - суддів
+    - послів
+    answer: депутатів
+  - options:
+    - Опозиція
+    - Коаліція
+    - Уряд
+    - Президент
+    answer: Опозиція
+  - options:
+    - опозиційної
+    - правлячої
+    - нової
+    - старої
+    answer: опозиційної
+  - options:
+    - Президент
+    - Прем'єр-міністр
+    - Спікер
+    - Міністр
+    answer: Президент
+  - options:
+    - підписати
+    - ухвалити
+    - прийняти
+    - видати
+    answer: підписати
+  - options:
+    - вето
+    - санкції
+    - обмеження
+    - заборону
+    answer: вето
+  - options:
+    - двома третинами
+    - простою більшістю
+    - одноголосно
+    - половиною
+    answer: двома третинами
+  - options:
+    - перемогою
+    - поразкою
+    - компромісом
+    - провалом
+    answer: перемогою
+  - options:
+    - коаліції
+    - опозиції
+    - уряду
+    - президента
+    answer: коаліції
+  - options:
+    - законопроект
+    - указ
+    - вирок
+    - договір
+    answer: законопроект
+  - options:
+    - уряд
+    - опозиція
+    - президент
+    - суд
+    answer: уряд
+  - options:
+    - Демократія
+    - Диктатура
+    - Анархія
+    - Монархія
+    answer: Демократія
+  complete_passage: 'Учора {Верховна|Державна|Національна|Головна} Рада {ухвалила|відхилила|відклала|ігнорувала}
+    важливий {законопроект|указ|постанову|рішення} про реформу системи охорони здоров''я.
+    За рішення {проголосували|виступили|критикували|підтримали} 267 {депутатів|міністрів|суддів|послів}.
+
+
+    {Опозиція|Коаліція|Уряд|Президент} критикувала окремі положення документа. Лідер
+    {опозиційної|правлячої|нової|старої} фракції заявив, що закон не вирішує головних
+    проблем.
+
+
+    {Президент|Прем''єр-міністр|Спікер|Міністр} має 15 днів, щоб {підписати|ухвалити|прийняти|видати}
+    закон або накласти {вето|санкції|обмеження|заборону}. Якщо вето буде накладено,
+    парламент може його подолати {двома третинами|простою більшістю|одноголосно|половиною}
+    голосів.
+
+
+    Експерти називають голосування "{перемогою|поразкою|компромісом|провалом} {коаліції|опозиції|уряду|президента}".
+    Це вже третій важливий {законопроект|указ|вирок|договір}, який {уряд|опозиція|президент|суд}
+    провів через парламент цього місяця. {Демократія|Диктатура|Анархія|Монархія} потребує
+    активної участі громадян.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Верховна Рада ухвалила закон про освіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Президент наклав вето на закон.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Коаліція отримала більшість голосів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Уряд оголосив про реформу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Опозиція критикує дії уряду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Призначено нового міністра освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Країни підписали угоду про співпрацю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Накладено санкції проти агресора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Розпочались дипломатичні переговори між країнами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Референдум про питання конституційних змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Президент видав указ про мобілізацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Кабінет Міністрів прийняв постанову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Конституція гарантує права громадян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Депутати обираються на п'ять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: В Україні три гілки влади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова політичних речень
+  jumbled_words: []
+  answer: Вдалось подолати політичну кризу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Яка форма правління в Україні?
+  options:
+  - text: Президентська республіка
+    correct: false
+  - text: Парламентсько-президентська республіка
+    correct: true
+  - text: Парламентська республіка
+    correct: false
+  - text: Конституційна монархія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Як називається парламент України?
+  options:
+  - text: Державна Дума
+    correct: false
+  - text: Національні Збори
+    correct: false
+  - text: Верховна Рада
+    correct: true
+  - text: Сейм
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Скільки депутатів входить до Верховної Ради?
+  options:
+  - text: 300
+    correct: false
+  - text: 400
+    correct: false
+  - text: 450
+    correct: true
+  - text: 500
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Хто очолює Кабінет Міністрів України?
+  options:
+  - text: Президент
+    correct: false
+  - text: Прем'єр-міністр
+    correct: true
+  - text: Спікер парламенту
+    correct: false
+  - text: Генеральний прокурор
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке коаліція в парламенті?
+  options:
+  - text: Партія більшості
+    correct: false
+  - text: Об'єднання фракцій з більшістю голосів
+    correct: true
+  - text: Опозиційні партії
+    correct: false
+  - text: Парламентський комітет
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке опозиція?
+  options:
+  - text: Правляча партія
+    correct: false
+  - text: Фракції, які не входять до коаліції
+    correct: true
+  - text: Уряд
+    correct: false
+  - text: Президентська партія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Який документ є основним законом України?
+  options:
+  - text: Указ Президента
+    correct: false
+  - text: Постанова уряду
+    correct: false
+  - text: Конституція
+    correct: true
+  - text: Закон про вибори
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке вето?
+  options:
+  - text: Право Президента відхилити закон
+    correct: true
+  - text: Голосування в парламенті
+    correct: false
+  - text: Постанова уряду
+    correct: false
+  - text: Рішення суду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Як парламент може подолати вето Президента?
+  options:
+  - text: Простою більшістю голосів
+    correct: false
+  - text: Двома третинами голосів
+    correct: true
+  - text: Одноголосно
+    correct: false
+  - text: Рішенням уряду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке референдум?
+  options:
+  - text: Вибори Президента
+    correct: false
+  - text: Парламентські вибори
+    correct: false
+  - text: Всенародне голосування з важливих питань
+    correct: true
+  - text: Засідання уряду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Хто призначає Прем'єр-міністра України?
+  options:
+  - text: Президент одноосібно
+    correct: false
+  - text: Верховна Рада за поданням Президента
+    correct: true
+  - text: Кабінет Міністрів
+    correct: false
+  - text: Конституційний Суд
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке фракція в парламенті?
+  options:
+  - text: Парламентський комітет
+    correct: false
+  - text: Група депутатів однієї партії
+    correct: true
+  - text: Коаліція партій
+    correct: false
+  - text: Опозиційний блок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Який термін повноважень Президента України?
+  options:
+  - text: 4 роки
+    correct: false
+  - text: 5 років
+    correct: true
+  - text: 6 років
+    correct: false
+  - text: 7 років
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке указ Президента?
+  options:
+  - text: Закон, ухвалений парламентом
+    correct: false
+  - text: Нормативний акт Президента
+    correct: true
+  - text: Рішення уряду
+    correct: false
+  - text: Судовий вирок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Хто представляє Україну на міжнародній арені?
+  options:
+  - text: Прем'єр-міністр
+    correct: false
+  - text: Спікер парламенту
+    correct: false
+  - text: Президент
+    correct: true
+  - text: Міністр закордонних справ
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Політична система України
+  question: Що таке постанова уряду?
+  options:
+  - text: Закон парламенту
+    correct: false
+  - text: Указ Президента
+    correct: false
+  - text: Нормативний акт Кабінету Міністрів
+    correct: true
+  - text: Рішення суду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Хто є гарантом Конституції України?
+  options:
+  - text: Прем'єр-міністр
+    correct: false
+  - text: Спікер парламенту
+    correct: false
+  - text: Президент
+    correct: true
+  - text: Голова Конституційного Суду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Який орган ухвалює закони в Україні?
+  options:
+  - text: Кабінет Міністрів
+    correct: false
+  - text: Верховна Рада
+    correct: true
+  - text: Президент
+    correct: false
+  - text: Верховний Суд
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що таке постанова уряду?
+  options:
+  - text: Закон парламенту
+    correct: false
+  - text: Указ Президента
+    correct: false
+  - text: Нормативний акт Кабінету Міністрів
+    correct: true
+  - text: Рішення суду
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Скільки голосів потрібно для подолання президентського вето?
+  options:
+  - text: Проста більшість (226)
+    correct: false
+  - text: Дві третини (300)
+    correct: true
+  - text: Три чверті (338)
+    correct: false
+  - text: Одноголосно (450)
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що означає слово "демократія"?
+  options:
+  - text: Влада президента
+    correct: false
+  - text: Влада народу
+    correct: true
+  - text: Влада партії
+    correct: false
+  - text: Влада армії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Хто представляє Україну в інших державах?
+  options:
+  - text: Депутати
+    correct: false
+  - text: Посли
+    correct: true
+  - text: Прокурори
+    correct: false
+  - text: Судді
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що таке санкції?
+  options:
+  - text: Нагороди
+    correct: false
+  - text: Обмежувальні заходи
+    correct: true
+  - text: Кредити
+    correct: false
+  - text: Угоди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яка основна функція опозиції?
+  options:
+  - text: Формувати уряд
+    correct: false
+  - text: Контролювати владу та пропонувати альтернативи
+    correct: true
+  - text: Призначати міністрів
+    correct: false
+  - text: Видавати укази
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Який регістр характерний для офіційних документів?
+  options:
+  - text: Розмовний
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що характерно для публіцистичного стилю в політичних новинах?
+  options:
+  - text: Канцеляризми
+    correct: false
+  - text: Оцінна лексика та риторичні питання
+    correct: true
+  - text: Терміни без пояснень
+    correct: false
+  - text: Юридичні формули
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що таке коаліція?
+  options:
+  - text: Опозиційні партії
+    correct: false
+  - text: Об'єднання фракцій з більшістю голосів
+    correct: true
+  - text: Парламентський комітет
+    correct: false
+  - text: Судовий орган
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Хто очолює Кабінет Міністрів?
+  options:
+  - text: Президент
+    correct: false
+  - text: Спікер
+    correct: false
+  - text: Прем'єр-міністр
+    correct: true
+  - text: Міністр оборони
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що таке референдум?
+  options:
+  - text: Вибори президента
+    correct: false
+  - text: Всенародне голосування
+    correct: true
+  - text: Засідання уряду
+    correct: false
+  - text: Судовий процес
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яке право гарантує свободу вираження думок?
+  options:
+  - text: Право на життя
+    correct: false
+  - text: Право на освіту
+    correct: false
+  - text: Свобода слова
+    correct: true
+  - text: Право на працю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що означає "корупція"?
+  options:
+  - text: Законна діяльність
+    correct: false
+  - text: Зловживання владою для особистої вигоди
+    correct: true
+  - text: Політична реформа
+    correct: false
+  - text: Дипломатична угода
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Скільки депутатів у Верховній Раді?
+  options:
+  - text: 300
+    correct: false
+  - text: 400
+    correct: false
+  - text: 450
+    correct: true
+  - text: 500
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Україна є парламентсько-президентською республікою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: До Верховної Ради входять 500 депутатів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Президент України є Верховним Головнокомандувачем Збройних Сил.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Прем'єр-міністра призначає Президент одноосібно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Кабінет Міністрів є вищим органом виконавчої влади.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Для подолання вето Президента потрібна проста більшість голосів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Конституційний Суд перевіряє закони на відповідність Конституції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Опозиція — це партії, які підтримують уряд.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Референдум — це форма прямої демократії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Указ — це нормативний акт Кабінету Міністрів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Депутати Верховної Ради обираються на 5 років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Посол представляє іншу країну в Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Корупція є злочином в Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Права людини можуть бути повністю скасовані законом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Коаліція формує уряд.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про політичну систему
+  statement: Фракція — це група депутатів різних партій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

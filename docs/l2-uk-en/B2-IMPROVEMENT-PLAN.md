@@ -1,8 +1,8 @@
 # B2 Improvement Plan
 
 **Status:** Ready for Implementation
-**Updated:** 2025-12-24 (Rebalanced)
-**Modules:** 110
+**Updated:** 2025-12-29 (145-module structure)
+**Modules:** 145
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Metric | Value |
 |--------|-------|
-| Total Modules | 110 |
+| Total Modules | 145 |
 | Built | 0 |
-| Remaining | 110 |
+| Remaining | 145 |
 | Immersion | 100% (full Ukrainian) |
 
 ---
@@ -26,17 +26,21 @@ All B2 modules use full immersion. English appears ONLY in:
 
 All instructions, explanations, content body, and activity feedback are in Ukrainian. Students learned all grammatical terminology at B1.
 
-### Module Structure (110 modules)
+### Module Structure (145 modules)
 
-| Phase | Modules | Content |
-|-------|---------|---------|
-| B2.1a | M01-30 | Grammar & Register (Passive, participles, syntax) |
-| B2.1b | M31-40 | Grammar Completion (Numerals, word formation, pronouns) |
-| B2.2 | M41-70 | Phraseology & Synonymy (Proverbs, idioms, synonyms) |
-| B2.3 | M71-95 | Ukrainian History (Medieval to present) |
-| B2.4 | M96-110 | Skills & Capstone |
+| Phase | Modules | Content | Notes |
+|-------|---------|---------|-------|
+| B2.1a | M01-30 | Grammar & Register (Passive, participles, syntax) | |
+| B2.1b | M31-40 | Grammar Completion (Numerals, word formation, pronouns) | |
+| B2.2 | M41-70 | Phraseology & Synonymy (Proverbs, idioms, synonyms) | |
+| B2.3a | M71-83 | History: Origins → Commonwealth | **M83** synthesis |
+| B2.3b | M84-107 | History: Cossack Era & Empire | **M107** synthesis |
+| B2.3c | M108-119 | History: Trauma & Resistance | **M119** synthesis |
+| B2.3d | M120-125 | History: Independence Era | **M125** synthesis |
+| B2.3e | M126-131 | History: Revolution & War | **M131** synthesis |
+| B2.4 | M132-145 | Skills & Capstone | **M145** capstone |
 
-> **Note:** Biographies (65 modules) and Folk Culture & Arts (25 modules) moved to C1 for better pedagogical progression.
+> **Note:** Biographies (65 modules) and Folk Culture & Arts (25 modules) moved to C1 for better pedagogical progression. History expanded to 61 modules (M71-131) with 5 synthesis modules replacing traditional checkpoints.
 
 ### Activity Requirements
 
@@ -44,9 +48,9 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 |-------------|----------------|-------|
 | Grammar (M01-40) | 14 | Complex, needs more practice |
 | Phraseology (M41-70) | 12 | Synonym/nuance focused |
-| History (M71-95) | 10-12 | Reading comprehension focused |
-| Skills (M96-110) | 12 | Academic writing, capstone |
-| Checkpoint | 15 | Comprehensive review |
+| History (M71-131) | 10-12 | Reading comprehension focused |
+| Synthesis (M83, M107, M119, M125, M131) | 14 | Cross-era analysis, not recall |
+| Skills (M132-145) | 12 | Academic writing, capstone |
 
 ### Vocabulary
 
@@ -56,15 +60,21 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 ---
 
-## Checkpoints
+## Checkpoints & Synthesis Modules
 
-| Module | Checkpoint | Covers |
-|--------|-----------|--------|
-| M30 | Grammar Checkpoint | Passive, participles, syntax (M01-29) |
-| M40 | Grammar Completion Check | Numerals, word formation, pronouns (M31-39) |
-| M70 | Phraseology Checkpoint | Idioms, proverbs, synonyms (M41-69) |
-| M95 | History Checkpoint | Ukrainian history (M71-94) |
-| M110 | B2 Final Exam | Full B2 assessment |
+| Module | Type | Covers |
+|--------|------|--------|
+| M30 | Checkpoint | Passive, participles, syntax (M01-29) |
+| M40 | Checkpoint | Numerals, word formation, pronouns (M31-39) |
+| M70 | Checkpoint | Idioms, proverbs, synonyms (M41-69) |
+| M83 | **Synthesis** | Origins → Commonwealth (M71-82) |
+| M107 | **Synthesis** | Cossack Era & Empire (M84-106) |
+| M119 | **Synthesis** | Trauma & Resistance (M108-118) |
+| M125 | **Synthesis** | Independence Era (M120-124) |
+| M131 | **Synthesis** | Revolution & War (M126-130) |
+| M145 | Capstone | Full B2 assessment |
+
+> **Synthesis vs Checkpoint:** Synthesis modules test cross-era analysis and historical argumentation, not recall. See `b2-synthesis-module-template.md`.
 
 ---
 
@@ -84,7 +94,7 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 |------|-------------|
 | Vocabulary finalization | Run `npm run vocab:rebuild` |
 | Cross-reference validation | Ensure history references don't precede teaching |
-| Final exam calibration | Verify M110 covers all B2 competencies |
+| Final exam calibration | Verify M145 covers all B2 competencies |
 
 ---
 
@@ -93,8 +103,8 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 1. **M01-30** (Grammar & Register) - Foundation
 2. **M31-40** (Grammar Completion) - Numerals, word formation
 3. **M41-70** (Phraseology) - Proverbs, idioms, synonyms
-4. **M71-95** (History) - Chronological Ukrainian history
-5. **M96-110** (Skills & Capstone) - Integration and final assessment
+4. **M71-131** (History) - Ukrainian history with 5 synthesis modules
+5. **M132-145** (Skills & Capstone) - Integration and final assessment
 
 ---
 
@@ -102,12 +112,12 @@ All instructions, explanations, content body, and activity feedback are in Ukrai
 
 Before marking B2 complete:
 
-- [ ] All 110 modules pass audit
+- [ ] All 145 modules pass audit
 - [ ] All modules pass pipeline (lint → generate → validate)
 - [ ] Vocabulary database rebuilt
-- [ ] All checkpoints in place
-- [ ] Capstone has full rubrics and model project
-- [ ] History sources verified
+- [ ] All checkpoints and synthesis modules in place
+- [ ] Capstone (M145) has full rubrics and model project
+- [ ] History sources verified (M71-131)
 
 ---
 

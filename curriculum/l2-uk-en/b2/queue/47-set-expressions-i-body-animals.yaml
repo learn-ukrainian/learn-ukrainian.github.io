@@ -1,0 +1,1323 @@
+module: 47-set-expressions-i-body-animals
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/47-set-expressions-i-body-animals.md
+generated: '2025-12-30T00:32:02.531180'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 26
+  true-false: 16
+item_count: 106
+items:
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Руки сверблять від нетерплячки почати роботу.
+  error: сверблять
+  answer: чешуться
+  sentence_corrected: Руки чешуться від нетерплячки почати роботу.
+  options:
+  - сверблять
+  - чешуться
+  - болять
+  - горять
+  original_explanation: Правильна форма — «руки чешуться», а не "сверблять".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Очі бігають від кількості варіантів у магазині.
+  error: бігають
+  answer: розбігаються
+  sentence_corrected: Очі розбігаються від кількості варіантів у магазині.
+  options:
+  - бігають
+  - розбігаються
+  - дивляться
+  - світяться
+  original_explanation: Правильна форма — «очі розбігаються».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Вуха сохнуть від його нарікань на роботу.
+  error: сохнуть
+  answer: в'януть
+  sentence_corrected: Вуха в'януть від його нарікань на роботу.
+  options:
+  - сохнуть
+  - в'януть
+  - болять
+  - горять
+  original_explanation: Правильна форма — «вуха в'януть».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Язик не крутиться сказати правду про ситуацію.
+  error: крутиться
+  answer: повертається
+  sentence_corrected: Язик не повертається сказати правду про ситуацію.
+  options:
+  - крутиться
+  - повертається
+  - рухається
+  - вертиться
+  original_explanation: Правильна форма — «язик не повертається».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Ніс не виріс ще керувати такою командою.
+  error: виріс
+  answer: дорос
+  sentence_corrected: Ніс не дорос ще керувати такою командою.
+  options:
+  - виріс
+  - дорос
+  - прийшов
+  - став
+  original_explanation: Правильна форма — «ніс не дорос».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Волосся піднімається від страху на голові.
+  error: піднімається
+  answer: стає дибки
+  sentence_corrected: Волосся стає дибки від страху на голові.
+  options:
+  - піднімається
+  - стає дибки
+  - встає
+  - росте
+  original_explanation: Правильна форма — «волосся стає дибки».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Серце не там де треба від тривоги.
+  error: не там де треба
+  answer: не на місці
+  sentence_corrected: Серце не на місці від тривоги.
+  options:
+  - не там де треба
+  - не на місці
+  - не тут
+  - не в грудях
+  original_explanation: Правильна форма — «серце не на місці».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Душа не хоче до цієї роботи зовсім.
+  error: не хоче
+  answer: не лежить
+  sentence_corrected: Душа не лежить до цієї роботи зовсім.
+  options:
+  - не хоче
+  - не лежить
+  - не йде
+  - не прагне
+  original_explanation: Правильна форма — «душа не лежить».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У нього справжня вовчий характер на роботі.
+  error: вовчий характер
+  answer: вовча натура
+  sentence_corrected: У нього справжня вовча натура на роботі.
+  options:
+  - вовчий характер
+  - вовча натура
+  - вовче серце
+  - вовча душа
+  original_explanation: Правильна форма — «вовча натура».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Грошей кішка наплакала до зарплати.
+  error: кішка
+  answer: кіт
+  sentence_corrected: Грошей кіт наплакала до зарплати.
+  options:
+  - кішка
+  - кіт
+  - собака
+  - миша
+  original_explanation: Правильна форма — «кіт наплакав».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Уся робота пішла псу під хвіст.
+  error: псу
+  answer: собаці
+  sentence_corrected: Уся робота пішла собаці під хвіст.
+  options:
+  - псу
+  - собаці
+  - коту
+  - вовку
+  original_explanation: Правильна форма — «собаці під хвіст».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Не варто купувати кішку в мішку.
+  error: кішку
+  answer: кота
+  sentence_corrected: Не варто купувати кота в мішку.
+  options:
+  - кішку
+  - кота
+  - пса
+  - зайця
+  original_explanation: Правильна форма — «купити кота в мішку».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Покажу тобі, де риби зимують!
+  error: риби
+  answer: раки
+  sentence_corrected: Покажу тобі, де раки зимують!
+  options:
+  - риби
+  - раки
+  - жаби
+  - карасі
+  original_explanation: Правильна форма — «де раки зимують».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Це станеться, коли жаба заспіває.
+  error: жаба заспіває
+  answer: рак свисне
+  sentence_corrected: Це станеться, коли рак свисне.
+  options:
+  - жаба заспіває
+  - рак свисне
+  - кіт замуркає
+  - птах полетить
+  original_explanation: Правильна форма — «коли рак свисне».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Після сварки вони лисицею дивляться.
+  error: лисицею
+  answer: вовком
+  sentence_corrected: Після сварки вони вовком дивляться.
+  options:
+  - лисицею
+  - вовком
+  - котом
+  - собакою
+  original_explanation: Правильна форма — «вовком дивитися».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Вона в колективі як чорна ворона.
+  error: чорна
+  answer: біла
+  sentence_corrected: Вона в колективі як біла ворона.
+  options:
+  - чорна
+  - біла
+  - сіра
+  - руда
+  original_explanation: Правильна форма — «біла ворона».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після місяця теорії студенти нарешті почнуть практику. «_____!»
+    — каже Марія.
+  answer: Руки чешуться
+  complete_sentence: Після місяця теорії студенти нарешті почнуть практику. «Руки
+    чешуться__!» — каже Марія.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: На різдвяному ярмарку _____ від кількості подарунків — що купити?
+  answer: очі розбігаються
+  complete_sentence: На різдвяному ярмарку очі розбігаються__ від кількості подарунків
+    — що купити?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Колега годину скаржився на начальство. «_____!» — подумала Оля.
+  answer: Вуха в'януть
+  complete_sentence: Колега годину скаржився на начальство. «Вуха в'януть__!» — подумала
+    Оля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Треба сказати правду, але _____ — вона буде дуже засмучена.
+  answer: язик не повертається
+  complete_sentence: Треба сказати правду, але язик не повертається__ — вона буде
+    дуже засмучена.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Двадцятирічний менеджер хотів керувати відділом. «_____ ще!»
+    — сказали старші.
+  answer: Ніс не дорос
+  complete_sentence: Двадцятирічний менеджер хотів керувати відділом. «Ніс не дорос__
+    ще!» — сказали старші.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Коли я прочитав новини про катастрофу, _____.
+  answer: волосся стало дибки
+  complete_sentence: Коли я прочитав новини про катастрофу, волосся стало дибки__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Донька поїхала в інше місто вчитися. _____ — як вона там?
+  answer: Серце не на місці
+  complete_sentence: Донька поїхала в інше місто вчитися. Серце не на місці__ — як
+    вона там?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Пропонували гарну зарплату, але _____ до офісної роботи.
+  answer: душа не лежить
+  complete_sentence: Пропонували гарну зарплату, але душа не лежить__ до офісної роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Новий директор звільнив половину команди. «_____», — казали працівники.
+  answer: Вовча натура
+  complete_sentence: Новий директор звільнив половину команди. «Вовча натура__», —
+    казали працівники.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: У мене грошей _____ — ледве на їжу вистачає.
+  answer: кіт наплакав
+  complete_sentence: У мене грошей кіт наплакав__ — ледве на їжу вистачає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Три роки роботи — і все _____! Компанія закрилася.
+  answer: собаці під хвіст
+  complete_sentence: Три роки роботи — і все собаці під хвіст__! Компанія закрилася.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Не варто наймати працівника без співбесіди — це _____!
+  answer: купити кота в мішку
+  complete_sentence: Не варто наймати працівника без співбесіди — це купити кота в
+    мішку__!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: «Якщо не здаси звіт вчасно, покажу тобі, _____!» — сказав начальник.
+  answer: де раки зимують
+  complete_sentence: «Якщо не здаси звіт вчасно, покажу тобі, де раки зимують__!»
+    — сказав начальник.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: «Коли ти прибереш у кімнаті?» — «_____!» — відповів підліток.
+  answer: Коли рак свисне
+  complete_sentence: «Коли ти прибереш у кімнаті?» — «Коли рак свисне__!» — відповів
+    підліток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після сварки брати _____ один на одного.
+  answer: вовком дивляться
+  complete_sentence: Після сварки брати вовком дивляться__ один на одного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: У сім'ї юристів Ольга стала художницею — справжня _____!
+  answer: біла ворона
+  complete_sentence: У сім'ї юристів Ольга стала художницею — справжня біла ворона__!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Ну що, як справи на роботі?» — «Грошей _____, ледве вистачає».
+  answer: кіт наплакав
+  complete_sentence: «Ну що, як справи на роботі?» — «Грошей кіт наплакав__, ледве
+    вистачає».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Ти хочеш їхати на цю вечірку?» — «Ні, _____».
+  answer: душа не лежить
+  complete_sentence: «Ти хочеш їхати на цю вечірку?» — «Ні, душа не лежить__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Чому ти не скажеш їй правду?» — «_____ образити».
+  answer: Язик не повертається
+  complete_sentence: «Чому ти не скажеш їй правду?» — «Язик не повертається__ образити».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Який телефон обрати?» — «Не знаю, _____!»
+  answer: очі розбігаються
+  complete_sentence: «Який телефон обрати?» — «Не знаю, очі розбігаються__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Коли він поверне гроші?» — «_____!»
+  answer: Коли рак свисне
+  complete_sentence: «Коли він поверне гроші?» — «Коли рак свисне__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Чому вони не розмовляють?» — «Після сварки _____ один на одного».
+  answer: вовком дивляться
+  complete_sentence: «Чому вони не розмовляють?» — «Після сварки вовком дивляться__
+    один на одного».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Як ти почуваєшся перед іспитом?» — «_____! Так хвилююся за оцінку».
+  answer: Серце не на місці
+  complete_sentence: «Як ти почуваєшся перед іспитом?» — «Серце не на місці__! Так
+    хвилююся за оцінку».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Чому він такий жорстокий на роботі?» — «Справжня _____».
+  answer: вовча натура
+  complete_sentence: «Чому він такий жорстокий на роботі?» — «Справжня вовча натура__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Вона відрізняється від усієї родини!» — «Так, справжня _____».
+  answer: біла ворона
+  complete_sentence: «Вона відрізняється від усієї родини!» — «Так, справжня біла
+    ворона__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Не купуй без перевірки!» — «Чому?» — «Бо _____.»
+  answer: купиш кота в мішку
+  complete_sentence: «Не купуй без перевірки!» — «Чому?» — «Бо купиш кота в мішку__.»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Три місяці роботи — і проєкт закрили!» — «Жаль, все пішло _____».
+  answer: собаці під хвіст
+  complete_sentence: «Три місяці роботи — і проєкт закрили!» — «Жаль, все пішло собаці
+    під хвіст__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Якщо не здаси звіт, покажу тобі, _____!»
+  answer: де раки зимують
+  complete_sentence: «Якщо не здаси звіт, покажу тобі, де раки зимують__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Молодий менеджер хоче керувати відділом!» — «_____ще!»
+  answer: Ніс не дорос
+  complete_sentence: «Молодий менеджер хоче керувати відділом!» — «Ніс не дорос__ще!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Нарешті починається практика!» — «Так, _____!»
+  answer: руки чешуться
+  complete_sentence: «Нарешті починається практика!» — «Так, руки чешуться__!»
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Від його скарг _____!» — «Так, він весь час нарікає».
+  answer: вуха в'януть
+  complete_sentence: «Від його скарг вуха в'януть__!» — «Так, він весь час нарікає».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть діалог фразеологізмами
+  sentence_template: «Коли я прочитав новини про аварію, _____».
+  answer: волосся стало дибки
+  complete_sentence: «Коли я прочитав новини про аварію, волосся стало дибки__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Руки чешуться.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Очі розбігаються.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Вуха в'януть.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Язик не повертається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Ніс не дорос.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Волосся стає дибки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Серце не на місці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Душа не лежить.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Вовча натура.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Кіт наплакав.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Собаці під хвіст.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Купити кота в мішку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Де раки зимують.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Коли рак свисне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Вовком дивитися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Біла ворона.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке значення має вираз «руки чешуться» у переносному сенсі в українській
+    мові?
+  options:
+  - text: Руки сверблять через хворобу шкіри.
+    correct: false
+  - text: Людина дуже хоче щось зробити, нетерплячка.
+    correct: true
+  - text: Руки замерзли від холоду.
+    correct: false
+  - text: Людина нервує перед важливою подією.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли найдоречніше використати вираз «очі розбігаються» в розмові з другом?
+  options:
+  - text: Коли хтось має проблеми з очима після роботи за комп'ютером.
+    correct: false
+  - text: Коли важко обрати щось через велику кількість варіантів.
+    correct: true
+  - text: Коли хтось дуже втомився і хоче спати.
+    correct: false
+  - text: Коли людина шукає щось очима в кімнаті.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає вираз «вуха в''януть» у контексті української фразеології?
+  options:
+  - text: Вуха болять від гучної музики.
+    correct: false
+  - text: Неприємно слухати щось — лайку, нісенітницю.
+    correct: true
+  - text: Людина погано чує через хворобу.
+    correct: false
+  - text: Вуха замерзли на морозі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: У якій ситуації найкраще використати вираз «язик не повертається»?
+  options:
+  - text: Коли людина не може вимовити складне слово.
+    correct: false
+  - text: Коли не можеш сказати щось через незручність або етичні причини.
+    correct: true
+  - text: Коли хтось має проблеми з мовленням після хвороби.
+    correct: false
+  - text: Коли людина забула слово під час розмови.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Який фразеологізм найкраще описує молоду людину, яка хоче керувати досвідченими
+    колегами?
+  options:
+  - text: Очі розбігаються.
+    correct: false
+  - text: Ніс не дорос.
+    correct: true
+  - text: Серце не на місці.
+    correct: false
+  - text: Руки чешуться.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає вираз «волосся стає дибки» у переносному значенні?
+  options:
+  - text: Волосся погано лежить після сну.
+    correct: false
+  - text: Відчуття сильного жаху, страху.
+    correct: true
+  - text: Людина дуже здивована новиною.
+    correct: false
+  - text: Волосся росте вгору від вологості.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли вживають вираз «серце не на місці» в українській мові?
+  options:
+  - text: Коли болить серце від фізичного навантаження.
+    correct: false
+  - text: Коли людина тривожиться, хвилюється за когось.
+    correct: true
+  - text: Коли серце б''ється надто швидко.
+    correct: false
+  - text: Коли хтось закоханий у іншу людину.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Яке значення має вираз «душа не лежить» у контексті прийняття рішень?
+  options:
+  - text: Людина занадто втомилася, щоб працювати.
+    correct: false
+  - text: Не подобається, немає інтересу чи симпатії до чогось.
+    correct: true
+  - text: Людина лежить і відпочиває після роботи.
+    correct: false
+  - text: Душа болить через втрату близької людини.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає вираз «вовча натура» як характеристика людини?
+  options:
+  - text: Людина любить природу і тварин.
+    correct: false
+  - text: Хижа, агресивна, безжальна людина.
+    correct: true
+  - text: Людина самотня і не любить компанії.
+    correct: false
+  - text: Людина працює вночі, як вовк.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: У якому контексті найдоречніше сказати «кіт наплакав» про грошову ситуацію?
+  options:
+  - text: Коли хтось витратив усі гроші на кота.
+    correct: false
+  - text: Коли грошей дуже мало, ледве вистачає.
+    correct: true
+  - text: Коли хтось заробив багато грошей.
+    correct: false
+  - text: Коли кіт зіпсував грошові купюри.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Який вираз найкраще описує ситуацію, коли зусилля витрачено даремно?
+  options:
+  - text: Кіт наплакав.
+    correct: false
+  - text: Собаці під хвіст.
+    correct: true
+  - text: Біла ворона.
+    correct: false
+  - text: Коли рак свисне.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що застерігає вираз «купити кота в мішку» в контексті рішень?
+  options:
+  - text: Не варто купувати котів у магазині.
+    correct: false
+  - text: Не варто обирати або купувати щось наосліп, без перевірки.
+    correct: true
+  - text: Коти в мішках хворіють на транспортуванні.
+    correct: false
+  - text: Мішки для котів занадто дорогі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли вживають вираз «де раки зимують» як попередження?
+  options:
+  - text: Коли розповідають про біологію раків.
+    correct: false
+  - text: Коли погрожують покаранням, неприємностями.
+    correct: true
+  - text: Коли пояснюють, де ловити раків взимку.
+    correct: false
+  - text: Коли говорять про холодну погоду.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Що означає вираз «коли рак свисне» про ймовірність події?
+  options:
+  - text: Подія станеться дуже скоро.
+    correct: false
+  - text: Подія ніколи не станеться.
+    correct: true
+  - text: Подія станеться влітку.
+    correct: false
+  - text: Подія залежить від погоди.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Який фразеологізм описує людину, що відрізняється від інших у групі?
+  options:
+  - text: Вовком дивитися.
+    correct: false
+  - text: Біла ворона.
+    correct: true
+  - text: Кіт наплакав.
+    correct: false
+  - text: Собаці під хвіст.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення фразеологізмів
+  question: Коли використовують вираз «вовком дивитися» для опису стосунків?
+  options:
+  - text: Коли люди дивляться на вовка в зоопарку.
+    correct: false
+  - text: Коли люди дивляться один на одного вороже, недружньо.
+    correct: true
+  - text: Коли хтось має гарний зір, як вовк.
+    correct: false
+  - text: Коли люди полюють на вовків разом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваш друг хоче почати новий проєкт і дуже нетерплячий. Яким фразеологізмом
+    описати його стан?
+  options:
+  - text: Серце не на місці.
+    correct: false
+  - text: Руки чешуться.
+    correct: true
+  - text: Вуха в'януть.
+    correct: false
+  - text: Душа не лежить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Колега годину скаржиться на начальство, і вам неприємно це слухати. Що
+    сказати?
+  options:
+  - text: Очі розбігаються від твоїх скарг.
+    correct: false
+  - text: Вуха в'януть від твоїх скарг.
+    correct: true
+  - text: Язик не повертається від твоїх скарг.
+    correct: false
+  - text: Волосся стає дибки від твоїх скарг.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Новий директор звільнив багатьох працівників без причини. Як охарактеризувати
+    його?
+  options:
+  - text: Біла ворона.
+    correct: false
+  - text: Вовча натура.
+    correct: true
+  - text: Кіт наплакав.
+    correct: false
+  - text: Собаці під хвіст.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ви хочете купити товар онлайн без відгуків. Як друг може вас застерегти?
+  options:
+  - text: Не варто — вовком дивитися будеш!
+    correct: false
+  - text: Не варто — купиш кота в мішку!
+    correct: true
+  - text: Не варто — кіт наплакав!
+    correct: false
+  - text: Не варто — біла ворона станеш!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваша подруга переживає за сина, який поїхав вчитися в інше місто. Який
+    вираз описує її стан?
+  options:
+  - text: Руки чешуться.
+    correct: false
+  - text: Очі розбігаються.
+    correct: false
+  - text: Серце не на місці.
+    correct: true
+  - text: Душа не лежить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Колега питає, коли компанія підвищить зарплату. Як відповісти з іронією?
+  options:
+  - text: Де раки зимують!
+    correct: false
+  - text: Коли рак свисне!
+    correct: true
+  - text: Собаці під хвіст!
+    correct: false
+  - text: Кіт наплакав!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: У сім'ї лікарів один із синів став музикантом. Як описати його становище?
+  options:
+  - text: Вовча натура.
+    correct: false
+  - text: Біла ворона.
+    correct: true
+  - text: Кіт наплакав.
+    correct: false
+  - text: Собаці під хвіст.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Після сварки двоє друзів не розмовляють і дивляться недружньо. Як описати
+    їхні стосунки?
+  options:
+  - text: Як кіт наплакав.
+    correct: false
+  - text: Як вовком дивляться.
+    correct: true
+  - text: Як біла ворона.
+    correct: false
+  - text: Як рак свисне.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Пропонують цікаву роботу, але вам не подобається офісний формат. Як м''яко
+    відмовити?
+  options:
+  - text: Руки чешуться відмовитися.
+    correct: false
+  - text: Серце не на місці від цієї пропозиції.
+    correct: false
+  - text: Душа не лежить до офісної роботи.
+    correct: true
+  - text: Вуха в'януть від цієї пропозиції.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Три роки роботи над проєктом — і компанія закрилася. Як описати ситуацію?
+  options:
+  - text: Кіт наплакав.
+    correct: false
+  - text: Собаці під хвіст.
+    correct: true
+  - text: Де раки зимують.
+    correct: false
+  - text: Біла ворона.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «руки чешуться» вживають, коли людина має алергію на руках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «очі розбігаються» вживають, коли важко обрати через велику кількість
+    варіантів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «вуха в''януть» має позитивне значення — приємно слухати.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «язик не повертається» означає фізичну проблему з мовленням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «ніс не дорос» може сприйматися як образа для молодої людини.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «волосся стає дибки» означає радість і захоплення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «серце не на місці» вживають для вираження тривоги та занепокоєння.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «душа не лежить» є м''яким способом сказати «не подобається».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «вовча натура» завжди має позитивне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «кіт наплакав» означає дуже мало чогось.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «собаці під хвіст» вживають, коли щось вдалося ідеально.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «купити кота в мішку» застерігає від необдуманих рішень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «де раки зимують» вживають як дружнє запрошення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «коли рак свисне» означає, що подія станеться дуже скоро.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «вовком дивитися» описує дружні стосунки між людьми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «біла ворона» може мати як нейтральне, так і негативне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

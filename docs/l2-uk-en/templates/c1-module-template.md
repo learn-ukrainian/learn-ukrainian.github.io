@@ -261,6 +261,37 @@ text_type: "academic"  # academic, literary, journalistic, professional
 
 **Minimum:** 16+ activities (vs. 14+ for B2)
 
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not content recall.**
+
+C1 modules teach both Ukrainian AND subject matter (academic, literary, cultural, etc.). Activities practice only Ukrainian language using content as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор аналізує..." (requires reading Ukrainian)
+**❌ WRONG:** "У якому році це відбулося?" (tests content recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND subject knowledge |
+| **Activities** | Practice ONLY Ukrainian language skills using content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension — "Згідно з текстом модуля..."
+- **fill-in**: Test vocabulary/collocations from module
+- **match-up**: Test vocabulary — Ukrainian terms ↔ Ukrainian definitions
+- **cloze**: Test vocabulary in context
+- **group-sort**: Test categorization using module vocabulary
+- **mark-the-words**: Test grammar/stylistic recognition in text
+- **error-correction**: Test grammar, NOT content facts
+
+</critical>
+
+---
+
 **Activity Mix for C1:**
 
 #### Core Activities (Must Have)

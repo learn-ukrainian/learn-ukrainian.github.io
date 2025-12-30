@@ -1,0 +1,1586 @@
+module: 25-register-practice-cross-register-rewriting
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/25-register-practice-cross-register-rewriting.md
+generated: '2025-12-29T22:46:41.318708'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 113
+items:
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'В офіційному документі: ''Просимо надати документи, бо ми
+    їх дуже потребуємо.'''
+  error: бо ми їх дуже потребуємо
+  answer: для розгляду справи
+  sentence_corrected: 'В офіційному документі: ''Просимо надати документи, для розгляду
+    справи.'''
+  options:
+  - бо ми їх дуже потребуємо
+  - для розгляду справи
+  - бо треба
+  - тому що хочемо
+  original_explanation: В офіційно-діловому стилі емоції недоречні — потрібне нейтральне
+    обґрунтування.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У науковому тексті: ''Це дуже круте дослідження, яке показує
+    неймовірні результати.'''
+  error: дуже круте
+  answer: важливе
+  sentence_corrected: 'У науковому тексті: ''Це важливе дослідження, яке показує неймовірні
+    результати.'''
+  options:
+  - дуже круте
+  - важливе
+  - класне
+  - суперове
+  original_explanation: Науковий стиль вимагає нейтральної, неоцінної лексики.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У публіцистичному тексті: ''Відповідно до постанови, захід
+    відбудеться.'''
+  error: Відповідно до постанови
+  answer: Як стало відомо
+  sentence_corrected: 'У публіцистичному тексті: ''Як стало відомо, захід відбудеться.'''
+  options:
+  - Відповідно до постанови
+  - Як стало відомо
+  - Згідно з наказом
+  - На підставі
+  original_explanation: Публіцистичний стиль уникає канцеляризмів, використовує живішу
+    мову.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У художньому тексті: ''Температура повітря становила 25 градусів
+    Цельсія.'''
+  error: становила 25 градусів Цельсія
+  answer: пестила шкіру теплом
+  sentence_corrected: 'У художньому тексті: ''Температура повітря пестила шкіру теплом.'''
+  options:
+  - становила 25 градусів Цельсія
+  - пестила шкіру теплом
+  - була нормальною
+  - дорівнювала 25°C
+  original_explanation: Художній стиль уникає сухих фактів, використовує образність.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У розмовному стилі: ''Відповідач не з''явився на засідання
+    суду.'''
+  error: Відповідач не з'явився на засідання суду
+  answer: Той хлопець не прийшов до суду
+  sentence_corrected: 'У розмовному стилі: ''Той хлопець не прийшов до суду.'''
+  options:
+  - Відповідач не з'явився на засідання суду
+  - Той хлопець не прийшов до суду
+  - Особа була відсутня
+  - Громадянин не прибув
+  original_explanation: Розмовний стиль уникає юридичних термінів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'В офіційному листі: ''Ми хочемо, щоб ви нам допомогли.'''
+  error: Ми хочемо, щоб ви нам допомогли
+  answer: Просимо надати сприяння
+  sentence_corrected: 'В офіційному листі: ''Просимо надати сприяння.'''
+  options:
+  - Ми хочемо, щоб ви нам допомогли
+  - Просимо надати сприяння
+  - Нам потрібна допомога
+  - Допоможіть нам
+  original_explanation: Офіційно-діловий стиль використовує стандартні формули замість
+    особових звернень.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У науковій статті: ''Усі погодяться, що це правда.'''
+  error: Усі погодяться, що це правда
+  answer: Дані підтверджують гіпотезу
+  sentence_corrected: 'У науковій статті: ''Дані підтверджують гіпотезу.'''
+  options:
+  - Усі погодяться, що це правда
+  - Дані підтверджують гіпотезу
+  - Це точно так
+  - Кожен знає
+  original_explanation: Науковий стиль спирається на дані, а не на загальні твердження.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У новині: ''На підставі статті 15 Закону про освіту, зміни
+    набувають чинності.'''
+  error: На підставі статті 15 Закону про освіту
+  answer: Згідно з новим законом
+  sentence_corrected: 'У новині: ''Згідно з новим законом, зміни набувають чинності.'''
+  options:
+  - На підставі статті 15 Закону про освіту
+  - Згідно з новим законом
+  - Відповідно до нормативного акта
+  - У порядку, встановленому
+  original_explanation: Публіцистичний стиль спрощує юридичні формулювання для широкої
+    аудиторії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У художньому творі: ''Метод дослідження базувався на аналізі.'''
+  error: Метод дослідження базувався на аналізі
+  answer: Він шукав відповіді в кожній деталі
+  sentence_corrected: 'У художньому творі: ''Він шукав відповіді в кожній деталі.'''
+  options:
+  - Метод дослідження базувався на аналізі
+  - Він шукав відповіді в кожній деталі
+  - Проводився аналіз
+  - Використовувалась методологія
+  original_explanation: Художній стиль уникає наукової термінології, використовує
+    образність.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У розмовному стилі: ''Інформуємо, що захід відбудеться о 15:00.'''
+  error: Інформуємо, що захід відбудеться о 15:00
+  answer: О третій починається
+  sentence_corrected: 'У розмовному стилі: ''О третій починається.'''
+  options:
+  - Інформуємо, що захід відбудеться о 15:00
+  - О третій починається
+  - Повідомляємо про початок
+  - Доводимо до відома
+  original_explanation: Розмовний стиль простий і невимушений.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'В офіційному документі: ''Президент сказав, що підпише закон.'''
+  error: сказав
+  answer: заявив
+  sentence_corrected: 'В офіційному документі: ''Президент заявив, що підпише закон.'''
+  options:
+  - сказав
+  - заявив
+  - мовив
+  - промовив
+  original_explanation: В офіційному стилі використовується «заявив» замість нейтрального
+    «сказав».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У науковому тексті: ''Мені здається, що результати цікаві.'''
+  error: Мені здається
+  answer: Результати свідчать
+  sentence_corrected: 'У науковому тексті: ''Результати свідчать, що результати цікаві.'''
+  options:
+  - Мені здається
+  - Результати свідчать
+  - Я думаю
+  - На мою думку
+  original_explanation: Науковий стиль уникає суб'єктивних формулювань.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У новині: ''Засідання оголошено закритим.'''
+  error: Засідання оголошено закритим
+  answer: Засідання завершилось
+  sentence_corrected: 'У новині: ''Засідання завершилось.'''
+  options:
+  - Засідання оголошено закритим
+  - Засідання завершилось
+  - Засідання було закрите
+  - Засідання припинено
+  original_explanation: Публіцистичний стиль уникає пасивних канцеляризмів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У художньому тексті: ''Кількість учасників становила 500 осіб.'''
+  error: Кількість учасників становила 500 осіб
+  answer: Натовп заполонив площу
+  sentence_corrected: 'У художньому тексті: ''Натовп заполонив площу.'''
+  options:
+  - Кількість учасників становила 500 осіб
+  - Натовп заполонив площу
+  - Було багато людей
+  - Присутні налічували п'ятсот
+  original_explanation: Художній стиль створює образ, а не подає статистику.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'У розмовному стилі: ''Рішення прийнято одноголосно.'''
+  error: Рішення прийнято одноголосно
+  answer: Усі погодились
+  sentence_corrected: 'У розмовному стилі: ''Усі погодились.'''
+  options:
+  - Рішення прийнято одноголосно
+  - Усі погодились
+  - Голосування було успішним
+  - Консенсус досягнуто
+  original_explanation: Розмовний стиль використовує прості формулювання.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Помилки при трансформації
+  sentence_with_error: 'В офіційному документі: ''Ми вирішили, що так буде краще.'''
+  error: Ми вирішили, що так буде краще
+  answer: Прийнято рішення про
+  sentence_corrected: 'В офіційному документі: ''Прийнято рішення про.'''
+  options:
+  - Ми вирішили, що так буде краще
+  - Прийнято рішення про
+  - Нам здалося
+  - Подумали і зробили
+  original_explanation: Офіційно-діловий стиль уникає особових займенників і оцінок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank} до наказу № 45, повідомляємо про введення нових правил.'
+  answer: Відповідно
+  complete_sentence: Відповідно до наказу № 45, повідомляємо про введення нових правил.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Рішення {blank} на засіданні комісії.
+  answer: прийнято
+  complete_sentence: Рішення прийнято на засіданні комісії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank} здійснено за рахунок державного бюджету.'
+  answer: Фінансування
+  complete_sentence: Фінансування здійснено за рахунок державного бюджету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Загальна вартість проєкту становить 500 000 000 ({blank}) гривень.
+  answer: п'ятсот мільйонів
+  complete_sentence: Загальна вартість проєкту становить 500 000 000 (п'ятсот мільйонів)
+    гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Термін виконання — протягом {blank} робочих днів.
+  answer: тридцяти
+  complete_sentence: Термін виконання — протягом тридцяти робочих днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank}: призначити Петренка О.В. на посаду директора.'
+  answer: НАКАЗУЮ
+  complete_sentence: 'НАКАЗУЮ: призначити Петренка О.В. на посаду директора.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Контроль за виконанням наказу {blank} на заступника.
+  answer: покладаю
+  complete_sentence: Контроль за виконанням наказу покладаю на заступника.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank}: акт прийняття об''єкта від 15.05.2024.'
+  answer: Підстава
+  complete_sentence: 'Підстава: акт прийняття об''єкта від 15.05.2024.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Просимо надати {blank} документів згідно з переліком.
+  answer: пакет
+  complete_sentence: Просимо надати пакет документів згідно з переліком.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Захід {blank} на 15:00 15 травня 2024 року.
+  answer: заплановано
+  complete_sentence: Захід заплановано на 15:00 15 травня 2024 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank} чинного законодавства, громадянин має право на...'
+  answer: Відповідно до
+  complete_sentence: Відповідно до чинного законодавства, громадянин має право на...
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Засідання {blank} закритим.
+  answer: оголошено
+  complete_sentence: Засідання оголошено закритим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Документи {blank} на розгляд комісії.
+  answer: подано
+  complete_sentence: Документи подано на розгляд комісії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Рішення {blank} законної сили з моменту підписання.
+  answer: набирає
+  complete_sentence: Рішення набирає законної сили з моменту підписання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: '{blank} об''єкта становить 5,5 гектара.'
+  answer: Загальна площа
+  complete_sentence: Загальна площа об'єкта становить 5,5 гектара.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в офіційно-діловий стиль
+  sentence_template: Строк {blank} заяви — 30 календарних днів.
+  answer: розгляду
+  complete_sentence: Строк розгляду заяви — 30 календарних днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: '{blank}! Нова станція метро відкрилась для пасажирів!'
+  answer: Сенсація
+  complete_sentence: Сенсація! Нова станція метро відкрилась для пасажирів!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: '{blank} стане цей день для киян?'
+  answer: Чи важливим
+  complete_sentence: Чи важливим стане цей день для киян?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Півмільярда на культуру — {blank}?
+  answer: чи це виправдано
+  complete_sentence: Півмільярда на культуру — чи це виправдано?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Перші враження {blank}!
+  answer: вражають
+  complete_sentence: Перші враження вражають!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: '''{blank},'' — заявив міністр у своєму виступі.'
+  answer: Це історичне рішення
+  complete_sentence: '''Це історичне рішення,'' — заявив міністр у своєму виступі.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Що {blank} цей крок для галузі?
+  answer: означає
+  complete_sentence: Що означає цей крок для галузі?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Експерти {blank} оптимізм влади.
+  answer: не поділяють
+  complete_sentence: Експерти не поділяють оптимізм влади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Чи {blank} новий закон життя громадян?
+  answer: полегшить
+  complete_sentence: Чи полегшить новий закон життя громадян?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: '{blank} з черг у перший день — безперечно так!'
+  answer: Судячи
+  complete_sentence: Судячи з черг у перший день — безперечно так!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Це вже третій важливий законопроект, який уряд {blank} через
+    парламент.
+  answer: провів
+  complete_sentence: Це вже третій важливий законопроект, який уряд провів через парламент.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Критики {blank} владу в ігноруванні думки меншості.
+  answer: звинувачують
+  complete_sentence: Критики звинувачують владу в ігноруванні думки меншості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: '{blank} перемога сколихнула країну!'
+  answer: Безпрецедентна
+  complete_sentence: Безпрецедентна перемога сколихнула країну!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Чи {blank} ви над цим питанням?
+  answer: замислювались
+  complete_sentence: Чи замислювались ви над цим питанням?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Новий музей — справжній {blank} для поціновувачів мистецтва.
+  answer: центр притягання
+  complete_sentence: Новий музей — справжній центр притягання для поціновувачів мистецтва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Амбіції організаторів не знають {blank}!
+  answer: меж
+  complete_sentence: Амбіції організаторів не знають меж!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в публіцистичний стиль
+  sentence_template: Колекція {blank}, архітектура надихає!
+  answer: вражає
+  complete_sentence: Колекція вражає, архітектура надихає!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Трансформація тексту
+  passage_template: 'Прочитайте вихідний текст і заповніть трансформований варіант.
+
+
+    ВИХІДНИЙ ТЕКСТ (публіцистичний): "Учора в Києві відкрили новий музей. На церемонії
+    був Президент."
+
+
+    ОФІЦІЙНО-ДІЛОВИЙ ВАРІАНТ: "{Відповідно|Згідно|На підставі|Через} до розпорядження
+    № 45, {повідомляємо|інформуємо|кажемо|говоримо} про урочисте відкриття музею,
+    яке {відбулось|сталось|було|пройшло} 15 травня 2024 року. На церемонії {були присутні|прийшли|з''явились|завітали}
+    представники вищого керівництва держави. {Фінансування|Гроші|Кошти|Оплату} здійснено
+    за рахунок державного бюджету.
+
+
+    НАУКОВИЙ ВАРІАНТ: {Аналіз|Огляд|Перегляд|Читання} подій свідчить про відкриття
+    нового музею в столиці. {Присутність|Участь|Візит|Прихід} Президента на церемонії
+    {вказує|каже|говорить|свідчить} на символічну значущість об''єкта.
+
+
+    ХУДОЖНІЙ ВАРІАНТ: Двері {розчинились|відчинились|відкрились|розкрились}, і світло
+    {залило|наповнило|озарило|освітило} простір. У натовпі {завмирали|стояли|чекали|дивились}
+    ті, для кого цей день став {початком|стартом|відкриттям|моментом} нової ери.
+
+
+    РОЗМОВНИЙ ВАРІАНТ: Ти {чув|знаєш|бачив|дивився}? Учора музей відкрили! І {Президент|начальник|голова|керівник}
+    був, уявляєш? {Круто|Добре|Нормально|Ок}, правда? Ну, {загалом|взагалі|коротше|типу}
+    — справжнє свято!
+
+    '
+  blanks:
+  - options:
+    - Відповідно
+    - Згідно
+    - На підставі
+    - Через
+    answer: Відповідно
+  - options:
+    - повідомляємо
+    - інформуємо
+    - кажемо
+    - говоримо
+    answer: повідомляємо
+  - options:
+    - відбулось
+    - сталось
+    - було
+    - пройшло
+    answer: відбулось
+  - options:
+    - були присутні
+    - прийшли
+    - з'явились
+    - завітали
+    answer: були присутні
+  - options:
+    - Фінансування
+    - Гроші
+    - Кошти
+    - Оплату
+    answer: Фінансування
+  - options:
+    - Аналіз
+    - Огляд
+    - Перегляд
+    - Читання
+    answer: Аналіз
+  - options:
+    - Присутність
+    - Участь
+    - Візит
+    - Прихід
+    answer: Присутність
+  - options:
+    - вказує
+    - каже
+    - говорить
+    - свідчить
+    answer: вказує
+  - options:
+    - розчинились
+    - відчинились
+    - відкрились
+    - розкрились
+    answer: розчинились
+  - options:
+    - залило
+    - наповнило
+    - озарило
+    - освітило
+    answer: залило
+  - options:
+    - завмирали
+    - стояли
+    - чекали
+    - дивились
+    answer: завмирали
+  - options:
+    - початком
+    - стартом
+    - відкриттям
+    - моментом
+    answer: початком
+  - options:
+    - чув
+    - знаєш
+    - бачив
+    - дивився
+    answer: чув
+  - options:
+    - Президент
+    - начальник
+    - голова
+    - керівник
+    answer: Президент
+  - options:
+    - Круто
+    - Добре
+    - Нормально
+    - Ок
+    answer: Круто
+  - options:
+    - загалом
+    - взагалі
+    - коротше
+    - типу
+    answer: загалом
+  complete_passage: 'Прочитайте вихідний текст і заповніть трансформований варіант.
+
+
+    ВИХІДНИЙ ТЕКСТ (публіцистичний): "Учора в Києві відкрили новий музей. На церемонії
+    був Президент."
+
+
+    ОФІЦІЙНО-ДІЛОВИЙ ВАРІАНТ: "{Відповідно|Згідно|На підставі|Через} до розпорядження
+    № 45, {повідомляємо|інформуємо|кажемо|говоримо} про урочисте відкриття музею,
+    яке {відбулось|сталось|було|пройшло} 15 травня 2024 року. На церемонії {були присутні|прийшли|з''явились|завітали}
+    представники вищого керівництва держави. {Фінансування|Гроші|Кошти|Оплату} здійснено
+    за рахунок державного бюджету.
+
+
+    НАУКОВИЙ ВАРІАНТ: {Аналіз|Огляд|Перегляд|Читання} подій свідчить про відкриття
+    нового музею в столиці. {Присутність|Участь|Візит|Прихід} Президента на церемонії
+    {вказує|каже|говорить|свідчить} на символічну значущість об''єкта.
+
+
+    ХУДОЖНІЙ ВАРІАНТ: Двері {розчинились|відчинились|відкрились|розкрились}, і світло
+    {залило|наповнило|озарило|освітило} простір. У натовпі {завмирали|стояли|чекали|дивились}
+    ті, для кого цей день став {початком|стартом|відкриттям|моментом} нової ери.
+
+
+    РОЗМОВНИЙ ВАРІАНТ: Ти {чув|знаєш|бачив|дивився}? Учора музей відкрили! І {Президент|начальник|голова|керівник}
+    був, уявляєш? {Круто|Добре|Нормально|Ок}, правда? Ну, {загалом|взагалі|коротше|типу}
+    — справжнє свято!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Відповідно до наказу № 123 повідомляємо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Рішення прийнято на засіданні комісії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Загальна вартість становить 500 000 гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Контроль за виконанням покладаю на заступника.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Просимо надати запитувану інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Фінансування здійснено за рахунок державного бюджету.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Відповідно до чинного законодавства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Рішення набирає законної сили.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Засідання оголошено закритим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Призначити Петренка О.В. на посаду директора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Строк — протягом тридцяти робочих днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: У порядку, встановленому законом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Документи подано на розгляд комісії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: На підставі вищезазначеного.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Загальна площа становить 5,5 гектара.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова речень офіційно-ділового стилю
+  jumbled_words: []
+  answer: Контроль за виконанням наказу залишаю за собою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що змінюється при трансформації тексту з одного стилю в інший?
+  options:
+  - text: Тільки окремі слова
+    correct: false
+  - text: Лексика, синтаксис, морфологія, композиція, тональність
+    correct: true
+  - text: Тільки порядок слів
+    correct: false
+  - text: Тільки знаки пунктуації
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Який перший крок алгоритму трансформації тексту?
+  options:
+  - text: Замінити всі слова синонімами
+    correct: false
+  - text: Виділити ядро інформації (факти)
+    correct: true
+  - text: Змінити порядок речень
+    correct: false
+  - text: Додати емоційні оцінки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що залишається незмінним при стильовій трансформації?
+  options:
+  - text: Форма тексту
+    correct: false
+  - text: Зміст тексту
+    correct: true
+  - text: Довжина речень
+    correct: false
+  - text: Емоційне забарвлення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Як подати суму "500 мільйонів гривень" у публіцистичному стилі?
+  options:
+  - text: 500 000 000 (п'ятсот мільйонів) гривень 00 копійок
+    correct: false
+  - text: Півмільярда
+    correct: true
+  - text: 500 млн грн
+    correct: false
+  - text: Значна сума коштів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Яка конструкція характерна для офіційно-ділового стилю?
+  options:
+  - text: Уявіть собі!
+    correct: false
+  - text: На підставі вищезазначеного
+    correct: true
+  - text: Це просто неймовірно
+    correct: false
+  - text: Ну, коротше
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що потрібно додати при трансформації в науковий стиль?
+  options:
+  - text: Емоційні оцінки
+    correct: false
+  - text: Терміни та безособові конструкції
+    correct: true
+  - text: Риторичні питання
+    correct: false
+  - text: Діалоги
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Як трансформувати "Президент заявив" для розмовного стилю?
+  options:
+  - text: Президентом заявлено
+    correct: false
+  - text: Глава держави оголосив
+    correct: false
+  - text: Президент сказав
+    correct: true
+  - text: Було заявлено Президентом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що характерне для художнього стилю при описі події?
+  options:
+  - text: Точні дати та цифри
+    correct: false
+  - text: Метафори та персоніфікація
+    correct: true
+  - text: Посилання на документи
+    correct: false
+  - text: Безособові речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Яку помилку найчастіше роблять при стильовій трансформації?
+  options:
+  - text: Змінюють факти
+    correct: false
+  - text: Механічно замінюють слова без урахування контексту
+    correct: true
+  - text: Скорочують текст
+    correct: false
+  - text: Додають нову інформацію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Для кого призначений офіційно-діловий стиль?
+  options:
+  - text: Для широкої аудиторії
+    correct: false
+  - text: Для юридичних осіб та громадян (як суб'єктів права)
+    correct: true
+  - text: Для друзів і родичів
+    correct: false
+  - text: Для студентів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що потрібно прибрати при трансформації з публіцистичного в науковий стиль?
+  options:
+  - text: Факти і цифри
+    correct: false
+  - text: Оцінну лексику та риторичні питання
+    correct: true
+  - text: Терміни
+    correct: false
+  - text: Посилання на джерела
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Як подати дату в офіційно-діловому стилі?
+  options:
+  - text: Вчора
+    correct: false
+  - text: 15 травня 2024 року
+    correct: true
+  - text: Нещодавно
+    correct: false
+  - text: У той день
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що характерно для розмовного стилю?
+  options:
+  - text: Складні речення з підрядними
+    correct: false
+  - text: Неповні речення та частки
+    correct: true
+  - text: Пасивні конструкції
+    correct: false
+  - text: Терміни
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Як трансформувати "відбулось відкриття" для художнього стилю?
+  options:
+  - text: Відкриття відбулось
+    correct: false
+  - text: Зафіксовано факт відкриття
+    correct: false
+  - text: Народився новий простір
+    correct: true
+  - text: Відкрили
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Що важливо уявити перед написанням тексту в певному стилі?
+  options:
+  - text: Кількість слів
+    correct: false
+  - text: Адресата тексту
+    correct: true
+  - text: Дату публікації
+    correct: false
+  - text: Автора оригіналу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Принципи стильової трансформації
+  question: Яка основна вимога публіцистичного стилю?
+  options:
+  - text: Юридична коректність
+    correct: false
+  - text: Актуальність та доступність
+    correct: true
+  - text: Термінологічність
+    correct: false
+  - text: Образність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Який стиль використовує формулу "500 000 000 (п'ятсот мільйонів) гривень
+    00 копійок"?
+  options:
+  - text: Публіцистичний
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Науковий
+    correct: false
+  - text: Художній
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яке формулювання найбільш характерне для наукового стилю?
+  options:
+  - text: Це просто неймовірно!
+    correct: false
+  - text: Аналіз даних свідчить про кореляцію.
+    correct: true
+  - text: Ну, коротше, так воно і є.
+    correct: false
+  - text: Сонце торкнулось обрію.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: При трансформації з розмовного в офіційно-діловий стиль що потрібно змінити
+    в першу чергу?
+  options:
+  - text: Додати метафори
+    correct: false
+  - text: Замінити розмовні слова канцеляризмами
+    correct: true
+  - text: Скоротити речення
+    correct: false
+  - text: Додати вигуки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яке слово НЕ є стильовим маркером офіційно-ділового стилю?
+  options:
+  - text: Відповідно до
+    correct: false
+  - text: На підставі
+    correct: false
+  - text: Офігенно
+    correct: true
+  - text: Постановляю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Який стиль найчастіше використовує риторичні питання?
+  options:
+  - text: Офіційно-діловий
+    correct: false
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що потрібно прибрати при трансформації художнього тексту в науковий?
+  options:
+  - text: Факти
+    correct: false
+  - text: Метафори та персоніфікацію
+    correct: true
+  - text: Терміни
+    correct: false
+  - text: Логічні зв'язки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Як правильно трансформувати "Президент сказав" для публіцистичного стилю?
+  options:
+  - text: Президентом сказано
+    correct: false
+  - text: Президент заявив
+    correct: true
+  - text: Глава держави мовив
+    correct: false
+  - text: Він промовив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яка конструкція типова для розмовного стилю?
+  options:
+  - text: Відповідно до рішення
+    correct: false
+  - text: Аналіз свідчить
+    correct: false
+  - text: Ну, коротше
+    correct: true
+  - text: Сонце торкнулось
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: При трансформації в художній стиль що потрібно додати?
+  options:
+  - text: Канцеляризми
+    correct: false
+  - text: Терміни
+    correct: false
+  - text: Образні засоби (метафори, епітети)
+    correct: true
+  - text: Статистичні дані
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Що залишається незмінним при будь-якій стильовій трансформації?
+  options:
+  - text: Форма подання
+    correct: false
+  - text: Лексика
+    correct: false
+  - text: Фактичний зміст
+    correct: true
+  - text: Синтаксис
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Який стиль вимагає точних дат у форматі "15 травня 2024 року"?
+  options:
+  - text: Художній
+    correct: false
+  - text: Розмовний
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Публіцистичний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Як трансформувати "Усі погодились" в офіційно-діловий стиль?
+  options:
+  - text: Усі сказали так
+    correct: false
+  - text: Рішення прийнято одноголосно
+    correct: true
+  - text: Усім сподобалось
+    correct: false
+  - text: Народ погодився
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яке формулювання НЕ підходить для наукового стилю?
+  options:
+  - text: Дані підтверджують гіпотезу
+    correct: false
+  - text: Методологія базується на
+    correct: false
+  - text: На мою думку, це чудово
+    correct: true
+  - text: Результати свідчать
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: При трансформації новини в науковий стиль що потрібно змінити?
+  options:
+  - text: Додати вигуки
+    correct: false
+  - text: Замінити оцінну лексику нейтральною термінологією
+    correct: true
+  - text: Скоротити текст
+    correct: false
+  - text: Додати діалоги
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Яка головна помилка при механічній заміні слів?
+  options:
+  - text: Текст стає коротшим
+    correct: false
+  - text: Втрачається контекст і стильова цілісність
+    correct: true
+  - text: Текст стає довшим
+    correct: false
+  - text: З'являються помилки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Інтеграційний тест
+  question: Для кого найважливіше уявляти адресата тексту?
+  options:
+  - text: Тільки для автора офіційних документів
+    correct: false
+  - text: Для автора будь-якого тексту
+    correct: true
+  - text: Тільки для журналіста
+    correct: false
+  - text: Тільки для письменника
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: При стильовій трансформації можна вигадувати нові факти, яких не було
+    в оригіналі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: В офіційно-діловому стилі суми грошей пишуться прописом у дужках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: У науковому стилі можна використовувати формулювання "на мою думку".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Публіцистичний стиль може поєднувати елементи різних стилів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: У художньому стилі точні дати та цифри обов'язкові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Розмовний стиль характеризується неповними реченнями та частками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Канцеляризми доречні в будь-якому стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Перший крок трансформації — механічна заміна слів синонімами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Пасивні конструкції типові для офіційно-ділового та наукового стилів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: У розмовному стилі можна використовувати юридичні терміни.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Риторичні питання характерні для публіцистичного стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Метафори та персоніфікація характерні для наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: В офіційному документі дати пишуться у форматі "вчора" або "нещодавно".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Адресат тексту впливає на вибір стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: При трансформації в художній стиль можна додавати емоційні оцінки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила трансформації
+  statement: Термін "гіпотеза" доречний у розмовному стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

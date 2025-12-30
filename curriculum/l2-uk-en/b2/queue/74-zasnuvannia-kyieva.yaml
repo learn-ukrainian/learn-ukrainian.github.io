@@ -1,0 +1,1427 @@
+module: 74-zasnuvannia-kyieva
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/74-zasnuvannia-kyieva.md
+generated: '2025-12-30T00:57:47.868587'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Київ стоїть на правому березі могутній Дніпро.
+  error: могутній
+  answer: могутнього
+  sentence_corrected: Київ стоїть на правому березі могутнього Дніпро.
+  options:
+  - могутній
+  - могутнього
+  - могутньому
+  - могутнім
+  original_explanation: Прийменник "на березі" вимагає родового відмінка для залежного
+    іменника — могутнього Дніпра.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Брати заснували місто на честь Кию.
+  error: Кию
+  answer: Кия
+  sentence_corrected: Брати заснували місто на честь Кия.
+  options:
+  - Кию
+  - Кия
+  - Києм
+  - Кий
+  original_explanation: Прийменник "на честь" вимагає родового відмінка — на честь
+    Кия (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Літопис укладений монах Нестор.
+  error: монах
+  answer: монахом
+  sentence_corrected: Літопис укладений монахом Нестор.
+  options:
+  - монах
+  - монахом
+  - монаха
+  - монахові
+  original_explanation: У пасивній конструкції виконавець дії виражається орудним
+    відмінком — монахом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Варяги везли хутра до Константинополя.
+  error: none
+  answer: none
+  sentence_corrected: Варяги везли хутра до Константинополя.
+  options:
+  - none
+  - везли
+  - хутра
+  - Константинополя
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Поляни сплачували данина хозарам.
+  error: данина
+  answer: данину
+  sentence_corrected: Поляни сплачували данину хозарам.
+  options:
+  - данина
+  - данину
+  - данини
+  - даниною
+  original_explanation: Дієслово "сплачувати" вимагає знахідного відмінка — сплачували
+    данину (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Аскольд і Дір здійснив похід на Константинополь.
+  error: здійснив
+  answer: здійснили
+  sentence_corrected: Аскольд і Дір здійснили похід на Константинополь.
+  options:
+  - здійснив
+  - здійснили
+  - здійснила
+  - здійснило
+  original_explanation: При двох підметах (Аскольд і Дір) дієслово стоїть у множині
+    — здійснили.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кий був князь свого племені.
+  error: князь
+  answer: князем
+  sentence_corrected: Кий був князем свого племені.
+  options:
+  - князь
+  - князем
+  - князя
+  - князеві
+  original_explanation: Після дієслова "бути" іменник стоїть в орудному відмінку —
+    був князем (ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Місто заснували на пагорби над Дніпром.
+  error: пагорби
+  answer: пагорбах
+  sentence_corrected: Місто заснували на пагорбах над Дніпром.
+  options:
+  - пагорби
+  - пагорбах
+  - пагорбів
+  - пагорбами
+  original_explanation: Прийменник "на" з питанням "де?" вимагає місцевого відмінка
+    — на пагорбах.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Річка Либідь тече через Київ.
+  error: none
+  answer: none
+  sentence_corrected: Річка Либідь тече через Київ.
+  options:
+  - none
+  - тече
+  - через
+  - Київ
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Хозарська еліта прийняла іудаїзму.
+  error: іудаїзму
+  answer: іудаїзм
+  sentence_corrected: Хозарська еліта прийняла іудаїзм.
+  options:
+  - іудаїзму
+  - іудаїзм
+  - іудаїзмом
+  - іудаїзмі
+  original_explanation: Дієслово "прийняти" вимагає знахідного відмінка — прийняла
+    іудаїзм (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Нащадки продовжили правити Київом.
+  error: none
+  answer: none
+  sentence_corrected: Нащадки продовжили правити Київом.
+  options:
+  - none
+  - продовжили
+  - правити
+  - Київом
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Легенда розповідав про трьох братів.
+  error: розповідав
+  answer: розповідає
+  sentence_corrected: Легенда розповідає про трьох братів.
+  options:
+  - розповідав
+  - розповідає
+  - розповідала
+  - розповідали
+  original_explanation: Іменник "легенда" — жіночого роду, тому минулий час — розповідала,
+    або теперішній — розповідає.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Москва виникла у XII століття.
+  error: століття
+  answer: столітті
+  sentence_corrected: Москва виникла у XII столітті.
+  options:
+  - століття
+  - столітті
+  - століттю
+  - століттям
+  original_explanation: Прийменник "у" з питанням "коли?" вимагає місцевого відмінка
+    — у столітті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Пам'ятник засновникам встановили 1982 року.
+  error: none
+  answer: none
+  sentence_corrected: Пам'ятник засновникам встановили 1982 року.
+  options:
+  - none
+  - засновникам
+  - встановили
+  - року
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Візантійський імператор залишив опис шлях.
+  error: шлях
+  answer: шляху
+  sentence_corrected: Візантійський імператор залишив опис шляху.
+  options:
+  - шлях
+  - шляху
+  - шляхом
+  - шляхові
+  original_explanation: Дієслово "залишити опис" вимагає родового відмінка — опис
+    шляху (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Київ був ключовий пунктом на торговельному шляху.
+  error: ключовий
+  answer: ключовим
+  sentence_corrected: Київ був ключовим пунктом на торговельному шляху.
+  options:
+  - ключовий
+  - ключовим
+  - ключового
+  - ключовому
+  original_explanation: Після дієслова "бути" прикметник стоїть в орудному відмінку,
+    узгоджуючись з іменником — ключовим пунктом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Київ — одне з найстаріших міст Європи, _____ сучасної України.
+  answer: столиця
+  complete_sentence: Київ — одне з найстаріших міст Європи, столиця__ сучасної України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Три брати — Кий, Щек і Хорив — стали _____ Києва.
+  answer: засновниками
+  complete_sentence: Три брати — Кий, Щек і Хорив — стали засновниками__ Києва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: «Повість минулих літ» — це давній _____, укладений монахом Нестором.
+  answer: літопис
+  complete_sentence: «Повість минулих літ» — це давній літопис__, укладений монахом
+    Нестором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Поляни сплачували _____ хозарам.
+  answer: данину
+  complete_sentence: Поляни сплачували данину__ хозарам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Київ стояв на торговельному _____ «з варягів у греки».
+  answer: шляху
+  complete_sentence: Київ стояв на торговельному шляху__ «з варягів у греки».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Варяги були скандинавськими воїнами і _____.
+  answer: торговцями
+  complete_sentence: Варяги були скандинавськими воїнами і торговцями__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Хозарський _____ контролював степи на схід від Дніпра.
+  answer: каганат
+  complete_sentence: Хозарський каганат__ контролював степи на схід від Дніпра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Аскольд і Дір організували _____ на Константинополь.
+  answer: похід
+  complete_sentence: Аскольд і Дір організували похід__ на Константинополь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Легенда про заснування Києва — частина національної _____.
+  answer: ідентичності
+  complete_sentence: Легенда про заснування Києва — частина національної ідентичності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Київ розташований на правому березі могутнього _____.
+  answer: Дніпра
+  complete_sentence: Київ розташований на правому березі могутнього Дніпра__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Кий, за літописом, був _____ свого племені.
+  answer: князем
+  complete_sentence: Кий, за літописом, був князем__ свого племені.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Україна є _____ Київської Русі.
+  answer: спадкоємицею
+  complete_sentence: Україна є спадкоємицею__ Київської Русі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: На пагорбах над Дніпром брати заснували _____.
+  answer: місто
+  complete_sentence: На пагорбах над Дніпром брати заснували місто__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Русь і Росія — це різні _____, розділені століттями.
+  answer: держави
+  complete_sentence: Русь і Росія — це різні держави__, розділені століттями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Кий подорожував до _____ — столиці Візантії.
+  answer: Константинополя
+  complete_sentence: Кий подорожував до Константинополя__ — столиці Візантії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Річка _____, названа на честь сестри, і сьогодні тече через Київ.
+  answer: Либідь
+  complete_sentence: Річка Либідь__, названа на честь сестри, і сьогодні тече через
+    Київ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Місто назвали на честь старшого _____.
+  answer: брата
+  complete_sentence: Місто назвали на честь старшого брата__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кий був князем свого _____.
+  answer: племені
+  complete_sentence: Кий був князем свого племені__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Варяги везли товари до _____.
+  answer: Константинополя
+  complete_sentence: Варяги везли товари до Константинополя__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Поляни сплачували данину _____.
+  answer: хозарам
+  complete_sentence: Поляни сплачували данину хозарам__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Літопис укладений _____ Нестором.
+  answer: монахом
+  complete_sentence: Літопис укладений монахом__ Нестором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Місто заснували на _____ над Дніпром.
+  answer: пагорбах
+  complete_sentence: Місто заснували на пагорбах__ над Дніпром.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Легенда розповідає про трьох _____.
+  answer: братів
+  complete_sentence: Легенда розповідає про трьох братів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Річку назвали на честь _____.
+  answer: сестри
+  complete_sentence: Річку назвали на честь сестри__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кий подорожував до візантійського _____.
+  answer: імператора
+  complete_sentence: Кий подорожував до візантійського імператора__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Аскольд і Дір здійснили похід на _____.
+  answer: Константинополь
+  complete_sentence: Аскольд і Дір здійснили похід на Константинополь__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дніпро був головною _____ середньовіччя.
+  answer: дорогою
+  complete_sentence: Дніпро був головною дорогою__ середньовіччя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Пам'ятник встановили на честь _____.
+  answer: засновників
+  complete_sentence: Пам'ятник встановили на честь засновників__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Хозари контролювали степи на схід від _____.
+  answer: Дніпра
+  complete_sentence: Хозари контролювали степи на схід від Дніпра__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Москва виникла у XII _____.
+  answer: столітті
+  complete_sentence: Москва виникла у XII столітті__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Торговельний шлях з'єднував Скандинавію з _____.
+  answer: Візантією
+  complete_sentence: Торговельний шлях з'єднував Скандинавію з Візантією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Київ є однією зі _____ України.
+  answer: столиць
+  complete_sentence: Київ є однією зі столиць__ України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Кий, Щек і Хорив стали засновниками Києва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Київ є столицею сучасної України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Варяги були скандинавськими воїнами і торговцями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Поляни сплачували данину хозарам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Торговельний шлях проходив через Київ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Місто назвали на честь брата Києвом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Брати заснували місто на пагорбах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Київ розташований на правому берегу Дніпра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Літопис укладений монахом Нестором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Аскольд і Дір здійснили похід на Константинополь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Київ був столицею середньовічної Русі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Шлях з варягів у греки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Річка названа на честь сестри Либідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Легенда є частиною національної ідентичності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Київ — одне з найстаріших міст Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про історію Києва
+  jumbled_words: []
+  answer: Хозарський каганат контролював степи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, хто був старшим із братів-засновників Києва?
+  options:
+  - text: Щек
+    correct: false
+  - text: Хорив
+    correct: false
+  - text: Кий
+    correct: true
+  - text: Аскольд
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, яке джерело є головним свідченням легенди про заснування
+    Києва?
+  options:
+  - text: Візантійські хроніки
+    correct: false
+  - text: '"Повість минулих літ"'
+    correct: true
+  - text: Хозарські документи
+    correct: false
+  - text: Скандинавські саги
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, як називався торговельний шлях, що проходив через Київ?
+  options:
+  - text: Шовковий шлях
+    correct: false
+  - text: Бурштиновий шлях
+    correct: false
+  - text: Шлях «з варягів у греки»
+    correct: true
+  - text: Чорноморський шлях
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, кому поляни сплачували данину до приходу варягів?
+  options:
+  - text: Візантійській імперії
+    correct: false
+  - text: Хозарському каганату
+    correct: true
+  - text: Скандинавським конунгам
+    correct: false
+  - text: Болгарському царству
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Як автор тексту характеризує роль Кия?
+  options:
+  - text: Як простого ватажка
+    correct: false
+  - text: Як справжнього державного діяча
+    correct: true
+  - text: Як варязького воїна
+    correct: false
+  - text: Як хозарського намісника
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, куди подорожував Кий за літописом?
+  options:
+  - text: До Рима
+    correct: false
+  - text: До Скандинавії
+    correct: false
+  - text: До Константинополя
+    correct: true
+  - text: До Хозарії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Як текст пояснює значення виразу «матір городів руських»?
+  options:
+  - text: Як «російська столиця»
+    correct: false
+  - text: Як «головне місто Русі»
+    correct: true
+  - text: Як «найстаріше місто»
+    correct: false
+  - text: Як «священне місто»
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, коли варяги Аскольд і Дір захопили Київ?
+  options:
+  - text: Близько 800 року
+    correct: false
+  - text: Близько 860 року
+    correct: true
+  - text: Близько 900 року
+    correct: false
+  - text: Близько 988 року
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Як текст характеризує претензії Росії на київську спадщину?
+  options:
+  - text: Як законні претензії
+    correct: false
+  - text: Як історичний ревізіонізм
+    correct: true
+  - text: Як неважливі
+    correct: false
+  - text: Як частково обґрунтовані
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, якою була друга назва Києва за візантійськими джерелами?
+  options:
+  - text: Константинополь
+    correct: false
+  - text: Самватас
+    correct: true
+  - text: Києвець
+    correct: false
+  - text: Вишгород
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, коли Москва виникла як місто?
+  options:
+  - text: У IX столітті
+    correct: false
+  - text: У X столітті
+    correct: false
+  - text: У XII столітті
+    correct: true
+  - text: У XIV столітті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Як текст характеризує хозар?
+  options:
+  - text: Як слов'янський народ
+    correct: false
+  - text: Як могутній тюркський народ
+    correct: true
+  - text: Як скандинавських торговців
+    correct: false
+  - text: Як візантійських союзників
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, яку релігію прийняла хозарська еліта?
+  options:
+  - text: Християнство
+    correct: false
+  - text: Іслам
+    correct: false
+  - text: Іудаїзм
+    correct: true
+  - text: Язичництво
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, що символізував Кий під час російського вторгнення 2022
+    року?
+  options:
+  - text: Мирне співіснування
+    correct: false
+  - text: Опір
+    correct: true
+  - text: Торгівлю
+    correct: false
+  - text: Релігійну єдність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Згідно з текстом, коли було встановлено пам'ятник засновникам Києва?
+  options:
+  - text: 1972 року
+    correct: false
+  - text: 1982 року
+    correct: true
+  - text: 1992 року
+    correct: false
+  - text: 2002 року
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про заснування Києва
+  question: Що везли варяги на південь, згідно з текстом?
+  options:
+  - text: Шовки та прянощі
+    correct: false
+  - text: Хутра, мед, рабів
+    correct: true
+  - text: Золото та срібло
+    correct: false
+  - text: Зброю та коней
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: У цитаті з «Повісті минулих літ» згадується «бір великий». Що це означає?
+  options:
+  - text: Великий палац
+    correct: false
+  - text: Великий ліс
+    correct: true
+  - text: Велике поле
+    correct: false
+  - text: Велике озеро
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Згідно з цитатою Костянтина Багрянородного, звідки приходили човни до
+    Києва?
+  options:
+  - text: Тільки з Новгорода
+    correct: false
+  - text: З багатьох міст, включаючи Новгород, Смоленськ, Чернігів
+    correct: true
+  - text: Тільки з Константинополя
+    correct: false
+  - text: Тільки з Хозарії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку другу назву Києва згадує Костянтин Багрянородний?
+  options:
+  - text: Константинополь
+    correct: false
+  - text: Самватас
+    correct: true
+  - text: Київець
+    correct: false
+  - text: Вишгород
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: У цитаті з літопису сказано «сидів Кий на горі». Що означає дієслово «сидіти»
+    в цьому контексті?
+  options:
+  - text: Відпочивати
+    correct: false
+  - text: Правити, мешкати
+    correct: true
+  - text: Воювати
+    correct: false
+  - text: Торгувати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому в літопису згадується, що навколо міста «ловили звіра»?
+  options:
+  - text: Щоб показати, що жителі були мисливцями
+    correct: false
+  - text: Щоб підкреслити давність та автентичність поселення
+    correct: true
+  - text: Щоб описати клімат
+    correct: false
+  - text: Щоб пояснити назву річки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Хто такий Святослав, згаданий у візантійському джерелі?
+  options:
+  - text: Засновник Києва
+    correct: false
+  - text: Візантійський імператор
+    correct: false
+  - text: Київський князь, син Ігоря
+    correct: true
+  - text: Хозарський каган
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Про що свідчить список міст у візантійському джерелі?
+  options:
+  - text: Про занепад Києва
+    correct: false
+  - text: Про розгалужену торговельну мережу Русі
+    correct: true
+  - text: Про могутність Візантії
+    correct: false
+  - text: Про хозарську загрозу
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яка гора згадується в літопису як місце оселення Кия?
+  options:
+  - text: Щекавиця
+    correct: false
+  - text: Хоривиця
+    correct: false
+  - text: Гора, «де нині узвіз Боричів»
+    correct: true
+  - text: Гора Хом'як
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як літопис описує процес найменування міста?
+  options:
+  - text: Місто назвала Либідь
+    correct: false
+  - text: Місто назвали греки
+    correct: false
+  - text: Брати назвали місто на честь найстаршого
+    correct: true
+  - text: Місто назвали хозари
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: У візантійському джерелі згадується «зовнішня Росія». Що це означає?
+  options:
+  - text: Територія поза Візантією
+    correct: false
+  - text: Північні руські землі (на відміну від Києва)
+    correct: true
+  - text: Хозарія
+    correct: false
+  - text: Скандинавія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який жанр представляє «Повість минулих літ»?
+  options:
+  - text: Художній роман
+    correct: false
+  - text: Історичний літопис
+    correct: true
+  - text: Філософський трактат
+    correct: false
+  - text: Релігійний гімн
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому візантійське джерело є важливим для підтвердження легенди?
+  options:
+  - text: Тому що воно старіше за літопис
+    correct: false
+  - text: Тому що це незалежне свідчення з іншої країни
+    correct: true
+  - text: Тому що його автор був у Києві
+    correct: false
+  - text: Тому що воно написане українською
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як автор літопису ставиться до легенди про заснування?
+  options:
+  - text: Критично, як до вигадки
+    correct: false
+  - text: Як до історичного факту
+    correct: true
+  - text: Нейтрально, без оцінки
+    correct: false
+  - text: Негативно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яка мета цитування первинних джерел у модулі?
+  options:
+  - text: Розвага читачів
+    correct: false
+  - text: Підтвердження історичних фактів автентичними документами
+    correct: true
+  - text: Заповнення обсягу тексту
+    correct: false
+  - text: Демонстрація давньоукраїнської мови
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому в модулі наведено два різні джерела?
+  options:
+  - text: Щоб показати суперечності
+    correct: false
+  - text: Щоб дати різні перспективи — руську і візантійську
+    correct: true
+  - text: Тому що одного джерела недостатньо
+    correct: false
+  - text: Для порівняння мов
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає слово «городок» у давньоруській мові?
+  options:
+  - text: Маленьке місто
+    correct: false
+  - text: Укріплене поселення
+    correct: true
+  - text: Торговельний центр
+    correct: false
+  - text: Релігійний центр
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Київ названо на честь найстаршого з братів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, «Повість минулих літ» укладено у XV столітті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Москва виникла раніше за Київ.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, варяги торгували хутрами, медом і рабами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, хозарська еліта прийняла християнство.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Аскольд і Дір здійснили успішний похід на Константинополь.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, річка Либідь названа на честь сестри братів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, поселення на місці Києва існувало вже 20 000 років
+    тому.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Кий заснував лише одне місто.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, вираз «матір городів руських» означає «російська столиця».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, пам'ятник засновникам Києва зображує чотири фігури
+    на човні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Дніпро був «головною дорогою» середньовічної України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, Костянтин Багрянородний — візантійський імператор X
+    століття.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, претензії Росії на київську спадщину є обґрунтованими.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, монах Нестор був автором «Повісті минулих літ».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про заснування Києва
+  statement: Згідно з текстом, слов'янські поселення з'явилися на місці Києва у VI
+    столітті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,57 @@
+# Audit Report: 40-b21c-checkpoint.md
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** "TTT" | **Target:** 1000
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ⚠️ 2255/1000 (>2000 may be too long)
+- **Activities:** ✅ 22/15
+- **Density:** ✅ All > 14
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/4
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 78/10
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 99.5% (checkpoint - no gate)
+- **Richness:** ✅ 98% (checkpoint)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 98% (minimum: 85%)
+**Module Type:** checkpoint
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| activity_types | 12 | 8 | 100% | 25% | 25.0% |
+| review_sections | 30 | 3 | 100% | 20% | 20.0% |
+| variety | 0.93 | - | 93% | 15% | 14.0% |
+| engagement | 7 | 3 | 100% | 10% | 10.0% |
+| cultural | 1 | - | 100% | 10% | 10.0% |
+| visual | 9 | 3 | 100% | 10% | 10.0% |
+| paragraph_var | 1.00 | - | 100% | 10% | 10.0% |
+| **TOTAL** | | | | | **99.0%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+✅ Renders correctly (22 interactive elements)
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Контрольна точка B2.1c: Числівники, словотвір та синтаксис** | ⚪️ | 51 | Skipped |
+| **Огляд** | ⚪️ | 212 | Skipped |
+| **Навичка 1: Відмінювання числівників (М31-32)** | ⚪️ | 257 | Skipped |
+| **Навичка 2: Словотвір — назви осіб (М33)** | ⚪️ | 296 | Skipped |
+| **Навичка 3: Словотвір — абстрактні поняття та місця (М34-35)** | ⚪️ | 214 | Skipped |
+| **Навичка 4: Словотвір — прикметники та прислівники (М36-37)** | ⚪️ | 270 | Skipped |
+| **Навичка 5: Односкладні речення (М38)** | ⚪️ | 202 | Skipped |
+| **Навичка 6: Релігійний та епістолярний стилі (М39)** | ⚪️ | 382 | Skipped |
+| **Інтеграційне завдання** | ⚪️ | 207 | Skipped |
+| **Підсумок** | ✅ | 164 | Included in Core |
+| **Вправи** | ⚪️ | 5 | Skipped |
+| **Словник** | ⚪️ | 0 | Skipped |

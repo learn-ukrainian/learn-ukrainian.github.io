@@ -1,0 +1,1415 @@
+module: 22-register-literary-ukrainian
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/22-register-literary-ukrainian.md
+generated: '2025-12-29T22:44:04.024707'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Золоте сонце сідало, і це було типу красиво.
+  error: типу
+  answer: неймовірно
+  sentence_corrected: Золоте сонце сідало, і це було неймовірно красиво.
+  options:
+  - типу
+  - неймовірно
+  - ну
+  - коротше
+  original_explanation: Розмовне "типу" недоречне в літературному описі природи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Вона мовила, що згідно з її думкою він помилявся.
+  error: згідно з її думкою
+  answer: на її думку
+  sentence_corrected: Вона мовила, що на її думку він помилявся.
+  options:
+  - згідно з її думкою
+  - на її думку
+  - відповідно до її думки
+  - на підставі її думки
+  original_explanation: Канцеляризм "згідно з" недоречний у художньому тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Серце її тріпотіло, і вона відчувала кореляцію між почуттями.
+  error: кореляцію
+  answer: зв'язок
+  sentence_corrected: Серце її тріпотіло, і вона відчувала зв'язок між почуттями.
+  options:
+  - кореляцію
+  - зв'язок
+  - методологію
+  - гіпотезу
+  original_explanation: Науковий термін "кореляція" недоречний у художньому описі
+    почуттів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Ліс шепотів таємниці, і це було офігенно.
+  error: офігенно
+  answer: чарівно
+  sentence_corrected: Ліс шепотів таємниці, і це було чарівно.
+  options:
+  - офігенно
+  - чарівно
+  - класно
+  - круто
+  original_explanation: Розмовне "офігенно" руйнує поетичну атмосферу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Прийшла весна рання, і було видано наказ про початок літа.
+  error: було видано наказ про початок літа
+  answer: обіцяючи спеку літа
+  sentence_corrected: Прийшла весна рання, і обіцяючи спеку літа.
+  options:
+  - було видано наказ про початок літа
+  - обіцяючи спеку літа
+  - затверджено план літа
+  - постановлено про літо
+  original_explanation: Канцеляризм абсурдний у художньому описі природи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Вітер мовив тихо, і його голос звучав ну дуже приємно.
+  error: ну
+  answer: надзвичайно
+  sentence_corrected: Вітер мовив тихо, і його голос звучав надзвичайно дуже приємно.
+  options:
+  - ну
+  - надзвичайно
+  - типу
+  - короче
+  original_explanation: Розмовна частка "ну" недоречна в літературному стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Зоря вечірня сходила, і методологія її сяйва була особливою.
+  error: методологія
+  answer: таємниця
+  sentence_corrected: Зоря вечірня сходила, і таємниця її сяйва була особливою.
+  options:
+  - методологія
+  - таємниця
+  - система
+  - структура
+  original_explanation: Науковий термін недоречний у поетичному описі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Море почуттів захлиснуло її, і вона типу не знала, що робити.
+  error: типу
+  answer: зовсім
+  sentence_corrected: Море почуттів захлиснуло її, і вона зовсім не знала, що робити.
+  options:
+  - типу
+  - зовсім
+  - ну
+  - короче
+  original_explanation: Розмовне "типу" руйнує образність метафори.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Його погляд був холодний, жорстокий, і відповідно до цього
+    вона злякалась.
+  error: відповідно до цього
+  answer: тому
+  sentence_corrected: Його погляд був холодний, жорстокий, і тому вона злякалась.
+  options:
+  - відповідно до цього
+  - тому
+  - згідно з цим
+  - на підставі цього
+  original_explanation: Канцеляризм недоречний у художньому тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Тиша огорнула все навколо, і ну це було щось неймовірне.
+  error: ну
+  answer: справді
+  sentence_corrected: Тиша огорсправділа все навколо, і справді це було щось неймовірне.
+  options:
+  - ну
+  - справді
+  - типу
+  - от
+  original_explanation: Розмовна частка "ну" недоречна в піднесеному описі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Вона плакала, і сльози падали, як дощ, згідно з постановою
+    про сум.
+  error: згідно з постановою про сум
+  answer: не стримуючись
+  sentence_corrected: Вона плакала, і сльози падали, як дощ, не стримуючись.
+  options:
+  - згідно з постановою про сум
+  - не стримуючись
+  - відповідно до рішення
+  - на виконання наказу
+  original_explanation: Канцеляризм абсолютно абсурдний у художньому описі емоцій.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Сонце сяяло, наче золото, і це було прям вау.
+  error: прям вау
+  answer: дивовижно
+  sentence_corrected: Сонце сяяло, наче золото, і це було дивовижно.
+  options:
+  - прям вау
+  - дивовижно
+  - офігенно
+  - класно
+  original_explanation: Сленг "прям вау" недоречний у літературному стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Ніч опустилась на місто, і гіпотеза про темряву підтвердилась.
+  error: гіпотеза про темряву підтвердилась
+  answer: накривши його темрявою
+  sentence_corrected: Ніч опустилась на місто, і накривши його темрявою.
+  options:
+  - гіпотеза про темряву підтвердилась
+  - накривши його темрявою
+  - відповідно до плану
+  - згідно з прогнозом
+  original_explanation: Науковий термін абсурдний у художньому описі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Його серце тріпотіло, і він відчував, ну, щось незрозуміле.
+  error: ну, щось незрозуміле
+  answer: невимовне хвилювання
+  sentence_corrected: Його серце тріпотіло, і він відчував, невимовне хвилювання.
+  options:
+  - ну, щось незрозуміле
+  - невимовне хвилювання
+  - типу тривогу
+  - якусь фігню
+  original_explanation: Розмовний вираз руйнує поетичний опис емоцій.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Краса її вражала, і це було задокументовано у звіті.
+  error: задокументовано у звіті
+  answer: очевидно для всіх
+  sentence_corrected: Краса її вражала, і це було очевидно для всіх.
+  options:
+  - задокументовано у звіті
+  - очевидно для всіх
+  - зафіксовано в протоколі
+  - внесено до реєстру
+  original_explanation: Офіційно-діловий вираз абсурдний у художньому описі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Стилістичні помилки в літературному тексті
+  sentence_with_error: Вітер дмухнув різко, і воістину це було ну таке собі.
+  error: ну таке собі
+  answer: несподівано
+  sentence_corrected: Вітер дмухнув різко, і воістину це було несподівано.
+  options:
+  - ну таке собі
+  - несподівано
+  - типу дивно
+  - якось так
+  original_explanation: Розмовний вираз несумісний із піднесеним "воістину".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Небо плакало дощем" — це _____.
+  answer: персоніфікація
+  complete_sentence: Вираз "Небо плакало дощем" — це персоніфікація__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Очі, як зорі" — це _____.
+  answer: порівняння
+  complete_sentence: Вираз "Очі, як зорі" — це порівняння__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Золоте сонце" — це _____.
+  answer: епітет
+  complete_sentence: Вираз "Золоте сонце" — це епітет__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Життя — це дорога" — це _____.
+  answer: метафора
+  complete_sentence: Вираз "Життя — це дорога" — це метафора__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Море сліз" — це _____.
+  answer: гіпербола
+  complete_sentence: Вираз "Море сліз" — це гіпербола__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Речення "Прийшла весна рання" — це _____.
+  answer: інверсія
+  complete_sentence: Речення "Прийшла весна рання" — це інверсія__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Сумно мені, сумно..." — це _____.
+  answer: повтор
+  complete_sentence: Вираз "Сумно мені, сумно..." — це повтор__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Хто б міг подумати?" — це _____ питання.
+  answer: риторичне
+  complete_sentence: Вираз "Хто б міг подумати?" — це риторичне__ питання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Вираз "Він — у місто, вона — додому" — це _____.
+  answer: еліпсис
+  complete_sentence: Вираз "Він — у місто, вона — додому" — це еліпсис__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Слово "мовив" — це _____ літературного стилю.
+  answer: архаїзм
+  complete_sentence: Слово "мовив" — це архаїзм__ літературного стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Слово "зоря" звучить _____, ніж "зірка".
+  answer: піднесено
+  complete_sentence: Слово "зоря" звучить піднесено__, ніж "зірка".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Слово "сонечко" — це _____ форма від "сонце".
+  answer: зменшувально-пестлива
+  complete_sentence: Слово "сонечко" — це зменшувально-пестлива__ форма від "сонце".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Слово "вітрище" — це _____ форма від "вітер".
+  answer: згрубіла
+  complete_sentence: Слово "вітрище" — це згрубіла__ форма від "вітер".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: Літературний стиль характеризується _____ та індивідуальністю.
+  answer: образністю
+  complete_sentence: Літературний стиль характеризується образністю__ та індивідуальністю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: _____ мова передає думки персонажа без маркерів.
+  answer: Невласне-пряма
+  complete_sentence: Невласне-пряма__ мова передає думки персонажа без маркерів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначення образних засобів
+  sentence_template: У літературному стилі "старий, давній, древній" — це _____.
+  answer: синоніми
+  complete_sentence: У літературному стилі "старий, давній, древній" — це синоніми__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість нейтрального "вечір настав" краще написати: "Вечір _____
+    на землю".'
+  answer: опустився
+  complete_sentence: 'Замість нейтрального "вечір настав" краще написати: "Вечір опустився__
+    на землю".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "вона красива" краще: "Її краса _____, як зоря".'
+  answer: сяяла
+  complete_sentence: 'Замість "вона красива" краще: "Її краса сяяла__, як зоря".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "він сказав тихо" краще: "Він _____ тихо".'
+  answer: мовив
+  complete_sentence: 'Замість "він сказав тихо" краще: "Він мовив__ тихо".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "було тихо" краще: "Тиша _____ все навколо".'
+  answer: огорнула
+  complete_sentence: 'Замість "було тихо" краще: "Тиша огорнула__ все навколо".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "сльози падали" краще: "Сльози, мов _____, котилися
+    по щоках".'
+  answer: перлини
+  complete_sentence: 'Замість "сльози падали" краще: "Сльози, мов перлини__, котилися
+    по щоках".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "сонце зійшло" краще: "_____ сонце виринало з-за обрію".'
+  answer: Золоте
+  complete_sentence: 'Замість "сонце зійшло" краще: "Золоте__ сонце виринало з-за
+    обрію".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "весна прийшла" краще: "Прийшла весна _____".'
+  answer: довгождана
+  complete_sentence: 'Замість "весна прийшла" краще: "Прийшла весна довгождана__".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "серце билося швидко" краще: "Серце _____, мов птах".'
+  answer: тріпотіло
+  complete_sentence: 'Замість "серце билося швидко" краще: "Серце тріпотіло__, мов
+    птах".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "вітер дмухав" краще: "Вітер _____ таємниці".'
+  answer: шепотів
+  complete_sentence: 'Замість "вітер дмухав" краще: "Вітер шепотів__ таємниці".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "ніч настала" краще: "Ніч _____ своїм плащем".'
+  answer: огорнула
+  complete_sentence: 'Замість "ніч настала" краще: "Ніч огорнула__ своїм плащем".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "річка текла" краще: "Річка _____ свої води".'
+  answer: несла
+  complete_sentence: 'Замість "річка текла" краще: "Річка несла__ свої води".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "він думав" краще: "Думки _____ в його голові".'
+  answer: вирували
+  complete_sentence: 'Замість "він думав" краще: "Думки вирували__ в його голові".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "дорога була довга" краще: "_____ лежала далека".'
+  answer: Путь
+  complete_sentence: 'Замість "дорога була довга" краще: "Путь__ лежала далека".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "зірка" в поетичному тексті краще: "_____".'
+  answer: зоря
+  complete_sentence: 'Замість "зірка" в поетичному тексті краще: "зоря__".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "колодязь" у літературному тексті краще: "_____".'
+  answer: криниця
+  complete_sentence: 'Замість "колодязь" у літературному тексті краще: "криниця__".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в літературний стиль
+  sentence_template: 'Замість "ліс" у поетичному тексті краще: "_____".'
+  answer: гай
+  complete_sentence: 'Замість "ліс" у поетичному тексті краще: "гай__".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Прийшла весна рання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Сходила зоря вечірня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Падав на землю сніг білий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Стояла тиша глибока.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Опустилась ніч темна на місто.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Ішов дощ осінній холодний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Виглянуло з-за хмар сонце ясне.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Забилось серце її сильніше.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Дмухнув вітер різкий з півночі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Так мовив він тихо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Та ніч плакала зорями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Сідало сонце золоте за обрій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Лежала путь далека перед ними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Тремтіла душа його від хвилювання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Звучали слова її ніжно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Речення з інверсією
+  jumbled_words: []
+  answer: Вражала краса неймовірна її.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Небо плакало дощем"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: false
+  - text: Персоніфікація
+    correct: true
+  - text: Гіпербола
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Його слова, як ніж, вразили
+    серце"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: true
+  - text: Епітет
+    correct: false
+  - text: Персоніфікація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Золоте сонце сідало за обрій"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: false
+  - text: Епітет
+    correct: true
+  - text: Гіпербола
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Я помру від щастя"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Гіпербола
+    correct: true
+  - text: Епітет
+    correct: false
+  - text: Персоніфікація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Життя — це дорога"?
+  options:
+  - text: Метафора
+    correct: true
+  - text: Порівняння
+    correct: false
+  - text: Епітет
+    correct: false
+  - text: Персоніфікація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб використано в реченні "Вітер шепотів таємниці"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: false
+  - text: Персоніфікація
+    correct: true
+  - text: Гіпербола
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Яке слово є архаїчним у літературному стилі?
+  options:
+  - text: сказав
+    correct: false
+  - text: мовив
+    correct: true
+  - text: говорив
+    correct: false
+  - text: промовляв
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Що таке інверсія в літературному стилі?
+  options:
+  - text: Повторення слів
+    correct: false
+  - text: Незвичайний порядок слів
+    correct: true
+  - text: Приховане порівняння
+    correct: false
+  - text: Перебільшення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Яке речення містить інверсію?
+  options:
+  - text: Весна прийшла рано.
+    correct: false
+  - text: Прийшла весна рання.
+    correct: true
+  - text: Рання весна нарешті прийшла.
+    correct: false
+  - text: Сьогодні прийшла весна.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Що таке анафора?
+  options:
+  - text: Повторення слів на початку речень
+    correct: true
+  - text: Пропуск слів
+    correct: false
+  - text: Питання без відповіді
+    correct: false
+  - text: Перебільшення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Який образний засіб у реченні "Море сліз пролила вона"?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Гіпербола
+    correct: true
+  - text: Персоніфікація
+    correct: false
+  - text: Епітет
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Яке слово є піднесеним (книжним)?
+  options:
+  - text: зірка
+    correct: false
+  - text: зоря
+    correct: true
+  - text: зірочка
+    correct: false
+  - text: зоряний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Що таке невласне-пряма мова?
+  options:
+  - text: Цитата зі слів автора
+    correct: false
+  - text: Переказ чужих слів
+    correct: false
+  - text: Думки персонажа без маркерів
+    correct: true
+  - text: Діалог персонажів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Яке слово є зменшувально-пестливим?
+  options:
+  - text: сонце
+    correct: false
+  - text: сонечко
+    correct: true
+  - text: сонцепек
+    correct: false
+  - text: сонячний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Яке слово є згрубілою формою?
+  options:
+  - text: вітер
+    correct: false
+  - text: вітерець
+    correct: false
+  - text: вітрище
+    correct: true
+  - text: вітровий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення образних засобів
+  question: Що характерно для літературного стилю?
+  options:
+  - text: Стандартні формули та кліше
+    correct: false
+  - text: Образність та індивідуальність
+    correct: true
+  - text: Термінологічність та об'єктивність
+    correct: false
+  - text: Спонтанність та невимушеність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: У реченні "Місто — це скелет" який образний засіб?
+  options:
+  - text: Порівняння
+    correct: false
+  - text: Метафора
+    correct: true
+  - text: Гіпербола
+    correct: false
+  - text: Персоніфікація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: У реченні "Хмари, наче мішки з ватою" який образний засіб?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: true
+  - text: Епітет
+    correct: false
+  - text: Гіпербола
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: У реченні "Тиша, від якої болять вуха" який прийом?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Порівняння
+    correct: false
+  - text: Гіпербола
+    correct: true
+  - text: Інверсія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: У реченні "Природа втратила сили" який образний засіб?
+  options:
+  - text: Метафора
+    correct: false
+  - text: Персоніфікація
+    correct: true
+  - text: Порівняння
+    correct: false
+  - text: Епітет
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'У виразі "важкі хмари" слово "важкі" — це:'
+  options:
+  - text: Метафора
+    correct: false
+  - text: Епітет
+    correct: true
+  - text: Порівняння
+    correct: false
+  - text: Гіпербола
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'Речення "Сходила зоря вечірня" містить:'
+  options:
+  - text: Інверсію
+    correct: true
+  - text: Анафору
+    correct: false
+  - text: Еліпсис
+    correct: false
+  - text: Метафору
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: '"Сумно мені, сумно..." — це приклад:'
+  options:
+  - text: Інверсії
+    correct: false
+  - text: Повтору (анафори)
+    correct: true
+  - text: Еліпсису
+    correct: false
+  - text: Метафори
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: '"І хто б міг подумати?" — це:'
+  options:
+  - text: Пряме питання
+    correct: false
+  - text: Риторичне питання
+    correct: true
+  - text: Непряме питання
+    correct: false
+  - text: Метафора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'Слово "мовив" порівняно зі "сказав" є:'
+  options:
+  - text: Нейтральним
+    correct: false
+  - text: Архаїчним/піднесеним
+    correct: true
+  - text: Розмовним
+    correct: false
+  - text: Офіційним
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: У реченні "Вітер б'є в обличчя мокрою ганчіркою" який прийом?
+  options:
+  - text: Порівняння
+    correct: true
+  - text: Метафора
+    correct: false
+  - text: Гіпербола
+    correct: false
+  - text: Інверсія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: '"Місто, яке він знав, виглядає чужим" — це приклад:'
+  options:
+  - text: Прямої мови
+    correct: false
+  - text: Непрямої мови
+    correct: false
+  - text: Невласне-прямої мови
+    correct: true
+  - text: Авторської мови
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: '"Донечка" порівняно з "дочка" є:'
+  options:
+  - text: Нейтральним
+    correct: false
+  - text: Зменшувально-пестливим
+    correct: true
+  - text: Згрубілим
+    correct: false
+  - text: Офіційним
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: '"Вітрище" порівняно з "вітер" виражає:'
+  options:
+  - text: Ніжність
+    correct: false
+  - text: Силу, інтенсивність
+    correct: true
+  - text: Нейтральність
+    correct: false
+  - text: Офіційність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'Антоніми "будувати — руйнувати" використовуються для:'
+  options:
+  - text: Опису одного процесу
+    correct: false
+  - text: Створення контрасту
+    correct: true
+  - text: Уточнення значення
+    correct: false
+  - text: Офіційного документа
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'У літературному стилі "старий, давній, древній, архаїчний" — це:'
+  options:
+  - text: Антоніми
+    correct: false
+  - text: Синоніми з відтінками
+    correct: true
+  - text: Омоніми
+    correct: false
+  - text: Пароніми
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз літературних текстів
+  question: 'Головна мета літературного стилю:'
+  options:
+  - text: Передача точної інформації
+    correct: false
+  - text: Естетичний вплив на читача
+    correct: true
+  - text: Регулювання відносин
+    correct: false
+  - text: Наукове пояснення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Метафора — це явне порівняння зі словом "як".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Персоніфікація — це оживлення неживого.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Інверсія — це стандартний порядок слів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Гіпербола — це перебільшення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Епітет — це дієслово.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Слово "мовив" — це сучасне нейтральне слово.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Анафора — це повторення слів на початку речень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Літературний стиль — найбільш стандартизований.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Риторичне питання потребує відповіді.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Слово "зоря" звучить піднесено порівняно із "зірка".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Невласне-пряма мова використовує слова "він сказав".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: '"Сонечко" — це зменшувально-пестлива форма.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: '"Вітрище" виражає ніжність.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: У літературному стилі можна використовувати інверсію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Порівняння завжди використовує слово "як".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики літературного стилю
+  statement: Еліпсис — це пропуск слів, зрозумілих із контексту.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

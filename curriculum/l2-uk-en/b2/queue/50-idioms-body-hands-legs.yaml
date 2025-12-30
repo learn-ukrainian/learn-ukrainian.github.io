@@ -1,0 +1,1151 @@
+module: 50-idioms-body-hands-legs
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/50-idioms-body-hands-legs.md
+generated: '2025-12-30T00:32:51.241480'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 26
+  unjumble: 16
+  quiz: 26
+  true-false: 16
+item_count: 92
+items:
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Він справжній майстер на всі ноги.
+  error: ноги
+  answer: руки
+  sentence_corrected: Він справжній майстер на всі руки.
+  options:
+  - ноги
+  - руки
+  - пальці
+  - долоні
+  original_explanation: Правильно — «майстер на всі руки». Цей вираз стосується саме
+    рук.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: У мене ноги не доходять до цієї справи.
+  error: ноги
+  answer: руки
+  sentence_corrected: У мене руки не доходять до цієї справи.
+  options:
+  - ноги
+  - руки
+  - очі
+  - думки
+  original_explanation: Правильно — «руки не доходять». Ноги ходять, а руки роблять.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Він підставив мені руку на зборах.
+  error: руку
+  answer: ногу
+  sentence_corrected: Він підставив мені ногу на зборах.
+  options:
+  - руку
+  - ногу
+  - плече
+  - спину
+  original_explanation: Правильно — «підставив ногу». «Підставити руку» — це допомогти.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Діти постійно плутаються під руками.
+  error: руками
+  answer: ногами
+  sentence_corrected: Діти постійно плутаються під ногами.
+  options:
+  - руками
+  - ногами
+  - очима
+  - вухами
+  original_explanation: Правильно — «плутатися під ногами». Цей вираз стосується ніг.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Політик впав у калюжу на прес-конференції.
+  error: впав
+  answer: сів
+  sentence_corrected: Політик сів у калюжу на прес-конференції.
+  options:
+  - впав
+  - сів
+  - ліг
+  - став
+  original_explanation: Правильний вираз — «сісти в калюжу», а не «впасти».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Після університету вона встала на ноги.
+  error: встала
+  answer: стала
+  sentence_corrected: Після університету вона стала на ноги.
+  options:
+  - встала
+  - стала
+  - лягла
+  - сіла
+  original_explanation: Правильно — «стала на ноги». «Встати» — буквальне значення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Бабуся каже, що він дуже важкий на ногу.
+  error: важкий
+  answer: легкий
+  sentence_corrected: Бабуся каже, що він дуже легкий на ногу.
+  options:
+  - важкий
+  - легкий
+  - швидкий
+  - повільний
+  original_explanation: Правильно — «легкий на ногу». Антонім — «важкий на підйом».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у фразеологізмах
+  sentence_with_error: Новий закон розв'язав руки підприємцям, позбавивши їх можливості
+    діяти.
+  error: розв'язав
+  answer: зв'язав
+  sentence_corrected: Новий закон зв'язав руки підприємцям, позбавивши їх можливості
+    діяти.
+  options:
+  - розв'язав
+  - зв'язав
+  - дав
+  - забрав
+  original_explanation: «Зв'язати руки» — обмежити, «розв'язати руки» — дати свободу.
+    Тут потрібен перший варіант.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Мій дядько — справжній _____. Він може полагодити будь-що.
+  answer: майстер на всі руки
+  complete_sentence: Мій дядько — справжній майстер на всі руки__. Він може полагодити
+    будь-що.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Вибач, у мене _____ до твого прохання — дуже багато роботи.
+  answer: руки не доходять
+  complete_sentence: Вибач, у мене руки не доходять__ до твого прохання — дуже багато
+    роботи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Новий закон _____ підприємцям — тепер вони не можуть швидко приймати
+    рішення.
+  answer: зв'язав руки
+  complete_sentence: Новий закон зв'язав руки__ підприємцям — тепер вони не можуть
+    швидко приймати рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Конкурент _____ нашій компанії — поширив неправдиву інформацію.
+  answer: підставив ногу
+  complete_sentence: Конкурент підставив ногу__ нашій компанії — поширив неправдиву
+    інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Діти постійно _____, коли я намагаюся працювати вдома.
+  answer: плутаються під ногами
+  complete_sentence: Діти постійно плутаються під ногами__, коли я намагаюся працювати
+    вдома.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Політик _____ на прес-конференції, коли не зміг відповісти на
+    просте запитання.
+  answer: сів у калюжу
+  complete_sentence: Політик сів у калюжу__ на прес-конференції, коли не зміг відповісти
+    на просте запитання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після університету Олена швидко _____ — знайшла роботу і зняла
+    квартиру.
+  answer: стала на ноги
+  complete_sentence: Після університету Олена швидко стала на ноги__ — знайшла роботу
+    і зняла квартиру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Бабуся каже, що Андрійко дуже _____ — тільки покличеш, і він
+    уже тут.
+  answer: легкий на ногу
+  complete_sentence: Бабуся каже, що Андрійко дуже легкий на ногу__ — тільки покличеш,
+    і він уже тут.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Директор нарешті _____ менеджерам — тепер вони можуть самі приймати
+    рішення.
+  answer: розв'язав руки
+  complete_sentence: Директор нарешті розв'язав руки__ менеджерам — тепер вони можуть
+    самі приймати рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Батьки все життя працювали, щоб _____ своїх дітей.
+  answer: поставити на ноги
+  complete_sentence: Батьки все життя працювали, щоб поставити на ноги__ своїх дітей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: У моєї бабусі справжні _____ — вона шиє чудовий одяг.
+  answer: золоті руки
+  complete_sentence: У моєї бабусі справжні золоті руки__ — вона шиє чудовий одяг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Магазин зовсім поруч, _____.
+  answer: рукою подати
+  complete_sentence: Магазин зовсім поруч, рукою подати__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Після хвороби дідусь поступово _____ і почав ходити.
+  answer: піднявся на ноги
+  complete_sentence: Після хвороби дідусь поступово піднявся на ноги__ і почав ходити.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Мій брат дуже _____ — завжди шукає відмовки, щоб нікуди не йти.
+  answer: важкий на підйом
+  complete_sentence: Мій брат дуже важкий на підйом__ — завжди шукає відмовки, щоб
+    нікуди не йти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Керівник завжди _____ — знає про всі новини компанії.
+  answer: тримає руку на пульсі
+  complete_sentence: Керівник завжди тримає руку на пульсі__ — знає про всі новини
+    компанії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте фразеологізм у контекст
+  sentence_template: Не хочу _____ на завтрашній презентації — треба добре підготуватися.
+  answer: сісти в калюжу
+  complete_sentence: Не хочу сісти в калюжу__ на завтрашній презентації — треба добре
+    підготуватися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Мама: Як справи у Миколи? Тато: Добре! Він нарешті _____.'
+  answer: став на ноги
+  complete_sentence: 'Мама: Як справи у Миколи? Тато: Добре! Він нарешті став на ноги__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Тато: Він відкрив власну майстерню. Мама: Справді? Він тепер
+    справжній _____!'
+  answer: майстер на всі руки
+  complete_sentence: 'Тато: Він відкрив власну майстерню. Мама: Справді? Він тепер
+    справжній майстер на всі руки__!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Мама: Головне, щоб йому ніхто не _____ в бізнесі.'
+  answer: підставив ногу
+  complete_sentence: 'Мама: Головне, щоб йому ніхто не підставив ногу__ в бізнесі.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Тато: Він _____ — швидко реагує на проблеми. Впорається.'
+  answer: легкий на ногу
+  complete_sentence: 'Тато: Він легкий на ногу__ — швидко реагує на проблеми. Впорається.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Клієнт: Ви можете полагодити цей годинник? Майстер: Звісно!
+    У мене _____.'
+  answer: золоті руки
+  complete_sentence: 'Клієнт: Ви можете полагодити цей годинник? Майстер: Звісно!
+    У мене золоті руки__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Клієнт: А скільки часу це займе? Майстер: _____ до дрібниць
+    — у мене черга на тиждень.'
+  answer: Руки не доходять
+  complete_sentence: 'Клієнт: А скільки часу це займе? Майстер: Руки не доходять__
+    до дрібниць — у мене черга на тиждень.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Олена: Чому ти ще не прибрав гараж? Петро: _____! У мене стільки
+    роботи!'
+  answer: Руки не доходять
+  complete_sentence: 'Олена: Чому ти ще не прибрав гараж? Петро: Руки не доходять__!
+    У мене стільки роботи!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Богдан: Вічно під лежачий камінь вода не тече. Або говориш,
+    або шукаєш іншу роботу. Андрій: Ти правий. _____ шукати нову, але треба.'
+  answer: Руки не доходять
+  complete_sentence: 'Богдан: Вічно під лежачий камінь вода не тече. Або говориш,
+    або шукаєш іншу роботу. Андрій: Ти правий. Руки не доходять__ шукати нову, але
+    треба.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Оксана: Не хочу _____ на завтрашній презентації — треба добре
+    підготуватися.'
+  answer: сісти в калюжу
+  complete_sentence: 'Оксана: Не хочу сісти в калюжу__ на завтрашній презентації —
+    треба добре підготуватися.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть діалог фразеологізмами
+  sentence_template: 'Віктор: Директор _____ менеджерам — тепер вони можуть самі приймати
+    рішення.'
+  answer: розв'язав руки
+  complete_sentence: 'Віктор: Директор розв''язав руки__ менеджерам — тепер вони можуть
+    самі приймати рішення.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Майстер на всі руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Руки не доходять.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Зв'язати руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Підставити ногу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Плутатися під ногами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Сісти в калюжу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Стати на ноги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Легкий на ногу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Золоті руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Розв'язати руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Рукою подати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Тримати руку на пульсі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Поставити на ноги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Піднятися на ноги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Важкий на підйом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть фразеологізми
+  jumbled_words: []
+  answer: Стояти над душею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Яке значення має фразеологізм «майстер на всі руки» у переносному сенсі?
+  options:
+  - text: Людина з багатьма руками.
+    correct: false
+  - text: Універсальний фахівець, який вміє робити все.
+    correct: true
+  - text: Той, хто працює тільки руками.
+    correct: false
+  - text: Майстер з виготовлення рук для ляльок.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Коли найдоречніше використати вираз «руки не доходять»?
+  options:
+  - text: Коли людина має проблеми з руками.
+    correct: false
+  - text: Коли людина не може дотягнутися до чогось високого.
+    correct: false
+  - text: Коли немає часу або можливості зайнятися чимось.
+    correct: true
+  - text: Коли хтось працює дуже повільно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Що означає фразеологізм «зв'язати руки»?
+  options:
+  - text: Фізично зв'язати руки мотузкою.
+    correct: false
+  - text: Позбавити можливості діяти; обмежити свободу дій.
+    correct: true
+  - text: Тримати руки разом під час молитви.
+    correct: false
+  - text: Навчити когось зав'язувати шнурки.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: У якій ситуації найкраще використати фразеологізм «підставити ногу»?
+  options:
+  - text: Коли хтось допомагає іншому встати.
+    correct: false
+  - text: Коли хтось підступно завадив іншій людині.
+    correct: true
+  - text: Коли людина підставляє ногу для масажу.
+    correct: false
+  - text: Коли спортсмен витягує ногу перед стартом.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Який фразеологізм означає «заважати; бути на заваді»?
+  options:
+  - text: Стати на ноги.
+    correct: false
+  - text: Легкий на ногу.
+    correct: false
+  - text: Плутатися під ногами.
+    correct: true
+  - text: Сісти в калюжу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Що означає фразеологізм «сісти в калюжу» у переносному значенні?
+  options:
+  - text: Намочити одяг після дощу.
+    correct: false
+  - text: Знайти місце для відпочинку біля води.
+    correct: false
+  - text: Осоромитися; зазнати невдачі публічно.
+    correct: true
+  - text: Сісти на мокрий стілець.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Коли використовують фразеологізм «стати на ноги»?
+  options:
+  - text: Коли хтось встає зранку з ліжка.
+    correct: false
+  - text: Коли людина стає незалежною або одужує.
+    correct: true
+  - text: Коли спортсмен готується до бігу.
+    correct: false
+  - text: Коли хтось вперше вчиться ходити.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Який фразеологізм описує людину, яка швидко відгукується і готова йти
+    куди завгодно?
+  options:
+  - text: Майстер на всі руки.
+    correct: false
+  - text: Легкий на ногу.
+    correct: true
+  - text: Плутатися під ногами.
+    correct: false
+  - text: Руки не доходять.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Що означає антонім «розв'язати руки» до фразеологізму «зв'язати руки»?
+  options:
+  - text: Зняти мотузку з рук.
+    correct: false
+  - text: Дати свободу дій; надати можливість діяти.
+    correct: true
+  - text: Витягнути руки з кишень.
+    correct: false
+  - text: Зробити масаж рук.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Який фразеологізм найкраще підходить для опису негативного колеги, який
+    заважає вашій роботі?
+  options:
+  - text: Він легкий на ногу.
+    correct: false
+  - text: У нього руки не доходять.
+    correct: false
+  - text: Він постійно плутається під ногами.
+    correct: true
+  - text: Він майстер на всі руки.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: У якому регістрі переважно вживається фразеологізм «сісти в калюжу»?
+  options:
+  - text: Офіційно-діловий.
+    correct: false
+  - text: Науковий.
+    correct: false
+  - text: Розмовний.
+    correct: true
+  - text: Художній.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Яке значення має вираз «золоті руки» у порівнянні з «майстер на всі руки»?
+  options:
+  - text: Вони мають однакове значення.
+    correct: false
+  - text: «Золоті руки» наголошує на якості роботи, а не на універсальності.
+    correct: true
+  - text: «Золоті руки» означає багатого майстра.
+    correct: false
+  - text: «Золоті руки» вживається тільки іронічно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Який англійський еквівалент найближчий до фразеологізму «сісти в калюжу»?
+  options:
+  - text: To sit in water.
+    correct: false
+  - text: To put one's foot in one's mouth.
+    correct: true
+  - text: To fall in a puddle.
+    correct: false
+  - text: To sit down unexpectedly.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Яку помилку часто роблять при вживанні соматичних фразеологізмів?
+  options:
+  - text: Використання у неформальній розмові.
+    correct: false
+  - text: Змішування двох різних фразеологізмів.
+    correct: true
+  - text: Вживання занадто часто.
+    correct: false
+  - text: Переклад на англійську мову.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Що символізують руки в українських фразеологізмах?
+  options:
+  - text: Силу та агресію.
+    correct: false
+  - text: Діяльність, майстерність і здатність діяти.
+    correct: true
+  - text: Любов і ніжність.
+    correct: false
+  - text: Багатство і владу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення соматичних фразеологізмів
+  question: Що символізують ноги в українських фразеологізмах?
+  options:
+  - text: Силу та швидкість.
+    correct: false
+  - text: Рух, незалежність і життєвий шлях.
+    correct: true
+  - text: Танці та розваги.
+    correct: false
+  - text: Здоров'я та молодість.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваш друг уміє все ремонтувати — від машини до комп'ютера. Як його описати?
+  options:
+  - text: Він легкий на ногу.
+    correct: false
+  - text: Він майстер на всі руки.
+    correct: true
+  - text: Він стоїть на ногах.
+    correct: false
+  - text: У нього руки не доходять.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Колега не дає вам нормально працювати, постійно заходить і питає. Що ви
+    скажете?
+  options:
+  - text: Ти підставляєш мені ногу!
+    correct: false
+  - text: Ти плутаєшся під ногами!
+    correct: true
+  - text: Ти зв'язуєш мені руки!
+    correct: false
+  - text: Ти сідаєш у калюжу!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ви хочете допомогти другу, але маєте занадто багато роботи. Що сказати?
+  options:
+  - text: У мене зв'язані руки.
+    correct: false
+  - text: Я легкий на ногу.
+    correct: false
+  - text: У мене руки не доходять.
+    correct: true
+  - text: Я сиджу в калюжі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваш син закінчив університет, знайшов роботу і зняв квартиру. Що ви скажете?
+  options:
+  - text: Він сів у калюжу.
+    correct: false
+  - text: Він став на ноги.
+    correct: true
+  - text: Він плутається під ногами.
+    correct: false
+  - text: Йому підставили ногу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Конкурент поширив неправдиву інформацію про вашу компанію. Як це описати?
+  options:
+  - text: Він зв'язав нам руки.
+    correct: false
+  - text: Він підставив нам ногу.
+    correct: true
+  - text: Він плутався під ногами.
+    correct: false
+  - text: Він легкий на ногу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Політик не зміг відповісти на просте запитання і всі сміялися. Як це описати?
+  options:
+  - text: Він підставив ногу.
+    correct: false
+  - text: Він сів у калюжу.
+    correct: true
+  - text: Він став на ноги.
+    correct: false
+  - text: У нього руки не доходять.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Новий закон не дає підприємцям швидко приймати рішення. Як це описати?
+  options:
+  - text: Закон підставив ногу.
+    correct: false
+  - text: Закон зв'язав руки.
+    correct: true
+  - text: Закон сів у калюжу.
+    correct: false
+  - text: Закон став на ноги.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Ваша бабуся каже, що онук завжди швидко приходить, коли вона кличе. Який
+    фразеологізм вона вживає?
+  options:
+  - text: Він майстер на всі руки.
+    correct: false
+  - text: Він легкий на ногу.
+    correct: true
+  - text: Він стоїть на ногах.
+    correct: false
+  - text: У нього золоті руки.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Батьки все життя працювали, щоб діти здобули освіту і стали незалежними.
+    Який фразеологізм описує це?
+  options:
+  - text: Вони підставили ногу.
+    correct: false
+  - text: Вони поставили на ноги.
+    correct: true
+  - text: Вони зв'язали руки.
+    correct: false
+  - text: Вони сіли в калюжу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть фразеологізм для ситуації
+  question: Директор нарешті дозволив менеджерам самим приймати рішення. Як це описати?
+  options:
+  - text: Він зв'язав руки.
+    correct: false
+  - text: Він розв'язав руки.
+    correct: true
+  - text: Він підставив ногу.
+    correct: false
+  - text: Він сів у калюжу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «майстер на всі руки» описує людину з багатьма талантами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «руки не доходять» можна використовувати в офіційних документах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «зв'язати руки» має тільки негативне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «підставити ногу» можна використати як комплімент.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «плутатися під ногами» може вживатися з легким роздратуванням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «сісти в калюжу» походить із міського життя.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «стати на ноги» може означати і фінансову незалежність,
+    і одужання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «легкий на ногу» є антонімом до «важкий на підйом».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «золоті руки» означає те саме, що і «майстер на всі руки».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: В українській мові соматичні фразеологізми — найбільша група ідіом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «рукою подати» означає, що потрібно щось передати рукою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Фразеологізм «підставити плече» має протилежне значення до «підставити
+    ногу».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Вираз «стояти над душею» є синонімом до «плутатися під ногами».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: У публіцистиці можна використовувати фразеологізм «зв'язати руки».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Англійський вираз «Jack of all trades» має тільки позитивне значення,
+    як і український «майстер на всі руки».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання фразеологізмів
+  statement: Соматичні фразеологізми існують тільки в українській мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

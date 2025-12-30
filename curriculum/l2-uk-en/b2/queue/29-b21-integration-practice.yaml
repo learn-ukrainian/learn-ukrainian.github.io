@@ -1,0 +1,1416 @@
+module: 29-b21-integration-practice
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/29-b21-integration-practice.md
+generated: '2025-12-29T22:44:02.013691'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Згідно з проведеним дослідженням, ну типу результати позитивні.
+  error: ну типу
+  answer: загалом
+  sentence_corrected: Згідно з проведеним дослідженням, загалом результати позитивні.
+  options:
+  - ну типу
+  - загалом
+  - типу
+  - ну
+  original_explanation: Розмовне "ну типу" недоречне в науковому тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Шановний директоре, я хочу сказати, що короче документи готові.
+  error: короче
+  answer: отже
+  sentence_corrected: Шановний директоре, я хочу сказати, що отже документи готові.
+  options:
+  - короче
+  - отже
+  - ну
+  - типу
+  original_explanation: Розмовне "короче" недоречне в офіційному листі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Дослідження показує, що методологія була офігенною.
+  error: офігенною
+  answer: ефективною
+  sentence_corrected: Дослідження показує, що методологія була ефективною.
+  options:
+  - офігенною
+  - ефективною
+  - класною
+  - крутою
+  original_explanation: Сленг "офігенний" недоречний у науковому стилі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Було встановлено, що ця річ продається нереально добре.
+  error: нереально
+  answer: надзвичайно
+  sentence_corrected: Було встановлено, що ця річ продається надзвичайно добре.
+  options:
+  - нереально
+  - надзвичайно
+  - типу
+  - офігенно
+  original_explanation: Розмовне "нереально" недоречне в офіційному контексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Президент мовив, що економіка зростає на 5%.
+  error: мовив
+  answer: заявив
+  sentence_corrected: Президент заявив, що економіка зростає на 5%.
+  options:
+  - мовив
+  - заявив
+  - сказанув
+  - промовив
+  original_explanation: Архаїчне "мовив" недоречне в новинному тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: У результаті проведеного аналізу гіпотезу типу підтверджено.
+  error: типу
+  answer: було
+  sentence_corrected: У результаті проведеного аналізу гіпотезу було підтверджено.
+  options:
+  - типу
+  - було
+  - ну
+  - якби
+  original_explanation: Розмовне "типу" недоречне в науковому тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Прошу розглянути мою заяву, бо мені реально треба.
+  error: бо мені реально треба
+  answer: оскільки це питання є терміновим
+  sentence_corrected: Прошу розглянути мою заяву, оскільки це питання є терміновим.
+  options:
+  - бо мені реально треба
+  - оскільки це питання є терміновим
+  - бо треба
+  - бо дуже хочу
+  original_explanation: Розмовний вираз недоречний в офіційній заяві.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Дослідники кажуть, що проблема як би існує.
+  error: як би
+  answer: дійсно
+  sentence_corrected: Дослідники кажуть, що проблема дійсно існує.
+  options:
+  - як би
+  - дійсно
+  - типу
+  - ніби
+  original_explanation: Розмовне "як би" недоречне в науковому контексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Відповідно до постанови, прям усіх зобов'язали.
+  error: прям
+  answer: усіх було зобов'язано
+  sentence_corrected: Відповідно до постанови, усіх було зобов'язано усіх зобов'язали.
+  options:
+  - прям
+  - усіх було зобов'язано
+  - ну всіх
+  - типу всіх
+  original_explanation: Розмовне "прям" недоречне в офіційному тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Статистика показує, що ВВП зріс, і це круто.
+  error: і це круто
+  answer: що є позитивним показником
+  sentence_corrected: Статистика показує, що ВВП зріс, що є позитивним показником.
+  options:
+  - і це круто
+  - що є позитивним показником
+  - і це класно
+  - і це офігенно
+  original_explanation: Сленг недоречний в економічному аналізі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Компанія, яка працює на ринку, типу успішна.
+  error: типу
+  answer: є
+  sentence_corrected: Компанія, яка працює на ринку, є успішна.
+  options:
+  - типу
+  - є
+  - ну
+  - якби
+  original_explanation: '"Типу" недоречне в діловому описі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Згідно з рішенням суду, ну там відповідача визнано винним.
+  error: ну там
+  answer: —
+  sentence_corrected: Згідно з рішенням суду, — відповідача визнано винним.
+  options:
+  - ну там
+  - —
+  - типу
+  - якби
+  original_explanation: Розмовні вставки недоречні в юридичному тексті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Результати експерименту, на жаль, якісь фігові.
+  error: фігові
+  answer: незадовільні
+  sentence_corrected: Результати експерименту, на жаль, якісь незадовільні.
+  options:
+  - фігові
+  - незадовільні
+  - погані
+  - кепські
+  original_explanation: Сленг недоречний у науковому звіті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: 'Прес-реліз: Наша компанія прям топ на ринку.'
+  error: прям топ
+  answer: є лідером
+  sentence_corrected: 'Прес-реліз: Наша компанія є лідером на ринку.'
+  options:
+  - прям топ
+  - є лідером
+  - круто
+  - найкраща типу
+  original_explanation: Сленг недоречний в офіційному прес-релізі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Хоча дослідження завершено, але результати ну такі собі.
+  error: ну такі собі
+  answer: потребують додаткового аналізу
+  sentence_corrected: Хоча дослідження завершено, але результати потребують додаткового
+    аналізу.
+  options:
+  - ну такі собі
+  - потребують додаткового аналізу
+  - фігові
+  - не дуже
+  original_explanation: Розмовний вираз недоречний у науковому звіті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте стилістичні помилки
+  sentence_with_error: Наказ видано, і всім треба його типу виконувати.
+  error: типу
+  answer: неухильно
+  sentence_corrected: Наказ видано, і всім треба його неухильно виконувати.
+  options:
+  - типу
+  - неухильно
+  - ну
+  - якось
+  original_explanation: '"Типу" недоречне в офіційному наказі.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Парламент ухвалив закон." Пасив: "Закон _____ парламентом."'
+  answer: було ухвалено
+  complete_sentence: 'Активний: "Парламент ухвалив закон." Пасив: "Закон було ухвалено__
+    парламентом."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Компанія будує офіс." Пасив: "Офіс _____."'
+  answer: будується
+  complete_sentence: 'Активний: "Компанія будує офіс." Пасив: "Офіс будується__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Студенти напишуть тест." Пасив: "Тест _____ студентами."'
+  answer: буде написано
+  complete_sentence: 'Активний: "Студенти напишуть тест." Пасив: "Тест буде написано__
+    студентами."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Вчений опублікував статтю." Пасив: "Стаття _____
+    вченим."'
+  answer: опублікована
+  complete_sentence: 'Активний: "Вчений опублікував статтю." Пасив: "Стаття опублікована__
+    вченим."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Люди кажуть, що..." Пасив: "_____, що..."'
+  answer: Кажуть
+  complete_sentence: 'Активний: "Люди кажуть, що..." Пасив: "Кажуть__, що..."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Уряд приймає рішення." Пасив: "Рішення _____."'
+  answer: приймається
+  complete_sentence: 'Активний: "Уряд приймає рішення." Пасив: "Рішення приймається__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'У науковому стилі: "Результати _____ у таблиці 1."'
+  answer: представлено
+  complete_sentence: 'У науковому стилі: "Результати представлено__ у таблиці 1."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'У діловому стилі: "Документи _____ до розгляду."'
+  answer: подано
+  complete_sentence: 'У діловому стилі: "Документи подано__ до розгляду."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Архітектор спроєктував будинок." Пасив: "Будинок
+    _____ архітектором."'
+  answer: спроєктований
+  complete_sentence: 'Активний: "Архітектор спроєктував будинок." Пасив: "Будинок
+    спроєктований__ архітектором."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Вони продають товари." Пасив: "Товари _____."'
+  answer: продаються
+  complete_sentence: 'Активний: "Вони продають товари." Пасив: "Товари продаються__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'У пресі: "_____, що президент приїде завтра."'
+  answer: Повідомляється
+  complete_sentence: 'У пресі: "Повідомляється__, що президент приїде завтра."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Комісія розглянула заяву." Пасив: "Заяву _____."'
+  answer: розглянуто
+  complete_sentence: 'Активний: "Комісія розглянула заяву." Пасив: "Заяву розглянуто__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Офіційний стиль: "Наказ _____ директором."'
+  answer: підписано
+  complete_sentence: 'Офіційний стиль: "Наказ підписано__ директором."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Влада контролює ситуацію." Пасив: "Ситуація _____."'
+  answer: контролюється
+  complete_sentence: 'Активний: "Влада контролює ситуацію." Пасив: "Ситуація контролюється__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Науковий стиль: "Гіпотезу _____ експериментально."'
+  answer: підтверджено
+  complete_sentence: 'Науковий стиль: "Гіпотезу підтверджено__ експериментально."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація в пасив
+  sentence_template: 'Активний: "Робітники побудували міст." Пасив: "Міст _____."'
+  answer: побудовано
+  complete_sentence: 'Активний: "Робітники побудували міст." Пасив: "Міст побудовано__."'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, результати дослідження позитивні.
+  answer: На думку експертів
+  complete_sentence: На думку експертів__, результати дослідження позитивні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Економіка, _____, продовжує зростати.
+  answer: безперечно
+  complete_sentence: Економіка, безперечно__, продовжує зростати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Рішення, _____, буде прийнято завтра.
+  answer: ймовірно
+  complete_sentence: Рішення, ймовірно__, буде прийнято завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, пропозицію було відхилено.
+  answer: На жаль
+  complete_sentence: На жаль__, пропозицію було відхилено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Проєкт, _____, має великі перспективи.
+  answer: на мою думку
+  complete_sentence: Проєкт, на мою думку__, має великі перспективи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, ситуація покращується.
+  answer: Очевидно
+  complete_sentence: Очевидно__, ситуація покращується.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Реформи, _____, дають результати.
+  answer: безсумнівно
+  complete_sentence: Реформи, безсумнівно__, дають результати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, інфляція знизилась до 5%.
+  answer: Згідно з даними
+  complete_sentence: Згідно з даними__, інфляція знизилась до 5%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Компанія, _____, планує розширення.
+  answer: як повідомляється
+  complete_sentence: Компанія, як повідомляється__, планує розширення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, результати перевершили очікування.
+  answer: На щастя
+  complete_sentence: На щастя__, результати перевершили очікування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Закон, _____, набуде чинності з нового року.
+  answer: як відомо
+  complete_sentence: Закон, як відомо__, набуде чинності з нового року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, проблема залишається актуальною.
+  answer: Водночас
+  complete_sentence: Водночас__, проблема залишається актуальною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Експорт, _____, зріс на 15%.
+  answer: за останніми даними
+  complete_sentence: Експорт, за останніми даними__, зріс на 15%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, питання потребує додаткового вивчення.
+  answer: Безумовно
+  complete_sentence: Безумовно__, питання потребує додаткового вивчення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: Рішення, _____, вплине на всіх.
+  answer: безперечно
+  complete_sentence: Рішення, безперечно__, вплине на всіх.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставні конструкції та модалізація
+  sentence_template: _____, це важливий крок уперед.
+  answer: Без сумніву
+  complete_sentence: Без сумніву__, це важливий крок уперед.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Стаття, яка була опублікована вчора, викликала дискусію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: На думку експертів, ситуація поступово покращується.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Хоча було холодно, вони продовжували працювати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Закон, який було ухвалено, набуває чинності завтра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Результати, що було отримано, підтверджують гіпотезу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Незважаючи на труднощі, проєкт було завершено вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Компанія, яка працює на ринку, розширюється.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Рішення, як очікувалось, було прийнято одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Оскільки економіка зростає, безробіття знижується.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Документи, які підготовлені відділом, надіслано партнерам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: На жаль, пропозицію було відхилено.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Згідно з даними, інфляція знизилась до 5%.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Товари, що продаються онлайн, дешевші.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Попри те що йшов дощ, захід відбувся.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Водночас, як зазначалось раніше, проблема залишається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть складнопідрядні речення
+  jumbled_words: []
+  answer: Компанія, очевидно, планує розширення наступного року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яка пасивна конструкція використана в реченні "Закон було ухвалено парламентом"?
+  options:
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Безособовий пасив
+    correct: true
+  - text: Пасив третьої особи множини
+    correct: false
+  - text: Активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яка пасивна конструкція використана в реченні "Ця книга продається в усіх
+    магазинах"?
+  options:
+  - text: Безособовий пасив
+    correct: false
+  - text: Рефлексивний пасив
+    correct: true
+  - text: Пасив з допоміжним дієсловом
+    correct: false
+  - text: Активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яка пасивна конструкція використана в реченні "Кажуть, що завтра буде
+    дощ"?
+  options:
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Безособовий пасив
+    correct: false
+  - text: Пасив третьої особи множини
+    correct: true
+  - text: Пасивний дієприкметник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Який тип пасиву в реченні "Стаття написана видатним вченим"?
+  options:
+  - text: Безособовий пасив
+    correct: false
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Пасивний дієприкметник
+    correct: true
+  - text: Пасив третьої особи множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Як правильно трансформувати "Студенти написали тест" у пасив?
+  options:
+  - text: Тест написався студентами.
+    correct: false
+  - text: Тест було написано студентами.
+    correct: true
+  - text: Студентами написали тест.
+    correct: false
+  - text: Тест написують студенти.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: У якому реченні використано рефлексивний пасив?
+  options:
+  - text: Будинок збудовано минулого року.
+    correct: false
+  - text: Будинок будується вже два роки.
+    correct: true
+  - text: Будинок побудований архітектором.
+    correct: false
+  - text: Будинок збудували робітники.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Який регістр типовий для безособового пасиву?
+  options:
+  - text: Розмовний
+    correct: false
+  - text: Офіційно-діловий та науковий
+    correct: true
+  - text: Художній
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яка форма пасиву найчастіше використовується в розмовній мові?
+  options:
+  - text: Безособовий пасив
+    correct: false
+  - text: Пасивний дієприкметник
+    correct: false
+  - text: Пасив третьої особи множини
+    correct: true
+  - text: Рефлексивний пасив
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Як утворюється безособовий пасив майбутнього часу?
+  options:
+  - text: буде + -но/-то
+    correct: true
+  - text: буде + інфінітив
+    correct: false
+  - text: -ся + буде
+    correct: false
+  - text: -ний + буде
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: У якому реченні пасив використано неправильно?
+  options:
+  - text: Рішення було прийнято одноголосно.
+    correct: false
+  - text: Ця річ продається в магазині.
+    correct: false
+  - text: Кажуть, що він приїде завтра.
+    correct: false
+  - text: Стаття написалась автором.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Який тип пасиву в реченні "Документи мають бути підготовлені до понеділка"?
+  options:
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Безособовий пасив
+    correct: false
+  - text: Модальний пасив
+    correct: true
+  - text: Пасив третьої особи множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яке речення містить пасивний дієприкметник?
+  options:
+  - text: Книга читається легко.
+    correct: false
+  - text: Книга прочитана за вечір.
+    correct: true
+  - text: Кажуть, що книга цікава.
+    correct: false
+  - text: Книгу було прочитано.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Як правильно трансформувати "Учені досліджують проблему" у рефлексивний
+    пасив?
+  options:
+  - text: Проблема була досліджена ученими.
+    correct: false
+  - text: Проблема досліджується ученими.
+    correct: false
+  - text: Проблема досліджується.
+    correct: true
+  - text: Проблему досліджено.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: У якому стилі пасивні конструкції використовуються найрідше?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Яка функція пасиву в реченні "Рішення було прийнято"?
+  options:
+  - text: Підкреслити діяча
+    correct: false
+  - text: Приховати діяча або підкреслити результат
+    correct: true
+  - text: Зробити речення довшим
+    correct: false
+  - text: Додати емоційності
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення пасивних конструкцій
+  question: Як утворюється пасивний дієприкметник від дієслів на -ити?
+  options:
+  - text: -ний
+    correct: false
+  - text: -тий
+    correct: false
+  - text: -ений/-єний
+    correct: true
+  - text: -уваний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: У реченні "Закон, який було ухвалено вчора, набуває чинності" яка пасивна
+    конструкція?
+  options:
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Безособовий пасив
+    correct: true
+  - text: Пасивний дієприкметник
+    correct: false
+  - text: Пасив третьої особи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яке підрядне речення у "Компанія, яка працює на ринку, розширюється"?
+  options:
+  - text: Допустове
+    correct: false
+  - text: Означальне
+    correct: true
+  - text: Причинове
+    correct: false
+  - text: Умовне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Що є вставною конструкцією в "Результати, на думку експертів, позитивні"?
+  options:
+  - text: Результати
+    correct: false
+  - text: На думку експертів
+    correct: true
+  - text: Позитивні
+    correct: false
+  - text: Немає вставної конструкції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Який регістр у тексті "Цим повідомляємо, що Ваш запит розглянуто"?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Офіційно-діловий
+    correct: true
+  - text: Розмовний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка форма пасиву в "Товари продаються зі знижкою"?
+  options:
+  - text: Безособовий пасив
+    correct: false
+  - text: Рефлексивний пасив
+    correct: true
+  - text: Пасивний дієприкметник
+    correct: false
+  - text: Активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Що таке "хоча" в реченні "Хоча було холодно, вони працювали"?
+  options:
+  - text: Вставне слово
+    correct: false
+  - text: Допустовий сполучник
+    correct: true
+  - text: Означальний сполучник
+    correct: false
+  - text: Причиновий сполучник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Який регістр у "Ну типу економіка росте, круто!"?
+  options:
+  - text: Науковий
+    correct: false
+  - text: Публіцистичний
+    correct: false
+  - text: Офіційно-діловий
+    correct: false
+  - text: Розмовний
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка функція пасиву в "Дослідження проведено в 2024 році"?
+  options:
+  - text: Підкреслити діяча
+    correct: false
+  - text: Підкреслити результат без діяча
+    correct: true
+  - text: Зробити текст неформальним
+    correct: false
+  - text: Додати емоційності
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яке речення містить інверсію?
+  options:
+  - text: Студент читає книгу.
+    correct: false
+  - text: Важливим є питання освіти.
+    correct: true
+  - text: Вони працюють в офісі.
+    correct: false
+  - text: Компанія розширюється.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка форма "працюючий" у "Студент, працюючий над проєктом"?
+  options:
+  - text: Пасивний дієприкметник
+    correct: false
+  - text: Активний дієприкметник
+    correct: true
+  - text: Дієприслівник
+    correct: false
+  - text: Безособова форма
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка стилістична помилка в "Згідно з даними, результати офігенні"?
+  options:
+  - text: Неправильний сполучник
+    correct: false
+  - text: Змішування регістрів
+    correct: true
+  - text: Неправильний пасив
+    correct: false
+  - text: Немає помилки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Що означає "на жаль" у "На жаль, пропозицію відхилено"?
+  options:
+  - text: Причину
+    correct: false
+  - text: Ставлення мовця
+    correct: true
+  - text: Час дії
+    correct: false
+  - text: Місце дії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Який тип підрядного в "Оскільки економіка зростає, безробіття падає"?
+  options:
+  - text: Означальне
+    correct: false
+  - text: Допустове
+    correct: false
+  - text: Причинове
+    correct: true
+  - text: Умовне
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка форма пасиву найтиповіша для наукового стилю?
+  options:
+  - text: Пасив третьої особи
+    correct: false
+  - text: Рефлексивний пасив
+    correct: false
+  - text: Безособовий пасив
+    correct: true
+  - text: Активний стан
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка помилка в "Документи, які підготовлено, надіслано"?
+  options:
+  - text: Неправильний пасив
+    correct: false
+  - text: Неправильне підрядне
+    correct: true
+  - text: Неправильний регістр
+    correct: false
+  - text: Немає помилки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний аналіз тексту
+  question: Яка функція еліпсису в "— Куди? — До банку."?
+  options:
+  - text: Ускладнити речення
+    correct: false
+  - text: Скоротити зрозуміле
+    correct: true
+  - text: Додати офіційності
+    correct: false
+  - text: Змінити регістр
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: У науковому стилі пасивні конструкції використовуються часто.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Рефлексивний пасив завжди вказує на діяча.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Вставні конструкції можуть виражати ставлення автора.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Означальні підрядні речення відповідають на питання "який?".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: У розмовному стилі переважають складні пасивні конструкції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Безособовий пасив утворюється формами на -но, -то.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Пасив третьої особи множини завжди вимагає вказівки на діяча.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Інверсія — це стандартний порядок слів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Дієприкметниковий зворот може замінити підрядне речення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Офіційно-діловий стиль характеризується емоційністю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Публіцистичний стиль поєднує інформативність та емоційність.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Допустові підрядні речення вводяться сполучником "хоча".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Канцеляризми доречні в художньому тексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Активний дієприкметник утворюється від дієслів недоконаного виду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: У літературному стилі можна використовувати інверсію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Характеристики регістрів та граматичних структур
+  statement: Еліпсис — це додавання зайвих слів для виразності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

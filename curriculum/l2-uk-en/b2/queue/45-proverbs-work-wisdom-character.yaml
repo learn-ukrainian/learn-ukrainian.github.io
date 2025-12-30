@@ -1,0 +1,875 @@
+module: 45-proverbs-work-wisdom-character
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/45-proverbs-work-wisdom-character.md
+generated: '2025-12-30T00:00:47.469787'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 20
+  unjumble: 10
+  quiz: 20
+  true-false: 10
+item_count: 68
+items:
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Без праці нема плода.
+  error: праці
+  answer: труда
+  sentence_corrected: Без труда нема плода.
+  options:
+  - праці
+  - труда
+  - роботи
+  - зусиль
+  original_explanation: Правильна форма — «Без труда нема плода». «Труд» — архаїчне
+    слово у цьому прислів'ї.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Хто рано встає, тому щастя дає.
+  error: щастя
+  answer: Бог
+  sentence_corrected: Хто рано встає, тому Бог дає.
+  options:
+  - щастя
+  - Бог
+  - доля
+  - успіх
+  original_explanation: Правильна форма — «Хто рано встає, тому Бог дає».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Під нерухомий камінь вода не тече.
+  error: нерухомий
+  answer: лежачий
+  sentence_corrected: Під лежачий камінь вода не тече.
+  options:
+  - нерухомий
+  - лежачий
+  - великий
+  - важкий
+  original_explanation: Правильна форма — «Під лежачий камінь вода не тече».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Очі бояться, а ноги роблять.
+  error: ноги
+  answer: руки
+  sentence_corrected: Очі бояться, а руки роблять.
+  options:
+  - ноги
+  - руки
+  - люди
+  - голови
+  original_explanation: Правильна форма — «Очі бояться, а руки роблять».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Робота не ведмідь, у ліс не втече.
+  error: ведмідь
+  answer: вовк
+  sentence_corrected: Робота не вовк, у ліс не втече.
+  options:
+  - ведмідь
+  - вовк
+  - заєць
+  - лисиця
+  original_explanation: Правильна форма — «Робота не вовк, у ліс не втече».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Яблуко від яблуні далеко не росте.
+  error: росте
+  answer: падає
+  sentence_corrected: Яблуко від яблуні далеко не падає.
+  options:
+  - росте
+  - падає
+  - лежить
+  - котиться
+  original_explanation: Правильна форма — «Яблуко від яблуні далеко не падає».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Повільніше їдеш — далі будеш.
+  error: Повільніше
+  answer: Тихіше
+  sentence_corrected: Тихіше їдеш — далі будеш.
+  options:
+  - Повільніше
+  - Тихіше
+  - Спокійніше
+  - Обережніше
+  original_explanation: Правильна форма — «Тихіше їдеш — далі будеш».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в прислів'ях
+  sentence_with_error: Жадібний платить двічі.
+  error: Жадібний
+  answer: Скупий
+  sentence_corrected: Скупий платить двічі.
+  options:
+  - Жадібний
+  - Скупий
+  - Бідний
+  - Економний
+  original_explanation: Правильна форма — «Скупий платить двічі».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Без труда _____.
+  answer: нема плода
+  complete_sentence: Без труда нема плода__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Хто рано встає, _____.
+  answer: тому Бог дає
+  complete_sentence: Хто рано встає, тому Бог дає__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Під лежачий камінь _____.
+  answer: вода не тече
+  complete_sentence: Під лежачий камінь вода не тече__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Очі бояться, _____.
+  answer: а руки роблять
+  complete_sentence: Очі бояться, а руки роблять__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Терпіння і труд _____.
+  answer: все перетруть
+  complete_sentence: Терпіння і труд все перетруть__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Робота не вовк, _____.
+  answer: у ліс не втече
+  complete_sentence: Робота не вовк, у ліс не втече__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Хто не працює, _____.
+  answer: той не їсть
+  complete_sentence: Хто не працює, той не їсть__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Кінець — _____.
+  answer: ділу вінець
+  complete_sentence: Кінець — ділу вінець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Яблуко від яблуні _____.
+  answer: далеко не падає
+  complete_sentence: Яблуко від яблуні далеко не падає__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Закінчіть прислів'я
+  sentence_template: Тихіше їдеш — _____.
+  answer: далі будеш
+  complete_sentence: Тихіше їдеш — далі будеш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Студент три роки писав дисертацію. Нарешті захистився! _____.
+  answer: Кінець — ділу вінець
+  complete_sentence: Студент три роки писав дисертацію. Нарешті захистився! Кінець
+    — ділу вінець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Колега купив дешеве обладнання, яке зламалося за місяць. _____.
+  answer: Скупий платить двічі
+  complete_sentence: Колега купив дешеве обладнання, яке зламалося за місяць. Скупий
+    платить двічі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Марія боялася почати великий проєкт, але взялася і закінчила
+    за тиждень. _____.
+  answer: Очі бояться, а руки роблять
+  complete_sentence: Марія боялася почати великий проєкт, але взялася і закінчила
+    за тиждень. Очі бояться, а руки роблять__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Петро скаржиться на життя, але нічого не робить, щоб змінити
+    ситуацію. _____.
+  answer: Під лежачий камінь вода не тече
+  complete_sentence: Петро скаржиться на життя, але нічого не робить, щоб змінити
+    ситуацію. Під лежачий камінь вода не тече__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Син художника теж став відомим митцем, як і батько. _____.
+  answer: Яблуко від яблуні далеко не падає
+  complete_sentence: Син художника теж став відомим митцем, як і батько. Яблуко від
+    яблуні далеко не падає__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Ця пропозиція виглядає занадто добре. Будь обережний! _____.
+  answer: Не все те золото, що блищить
+  complete_sentence: Ця пропозиція виглядає занадто добре. Будь обережний! Не все
+    те золото, що блищить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Керівник критикує підлеглих за запізнення, хоча сам часто приходить
+    пізно. _____.
+  answer: У чужому оці порошину бачить
+  complete_sentence: Керівник критикує підлеглих за запізнення, хоча сам часто приходить
+    пізно. У чужому оці порошину бачить__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Колега образився, коли я сказав правду про якість його роботи.
+    _____.
+  answer: Правда очі коле
+  complete_sentence: Колега образився, коли я сказав правду про якість його роботи.
+    Правда очі коле__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Під час конфлікту краще не висловлювати свою думку. _____.
+  answer: Мовчання — золото
+  complete_sentence: Під час конфлікту краще не висловлювати свою думку. Мовчання
+    — золото__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте прислів'я в контекст
+  sentence_template: Андрій поспішав і зробив багато помилок. _____.
+  answer: Тихіше їдеш — далі будеш
+  complete_sentence: Андрій поспішав і зробив багато помилок. Тихіше їдеш — далі будеш__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Без труда нема плода.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Хто рано встає, тому Бог дає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Під лежачий камінь вода не тече.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Очі бояться, а руки роблять.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Терпіння і труд все перетруть.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Робота не вовк, у ліс не втече.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Хто не працює, той не їсть.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Кінець — ділу вінець.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Яблуко від яблуні далеко не падає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть прислів'я
+  jumbled_words: []
+  answer: Тихіше їдеш — далі будеш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке значення має прислів'я «Без труда нема плода» у переносному сенсі?
+  options:
+  - text: Фрукти ростуть тільки у садах, де працюють.
+    correct: false
+  - text: Успіх приходить тільки через наполегливу працю.
+    correct: true
+  - text: Люди, які працюють фізично, отримують більше їжі.
+    correct: false
+  - text: Праця на фермі важливіша за офісну роботу.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Коли найдоречніше використати прислів'я «Очі бояться, а руки роблять»?
+  options:
+  - text: Коли хтось скаржиться на біль в очах після роботи.
+    correct: false
+  - text: Коли людина боїться почати справу, яка здається надто складною.
+    correct: true
+  - text: Коли хтось працює без захисних окулярів.
+    correct: false
+  - text: Коли очі і руки працюють разом під час читання.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Яблуко від яблуні далеко не падає»?
+  options:
+  - text: Яблука треба збирати відразу після падіння.
+    correct: false
+  - text: Діти успадковують риси своїх батьків.
+    correct: true
+  - text: Яблуневі сади потребують постійного догляду.
+    correct: false
+  - text: Яблука краще зберігаються біля дерева.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: У якій ситуації найкраще використати прислів'я «Скупий платить двічі»?
+  options:
+  - text: Коли хтось купив дешеву річ, яка швидко зламалася.
+    correct: true
+  - text: Коли людина заплатила за товар кредитною карткою.
+    correct: false
+  - text: Коли магазин пропонує знижку на другу покупку.
+    correct: false
+  - text: Коли покупець торгується за нижчу ціну.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке прислів'я найкраще описує ситуацію, коли хтось критикує інших, не
+    помічаючи власних недоліків?
+  options:
+  - text: Правда очі коле.
+    correct: false
+  - text: Мовчання — золото.
+    correct: false
+  - text: У чужому оці порошину бачить, а в своєму колоди не помічає.
+    correct: true
+  - text: Не все те золото, що блищить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Тихіше їдеш — далі будеш» у переносному значенні?
+  options:
+  - text: Повільні автомобілі споживають менше пального.
+    correct: false
+  - text: Обережність і розважливість важливіші за швидкість.
+    correct: true
+  - text: Тихі люди краще знають дорогу.
+    correct: false
+  - text: Довгі поїздки потребують повільної їзди.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Коли використовують прислів'я «Робота не вовк, у ліс не втече» у сучасному
+    контексті?
+  options:
+  - text: Як серйозну мотивацію до праці.
+    correct: false
+  - text: Як жартівливе виправдання відкладання роботи.
+    correct: true
+  - text: Як попередження про небезпечну роботу.
+    correct: false
+  - text: Як похвалу працьовитості.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Яке прислів'я найкраще підходить для поради людині, яка нічого не робить,
+    але скаржиться на свої проблеми?
+  options:
+  - text: Мовчання — золото.
+    correct: false
+  - text: Під лежачий камінь вода не тече.
+    correct: true
+  - text: Кінець — ділу вінець.
+    correct: false
+  - text: Терпіння і труд все перетруть.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: Що означає прислів'я «Не все те золото, що блищить»?
+  options:
+  - text: Справжнє золото не блищить так яскраво.
+    correct: false
+  - text: Зовнішній вигляд може бути оманливим.
+    correct: true
+  - text: Золоті прикраси швидко тьмяніють.
+    correct: false
+  - text: Дорогі речі не завжди блискучі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Значення прислів'їв
+  question: У якому контексті найдоречніше сказати «Правда очі коле»?
+  options:
+  - text: Коли хтось має проблеми з очима.
+    correct: false
+  - text: Коли людина образилася на справедливу критику.
+    correct: true
+  - text: Коли очі втомилися від яскравого світла.
+    correct: false
+  - text: Коли хтось говорить тільки правду.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Ваш друг скаржиться, що не може знайти роботу, але нічого не робить для
+    пошуку. Яке прислів'я найкраще підходить?
+  options:
+  - text: Мовчання — золото.
+    correct: false
+  - text: Під лежачий камінь вода не тече.
+    correct: true
+  - text: Кінець — ділу вінець.
+    correct: false
+  - text: Яблуко від яблуні далеко не падає.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Колега купив дешевий ноутбук, який зламався через тиждень. Що ви скажете?
+  options:
+  - text: Без труда нема плода.
+    correct: false
+  - text: Хто рано встає, тому Бог дає.
+    correct: false
+  - text: Скупий платить двічі.
+    correct: true
+  - text: Терпіння і труд все перетруть.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Ваша подруга боїться почати великий проєкт. Як її підбадьорити?
+  options:
+  - text: Робота не вовк, у ліс не втече.
+    correct: false
+  - text: Очі бояться, а руки роблять.
+    correct: true
+  - text: Правда очі коле.
+    correct: false
+  - text: Хто багато говорить, той мало робить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Хтось критикує інших за помилки, які сам робить постійно. Яке прислів'я
+    описує цю ситуацію?
+  options:
+  - text: Не все те золото, що блищить.
+    correct: false
+  - text: У чужому оці порошину бачить, а в своєму колоди не помічає.
+    correct: true
+  - text: Тихіше їдеш — далі будеш.
+    correct: false
+  - text: Без труда нема плода.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Ваш колега завершив складний проєкт після місяців роботи. Що сказати на
+    поздоровлення?
+  options:
+  - text: Під лежачий камінь вода не тече.
+    correct: false
+  - text: Хто не працює, той не їсть.
+    correct: false
+  - text: Кінець — ділу вінець.
+    correct: true
+  - text: Мовчання — золото.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Нова пропозиція виглядає дуже привабливо, але щось здається підозрілим.
+    Як попередити?
+  options:
+  - text: Очі бояться, а руки роблять.
+    correct: false
+  - text: Не все те золото, що блищить.
+    correct: true
+  - text: Без труда нема плода.
+    correct: false
+  - text: Терпіння і труд все перетруть.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Син музиканта теж став відомим музикантом. Як це прокоментувати?
+  options:
+  - text: Правда очі коле.
+    correct: false
+  - text: Скупий платить двічі.
+    correct: false
+  - text: Яблуко від яблуні далеко не падає.
+    correct: true
+  - text: Хто багато говорить, той мало робить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Людина образилася на справедливу критику своєї роботи. Яке прислів'я підходить?
+  options:
+  - text: Мовчання — золото.
+    correct: false
+  - text: Правда очі коле.
+    correct: true
+  - text: Тихіше їдеш — далі будеш.
+    correct: false
+  - text: Кінець — ділу вінець.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Колега постійно обіцяє зробити роботу, але ніколи не виконує. Що сказати?
+  options:
+  - text: Без труда нема плода.
+    correct: false
+  - text: Хто рано встає, тому Бог дає.
+    correct: false
+  - text: Хто багато говорить, той мало робить.
+    correct: true
+  - text: Очі бояться, а руки роблять.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть прислів'я для ситуації
+  question: Хтось поспішає і робить помилки через це. Яке прислів'я дати як пораду?
+  options:
+  - text: Під лежачий камінь вода не тече.
+    correct: false
+  - text: Робота не вовк, у ліс не втече.
+    correct: false
+  - text: Тихіше їдеш — далі будеш.
+    correct: true
+  - text: Терпіння і труд все перетруть.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Без труда нема плода» використовують для мотивації до роботи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Робота не вовк, у ліс не втече» завжди вживають як серйозну
+    пораду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Яблуко від яблуні далеко не падає» може мати і позитивне,
+    і негативне значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Скупий платить двічі» радить завжди купувати найдорожчі речі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Мовчання — золото» доречне, коли краще не висловлювати свою
+    думку в конфліктній ситуації.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «У чужому оці порошину бачить» має біблійне походження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Правда очі коле» означає, що говорити правду завжди небезпечно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Тихіше їдеш — далі будеш» застерігає від надмірної поспішності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Хто багато говорить, той мало робить» хвалить людей, які вміють
+    красиво говорити.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правильне вживання прислів'їв
+  statement: Прислів'я «Не все те золото, що блищить» радить не оцінювати лише за
+    зовнішнім виглядом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

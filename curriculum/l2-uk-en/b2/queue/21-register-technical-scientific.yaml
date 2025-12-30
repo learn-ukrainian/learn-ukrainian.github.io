@@ -1,0 +1,1445 @@
+module: 21-register-technical-scientific
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/21-register-technical-scientific.md
+generated: '2025-12-29T22:44:03.870605'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Клацніть по кнопці для активації системи.
+  error: Клацніть по кнопці
+  answer: Натисніть кнопку
+  sentence_corrected: Натисніть кнопку для активації системи.
+  options:
+  - Клацніть по кнопці
+  - Натисніть кнопку
+  - Тисніть на кнопку
+  - Клацайте кнопку
+  original_explanation: '"Клацнути по" — розмовна форма. У технічних текстах — "натисніть
+    кнопку".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Девайс глючить і не хоче працювати.
+  error: Девайс глючить
+  answer: Пристрій працює нестабільно
+  sentence_corrected: Пристрій працює нестабільно і не хоче працювати.
+  options:
+  - Девайс глючить
+  - Пристрій працює нестабільно
+  - Девайс не робе
+  - Штука зламалась
+  original_explanation: Технічний стиль вимагає стандартних термінів, а не розмовних
+    слів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Програма є встановлена на комп'ютері.
+  error: є встановлена
+  answer: встановлено
+  sentence_corrected: Програма встановлено на комп'ютері.
+  options:
+  - є встановлена
+  - встановлено
+  - є встановлено
+  - встановлювалась
+  original_explanation: 'Конструкція "є + дієприкметник" нетипова. Правильно: "Програму
+    встановлено".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Воно само все зробить після включення.
+  error: Воно само все зробить
+  answer: Процес виконується автоматично
+  sentence_corrected: Процес виконується автоматично після включення.
+  options:
+  - Воно само все зробить
+  - Процес виконується автоматично
+  - Воно автоматично зробить
+  - Само все робиться
+  original_explanation: Технічний стиль уникає невизначених займенників і розмовних
+    конструкцій.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Шоб все запрацювало, потрібно почекати.
+  error: Шоб все запрацювало
+  answer: Для запуску системи
+  sentence_corrected: Для запуску системи, потрібно почекати.
+  options:
+  - Шоб все запрацювало
+  - Для запуску системи
+  - Щоб воно заробило
+  - Шоб працювало
+  original_explanation: '"Шоб" — діалектна форма. "Все" — невизначене. Використовуйте
+    точні терміни.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Ця штука показує скільки залишилось заряду.
+  error: Ця штука
+  answer: Індикатор
+  sentence_corrected: Індикатор показує скільки залишилось заряду.
+  options:
+  - Ця штука
+  - Індикатор
+  - Ця штучка
+  - Оця річ
+  original_explanation: '"Штука" — розмовне слово. Використовуйте точний термін "індикатор".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Комп'ютер треба перезавантажити бо він завис.
+  error: бо він завис
+  answer: у разі відсутності відповіді системи
+  sentence_corrected: Комп'ютер треба перезавантажити у разі відсутності відповіді
+    системи.
+  options:
+  - бо він завис
+  - у разі відсутності відповіді системи
+  - бо він не робе
+  - бо він глючить
+  original_explanation: Технічний стиль — нейтральний опис проблеми без розмовних
+    слів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Воткни шнур у розетку для живлення.
+  error: Воткни шнур
+  answer: Підключіть кабель живлення
+  sentence_corrected: Підключіть кабель живлення у розетку для живлення.
+  options:
+  - Воткни шнур
+  - Підключіть кабель живлення
+  - Воткніть провід
+  - Всуньте шнур
+  original_explanation: '"Воткнути шнур" — розмовна форма. Правильно: "Підключіть
+    кабель".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Ця програма качає файли з інтернету.
+  error: качає
+  answer: завантажує
+  sentence_corrected: Ця програма завантажує файли з інтернету.
+  options:
+  - качає
+  - завантажує
+  - скачує
+  - качується
+  original_explanation: '"Качати" — розмовний сленг. У технічних текстах — "завантажувати".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Якщо воно не робе вимкни і знову включи.
+  error: не робе
+  answer: система не функціонує
+  sentence_corrected: Якщо воно система не функціонує вимкни і знову включи.
+  options:
+  - не робе
+  - система не функціонує
+  - не робить
+  - не хоче робити
+  original_explanation: '"Не робе" — діалектна форма. Технічний стиль вимагає нейтрального
+    опису.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Там написано шо треба щось ввести.
+  error: шо треба щось ввести
+  answer: необхідно ввести параметри
+  sentence_corrected: Там написано необхідно ввести параметри.
+  options:
+  - шо треба щось ввести
+  - необхідно ввести параметри
+  - що треба вводити
+  - шо вводити
+  original_explanation: '"Шо", "щось" — розмовні та невизначені форми. Вказуйте конкретно.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Апарат заряджайте до повного.
+  error: до повного
+  answer: до повного заряду акумулятора
+  sentence_corrected: Апарат заряджайте до повного заряду акумулятора.
+  options:
+  - до повного
+  - до повного заряду акумулятора
+  - повністю
+  - до кінця
+  original_explanation: Технічний стиль вимагає повних і точних формулювань.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Це такий кабель що дані передає.
+  error: такий кабель що
+  answer: кабель для передачі даних
+  sentence_corrected: Це кабель для передачі даних дані передає.
+  options:
+  - такий кабель що
+  - кабель для передачі даних
+  - кабель який
+  - такий що передає
+  original_explanation: Технічний стиль уникає розмовних конструкцій "такий... що".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Програма інсталюється приблизно хвилинку.
+  error: приблизно хвилинку
+  answer: протягом 60 секунд
+  sentence_corrected: Програма інсталюється протягом 60 секунд.
+  options:
+  - приблизно хвилинку
+  - протягом 60 секунд
+  - хвилину-дві
+  - якусь хвилину
+  original_explanation: Технічні тексти використовують точні числові значення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Функцію активовано завод.
+  error: завод
+  answer: заводом
+  sentence_corrected: Функцію активовано заводом.
+  options:
+  - завод
+  - заводом
+  - на заводі
+  - від заводу
+  original_explanation: Агент виражається орудним відмінком — "активовано заводом".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в технічних текстах
+  sentence_with_error: Пристрій підключається до розетку.
+  error: до розетку
+  answer: до розетки
+  sentence_corrected: Пристрій підключається до розетки.
+  options:
+  - до розетку
+  - до розетки
+  - в розетку
+  - у розетку
+  original_explanation: 'Після прийменника "до" — родовий відмінок: "до розетки".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Систему _____ протягом 24 годин.
+  answer: протестовано
+  complete_sentence: Систему протестовано__ протягом 24 годин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Оновлення _____ автоматично щоночі.
+  answer: завантажуються
+  complete_sentence: Оновлення завантажуються__ автоматично щоночі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Параметри безпеки _____ відповідно до вимог.
+  answer: налаштовано
+  complete_sentence: Параметри безпеки налаштовано__ відповідно до вимог.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Пристрій _____ на заводі в Україні.
+  answer: виготовлено
+  complete_sentence: Пристрій виготовлено__ на заводі в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Дані _____ в реальному часі.
+  answer: обробляються
+  complete_sentence: Дані обробляються__ в реальному часі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Інструкцію з експлуатації _____ до комплекту.
+  answer: додано
+  complete_sentence: Інструкцію з експлуатації додано__ до комплекту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Функцію автозбереження _____ за замовчуванням.
+  answer: активовано
+  complete_sentence: Функцію автозбереження активовано__ за замовчуванням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Звіт про помилки _____ щодня о 9:00.
+  answer: генерується
+  complete_sentence: Звіт про помилки генерується__ щодня о 9:00.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Гарантійний термін _____ на 2 роки.
+  answer: встановлено
+  complete_sentence: Гарантійний термін встановлено__ на 2 роки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Резервні копії _____ на зовнішній сервер.
+  answer: зберігаються
+  complete_sentence: Резервні копії зберігаються__ на зовнішній сервер.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Технічну документацію _____ українською мовою.
+  answer: написано
+  complete_sentence: Технічну документацію написано__ українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Помилку _____ під час тестування.
+  answer: виявлено
+  complete_sentence: Помилку виявлено__ під час тестування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Модуль Wi-Fi _____ до материнської плати.
+  answer: інтегровано
+  complete_sentence: Модуль Wi-Fi інтегровано__ до материнської плати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Програма _____ після кожного оновлення.
+  answer: перезапускається
+  complete_sentence: Програма перезапускається__ після кожного оновлення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Ліцензійну угоду _____ при встановленні.
+  answer: прийнято
+  complete_sentence: Ліцензійну угоду прийнято__ при встановленні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Пасивні конструкції в технічних текстах
+  sentence_template: Всі компоненти _____ на сумісність.
+  answer: перевірено
+  complete_sentence: Всі компоненти перевірено__ на сумісність.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Комп глючить» у технічному стилі звучить як «Система
+    _____».
+  answer: функціонує нестабільно
+  complete_sentence: Розмовне «Комп глючить» у технічному стилі звучить як «Система
+    функціонує нестабільно__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Воно само все зробить» у технічному стилі — «Процес
+    _____ автоматично».
+  answer: виконується
+  complete_sentence: Розмовне «Воно само все зробить» у технічному стилі — «Процес
+    виконується__ автоматично».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Натисни на кнопочку» у технічному стилі — «_____ кнопку
+    активації».
+  answer: Натисніть
+  complete_sentence: Розмовне «Натисни на кнопочку» у технічному стилі — «Натисніть__
+    кнопку активації».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Ця штука показує заряд» у технічному стилі — «_____
+    відображає рівень заряду».
+  answer: Індикатор
+  complete_sentence: Розмовне «Ця штука показує заряд» у технічному стилі — «Індикатор__
+    відображає рівень заряду».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Воткни шнур у розетку» у технічному стилі — «_____
+    кабель живлення до електромережі».
+  answer: Підключіть
+  complete_sentence: Розмовне «Воткни шнур у розетку» у технічному стилі — «Підключіть__
+    кабель живлення до електромережі».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Програма качає файли» у технічному стилі — «Програма
+    _____ файли».
+  answer: завантажує
+  complete_sentence: Розмовне «Програма качає файли» у технічному стилі — «Програма
+    завантажує__ файли».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Почекай хвилинку» у технічному стилі — «_____ 60 секунд».
+  answer: Зачекайте
+  complete_sentence: Розмовне «Почекай хвилинку» у технічному стилі — «Зачекайте__
+    60 секунд».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Якщо не робе вимкни» у технічному стилі — «У разі _____
+    вимкніть пристрій».
+  answer: несправності
+  complete_sentence: Розмовне «Якщо не робе вимкни» у технічному стилі — «У разі несправності__
+    вимкніть пристрій».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Там написано що треба ввести» у технічному стилі —
+    «Система _____ введення параметрів».
+  answer: запитує
+  complete_sentence: Розмовне «Там написано що треба ввести» у технічному стилі —
+    «Система запитує__ введення параметрів».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Комп завис» у технічному стилі — «Система не _____».
+  answer: відповідає
+  complete_sentence: Розмовне «Комп завис» у технічному стилі — «Система не відповідає__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Девайс працює нормально» у технічному стилі — «_____
+    функціонує стабільно».
+  answer: Пристрій
+  complete_sentence: Розмовне «Девайс працює нормально» у технічному стилі — «Пристрій__
+    функціонує стабільно».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Там є така кнопка» у технічному стилі — «На панелі
+    _____ кнопка керування».
+  answer: розміщено
+  complete_sentence: Розмовне «Там є така кнопка» у технічному стилі — «На панелі
+    розміщено__ кнопка керування».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Воно нагрівається» у технічному стилі — «Температура
+    пристрою _____».
+  answer: підвищується
+  complete_sentence: Розмовне «Воно нагрівається» у технічному стилі — «Температура
+    пристрою підвищується__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Шоб все запрацювало» у технічному стилі — «Для _____
+    системи».
+  answer: запуску
+  complete_sentence: Розмовне «Шоб все запрацювало» у технічному стилі — «Для запуску__
+    системи».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Кабель що дані передає» у технічному стилі — «Кабель
+    для _____ даних».
+  answer: передачі
+  complete_sentence: Розмовне «Кабель що дані передає» у технічному стилі — «Кабель
+    для передачі__ даних».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформуйте в технічний стиль
+  sentence_template: Розмовне «Заряджай до повного» у технічному стилі — «Заряджайте
+    до повного _____ акумулятора».
+  answer: заряду
+  complete_sentence: Розмовне «Заряджай до повного» у технічному стилі — «Заряджайте
+    до повного заряду__ акумулятора».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Натисніть кнопку для пуску живлення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Параметри системи налаштовано автоматично.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Підключіть пристрій до електромережі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Програму встановлено на комп'ютері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Оновлення системи виконується автоматично.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Перед підключенням перевірте цілісність кабелю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Систему протестовано протягом 1000 годин тривалості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Зачекайте до завершення ініціалізації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Під час тестування виявлено помилку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Індикатор статусу відображається на панелі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Налаштування може бути змінено адміністратором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: У разі несправності перезавантажте систему.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Технічну документацію додано до комплекту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Вимкніть пристрій від живлення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Захист даних забезпечується шифруванням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть технічні інструкції
+  jumbled_words: []
+  answer: Пристрій сертифіковано відповідно до стандарту ISO.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка головна ознака науково-технічного стилю мови?
+  options:
+  - text: Емоційність та образність
+    correct: false
+  - text: Точність та однозначність термінів
+    correct: true
+  - text: Використання діалектизмів
+    correct: false
+  - text: Художня виразність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка пасивна конструкція найчастіше використовується для опису технічних
+    процесів?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка конструкція є типовою для технічних інструкцій?
+  options:
+  - text: Умовний спосіб
+    correct: false
+  - text: Наказовий спосіб
+    correct: true
+  - text: Минулий час
+    correct: false
+  - text: Майбутній час
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Як правильно ввести абревіатуру в технічний текст?
+  options:
+  - text: Використовувати тільки скорочення
+    correct: false
+  - text: Спочатку повна форма, потім у дужках скорочення
+    correct: true
+  - text: Спочатку скорочення, потім повна форма
+    correct: false
+  - text: Абревіатури не вживаються в технічних текстах
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яке речення відповідає науково-технічному стилю?
+  options:
+  - text: Комп'ютер глючить і не хоче працювати.
+    correct: false
+  - text: Система виявляє нестабільну роботу через апаратну несправність.
+    correct: true
+  - text: Ця залізяка знову зламалась.
+    correct: false
+  - text: Мій комп стає дуже гарячим.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Що означає абревіатура "ПЗ" у технічних текстах?
+  options:
+  - text: Персональний запис
+    correct: false
+  - text: Програмне забезпечення
+    correct: true
+  - text: Початкова заява
+    correct: false
+  - text: Проектна заявка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка форма дієслова є правильною для технічної інструкції?
+  options:
+  - text: Натиснув би кнопку
+    correct: false
+  - text: Натисніть кнопку
+    correct: true
+  - text: Натиснув кнопку
+    correct: false
+  - text: Натискаючи кнопку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яке слово є розмовним і не вживається в технічних текстах?
+  options:
+  - text: Пристрій
+    correct: false
+  - text: Девайс
+    correct: true
+  - text: Обладнання
+    correct: false
+  - text: Апаратура
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Як правильно оформити технічну примітку?
+  options:
+  - text: Примітка — це важливо!
+    correct: false
+  - text: Примітка. Параметри налаштування можуть бути змінено.
+    correct: true
+  - text: Пс-с, зверни увагу!
+    correct: false
+  - text: УВАГА!!! Треба знати!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка структура є типовою для технічних інструкцій?
+  options:
+  - text: Розповідь з діалогами
+    correct: false
+  - text: Нумеровані кроки з короткими реченнями
+    correct: true
+  - text: Вільний текст без структури
+    correct: false
+  - text: Поетичні строфи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Що означає "калібрування" в технічному контексті?
+  options:
+  - text: Встановлення програми
+    correct: false
+  - text: Налаштування точності вимірювального приладу
+    correct: true
+  - text: Видалення даних
+    correct: false
+  - text: Підключення до мережі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яке речення містить правильну пасивну конструкцію для технічного тексту?
+  options:
+  - text: Програма є встановлена на комп'ютері.
+    correct: false
+  - text: Програму встановлено на комп'ютері.
+    correct: true
+  - text: Програма встановили на комп'ютері.
+    correct: false
+  - text: Програму встановлювали на комп'ютері.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Як правильно описати технічну характеристику?
+  options:
+  - text: Температура — приблизно 40 градусів, може більше.
+    correct: false
+  - text: Робоча температура — від 0°C до +40°C.
+    correct: true
+  - text: Воно нагрівається до якоїсь температури.
+    correct: false
+  - text: Температура нормальна.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Що означає "специфікація" в технічному контексті?
+  options:
+  - text: Загальний опис продукту
+    correct: false
+  - text: Документ з детальними технічними вимогами
+    correct: true
+  - text: Рекламний матеріал
+    correct: false
+  - text: Інструкція з експлуатації
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яке слово є синонімом до "несправність" у технічному контексті?
+  options:
+  - text: Краса
+    correct: false
+  - text: Збій
+    correct: true
+  - text: Успіх
+    correct: false
+  - text: Швидкість
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Ознаки науково-технічного стилю
+  question: Яка форма є правильною для опису процесу в технічному тексті?
+  options:
+  - text: Дані обробляють.
+    correct: false
+  - text: Дані обробляються.
+    correct: true
+  - text: Дані обробили.
+    correct: false
+  - text: Дані будуть обробити.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка основна функція науково-технічного стилю?
+  options:
+  - text: Розважати читача
+    correct: false
+  - text: Передавати точну технічну інформацію
+    correct: true
+  - text: Переконувати в політичних поглядах
+    correct: false
+  - text: Виражати емоції автора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка пасивна конструкція є типовою для опису завершеної дії в технічних
+    текстах?
+  options:
+  - text: Зворотна (-ся)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  - text: Дієприкметникова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому в технічних текстах не рекомендується використовувати синоніми?
+  options:
+  - text: Синоніми роблять текст надто довгим
+    correct: false
+  - text: Один термін для одного поняття забезпечує точність
+    correct: true
+  - text: Синоніми важко перекладати
+    correct: false
+  - text: Синоніми застарілі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно оформити першу згадку абревіатури USB?
+  options:
+  - text: USB
+    correct: true
+  - text: Universal Serial Bus (USB)
+    correct: false
+  - text: USB (Universal Serial Bus)
+    correct: false
+  - text: (USB) Universal Serial Bus
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке речення є найбільш технічно коректним?
+  options:
+  - text: Пристрій працює нестабільно через апаратну несправність.
+    correct: true
+  - text: Девайс глючить бо щось зламалось.
+    correct: false
+  - text: Ця штука не хоче робити.
+    correct: false
+  - text: Комп завис і не включається.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка структура є типовою для технічних інструкцій?
+  options:
+  - text: Вільний текст без структури
+    correct: false
+  - text: Нумеровані кроки з короткими реченнями
+    correct: true
+  - text: Діалоги між персонажами
+    correct: false
+  - text: Поетичні строфи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чим відрізняється "калібрування" від "налаштування"?
+  options:
+  - text: Це синоніми
+    correct: false
+  - text: Калібрування — спеціальне налаштування для точності вимірювань
+    correct: true
+  - text: Налаштування точніший термін
+    correct: false
+  - text: Калібрування — розмовне слово
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма є правильною — "Програму встановлено" чи "Програма є встановлена"?
+  options:
+  - text: Тільки перша
+    correct: true
+  - text: Тільки друга
+    correct: false
+  - text: Обидві правильні
+    correct: false
+  - text: Обидві неправильні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно описати технічну характеристику температури?
+  options:
+  - text: Температура нормальна
+    correct: false
+  - text: Робоча температура від 0°C до +40°C
+    correct: true
+  - text: Температура як завжди
+    correct: false
+  - text: Гаряче, але не дуже
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке слово є неприпустимим у технічній документації?
+  options:
+  - text: Пристрій
+    correct: false
+  - text: Обладнання
+    correct: false
+  - text: Девайс
+    correct: true
+  - text: Апаратура
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яку роль відіграє нумерація в технічних інструкціях?
+  options:
+  - text: Робить текст красивішим
+    correct: false
+  - text: Забезпечує логічну послідовність дій
+    correct: true
+  - text: Збільшує обсяг тексту
+    correct: false
+  - text: Ускладнює розуміння
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як правильно перекласти "The system is being initialized"?
+  options:
+  - text: Система є ініціалізована.
+    correct: false
+  - text: Система ініціалізується.
+    correct: true
+  - text: Систему ініціалізують.
+    correct: false
+  - text: Система буде ініціалізована.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що означає "ДСТУ" в технічних текстах?
+  options:
+  - text: Державний стандарт України
+    correct: true
+  - text: Документ стандартного типу України
+    correct: false
+  - text: Дослідження стандартних технічних умов
+    correct: false
+  - text: Допоміжна система технічного управління
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка форма дієслова використовується в технічних інструкціях?
+  options:
+  - text: Минулий час
+    correct: false
+  - text: Наказовий спосіб
+    correct: true
+  - text: Умовний спосіб
+    correct: false
+  - text: Дієприслівник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому технічний стиль уникає емоційного забарвлення?
+  options:
+  - text: Емоції заважають розумінню
+    correct: false
+  - text: Об'єктивність забезпечує точність інформації
+    correct: true
+  - text: Автори не мають емоцій
+    correct: false
+  - text: Це забороняє закон
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка різниця між "несправність", "збій" та "відмова"?
+  options:
+  - text: Це синоніми
+    correct: false
+  - text: Різний ступінь серйозності проблеми
+    correct: true
+  - text: Різні частини мови
+    correct: false
+  - text: Використовуються в різних галузях
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: У технічних текстах можна використовувати емоційні вигуки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Зворотна пасивна форма (-ся) часто вживається для опису процесів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: При першому вживанні абревіатури потрібно подати повну форму.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Слово "девайс" є стандартним терміном у технічній документації.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Технічні інструкції пишуться в минулому часі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Форма "було встановлено" рідко вживається в технічних текстах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Технічний стиль допускає синоніми для одного терміна в одному тексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Нумерація кроків є обов'язковою для технічних інструкцій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: У технічних текстах можна вживати розмовні скорочення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Технічні характеристики подаються з одиницями вимірювання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Конструкція "є встановлена" є типовою для українських технічних текстів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Технічний стиль допускає використання метафор та порівнянь.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Калібрування та налаштування — це синоніми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Пасивний стан переважає в технічних описах над активним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Технічна документація може не мати структури.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила технічного стилю
+  statement: Терміни "несправність", "збій" та "відмова" означають одне й те саме.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

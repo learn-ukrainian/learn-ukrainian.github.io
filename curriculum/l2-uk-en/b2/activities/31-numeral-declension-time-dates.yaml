@@ -1,0 +1,1407 @@
+# B2-31: Відмінювання числівників І: Час і дати
+# Activities: 14+ required for B2
+# Items per activity: 16+ for B2
+
+# Activity 1: Quiz - Time expressions (16 items)
+- type: quiz
+  title: Вибір правильного вираження часу
+  items:
+    - question: Як правильно сказати «at 2 o'clock» у формальному стилі?
+      options:
+        - text: о другому годині
+          correct: false
+        - text: о другій годині
+          correct: true
+        - text: о другій година
+          correct: false
+        - text: на другий годині
+          correct: false
+      explanation: Прийменник «о» вимагає місцевого відмінка, а «година» — жіночого роду, тому «о другій годині».
+
+    - question: Яка правильна форма для «half past twelve»?
+      options:
+        - text: пів дванадцятої
+          correct: false
+        - text: пів на першу
+          correct: true
+        - text: пів на дванадцяту
+          correct: false
+        - text: половина першої
+          correct: false
+      explanation: Конструкція «пів на...» означає половину шляху до наступної години, тому 12:30 — це «пів на першу».
+
+    - question: Як сказати «quarter to three» українською?
+      options:
+        - text: за чверть третя
+          correct: true
+        - text: чверть до третьої
+          correct: false
+        - text: три без чверті
+          correct: false
+        - text: за чверть третьої
+          correct: false
+      explanation: Конструкція «за чверть» + порядковий числівник у називному відмінку.
+
+    - question: Яка форма правильна для «twenty past six»?
+      options:
+        - text: двадцять після шостої
+          correct: false
+        - text: двадцять по шостій
+          correct: true
+        - text: двадцять на шостій
+          correct: false
+        - text: шоста двадцять
+          correct: false
+      explanation: Конструкція «хвилини по» + порядковий числівник у місцевому відмінку.
+
+    - question: О котрій годині це означає «опівдні»?
+      options:
+        - text: О 0:00
+          correct: false
+        - text: О 6:00
+          correct: false
+        - text: О 12:00
+          correct: true
+        - text: О 18:00
+          correct: false
+      explanation: Опівдні — це рівно полудень, 12:00.
+
+    - question: Який прийменник вживаємо перед «одинадцятій»?
+      options:
+        - text: о
+          correct: false
+        - text: об
+          correct: true
+        - text: у
+          correct: false
+        - text: на
+          correct: false
+      explanation: Перед голосними вживаємо «об», тому «об одинадцятій».
+
+    - question: Як правильно сказати 7:30?
+      options:
+        - text: пів сьомої
+          correct: false
+        - text: пів на восьму
+          correct: true
+        - text: половина сьомої
+          correct: false
+        - text: пів на сьому
+          correct: false
+      explanation: 7:30 — це половина шляху до восьмої години, тому «пів на восьму».
+
+    - question: Яка форма правильна для «at five minutes past nine»?
+      options:
+        - text: п'ять по дев'ятій
+          correct: true
+        - text: дев'ята п'ять
+          correct: false
+        - text: п'ять після дев'ятої
+          correct: false
+        - text: п'ять на дев'ятій
+          correct: false
+      explanation: Конструкція «хвилини по» + порядковий у місцевому відмінку.
+
+    - question: Що означає «за десять восьма»?
+      options:
+        - text: 7:50
+          correct: true
+        - text: 8:10
+          correct: false
+        - text: 7:10
+          correct: false
+        - text: 8:50
+          correct: false
+      explanation: «За десять восьма» означає «за десять хвилин восьма година», тобто 7:50.
+
+    - question: Яка форма правильна для офіційного оголошення о 14:30?
+      options:
+        - text: о чотирнадцятій тридцять
+          correct: true
+        - text: о другій тридцять
+          correct: false
+        - text: пів на третю
+          correct: false
+        - text: о другій годині тридцять хвилин
+          correct: false
+      explanation: В офіційних оголошеннях використовують 24-годинний формат без слова «годині».
+
+    - question: Як правильно сказати «at midnight»?
+      options:
+        - text: о півночі
+          correct: false
+        - text: опівночі
+          correct: true
+        - text: о дванадцятій ночі
+          correct: false
+        - text: о нулі годин
+          correct: false
+      explanation: Опівночі — це прислівник, що пишеться разом.
+
+    - question: Що означає «чверть на другу»?
+      options:
+        - text: 1:15
+          correct: true
+        - text: 2:15
+          correct: false
+        - text: 1:45
+          correct: false
+        - text: 2:45
+          correct: false
+      explanation: «Чверть на другу» означає чверть шляху до другої, тобто 1:15.
+
+    - question: Яка форма правильна для «from 9 to 5»?
+      options:
+        - text: з дев'ятої до п'ятої
+          correct: true
+        - text: від дев'ять до п'ять
+          correct: false
+        - text: з дев'яту до п'яту
+          correct: false
+        - text: з дев'ятий до п'ятий
+          correct: false
+      explanation: Прийменники «з» і «до» вимагають родового відмінка.
+
+    - question: Як правильно сказати 6:45?
+      options:
+        - text: за чверть сьома
+          correct: true
+        - text: за чверть шоста
+          correct: false
+        - text: чверть до сьомої
+          correct: false
+        - text: без чверті сьома
+          correct: false
+      explanation: 6:45 — це «за чверть сьома» (за 15 хвилин настане сьома).
+
+    - question: Яка форма правильна у реченні «Зустріч о ___ годині»?
+      options:
+        - text: третя
+          correct: false
+        - text: третю
+          correct: false
+        - text: третій
+          correct: true
+        - text: третьої
+          correct: false
+      explanation: Прийменник «о» вимагає місцевого відмінка, а «третій» — це місцевий відмінок жіночого роду.
+
+    - question: Як сказати «ten minutes to eight» українською?
+      options:
+        - text: за десять восьма
+          correct: true
+        - text: десять до восьмої
+          correct: false
+        - text: восьма без десяти
+          correct: false
+        - text: за десять восьмої
+          correct: false
+      explanation: Конструкція «за + хвилини + порядковий у називному відмінку».
+
+# Activity 2: Fill-in - Date expressions (16 items)
+- type: fill-in
+  title: Доповніть вирази з датами
+  items:
+    - sentence: Сьогодні перше _____.
+      answer: січня
+      options:
+        - січень
+        - січня
+        - січні
+        - січню
+
+    - sentence: Це сталося двадцять _____ березня.
+      answer: п'ятого
+      options:
+        - п'яте
+        - п'ятого
+        - п'ятому
+        - п'ять
+
+    - sentence: Подайте документи до _____ лютого.
+      answer: десятого
+      options:
+        - десяте
+        - десятого
+        - десятому
+        - десять
+
+    - sentence: Ми святкуємо Різдво двадцять п'ятого _____.
+      answer: грудня
+      options:
+        - грудень
+        - грудня
+        - грудні
+        - грудню
+
+    - sentence: День Незалежності — двадцять _____ серпня.
+      answer: четверте
+      options:
+        - четвертий
+        - четверте
+        - четвертого
+        - чотири
+
+    - sentence: Ми приїдемо _____ травні.
+      answer: у
+      options:
+        - в
+        - у
+        - на
+        - до
+
+    - sentence: Конференція триватиме з першого _____ п'ятого жовтня.
+      answer: до
+      options:
+        - на
+        - по
+        - до
+        - від
+
+    - sentence: Я народився _____ квітня.
+      answer: сьомого
+      options:
+        - сьоме
+        - сьомого
+        - сьомому
+        - сім
+
+    - sentence: Відпустка почнеться з _____ липня.
+      answer: першого
+      options:
+        - перше
+        - першого
+        - першому
+        - перший
+
+    - sentence: Сьогодні чотирнадцяте _____.
+      answer: лютого
+      options:
+        - лютий
+        - лютого
+        - лютому
+        - лютім
+
+    - sentence: Подія відбудеться _____ листопаді.
+      answer: у
+      options:
+        - на
+        - в
+        - у
+        - до
+
+    - sentence: Документ датований двадцять _____ вересня.
+      answer: третього
+      options:
+        - третє
+        - третього
+        - третьому
+        - три
+
+    - sentence: Ми маємо закінчити проєкт _____ кінця тижня.
+      answer: до
+      options:
+        - на
+        - по
+        - до
+        - у
+
+    - sentence: Термін подачі — не пізніше _____ червня.
+      answer: п'ятнадцятого
+      options:
+        - п'ятнадцяте
+        - п'ятнадцятого
+        - п'ятнадцятому
+        - п'ятнадцять
+
+    - sentence: Свято відбудеться тридцять _____ грудня.
+      answer: першого
+      options:
+        - перше
+        - першого
+        - перший
+        - першому
+
+    - sentence: Угоду підписано _____ січня дві тисячі двадцять п'ятого року.
+      answer: десятого
+      options:
+        - десяте
+        - десятого
+        - десятому
+        - десять
+
+# Activity 3: Match-up - Time expressions (16 pairs)
+- type: match-up
+  title: Зіставте час
+  pairs:
+    - left: пів на третю
+      right: 2:30
+    - left: за чверть сьома
+      right: 6:45
+    - left: о дев'ятій
+      right: 9:00
+    - left: двадцять по п'ятій
+      right: 5:20
+    - left: опівночі
+      right: 0:00
+    - left: опівдні
+      right: 12:00
+    - left: за десять дванадцята
+      right: 11:50
+    - left: чверть на другу
+      right: 1:15
+    - left: пів на восьму
+      right: 7:30
+    - left: за п'ять третя
+      right: 2:55
+    - left: п'ять по шостій
+      right: 6:05
+    - left: пів на першу
+      right: 12:30
+    - left: о четвертій
+      right: 4:00
+    - left: за двадцять восьма
+      right: 7:40
+    - left: десять по дев'ятій
+      right: 9:10
+    - left: за чверть десята
+      right: 9:45
+
+# Activity 4: Error-correction - Time and dates (16 items)
+- type: error-correction
+  title: Виправте помилки у виразах часу та дат
+  items:
+    - sentence: Зустріч о другому годині.
+      error: другому
+      answer: другій
+      options:
+        - другому
+        - другій
+        - другої
+        - другу
+      explanation: Слово «година» жіночого роду, тому порядковий числівник має бути «другій» (місцевий відмінок жіночого роду).
+
+    - sentence: Це пів третьої.
+      error: третьої
+      answer: на третю
+      options:
+        - третьої
+        - на третю
+        - третя
+        - до третьої
+      explanation: Правильна конструкція — «пів на третю» (знахідний відмінок), а не «пів третьої» (русизм).
+
+    - sentence: Свято двадцять п'яте січень.
+      error: січень
+      answer: січня
+      options:
+        - січень
+        - січня
+        - січні
+        - січню
+      explanation: Місяць при даті стоїть у родовому відмінку.
+
+    - sentence: Це сталося на третьому березня.
+      error: на третьому
+      answer: третього
+      options:
+        - на третьому
+        - третього
+        - третє
+        - о третьому
+      explanation: Для позначення дати події вживаємо родовий відмінок без прийменника.
+
+    - sentence: Подайте документи до десяте лютого.
+      error: десяте
+      answer: десятого
+      options:
+        - десяте
+        - десятого
+        - десятому
+        - десять
+      explanation: Прийменник «до» вимагає родового відмінка.
+
+    - sentence: Ми зустрінемось о одинадцятій.
+      error: о
+      answer: об
+      options:
+        - о
+        - об
+        - у
+        - на
+      explanation: Перед голосними вживаємо «об», тому «об одинадцятій».
+
+    - sentence: Засідання почнеться за чверть третьої.
+      error: третьої
+      answer: третя
+      options:
+        - третьої
+        - третя
+        - третю
+        - третій
+      explanation: Після «за чверть» вживаємо називний відмінок.
+
+    - sentence: Документ від перше січня.
+      error: перше
+      answer: першого
+      options:
+        - перше
+        - першого
+        - першому
+        - перший
+      explanation: Прийменник «від» вимагає родового відмінка.
+
+    - sentence: Ми працюємо з дев'ять до п'ять.
+      error: дев'ять
+      answer: дев'ятої
+      options:
+        - дев'ять
+        - дев'ятої
+        - дев'яту
+        - дев'ятій
+      explanation: Прийменники «з» і «до» вимагають родового відмінка.
+
+    - sentence: День народження в двадцять п'ятому серпня.
+      error: в двадцять п'ятому
+      answer: двадцять п'ятого
+      options:
+        - в двадцять п'ятому
+        - двадцять п'ятого
+        - на двадцять п'яте
+        - у двадцять п'ятому
+      explanation: Дата події вживається в родовому відмінку без прийменника.
+
+    - sentence: Зустріч в сімнадцять тридцять.
+      error: в
+      answer: о
+      options:
+        - в
+        - о
+        - на
+        - у
+      explanation: Для позначення часу з годинами вживаємо прийменник «о» / «об».
+
+    - sentence: Це п'ять по шоста.
+      error: шоста
+      answer: шостій
+      options:
+        - шоста
+        - шостій
+        - шостої
+        - шосту
+      explanation: Після «по» вживаємо місцевий відмінок.
+
+    - sentence: Свято у лютім.
+      error: лютім
+      answer: лютому
+      options:
+        - лютім
+        - лютому
+        - лютого
+        - лютий
+      explanation: Місцевий відмінок від «лютий» — «лютому».
+
+    - sentence: Ювілей на п'ятнадцяте березня.
+      error: на п'ятнадцяте
+      answer: п'ятнадцятого
+      options:
+        - на п'ятнадцяте
+        - п'ятнадцятого
+        - п'ятнадцяте
+        - о п'ятнадцятому
+      explanation: Дата події вживається в родовому відмінку без прийменника.
+
+    - sentence: Конференція відбудеться в грудень.
+      error: в грудень
+      answer: у грудні
+      options:
+        - в грудень
+        - у грудні
+        - на грудень
+        - до грудня
+      explanation: Для позначення місяця як періоду вживаємо місцевий відмінок.
+
+    - sentence: Термін подачі — до двадцяте.
+      error: двадцяте
+      answer: двадцятого
+      options:
+        - двадцяте
+        - двадцятого
+        - двадцятому
+        - двадцять
+      explanation: Прийменник «до» вимагає родового відмінка.
+
+# Activity 5: True-false - Grammar rules (16 items)
+- type: true-false
+  title: Правда чи хибність
+  items:
+    - statement: Прийменник «о» вживається перед приголосними, а «об» — перед голосними.
+      correct: true
+      explanation: Правильно. «О третій», але «об одинадцятій».
+
+    - statement: Конструкція «пів третьої» є правильною в українській мові.
+      correct: false
+      explanation: Хибно. Правильно — «пів на третю». Форма «пів третьої» — русизм.
+
+    - statement: При датах місяць стоїть у родовому відмінку.
+      correct: true
+      explanation: Правильно. Двадцять п'яте січня (січня — родовий).
+
+    - statement: «Опівночі» означає 12:00.
+      correct: false
+      explanation: Хибно. Опівночі — це 0:00 (або 24:00). 12:00 — це опівдні.
+
+    - statement: У конструкції «за чверть третя» числівник стоїть у називному відмінку.
+      correct: true
+      explanation: Правильно. «За чверть» + порядковий у називному відмінку.
+
+    - statement: Дата події вживається в місцевому відмінку.
+      correct: false
+      explanation: Хибно. Дата події вживається в родовому відмінку (Це сталося п'ятого травня).
+
+    - statement: Слово «опівдні» є прислівником і не змінюється.
+      correct: true
+      explanation: Правильно. «Опівдні» — незмінюване слово.
+
+    - statement: У 24-годинному форматі завжди додаємо слово «годині».
+      correct: false
+      explanation: Хибно. В офіційних оголошеннях часто опускають «годині».
+
+    - statement: Конструкція «двадцять по шостій» означає 6:20.
+      correct: true
+      explanation: Правильно. «Двадцять хвилин після шостої» — 6:20.
+
+    - statement: Для позначення періоду «в якому місяці» вживаємо родовий відмінок.
+      correct: false
+      explanation: Хибно. Для періоду «в якому місяці» вживаємо місцевий відмінок (у січні, у лютому).
+
+    - statement: Прийменник «до» з датою вимагає родового відмінка.
+      correct: true
+      explanation: Правильно. До п'ятого січня (родовий відмінок).
+
+    - statement: Порядкові числівники при датах узгоджуються зі словом «число» (середній рід).
+      correct: true
+      explanation: Правильно. Тому «перше січня», «друге лютого» (закінчення -е).
+
+    - statement: «Пів на восьму» означає 8:30.
+      correct: false
+      explanation: Хибно. «Пів на восьму» означає 7:30 (половина шляху до восьмої).
+
+    - statement: Місцевий відмінок від «лютий» — «лютім».
+      correct: false
+      explanation: Хибно. Правильна форма — «лютому» (у лютому).
+
+    - statement: У конструкції «п'ять по третій» числівник «третій» стоїть у місцевому відмінку.
+      correct: true
+      explanation: Правильно. Після «по» вживаємо місцевий відмінок.
+
+    - statement: Слово «дедлайн» є запозиченням з англійської мови.
+      correct: true
+      explanation: Правильно. «Дедлайн» — англіцизм, український відповідник — «крайній термін».
+
+# Activity 6: Group-sort - Months by declension (16 items)
+- type: group-sort
+  title: Розподіліть місяці за формою
+  groups:
+    - name: Родовий відмінок (якого місяця?)
+      items:
+        - січня
+        - лютого
+        - березня
+        - квітня
+        - травня
+        - червня
+        - липня
+        - серпня
+    - name: Місцевий відмінок (у якому місяці?)
+      items:
+        - у вересні
+        - у жовтні
+        - у листопаді
+        - у грудні
+        - у січні
+        - у лютому
+        - у березні
+        - у квітні
+
+# Activity 7: Unjumble - Time and date sentences (16 items)
+- type: unjumble
+  title: Складіть речення про час і дати
+  items:
+    - scrambled: зустріч / о / відбудеться / третій / годині
+      answer: Зустріч відбудеться о третій годині.
+
+    - scrambled: народився / я / серпня / двадцятого
+      answer: Я народився двадцятого серпня.
+
+    - scrambled: пів / вже / на / восьму
+      answer: Вже пів на восьму.
+
+    - scrambled: до / подати / документи / п'ятнадцятого / треба
+      answer: Треба подати документи до п'ятнадцятого.
+
+    - scrambled: опівдні / конференція / починається / рівно
+      answer: Конференція починається рівно опівдні.
+
+    - scrambled: у / свято / відбудеться / травні
+      answer: Свято відбудеться у травні.
+
+    - scrambled: за / третя / чверть / вже
+      answer: Вже за чверть третя.
+
+    - scrambled: січня / перше / сьогодні
+      answer: Сьогодні перше січня.
+
+    - scrambled: дев'ятій / об / одинадцятій / з / до
+      answer: З дев'ятої до одинадцятої.
+
+    - scrambled: річницю / святкуємо / п'яту / ми
+      answer: Ми святкуємо п'яту річницю.
+
+    - scrambled: двадцять / шостій / по
+      answer: Двадцять по шостій.
+
+    - scrambled: народження / день / батька / мого
+      answer: День народження мого батька.
+
+    - scrambled: не / десятого / пізніше
+      answer: Не пізніше десятого.
+
+    - scrambled: лютому / у / одружилися / вони
+      answer: Вони одружилися у лютому.
+
+    - scrambled: опівночі / термін / закінчується
+      answer: Термін закінчується опівночі.
+
+    - scrambled: березня / до / п'ятого / з / двадцятого / лютого
+      answer: З двадцятого лютого до п'ятого березня.
+
+# Activity 8: Cloze - Schedule reading (16+ blanks)
+- type: cloze
+  title: Прочитайте розклад і заповніть пропуски
+  passage: |
+    Розклад конференції на {п'ятнадцяте|п'ятнадцятого|п'ятнадцятому|п'ятнадцяте} березня.
+
+    Реєстрація учасників починається о {дев'ятій|дев'ятого|дев'яту|дев'ятій} годині ранку. Офіційне відкриття — {о|об|у|на} десятій. Перша сесія триватиме з десятої {до|на|по|у} дванадцятої.
+
+    Обідня перерва — {рівно|точно|саме|якраз} опівдні. {О|Об|У|На} першій годині відновлюємо роботу. Друга сесія закінчиться за {чверть|четверту|чвертю|четвертої} четверта.
+
+    Кава-брейк — {пів|половина|полу|полі} на п'яту. Заключна дискусія почнеться о {п'ятій|п'ятого|п'яту|п'ятої}. Офіційне закриття — не пізніше {шостої|шосту|шоста|шостим}.
+
+    Вечірня програма — з {сьомої|сьому|сьома|сьомим} до {десятої|десяту|десята|десятим}. Банкет починається рівно {о|об|у|на} восьмій годині {вечора|ранку|дня|ночі}.
+
+    Просимо підтвердити участь до {десятого|десяте|десятому|десять} березня. Реєстрація закривається {опівночі|опівдні|ввечері|вранці}.
+
+# Activity 9: Dialogue-reorder - Making an appointment (16 lines)
+- type: dialogue-reorder
+  title: Впорядкуйте діалог про призначення зустрічі
+  lines:
+    - order: 1
+      speaker: Секретар
+      text: Добрий день! Чим можу допомогти?
+    - order: 2
+      speaker: Клієнт
+      text: Добрий день! Хотів би записатися на прийом до директора.
+    - order: 3
+      speaker: Секретар
+      text: Так, звісно. Коли вам зручно?
+    - order: 4
+      speaker: Клієнт
+      text: Бажано на наступному тижні, у вівторок або середу.
+    - order: 5
+      speaker: Секретар
+      text: Давайте подивлюся. У вівторок директор вільний о десятій ранку.
+    - order: 6
+      speaker: Клієнт
+      text: А в середу є щось після обіду?
+    - order: 7
+      speaker: Секретар
+      text: У середу є вікно о третій годині.
+    - order: 8
+      speaker: Клієнт
+      text: Третя година мені підходить ідеально.
+    - order: 9
+      speaker: Секретар
+      text: Добре. Записую вас на середу, двадцять п'яте січня, о третій.
+    - order: 10
+      speaker: Клієнт
+      text: А скільки триватиме зустріч?
+    - order: 11
+      speaker: Секретар
+      text: Приблизно годину. Закінчимо до четвертої.
+    - order: 12
+      speaker: Клієнт
+      text: Чудово. А чи можу я прийти за п'ятнадцять хвилин раніше?
+    - order: 13
+      speaker: Секретар
+      text: Так, будь ласка, приходьте за чверть третя.
+    - order: 14
+      speaker: Клієнт
+      text: Дякую! До побачення!
+    - order: 15
+      speaker: Секретар
+      text: До побачення! Чекаємо вас двадцять п'ятого.
+    - order: 16
+      speaker: Клієнт
+      text: Обов'язково буду. Ще раз дякую!
+
+# Activity 10: Select - Multiple correct answers (16 items with multiple correct)
+- type: select
+  title: Оберіть усі правильні варіанти
+  items:
+    - question: Які форми правильні для позначення 2:30?
+      options:
+        - text: пів на третю
+          correct: true
+        - text: о другій тридцять
+          correct: true
+        - text: пів третьої
+          correct: false
+        - text: о чотирнадцятій тридцять
+          correct: true
+
+    - question: Які форми місяців є родовим відмінком?
+      options:
+        - text: січня
+          correct: true
+        - text: у лютому
+          correct: false
+        - text: березня
+          correct: true
+        - text: квітень
+          correct: false
+
+    - question: Які вирази означають 12:00?
+      options:
+        - text: опівдні
+          correct: true
+        - text: опівночі
+          correct: false
+        - text: рівно полудень
+          correct: true
+        - text: о дванадцятій
+          correct: true
+
+    - question: Які прийменники вживаються з датами для позначення терміну?
+      options:
+        - text: до
+          correct: true
+        - text: не пізніше
+          correct: true
+        - text: на
+          correct: false
+        - text: з
+          correct: true
+
+    - question: Які форми правильні для «at nine o'clock»?
+      options:
+        - text: о дев'ятій
+          correct: true
+        - text: о дев'ятій годині
+          correct: true
+        - text: на дев'яту
+          correct: false
+        - text: в дев'ять
+          correct: false
+
+    - question: Які слова означають частини доби?
+      options:
+        - text: ранок
+          correct: true
+        - text: обід
+          correct: true
+        - text: календар
+          correct: false
+        - text: вечір
+          correct: true
+
+    - question: Які вирази правильні для «January 1st» у називному відмінку?
+      options:
+        - text: перше січня
+          correct: true
+        - text: першого січня
+          correct: false
+        - text: перший січень
+          correct: false
+        - text: перше число січня
+          correct: true
+
+    - question: Які форми правильні для «until the 10th»?
+      options:
+        - text: до десятого
+          correct: true
+        - text: не пізніше десятого
+          correct: true
+        - text: до десяте
+          correct: false
+        - text: по десяте
+          correct: true
+
+    - question: Які слова є незмінюваними прислівниками?
+      options:
+        - text: опівночі
+          correct: true
+        - text: опівдні
+          correct: true
+        - text: година
+          correct: false
+        - text: хвилина
+          correct: false
+
+    - question: Які конструкції означають «quarter past»?
+      options:
+        - text: чверть на
+          correct: true
+        - text: п'ятнадцять по
+          correct: true
+        - text: за чверть
+          correct: false
+        - text: за п'ятнадцять
+          correct: false
+
+    - question: Які форми правильні для місцевого відмінка місяців?
+      options:
+        - text: у січні
+          correct: true
+        - text: у лютому
+          correct: true
+        - text: у березню
+          correct: false
+        - text: у квітні
+          correct: true
+
+    - question: Які слова позначають святкові події?
+      options:
+        - text: річниця
+          correct: true
+        - text: ювілей
+          correct: true
+        - text: розклад
+          correct: false
+        - text: народження
+          correct: true
+
+    - question: Які форми правильні для «from... to...» з годинами?
+      options:
+        - text: з дев'ятої до п'ятої
+          correct: true
+        - text: від дев'ятої до п'ятої
+          correct: true
+        - text: з дев'ять до п'ять
+          correct: false
+        - text: з дев'яту до п'яту
+          correct: false
+
+    - question: Які вирази означають 0:00?
+      options:
+        - text: опівночі
+          correct: true
+        - text: о двадцять четвертій
+          correct: true
+        - text: опівдні
+          correct: false
+        - text: о нульовій годині
+          correct: true
+
+    - question: Які форми правильні для родового відмінка дати?
+      options:
+        - text: першого січня
+          correct: true
+        - text: п'ятого травня
+          correct: true
+        - text: десяте лютого
+          correct: false
+        - text: двадцятого грудня
+          correct: true
+
+    - question: Які слова означають часові періоди?
+      options:
+        - text: тиждень
+          correct: true
+        - text: місяць
+          correct: true
+        - text: термін
+          correct: true
+        - text: дедлайн
+          correct: true
+
+# Activity 11: Translate - Time and date expressions (16 items)
+- type: translate
+  title: Перекладіть вирази часу та дат
+  items:
+    - source: At half past two.
+      options:
+        - text: О пів третьої.
+          correct: false
+        - text: Пів на третю.
+          correct: true
+        - text: О другій половині.
+          correct: false
+        - text: Половина другої.
+          correct: false
+
+    - source: On January 5th.
+      options:
+        - text: На п'яте січня.
+          correct: false
+        - text: П'ятого січня.
+          correct: true
+        - text: У п'ятому січні.
+          correct: false
+        - text: П'яте січень.
+          correct: false
+
+    - source: At quarter to eight.
+      options:
+        - text: Чверть до восьмої.
+          correct: false
+        - text: За чверть восьма.
+          correct: true
+        - text: Восьма без чверті.
+          correct: false
+        - text: За чверть восьмої.
+          correct: false
+
+    - source: Until the 15th of March.
+      options:
+        - text: До п'ятнадцяте березня.
+          correct: false
+        - text: До п'ятнадцятого березня.
+          correct: true
+        - text: По п'ятнадцяте березня.
+          correct: false
+        - text: На п'ятнадцяте березня.
+          correct: false
+
+    - source: At midnight.
+      options:
+        - text: О півночі.
+          correct: false
+        - text: Опівночі.
+          correct: true
+        - text: О дванадцятій ночі.
+          correct: false
+        - text: У північ.
+          correct: false
+
+    - source: In February.
+      options:
+        - text: У лютому.
+          correct: true
+        - text: У лютім.
+          correct: false
+        - text: На лютий.
+          correct: false
+        - text: До лютого.
+          correct: false
+
+    - source: Twenty past six.
+      options:
+        - text: Шоста двадцять.
+          correct: false
+        - text: Двадцять по шостій.
+          correct: true
+        - text: Двадцять після шостої.
+          correct: false
+        - text: За двадцять сьома.
+          correct: false
+
+    - source: The meeting is at 3 PM.
+      options:
+        - text: Зустріч о третій.
+          correct: true
+        - text: Зустріч на третю.
+          correct: false
+        - text: Зустріч у третій.
+          correct: false
+        - text: Зустріч до третьої.
+          correct: false
+
+    - source: From the 1st to the 10th.
+      options:
+        - text: Від перше до десяте.
+          correct: false
+        - text: З першого до десятого.
+          correct: true
+        - text: З першу до десяту.
+          correct: false
+        - text: Від першого на десяте.
+          correct: false
+
+    - source: At eleven o'clock.
+      options:
+        - text: О одинадцятій.
+          correct: false
+        - text: Об одинадцятій.
+          correct: true
+        - text: На одинадцяту.
+          correct: false
+        - text: У одинадцять.
+          correct: false
+
+    - source: The fifth anniversary.
+      options:
+        - text: П'ятий ювілей.
+          correct: false
+        - text: П'ята річниця.
+          correct: true
+        - text: П'яте свято.
+          correct: false
+        - text: П'ять років.
+          correct: false
+
+    - source: Not later than the 20th.
+      options:
+        - text: Не пізніше двадцяте.
+          correct: false
+        - text: Не пізніше двадцятого.
+          correct: true
+        - text: Не пізніше на двадцяте.
+          correct: false
+        - text: До не двадцяте.
+          correct: false
+
+    - source: At noon.
+      options:
+        - text: О полудні.
+          correct: false
+        - text: Опівдні.
+          correct: true
+        - text: О дванадцятій дня.
+          correct: false
+        - text: У полудень.
+          correct: false
+
+    - source: Ten to five.
+      options:
+        - text: Десять до п'ятої.
+          correct: false
+        - text: За десять п'ята.
+          correct: true
+        - text: П'ята без десяти.
+          correct: false
+        - text: За десять п'ятої.
+          correct: false
+
+    - source: Birthday.
+      options:
+        - text: День народження.
+          correct: true
+        - text: Дата народження.
+          correct: false
+        - text: Народжений день.
+          correct: false
+        - text: Свято народження.
+          correct: false
+
+    - source: At exactly 9:00.
+      options:
+        - text: Точно о дев'ятій.
+          correct: true
+        - text: Рівно дев'ять.
+          correct: false
+        - text: Саме на дев'яту.
+          correct: false
+        - text: О дев'ять точно.
+          correct: false
+
+# Activity 12: Mark-the-words - Time expressions in text (300+ words)
+- type: mark-the-words
+  title: Знайдіть вирази часу та дати
+  instruction: Позначте всі вирази, що стосуються часу або дат (години, хвилини, дати, місяці, дні тижня).
+  text: |
+    Мій типовий робочий день починається рано. Будильник дзвонить *о сьомій* ранку, але зазвичай я встаю *за чверть восьма*. Снідаю швидко — *пів на восьму* вже виходжу з дому.
+
+    На роботу приїжджаю *о дев'ятій*. Перша нарада — *о десятій*. Вона зазвичай триває до *пів на дванадцяту*. Обідаю *рівно опівдні* у кафе біля офісу.
+
+    *О першій* повертаюся до роботи. *Двадцять по другій* маю щотижневий дзвінок із клієнтами. Він закінчується *за чверть четверта*.
+
+    Робочий день закінчується *о шостій*, але іноді затримуюся до *сьомої*. Дорога додому займає годину, тому приходжу *о восьмій* вечора.
+
+    Щодо важливих дат цього місяця: *п'ятого січня* — день народження сестри. *Четырнадцятого* — останній день подачі звітів. *Двадцять п'ятого* — корпоративне свято.
+
+    *У лютому* плануємо відпустку. Виїжджаємо *першого лютого* і повертаємося *п'ятнадцятого*. Бронювання потрібно підтвердити до *двадцять восьмого січня*.
+
+    Вихідні дні зазвичай починаються *в суботу* вранці. Сплю до *десятої*. *О дванадцятій* обідаю з родиною. Вечори проводжу з друзями — зустрічаємося *о сьомій*.
+
+    *Опівночі* намагаюся вже спати. Засинаю зазвичай *за чверть перша*. Вранці цикл повторюється.
+
+# Activity 13: Fill-in - Schedule completion (additional 10 items)
+- type: fill-in
+  title: Заповніть розклад заходів
+  items:
+    - sentence: Реєстрація починається о _____ годині ранку.
+      answer: дев'ятій
+      options:
+        - дев'яту
+        - дев'ятій
+        - дев'ятої
+        - дев'ять
+
+    - sentence: Конференція триватиме з _____ до п'ятої.
+      answer: десятої
+      options:
+        - десяту
+        - десятої
+        - десятій
+        - десять
+
+    - sentence: Перерва на каву — _____ на третю.
+      answer: пів
+      options:
+        - пів
+        - половина
+        - полу
+        - чверть
+
+    - sentence: Обід заплановано _____ опівдні.
+      answer: рівно
+      options:
+        - точно
+        - рівно
+        - саме
+        - на
+
+    - sentence: Заключна доповідь почнеться за _____ п'ята.
+      answer: чверть
+      options:
+        - чверть
+        - четверту
+        - чвертю
+        - п'ятнадцять
+
+    - sentence: Закриття — не пізніше _____.
+      answer: шостої
+      options:
+        - шосту
+        - шостої
+        - шостій
+        - шоста
+
+    - sentence: Банкет розпочнеться _____ восьмій вечора.
+      answer: о
+      options:
+        - о
+        - об
+        - у
+        - на
+
+    - sentence: Захід відбудеться _____ вересні.
+      answer: у
+      options:
+        - на
+        - в
+        - у
+        - до
+
+    - sentence: Просимо підтвердити участь до _____ серпня.
+      answer: двадцятого
+      options:
+        - двадцяте
+        - двадцятого
+        - двадцятому
+        - двадцять
+
+    - sentence: Термін реєстрації — з _____ до п'ятнадцятого.
+      answer: першого
+      options:
+        - перше
+        - першого
+        - першому
+        - перший
+
+# Activity 14: Quiz - Advanced time concepts (16 items)
+- type: quiz
+  title: "Поглиблена перевірка: Час і дати"
+  items:
+    - question: У якому реченні дата вжита правильно для позначення події?
+      options:
+        - text: Конференція відбудеться двадцяте травня.
+          correct: false
+        - text: Конференція відбудеться двадцятого травня.
+          correct: true
+        - text: Конференція відбудеться на двадцяте травня.
+          correct: false
+        - text: Конференція відбудеться у двадцятому травні.
+          correct: false
+      explanation: Дата події вживається в родовому відмінку без прийменника.
+
+    - question: Яка різниця між «опівдні» та «опівночі»?
+      options:
+        - text: Опівдні — 0:00, опівночі — 12:00.
+          correct: false
+        - text: Опівдні — 12:00, опівночі — 0:00.
+          correct: true
+        - text: Немає різниці, це синоніми.
+          correct: false
+        - text: Опівдні — ранок, опівночі — вечір.
+          correct: false
+      explanation: Опівдні — полудень (12:00), опівночі — північ (0:00).
+
+    - question: У якому випадку вживаємо «об» замість «о»?
+      options:
+        - text: Перед приголосними.
+          correct: false
+        - text: Перед голосними.
+          correct: true
+        - text: Завжди можна обидва.
+          correct: false
+        - text: Тільки з годинами.
+          correct: false
+      explanation: «Об» вживаємо перед голосними (об одинадцятій, об одній).
+
+    - question: Чому «пів третьої» вважається русизмом?
+      options:
+        - text: Це російське слово.
+          correct: false
+        - text: Правильна українська конструкція — «пів на третю».
+          correct: true
+        - text: Це архаїзм.
+          correct: false
+        - text: Це діалектизм.
+          correct: false
+      explanation: В українській мові правильно «пів на третю» (знахідний відмінок).
+
+    - question: Який відмінок вживається після прийменника «до» з датами?
+      options:
+        - text: Називний.
+          correct: false
+        - text: Знахідний.
+          correct: false
+        - text: Родовий.
+          correct: true
+        - text: Місцевий.
+          correct: false
+      explanation: Прийменник «до» завжди вимагає родового відмінка.
+
+    - question: Яка форма правильна для 11:45?
+      options:
+        - text: За чверть дванадцята.
+          correct: true
+        - text: За чверть дванадцятої.
+          correct: false
+        - text: Чверть до дванадцятої.
+          correct: false
+        - text: Дванадцята без чверті.
+          correct: false
+      explanation: Після «за чверть» вживаємо називний відмінок.
+
+    - question: Чому порядкові числівники при датах мають закінчення -е?
+      options:
+        - text: Це особлива форма для дат.
+          correct: false
+        - text: Вони узгоджуються зі словом «число» (середній рід).
+          correct: true
+        - text: Це множина.
+          correct: false
+        - text: Це наказовий спосіб.
+          correct: false
+      explanation: Дата — це «яке число?», тому середній рід, закінчення -е.
+
+    - question: Яка форма правильна для «у березні»?
+      options:
+        - text: Це родовий відмінок.
+          correct: false
+        - text: Це місцевий відмінок.
+          correct: true
+        - text: Це знахідний відмінок.
+          correct: false
+        - text: Це давальний відмінок.
+          correct: false
+      explanation: «У якому місяці?» — місцевий відмінок.
+
+    - question: Яка конструкція правильна для періоду «з 1 до 10 січня»?
+      options:
+        - text: З першого до десятого січня.
+          correct: true
+        - text: З перше до десяте січня.
+          correct: false
+        - text: Від перший до десятий січня.
+          correct: false
+        - text: З першому до десятому січня.
+          correct: false
+      explanation: Прийменники «з» і «до» вимагають родового відмінка.
+
+    - question: Що означає «чверть на другу»?
+      options:
+        - text: 2:15.
+          correct: false
+        - text: 1:15.
+          correct: true
+        - text: 1:45.
+          correct: false
+        - text: 2:45.
+          correct: false
+      explanation: «Чверть на другу» — чверть шляху до другої, тобто 1:15.
+
+    - question: Яка форма правильна для «birthday»?
+      options:
+        - text: День народження.
+          correct: true
+        - text: Дата народження.
+          correct: false
+        - text: Свято народження.
+          correct: false
+        - text: Час народження.
+          correct: false
+      explanation: «День народження» — усталений вираз для «birthday».
+
+    - question: Яке слово є українським відповідником до «deadline»?
+      options:
+        - text: Дедлайн.
+          correct: false
+        - text: Кінцевий строк.
+          correct: false
+        - text: Крайній термін.
+          correct: true
+        - text: Останній день.
+          correct: false
+      explanation: «Крайній термін» — правильний український відповідник.
+
+    - question: Яка форма правильна для «at 14:30» в офіційному стилі?
+      options:
+        - text: О чотирнадцятій тридцять.
+          correct: true
+        - text: О другій тридцять.
+          correct: false
+        - text: Пів на третю.
+          correct: false
+        - text: О другій годині тридцять хвилин.
+          correct: false
+      explanation: В офіційному стилі використовують 24-годинний формат.
+
+    - question: Яка різниця між «річниця» і «ювілей»?
+      options:
+        - text: Немає різниці.
+          correct: false
+        - text: Ювілей — кругла дата (10, 25, 50 років).
+          correct: true
+        - text: Річниця — тільки перший рік.
+          correct: false
+        - text: Ювілей — тільки для людей.
+          correct: false
+      explanation: Ювілей — це кругла річниця (10, 25, 50, 100 років).
+
+    - question: Яка форма правильна для «п'ять хвилин після третьої»?
+      options:
+        - text: П'ять по третя.
+          correct: false
+        - text: П'ять по третій.
+          correct: true
+        - text: П'ять по третьої.
+          correct: false
+        - text: П'ять після третьої.
+          correct: false
+      explanation: Після «по» вживаємо місцевий відмінок.
+
+    - question: У якому відмінку стоїть місяць у виразі «п'ятого січня»?
+      options:
+        - text: У називному.
+          correct: false
+        - text: У родовому.
+          correct: true
+        - text: У місцевому.
+          correct: false
+        - text: У знахідному.
+          correct: false
+      explanation: При датах місяць завжди стоїть у родовому відмінку.

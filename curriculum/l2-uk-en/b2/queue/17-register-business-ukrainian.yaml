@@ -1,0 +1,1411 @@
+module: 17-register-business-ukrainian
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/17-register-business-ukrainian.md
+generated: '2025-12-29T22:08:24.079186'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Привіт, пане директоре! Хотів скинути пропозицію.
+  error: Привіт
+  answer: Добрий день
+  sentence_corrected: Добрий день, пане директоре! Хотів скинути пропозицію.
+  options:
+  - Привіт
+  - Добрий день
+  - Здоров
+  - Гей
+  original_explanation: '"Привіт" не підходить для офіційного звертання до директора.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Шановний пане Коваленко! Скинь документи, будь ласка.
+  error: Скинь
+  answer: Надішліть
+  sentence_corrected: Шановний пане Коваленко! Надішліть документи, будь ласка.
+  options:
+  - Скинь
+  - Надішліть
+  - Кинь
+  - Дай
+  original_explanation: '"Скинь" — розмовне, в офіційному листі використовують "Надішліть".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Прошу Вас глянути на пропозицію.
+  error: глянути
+  answer: ознайомитися
+  sentence_corrected: Прошу Вас ознайомитися на пропозицію.
+  options:
+  - глянути
+  - ознайомитися
+  - подивитися
+  - поглянути
+  original_explanation: '"Глянути" — розмовне, формальний відповідник — "ознайомитися".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Ваша пропозиція класна! Беремо!
+  error: класна
+  answer: прийнятна
+  sentence_corrected: Ваша пропозиція прийнятна! Беремо!
+  options:
+  - класна
+  - прийнятна
+  - крута
+  - норм
+  original_explanation: '"Класна" — розмовне, в офіційному листі — "прийнятна" або
+    "цікава".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Ок, домовились! Чекаємо.
+  error: Ок
+  answer: Добре
+  sentence_corrected: Добре, домовились! Чекаємо.
+  options:
+  - Ок
+  - Добре
+  - Норм
+  - Ага
+  original_explanation: '"Ок" — неформальне, в діловому листі — "Добре" або "Погоджуємося".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Шановний пан Коваленко! (у звертанні)
+  error: пан
+  answer: пане
+  sentence_corrected: Шановний пане Коваленко! (у звертанні)
+  options:
+  - пан
+  - пане
+  - пана
+  - паном
+  original_explanation: У звертанні використовується кличний відмінок — «пане».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: З повага, Марія Петренко.
+  error: повага
+  answer: повагою
+  sentence_corrected: З повагою, Марія Петренко.
+  options:
+  - повага
+  - повагою
+  - поваги
+  - повазі
+  original_explanation: 'Правильно: "З повагою" (орудний відмінок).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Дякую за допомога!
+  error: допомога
+  answer: допомогу
+  sentence_corrected: Дякую за допомогу!
+  options:
+  - допомога
+  - допомогу
+  - допомозі
+  - допомогою
+  original_explanation: 'Правильно: "Дякую за допомогу" (знахідний відмінок).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Типу, хотів запитати про ціни.
+  error: Типу
+  answer: Хотів би
+  sentence_corrected: Хотів би, хотів запитати про ціни.
+  options:
+  - Типу
+  - Хотів би
+  - Ну
+  - Короче
+  original_explanation: '"Типу" — сленг, не підходить для ділового листа.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Шановна пане Коваленко! (до чоловіка)
+  error: Шановна
+  answer: Шановний
+  sentence_corrected: Шановний пане Коваленко! (до чоловіка)
+  options:
+  - Шановна
+  - Шановний
+  - Шановне
+  - Шановні
+  original_explanation: '"Шановний" узгоджується з "пане" (чоловічий рід).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Прошу вас надати документи. (до однієї особи)
+  error: вас
+  answer: Вас
+  sentence_corrected: Прошу Вас надати документи. (до однієї особи)
+  options:
+  - вас
+  - Вас
+  - тебе
+  - їх
+  original_explanation: При звертанні до однієї особи «Вас» пишеться з великої літери.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Чекаємо твою відповідь. (в офіційному листі)
+  error: твою
+  answer: Вашу
+  sentence_corrected: Чекаємо Вашу відповідь. (в офіційному листі)
+  options:
+  - твою
+  - Вашу
+  - його
+  - їхню
+  original_explanation: В офіційному листі використовують «Вашу» (від «Ви»).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Бувай! Пиши! (в офіційному листі)
+  error: Бувай
+  answer: До побачення
+  sentence_corrected: До побачення! Пиши! (в офіційному листі)
+  options:
+  - Бувай
+  - До побачення
+  - Па-па
+  - Поки
+  original_explanation: '"Бувай" — неформальне, в офіційному листі — "До побачення".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Шановний друже Іване! (в офіційному листі)
+  error: друже
+  answer: пане
+  sentence_corrected: Шановний пане Іване! (в офіційному листі)
+  options:
+  - друже
+  - пане
+  - колего
+  - товаришу
+  original_explanation: У формальному звертанні використовують «пане», а не «друже».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Ми дуже-дуже раді співпраці!!!
+  error: дуже-дуже раді
+  answer: раді
+  sentence_corrected: Ми раді співпраці!!!
+  options:
+  - дуже-дуже раді
+  - раді
+  - щасливі
+  - в екстазі
+  original_explanation: Надмірна емоційність недоречна в діловому листі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в діловому листуванні
+  sentence_with_error: Напишіть, якщо щось.
+  error: якщо щось
+  answer: якщо матимете запитання
+  sentence_corrected: Напишіть, якщо матимете запитання.
+  options:
+  - якщо щось
+  - якщо матимете запитання
+  - якщо чо
+  - якщо треба
+  original_explanation: Прохання має бути конкретним — «якщо матимете запитання».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ пане директоре! (звертання)
+  answer: Шановний
+  complete_sentence: Шановний__ пане директоре! (звертання)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ звернутися до Вас із проханням. (ввічливий вступ)
+  answer: Дозвольте
+  complete_sentence: Дозвольте__ звернутися до Вас із проханням. (ввічливий вступ)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Просимо _____ інформацію щодо умов контракту. (прохання)
+  answer: надати
+  complete_sentence: Просимо надати__ інформацію щодо умов контракту. (прохання)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ вдячні за Вашу відповідь. (подяка наперед)
+  answer: Заздалегідь
+  complete_sentence: Заздалегідь__ вдячні за Вашу відповідь. (подяка наперед)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: З _____, Марія Петренко. (підпис)
+  answer: повагою
+  complete_sentence: З повагою__, Марія Петренко. (підпис)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Чекаємо на _____ відповідь. (завершення)
+  answer: Вашу
+  complete_sentence: Чекаємо на Вашу__ відповідь. (завершення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ до Вас з пропозицією співпраці. (вступ)
+  answer: Звертаюся
+  complete_sentence: Звертаюся__ до Вас з пропозицією співпраці. (вступ)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Будемо _____ за Вашу допомогу. (подяка)
+  answer: вдячні
+  complete_sentence: Будемо вдячні__ за Вашу допомогу. (подяка)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ на подальшу співпрацю. (позитивне завершення)
+  answer: Сподіваємося
+  complete_sentence: Сподіваємося__ на подальшу співпрацю. (позитивне завершення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: На _____ запит повідомляємо... (відповідь)
+  answer: Ваш
+  complete_sentence: На Ваш__ запит повідомляємо... (відповідь)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ до Ваших послуг. (готовність допомогти)
+  answer: Залишаємося
+  complete_sentence: Залишаємося__ до Ваших послуг. (готовність допомогти)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Маємо _____ повідомити Вам... (дуже офіційно)
+  answer: честь
+  complete_sentence: Маємо честь__ повідомити Вам... (дуже офіційно)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ до нашої домовленості... (посилання на угоду)
+  answer: Відповідно
+  complete_sentence: Відповідно__ до нашої домовленості... (посилання на угоду)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Просимо _____ Ваше рішення до п'ятниці. (прохання з терміном)
+  answer: повідомити
+  complete_sentence: Просимо повідомити__ Ваше рішення до п'ятниці. (прохання з терміном)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: _____ ласкаві надіслати документи. (ввічливе прохання)
+  answer: Будьте
+  complete_sentence: Будьте__ ласкаві надіслати документи. (ввічливе прохання)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули ділового листування
+  sentence_template: Висловлюємо _____ за Вашу підтримку. (офіційна подяка)
+  answer: подяку
+  complete_sentence: Висловлюємо подяку__ за Вашу підтримку. (офіційна подяка)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Дякую, що _____ час для зустрічі. (ввічливий початок)
+  answer: знайшли
+  complete_sentence: Дякую, що знайшли__ час для зустрічі. (ввічливий початок)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: _____ перейдемо до справи. (початок обговорення)
+  answer: Давайте
+  complete_sentence: Давайте__ перейдемо до справи. (початок обговорення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: _____ нашої зустрічі — обговорити умови контракту. (визначення
+    мети)
+  answer: Мета
+  complete_sentence: Мета__ нашої зустрічі — обговорити умови контракту. (визначення
+    мети)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Наша _____ полягає в тому, що... (заява позиції)
+  answer: позиція
+  complete_sentence: Наша позиція__ полягає в тому, що... (заява позиції)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Ми _____ такі умови... (пропозиція)
+  answer: пропонуємо
+  complete_sentence: Ми пропонуємо__ такі умови... (пропозиція)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Це _____ пропозиція. (позитивна реакція)
+  answer: цікава
+  complete_sentence: Це цікава__ пропозиція. (позитивна реакція)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Нам _____ час на роздуми. (відтермінування)
+  answer: потрібен
+  complete_sentence: Нам потрібен__ час на роздуми. (відтермінування)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Чи могли б ви _____ детальніше? (уточнення)
+  answer: пояснити
+  complete_sentence: Чи могли б ви пояснити__ детальніше? (уточнення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Ми _____ з цими умовами. (згода)
+  answer: згодні
+  complete_sentence: Ми згодні__ з цими умовами. (згода)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Пропонуємо _____. (пошук середини)
+  answer: компроміс
+  complete_sentence: Пропонуємо компроміс__. (пошук середини)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: _____! (фіналізація угоди)
+  answer: Домовились
+  complete_sentence: Домовились__! (фіналізація угоди)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: _____ угоду найближчим часом. (оформлення)
+  answer: Підпишемо
+  complete_sentence: Підпишемо__ угоду найближчим часом. (оформлення)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Маємо деякі _____ щодо термінів. (сумнів)
+  answer: застереження
+  complete_sentence: Маємо деякі застереження__ щодо термінів. (сумнів)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Принципово _____ для нас є якість. (пріоритети)
+  answer: важливим
+  complete_sentence: Принципово важливим__ для нас є якість. (пріоритети)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: Ми _____ розглянути альтернативні варіанти. (відкритість)
+  answer: готові
+  complete_sentence: Ми готові__ розглянути альтернативні варіанти. (відкритість)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть фрази переговорів
+  sentence_template: _____ за продуктивну зустріч! (подяка)
+  answer: Дякуємо
+  complete_sentence: Дякуємо__ за продуктивну зустріч! (подяка)
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Шановний пане директоре!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Дозвольте звернутися до Вас.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Просимо надати інформацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Заздалегідь вдячні за співпрацю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Чекаємо на Вашу відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: З повагою, Марія Петренко.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Сподіваємося на подальшу співпрацю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Маємо честь повідомити Вам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Будьте ласкаві надіслати документи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Звертаюся до Вас з пропозицією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Підтверджуємо отримання Вашого листа.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: На жаль, не маємо змоги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: На Ваш запит повідомляємо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Залишаємося до Ваших послуг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Просимо повідомте Ваше рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть ділові фрази
+  jumbled_words: []
+  answer: Будемо раді співпрацювати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Який елемент є обов'язковим на початку офіційного ділового листа?
+  options:
+  - text: Привіт!
+    correct: false
+  - text: Шановний пане/пані!
+    correct: true
+  - text: Слухай!
+    correct: false
+  - text: Гей!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула є стандартним завершенням ділового листа?
+  options:
+  - text: Бувай!
+    correct: false
+  - text: Поки!
+    correct: false
+  - text: З повагою,
+    correct: true
+  - text: Па-па!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Чому в діловому листуванні використовують «просимо» замість «прошу»?
+  options:
+  - text: Так коротше
+    correct: false
+  - text: Це створює образ команди та підприємства
+    correct: true
+  - text: Це граматично правильніше
+    correct: false
+  - text: Так прийнято в англійській мові
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула використовується для ввічливого вступу в діловому листі?
+  options:
+  - text: Слухай, хотів сказати...
+    correct: false
+  - text: Ну, типу...
+    correct: false
+  - text: Дозвольте звернутися до Вас...
+    correct: true
+  - text: Гей, маю питання...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Скільки основних елементів має стандартний діловий лист?
+  options:
+  - text: Три
+    correct: false
+  - text: Чотири
+    correct: false
+  - text: Шість
+    correct: true
+  - text: Вісім
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула подяки є найбільш офіційною?
+  options:
+  - text: Дякую
+    correct: false
+  - text: Дякс
+    correct: false
+  - text: Заздалегідь вдячні за співпрацю
+    correct: true
+  - text: Спасибі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Як правильно закінчити діловий лист з очікуванням відповіді?
+  options:
+  - text: Напиши мені
+    correct: false
+  - text: Чекаємо на Вашу відповідь
+    correct: true
+  - text: Давай відповідай
+    correct: false
+  - text: Ну, чекаю
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула використовується для посилання на попередній лист?
+  options:
+  - text: Ти писав...
+    correct: false
+  - text: Щодо Вашого листа від...
+    correct: true
+  - text: Про що ми говорили...
+    correct: false
+  - text: Пам'ятаєш, ти казав...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яке звертання доречне, коли ім'я адресата невідоме?
+  options:
+  - text: Привіт всім!
+    correct: false
+  - text: Шановний пане/пані!
+    correct: true
+  - text: Гей, хтось там!
+    correct: false
+  - text: Слухайте!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка тема листа є найкращою для ділового email?
+  options:
+  - text: Лист
+    correct: false
+  - text: Важливо!!!
+    correct: false
+  - text: Пропозиція співпраці від ТОВ «Технолоджі»
+    correct: true
+  - text: Привіт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула використовується для ввічливої відмови?
+  options:
+  - text: Ні, не хочемо
+    correct: false
+  - text: На жаль, на даному етапі не маємо змоги...
+    correct: true
+  - text: Нас це не цікавить
+    correct: false
+  - text: Забудьте про це
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Як правильно звернутися до директора компанії у листі?
+  options:
+  - text: Привіт, директоре!
+    correct: false
+  - text: Шановний пане директоре!
+    correct: true
+  - text: Гей, директор!
+    correct: false
+  - text: Слухай, директоре!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Що таке «корпоративна комунікація»?
+  options:
+  - text: Розмова з друзями
+    correct: false
+  - text: Ділове спілкування в межах та між компаніями
+    correct: true
+  - text: Листування в соціальних мережах
+    correct: false
+  - text: Телефонні розмови з родиною
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула є найбільш формальною для прохання?
+  options:
+  - text: Дай мені...
+    correct: false
+  - text: Мені треба...
+    correct: false
+  - text: Маємо честь просити...
+    correct: true
+  - text: Хочу попросити...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Що має бути в підписі ділового листа?
+  options:
+  - text: Тільки ім'я
+    correct: false
+  - text: Ім'я, посада, контакти
+    correct: true
+  - text: Тільки номер телефону
+    correct: false
+  - text: Нічого
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Структура та формули ділового листування
+  question: Яка формула використовується для вираження готовності до співпраці?
+  options:
+  - text: Ну, можемо поговорити
+    correct: false
+  - text: Сподіваємося на подальшу співпрацю
+    correct: true
+  - text: Якщо хочете — телефонуйте
+    correct: false
+  - text: Може, колись
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Який елемент НЕ є обов'язковим у структурі ділового листа?
+  options:
+  - text: Звертання
+    correct: false
+  - text: Підпис
+    correct: false
+  - text: Смайлики
+    correct: true
+  - text: Контакти
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка формула є правильною для початку ділового листа до директора?
+  options:
+  - text: Привіт, директоре!
+    correct: false
+  - text: Шановний пане директоре!
+    correct: true
+  - text: Гей, директор!
+    correct: false
+  - text: Слухай, директоре!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Що означає «корпоративна комунікація»?
+  options:
+  - text: Спілкування з друзями
+    correct: false
+  - text: Ділове спілкування в бізнес-середовищі
+    correct: true
+  - text: Листування в соціальних мережах
+    correct: false
+  - text: Телефонні розмови з родиною
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка тема email є найкращою для ділового листування?
+  options:
+  - text: Важливо!!!
+    correct: false
+  - text: Лист
+    correct: false
+  - text: Пропозиція співпраці — проєкт «Інновація»
+    correct: true
+  - text: Привіт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Як правильно завершити діловий лист?
+  options:
+  - text: Бувай!
+    correct: false
+  - text: З повагою,
+    correct: true
+  - text: Па-па!
+    correct: false
+  - text: Поки!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка формула використовується для ввічливої відмови?
+  options:
+  - text: Ні, не хочемо.
+    correct: false
+  - text: На жаль, на даному етапі не маємо змоги...
+    correct: true
+  - text: Нас це не цікавить.
+    correct: false
+  - text: Забудьте про це.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Чому в діловому листуванні використовують «просимо» замість «прошу»?
+  options:
+  - text: Так коротше
+    correct: false
+  - text: Це граматично правильніше
+    correct: false
+  - text: Це створює образ команди та підприємства
+    correct: true
+  - text: Це модно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яке слово є формальним відповідником до «скинути» (документи)?
+  options:
+  - text: Закинути
+    correct: false
+  - text: Надіслати
+    correct: true
+  - text: Кинути
+    correct: false
+  - text: Перекинути
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Як правильно почати телефонну розмову в діловому контексті?
+  options:
+  - text: Алло, хто це?
+    correct: false
+  - text: Добрий день! Компанія «...», мене звати...
+    correct: true
+  - text: Слухаю!
+    correct: false
+  - text: Привіт!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Що таке «нарада» в діловому контексті?
+  options:
+  - text: Зустріч з друзями
+    correct: false
+  - text: Внутрішня робоча зустріч
+    correct: true
+  - text: Вечірка
+    correct: false
+  - text: Свято
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка формула використовується для вираження готовності допомогти?
+  options:
+  - text: Ну, якщо треба...
+    correct: false
+  - text: Залишаємося до Ваших послуг
+    correct: true
+  - text: Може, допоможемо...
+    correct: false
+  - text: Подивимось...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Як правильно звернутися в листі, коли ім'я адресата невідоме?
+  options:
+  - text: Привіт всім!
+    correct: false
+  - text: Шановний пане/пані!
+    correct: true
+  - text: Гей, хто там!
+    correct: false
+  - text: Слухайте!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Що таке «контракт» у діловому контексті?
+  options:
+  - text: Усна домовленість
+    correct: false
+  - text: Юридична угода між сторонами
+    correct: true
+  - text: Дружня розмова
+    correct: false
+  - text: Телефонний дзвінок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка помилка у фразі «Ваша пропозиція класна!» в діловому листі?
+  options:
+  - text: Неправильний відмінок
+    correct: false
+  - text: «Класна» — розмовне слово
+    correct: true
+  - text: Помилки немає
+    correct: false
+  - text: Неправильне звертання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Як правильно попросити документи в діловому листі?
+  options:
+  - text: Скинь документи.
+    correct: false
+  - text: Просимо надати документи.
+    correct: true
+  - text: Дай документи.
+    correct: false
+  - text: Кинь документи.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань з ділової комунікації
+  question: Яка формула є найбільш формальною для початку прохання?
+  options:
+  - text: Слухай, мені треба...
+    correct: false
+  - text: Маємо честь просити...
+    correct: true
+  - text: Можеш допомогти?
+    correct: false
+  - text: Мені треба...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: У діловому листуванні прийнято використовувати форму множини «просимо»
+    замість «прошу».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"Скинути документи" — це доречний вираз для офіційного ділового листа.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: Діловий лист має містити контактну інформацію відправника.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"Привіт" можна використовувати на початку ділового листа до директора.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: Тема email має бути конкретною та інформативною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: У діловому листуванні допускається змішування формального і неформального
+    регістрів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"На жаль, не маємо змоги" — це ввічлива формула відмови.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: У діловому листі можна використовувати емоційні вигуки типу «Ого!» або
+    «Вау!».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"Шановний пане директоре" — правильна форма звертання до керівника.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: Перший діловий лист може бути менш формальним, якщо ви знайомі з адресатом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"Чекаємо на Вашу відповідь" — це стандартна завершальна формула.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: У діловому листі прохання може бути без конкретних термінів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"З повагою" — це найбільш формальне завершення листа.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: Українська ділова культура цінує особисті стосунки та довіру.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: У месенджері можна використовувати менш формальний тон, ніж у email.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила ділової комунікації
+  statement: '"Вельмишановний добродію" — це звертання для повсякденного листування.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

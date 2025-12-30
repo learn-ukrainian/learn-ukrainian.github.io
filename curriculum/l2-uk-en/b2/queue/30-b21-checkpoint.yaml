@@ -1,0 +1,1956 @@
+module: 30-b21-checkpoint
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/30-b21-checkpoint.md
+generated: '2025-12-29T22:44:07.615241'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 22
+  fill-in: 32
+  unjumble: 16
+  quiz: 58
+  true-false: 12
+item_count: 140
+items:
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Книга написано автором.
+  error: написано
+  answer: написана
+  sentence_corrected: Книга написана автором.
+  options:
+  - написано
+  - написана
+  - написаний
+  - написані
+  original_explanation: 'Якщо підмет називний ("книга"), потрібен дієприкметник з
+    узгодженням: "написана".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Рішення прийнятий вчора.
+  error: прийнятий
+  answer: прийнято
+  sentence_corrected: Рішення прийнято вчора.
+  options:
+  - прийнятий
+  - прийнято
+  - прийняте
+  - прийнята
+  original_explanation: 'Форма -но/-то не узгоджується: "Рішення прийнято" (рішення
+    — с.р., але -но незмінне).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Документ підписано обома сторонами.
+  error: Документ
+  answer: Документ
+  sentence_corrected: Документ підписано обома сторонами.
+  options:
+  - Документ
+  - Документа
+  - Документу
+  - Документом
+  original_explanation: 'При -но/-то об''єкт у знахідному: "Документ підписано" правильно
+    (знах. = наз. для неістот).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Їй сказано про зміни.
+  error: сказано
+  answer: сказали
+  sentence_corrected: Їй сказали про зміни.
+  options:
+  - сказано
+  - сказали
+  - сказала
+  - сказати
+  original_explanation: 'При непрямому об''єкті (їй) природніше 3-я особа мн.: "Їй
+    сказали".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Експеримент проводиться науковцями протягом року.
+  error: none
+  answer: correct
+  sentence_corrected: Експеримент проводиться науковцями протягом року.
+  options:
+  - проводиться
+  - проводилось
+  - проведено
+  - проводять
+  original_explanation: Речення правильне — зворотна форма з орудним для агента.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Картина намальовано художником.
+  error: намальовано
+  answer: намальована
+  sentence_corrected: Картина намальована художником.
+  options:
+  - намальовано
+  - намальована
+  - намальований
+  - намальоване
+  original_explanation: 'Якщо підмет називний ("картина" — ж.р.), потрібен дієприкметник:
+    "намальована".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Закон приймається парламенту.
+  error: парламенту
+  answer: парламентом
+  sentence_corrected: Закон приймається парламентом.
+  options:
+  - парламенту
+  - парламентом
+  - парламент
+  - від парламенту
+  original_explanation: Агент при -ся конструкції виражається орудним відмінком без
+    прийменника.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Йому пояснено ситуацію докладно.
+  error: пояснено
+  answer: пояснили
+  sentence_corrected: Йому пояснили ситуацію докладно.
+  options:
+  - пояснено
+  - пояснили
+  - пояснював
+  - поясняється
+  original_explanation: 'При непрямому об''єкті (йому) природніше 3-я особа мн.: "Йому
+    пояснили".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Книгу написана відомим автором.
+  error: Книгу
+  answer: Книга
+  sentence_corrected: Книга написана відомим автором.
+  options:
+  - Книгу
+  - Книга
+  - Книзі
+  - Книгою
+  original_explanation: 'При дієприкметнику підмет у називному відмінку: "Книга написана".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Засідання оголошений закритим.
+  error: оголошений
+  answer: оголошено
+  sentence_corrected: Засідання оголошено закритим.
+  options:
+  - оголошений
+  - оголошено
+  - оголошена
+  - оголошене
+  original_explanation: 'Офіційно-діловий стиль вимагає -но/-то: "Засідання оголошено
+    закритим".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Проблема досліджуються науковцями.
+  error: досліджуються
+  answer: досліджується
+  sentence_corrected: Проблема досліджується науковцями.
+  options:
+  - досліджуються
+  - досліджується
+  - досліджено
+  - досліджена
+  original_explanation: 'Підмет "проблема" (одн.) вимагає дієслова в однині: "досліджується".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення помилок у пасивних конструкціях
+  sentence_with_error: Нам порадили від лікаря.
+  error: від лікаря
+  answer: лікарем
+  sentence_corrected: Нам порадили лікарем.
+  options:
+  - від лікаря
+  - лікарем
+  - лікаря
+  - до лікаря
+  original_explanation: 'Якщо є агент, то орудний відмінок: "Нам порадив лікар" або
+    без агента.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: В офіційному документі написали рішення про призначення.
+  error: написали
+  answer: написано
+  sentence_corrected: В офіційному документі написано рішення про призначення.
+  options:
+  - написали
+  - написано
+  - пишуть
+  - писали
+  original_explanation: В офіційно-діловому стилі використовується форма -но/-то.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: У науковій статті мені сказали про результати експерименту.
+  error: мені сказали
+  answer: було повідомлено
+  sentence_corrected: У науковій статті було повідомлено про результати експерименту.
+  options:
+  - мені сказали
+  - було повідомлено
+  - говорять
+  - сказано мені
+  original_explanation: У науковому стилі не вживається розмовна форма 3-ї особи множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: У повсякденній розмові рішення прийнято одноголосно.
+  error: прийнято
+  answer: прийняли
+  sentence_corrected: У повсякденній розмові рішення прийняли одноголосно.
+  options:
+  - прийнято
+  - прийняли
+  - приймається
+  - було прийняте
+  original_explanation: У розмовному стилі природніша форма 3-ї особи множини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: У художньому тексті наказ підписано автором.
+  error: підписано
+  answer: підписаний
+  sentence_corrected: У художньому тексті наказ підписаний автором.
+  options:
+  - підписано
+  - підписаний
+  - підписують
+  - підписали
+  original_explanation: У художньому стилі переважає дієприкметникова конструкція
+    з агентом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: По-перше, він прийшов пізно, однак нам сказали чекати.
+  error: none
+  answer: correct
+  sentence_corrected: По-перше, він прийшов пізно, однак нам сказали чекати.
+  options:
+  - По-перше
+  - однак
+  - сказали
+  - correct
+  original_explanation: Речення правильне — вставне слово та конектор вжито правильно.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: Закон ухвалюється Верховною Радою вже рік. Рішення прийнято!
+  error: ухвалюється
+  answer: ухвалюється
+  sentence_corrected: Закон ухвалюється Верховною Радою вже рік. Рішення прийнято!
+  options:
+  - ухвалюється
+  - ухвалено
+  - ухвалювалось
+  - ухвалить
+  original_explanation: Якщо процес триває рік, -ся форма правильна. Друге речення
+    — результат.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: Сидячи в кріслі, телефон задзвонив несподівано.
+  error: Сидячи
+  answer: Коли я сидів
+  sentence_corrected: Коли я сидів в кріслі, телефон задзвонив несподівано.
+  options:
+  - Сидячи
+  - Коли я сидів
+  - Сидівши
+  - Посидівши
+  original_explanation: Дієприслівник потребує спільного суб'єкта — "сидячи" і "телефон"
+    — різні суб'єкти.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: Читаючи документ, директором було підписано наказ.
+  error: директором було підписано
+  answer: директор підписав
+  sentence_corrected: Читаючи документ, директор підписав наказ.
+  options:
+  - директором було підписано
+  - директор підписав
+  - підписано директором
+  - директор підписано
+  original_explanation: '"Читаючи" вимагає активного суб''єкта: "директор" (не пасив).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: Натомість, він погодився з рішенням комісії.
+  error: none
+  answer: correct
+  sentence_corrected: Натомість, він погодився з рішенням комісії.
+  options:
+  - Натомість
+  - погодився
+  - рішенням
+  - correct
+  original_explanation: Речення правильне — конектор "натомість" вжито правильно.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправлення регістрових помилок
+  sentence_with_error: Експеримент проводиться від науковців протягом року.
+  error: від науковців
+  answer: науковцями
+  sentence_corrected: Експеримент проводиться науковцями протягом року.
+  options:
+  - від науковців
+  - науковцями
+  - науковців
+  - з науковцями
+  original_explanation: Агент при -ся виражається орудним відмінком без прийменника.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Документ _____ директором учора.
+  answer: підписаний
+  complete_sentence: Документ підписаний__ директором учора.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Рішення _____ одноголосно.
+  answer: прийнято
+  complete_sentence: Рішення прийнято__ одноголосно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Проєкт _____ командою експертів.
+  answer: завершений
+  complete_sentence: Проєкт завершений__ командою експертів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Закон _____ Верховною Радою.
+  answer: ухвалено
+  complete_sentence: Закон ухвалено__ Верховною Радою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Лист _____ українською мовою.
+  answer: написаний
+  complete_sentence: Лист написаний__ українською мовою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Роботу _____ вчасно.
+  answer: завершено
+  complete_sentence: Роботу завершено__ вчасно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Договір _____ обома сторонами.
+  answer: підписаний
+  complete_sentence: Договір підписаний__ обома сторонами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Результати _____ в журналі.
+  answer: опубліковано
+  complete_sentence: Результати опубліковано__ в журналі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Будинок _____ у 1920 році.
+  answer: збудований
+  complete_sentence: Будинок збудований__ у 1920 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Наказ _____ керівником.
+  answer: підписано
+  complete_sentence: Наказ підписано__ керівником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: План _____ урядом.
+  answer: затверджений
+  complete_sentence: План затверджений__ урядом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Бюджет _____ парламентом.
+  answer: прийнято
+  complete_sentence: Бюджет прийнято__ парламентом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Текст _____ з англійської мови.
+  answer: перекладений
+  complete_sentence: Текст перекладений__ з англійської мови.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Статтю _____ професором.
+  answer: написано
+  complete_sentence: Статтю написано__ професором.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Двері _____ о дев'ятій годині.
+  answer: зачинено
+  complete_sentence: Двері зачинено__ о дев'ятій годині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Утворення пасивних дієприкметників
+  sentence_template: Документи _____ у архів.
+  answer: передано
+  complete_sentence: Документи передано__ у архів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Верховна Рада ухвалила новий _____ про захист довкілля.
+  answer: закон
+  complete_sentence: Верховна Рада ухвалила новий закон__ про захист довкілля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ виніс рішення на користь позивача.
+  answer: Суд
+  complete_sentence: Суд__ виніс рішення на користь позивача.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Національний банк оголосив про зниження облікової _____.
+  answer: ставки
+  complete_sentence: Національний банк оголосив про зниження облікової ставки__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ подав апеляцію на вирок першої інстанції.
+  answer: Адвокат
+  complete_sentence: Адвокат__ подав апеляцію на вирок першої інстанції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Економіка країни зросла на 3,5% за даними _____.
+  answer: ВВП
+  complete_sentence: Економіка країни зросла на 3,5% за даними ВВП__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ сформувала новий уряд після виборів.
+  answer: Коаліція
+  complete_sentence: Коаліція__ сформувала новий уряд після виборів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ розглядає скаргу на дії поліції.
+  answer: Прокуратура
+  complete_sentence: Прокуратура__ розглядає скаргу на дії поліції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Державний _____ на наступний рік передбачає скорочення витрат.
+  answer: бюджет
+  complete_sentence: Державний бюджет__ на наступний рік передбачає скорочення витрат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ країни зросла до 10% річних.
+  answer: Інфляція
+  complete_sentence: Інфляція__ країни зросла до 10% річних.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Компанія залучила іноземні _____ для розширення виробництва.
+  answer: інвестиції
+  complete_sentence: Компанія залучила іноземні інвестиції__ для розширення виробництва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ заявив про свою невинуватість у залі суду.
+  answer: Підсудний
+  complete_sentence: Підсудний__ заявив про свою невинуватість у залі суду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: Новий _____ подано до Верховної Ради на розгляд.
+  answer: законопроєкт
+  complete_sentence: Новий законопроєкт__ подано до Верховної Ради на розгляд.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ виступив з критикою дій уряду.
+  answer: Опозиція
+  complete_sentence: Опозиція__ виступив з критикою дій уряду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ дав свідчення на користь обвинуваченого.
+  answer: Свідок
+  complete_sentence: Свідок__ дав свідчення на користь обвинуваченого.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ компанії впали на 15% після публікації звіту.
+  answer: Акції
+  complete_sentence: Акції__ компанії впали на 15% після публікації звіту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доменна лексика у контексті
+  sentence_template: _____ засудили підсудного до п'яти років ув'язнення.
+  answer: Присяжні
+  complete_sentence: Присяжні__ засудили підсудного до п'яти років ув'язнення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Хоча економіка зростає, проте залишаються проблеми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: По-перше, закон важливий для захисту громадян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Крім того, він відповідає європейським стандартам.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Однак опозиція критикує деякі положення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Отже, Україна зробила важливий крок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Безперечно, це є правильне рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Таким чином, закон набуде чинності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: З іншого боку, є певні ризики.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Насамкінець, зазначимо позитивні результати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Нарешті, всі сторони були задоволені.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: До того ж, закон отримав міжнародну підтримку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Більше того, ця реформа є необхідна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Загалом, ми оцінюємо ситуацію позитивно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Натомість, опозиція пропонує альтернативу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: На мою думку, рішення є виваженим.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Побудова складних речень
+  jumbled_words: []
+  answer: Очевидно, що ситуація потребує змін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву у реченні "Законопроєкт ухвалено Верховною Радою"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: true
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву у реченні "Дослідження проводиться протягом року"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву у реченні "Мені сказали про зміни в розкладі"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву у реченні "Договір підписаний обома сторонами"?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: true
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Для якого регістру найтиповіша форма -но/-то?
+  options:
+  - text: Розмовного
+    correct: false
+  - text: Офіційно-ділового
+    correct: true
+  - text: Художнього
+    correct: false
+  - text: Наукового
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: У якому відмінку стоїть об'єкт у конструкції з -но/-то?
+  options:
+  - text: У називному
+    correct: false
+  - text: У родовому
+    correct: false
+  - text: У знахідному
+    correct: true
+  - text: В орудному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву підкреслює процес, а не результат?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Як виражається агент у дієприкметниковій конструкції?
+  options:
+  - text: У називному відмінку
+    correct: false
+  - text: У родовому відмінку
+    correct: false
+  - text: В орудному відмінку
+    correct: true
+  - text: У знахідному відмінку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яке речення є правильним у офіційному документі?
+  options:
+  - text: Рішення прийняли вчора.
+    correct: false
+  - text: Рішення прийнято вчора.
+    correct: true
+  - text: Рішення було прийняте вчора.
+    correct: false
+  - text: Рішення приймалось вчора.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву найприродніша в повсякденній розмові?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яке речення містить помилку?
+  options:
+  - text: Книга написана автором.
+    correct: false
+  - text: Книгу написано.
+    correct: false
+  - text: Книга написано.
+    correct: true
+  - text: Книгу написали.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву типова для наукових текстів?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: false
+  - text: Зворотна (-ся)
+    correct: true
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма пасиву узгоджується з підметом?
+  options:
+  - text: Тільки дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Дієприкметникова та зворотна
+    correct: true
+  - text: Тільки безособова (-но/-то)
+    correct: false
+  - text: Всі форми
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: У реченні "Експеримент було проведено успішно" яка форма пасиву?
+  options:
+  - text: Дієприкметникова (-ний/-тий)
+    correct: false
+  - text: Безособова (-но/-то)
+    correct: true
+  - text: Зворотна (-ся)
+    correct: false
+  - text: 3-тя особа множини
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яке речення демонструє правильне вживання агента в -ся конструкції?
+  options:
+  - text: Дані аналізуються комп'ютером.
+    correct: true
+  - text: Дані аналізуються від комп'ютера.
+    correct: false
+  - text: Дані аналізуються комп'ютер.
+    correct: false
+  - text: Дані аналізуються з комп'ютером.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Пасивний стан: розпізнавання форм'
+  question: Яка форма буде найдоречнішою для художнього опису?
+  options:
+  - text: Картину намальовано.
+    correct: false
+  - text: Картина намальована художником.
+    correct: true
+  - text: Картину намалювали.
+    correct: false
+  - text: Картина малюється.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Як замінити "читаючий студент" на підрядне речення?
+  options:
+  - text: студент, який читав
+    correct: false
+  - text: студент, який читає
+    correct: true
+  - text: студент, який прочитав
+    correct: false
+  - text: студент, якого читають
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Яке слово є лексикалізованим активним дієприкметником?
+  options:
+  - text: читаючий
+    correct: false
+  - text: колишній
+    correct: true
+  - text: написаний
+    correct: false
+  - text: зроблено
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Чому активні дієприкметники на -учий/-ючий вважаються архаїчними?
+  options:
+  - text: Вони граматично неправильні.
+    correct: false
+  - text: Сучасна мова надає перевагу підрядним реченням.
+    correct: true
+  - text: Вони вживаються тільки в діалектах.
+    correct: false
+  - text: Вони є русизмами.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Як трансформувати "вищезгаданий документ"?
+  options:
+  - text: документ, що згадується вище
+    correct: true
+  - text: документ, який згадував
+    correct: false
+  - text: документ, що згадано
+    correct: false
+  - text: документ вище згаданий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Який дієприкметник є формою минулого часу на -лий?
+  options:
+  - text: читаючий
+    correct: false
+  - text: минулий
+    correct: true
+  - text: написаний
+    correct: false
+  - text: зроблений
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Як замінити "новообраний президент"?
+  options:
+  - text: президент, який обрали
+    correct: false
+  - text: президент, якого щойно обрали
+    correct: true
+  - text: президент, який обирає
+    correct: false
+  - text: президент, що обраний
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: У якому стилі найчастіше зустрічаються активні дієприкметники?
+  options:
+  - text: Розмовному
+    correct: false
+  - text: Офіційно-діловому та художньому
+    correct: true
+  - text: Тільки в діалектах
+    correct: false
+  - text: Науковому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Як трансформувати "зростаюча інфляція"?
+  options:
+  - text: інфляція, яка зростала
+    correct: false
+  - text: інфляція, що зростає
+    correct: true
+  - text: інфляція, яку зростають
+    correct: false
+  - text: інфляція зростаюча
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Яке речення містить помилку у вживанні дієприкметника?
+  options:
+  - text: Людина, знаюча правду, мовчить.
+    correct: false
+  - text: Людина, яка знає правду, мовчить.
+    correct: false
+  - text: Знаюча правду людина мовчить.
+    correct: false
+  - text: Всі речення граматично правильні.
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Активні дієприкметники: розпізнавання та трансформація'
+  question: Що таке лексикалізація дієприкметника?
+  options:
+  - text: Втрата дієслівного значення і перехід у прикметник.
+    correct: true
+  - text: Утворення нового дієслова.
+    correct: false
+  - text: Зміна наголосу.
+    correct: false
+  - text: Зміна відмінкової форми.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Як утворюється дієприслівник теперішнього часу від "читати"?
+  options:
+  - text: читаючи
+    correct: true
+  - text: прочитавши
+    correct: false
+  - text: читавши
+    correct: false
+  - text: читано
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Як утворюється дієприслівник минулого часу від "прочитати"?
+  options:
+  - text: прочитаючи
+    correct: false
+  - text: прочитавши
+    correct: true
+  - text: прочитано
+    correct: false
+  - text: прочитуючи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Яка умова вживання дієприслівника?
+  options:
+  - text: Суб'єкт дієприслівника та головного дієслова — той самий.
+    correct: true
+  - text: Суб'єкти можуть бути різними.
+    correct: false
+  - text: Дієприслівник не має суб'єкта.
+    correct: false
+  - text: Суб'єкт дієприслівника завжди в орудному відмінку.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Яке речення правильне?
+  options:
+  - text: Читаючи книгу, мені стало цікаво.
+    correct: false
+  - text: Читаючи книгу, я зацікавився темою.
+    correct: true
+  - text: Читаючи книгу, тема стала цікавою.
+    correct: false
+  - text: Читаючи книгу, книга виявилася цікавою.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Який дієприслівник виражає попередню дію?
+  options:
+  - text: працюючи
+    correct: false
+  - text: закінчивши
+    correct: true
+  - text: думаючи
+    correct: false
+  - text: знаючи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Який дієприслівник виражає супровідну дію?
+  options:
+  - text: прийшовши
+    correct: false
+  - text: сказавши
+    correct: false
+  - text: слухаючи
+    correct: true
+  - text: написавши
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Як правильно утворити дієприслівник від "прийти"?
+  options:
+  - text: прийтивши
+    correct: false
+  - text: прийшовши
+    correct: true
+  - text: приходячи
+    correct: false
+  - text: прийдучи
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Яке речення містить помилку у вживанні дієприслівника?
+  options:
+  - text: Працюючи над проєктом, вона зробила відкриття.
+    correct: false
+  - text: Завершивши роботу, команда святкувала.
+    correct: false
+  - text: Сидячи в кріслі, книга впала на підлогу.
+    correct: true
+  - text: Не знаючи правди, він помилився.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: Як об'єднати "Він закінчив роботу. Він пішов додому."?
+  options:
+  - text: Він закінчивши роботу, пішов додому.
+    correct: false
+  - text: Закінчивши роботу, він пішов додому.
+    correct: true
+  - text: Він закінчуючи роботу, пішов додому.
+    correct: false
+  - text: Закінчуючи роботу, він пішов додому.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: 'Дієприслівники: утворення та вживання'
+  question: У якому стилі найчастіше вживаються дієприслівники?
+  options:
+  - text: Розмовному
+    correct: false
+  - text: Книжних (науковому, офіційному, художньому)
+    correct: true
+  - text: Тільки в поезії
+    correct: false
+  - text: У всіх однаково
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Яку функцію виконує "по-перше" у тексті?
+  options:
+  - text: Виражає контраст
+    correct: false
+  - text: Організовує послідовність аргументів
+    correct: true
+  - text: Підсумовує сказане
+    correct: false
+  - text: Виражає причину
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Який конектор виражає контраст?
+  options:
+  - text: крім того
+    correct: false
+  - text: однак
+    correct: true
+  - text: по-друге
+    correct: false
+  - text: таким чином
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Який конектор використовується для підсумку?
+  options:
+  - text: по-перше
+    correct: false
+  - text: крім того
+    correct: false
+  - text: отже
+    correct: true
+  - text: з іншого боку
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Яку функцію виконує "крім того"?
+  options:
+  - text: Виражає контраст
+    correct: false
+  - text: Додає аргумент
+    correct: true
+  - text: Підсумовує
+    correct: false
+  - text: Організовує послідовність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Який конектор найкраще підходить для виразу альтернативи?
+  options:
+  - text: по-перше
+    correct: false
+  - text: крім того
+    correct: false
+  - text: натомість
+    correct: true
+  - text: безперечно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Яке вставне слово виражає впевненість?
+  options:
+  - text: можливо
+    correct: false
+  - text: безперечно
+    correct: true
+  - text: на жаль
+    correct: false
+  - text: напевно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Яку функцію виконує "таким чином"?
+  options:
+  - text: Додає аргумент
+    correct: false
+  - text: Виражає контраст
+    correct: false
+  - text: Підсумовує або робить висновок
+    correct: true
+  - text: Організовує послідовність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Який конектор використовується для додавання?
+  options:
+  - text: однак
+    correct: false
+  - text: до того ж
+    correct: true
+  - text: натомість
+    correct: false
+  - text: нарешті
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Яке вставне слово виражає суб'єктивну думку автора?
+  options:
+  - text: отже
+    correct: false
+  - text: по-перше
+    correct: false
+  - text: на мою думку
+    correct: true
+  - text: таким чином
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Вставні слова та конектори
+  question: Який конектор завершує послідовність аргументів?
+  options:
+  - text: по-перше
+    correct: false
+  - text: крім того
+    correct: false
+  - text: насамкінець
+    correct: true
+  - text: однак
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яка головна відмінність між -но/-то та -ний/-тий?
+  options:
+  - text: -но/-то узгоджується, -ний/-тий — ні
+    correct: false
+  - text: -но/-то не узгоджується, -ний/-тий узгоджується
+    correct: true
+  - text: Вони ідентичні за значенням
+    correct: false
+  - text: -но/-то вживається тільки в минулому часі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яка послідовність вставних слів організовує аргументи?
+  options:
+  - text: однак — натомість — крім того
+    correct: false
+  - text: по-перше — по-друге — насамкінець
+    correct: true
+  - text: безперечно — очевидно — можливо
+    correct: false
+  - text: отже — таким чином — загалом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Коли дієприслівник вживається неправильно?
+  options:
+  - text: Коли виражає супровідну дію
+    correct: false
+  - text: Коли суб'єкт дієприслівника та головного дієслова різний
+    correct: true
+  - text: Коли стоїть на початку речення
+    correct: false
+  - text: Коли виражає попередню дію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Який регістр типовий для новинних матеріалів?
+  options:
+  - text: Художній
+    correct: false
+  - text: Публіцистичний
+    correct: true
+  - text: Розмовний
+    correct: false
+  - text: Науковий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Як правильно виразити агента у -ся конструкції?
+  options:
+  - text: Від + родовий відмінок
+    correct: false
+  - text: З + орудний відмінок
+    correct: false
+  - text: Орудний відмінок без прийменника
+    correct: true
+  - text: До + родовий відмінок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яке слово належить до економічної сфери?
+  options:
+  - text: вирок
+    correct: false
+  - text: депутат
+    correct: false
+  - text: інфляція
+    correct: true
+  - text: прокурор
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яка функція інверсії у реченні "Цю книгу він прочитав"?
+  options:
+  - text: Виправлення граматичної помилки
+    correct: false
+  - text: Логічний наголос на об'єкті
+    correct: true
+  - text: Скорочення речення
+    correct: false
+  - text: Перехід у питальну форму
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Який конектор найкраще завершує текст?
+  options:
+  - text: по-перше
+    correct: false
+  - text: крім того
+    correct: false
+  - text: загалом
+    correct: true
+  - text: однак
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яка особливість "колишнього" як лексикалізованого дієприкметника?
+  options:
+  - text: Він вживається тільки в однині
+    correct: false
+  - text: Він втратив дієслівне значення
+    correct: true
+  - text: Він не відмінюється
+    correct: false
+  - text: Він вживається тільки з істотами
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яке речення демонструє правильне вживання всіх елементів B2.1?
+  options:
+  - text: Закон прийнято. Він важливий.
+    correct: false
+  - text: По-перше, законопроєкт було ухвалено; крім того, опозицією підтримано ключові
+      положення.
+    correct: true
+  - text: Мені сказали, що закон прийняли депутати.
+    correct: false
+  - text: Закон є важливий для громадян.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Яка головна мета B2.1?
+  options:
+  - text: Вивчити всі українські слова
+    correct: false
+  - text: Опанувати пасив, дієприкметники, синтаксис та регістри
+    correct: true
+  - text: Навчитися читати художню літературу
+    correct: false
+  - text: Вивчити історію України
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексний тест B2.1
+  question: Що відбувається у B2.2?
+  options:
+  - text: Продовження граматики B2.1
+    correct: false
+  - text: Фразеологія та синонімія
+    correct: true
+  - text: Історія України
+    correct: false
+  - text: Підготовка до C1
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Форма -но/-то є типовою для офіційно-ділового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: У розмовному стилі часто вживаються дієприслівники.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Зворотна форма (-ся) характерна для наукового стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Активні дієприкметники на -учий/-ючий широко вживаються в сучасній мові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Інверсія використовується для створення емфази у художньому стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Вставні слова обов'язкові в усіх стилях.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: 3-тя особа множини — найприродніша форма пасиву в розмові.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Доменна лексика має однакове значення у всіх контекстах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Публіцистичний стиль характеризується риторичними питаннями.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Художній стиль не використовує пасивних конструкцій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: '"Колишній" та "минулий" — лексикалізовані дієприкметники.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність про регістри
+  statement: Конектор "однак" виражає додавання аргументу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

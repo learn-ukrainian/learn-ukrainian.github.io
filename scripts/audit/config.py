@@ -547,6 +547,20 @@ LEVEL_CONFIG = {
         'transliteration_allowed': False,
         'priority_types': {'quiz', 'fill-in', 'error-correction', 'cloze'}
     },
+    'B2-synthesis': {
+        # Synthesis modules replace checkpoints in B2.3 History (M83, M107, M119, M125, M131)
+        # Focus on cross-era analysis and historical argumentation, not recall
+        'target_words': 1200,
+        'min_activities': 14,
+        'min_items_per_activity': 12,
+        'min_types_unique': 4,
+        'min_vocab': 20,  # Review vocabulary from covered modules
+        'min_engagement': 4,
+        'min_immersion': 98,
+        'max_immersion': 100,  # FULL IMMERSION - no English in body text
+        'transliteration_allowed': False,
+        'priority_types': {'quiz', 'select', 'cloze', 'true-false'}  # Analysis-focused
+    },
     'B2-capstone': {
         'target_words': 1200,
         'min_activities': 12,

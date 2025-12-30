@@ -1,0 +1,1426 @@
+module: 73-sloviany-na-ukrainskykh-zemliakh
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/73-sloviany-na-ukrainskykh-zemliakh.md
+generated: '2025-12-30T01:07:38.208578'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Слов'яни жили в самодержавство, де вождь мав абсолютну владу.
+  error: самодержавство
+  answer: народоправстві
+  sentence_corrected: Слов'яни жили в народоправстві, де вождь мав абсолютну владу.
+  options:
+  - самодержавство
+  - народоправстві
+  - монархії
+  - деспотії
+  original_explanation: Слов'яни жили в народоправстві (давальний відмінок), а не
+    в самодержавстві.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Анти жили на території сучасний Польщі.
+  error: сучасний
+  answer: сучасної
+  sentence_corrected: Анти жили на території сучасної Польщі.
+  options:
+  - сучасний
+  - сучасної
+  - сучасна
+  - сучасному
+  original_explanation: Потрібен родовий відмінок жіночого роду (території чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Віче — це народні збори, де кожен раб мав право голосу.
+  error: раб
+  answer: вільний чоловік
+  sentence_corrected: Віче — це народні збори, де кожен вільний чоловік мав право
+    голосу.
+  options:
+  - раб
+  - вільний чоловік
+  - імператор
+  - вождь
+  original_explanation: На віче право голосу мали вільні чоловіки, а не раби.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Поляни заснували Львів, столицю Русі.
+  error: Львів
+  answer: Київ
+  sentence_corrected: Поляни заснували Київ, столицю Русі.
+  options:
+  - Львів
+  - Київ
+  - Чернігів
+  - Новгород
+  original_explanation: За літописом, поляни заснували Київ, який став столицею Київської
+    Русі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Антський союз розпався під ударами візантійці.
+  error: візантійці
+  answer: аварів
+  sentence_corrected: Антський союз розпався під ударами аварів.
+  options:
+  - візантійці
+  - аварів
+  - римлян
+  - греків
+  original_explanation: Антський союз розпався під ударами аварів, кочівників із Центральної
+    Азії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Перун був богом сонця у слов'янському пантеоні.
+  error: сонця
+  answer: грому
+  sentence_corrected: Перун був богом грому у слов'янському пантеоні.
+  options:
+  - сонця
+  - грому
+  - моря
+  - лісу
+  original_explanation: Перун був богом грому та блискавки. Богом сонця був Дажбог.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Маврикій описував слов'ян як покірний люди.
+  error: покірний
+  answer: вільнолюбних
+  sentence_corrected: Маврикій описував слов'ян як вільнолюбних люди.
+  options:
+  - покірний
+  - вільнолюбних
+  - агресивних
+  - пасивних
+  original_explanation: Маврикій описував слов'ян як вільнолюбних, не схильних до
+    рабства.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Прокопій Кесарійський був римський імператор.
+  error: римський
+  answer: візантійським
+  sentence_corrected: Прокопій Кесарійський був візантійським імператор.
+  options:
+  - римський
+  - візантійським
+  - грецьким
+  - перським
+  original_explanation: Прокопій був візантійським істориком, а не імператором.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Слов'яни прийшли на порожній землі.
+  error: землі
+  answer: місце
+  sentence_corrected: Слов'яни прийшли на порожній місце.
+  options:
+  - землі
+  - місце
+  - землю
+  - території
+  original_explanation: Вираз «прийшли на порожнє місце» (знахідний відмінок). До
+    слов'ян тут жили інші народи.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Рада старійшин ухвалювала всі рішення самостійно без віче.
+  error: без
+  answer: для
+  sentence_corrected: Рада старійшин ухвалювала всі рішення самостійно для віче.
+  options:
+  - без
+  - для
+  - проти
+  - замість
+  original_explanation: Рада старійшин готувала питання ДЛЯ віча, а не замість нього.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Традиція віча зникла після VII століття назавжди.
+  error: зникла
+  answer: збереглася
+  sentence_corrected: Традиція віча збереглася після VII століття назавжди.
+  options:
+  - зникла
+  - збереглася
+  - почалася
+  - змінилася
+  original_explanation: Традиція віча збереглася і відродилася в козацькій раді та
+    сільських громадах.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Слов'яни ставилися до чужинців ворожо та з підозрою.
+  error: ворожо
+  answer: ласкаво
+  sentence_corrected: Слов'яни ставилися до чужинців ласкаво та з підозрою.
+  options:
+  - ворожо
+  - ласкаво
+  - байдуже
+  - агресивно
+  original_explanation: За Маврикієм, слов'яни ставилися до чужинців ласкаво і з турботою.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Норманська теорія підтверджує слов'янську демократичну традицію.
+  error: підтверджує
+  answer: заперечує
+  sentence_corrected: Норманська теорія заперечує слов'янську демократичну традицію.
+  options:
+  - підтверджує
+  - заперечує
+  - ігнорує
+  - вивчає
+  original_explanation: Норманська теорія заперечує здатність слов'ян до державного
+    життя.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Візантійці не залишили жодних свідчення про слов'ян.
+  error: свідчення
+  answer: свідчень
+  sentence_corrected: Візантійці не залишили жодних свідчень про слов'ян.
+  options:
+  - свідчення
+  - свідчень
+  - свідок
+  - свідченням
+  original_explanation: 'Потрібен родовий відмінок множини: жодних свідчень.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Демократична традиція розпочалася в Україні у XVIII столітті.
+  error: XVIII
+  answer: VI
+  sentence_corrected: Демократична традиція розпочалася в Україні у VI столітті.
+  options:
+  - XVIII
+  - VI
+  - XIX
+  - XX
+  original_explanation: Демократична традиція (народоправство) сягає VI століття.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Плем'я — це об'єднання держав зі спільним правителем.
+  error: держав
+  answer: родів
+  sentence_corrected: Плем'я — це об'єднання родів зі спільним правителем.
+  options:
+  - держав
+  - родів
+  - імперій
+  - міст
+  original_explanation: Плем'я — це об'єднання родів зі спільною територією.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Слов'яни жили в [___], де кожен вільний чоловік мав право голосу.
+  answer: народоправстві
+  complete_sentence: Слов'яни жили в [народоправстві], де кожен вільний чоловік мав
+    право голосу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Найважливіші рішення ухвалювало [___] — народні збори.
+  answer: віче
+  complete_sentence: Найважливіші рішення ухвалювало [віче] — народні збори.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: На чолі [___] стояв вождь, але його влада була обмежена.
+  answer: племені
+  complete_sentence: На чолі [племені] стояв вождь, але його влада була обмежена.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Анти жили на [___] сучасної України.
+  answer: території
+  complete_sentence: Анти жили на [території] сучасної України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Візантійські автори залишили цінні [___] про слов'янський спосіб
+    життя.
+  answer: свідчення
+  complete_sentence: Візантійські автори залишили цінні [свідчення] про слов'янський
+    спосіб життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Слов'яни [___] щодо рішень спільно на віче.
+  answer: домовлялися
+  complete_sentence: Слов'яни [домовлялися] щодо рішень спільно на віче.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Антський союз [___] під ударами аварів у VII столітті.
+  answer: розпався
+  complete_sentence: Антський союз [розпався] під ударами аварів у VII столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: '[___] — це безперервність традиції від покоління до покоління.'
+  answer: Тяглість
+  complete_sentence: '[Тяглість] — це безперервність традиції від покоління до покоління.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Головним богом слов'янського пантеону був [___] — бог грому.
+  answer: Перун
+  complete_sentence: Головним богом слов'янського пантеону був [Перун] — бог грому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Маврикій описував слов'ян як [___] людей.
+  answer: вільнолюбних
+  complete_sentence: Маврикій описував слов'ян як [вільнолюбних] людей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Рада [___] готувала питання для віча.
+  answer: старійшин
+  complete_sentence: Рада [старійшин] готувала питання для віча.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Норманська теорія [___] візантійськими джерелами.
+  answer: спростовується
+  complete_sentence: Норманська теорія [спростовується] візантійськими джерелами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Слов'яни [___] вздовж річок — Дніпра, Дністра, Південного Бугу.
+  answer: селилися
+  complete_sentence: Слов'яни [селилися] вздовж річок — Дніпра, Дністра, Південного
+    Бугу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Поляни жили [___] Києва — на тих самих пагорбах, де постане столиця
+    Русі.
+  answer: навколо
+  complete_sentence: Поляни жили [навколо] Києва — на тих самих пагорбах, де постане
+    столиця Русі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Язичництво слов'ян було тісно [___] з природою.
+  answer: пов'язане
+  complete_sentence: Язичництво слов'ян було тісно [пов'язане] з природою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Традиція віча [___] в козацькій раді Запорозької Січі.
+  answer: відродилася
+  complete_sentence: Традиція віча [відродилася] в козацькій раді Запорозької Січі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Ці племена не управляються [___] людиною — Прокопій Кесарійський.
+  answer: однією
+  complete_sentence: Ці племена не управляються [однією] людиною — Прокопій Кесарійський.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Вони здавна живуть у [___] — Прокопій про слов'ян.
+  answer: народоправстві
+  complete_sentence: Вони здавна живуть у [народоправстві] — Прокопій про слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Щастя і [___] вважаються спільною справою — Прокопій.
+  answer: нещастя
+  complete_sentence: Щастя і [нещастя] вважаються спільною справою — Прокопій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Вони [___] й ніяк не схильні до рабства — Маврикій про слов'ян.
+  answer: вільнолюбні
+  complete_sentence: Вони [вільнолюбні] й ніяк не схильні до рабства — Маврикій про
+    слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Вони хоробрі, особливо на своїй [___] — Маврикій.
+  answer: землі
+  complete_sentence: Вони хоробрі, особливо на своїй [землі] — Маврикій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: До [___], які до них приходять, вони ставляться ласкаво — Маврикій.
+  answer: чужинців
+  complete_sentence: До [чужинців], які до них приходять, вони ставляться ласкаво
+    — Маврикій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Існує один бог, творець [___] та владика всього — Прокопій про
+    слов'янські вірування.
+  answer: блискавки
+  complete_sentence: Існує один бог, творець [блискавки] та владика всього — Прокопій
+    про слов'янські вірування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Вони приносять йому в [___] биків та інших тварин — Прокопій.
+  answer: жертву
+  complete_sentence: Вони приносять йому в [жертву] биків та інших тварин — Прокопій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Племена слов'ян і антів схожі за способом [___] — Маврикій.
+  answer: життя
+  complete_sentence: Племена слов'ян і антів схожі за способом [життя] — Маврикій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Вони легко переносять [___] й холод — Маврикій про витривалість
+    слов'ян.
+  answer: спеку
+  complete_sentence: Вони легко переносять [спеку] й холод — Маврикій про витривалість
+    слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Літопис називає полян [___] і тихими.
+  answer: мудрими
+  complete_sentence: Літопис називає полян [мудрими] і тихими.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Трипільці існували [___] до появи слов'ян.
+  answer: задовго
+  complete_sentence: Трипільці існували [задовго] до появи слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Антський союз був серйозною [___] силою.
+  answer: політичною
+  complete_sentence: Антський союз був серйозною [політичною] силою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Козацька демократія має [___] в слов'янському народоправстві.
+  answer: коріння
+  complete_sentence: Козацька демократія має [коріння] в слов'янському народоправстві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Деколонізація — це звільнення від [___] впливу.
+  answer: колоніального
+  complete_sentence: Деколонізація — це звільнення від [колоніального] впливу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть цитати з первинних джерел
+  sentence_template: Норманська теорія виникла у [___] столітті.
+  answer: XVIII
+  complete_sentence: Норманська теорія виникла у [XVIII] столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Слов'яни здавна живуть у народоправстві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Щастя і нещастя вважаються спільною справою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Слов'яни вільнолюбні й не схильні до рабства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Найважливіші рішення ухвалювало віче.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Влада вождя була обмежена.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Поляни заснували Київ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Перун був богом грому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Територія антів охоплювала від Дніпра до Дністра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Антський союз розпався у VII столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Традиція віча відродилася у козацькій раді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Анти іноді воювали з візантійцями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Візантійці залишили цінні свідчення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Прокопій писав про слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Слов'яни були майстерні хлібороби.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Слов'яни селилися уздовж річок.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про слов'ян
+  jumbled_words: []
+  answer: Це тисячолітня демократична традиція.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, що означає слово «народоправство» в контексті слов'янського
+    суспільства?
+  options:
+  - text: Влада одного правителя над народом
+    correct: false
+  - text: Демократичне врядування, де рішення ухвалюють спільно
+    correct: true
+  - text: Влада священиків
+    correct: false
+  - text: Спадкова монархія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті описано функцію віча у слов'янському суспільстві?
+  options:
+  - text: Релігійне свято
+    correct: false
+  - text: Військова рада
+    correct: false
+  - text: Народні збори для ухвалення рішень
+    correct: true
+  - text: Торговельний ярмарок
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яке плем'я заснувало Київ?
+  options:
+  - text: Анти
+    correct: false
+  - text: Склавини
+    correct: false
+  - text: Поляни
+    correct: true
+  - text: Авари
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор описує ставлення візантійців до слов'янського політичного устрою?
+  options:
+  - text: Візантійці ігнорували слов'ян
+    correct: false
+  - text: Візантійці детально описували слов'янське народоправство
+    correct: true
+  - text: Візантійці не залишили жодних свідчень
+    correct: false
+  - text: Візантійці засуджували слов'янську демократію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, чому антський союз розпався у VII столітті?
+  options:
+  - text: Через внутрішні конфлікти
+    correct: false
+  - text: Через напад візантійців
+    correct: false
+  - text: Під ударами аварів
+    correct: true
+  - text: Через епідемію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті пояснюється зв'язок між слов'янським віче та козацькою радою?
+  options:
+  - text: Вони не мають жодного зв'язку
+    correct: false
+  - text: Козаки запозичили цю традицію від поляків
+    correct: false
+  - text: Віче є прадідом козацької ради — це тяглість демократичної традиції
+    correct: true
+  - text: Козацька рада виникла незалежно
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, за текстом, є головною рисою норманської теорії, яку автор критикує?
+  options:
+  - text: Твердження про культурну вищість слов'ян
+    correct: false
+  - text: Твердження про нездатність слов'ян до державного життя
+    correct: true
+  - text: Твердження про мирний характер слов'ян
+    correct: false
+  - text: Твердження про слов'янське походження варягів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор характеризує роль вождя в слов'янському суспільстві?
+  options:
+  - text: Вождь мав абсолютну владу
+    correct: false
+  - text: Вождь був лише релігійним лідером
+    correct: false
+  - text: Влада вождя була обмежена — рішення ухвалювало віче
+    correct: true
+  - text: Вождів у слов'ян не було
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з цитатою Прокопія, яку рису слов'янського життя він підкреслює?
+  options:
+  - text: Багатство та розкіш
+    correct: false
+  - text: Спільність у щасті та нещасті
+    correct: true
+  - text: Войовничість
+    correct: false
+  - text: Релігійний фанатизм
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті описано географічне розташування антів?
+  options:
+  - text: Від Балтійського до Чорного моря
+    correct: false
+  - text: Від Дніпра до Дону, в басейнах Дніпра, Дністра та Південного Бугу
+    correct: true
+  - text: На території сучасної Польщі
+    correct: false
+  - text: На Кавказі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, за текстом, означає слово «анти» у грецькій транслітерації?
+  options:
+  - text: Сильні або хоробрі
+    correct: false
+  - text: Крайні або прикордонні
+    correct: true
+  - text: Мудрі або вчені
+    correct: false
+  - text: Вільні або незалежні
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор пов'язує події 2014 та 2022 років із слов'янською спадщиною?
+  options:
+  - text: Ніяк не пов'язує
+    correct: false
+  - text: Як продовження традиції народоправства
+    correct: true
+  - text: Як розрив із традицією
+    correct: false
+  - text: Як повернення до язичництва
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку роль, за текстом, відігравали річки для слов'янських поселень?
+  options:
+  - text: Тільки як джерело питної води
+    correct: false
+  - text: Як транспортні артерії, джерело їжі та захист
+    correct: true
+  - text: Тільки для релігійних обрядів
+    correct: false
+  - text: Річки не мали значення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що означає слово «тяглість» у контексті статті?
+  options:
+  - text: Тягар, важкість
+    correct: false
+  - text: Безперервність, неперервне існування традиції
+    correct: true
+  - text: Повільність розвитку
+    correct: false
+  - text: Конфлікт поколінь
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як Маврикій описує ставлення слов'ян до чужинців?
+  options:
+  - text: Ворожо та агресивно
+    correct: false
+  - text: Байдуже
+    correct: false
+  - text: Ласкаво і з турботою
+    correct: true
+  - text: З недовірою
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку функцію, за текстом, виконувала рада старійшин?
+  options:
+  - text: Судила злочинців
+    correct: false
+  - text: Готувала питання для віча та радила вождеві
+    correct: true
+  - text: Проводила релігійні обряди
+    correct: false
+  - text: Командувала військом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яка головна теза норманської теорії, яку автор критикує?
+  options:
+  - text: Слов'яни були культурно розвинені
+    correct: false
+  - text: Слов'яни не здатні до державного життя без варягів
+    correct: true
+  - text: Слов'яни походять із Скандинавії
+    correct: false
+  - text: Слов'яни мали демократичні традиції
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яке джерело спростовує норманську теорію?
+  options:
+  - text: Російські літописи XVIII століття
+    correct: false
+  - text: Візантійські джерела VI століття
+    correct: true
+  - text: Скандинавські саги
+    correct: false
+  - text: Німецькі хроніки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому автор наголошує на «тяглості» демократичної традиції?
+  options:
+  - text: Щоб показати відсталість України
+    correct: false
+  - text: Щоб довести безперервність української політичної культури
+    correct: true
+  - text: Щоб применшити роль козацтва
+    correct: false
+  - text: Щоб виправдати самодержавство
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як автор характеризує ставлення Російської імперії до слов'янського народоправства?
+  options:
+  - text: Імперія активно вивчала слов'янську демократію
+    correct: false
+  - text: Імперія ігнорувала або применшувала значення народоправства
+    correct: true
+  - text: Імперія популяризувала слов'янські традиції
+    correct: false
+  - text: Імперія не мала позиції з цього питання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що відрізняє українську політичну традицію від сусідніх країн, за автором?
+  options:
+  - text: Географічне положення
+    correct: false
+  - text: Тяглість демократичної культури
+    correct: true
+  - text: Економічний розвиток
+    correct: false
+  - text: Релігійні вірування
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку роль відіграє деколонізація історії, за автором?
+  options:
+  - text: Переписування історії з політичних мотивів
+    correct: false
+  - text: Звільнення від колоніальних наративів та міфів
+    correct: true
+  - text: Відмова від вивчення історії
+    correct: false
+  - text: Прийняття російської версії історії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому автор пов'язує Майдан 2014 року зі слов'янським народоправством?
+  options:
+  - text: Це випадковий збіг
+    correct: false
+  - text: Обидва явища — прояви демократичної традиції
+    correct: true
+  - text: Майдан був антислов'янським рухом
+    correct: false
+  - text: Слов'яни не мали нічого спільного з Майданом
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як автор спростовує міф про «молоду націю»?
+  options:
+  - text: Посиланням на норманську теорію
+    correct: false
+  - text: Свідченнями візантійських авторів про давню політичну культуру
+    correct: true
+  - text: Відмовою від вивчення давньої історії
+    correct: false
+  - text: Прийняттям російської версії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку ідеологічну функцію виконувала норманська теорія в Російській імперії?
+  options:
+  - text: Демократизація суспільства
+    correct: false
+  - text: Обґрунтування самодержавства
+    correct: true
+  - text: Популяризація слов'янської культури
+    correct: false
+  - text: Захист прав народів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що є головним аргументом проти норманської теорії в тексті?
+  options:
+  - text: Генетичні дослідження
+    correct: false
+  - text: Свідчення візантійських авторів про слов'янське народоправство
+    correct: true
+  - text: Археологічні знахідки
+    correct: false
+  - text: Лінгвістичний аналіз
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як автор інтерпретує опір України у 2022 році?
+  options:
+  - text: Як розрив із традицією
+    correct: false
+  - text: Як продовження традиції народоправства
+    correct: true
+  - text: Як випадкову подію
+    correct: false
+  - text: Як імітацію західних зразків
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому важливо вивчати первинні джерела, а не лише пізніші інтерпретації?
+  options:
+  - text: Первинні джерела коротші
+    correct: false
+  - text: Первинні джерела не містять ідеологічних спотворень пізніших епох
+    correct: true
+  - text: Первинні джерела легші для розуміння
+    correct: false
+  - text: Первинних джерел більше
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку паралель автор проводить між слов'янським вічем та сучасними інституціями?
+  options:
+  - text: Віче — прадід царського двору
+    correct: false
+  - text: Віче — прадід парламенту та козацької ради
+    correct: true
+  - text: Віче не має сучасних аналогів
+    correct: false
+  - text: Віче — прототип монархії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що означає «колоніальний наратив» у контексті статті?
+  options:
+  - text: Об'єктивний опис історії
+    correct: false
+  - text: Спосіб представлення історії, що обслуговує інтереси імперії
+    correct: true
+  - text: Науковий підхід до вивчення минулого
+    correct: false
+  - text: Народна традиція оповіді
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому автор підкреслює, що слов'яни успішно воювали з Візантією?
+  options:
+  - text: Щоб показати агресивність слов'ян
+    correct: false
+  - text: Щоб довести наявність складної політичної організації
+    correct: true
+  - text: Щоб виправдати насильство
+    correct: false
+  - text: Щоб принизити Візантію
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яке значення має фраза «тисячолітня традиція» в контексті статті?
+  options:
+  - text: Це просто красива метафора
+    correct: false
+  - text: Це підкреслення безперервності демократичної культури від VI ст. до сьогодні
+    correct: true
+  - text: Це перебільшення для ефекту
+    correct: false
+  - text: Це помилка автора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Слов'янські племена на українських землях мали демократичну форму правління.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Візантійські джерела описують слов'ян як покірних підданих імперії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Анти жили на території від Дніпра до Дністра.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Вождь слов'янського племені мав абсолютну владу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Віче — це народні збори, де кожен вільний чоловік мав право голосу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Поляни заснували місто Львів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Антський союз розпався під ударами візантійців.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Перун був богом сонця у слов'янському пантеоні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Прокопій Кесарійський був візантійським істориком VI століття.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Норманська теорія стверджує, що слов'яни мали розвинену політичну культуру.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Слов'яни прийшли на українські землі на порожнє місце.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Маврикій Стратег був візантійським імператором та військовим теоретиком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Козацька рада є продовженням традиції слов'янського віча.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Авари були слов'янським племенем.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Річки були центрами слов'янської цивілізації на українських землях.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Слов'яни ставилися до чужинців вороже та агресивно.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

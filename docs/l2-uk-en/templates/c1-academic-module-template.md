@@ -223,6 +223,36 @@ vocabulary_focus:
 
 ## Academic-Specific Activities
 
+### CRITICAL: Language Practice, Not Content Testing
+
+<critical>
+
+**Activities test LANGUAGE SKILLS, not academic content recall.**
+
+The lesson teaches both Ukrainian AND academic concepts. Activities practice only Ukrainian using academic content as context.
+
+**✅ CORRECT:** "Згідно з текстом, як автор формулює свою тезу?" (requires reading Ukrainian)
+**❌ WRONG:** "Яка структура наукової статті?" (tests academic knowledge recall, not language)
+
+**Key Test:** Can the learner answer without reading the Ukrainian text? If yes, rewrite.
+
+| Component | Purpose |
+|-----------|---------|
+| **Lesson Content** | Teaches BOTH Ukrainian language AND academic writing skills |
+| **Activities** | Practice ONLY Ukrainian language skills using academic content as context |
+
+**Activity Types and Their Language Focus:**
+- **quiz**: Test reading comprehension of academic text — "Згідно з текстом модуля..."
+- **fill-in**: Test academic vocabulary/collocations from module
+- **match-up**: Test vocabulary — Ukrainian academic terms ↔ Ukrainian definitions
+- **cloze**: Test vocabulary in academic context
+- **group-sort**: Test register categorization using module vocabulary
+- **error-correction**: Test grammar in academic sentences, NOT factual accuracy
+
+</critical>
+
+---
+
 ### Activity Format Quick Reference
 
 **CRITICAL:** Use these exact formats for MDX generation to work correctly.

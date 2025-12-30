@@ -1,0 +1,1420 @@
+module: 44-complex-syntax-ellipsis-parcelling
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/44-complex-syntax-ellipsis-parcelling.md
+generated: '2025-12-29T23:57:51.794664'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я. Пішов. У. Магазин. Купив. Хліб.
+  error: Я. Пішов. У. Магазин. Купив. Хліб.
+  answer: Я пішов у магазин. Купив хліб.
+  sentence_corrected: Я пішов у магазин. Купив хліб.
+  options:
+  - Я. Пішов. У. Магазин. Купив. Хліб.
+  - Я пішов у магазин. Купив хліб.
+  - Я пішов у магазин купив хліб.
+  - Я. Пішов у магазин. Купив хліб.
+  original_explanation: Прийменники та займенники не можуть бути окремими парцельованими
+    фрагментами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він — там. (незрозуміло де)
+  error: там
+  answer: Він пішов туди
+  sentence_corrected: Він — Він пішов туди. (незрозуміло де)
+  options:
+  - там
+  - Він пішов туди
+  - Він туди
+  - там пішов
+  original_explanation: Якщо контекст не ясний, потрібно використати повну форму.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я. Не. Знаю.
+  error: Я. Не. Знаю.
+  answer: Я не знаю. Справді не знаю.
+  sentence_corrected: Я не знаю. Справді не знаю.
+  options:
+  - Я. Не. Знаю.
+  - Я не знаю. Справді не знаю.
+  - Я. Не знаю.
+  - Не знаю. Я.
+  original_explanation: Частка "не" не може бути окремим парцельованим фрагментом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Наказ видано. Негайно. До виконання. (офіційний документ)
+  error: Негайно. До виконання.
+  answer: Наказ видано до негайного виконання.
+  sentence_corrected: Наказ видано. Наказ видано до негайного виконання. (офіційний
+    документ)
+  options:
+  - Негайно. До виконання.
+  - Наказ видано до негайного виконання.
+  - Наказ. Видано. Негайно.
+  - До негайного. Виконання.
+  original_explanation: У офіційних документах парцеляція недоречна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Система ініціалізується. Повільно. Дуже повільно. (технічний
+    текст)
+  error: Повільно. Дуже повільно.
+  answer: Система ініціалізується повільно.
+  sentence_corrected: Система ініціалізується. Система ініціалізується повільно. (технічний
+    текст)
+  options:
+  - Повільно. Дуже повільно.
+  - Система ініціалізується повільно.
+  - Система. Ініціалізується. Повільно.
+  - Ініціалізація. Повільно.
+  original_explanation: У технічних текстах слід уникати парцеляції.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він до куди йде? (неправильний еліпсис)
+  error: до куди
+  answer: Він куди йде?
+  sentence_corrected: Він Він куди йде? йде? (неправильний еліпсис)
+  options:
+  - до куди
+  - Він куди йде?
+  - Він куди до?
+  - До куди він?
+  original_explanation: 'Правильна форма: "Він куди йде?" або "Він куди?"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вона як квітка красива. (неправильний порядок)
+  error: як квітка красива
+  answer: Вона красива, як квітка.
+  sentence_corrected: Вона Вона красива, як квітка.. (неправильний порядок)
+  options:
+  - як квітка красива
+  - Вона красива, як квітка.
+  - Вона квітка як красива.
+  - Як квітка вона.
+  original_explanation: 'Правильний порядок: "Вона красива, як квітка" або еліпсис
+    "Вона — як квітка".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Я — до йти брата.
+  error: до йти
+  answer: Я — до брата.
+  sentence_corrected: Я — Я — до брата. брата.
+  options:
+  - до йти
+  - Я — до брата.
+  - Я до брата йти.
+  - До йти я брата.
+  original_explanation: 'В еліпсисі дієслово опускається повністю: "Я — до брата".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Треба. Діяти. Зараз. Треба. Негайно. (надмірне повторення)
+  error: Треба. Діяти. Зараз. Треба. Негайно.
+  answer: Треба діяти. Зараз. Негайно.
+  sentence_corrected: Треба діяти. Зараз. Негайно. (надмірне повторення)
+  options:
+  - Треба. Діяти. Зараз. Треба. Негайно.
+  - Треба діяти. Зараз. Негайно.
+  - Треба діяти зараз негайно.
+  - Зараз. Негайно. Треба діяти.
+  original_explanation: Надмірна парцеляція та повторення роблять текст роздробленим.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Дослідження показало. Важливі результати. Дуже важливі. (науковий
+    стиль)
+  error: Важливі результати. Дуже важливі.
+  answer: Дослідження показало важливі результати.
+  sentence_corrected: Дослідження показало. Дослідження показало важливі результати.
+    (науковий стиль)
+  options:
+  - Важливі результати. Дуже важливі.
+  - Дослідження показало важливі результати.
+  - Дослідження. Показало. Результати.
+  - Показало. Важливі. Результати.
+  original_explanation: У науковому стилі парцеляція недоречна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Ти куди йти хочеш?
+  error: куди йти хочеш
+  answer: Ти куди хочеш йти?
+  sentence_corrected: Ти Ти куди хочеш йти??
+  options:
+  - куди йти хочеш
+  - Ти куди хочеш йти?
+  - Куди йти ти хочеш?
+  - Хочеш куди йти?
+  original_explanation: Неправильний порядок слів. Правильно "Ти куди хочеш йти?"
+    або еліпсис "Ти куди?"
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Угода підписано. Сторонами. Офіційно. (юридичний документ)
+  error: Сторонами. Офіційно.
+  answer: Угоду підписано сторонами офіційно.
+  sentence_corrected: Угода підписано. Угоду підписано сторонами офіційно. (юридичний
+    документ)
+  options:
+  - Сторонами. Офіційно.
+  - Угоду підписано сторонами офіційно.
+  - Угода. Підписано. Офіційно.
+  - Підписано сторонами. Угоду.
+  original_explanation: У юридичних документах парцеляція недоречна. Також правильна
+    форма "угоду" (знахідний).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: А. Він. Що. Сказав?
+  error: А. Він. Що. Сказав?
+  answer: А він що сказав?
+  sentence_corrected: А він що сказав?
+  options:
+  - А. Він. Що. Сказав?
+  - А він що сказав?
+  - А він що?
+  - Що він сказав? А?
+  original_explanation: Частки та займенники не можуть бути окремими парцельованими
+    фрагментами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Вона — наче як зірка.
+  error: наче як
+  answer: Вона — наче зірка.
+  sentence_corrected: Вона — Вона — наче зірка. зірка.
+  options:
+  - наче як
+  - Вона — наче зірка.
+  - Вона як наче зірка.
+  - Наче як вона зірка.
+  original_explanation: 'Не можна поєднувати "наче" і "як" — достатньо одного: "Вона
+    — наче зірка".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Скільки це скільки коштує?
+  error: скільки це скільки
+  answer: Скільки це коштує?
+  sentence_corrected: Скільки це скільки коштує?
+  options:
+  - скільки це скільки
+  - Скільки це коштує?
+  - Це скільки коштує?
+  - Скільки? Це? Коштує?
+  original_explanation: 'Повторення "скільки" зайве. Правильно: "Скільки це коштує?"
+    або еліпсис "Скільки?"'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Він пішов до — брата.
+  error: до —
+  answer: Він пішов до брата.
+  sentence_corrected: Він пішов Він пішов до брата. брата.
+  options:
+  - до —
+  - Він пішов до брата.
+  - Він — до брата.
+  - До — брата він.
+  original_explanation: Тире не ставиться після прийменника. Або "Він пішов до брата",
+    або еліпсис "Він — до брата".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Ти куди?" означає "Ти куди _____?"'
+  answer: йдеш
+  complete_sentence: '"Ти куди?" означає "Ти куди йдеш__?"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Я — додому" означає "Я _____ додому".'
+  answer: йду
+  complete_sentence: '"Я — додому" означає "Я йду__ додому".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"А він що?" означає "А він що _____?"'
+  answer: сказав
+  complete_sentence: '"А він що?" означає "А він що сказав__?"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"— Каву? — Так" означає "— _____ каву? — Так".'
+  answer: Хочеш
+  complete_sentence: '"— Каву? — Так" означає "— Хочеш__ каву? — Так".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Вона — як квітка" означає "Вона _____, як квітка".'
+  answer: гарна
+  complete_sentence: '"Вона — як квітка" означає "Вона гарна__, як квітка".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Діти — в школу" означає "Діти _____ в школу".'
+  answer: йдуть
+  complete_sentence: '"Діти — в школу" означає "Діти йдуть__ в школу".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"— Скільки? — Двадцять" означає "— Скільки це _____? — Двадцять".'
+  answer: коштує
+  complete_sentence: '"— Скільки? — Двадцять" означає "— Скільки це коштує__? — Двадцять".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Він — до брата" означає "Він _____ до брата".'
+  answer: пішов
+  complete_sentence: '"Він — до брата" означає "Він пішов__ до брата".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Ну що?" означає "Ну що _____?"'
+  answer: сталося
+  complete_sentence: '"Ну що?" означає "Ну що сталося__?"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"— Коли? — Завтра" означає "— Коли це _____? — Завтра".'
+  answer: буде
+  complete_sentence: '"— Коли? — Завтра" означає "— Коли це буде__? — Завтра".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Звідки ти?" означає "Звідки ти _____?"'
+  answer: приїхав
+  complete_sentence: '"Звідки ти?" означає "Звідки ти приїхав__?"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Вона — наче зірка" означає "Вона _____, наче зірка".'
+  answer: красива
+  complete_sentence: '"Вона — наче зірка" означає "Вона красива__, наче зірка".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"— Чаю? — Дякую" означає "— _____ чаю? — Дякую".'
+  answer: Бажаєте
+  complete_sentence: '"— Чаю? — Дякую" означає "— Бажаєте__ чаю? — Дякую".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Він — як батько" означає "Він _____, як батько".'
+  answer: такий
+  complete_sentence: '"Він — як батько" означає "Він такий__, як батько".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"— Куди? — На роботу" означає "— Куди _____? — На роботу".'
+  answer: йдеш
+  complete_sentence: '"— Куди? — На роботу" означає "— Куди йдеш__? — На роботу".'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відновіть пропущені слова
+  sentence_template: '"Навіщо це?" означає "Навіщо це _____?"'
+  answer: потрібно
+  complete_sentence: '"Навіщо це?" означає "Навіщо це потрібно__?"'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: У реченні "Він пішов. Назавжди." використано _____.
+  answer: парцеляцію
+  complete_sentence: У реченні "Він пішов. Назавжди." використано парцеляцію__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: У реченні "Ти куди?" використано _____.
+  answer: еліпсис
+  complete_sentence: У реченні "Ти куди?" використано еліпсис__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Парцеляція створює _____ у тексті.
+  answer: паузи
+  complete_sentence: Парцеляція створює паузи__ у тексті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Еліпсис робить мовлення більш _____.
+  answer: лаконічним
+  complete_sentence: Еліпсис робить мовлення більш лаконічним__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: У художньому тексті парцеляція посилює _____.
+  answer: емоційність
+  complete_sentence: У художньому тексті парцеляція посилює емоційність__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: '"Ранок. Сонце. Кава." — це приклад _____.'
+  answer: парцеляції
+  complete_sentence: '"Ранок. Сонце. Кава." — це приклад парцеляції__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: '"Я — додому" — це приклад _____.'
+  answer: еліпсису
+  complete_sentence: '"Я — додому" — це приклад еліпсису__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: В офіційних текстах _____ недоречна.
+  answer: парцеляція
+  complete_sentence: В офіційних текстах парцеляція__ недоречна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Еліпсис найчастіше вживається в _____ мовленні.
+  answer: розмовному
+  complete_sentence: Еліпсис найчастіше вживається в розмовному__ мовленні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Парцеляція часто використовується в _____.
+  answer: рекламі
+  complete_sentence: Парцеляція часто використовується в рекламі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: У реченні "— Каву? — Так" пропущено _____.
+  answer: дієслово
+  complete_sentence: У реченні "— Каву? — Так" пропущено дієслово__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Парцеляція _____ речення на фрагменти.
+  answer: розчленовує
+  complete_sentence: Парцеляція розчленовує__ речення на фрагменти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: '"Вона — як квітка" — це еліпсис _____.'
+  answer: порівняння
+  complete_sentence: '"Вона — як квітка" — це еліпсис порівняння__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Ліна Костенко майстерно використовувала _____ у своїй поезії.
+  answer: парцеляцію
+  complete_sentence: Ліна Костенко майстерно використовувала парцеляцію__ у своїй
+    поезії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: Еліпсис у діалозі свідчить про _____ стосунки між співрозмовниками.
+  answer: близькі
+  complete_sentence: Еліпсис у діалозі свідчить про близькі__ стосунки між співрозмовниками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Визначте стилістичні прийоми
+  sentence_template: '"Війна. Біль. Надія." — це парцеляція для створення _____.'
+  answer: ритму
+  complete_sentence: '"Війна. Біль. Надія." — це парцеляція для створення ритму__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Він пішов. Назавжди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Ми переможемо. Обов'язково.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Це було страшно. І боляче.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Вона говорила. Тихо. Повільно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Я чекала. Довго. Безнадійно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Треба діяти. Зараз. Негайно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Він дивився на неї. Мовчки. Сумно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Він прийшов. Нарешті. Після стількох років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Це важливо. Надзвичайно важливо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Двері відчинилися. Повільно. Хтось увійшов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Вона плакала. Гірко. Безутішно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Ранок. Сонце. Кава. Робота.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Війна. Біль. Надія. Перемога.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Я повернуся. Скоро. Обов'язково.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Він сказав правду. Нарешті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Створіть парцельовані речення
+  jumbled_words: []
+  answer: Двері зачинилися. Тихо. Без крику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Що таке еліпсис у синтаксисі?
+  options:
+  - text: Пропуск слів, які легко відновити з контексту
+    correct: true
+  - text: Повторення однакових слів для наголосу
+    correct: false
+  - text: Перестановка слів у реченні
+    correct: false
+  - text: Додавання зайвих слів для краси
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Що таке парцеляція?
+  options:
+  - text: Об'єднання коротких речень в одне довге
+    correct: false
+  - text: Розчленування речення на фрагменти, відділені крапками
+    correct: true
+  - text: Видалення всіх прикметників з речення
+    correct: false
+  - text: Заміна іменників займенниками
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яке слово пропущено в реченні "Я — додому"?
+  options:
+  - text: Дієслово руху (йду/їду)
+    correct: true
+  - text: Прикметник
+    correct: false
+  - text: Прислівник
+    correct: false
+  - text: Сполучник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: В якому стилі найчастіше використовується еліпсис?
+  options:
+  - text: Офіційно-діловому
+    correct: false
+  - text: Розмовному та художньому
+    correct: true
+  - text: Науковому
+    correct: false
+  - text: Публіцистичному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яка функція парцеляції в реченні "Він пішов. Назавжди."?
+  options:
+  - text: Скорочення тексту
+    correct: false
+  - text: Посилення емоційного впливу
+    correct: true
+  - text: Виправлення граматичної помилки
+    correct: false
+  - text: Уникнення повторів
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яке речення є прикладом еліпсису?
+  options:
+  - text: Я йду додому зараз.
+    correct: false
+  - text: Ти куди?
+    correct: true
+  - text: Він поїхав до Києва.
+    correct: false
+  - text: Вона працює в офісі.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яке речення є прикладом парцеляції?
+  options:
+  - text: Він прийшов нарешті.
+    correct: false
+  - text: Він прийшов. Нарешті.
+    correct: true
+  - text: Нарешті він прийшов.
+    correct: false
+  - text: Прийшов він нарешті.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Чому еліпсис небажаний у науковому стилі?
+  options:
+  - text: Він робить текст занадто коротким
+    correct: false
+  - text: Він може призвести до неоднозначності
+    correct: true
+  - text: Він застарілий
+    correct: false
+  - text: Він занадто простий
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яке слово пропущено в діалозі "— Каву? — Так"?
+  options:
+  - text: Дієслово "хочеш/бажаєш"
+    correct: true
+  - text: Прикметник "гарячу"
+    correct: false
+  - text: Іменник "чашку"
+    correct: false
+  - text: Прислівник "зараз"
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яка помилка допущена в реченні "Я. Пішов. У. Магазин."?
+  options:
+  - text: Неправильний порядок слів
+    correct: false
+  - text: Надмірна парцеляція несамостійних слів
+    correct: true
+  - text: Відсутність підмета
+    correct: false
+  - text: Неправильна форма дієслова
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Що означає речення "Він — як батько"?
+  options:
+  - text: Він є батьком
+    correct: false
+  - text: Він схожий на батька
+    correct: true
+  - text: Він живе з батьком
+    correct: false
+  - text: Він працює як батько
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яка функція парцеляції в рекламі "Нове. Сучасне. Українське."?
+  options:
+  - text: Економія місця
+    correct: false
+  - text: Створення ритму та наголошення кожної якості
+    correct: true
+  - text: Виправлення помилок
+    correct: false
+  - text: Дотримання граматичних правил
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: В якому випадку еліпсис доречний?
+  options:
+  - text: У науковій статті
+    correct: false
+  - text: У офіційному листі
+    correct: false
+  - text: У діалозі близьких друзів
+    correct: true
+  - text: У юридичному документі
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яке слово пропущено в питанні "А він що?"?
+  options:
+  - text: сказав/зробив
+    correct: true
+  - text: хоче
+    correct: false
+  - text: думає
+    correct: false
+  - text: знає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Яка різниця між еліпсисом та парцеляцією?
+  options:
+  - text: Еліпсис — пропуск слів, парцеляція — розбиття крапками
+    correct: true
+  - text: Це синоніми
+    correct: false
+  - text: Еліпсис — для поезії, парцеляція — для прози
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння еліпсису та парцеляції
+  question: Хто з українських письменників майстерно використовував еліпсис та парцеляцію?
+  options:
+  - text: Тільки Тарас Шевченко
+    correct: false
+  - text: Тільки Леся Українка
+    correct: false
+  - text: Коцюбинський, Леся Українка, Ліна Костенко та інші
+    correct: true
+  - text: Ніхто з українських письменників
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Яка головна різниця між еліпсисом і парцеляцією?
+  options:
+  - text: Еліпсис — пропуск слів, парцеляція — розбиття крапками
+    correct: true
+  - text: Це синоніми
+    correct: false
+  - text: Еліпсис — для прози, парцеляція — для поезії
+    correct: false
+  - text: Різниці немає
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: У якому стилі еліпсис найбільш природний?
+  options:
+  - text: У науковому
+    correct: false
+  - text: У розмовному та художньому
+    correct: true
+  - text: У офіційно-діловому
+    correct: false
+  - text: У технічному
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Що означає речення "Ми переможемо. Обов''язково."?
+  options:
+  - text: Два окремі речення без зв'язку
+    correct: false
+  - text: Парцеляція для наголосу на впевненості
+    correct: true
+  - text: Граматична помилка
+    correct: false
+  - text: Незавершена думка
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Яке слово пропущено в еліпсисі "Вона — як зірка"?
+  options:
+  - text: Дієслово буття (є/була)
+    correct: false
+  - text: Прикметник (красива/яскрава)
+    correct: true
+  - text: Займенник
+    correct: false
+  - text: Прислівник
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Чому парцеляція недоречна в юридичних документах?
+  options:
+  - text: Вона занадто проста
+    correct: false
+  - text: Юридичні тексти вимагають повноти й однозначності
+    correct: true
+  - text: Її важко читати
+    correct: false
+  - text: Вона застаріла
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Яка функція парцеляції в рекламі "Нове. Сучасне. Українське."?
+  options:
+  - text: Скорочення тексту
+    correct: false
+  - text: Ритм і наголос на кожній якості
+    correct: true
+  - text: Виправлення помилок
+    correct: false
+  - text: Офіційність
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Чому речення "Я. Пішов. У. Магазин." є неправильним?
+  options:
+  - text: Занадто коротке
+    correct: false
+  - text: Прийменники та займенники не парцелюються окремо
+    correct: true
+  - text: Неправильний порядок слів
+    correct: false
+  - text: Відсутній підмет
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Що є спільного між еліпсисом та парцеляцією?
+  options:
+  - text: Вони тотожні
+    correct: false
+  - text: Обидва — стилістичні засоби для виразності
+    correct: true
+  - text: Обидва пропускають слова
+    correct: false
+  - text: Обидва об'єднують речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Як еліпсис впливає на діалог?
+  options:
+  - text: Робить його штучним
+    correct: false
+  - text: Надає природності та лаконічності
+    correct: true
+  - text: Ускладнює розуміння
+    correct: false
+  - text: Робить офіційним
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Хто з українських поетів відомий майстерним використанням парцеляції?
+  options:
+  - text: Тільки Тарас Шевченко
+    correct: false
+  - text: Тільки Іван Франко
+    correct: false
+  - text: Ліна Костенко та інші сучасні поети
+    correct: true
+  - text: Ніхто не використовував
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: У якому випадку еліпсис може бути недоречним?
+  options:
+  - text: У розмові з другом
+    correct: false
+  - text: Коли контекст не робить пропущене слово очевидним
+    correct: true
+  - text: У художньому творі
+    correct: false
+  - text: У поезії
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Що означає "недомовленість" як стилістичний ефект еліпсису?
+  options:
+  - text: Граматичну помилку
+    correct: false
+  - text: Навмисне незавершення думки для художнього ефекту
+    correct: true
+  - text: Брак слів у мовця
+    correct: false
+  - text: Неуважність автора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Яка функція тире в еліпсисі "Я — додому"?
+  options:
+  - text: Граматична помилка
+    correct: false
+  - text: Позначає місце пропущеного дієслова
+    correct: true
+  - text: Прикраса
+    correct: false
+  - text: Розділовий знак
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Чим парцеляція відрізняється від простого списку?
+  options:
+  - text: Нічим не відрізняється
+    correct: false
+  - text: Парцеляція — це розбите речення, список — перелік окремих елементів
+    correct: true
+  - text: Список довший
+    correct: false
+  - text: Парцеляція завжди коротша
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Як визначити, чи доречний еліпсис у конкретному тексті?
+  options:
+  - text: Еліпсис завжди доречний
+    correct: false
+  - text: За регістром тексту та ясністю контексту
+    correct: true
+  - text: Еліпсис ніколи не доречний
+    correct: false
+  - text: За довжиною речення
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка
+  question: Яку роль відіграє парцеляція в сучасних соціальних мережах?
+  options:
+  - text: Ніякої
+    correct: false
+  - text: Створює емоційність і ритм коротких повідомлень
+    correct: true
+  - text: Ускладнює розуміння
+    correct: false
+  - text: Робить тексти офіційними
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис — це пропуск слів, які легко відновити з контексту.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Парцеляція об'єднує кілька речень в одне.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис доречний у науковому стилі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Парцеляція посилює емоційний вплив тексту.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: '"Ти куди?" — це приклад еліпсису.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: '"Він пішов. Назавжди." — це приклад парцеляції.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис можна використовувати в офіційних документах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Парцеляція часто використовується в рекламі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис і парцеляція — це синоніми.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: У реченні "Я — додому" пропущено дієслово.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Парцеляція допустима в юридичних текстах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис робить мовлення природнішим у діалогах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: '"Я. Пішов. У. Магазин." — це правильна парцеляція.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Українська мова має розвинену систему еліпсису.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Парцеляція створює ритм у тексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила еліпсису та парцеляції
+  statement: Еліпсис завжди призводить до неоднозначності.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

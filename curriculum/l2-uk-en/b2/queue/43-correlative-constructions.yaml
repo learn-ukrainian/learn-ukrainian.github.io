@@ -1,0 +1,1408 @@
+module: 43-correlative-constructions
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/43-correlative-constructions.md
+generated: '2025-12-29T23:56:15.672514'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Те, яке ти сказав, цікаво.
+  error: яке
+  answer: що
+  sentence_corrected: Те, що ти сказав, цікаво.
+  options:
+  - яке
+  - що
+  - хто
+  - де
+  original_explanation: Із "те" вживається "що", а не "яке".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Той хто знає мовчить.
+  error: Той хто
+  answer: Той, хто
+  sentence_corrected: Той, хто знає мовчить.
+  options:
+  - Той хто
+  - Той, хто
+  - Той; хто
+  - Той — хто
+  original_explanation: Перед відносним словом "хто" потрібна кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Там де тихо добре думається.
+  error: Там де
+  answer: Там, де
+  sentence_corrected: Там, де тихо добре думається.
+  options:
+  - Там де
+  - Там, де
+  - Там; де
+  - Там — де
+  original_explanation: Після "там" перед "де" ставиться кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Той, що працює, досягає успіху.
+  error: що
+  answer: хто
+  sentence_corrected: Той, хто працює, досягає успіху.
+  options:
+  - що
+  - хто
+  - який
+  - де
+  original_explanation: Для вказівки на особу вживається "хто", а не "що".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Стільки, як потрібно, візьми.
+  error: як
+  answer: скільки
+  sentence_corrected: Стільки, скільки потрібно, візьми.
+  options:
+  - як
+  - скільки
+  - що
+  - де
+  original_explanation: Зі "стільки" вживається "скільки".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Тоді, де сонце сідає, стає прохолодно.
+  error: де
+  answer: коли
+  sentence_corrected: Тоді, коли сонце сідає, стає прохолодно.
+  options:
+  - де
+  - коли
+  - що
+  - хто
+  original_explanation: '"Тоді" поєднується з "коли" (часовий корелятив).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Туди, де всі йдуть, іди й ти.
+  error: де
+  answer: куди
+  sentence_corrected: Туди, куди всі йдуть, іди й ти.
+  options:
+  - де
+  - куди
+  - що
+  - коли
+  original_explanation: '"Туди" поєднується з "куди" (напрямок руху).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Там, куди тихо, добре думається.
+  error: куди
+  answer: де
+  sentence_corrected: Там, де тихо, добре думається.
+  options:
+  - куди
+  - де
+  - що
+  - коли
+  original_explanation: '"Там" поєднується з "де" (місце перебування).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Допоможи той, хто потребує.
+  error: той
+  answer: тому
+  sentence_corrected: Допоможи тому, хто потребує.
+  options:
+  - той
+  - тому
+  - того
+  - тим
+  original_explanation: Давальний відмінок потребує форми "тому".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Я поважаю той, хто чесний.
+  error: той
+  answer: того
+  sentence_corrected: Я поважаю того, хто чесний.
+  options:
+  - той
+  - того
+  - тому
+  - тим
+  original_explanation: Знахідний відмінок потребує форми "того".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Задоволений те, що зробив.
+  error: те
+  answer: тим
+  sentence_corrected: Задоволений тим, що зробив.
+  options:
+  - те
+  - тим
+  - того
+  - тому
+  original_explanation: Орудний відмінок потребує форми "тим".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Той, хто рано встає тому Бог дає.
+  error: встає тому
+  answer: встає, тому
+  sentence_corrected: Той, хто рано встає, тому Бог дає.
+  options:
+  - встає тому
+  - встає, тому
+  - встає; тому
+  - встає — тому
+  original_explanation: Після підрядної частини перед головною ставиться кома.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Такий результат, що ми очікували.
+  error: що
+  answer: якого
+  sentence_corrected: Такий результат, якого ми очікували.
+  options:
+  - що
+  - якого
+  - який
+  - хто
+  original_explanation: '"Такий" поєднується з "який" (у потрібному відмінку).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Настільки важливо, скільки і складно.
+  error: скільки
+  answer: наскільки
+  sentence_corrected: Настільки важливо, наскільки і складно.
+  options:
+  - скільки
+  - наскільки
+  - як
+  - що
+  original_explanation: '"Настільки" поєднується з "наскільки".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Звідти, де він приїхав, далеко.
+  error: де
+  answer: звідки
+  sentence_corrected: Звідти, звідки він приїхав, далеко.
+  options:
+  - де
+  - звідки
+  - куди
+  - коли
+  original_explanation: '"Звідти" поєднується зі "звідки" (місце походження).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки у співвідносних конструкціях
+  sentence_with_error: Доти, коли не прийдеш, чекатиму.
+  error: коли
+  answer: поки
+  sentence_corrected: Доти, поки не прийдеш, чекатиму.
+  options:
+  - коли
+  - поки
+  - де
+  - що
+  original_explanation: '"Доти" поєднується з "поки" (тривалість).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Той, _____ рано встає, тому Бог дає.
+  answer: хто
+  complete_sentence: Той, хто__ рано встає, тому Бог дає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Те, _____ ти сказав, мене здивувало.
+  answer: що
+  complete_sentence: Те, що__ ти сказав, мене здивувало.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Там, _____ тихо, добре думається.
+  answer: де
+  complete_sentence: Там, де__ тихо, добре думається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Тоді, _____ настане час, ти все зрозумієш.
+  answer: коли
+  complete_sentence: Тоді, коли__ настане час, ти все зрозумієш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Стільки, _____ потрібно, стільки й візьми.
+  answer: скільки
+  complete_sentence: Стільки, скільки__ потрібно, стільки й візьми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Туди, _____ всі йдуть, іди й ти.
+  answer: куди
+  complete_sentence: Туди, куди__ всі йдуть, іди й ти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Такий результат, _____ ми очікували.
+  answer: якого
+  complete_sentence: Такий результат, якого__ ми очікували.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Доти, _____ не прийдеш, чекатиму.
+  answer: поки
+  complete_sentence: Доти, поки__ не прийдеш, чекатиму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Звідти, _____ він приїхав, далеко до моря.
+  answer: звідки
+  complete_sentence: Звідти, звідки__ він приїхав, далеко до моря.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Роби так, _____ знаєш.
+  answer: як
+  complete_sentence: Роби так, як__ знаєш.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Настільки важливо, _____ і складно.
+  answer: наскільки
+  complete_sentence: Настільки важливо, наскільки__ і складно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Він прийшов тому, _____ хотів допомогти.
+  answer: що
+  complete_sentence: Він прийшов тому, що__ хотів допомогти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Допоможи _____, хто потребує.
+  answer: тому
+  complete_sentence: Допоможи тому__, хто потребує.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Я поважаю _____, хто чесний.
+  answer: того
+  complete_sentence: Я поважаю того__, хто чесний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Задоволений _____, що зробив.
+  answer: тим
+  complete_sentence: Задоволений тим__, що зробив.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Доповніть співвідносну конструкцію
+  sentence_template: Говорю про _____, хто знає правду.
+  answer: того
+  complete_sentence: Говорю про того__, хто знає правду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, хто наполегливо працює, досягає успіху.
+  answer: Той
+  complete_sentence: Той__, хто наполегливо працює, досягає успіху.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, що важливо, варто запам'ятати.
+  answer: Те
+  complete_sentence: Те__, що важливо, варто запам'ятати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, де порядок, там і успіх.
+  answer: Там
+  complete_sentence: Там__, де порядок, там і успіх.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, коли сонце сідає, стає прохолодно.
+  answer: Тоді
+  complete_sentence: Тоді__, коли сонце сідає, стає прохолодно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, скільки потрібно, візьми.
+  answer: Стільки
+  complete_sentence: Стільки__, скільки потрібно, візьми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, куди серце кличе, туди й іди.
+  answer: Туди
+  complete_sentence: Туди__, куди серце кличе, туди й іди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, звідки вітер, звідти й дощ.
+  answer: Звідти
+  complete_sentence: Звідти__, звідки вітер, звідти й дощ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____ результат, який ми хотіли отримати.
+  answer: Такий
+  complete_sentence: Такий__ результат, який ми хотіли отримати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, поки не закінчимо, працюватимемо.
+  answer: Доти
+  complete_sentence: Доти__, поки не закінчимо, працюватимемо.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____ важливо регулярно практикуватися, наскільки важливо знати
+    теорію.
+  answer: Настільки
+  complete_sentence: Настільки__ важливо регулярно практикуватися, наскільки важливо
+    знати теорію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, як знаєш, так і роби.
+  answer: Так
+  complete_sentence: Так__, як знаєш, так і роби.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____ людина, яка завжди допоможе.
+  answer: Така
+  complete_sentence: Така__ людина, яка завжди допоможе.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, хто чесний, заслуговує поваги.
+  answer: Ті
+  complete_sentence: Ті__, хто чесний, заслуговує поваги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____, що ми вивчаємо, стане основою знань.
+  answer: Те
+  complete_sentence: Те__, що ми вивчаємо, стане основою знань.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____ рішення, яке влаштує всіх.
+  answer: Таке
+  complete_sentence: Таке__ рішення, яке влаштує всіх.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Завершіть корелятивну конструкцію
+  sentence_template: _____ зміни, які потрібні країні.
+  answer: Такі
+  complete_sentence: Такі__ зміни, які потрібні країні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Той, хто рано встає, тому Бог дає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Те, що ти сказав, мене здивувало.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Там, де тихо, добре думається.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Тоді, коли сонце сідає, стає прохолодно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Стільки, скільки потрібно, візьми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Туди, куди серце кличе, іди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Такий результат, який ми очікували.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Доти, поки не прийдеш, чекатиму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Ті, хто працюють, досягають успіху.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Він прийшов тому, що хотів допомогти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Так, як знаєш, роби.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Настільки важливо, наскільки і складно.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Там, де порядок, там і успіх.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Допоможи тому, хто потребує.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Звідти, звідки вітер, звідти й дощ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення зі співвідносними конструкціями
+  jumbled_words: []
+  answer: Те, що ми вивчаємо, стане основою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара є особовим корелятивом?
+  options:
+  - text: той... хто
+    correct: true
+  - text: там... де
+    correct: false
+  - text: тоді... коли
+    correct: false
+  - text: стільки... скільки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення містить просторовий корелятив?
+  options:
+  - text: Той, хто працює, досягає успіху.
+    correct: false
+  - text: Там, де тихо, добре думається.
+    correct: true
+  - text: Те, що ти сказав, важливо.
+    correct: false
+  - text: Тоді, коли настане час, все зміниться.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара виражає кількість?
+  options:
+  - text: такий... який
+    correct: false
+  - text: туди... куди
+    correct: false
+  - text: стільки... скільки
+    correct: true
+  - text: доти... поки
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке відносне слово поєднується з вказівним "той"?
+  options:
+  - text: що
+    correct: false
+  - text: який
+    correct: false
+  - text: хто
+    correct: true
+  - text: де
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення є граматично правильним?
+  options:
+  - text: Те, яке ти сказав, цікаво.
+    correct: false
+  - text: Те, що ти сказав, цікаво.
+    correct: true
+  - text: Те, хто ти сказав, цікаво.
+    correct: false
+  - text: Те, де ти сказав, цікаво.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара виражає напрямок руху?
+  options:
+  - text: там... де
+    correct: false
+  - text: туди... куди
+    correct: true
+  - text: звідти... звідки
+    correct: false
+  - text: тоді... коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення містить часовий корелятив?
+  options:
+  - text: Той, хто рано встає, тому Бог дає.
+    correct: false
+  - text: Там, де порядок, там і успіх.
+    correct: false
+  - text: Тоді, коли сонце сідає, стає прохолодно.
+    correct: true
+  - text: Стільки, скільки потрібно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка форма правильна для давального відмінка?
+  options:
+  - text: Допоможи той, хто потребує.
+    correct: false
+  - text: Допоможи тому, хто потребує.
+    correct: true
+  - text: Допоможи того, хто потребує.
+    correct: false
+  - text: Допоможи тим, хто потребує.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара виражає тривалість?
+  options:
+  - text: тоді... коли
+    correct: false
+  - text: доти... поки
+    correct: true
+  - text: там... де
+    correct: false
+  - text: туди... куди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення містить якісний корелятив?
+  options:
+  - text: Той, хто знає, мовчить.
+    correct: false
+  - text: Такий результат, якого ми чекали.
+    correct: true
+  - text: Там, де тихо, там і добре.
+    correct: false
+  - text: Стільки часу, скільки потрібно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке відносне слово поєднується з "там"?
+  options:
+  - text: хто
+    correct: false
+  - text: що
+    correct: false
+  - text: куди
+    correct: false
+  - text: де
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара виражає походження?
+  options:
+  - text: там... де
+    correct: false
+  - text: туди... куди
+    correct: false
+  - text: звідти... звідки
+    correct: true
+  - text: тоді... коли
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення правильно пунктуоване?
+  options:
+  - text: Той хто знає мовчить.
+    correct: false
+  - text: Той, хто знає, мовчить.
+    correct: true
+  - text: Той, хто знає мовчить.
+    correct: false
+  - text: Той хто знає, мовчить.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка пара виражає спосіб дії?
+  options:
+  - text: стільки... скільки
+    correct: false
+  - text: так... як
+    correct: true
+  - text: тоді... коли
+    correct: false
+  - text: там... де
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яке речення містить причиновий корелятив?
+  options:
+  - text: Він прийшов тому, що хотів допомогти.
+    correct: true
+  - text: Там, де порядок, там і успіх.
+    correct: false
+  - text: Той, хто працює, досягає успіху.
+    correct: false
+  - text: Такий результат, який ми очікували.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Визначення типів співвідносних конструкцій
+  question: Яка форма правильна для множини?
+  options:
+  - text: Той, хто працюють, досягають успіху.
+    correct: false
+  - text: Ті, хто працюють, досягають успіху.
+    correct: true
+  - text: Ті, хто працює, досягає успіху.
+    correct: false
+  - text: Тих, хто працюють, досягають успіху.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Скільки основних типів співвідносних конструкцій існує?
+  options:
+  - text: Три
+    correct: false
+  - text: П'ять
+    correct: false
+  - text: Сім
+    correct: true
+  - text: Десять
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яка пара НЕ є співвідносною конструкцією?
+  options:
+  - text: той... хто
+    correct: false
+  - text: там... де
+    correct: false
+  - text: тому... що
+    correct: false
+  - text: але... однак
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: У якому реченні правильно змінено відмінок?
+  options:
+  - text: Допоможи той, хто потребує.
+    correct: false
+  - text: Допоможи тому, хто потребує.
+    correct: true
+  - text: Допоможи того, хто потребує.
+    correct: false
+  - text: Допоможи тим, хто потребує.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яка різниця між "там... де" і "туди... куди"?
+  options:
+  - text: Немає різниці
+    correct: false
+  - text: '"Там... де" — місце, "туди... куди" — напрямок'
+    correct: true
+  - text: '"Там... де" — час, "туди... куди" — місце'
+    correct: false
+  - text: '"Там... де" — причина, "туди... куди" — наслідок'
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яке речення містить найбільше корелятивів?
+  options:
+  - text: Той, хто знає, мовчить.
+    correct: false
+  - text: Там, де тихо, там і добре.
+    correct: false
+  - text: Той, хто там, де тихо, мовчить.
+    correct: true
+  - text: Стільки, скільки потрібно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: У якому стилі співвідносні конструкції вживаються найрідше?
+  options:
+  - text: Науковому
+    correct: false
+  - text: Офіційному
+    correct: false
+  - text: Публіцистичному
+    correct: false
+  - text: Розмовному (у повній формі)
+    correct: true
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яке вказівне слово поєднується з "поки"?
+  options:
+  - text: тоді
+    correct: false
+  - text: доти
+    correct: true
+  - text: там
+    correct: false
+  - text: туди
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: У якому реченні помилка у виборі відносного слова?
+  options:
+  - text: Той, хто працює, досягає.
+    correct: false
+  - text: Те, що важливо, запам'ятай.
+    correct: false
+  - text: Там, куди тихо, добре.
+    correct: true
+  - text: Тоді, коли настане час.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яка форма правильна для орудного відмінка?
+  options:
+  - text: Пишаюся той, хто переміг.
+    correct: false
+  - text: Пишаюся того, хто переміг.
+    correct: false
+  - text: Пишаюся тим, хто переміг.
+    correct: true
+  - text: Пишаюся тому, хто переміг.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Що означає "настільки... наскільки"?
+  options:
+  - text: Кількість
+    correct: false
+  - text: Міра або ступінь
+    correct: true
+  - text: Час
+    correct: false
+  - text: Місце
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Скільки ком потрібно у реченні "Той хто рано встає тому Бог дає"?
+  options:
+  - text: Одна
+    correct: false
+  - text: Дві
+    correct: true
+  - text: Три
+    correct: false
+  - text: Жодної
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яка пара виражає спосіб дії?
+  options:
+  - text: такий... який
+    correct: false
+  - text: так... як
+    correct: true
+  - text: стільки... скільки
+    correct: false
+  - text: тому... що
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: 'У множині замість "той" використовується:'
+  options:
+  - text: та
+    correct: false
+  - text: те
+    correct: false
+  - text: ті
+    correct: true
+  - text: тому
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яке речення є прикладом української народної мудрості?
+  options:
+  - text: Той, хто рано встає, тому Бог дає.
+    correct: true
+  - text: Там, де порядок, там і успіх.
+    correct: false
+  - text: Те, що важливо, запам'ятай.
+    correct: false
+  - text: Стільки, скільки потрібно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Яка функція співвідносних конструкцій у науковому стилі?
+  options:
+  - text: Емоційне підсилення
+    correct: false
+  - text: Точні визначення
+    correct: true
+  - text: Створення ритму
+    correct: false
+  - text: Скорочення тексту
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань про співвідносні конструкції
+  question: Який корелятив підходить для речення "_____, звідки він приїхав, далеко
+    до моря"?
+  options:
+  - text: Там
+    correct: false
+  - text: Туди
+    correct: false
+  - text: Звідти
+    correct: true
+  - text: Тоді
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Той... хто" використовується для вказівки на особу.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: Із займенником "те" завжди вживається відносне слово "який".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Там... де" — це просторовий корелятив.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: Підрядна частина у співвідносній конструкції не виділяється комами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Стільки... скільки" виражає кількість.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Туди... куди" вказує на місце перебування.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Тоді... коли" — часовий корелятив.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: Вказівне слово "той" змінюється за відмінками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Доти... поки" виражає тривалість дії.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: У розмовному стилі вказівне слово часто опускають.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Такий... який" — предметний корелятив.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Звідти... звідки" вказує на місце походження.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: Співвідносні конструкції характерні лише для розмовного стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Настільки... наскільки" виражає міру чогось.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: '"Тому... що" — причиновий корелятив.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила співвідносних конструкцій
+  statement: У множині використовується форма "ті, хто".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,0 +1,1441 @@
+module: 39-register-religious-epistolary
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/39-register-religious-epistolary.md
+generated: '2025-12-29T23:38:10.053707'
+scope: error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+item_count: 112
+items:
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Привіт, пане директоре! Прошу дати мені відпустку.
+  error: Привіт
+  answer: Шановний
+  sentence_corrected: Шановний, пане директоре! Прошу дати мені відпустку.
+  options:
+  - Привіт
+  - Шановний
+  - Гей
+  - Добридень
+  original_explanation: В офіційному листі до директора використовують "Шановний",
+    а не "Привіт".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Шановний друже Олексію! Як твої справи?
+  error: Шановний
+  answer: Дорогий
+  sentence_corrected: Дорогий друже Олексію! Як твої справи?
+  options:
+  - Шановний
+  - Дорогий
+  - Вельмишановний
+  - Пане
+  original_explanation: До друга звертаються неформально — "Дорогий", а не офіційно
+    — "Шановний".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Закінчую офіційний лист словами "Бувай, до зустрічі!"
+  error: Бувай, до зустрічі
+  answer: З повагою
+  sentence_corrected: Закінчую офіційний лист словами "З повагою!"
+  options:
+  - Бувай, до зустрічі
+  - З повагою
+  - Па-па
+  - Ну все
+  original_explanation: Офіційний лист закінчується формулою "З повагою,", а не розмовним
+    "Бувай".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Воістину дякую за Ваш звіт, пане Петренку.
+  error: Воістину
+  answer: Щиро
+  sentence_corrected: Щиро дякую за Ваш звіт, пане Петренку.
+  options:
+  - Воістину
+  - Щиро
+  - Справді
+  - Дуже
+  original_explanation: '"Воістину" — релігійний архаїзм. У діловому листі кажуть
+    "Щиро дякую".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Христос воскрес! — Справді воскрес!
+  error: Справді
+  answer: Воістину
+  sentence_corrected: Христос воскрес! — Воістину воскрес!
+  options:
+  - Справді
+  - Воістину
+  - Точно
+  - Так
+  original_explanation: Традиційна відповідь — "Воістину воскрес!", а не "Справді
+    воскрес!".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Звертаюся до тебе із проханням, пане директоре.
+  error: тебе
+  answer: Вас
+  sentence_corrected: Звертаюся до Вас із проханням, пане директоре.
+  options:
+  - тебе
+  - Вас
+  - його
+  - них
+  original_explanation: В офіційному листі звертаються на "Ви" (з великої літери),
+    а не на "ти".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Обіймаю та з повагою залишаюсь, Вашим директором.
+  error: Обіймаю та з повагою
+  answer: З повагою
+  sentence_corrected: З повагою залишаюсь, Вашим директором.
+  options:
+  - Обіймаю та з повагою
+  - З повагою
+  - Цілую
+  - Бувай
+  original_explanation: Не змішуйте формальне ("з повагою") і неформальне ("обіймаю")
+    завершення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: У вкладенці надсилаю звіт за місяць.
+  error: вкладенці
+  answer: вкладенні
+  sentence_corrected: У вкладенні надсилаю звіт за місяць.
+  options:
+  - вкладенці
+  - вкладенні
+  - прикріпленні
+  - додатці
+  original_explanation: Правильна форма — "у вкладенні", а не "у вкладенці".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Слава Бога за все! Яке чудове свято!
+  error: Бога
+  answer: Богу
+  sentence_corrected: Слава Богу за все! Яке чудове свято!
+  options:
+  - Бога
+  - Богу
+  - Божі
+  - Боже
+  original_explanation: 'Правильно: "Слава Богу!" (давальний відмінок), а не "Слава
+    Бога!".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Шановний пане! Звертаюся до тебе із питанням.
+  error: тебе
+  answer: Вас
+  sentence_corrected: Шановний пане! Звертаюся до Вас із питанням.
+  options:
+  - тебе
+  - Вас
+  - нього
+  - неї
+  original_explanation: Після "Шановний пане" звертаються на "Ви", а не на "ти".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Господи, помилуй! Справді великий Ти!
+  error: Справді
+  answer: Воістину
+  sentence_corrected: Господи, помилуй! Воістину великий Ти!
+  options:
+  - Справді
+  - Воістину
+  - Точно
+  - Реально
+  original_explanation: У молитві використовують піднесене "воістину", а не нейтральне
+    "справді".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Дорогий пане Олександре! Чекаю на відповідь. Обіймаю.
+  error: Дорогий
+  answer: Шановний
+  sentence_corrected: Шановний пане Олександре! Чекаю на відповідь. Обіймаю.
+  options:
+  - Дорогий
+  - Шановний
+  - Любий
+  - Милий
+  original_explanation: '"Дорогий" — неформальне звертання. До "пане" — "Шановний".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Нехай Бог благословить вас. Кінець.
+  error: Кінець
+  answer: Амінь
+  sentence_corrected: Нехай Бог благословить вас. Амінь.
+  options:
+  - Кінець
+  - Амінь
+  - Все
+  - Готово
+  original_explanation: Молитва завершується словом "Амінь", а не "Кінець".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Заздалегідь дякую вас за допомогу.
+  error: дякую вас
+  answer: вдячний Вам
+  sentence_corrected: Заздалегідь вдячний Вам за допомогу.
+  options:
+  - дякую вас
+  - вдячний Вам
+  - дякую тобі
+  - вдячний тебе
+  original_explanation: 'Правильно: "Заздалегідь вдячний Вам" або "Заздалегідь дякую
+    Вам".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: У прикріпленому файлі надсилаю звіт.
+  error: прикріпленому файлі
+  answer: вкладенні
+  sentence_corrected: У вкладенні надсилаю звіт.
+  options:
+  - прикріпленому файлі
+  - вкладенні
+  - атачменті
+  - приложенні
+  original_explanation: Стандартна українська формула — "У вкладенні надсилаю..."
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в листуванні та релігійному стилі
+  sentence_with_error: Храм священника знаходиться в центрі міста.
+  error: Храм священника
+  answer: Храм парафії
+  sentence_corrected: Храм парафії знаходиться в центрі міста.
+  options:
+  - Храм священника
+  - Храм парафії
+  - Храм директора
+  - Храм менеджера
+  original_explanation: Храм належить парафії (громаді), а не окремому священнику.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Офіційний лист до директора починається зі звертання: _____
+    пане директоре!'
+  answer: Шановний
+  complete_sentence: 'Офіційний лист до директора починається зі звертання: Шановний__
+    пане директоре!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Формула завершення офіційного листа: З _____,'
+  answer: повагою
+  complete_sentence: 'Формула завершення офіційного листа: З повагою__,'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Великоднє привітання: Христос _____!'
+  answer: воскрес
+  complete_sentence: 'Великоднє привітання: Христос воскрес__!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Відповідь на Великоднє привітання: _____ воскрес!'
+  answer: Воістину
+  complete_sentence: 'Відповідь на Великоднє привітання: Воістину__ воскрес!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Слово, яке завершує молитву: _____.'
+  answer: Амінь
+  complete_sentence: 'Слово, яке завершує молитву: Амінь__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Про прикріплений файл в email: У _____ надсилаю документ.'
+  answer: вкладенні
+  complete_sentence: 'Про прикріплений файл в email: У вкладенні__ надсилаю документ.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Ввічлива подяка наперед: _____ вдячний за допомогу.'
+  answer: Заздалегідь
+  complete_sentence: 'Ввічлива подяка наперед: Заздалегідь__ вдячний за допомогу.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Неформальне привітання в листі до друга: _____, як справи?'
+  answer: Привіт
+  complete_sentence: 'Неформальне привітання в листі до друга: Привіт__, як справи?'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Тепле завершення листа до мами: _____,'
+  answer: Обіймаю
+  complete_sentence: 'Тепле завершення листа до мами: Обіймаю__,'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Релігійна подяка: _____ Богу за все!'
+  answer: Слава
+  complete_sentence: 'Релігійна подяка: Слава__ Богу за все!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Архаїчний вираз у релігійному стилі: Нині і _____.'
+  answer: повсякчас
+  complete_sentence: 'Архаїчний вираз у релігійному стилі: Нині і повсякчас__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: 'Офіційне прохання: Звертаюся до Вас із _____ розглянути...'
+  answer: проханням
+  complete_sentence: 'Офіційне прохання: Звертаюся до Вас із проханням__ розглянути...'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: Місцева громада вірян називається _____.
+  answer: парафія
+  complete_sentence: Місцева громада вірян називається парафія__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: У релігійному стилі замість "справді" кажуть "_____".
+  answer: воістину
+  complete_sentence: У релігійному стилі замість "справді" кажуть "воістину__".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: Служитель культу в церкві — це _____.
+  answer: священник
+  complete_sentence: Служитель культу в церкві — це священник__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Заповніть формули листування та релігійного стилю
+  sentence_template: Церковна будівля в релігійному стилі — _____.
+  answer: храм
+  complete_sentence: Церковна будівля в релігійному стилі — храм__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "Привіт!" в офіційному листі замінюється на: _____
+    пане!'
+  answer: Шановний
+  complete_sentence: 'Неформальне "Привіт!" в офіційному листі замінюється на: Шановний__
+    пане!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "Бувай!" в офіційному листі замінюється на: З _____,'
+  answer: повагою
+  complete_sentence: 'Неформальне "Бувай!" в офіційному листі замінюється на: З повагою__,'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Нейтральне "справді" в релігійному стилі замінюється на: _____'
+  answer: воістину
+  complete_sentence: 'Нейтральне "справді" в релігійному стилі замінюється на: воістину__'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "типу дякую" в офіційному листі замінюється на: Щиро
+    _____'
+  answer: дякую
+  complete_sentence: 'Розмовне "типу дякую" в офіційному листі замінюється на: Щиро
+    дякую__'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "кидаю файл" в офіційному email замінюється на: У _____
+    надсилаю'
+  answer: вкладенні
+  complete_sentence: 'Розмовне "кидаю файл" в офіційному email замінюється на: У вкладенні__
+    надсилаю'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "обіймаю" в офіційному листі замінюється на: З _____,'
+  answer: повагою
+  complete_sentence: 'Неформальне "обіймаю" в офіційному листі замінюється на: З повагою__,'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "ну пиши" в офіційному листі замінюється на: Чекаю
+    на Вашу _____.'
+  answer: відповідь
+  complete_sentence: 'Розмовне "ну пиши" в офіційному листі замінюється на: Чекаю
+    на Вашу відповідь__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Нейтральне "церква" у піднесеному контексті замінюється на:
+    _____'
+  answer: храм
+  complete_sentence: 'Нейтральне "церква" у піднесеному контексті замінюється на:
+    храм__'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "як справи?" в офіційному листі замінюється на:
+    Сподіваюся, у Вас все _____.'
+  answer: гаразд
+  complete_sentence: 'Неформальне "як справи?" в офіційному листі замінюється на:
+    Сподіваюся, у Вас все гаразд__.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "слухай, треба" в офіційному листі замінюється на:
+    _____ до Вас із проханням.'
+  answer: Звертаюся
+  complete_sentence: 'Розмовне "слухай, треба" в офіційному листі замінюється на:
+    Звертаюся__ до Вас із проханням.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "дорогий" до офіційної особи замінюється на: _____'
+  answer: Шановний
+  complete_sentence: 'Неформальне "дорогий" до офіційної особи замінюється на: Шановний__'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "ну все, бувай" в офіційному листі замінюється на:
+    З найкращими _____,'
+  answer: побажаннями
+  complete_sentence: 'Розмовне "ну все, бувай" в офіційному листі замінюється на:
+    З найкращими побажаннями__,'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Нейтральне "зараз" у релігійному стилі замінюється на: _____'
+  answer: нині
+  complete_sentence: 'Нейтральне "зараз" у релігійному стилі замінюється на: нині__'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "дякую наперед" в офіційному листі замінюється на:
+    _____ вдячний.'
+  answer: Заздалегідь
+  complete_sentence: 'Розмовне "дякую наперед" в офіційному листі замінюється на:
+    Заздалегідь__ вдячний.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Неформальне "ти" в офіційному листі замінюється на: _____ (з
+    великої літери)'
+  answer: Ви
+  complete_sentence: 'Неформальне "ти" в офіційному листі замінюється на: Ви__ (з
+    великої літери)'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Трансформація стилів листування
+  sentence_template: 'Розмовне "ну Боже" в релігійному стилі замінюється на: _____,
+    помилуй!'
+  answer: Господи
+  complete_sentence: 'Розмовне "ну Боже" в релігійному стилі замінюється на: Господи__,
+    помилуй!'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Шановний пане директоре!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Звертаюся до Вас із проханням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: З повагою,
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Христос воскрес!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Воістину воскрес!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Слава Богу за все!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Заздалегідь вдячний за допомогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: У вкладенні надсилаю документ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Дорогий друже!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Привіт, як справи?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Господи, помилуй!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: З найкращими побажаннями,
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Шановна пані професорко!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Прошу розглянути можливість.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: Чекаю на Вашу відповідь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть формули листування та релігійного стилю
+  jumbled_words: []
+  answer: На віки віків. Амінь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке слово характерне для релігійного стилю української мови?
+  options:
+  - text: справді
+    correct: false
+  - text: воістину
+    correct: true
+  - text: типу
+    correct: false
+  - text: ну
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Як правильно відповісти на Великоднє привітання "Христос воскрес!"?
+  options:
+  - text: Дякую!
+    correct: false
+  - text: Воістину воскрес!
+    correct: true
+  - text: Слава Україні!
+    correct: false
+  - text: Добрий день!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке звертання є правильним для офіційного листа до директора компанії?
+  options:
+  - text: Привіт, директоре!
+    correct: false
+  - text: Шановний пане директоре!
+    correct: true
+  - text: Дорогий директоре!
+    correct: false
+  - text: Гей, директоре!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яка формула ввічливості завершує офіційний лист в українській мові?
+  options:
+  - text: Бувай!
+    correct: false
+  - text: Па-па!
+    correct: false
+  - text: З повагою,
+    correct: true
+  - text: Ну все!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Що означає слово "амінь" у релігійному контексті?
+  options:
+  - text: Кінець
+    correct: false
+  - text: Істинно, нехай так буде
+    correct: true
+  - text: Початок
+    correct: false
+  - text: Привіт
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке слово є частиною церковної лексики?
+  options:
+  - text: офіс
+    correct: false
+  - text: парафія
+    correct: true
+  - text: департамент
+    correct: false
+  - text: корпорація
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Як починається офіційний лист із проханням?
+  options:
+  - text: Слухай, мені потрібно...
+    correct: false
+  - text: Хочу сказати, що...
+    correct: false
+  - text: Звертаюся до Вас із проханням...
+    correct: true
+  - text: Ну от, треба мені...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке слово є архаїзмом релігійного стилю?
+  options:
+  - text: зараз
+    correct: false
+  - text: нині
+    correct: true
+  - text: сьогодні
+    correct: false
+  - text: тепер
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Що означає фраза "У вкладенні надсилаю..." в електронному листі?
+  options:
+  - text: Я надсилаю подарунок
+    correct: false
+  - text: Я прикріпив файл
+    correct: true
+  - text: Я загорнув лист у конверт
+    correct: false
+  - text: Я написав додаток
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке звертання є правильним для неформального листа до друга?
+  options:
+  - text: Шановний пане друже!
+    correct: false
+  - text: Вельмишановний!
+    correct: false
+  - text: Дорогий друже!
+    correct: true
+  - text: До пана друга!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Що означає "Слава Богу!" у повсякденному мовленні?
+  options:
+  - text: Вітання
+    correct: false
+  - text: Подяка або полегшення
+    correct: true
+  - text: Прощання
+    correct: false
+  - text: Привітання
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яка формула завершує неформальний лист?
+  options:
+  - text: З повагою,
+    correct: false
+  - text: Обіймаю,
+    correct: true
+  - text: Заздалегідь вдячний,
+    correct: false
+  - text: Залишаюсь з повагою,
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке слово є піднесеним еквівалентом "благословлений"?
+  options:
+  - text: благословенний
+    correct: true
+  - text: благословений
+    correct: false
+  - text: благої
+    correct: false
+  - text: благенький
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Як правильно написати "Ви" в офіційному листі?
+  options:
+  - text: Завжди з малої літери
+    correct: false
+  - text: Завжди з великої літери
+    correct: true
+  - text: Залежить від настрою
+    correct: false
+  - text: Можна не писати
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Що означає "Заздалегідь вдячний" в офіційному листі?
+  options:
+  - text: Я вже отримав відповідь
+    correct: false
+  - text: Дякую наперед за допомогу
+    correct: true
+  - text: Я забув подякувати раніше
+    correct: false
+  - text: Дякую за минуле
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Характеристики релігійного та епістолярного стилів
+  question: Яке слово означає "церковна будівля" в релігійному контексті?
+  options:
+  - text: офіс
+    correct: false
+  - text: храм
+    correct: true
+  - text: палац
+    correct: false
+  - text: контора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви пишете email професору з проханням про консультацію. Яке звертання
+    є правильним?
+  options:
+  - text: Привіт, професоре!
+    correct: false
+  - text: Шановний пане професоре!
+    correct: true
+  - text: Дорогий професоре!
+    correct: false
+  - text: Гей, пане!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви надсилаєте email з прикріпленим файлом. Яка фраза є правильною?
+  options:
+  - text: Кидаю файл у лист.
+    correct: false
+  - text: У вкладенні надсилаю документ.
+    correct: true
+  - text: Десь там файл.
+    correct: false
+  - text: Атачу документ.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Хтось каже вам "Христос воскрес!" на Великдень. Як правильно відповісти?
+  options:
+  - text: Дякую!
+    correct: false
+  - text: І вам того ж!
+    correct: false
+  - text: Воістину воскрес!
+    correct: true
+  - text: Слава Україні!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви пишете лист другу дитинства. Яке звертання є найкращим?
+  options:
+  - text: Шановний друже!
+    correct: false
+  - text: Вельмишановний пане!
+    correct: false
+  - text: Дорогий друже!
+    correct: true
+  - text: До друга звертаюся!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Як правильно закінчити офіційний лист до декана факультету?
+  options:
+  - text: Бувай!
+    correct: false
+  - text: Обіймаю!
+    correct: false
+  - text: З повагою,
+    correct: true
+  - text: Па-па!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Яке слово є піднесеним синонімом до "справді" у релігійному контексті?
+  options:
+  - text: Точно
+    correct: false
+  - text: Дійсно
+    correct: false
+  - text: Воістину
+    correct: true
+  - text: Реально
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви хочете подякувати наперед за допомогу в офіційному листі. Яка фраза
+    правильна?
+  options:
+  - text: Ну дякую заздалегідь.
+    correct: false
+  - text: Заздалегідь вдячний.
+    correct: true
+  - text: Типу дякую наперед.
+    correct: false
+  - text: Потім подякую.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Як називається місцева громада вірян при церкві?
+  options:
+  - text: Корпорація
+    correct: false
+  - text: Департамент
+    correct: false
+  - text: Парафія
+    correct: true
+  - text: Компанія
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви закінчуєте лист до мами. Яке завершення найкраще?
+  options:
+  - text: З повагою,
+    correct: false
+  - text: Заздалегідь вдячний,
+    correct: false
+  - text: Обіймаю і цілую,
+    correct: true
+  - text: Залишаюсь Вашим,
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Який займенник використовується в офіційному листі до адресата?
+  options:
+  - text: ти
+    correct: false
+  - text: він
+    correct: false
+  - text: Ви (з великої літери)
+    correct: true
+  - text: вона
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Яке слово завершує молитву в релігійному стилі?
+  options:
+  - text: Кінець
+    correct: false
+  - text: Амінь
+    correct: true
+  - text: Все
+    correct: false
+  - text: Готово
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Як правильно почати офіційний лист із проханням?
+  options:
+  - text: Хочу попросити...
+    correct: false
+  - text: Слухай, мені потрібно...
+    correct: false
+  - text: Звертаюся до Вас із проханням...
+    correct: true
+  - text: Ну от, треба мені...
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви пишете email колезі. Яке привітання є найкращим?
+  options:
+  - text: Вельмишановний пане!
+    correct: false
+  - text: Добрий день, Олено!
+    correct: true
+  - text: Гей!
+    correct: false
+  - text: До пані Олени!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Яке слово є релігійним терміном для "церковна будівля"?
+  options:
+  - text: Офіс
+    correct: false
+  - text: Храм
+    correct: true
+  - text: Центр
+    correct: false
+  - text: Контора
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Як висловити релігійну подяку за щасливий результат?
+  options:
+  - text: Ну класно!
+    correct: false
+  - text: Типу пощастило!
+    correct: false
+  - text: Слава Богу!
+    correct: true
+  - text: Ну нічо так!
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Практичні ситуації листування
+  question: Ви отримали відповідь на офіційний лист. Як подякувати?
+  options:
+  - text: Ну дякую!
+    correct: false
+  - text: Щиро дякую за Вашу відповідь.
+    correct: true
+  - text: Типу норм, дякую.
+    correct: false
+  - text: Ну ладно.
+    correct: false
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: В офіційному листі займенник "Ви" пишеться з великої літери.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Воістину" можна вільно використовувати в діловому листі.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Шановний пане директоре!" — правильне офіційне звертання.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: Неформальний лист можна закінчити формулою "З повагою,".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Амінь" означає "кінець молитви".'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Храм" і "церква" — синоніми в релігійному контексті.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: Фраза "У вкладенні надсилаю..." використовується для прикріплених файлів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Дорогий друже!" — це офіційне звертання.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Парафія" означає церковну будівлю.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Заздалегідь вдячний" — ввічлива форма подяки наперед.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Христос воскрес!" — привітання на Різдво.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: В офіційному листі можна писати "Привіт!" замість "Шановний..."
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Священник" — це службовець церкви.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: Слово "нині" означає "в минулому".
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Обіймаю," — тепле завершення листа до близької людини.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правила листування та релігійного стилю
+  statement: '"Благословіння" — це прокляття.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
