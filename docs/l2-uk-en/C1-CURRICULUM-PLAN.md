@@ -201,7 +201,7 @@ Before starting C1, learners have completed:
 > Can understand a wide range of demanding, longer texts, and recognise implicit meaning. Can express ideas fluently and spontaneously without much obvious searching for expressions. Can use language flexibly and effectively for social, academic and professional purposes. Can produce clear, well-structured, detailed text on complex subjects, showing controlled use of organisational patterns, connectors and cohesive devices.
 
 ### Learning Outcomes
-By module 115, learners can:
+By module 182, learners can:
 
 **Understanding (Listening/Reading)**
 - [ ] Understand extended speech even when not clearly structured
@@ -243,11 +243,6 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ## Phase C1.1: Academic Foundation (Modules 01-20)
 
-### Learning Goals
-- Master academic writing in Ukrainian
-- Build research vocabulary
-- Develop argumentation skills
-- Learn academic genres
 ### Learning Goals
 - Master academic writing in Ukrainian
 - Build research vocabulary
@@ -731,7 +726,6 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 - Master professional communication
 - Understand Ukrainian political system
 - Navigate media landscape
-- Recognize sociolinguistic variation
 - Recognize sociolinguistic variation
 - Build professional vocabulary
 
@@ -1655,16 +1649,16 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 ---
 
 #### Module 131: C1.4 Checkpoint
-**Covers:** M101-M119
+**Covers:** M112-M130
 
 **Required Skill Groups:**
-1. Figurative Language (M101-103) - metaphor, simile, irony, sarcasm, hyperbole, litotes
-2. Euphemism & Rhetoric (M104-105) - taboo language, rhetorical questions
-3. Modality & Politeness (M106-108) - degrees of certainty, politeness strategies, indirectness
-4. Ukrainian Humor (M109-111) - humor traditions, wordplay, anecdotes
-5. Archaic Forms (M112-115) - archaic verbs, literary syntax, Church Slavonicisms, pronouns
-6. Register Control (M116-118) - high formal, intimate, slang/youth language
-7. Integration Practice (M119) - C1.3 review and synthesis
+1. Figurative Language (M112-114) - metaphor, simile, irony, sarcasm, hyperbole, litotes
+2. Euphemism & Rhetoric (M115-116) - taboo language, rhetorical questions
+3. Modality & Politeness (M117-119) - degrees of certainty, politeness strategies, indirectness
+4. Ukrainian Humor (M120-122) - humor traditions, wordplay, anecdotes
+5. Archaic Forms (M123-126) - archaic verbs, literary syntax, Church Slavonicisms, pronouns
+6. Register Control (M127-129) - high formal, intimate, slang/youth language
+7. Integration Practice (M130) - C1.4 review and synthesis
 
 **Vocabulary (10 words - assessment):**
 оцінювання, тестування, перевірка, контроль, екзамен, залік, бал, оцінка, критерій, результат
