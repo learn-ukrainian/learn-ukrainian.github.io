@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        604 modules aligned with CEFR and Ukrainian State Standards.
+        634 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -96,12 +96,13 @@ function Feature({ title, emoji, description }: FeatureItem) {
   );
 }
 
-function LevelCard({ level, name, description, modules, color }: {
+function LevelCard({ level, name, description, modules, color, isTrack }: {
   level: string;
   name: string;
   description: string;
   modules: number;
   color: string;
+  isTrack?: boolean;
 }) {
   return (
     <div className={clsx('col col--4')}>
@@ -140,7 +141,7 @@ export default function Home(): ReactNode {
         <section id="levels" className={styles.levels}>
           <div className="container">
             <Heading as="h2" className={styles.sectionTitle}>
-              Choose Your Level
+              Core Levels
             </Heading>
             <div className="row">
               <LevelCard
@@ -184,6 +185,20 @@ export default function Home(): ReactNode {
                 description="Stylistic perfection, literary mastery, professional prep"
                 modules={100}
                 color="#C62828"
+              />
+            </div>
+
+            <Heading as="h2" className={clsx(styles.sectionTitle, 'margin-top--lg')}>
+              Specialization Tracks
+            </Heading>
+            <div className="row">
+              <LevelCard
+                level="LIT"
+                name="Literature"
+                description="Classical Ukrainian literature and philological analysis"
+                modules={30}
+                color="#5D4037"
+                isTrack
               />
             </div>
           </div>
