@@ -78,7 +78,7 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         From absolute beginner to native-level proficiency.
-        547 modules aligned with CEFR and Ukrainian State Standards.
+        480 modules aligned with CEFR and Ukrainian State Standards.
       </>
     ),
   },
@@ -147,42 +147,42 @@ export default function Home(): ReactNode {
                 level="A1"
                 name="Beginner"
                 description="Cyrillic alphabet, basic phrases, simple grammar"
-                modules={34}
+                modules={30}
                 color="#2E7D32"
               />
               <LevelCard
                 level="A2"
                 name="Elementary"
                 description="All 7 cases, verb aspects, comparison"
-                modules={57}
+                modules={50}
                 color="#1565C0"
               />
               <LevelCard
                 level="B1"
                 name="Intermediate"
                 description="Aspect mastery, motion verbs, complex sentences"
-                modules={86}
+                modules={80}
                 color="#E65100"
               />
               <LevelCard
                 level="B2"
                 name="Upper-Intermediate"
-                description="Grammar mastery, phraseology, Ukrainian history"
-                modules={110}
+                description="Grammar mastery, phraseology, history, biographies"
+                modules={125}
                 color="#C2185B"
               />
               <LevelCard
                 level="C1"
                 name="Advanced"
-                description="Biographies, stylistics, folk culture, literature"
-                modules={160}
+                description="Academic focus, stylistics, folk culture, literature"
+                modules={115}
                 color="#7B1FA2"
               />
               <LevelCard
                 level="C2"
                 name="Mastery"
-                description="Stylistic perfection, professional specialization"
-                modules={100}
+                description="Stylistic perfection, literary mastery, professional prep"
+                modules={80}
                 color="#C62828"
               />
             </div>
