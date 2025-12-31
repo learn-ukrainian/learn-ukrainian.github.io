@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "title", "url", "summary", "tags"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^(ULP|FMU)-\\d{3}$"
+      },
+      "title": { "type": "string", "minLength": 10 },
+      "url": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https://www\\.ukrainianlessons\\.com/(episode|fmu)\\d+/$"
+      },
+      "summary": { "type": "string", "minLength": 50 },
+      "tags": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 3
+      },
+      "season": { "type": "integer", "minimum": 1 },
+      "episode_number": { "type": "integer", "minimum": 1 },
+      "difficulty": { "type": "string", "enum": ["A1", "A2", "B1", "B2", "C1", "C2", "Beginner", "Intermediate", "Advanced"] },
+                  "duration": {
+                    "type": "string",
+                    "pattern": "^\\d{1,2}:\\d{2}$"
+                  },      "date_published": { "type": "string", "format": "date" },
+      "audio_url": { "type": "string", "format": "uri" },
+      "transcript_available": { "type": "boolean" }
+    }
+  }
+}

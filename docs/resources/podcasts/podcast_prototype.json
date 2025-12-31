@@ -1,0 +1,72 @@
+[
+  {
+    "id": "ULP-001",
+    "title": "Informal Greetings in Ukrainian, First Conversation in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/episode1/",
+    "summary": "The first episode introduces informal greetings in Ukrainian and common phrases friends use when meeting. It covers different ways to say 'also' and 'too', and teaches how to ask and respond to 'How are you?'. Features a basic first conversation template.",
+    "tags": ["General", "Grammar", "Phrases", "Vocabulary", "Beginner", "Greetings", "Conversation"]
+  },
+  {
+    "id": "ULP-002",
+    "title": "Formal Greetings and Saying Goodbye in Ukrainian + Ukrainian Pronouns with a Song!",
+    "url": "https://www.ukrainianlessons.com/episode2/",
+    "summary": "Covers formal greetings and goodbyes for professional or public situations (hotel, shop, boss). Contrasts formal and informal language, teaches how to say 'thank you', and introduces personal pronouns through a mnemonic song.",
+    "tags": ["General", "Grammar", "Phrases", "Vocabulary", "Beginner", "Greetings", "Pronouns", "Songs"]
+  },
+  {
+    "id": "ULP-003",
+    "title": "How to Introduce Yourself in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/episode3/",
+    "summary": "Teaches how to introduce oneself, including asking and stating names and discussing nationality. Features a dialogue between a Ukrainian woman and an American man. Covers popular Ukrainian names and formal/informal introduction etiquette.",
+    "tags": ["General", "Grammar", "Phrases", "Vocabulary", "Beginner", "Introductions", "Nationalities"]
+  },
+  {
+    "id": "ULP-004",
+    "title": "Talking about Where You Live and Where You Are from in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/episode4/",
+    "summary": "Focuses on asking and stating origins and current residence. Covers asking for permission to use informal 'ти', basic case endings introduction, and how to say 'excuse me'. Mentions five popular Ukrainian cities.",
+    "tags": ["General", "Grammar", "Phrases", "Vocabulary", "Beginner", "Cases", "Greetings", "Cities"]
+  },
+  {
+    "id": "ULP-005",
+    "title": "Numbers in Ukrainian + Pronunciation Trainer – How to Pronounce И in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/episode5/",
+    "summary": "Special practice lesson teaching numbers 1-20 with rhythmic counting to traditional music. Provides a deep-dive pronunciation guide for the vowel 'и', including a tongue twister and a children's poem for practice.",
+    "tags": ["General", "Pronunciation", "Vocabulary", "Beginner", "Numbers", "Phonetics"]
+  },
+  {
+    "id": "FMU-001",
+    "title": "How to Explain That You Don't Speak Ukrainian Very Well (yet)",
+    "url": "https://www.ukrainianlessons.com/fmu1/",
+    "summary": "Inaugural '5 Minute Ukrainian' episode. Teaches practical phrases to explain limited proficiency while showing effort. Focuses on natural conversation management for beginners.",
+    "tags": ["Podcasts", "General", "Phrases", "Vocabulary", "Conversation", "Beginner"]
+  },
+  {
+    "id": "FMU-002",
+    "title": "Useful Phrases for Learning Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu2/",
+    "summary": "Provides essential 'classroom' questions and phrases for learning interactions (e.g., 'What does this mean?', 'Repeat please'). Structured for immediate use in lessons.",
+    "tags": ["Podcasts", "General", "Phrases", "Vocabulary", "Classroom"]
+  },
+  {
+    "id": "FMU-003",
+    "title": "How to Talk to an Uber / Taxi Driver in Ukrainian?",
+    "url": "https://www.ukrainianlessons.com/fmu3/",
+    "summary": "Real-world conversational scenario covering the full taxi experience: ordering, giving directions, making small talk, and paying. Includes specific Uber/Taxi vocabulary.",
+    "tags": ["Podcasts", "General", "Phrases", "Vocabulary", "Transport", "Role-play"]
+  },
+  {
+    "id": "FMU-004",
+    "title": "Vocabulary Booster! Transport in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu4/",
+    "summary": "Vocabulary-focused episode introducing various modes of transport (bus, tram, trolleybus, metro). Builds the lexicon required for travel discussions.",
+    "tags": ["Podcasts", "Vocabulary", "General", "Transport"]
+  },
+  {
+    "id": "FMU-005",
+    "title": "How to Talk about Transport in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/fmu5/",
+    "summary": "Integrates grammar (Instrumental Case) with conversation. Features a dialogue about traveling to Lviv, teaching how to say 'by bus', 'by train', etc. in context.",
+    "tags": ["Podcasts", "Grammar", "Phrases", "Vocabulary", "Transport", "Instrumental Case"]
+  }
+]
