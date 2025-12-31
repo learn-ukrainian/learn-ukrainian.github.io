@@ -1,5 +1,5 @@
 {
-  "name": "curricula-opus",
+  "name": "learn-ukrainian",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -31,16 +31,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/krisztiankoos/curricula-opus.git"
+    "url": "git+https://github.com/krisztiankoos/learn-ukrainian.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/krisztiankoos/curricula-opus/issues"
+    "url": "https://github.com/krisztiankoos/learn-ukrainian/issues"
   },
-  "homepage": "https://github.com/krisztiankoos/curricula-opus#readme",
+  "homepage": "https://github.com/krisztiankoos/learn-ukrainian#readme",
   "devDependencies": {
     "@dagger.io/dagger": "^0.19.8",
     "@types/better-sqlite3": "^7.6.13",

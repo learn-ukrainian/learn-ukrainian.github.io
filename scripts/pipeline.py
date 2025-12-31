@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Curricula Opus Pipeline
+Learn Ukrainian Pipeline
 
 Unified command for the full module processing workflow:
 1. Lint MD (audit for format issues)
@@ -8,6 +8,7 @@ Unified command for the full module processing workflow:
 3. Validate MDX (ensure no content loss)
 4. Grammar Queue (generate validation queues for error-correction activities)
 5. Validate HTML (headless browser check - requires dev server)
+6. Sync Landing (update website landing pages with stats) - opt-in
 
 Usage:
     python scripts/pipeline.py [lang_pair] [level] [module_num] [--steps STEPS]
@@ -17,6 +18,7 @@ Examples:
     python scripts/pipeline.py l2-uk-en a1          # All A1 modules
     python scripts/pipeline.py l2-uk-en a1 5        # Single module
     python scripts/pipeline.py l2-uk-en a1 --steps lint,generate  # Specific steps
+    python scripts/pipeline.py l2-uk-en b2 --steps lint,generate,validate_mdx,sync_landing  # With sync
 """
 
 import argparse
@@ -216,6 +218,20 @@ def step_validate_html(lang_pair: str, level: Optional[str], module_num: Optiona
     else:
         return StepResult("validate_html", False, "HTML validation failed", details=(stderr or "")[:500])
 
+def step_sync_landing(lang_pair: str, level: Optional[str], module_num: Optional[int]) -> StepResult:
+    """Step 6: Sync landing pages with current stats."""
+    print("\n📊 Step 6: Sync Landing Pages")
+    print("-" * 40)
+
+    cmd = [str(VENV_PYTHON), "scripts/sync_landing_pages.py"]
+    code, stdout, stderr = run_command(cmd, capture=False)
+
+    if code == 0:
+        return StepResult("sync_landing", True, "Landing pages synced")
+    else:
+        return StepResult("sync_landing", False, "Sync failed", details=(stderr or "")[:500])
+
+
 def run_pipeline(
     lang_pair: str,
     level: Optional[str],
@@ -225,7 +241,7 @@ def run_pipeline(
     """Run the full pipeline."""
 
     print("\n" + "="*60)
-    print("🚀 Curricula Opus Pipeline")
+    print("🚀 Learn Ukrainian Pipeline")
     print("="*60)
     print(f"  Language pair: {lang_pair}")
     print(f"  Level: {level or 'all'}")
@@ -240,6 +256,7 @@ def run_pipeline(
         "validate_mdx": step_validate_mdx,
         "grammar_queue": step_grammar_queue,
         "validate_html": step_validate_html,
+        "sync_landing": step_sync_landing,
     }
 
     for step_name in steps:
@@ -276,15 +293,9 @@ def run_pipeline(
     return all_passed
 
 def main():
+    print("🚀 Learn Ukrainian Pipeline")
     parser = argparse.ArgumentParser(
-        description="Curricula Opus unified processing pipeline",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-    python scripts/pipeline.py l2-uk-en a1          # Process all A1 modules
-    python scripts/pipeline.py l2-uk-en a1 5        # Process single module
-    python scripts/pipeline.py l2-uk-en a1 --steps lint,generate
-        """
+        description="Learn Ukrainian unified processing pipeline",
     )
     parser.add_argument("lang_pair", nargs="?", default="l2-uk-en",
                        help="Language pair (default: l2-uk-en)")
