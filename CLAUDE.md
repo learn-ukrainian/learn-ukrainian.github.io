@@ -6,13 +6,13 @@
 **NEVER edit files directly in `.claude/` or `.agent/` directories.**
 
 These are DEPLOYMENT targets, not source files:
-- `.claude/` ← deployed FROM `claude_extensions/`
-- `.agent/` ← deprecated, do not use
+- `.claude/` ← deployed FROM `claude_extensions/` (used by Claude Code)
+- `.agent/` ← deployed FROM `claude_extensions/` (used by Antigravity/Gemini)
 
 **Workflow:**
 1. Edit files in `claude_extensions/` (commands, skills, stages, quick-ref)
-2. Run `npm run claude:deploy` to copy to `.claude/`
-3. Changes take effect after deploy
+2. Run `npm run claude:deploy` to deploy to both `.claude/` and `.agent/`
+3. Changes take effect after deploy for both Claude Code and Antigravity
 
 **Structure:**
 ```
