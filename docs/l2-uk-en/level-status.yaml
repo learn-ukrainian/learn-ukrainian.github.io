@@ -1,0 +1,42 @@
+# Level Status Configuration
+# This file is the source of truth for sync_landing_pages.py
+#
+# Fields:
+#   planned: Total modules planned for this level (from curriculum plan)
+#   status: 'auto' (calculate from completion %) or 'complete' (manual override)
+#   description: English description for intro.mdx table
+#
+# Status logic (when status: auto):
+#   100% completion -> "In QA" (needs final review)
+#   10-99% -> "In Progress"
+#   <10% -> "Planned"
+
+a1:
+  planned: 34
+  status: complete  # Manually verified 2024
+  description: "Beginner — Cyrillic alphabet, basic grammar"
+
+a2:
+  planned: 57
+  status: complete  # Manually verified 2024
+  description: "Elementary — All 7 cases, aspect intro, comparison"
+
+b1:
+  planned: 86
+  status: auto
+  description: "Intermediate — Aspect mastery, motion verbs, complex sentences"
+
+b2:
+  planned: 145
+  status: auto
+  description: "Upper-Intermediate — Passive voice, registers, history"
+
+c1:
+  planned: 182
+  status: auto
+  description: "Advanced — Biographies, stylistics, literature"
+
+c2:
+  planned: 80
+  status: auto
+  description: "Mastery — Native-level proficiency"

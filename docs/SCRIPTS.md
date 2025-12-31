@@ -448,6 +448,51 @@ npm run pipeline l2-uk-en b1 43
 
 ---
 
+## Landing Page Sync
+
+### sync_landing_pages.py
+
+**Purpose:** Auto-updates website landing pages with accurate module counts and status.
+
+**Updates:**
+- `docusaurus/docs/intro.mdx` - Main curriculum overview table
+- `docusaurus/docs/{level}/index.mdx` - Level landing pages
+
+**Usage:**
+```bash
+npm run sync:landing           # Apply changes
+npm run sync:landing:dry       # Preview only (dry run)
+```
+
+**Status Logic:**
+| Completion | Status | Meaning |
+|------------|--------|---------|
+| 100% | 🔍 In QA | All modules exist, needs final review |
+| 10-99% | 🚧 In Progress | Actively being built |
+| <10% | 📋 Planned | Curriculum plan only |
+| Manual | ✅ Complete | Manually verified (in STATUS_OVERRIDES) |
+
+**Data Sources:**
+- Config file: `docs/l2-uk-en/level-status.yaml` (planned counts, status overrides)
+- Ready counts: MDX files in `docusaurus/docs/{level}/module-*.mdx`
+
+**Config File (`level-status.yaml`):**
+```yaml
+b2:
+  planned: 145        # Total modules planned
+  status: auto        # 'auto' or 'complete'
+  description: "..."  # For intro.mdx table
+```
+
+**Integration:**
+Run after completing a batch of modules to update the website:
+```bash
+npm run pipeline l2-uk-en b2    # Build modules
+npm run sync:landing            # Update landing pages
+```
+
+---
+
 ## Vocabulary Pipeline
 
 The vocabulary system uses SQLite (`vocabulary.db`) to track all words across modules.
@@ -541,6 +586,10 @@ npm run vocab:scan            # Populate from modules
 npm run vocab:enrich          # Enrich module vocab sections
 npm run vocab:enrich:dry      # Preview enrichment changes
 npm run vocab:rebuild         # Full rebuild (init:force + scan)
+
+# Landing Page Sync
+npm run sync:landing          # Update landing pages with current stats
+npm run sync:landing:dry      # Preview changes without applying
 
 # Claude Skills
 npm run claude:deploy         # Deploy skills to .claude/
