@@ -49,3 +49,6 @@ temp/
 *.tmp
 .venv/
 .agent/
+
+gha-creds-*.json
+.pytest_cache/
