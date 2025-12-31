@@ -166,7 +166,7 @@ def process_csv(input_path, output_path):
     return all_issues
 
 def main():
-    vocab_path = Path('/Users/krisztiankoos/projects/curricula-opus/curriculum/l2-uk-en/vocabulary.csv')
+    vocab_path = Path('/Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/vocabulary.csv')
     output_path = vocab_path  # Overwrite in place
 
     print("Fixing vocabulary.csv B1 entries...")

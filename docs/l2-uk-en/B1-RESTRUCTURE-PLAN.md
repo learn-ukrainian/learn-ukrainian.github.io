@@ -66,20 +66,20 @@ The B1 plan has been updated (Issue 113) to address previous gaps. New modules m
 
 ## GitHub Tracking
 
-**Parent Issue:** [#115 - Build modules 01-80](https://github.com/krisztiankoos/curricula-opus/issues/115)
+**Parent Issue:** [#115 - Build modules 01-80](https://github.com/krisztiankoos/learn-ukrainian/issues/115)
 
 | Phase | Issue | Modules | Status |
 |-------|-------|---------|--------|
-| B1.1b | [#149](https://github.com/krisztiankoos/curricula-opus/issues/149) | M06-M10 (5) | ⏳ Ready |
-| B1.2 | [#150](https://github.com/krisztiankoos/curricula-opus/issues/150) | M11-M20 (10) | ⏳ Planned |
-| B1.3 | [#151](https://github.com/krisztiankoos/curricula-opus/issues/151) | M21-M35 (15) | ⏳ Planned |
-| B1.4 | [#152](https://github.com/krisztiankoos/curricula-opus/issues/152) | M36-M45 (10) | ⏳ Planned |
-| B1.5 | [#153](https://github.com/krisztiankoos/curricula-opus/issues/153) | M46-M55 (10) | ⏳ Planned |
-| B1.6 | [#154](https://github.com/krisztiankoos/curricula-opus/issues/154) | M56-M65 (10) | ⏳ Planned |
-| B1.7 | [#155](https://github.com/krisztiankoos/curricula-opus/issues/155) | M66-M75 (10) | ⏳ Planned |
-| B1.8 | [#156](https://github.com/krisztiankoos/curricula-opus/issues/156) | M76-M80 (5) | ⏳ Planned |
+| B1.1b | [#149](https://github.com/krisztiankoos/learn-ukrainian/issues/149) | M06-M10 (5) | ⏳ Ready |
+| B1.2 | [#150](https://github.com/krisztiankoos/learn-ukrainian/issues/150) | M11-M20 (10) | ⏳ Planned |
+| B1.3 | [#151](https://github.com/krisztiankoos/learn-ukrainian/issues/151) | M21-M35 (15) | ⏳ Planned |
+| B1.4 | [#152](https://github.com/krisztiankoos/learn-ukrainian/issues/152) | M36-M45 (10) | ⏳ Planned |
+| B1.5 | [#153](https://github.com/krisztiankoos/learn-ukrainian/issues/153) | M46-M55 (10) | ⏳ Planned |
+| B1.6 | [#154](https://github.com/krisztiankoos/learn-ukrainian/issues/154) | M56-M65 (10) | ⏳ Planned |
+| B1.7 | [#155](https://github.com/krisztiankoos/learn-ukrainian/issues/155) | M66-M75 (10) | ⏳ Planned |
+| B1.8 | [#156](https://github.com/krisztiankoos/learn-ukrainian/issues/156) | M76-M80 (5) | ⏳ Planned |
 
 **Related Issues:**
-- [#113](https://github.com/krisztiankoos/curricula-opus/issues/113) - State Standard compliance ✅ Closed
-- [#114](https://github.com/krisztiankoos/curricula-opus/issues/114) - Curriculum plan improvements ✅ Closed
-- [#116](https://github.com/krisztiankoos/curricula-opus/issues/116) - Vocabulary finalization (final step)
+- [#113](https://github.com/krisztiankoos/learn-ukrainian/issues/113) - State Standard compliance ✅ Closed
+- [#114](https://github.com/krisztiankoos/learn-ukrainian/issues/114) - Curriculum plan improvements ✅ Closed
+- [#116](https://github.com/krisztiankoos/learn-ukrainian/issues/116) - Vocabulary finalization (final step)

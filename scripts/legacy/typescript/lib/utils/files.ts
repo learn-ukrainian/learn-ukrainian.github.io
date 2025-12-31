@@ -1,5 +1,5 @@
 /**
- * File I/O utilities for curricula-opus generator
+ * File I/O utilities for learn-ukrainian generator
  *
  * Provides:
  * - Async file operations with error handling

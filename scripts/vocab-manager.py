@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vocabulary Manager for Curricula-Opus
+Vocabulary Manager for Learn Ukrainian
 
 Manages the master vocabulary database with proper lemma tracking.
 Ensures each lemma is introduced once and tracks module ownership.

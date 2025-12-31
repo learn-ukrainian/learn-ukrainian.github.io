@@ -1,5 +1,5 @@
 /**
- * Type definitions for curricula-opus generator
+ * Type definitions for learn-ukrainian generator
  */
 
 // =============================================================================

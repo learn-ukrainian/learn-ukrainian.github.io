@@ -42,7 +42,7 @@
 **Priority:** P0 (Critical)
 **Effort:** Low
 **Reference:** `docs/l2-uk-en/STATE-STANDARD-COMPLIANCE-ANALYSIS.md`
-**GitHub Issue:** [#104](https://github.com/krisztiankoos/curricula-opus/issues/104)
+**GitHub Issue:** [#104](https://github.com/krisztiankoos/learn-ukrainian/issues/104)
 
 The Ukrainian State Standard 2024 (Каталог В) requires two elements currently underrepresented in A1:
 
@@ -95,7 +95,7 @@ The Ukrainian State Standard 2024 (Каталог В) requires two elements curr
 
 **Priority:** P0 (Critical)
 **Effort:** High (14 modules)
-**GitHub Issue:** [#105](https://github.com/krisztiankoos/curricula-opus/issues/105)
+**GitHub Issue:** [#105](https://github.com/krisztiankoos/learn-ukrainian/issues/105)
 
 A1 cannot achieve CEFR can-do outcomes without past/future tense, time, adjectives, and the capstone.
 
@@ -152,7 +152,7 @@ A1 cannot achieve CEFR can-do outcomes without past/future tense, time, adjectiv
 - Learners are prompted to write, then can reveal model answers
 - This is "self-assessed production" without requiring AI grading
 
-**Future:** See [#174](https://github.com/krisztiankoos/curricula-opus/issues/174) for micro-write activity planning (B1+ with AI support)
+**Future:** See [#174](https://github.com/krisztiankoos/learn-ukrainian/issues/174) for micro-write activity planning (B1+ with AI support)
 
 ---
 
@@ -160,7 +160,7 @@ A1 cannot achieve CEFR can-do outcomes without past/future tense, time, adjectiv
 
 **Priority:** P1 (High)
 **Effort:** Medium
-**GitHub Issue:** [#107](https://github.com/krisztiankoos/curricula-opus/issues/107)
+**GitHub Issue:** [#107](https://github.com/krisztiankoos/learn-ukrainian/issues/107)
 
 Checkpoints (M10, M20, M34) feel thin with only 10 vocabulary words and lack assessment structure.
 
@@ -355,7 +355,7 @@ A1 achieves **A+ rating** when:
 
 - A1 completed with all 34 modules passing audit, MDX validation, and HTML validation
 - New checkpoint format with skill-based structure and self-assessment
-- True micro-write (AI-graded) deferred to B1+ - see [#174](https://github.com/krisztiankoos/curricula-opus/issues/174)
+- True micro-write (AI-graded) deferred to B1+ - see [#174](https://github.com/krisztiankoos/learn-ukrainian/issues/174)
 
 ---
 
@@ -417,7 +417,7 @@ Rebuild vocabulary DB → Regenerate output
 
 ### Vocabulary Workflow (Phased)
 
-**GitHub Issue:** [#108](https://github.com/krisztiankoos/curricula-opus/issues/108) (Finalize vocabulary)
+**GitHub Issue:** [#108](https://github.com/krisztiankoos/learn-ukrainian/issues/108) (Finalize vocabulary)
 
 **Problem:** Expanding vocabulary at module level during creation leads to endless recursion.
 

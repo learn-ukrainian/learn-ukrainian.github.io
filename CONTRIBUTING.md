@@ -1,10 +1,10 @@
-# Contributing to Curricula Opus
+# Contributing to Learn Ukrainian
 
 This guide is for **both humans and AI agents** contributing to the project.
 
 ## Project Overview
 
-Curricula Opus is a language curriculum generator for Ukrainian language learning. The primary curriculum is `l2-uk-en` (Ukrainian for English speakers).
+Learn Ukrainian is a language curriculum generator for Ukrainian language learning. The primary curriculum is `l2-uk-en` (Ukrainian for English speakers).
 
 ### Key Files
 - `curriculum/l2-uk-en/modules/*.md` - Source module files

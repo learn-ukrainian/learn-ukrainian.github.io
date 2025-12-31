@@ -88,7 +88,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 > - Topic Z → Module W
 ```
 
-**Live example:** [A1 Module 10](https://krisztiankoos.github.io/curricula-opus/docs/a1/module-10#need-more-practice)
+**Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
 | Icon | Type |

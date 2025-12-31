@@ -19,7 +19,7 @@ import sys
 from collections import defaultdict
 
 # Configuration
-OLD_REPO = "krisztiankoos/curricula-opus"
+OLD_REPO = "krisztiankoos/learn-ukrainian"
 NEW_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 
 def run_gh(args: list[str]) -> str:

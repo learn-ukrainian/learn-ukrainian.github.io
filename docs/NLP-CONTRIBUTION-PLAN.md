@@ -267,7 +267,7 @@
 **Dataset License:** CC-BY-4.0 (recommended for data sharing)
 
 **Attribution:**
-- "Krisztián Koos - Curricula Opus Ukrainian Language Curriculum"
+- "Krisztián Koos - Learn Ukrainian Language Curriculum"
 - "Developed with support from Ukrainian NLP community tools (nlp_uk, Stanza)"
 - "Validated using Gemini Pro (Google)"
 

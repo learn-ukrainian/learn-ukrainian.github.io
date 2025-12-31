@@ -1,6 +1,6 @@
 # Module Audit & Review Guide
 
-This document describes the design, implementation, and usage of the module audit and review system for Curricula Opus.
+This document describes the design, implementation, and usage of the module audit and review system for Learn Ukrainian.
 
 ---
 

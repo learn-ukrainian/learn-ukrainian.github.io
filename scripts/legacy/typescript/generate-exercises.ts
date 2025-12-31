@@ -1,6 +1,6 @@
 #!/usr/bin/env npx ts-node
 /**
- * Exercise Generator for Curricula-Opus
+ * Exercise Generator for Learn Ukrainian
  *
  * Generates additional activities for modules based on:
  * - Vocabulary words

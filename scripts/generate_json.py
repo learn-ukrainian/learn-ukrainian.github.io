@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Curricula-Opus JSON Generator (Python)
+Learn Ukrainian JSON Generator (Python)
 
 Generates Vibe-format JSON from markdown modules.
 Replaces the TypeScript generate.ts for JSON output only.
@@ -772,7 +772,7 @@ def render_vibe_json(parsed: dict, lang_pair: str) -> dict:
             "description": a["description"],
             "content": a["content"],
             "subject": "language",
-            "owner": "curricula-opus",
+            "owner": "learn-ukrainian",
             "visibility": "public",
             "language": "uk",
             "difficultyLevel": level,
@@ -803,7 +803,7 @@ def render_vibe_json(parsed: dict, lang_pair: str) -> dict:
         "moduleId": module_id,
         "languagePair": lang_pair,
         "subject": "language",
-        "owner": "curricula-opus",
+        "owner": "learn-ukrainian",
         "visibility": "public",
         "language": "uk",
         "targetLevel": level,
@@ -846,7 +846,7 @@ def main():
     target_level = args[1].lower() if len(args) > 1 else None
     target_module_num = int(args[2]) if len(args) > 2 else None
 
-    print("\n🚀 Curricula-Opus JSON Generator (Python)\n")
+    print("\n🚀 Learn Ukrainian JSON Generator (Python)\n")
     print("Source: curriculum/[lang]/[level]/*.md")
     print("Output: output/json/\n")
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Vocabulary Analysis Tool for Curricula-Opus
+Vocabulary Analysis Tool for Learn Ukrainian
 
 Analyzes vocabulary overlap and statistics across curriculum modules.
 

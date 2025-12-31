@@ -46,7 +46,7 @@
 **Priority:** P0 (Critical)
 **Effort:** Medium
 **Reference:** `docs/l2-uk-en/STATE-STANDARD-COMPLIANCE-ANALYSIS.md`
-**GitHub Issue:** [#109](https://github.com/krisztiankoos/curricula-opus/issues/109)
+**GitHub Issue:** [#109](https://github.com/krisztiankoos/learn-ukrainian/issues/109)
 
 The Ukrainian State Standard 2024 (Каталог В) requires explicit teaching of these elements at A2:
 
@@ -108,7 +108,7 @@ The Ukrainian State Standard 2024 (Каталог В) requires explicit teaching
 **Priority:** P0 (Critical)
 **Effort:** Low
 **Status:** ✅ COMPLETE
-**GitHub Issue:** [#110](https://github.com/krisztiankoos/curricula-opus/issues/110)
+**GitHub Issue:** [#110](https://github.com/krisztiankoos/learn-ukrainian/issues/110)
 
 The curriculum plan header stated 1,500 words but the summary showed 1,050. This was reconciled.
 
@@ -249,7 +249,7 @@ The reflexive possessive свій has comprehensive contrastive teaching in M17.
 **Priority:** P0 (Critical)
 **Effort:** Very High (45 modules)
 **Status:** ✅ COMPLETE (restructured to 57 modules)
-**GitHub Issue:** [#111](https://github.com/krisztiankoos/curricula-opus/issues/111)
+**GitHub Issue:** [#111](https://github.com/krisztiankoos/learn-ukrainian/issues/111)
 
 All modules implemented with restructured distribution:
 
@@ -360,7 +360,7 @@ A2 achieves **A+ rating** when:
 - A2 restructured from 50 to 57 modules for better pedagogical flow
 - 5 checkpoints with skill-based format and external resources
 - Semantic audits using AI (review-module) ensure content quality
-- True micro-write (AI-graded) deferred to B1+ - see [#174](https://github.com/krisztiankoos/curricula-opus/issues/174)
+- True micro-write (AI-graded) deferred to B1+ - see [#174](https://github.com/krisztiankoos/learn-ukrainian/issues/174)
 
 ---
 
@@ -422,7 +422,7 @@ Rebuild vocabulary DB → Regenerate output
 
 ### Vocabulary Workflow (Phased)
 
-**GitHub Issue:** [#112](https://github.com/krisztiankoos/curricula-opus/issues/112) (Finalize vocabulary)
+**GitHub Issue:** [#112](https://github.com/krisztiankoos/learn-ukrainian/issues/112) (Finalize vocabulary)
 
 **Problem:** Expanding vocabulary at module level during creation leads to endless recursion.
 

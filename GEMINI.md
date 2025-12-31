@@ -1,7 +1,7 @@
 # GEMINI.md - Gemini Agent Context & Memory
 
 ## Project Overview
-**Curricula Opus** (CO) is a language content factory generating Ukrainian language learning curricula.
+**Learn Ukrainian** is a language content factory generating Ukrainian language learning curricula.
 - **Target**: Ukrainian for English speakers (l2-uk-en).
 - **Philosophy**: "Theory-First, Content-Driven".
 - **Structure**: 6 Levels (A1, A2, B1, B2, C1, C2) aligned with Ukrainian State Standard 2024.
@@ -24,15 +24,15 @@
     - **Activity Density**: 8+ activities per module, 12+ items per activity.
     - **Graduated Immersion (A1)**: M01-M10 (Tier 1) allow 1.5 ratio; M11-M24 (Tier 2) allow 0.8; M25+ (Tier 3) strict 0.4.
 
-### Vocabulary Targets (Updated Dec 2025)
-| Level | Module Target | Cumulative Target | Note |
-|-------|---------------|-------------------|------|
-| **A1** | ~25 words | ~850 | Deduplicated (Introduced Once) |
-| **A2** | ~17 words | ~1,800 | Deduplicated (Cumulative) |
-| **B1** | ~35 words | ~4,500 | Narrative-driven expansion |
-| **B2** | ~25 words | ~7,500 | Specialized domains |
-| **C1** | ~25 words | ~10,500 | Academic/Literary |
-| **C2** | ~25 words | ~12,500 | Native mastery |
+### Vocabulary Targets (Verified Dec 2025)
+| Level | Modules | Module Target | Cumulative Target | Note |
+|-------|---------|---------------|-------------------|------|
+| **A1** | 34 | ~25 words | ~850 | Deduplicated (Introduced Once) |
+| **A2** | 57 | ~25 words | ~1,800 | Deduplicated (Cumulative) |
+| **B1** | 86 | ~30-40 words | ~3,300 | Narrative-driven expansion |
+| **B2** | 145 | ~24 words | ~6,780 | Specialized domains |
+| **C1** | 182 | ~24 words | ~10,300 | Academic/Literary |
+| **C2** | 100 | ~25 words | ~12,280 | Native mastery |
 
 ### User Preferences
 - **User**: Krisztian (Hungarian native).
@@ -40,21 +40,27 @@
 - **Goal**: Theory-first curriculum; Vibe app is a secondary practice tool.
 
 ## Work Status
-- **A1 (01-30)**:
+- **A1 (01-34)**:
     - Curriculum Plan: ✅ Updated & Aligned.
-    - Content: Modules 01-05 regenerated in `curriculum/l2-uk-en/a1/gemini/` with full richness.
-- **A2 (01-50)**:
+    - Status: **COMPLETE**.
+- **A2 (01-57)**:
     - Curriculum Plan: ✅ Updated & Aligned.
-- **B1 (01-80)**:
+    - Status: **COMPLETE**.
+- **B1 (01-86)**:
     - Curriculum Plan: ✅ Updated & Aligned (TTT/Narrative strategy).
-- **B2 (01-125)**:
+    - Status: **CONTENT DRAFTED** (Modules 01-86 exist; in validation/review phase).
+- **B2 (01-145)**:
     - Curriculum Plan: ✅ Updated & Aligned (CBI strategy).
-- **C1 (01-115)**:
+    - Status: **PLANNED** (Major expansion Dec 2025).
+- **C1 (01-182)**:
     - Curriculum Plan: ✅ Updated & Aligned (Immersion & Analysis).
-- **C2 (01-80)**:
+    - Status: **PLANNED** (Arts & Biographies expansion Dec 2025).
+- **C2 (01-100)**:
     - Curriculum Plan: ✅ Updated & Aligned (Stylistic Perfection).
+    - Status: **PLANNED**.
 
 ## Critical Workflow Rules (Gemini)
+0. **Use Mandatory Templates (CRITICAL)**: Every module MUST follow the structural guide in `docs/l2-uk-en/templates/` corresponding to its type (e.g., `b1-grammar-module-template.md`). The template defines the mandatory sections and layout.
 1. **Read Specs First**: Always read `{LEVEL}-CURRICULUM-PLAN.md` and `MODULE-RICHNESS-GUIDELINES-v2.md` before generating.
 2. **Audit Immediately**: After generating content, use `wc -w` (or equivalent logic) to verify Instructional Core word counts.
 3. **Narrative Vocabulary**: Use "Passive Vocabulary" freely in narratives for richness; restrict "Active Vocabulary" (drills) to the target list.
@@ -74,5 +80,11 @@
 ## File Structure Reference
 - **Curriculum Plans**: `docs/l2-uk-en/{LEVEL}-CURRICULUM-PLAN.md`
 - **Guidelines**: `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
+- **Module Templates**: `docs/l2-uk-en/templates/`
 - **Module Content**: `curriculum/l2-uk-en/{level}/`
-- **Skills**: `claude_extensions/skills/module-architect/SKILL.md`
+- **Key Scripts**:
+  - `scripts/pipeline.py` (Main generation/validation workflow)
+  - `scripts/audit_module.py` (Content quality & structure check)
+  - `scripts/generate_mdx.py` (Converts MD to Docusaurus MDX)
+- **CLI Setup**: `docs/GEMINI-CLI-SETUP.md`
+- **CLI Config**: `.gemini/config.yaml`

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Curricula Opus - Claude Code Wrapper
+# Learn Ukrainian - Claude Code Wrapper
 # Ensures skills are deployed and starts Claude
 
 set -e
@@ -7,7 +7,7 @@ set -e
 # Get script directory (project root)
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "Starting Claude in Curricula Opus project..."
+echo "Starting Claude in Learn Ukrainian project..."
 echo "Project: $PROJECT_DIR"
 
 # Preflight check: Verify required tools
@@ -55,7 +55,7 @@ fi
 
 # Show project status
 echo ""
-echo "CURRICULA OPUS - Ukrainian Language Learning"
+echo "LEARN UKRAINIAN - Ukrainian Language Learning"
 
 # Show level status from CLAUDE.md enrichment status table
 if [ -f "CLAUDE.md" ]; then

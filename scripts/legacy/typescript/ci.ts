@@ -1,6 +1,6 @@
 import { connect, Client } from '@dagger.io/dagger';
 
-// CI Pipeline for Curricula Opus
+// CI Pipeline for Learn Ukrainian
 // 1. Lint (ESLint)
 // 2. Typecheck (TSC)
 // 3. Test (Jest)

@@ -1,6 +1,6 @@
 # Ukrainian State Standard 2024 Index
 
-**Purpose:** This file maps specific Curriculum Modules to the exact line ranges in [`UKRAINIAN-STATE-STANDARD-2024.txt`](file:///Users/krisztiankoos/projects/curricula-opus/docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt) that define their required competencies.
+**Purpose:** This file maps specific Curriculum Modules to the exact line ranges in [`UKRAINIAN-STATE-STANDARD-2024.txt`](file:///Users/krisztiankoos/projects/learn-ukrainian/docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt) that define their required competencies.
 **Usage:** Before generating a module, check this index. If the module is listed, read the specific lines to ensure compliance. If not, search the Standard, add the mapping here, and then proceed.
 
 ## A1 Level (Початковий рівень першого ступеня)

@@ -1,8 +1,8 @@
-# Curricula-Opus Architecture
+# Learn Ukrainian Architecture
 
 ## Overview
 
-Curricula-Opus (CO) is a content factory that generates Ukrainian language learning materials from Markdown source files.
+Learn Ukrainian (CO) is a content factory that generates Ukrainian language learning materials from Markdown source files.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -38,14 +38,14 @@ Curricula-Opus (CO) is a content factory that generates Ukrainian language learn
 │ - Static site           │     │ - Extracts activities   │
 │ - GitHub Pages          │     │ - Creates flash cards   │
 │ - krisztiankoos.github  │     │ - Interactive workbook  │
-│   .io/curricula-opus    │     │                         │
+│   .io/learn-ukrainian    │     │                         │
 └─────────────────────────┘     └─────────────────────────┘
 ```
 
 ## Directory Structure
 
 ```
-curricula-opus/
+learn-ukrainian/
 ├── curriculum/                    # SOURCE OF TRUTH
 │   └── l2-uk-en/
 │       ├── a1/                    # A1 modules (34)
@@ -313,7 +313,7 @@ Located in `docusaurus/src/components/`:
 - **Answer shuffling**: Options randomized on each page load
 - **Progress tracking**: Visual feedback for correct/incorrect
 - **Mobile responsive**: Works on all device sizes
-- **GitHub Pages**: Deployed to krisztiankoos.github.io/curricula-opus
+- **GitHub Pages**: Deployed to krisztiankoos.github.io/learn-ukrainian
 
 ## Markdown Format
 

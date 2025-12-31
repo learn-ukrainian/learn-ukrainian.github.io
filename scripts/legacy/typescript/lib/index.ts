@@ -1,5 +1,5 @@
 /**
- * Curricula Opus Generator Library
+ * Learn Ukrainian Generator Library
  *
  * Main entry point for the refactored generator architecture.
  *

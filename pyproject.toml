@@ -1,5 +1,5 @@
 [project]
-name = "curricula-opus"
+name = "learn-ukrainian"
 version = "1.0.0"
 description = "Ukrainian language learning curriculum generator"
 requires-python = ">=3.10"

@@ -106,7 +106,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 > - Skill Z → Module W
 ```
 
-**Live example:** [A1 Module 10](https://krisztiankoos.github.io/curricula-opus/docs/a1/module-10#need-more-practice)
+**Live example:** [A1 Module 10](https://krisztiankoos.github.io/learn-ukrainian/docs/a1/module-10#need-more-practice)
 
 **Icon conventions:**
 | Icon | Type |
@@ -117,7 +117,7 @@ Every module MUST have a "Need More Practice?" section **before `## Activities`*
 | 📚 | Reading resources |
 | 🎬 | Video content |
 
-**GitHub Issue:** [#170](https://github.com/krisztiankoos/curricula-opus/issues/170) - Standardize "Need More Practice?" section
+**GitHub Issue:** [#170](https://github.com/krisztiankoos/learn-ukrainian/issues/170) - Standardize "Need More Practice?" section
 
 ---
 
