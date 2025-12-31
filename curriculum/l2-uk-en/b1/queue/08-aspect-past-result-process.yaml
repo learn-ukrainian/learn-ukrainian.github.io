@@ -1,15 +1,18 @@
 module: 08-aspect-past-result-process
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/08-aspect-past-result-process.md
-generated: '2025-12-29T00:21:59.032943'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.446099'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 10
+  cloze: 1
   unjumble: 8
   quiz: 14
   true-false: 8
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок виду
@@ -249,6 +252,103 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Вид у контексті
+  passage_template: Минулого тижня в мене був дуже напружений тиждень. Я {готувався|приготувався|готуватися}
+    до важливої презентації протягом усього тижня. Кожного дня я {працював|попрацював|працювати}
+    над слайдами кілька годин і {збирав|зібрав|збирати} інформацію з різних джерел.
+    У понеділок я весь день {читав|прочитав|читати} наукові статті і {робив|зробив|робити}
+    нотатки. У вівторок я {писав|написав|писати} текст для презентації три години,
+    але не {закінчив|закінчував|закінчувати}, бо матеріалу було дуже багато. Нарешті
+    в середу я {завершив|завершував|завершувати} основну частину тексту і {почав|починав|починати}
+    робити слайди. За день мені вдалося {створити|створювати|створював} десять слайдів
+    з графіками та діаграмами. У четвер я протягом усього дня {перевіряв|перевірив|перевіряти}
+    матеріал і {виправляв|виправив|виправляти} помилки. Поки я {працював|попрацював|працювати}
+    над презентацією, мій колега {готував|приготував|готувати} додаткові матеріали
+    для роздачі. Нарешті в п'ятницю я успішно {завершив|завершував|завершувати} всю
+    презентацію і {відправив|відправляв|відправляти} її керівництву на перевірку.
+    Я був дуже задоволений результатом!
+  blanks:
+  - answer: готуватися
+    options:
+    - готувався
+    - приготувався
+  - answer: працювати
+    options:
+    - працював
+    - попрацював
+  - answer: збирати
+    options:
+    - збирав
+    - зібрав
+  - answer: читати
+    options:
+    - читав
+    - прочитав
+  - answer: робити
+    options:
+    - робив
+    - зробив
+  - answer: писати
+    options:
+    - писав
+    - написав
+  - answer: закінчувати
+    options:
+    - закінчив
+    - закінчував
+  - answer: завершувати
+    options:
+    - завершив
+    - завершував
+  - answer: починати
+    options:
+    - почав
+    - починав
+  - answer: створював
+    options:
+    - створити
+    - створювати
+  - answer: перевіряти
+    options:
+    - перевіряв
+    - перевірив
+  - answer: виправляти
+    options:
+    - виправляв
+    - виправив
+  - answer: працювати
+    options:
+    - працював
+    - попрацював
+  - answer: готувати
+    options:
+    - готував
+    - приготував
+  - answer: завершувати
+    options:
+    - завершив
+    - завершував
+  - answer: відправляти
+    options:
+    - відправив
+    - відправляв
+  blank_count: 16
+  complete_passage: Минулого тижня в мене був дуже напружений тиждень. Я готуватися
+    до важливої презентації протягом усього тижня. Кожного дня я працювати над слайдами
+    кілька годин і збирати інформацію з різних джерел. У понеділок я весь день читати
+    наукові статті і робити нотатки. У вівторок я писати текст для презентації три
+    години, але не закінчувати, бо матеріалу було дуже багато. Нарешті в середу я
+    завершувати основну частину тексту і починати робити слайди. За день мені вдалося
+    створював десять слайдів з графіками та діаграмами. У четвер я протягом усього
+    дня перевіряти матеріал і виправляти помилки. Поки я працювати над презентацією,
+    мій колега готувати додаткові матеріали для роздачі. Нарешті в п'ятницю я успішно
+    завершувати всю презентацію і відправляти її керівництву на перевірку. Я був дуже
+    задоволений результатом!
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення про результат і процес
   jumbled_words: []
@@ -320,14 +420,10 @@ items:
   question: Нарешті після довгих зусиль і багатьох спроб я успішно __________ цю складну
     граматичну тему.
   options:
-  - text: вивчив
-    correct: true
-  - text: вивчав
-    correct: false
-  - text: вивчаю
-    correct: false
-  - text: вивчу
-    correct: false
+  - '{''text'': ''вивчив'', ''correct'': True}'
+  - '{''text'': ''вивчав'', ''correct'': False}'
+  - '{''text'': ''вивчаю'', ''correct'': False}'
+  - '{''text'': ''вивчу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -339,14 +435,10 @@ items:
   question: Вчора весь вечір від шостої до одинадцятої години я старанно __________
     домашнє завдання з математики.
   options:
-  - text: зробив
-    correct: false
-  - text: робив
-    correct: true
-  - text: роблю
-    correct: false
-  - text: зроблю
-    correct: false
+  - '{''text'': ''зробив'', ''correct'': False}'
+  - '{''text'': ''робив'', ''correct'': True}'
+  - '{''text'': ''роблю'', ''correct'': False}'
+  - '{''text'': ''зроблю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -358,14 +450,10 @@ items:
   question: Минулого тижня за три дні інтенсивної роботи вона повністю __________
     звіт і здала його керівництву.
   options:
-  - text: підготувала
-    correct: true
-  - text: готувала
-    correct: false
-  - text: готує
-    correct: false
-  - text: готуватиме
-    correct: false
+  - '{''text'': ''підготувала'', ''correct'': True}'
+  - '{''text'': ''готувала'', ''correct'': False}'
+  - '{''text'': ''готує'', ''correct'': False}'
+  - '{''text'': ''готуватиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -377,14 +465,10 @@ items:
   question: Поки батько на кухні __________ вечерю, діти в кімнаті __________ мультфільми
     по телевізору.
   options:
-  - text: приготував, подивилися
-    correct: false
-  - text: готував, дивилися
-    correct: true
-  - text: готує, дивляться
-    correct: false
-  - text: приготував, дивилися
-    correct: false
+  - '{''text'': ''приготував, подивилися'', ''correct'': False}'
+  - '{''text'': ''готував, дивилися'', ''correct'': True}'
+  - '{''text'': ''готує, дивляться'', ''correct'': False}'
+  - '{''text'': ''приготував, дивилися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -396,14 +480,10 @@ items:
   question: Я вже __________ цю цікаву книгу минулого року, тому не хочу читати її
     знову зараз.
   options:
-  - text: прочитав
-    correct: false
-  - text: читав
-    correct: true
-  - text: читаю
-    correct: false
-  - text: прочитаю
-    correct: false
+  - '{''text'': ''прочитав'', ''correct'': False}'
+  - '{''text'': ''читав'', ''correct'': True}'
+  - '{''text'': ''читаю'', ''correct'': False}'
+  - '{''text'': ''прочитаю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -415,14 +495,10 @@ items:
   question: Студенти успішно __________ усі складні іспити та отримали дипломи з відзнакою
     в червні.
   options:
-  - text: склали
-    correct: true
-  - text: складали
-    correct: false
-  - text: складають
-    correct: false
-  - text: складатимуть
-    correct: false
+  - '{''text'': ''склали'', ''correct'': True}'
+  - '{''text'': ''складали'', ''correct'': False}'
+  - '{''text'': ''складають'', ''correct'': False}'
+  - '{''text'': ''складатимуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -434,14 +510,10 @@ items:
   question: Протягом цілого семестру від вересня до грудня ми регулярно __________
     нову українську граматику щотижня.
   options:
-  - text: вивчили
-    correct: false
-  - text: вивчали
-    correct: true
-  - text: вивчаємо
-    correct: false
-  - text: вивчимо
-    correct: false
+  - '{''text'': ''вивчили'', ''correct'': False}'
+  - '{''text'': ''вивчали'', ''correct'': True}'
+  - '{''text'': ''вивчаємо'', ''correct'': False}'
+  - '{''text'': ''вивчимо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -453,14 +525,10 @@ items:
   question: За годину інтенсивної праці він швидко __________ презентацію та відправив
     її колегам електронною поштою.
   options:
-  - text: підготував
-    correct: true
-  - text: готував
-    correct: false
-  - text: готує
-    correct: false
-  - text: готуватиме
-    correct: false
+  - '{''text'': ''підготував'', ''correct'': True}'
+  - '{''text'': ''готував'', ''correct'': False}'
+  - '{''text'': ''готує'', ''correct'': False}'
+  - '{''text'': ''готуватиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -472,14 +540,10 @@ items:
   question: Вчора з ранку до вечора вона цілий день __________ листи різним клієнтам
     компанії.
   options:
-  - text: написала
-    correct: false
-  - text: писала
-    correct: true
-  - text: пише
-    correct: false
-  - text: напише
-    correct: false
+  - '{''text'': ''написала'', ''correct'': False}'
+  - '{''text'': ''писала'', ''correct'': True}'
+  - '{''text'': ''пише'', ''correct'': False}'
+  - '{''text'': ''напише'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -491,14 +555,10 @@ items:
   question: Нарешті після місяця копіткої роботи архітектори повністю __________ проєкт
     нової будівлі до встановленого терміну.
   options:
-  - text: розробили
-    correct: true
-  - text: розробляли
-    correct: false
-  - text: розробляють
-    correct: false
-  - text: розроблятимуть
-    correct: false
+  - '{''text'': ''розробили'', ''correct'': True}'
+  - '{''text'': ''розробляли'', ''correct'': False}'
+  - '{''text'': ''розробляють'', ''correct'': False}'
+  - '{''text'': ''розроблятимуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -510,14 +570,10 @@ items:
   question: Під час довгої зимової відпустки ми багато __________ книги, дивилися
     фільми та відпочивали.
   options:
-  - text: прочитали, подивилися
-    correct: false
-  - text: читали, дивилися
-    correct: true
-  - text: читаємо, дивимося
-    correct: false
-  - text: прочитаємо, подивимося
-    correct: false
+  - '{''text'': ''прочитали, подивилися'', ''correct'': False}'
+  - '{''text'': ''читали, дивилися'', ''correct'': True}'
+  - '{''text'': ''читаємо, дивимося'', ''correct'': False}'
+  - '{''text'': ''прочитаємо, подивимося'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -529,14 +585,10 @@ items:
   question: Минулого місяця йому вдалося успішно __________ усі необхідні документи
     для візи і подати заявку.
   options:
-  - text: зібрати
-    correct: true
-  - text: збирати
-    correct: false
-  - text: збирає
-    correct: false
-  - text: збиратиме
-    correct: false
+  - '{''text'': ''зібрати'', ''correct'': True}'
+  - '{''text'': ''збирати'', ''correct'': False}'
+  - '{''text'': ''збирає'', ''correct'': False}'
+  - '{''text'': ''збиратиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -548,14 +600,10 @@ items:
   question: Протягом трьох годин учитель терпляче __________ складну граматичну тему
     учням, але не всі зрозуміли.
   options:
-  - text: пояснив
-    correct: false
-  - text: пояснював
-    correct: true
-  - text: пояснює
-    correct: false
-  - text: пояснить
-    correct: false
+  - '{''text'': ''пояснив'', ''correct'': False}'
+  - '{''text'': ''пояснював'', ''correct'': True}'
+  - '{''text'': ''пояснює'', ''correct'': False}'
+  - '{''text'': ''пояснить'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -567,14 +615,10 @@ items:
   question: За останній рік компанія стабільно __________ свій прибуток на тридцять
     відсотків та відкрила нові філії.
   options:
-  - text: збільшила
-    correct: true
-  - text: збільшувала
-    correct: false
-  - text: збільшує
-    correct: false
-  - text: збільшуватиме
-    correct: false
+  - '{''text'': ''збільшила'', ''correct'': True}'
+  - '{''text'': ''збільшувала'', ''correct'': False}'
+  - '{''text'': ''збільшує'', ''correct'': False}'
+  - '{''text'': ''збільшуватиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

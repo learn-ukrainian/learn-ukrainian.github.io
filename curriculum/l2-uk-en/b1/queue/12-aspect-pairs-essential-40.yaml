@@ -1,7 +1,7 @@
 module: 12-aspect-pairs-essential-40
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/12-aspect-pairs-essential-40.md
-generated: '2025-12-29T00:21:59.301755'
+generated: '2025-12-30T19:49:27.557003'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 14
   true-false: 14
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок у виборі виду
@@ -397,6 +399,7 @@ items:
     - навчаюся
     - навчу
     - буду навчатися
+  blank_count: 15
   complete_passage: Минулого року я вивчав українську мову в університеті. Кожного
     дня я вивчав нові слова, читав граматичні правила та перекладав тексти. Викладач
     завжди дуже чітко пояснював складні моменти і показував цікаві приклади з літератури.  Одного
@@ -483,14 +486,10 @@ items:
   question: Яке з наведених нижче дієслів є доконаним видом і виражає завершену дію
     з конкретним результатом?
   options:
-  - text: читати
-    correct: false
-  - text: прочитати
-    correct: true
-  - text: читаю
-    correct: false
-  - text: буду читати
-    correct: false
+  - '{''text'': ''читати'', ''correct'': False}'
+  - '{''text'': ''прочитати'', ''correct'': True}'
+  - '{''text'': ''читаю'', ''correct'': False}'
+  - '{''text'': ''буду читати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -502,14 +501,10 @@ items:
   question: Яке речення правильно використовує недоконаний вид для вираження тривалого
     процесу без акценту на завершенні?
   options:
-  - text: Я написав листа дві години.
-    correct: false
-  - text: Я писав листа дві години.
-    correct: true
-  - text: Я пишу листа дві години.
-    correct: false
-  - text: Я буду писати листа дві години.
-    correct: false
+  - '{''text'': ''Я написав листа дві години.'', ''correct'': False}'
+  - '{''text'': ''Я писав листа дві години.'', ''correct'': True}'
+  - '{''text'': ''Я пишу листа дві години.'', ''correct'': False}'
+  - '{''text'': ''Я буду писати листа дві години.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -521,14 +516,10 @@ items:
   question: Який префікс найчастіше утворює доконаний вид дієслова "писати" в українській
     мові для позначення завершеності дії?
   options:
-  - text: про-
-    correct: false
-  - text: на-
-    correct: true
-  - text: з-
-    correct: false
-  - text: по-
-    correct: false
+  - '{''text'': ''про-'', ''correct'': False}'
+  - '{''text'': ''на-'', ''correct'': True}'
+  - '{''text'': ''з-'', ''correct'': False}'
+  - '{''text'': ''по-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -540,14 +531,10 @@ items:
   question: Яка пара дієслів є суплетивною і має різні корені для недоконаного та
     доконаного виду?
   options:
-  - text: писати / написати
-    correct: false
-  - text: робити / зробити
-    correct: false
-  - text: говорити / сказати
-    correct: true
-  - text: читати / прочитати
-    correct: false
+  - '{''text'': ''писати / написати'', ''correct'': False}'
+  - '{''text'': ''робити / зробити'', ''correct'': False}'
+  - '{''text'': ''говорити / сказати'', ''correct'': True}'
+  - '{''text'': ''читати / прочитати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -559,14 +546,10 @@ items:
   question: У якому реченні доконаний вид використовується правильно для позначення
     одноразової завершеної дії в минулому часі?
   options:
-  - text: Я купував хліб вчора.
-    correct: false
-  - text: Я купив хліб вчора.
-    correct: true
-  - text: Я купую хліб вчора.
-    correct: false
-  - text: Я буду купувати хліб вчора.
-    correct: false
+  - '{''text'': ''Я купував хліб вчора.'', ''correct'': False}'
+  - '{''text'': ''Я купив хліб вчора.'', ''correct'': True}'
+  - '{''text'': ''Я купую хліб вчора.'', ''correct'': False}'
+  - '{''text'': ''Я буду купувати хліб вчора.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -578,14 +561,10 @@ items:
   question: Яке дієслово є недоконаним видом і утворює пару з доконаним "зробити"
     для позначення процесу виконання дії?
   options:
-  - text: робив
-    correct: false
-  - text: робити
-    correct: true
-  - text: зробив
-    correct: false
-  - text: зроблю
-    correct: false
+  - '{''text'': ''робив'', ''correct'': False}'
+  - '{''text'': ''робити'', ''correct'': True}'
+  - '{''text'': ''зробив'', ''correct'': False}'
+  - '{''text'': ''зроблю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -597,14 +576,10 @@ items:
   question: Який суфікс змінюється при утворенні доконаного виду "вирішити" з недоконаного
     "вирішувати" через суфіксацію?
   options:
-  - text: -а- → -и-
-    correct: false
-  - text: -ува- → -и-
-    correct: true
-  - text: -ла- → -сла-
-    correct: false
-  - text: -и- → -а-
-    correct: false
+  - '{''text'': ''-а- → -и-'', ''correct'': False}'
+  - '{''text'': ''-ува- → -и-'', ''correct'': True}'
+  - '{''text'': ''-ла- → -сла-'', ''correct'': False}'
+  - '{''text'': ''-и- → -а-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -616,14 +591,10 @@ items:
   question: У якому реченні недоконаний вид правильно використовується для вираження
     повторюваної або регулярної дії?
   options:
-  - text: Я прочитав цю книгу щодня.
-    correct: false
-  - text: Я читав цю книгу щодня.
-    correct: true
-  - text: Я прочитаю цю книгу щодня.
-    correct: false
-  - text: Я читаю цю книгу щодня теперішнім часом.
-    correct: false
+  - '{''text'': ''Я прочитав цю книгу щодня.'', ''correct'': False}'
+  - '{''text'': ''Я читав цю книгу щодня.'', ''correct'': True}'
+  - '{''text'': ''Я прочитаю цю книгу щодня.'', ''correct'': False}'
+  - '{''text'': ''Я читаю цю книгу щодня теперішнім часом.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -635,14 +606,10 @@ items:
   question: Яке словосполучення сигналізує про необхідність використання доконаного
     виду через вказівку на завершеність дії?
   options:
-  - text: весь день
-    correct: false
-  - text: довго
-    correct: false
-  - text: вже
-    correct: true
-  - text: часто
-    correct: false
+  - '{''text'': ''весь день'', ''correct'': False}'
+  - '{''text'': ''довго'', ''correct'': False}'
+  - '{''text'': ''вже'', ''correct'': True}'
+  - '{''text'': ''часто'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -654,14 +621,10 @@ items:
   question: Яка пара дієслів утворена за допомогою префікса "при-" для позначення
     завершеного процесу приготування або підготовки?
   options:
-  - text: писати / написати
-    correct: false
-  - text: читати / прочитати
-    correct: false
-  - text: готувати / приготувати
-    correct: true
-  - text: робити / зробити
-    correct: false
+  - '{''text'': ''писати / написати'', ''correct'': False}'
+  - '{''text'': ''читати / прочитати'', ''correct'': False}'
+  - '{''text'': ''готувати / приготувати'', ''correct'': True}'
+  - '{''text'': ''робити / зробити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -673,14 +636,10 @@ items:
   question: У якому реченні доконаний вид неправильно використовується з виразом тривалості,
     що створює граматичну помилку?
   options:
-  - text: Я писав листа дві години.
-    correct: false
-  - text: Я написав листа дві години.
-    correct: true
-  - text: Я писав листа вчора.
-    correct: false
-  - text: Я пишу листа зараз.
-    correct: false
+  - '{''text'': ''Я писав листа дві години.'', ''correct'': False}'
+  - '{''text'': ''Я написав листа дві години.'', ''correct'': True}'
+  - '{''text'': ''Я писав листа вчора.'', ''correct'': False}'
+  - '{''text'': ''Я пишу листа зараз.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -692,14 +651,10 @@ items:
   question: Яка стратегія є найефективнішою для запам'ятовування видових пар дієслів
     в українській мові згідно з поданим матеріалом?
   options:
-  - text: Вивчати тільки недоконаний вид.
-    correct: false
-  - text: Вивчати тільки доконаний вид.
-    correct: false
-  - text: Завжди вивчати обидві форми разом як пару.
-    correct: true
-  - text: Вивчати дієслова в алфавітному порядку.
-    correct: false
+  - '{''text'': ''Вивчати тільки недоконаний вид.'', ''correct'': False}'
+  - '{''text'': ''Вивчати тільки доконаний вид.'', ''correct'': False}'
+  - '{''text'': ''Завжди вивчати обидві форми разом як пару.'', ''correct'': True}'
+  - '{''text'': ''Вивчати дієслова в алфавітному порядку.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -711,14 +666,10 @@ items:
   question: Яке дієслово є доконаним видом для недоконаного "шукати" і має інший корінь
     через суплетивізм?
   options:
-  - text: пошукати
-    correct: false
-  - text: шукав
-    correct: false
-  - text: знайти
-    correct: true
-  - text: дошукати
-    correct: false
+  - '{''text'': ''пошукати'', ''correct'': False}'
+  - '{''text'': ''шукав'', ''correct'': False}'
+  - '{''text'': ''знайти'', ''correct'': True}'
+  - '{''text'': ''дошукати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -730,14 +681,10 @@ items:
   question: У якому контексті правильно використовується недоконаний вид для опису
     фонової дії, під час якої відбувається інша подія?
   options:
-  - text: Я прочитав книгу, коли хтось постукав.
-    correct: false
-  - text: Я читав книгу, коли хтось постукав.
-    correct: true
-  - text: Я прочитаю книгу, коли хтось постукав.
-    correct: false
-  - text: Я читаю книгу, коли хтось постукав.
-    correct: false
+  - '{''text'': ''Я прочитав книгу, коли хтось постукав.'', ''correct'': False}'
+  - '{''text'': ''Я читав книгу, коли хтось постукав.'', ''correct'': True}'
+  - '{''text'': ''Я прочитаю книгу, коли хтось постукав.'', ''correct'': False}'
+  - '{''text'': ''Я читаю книгу, коли хтось постукав.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

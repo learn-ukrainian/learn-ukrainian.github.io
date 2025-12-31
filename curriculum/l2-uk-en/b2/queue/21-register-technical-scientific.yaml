@@ -1,15 +1,18 @@
 module: 21-register-technical-scientific
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/21-register-technical-scientific.md
-generated: '2025-12-29T22:44:03.870605'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.622272'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в технічних текстах
@@ -609,6 +612,172 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть технічну інструкцію
+  passage_template: '**Інструкція з {встановлення|встановлюють|встановили|встановлення}
+    програмного забезпечення**
+
+
+    1. Завантажте інсталяційний файл з офіційного {сайту|сайт|сайтом|сайту}.
+
+
+    2. Запустіть завантажений файл. Процес {ініціалізації|ініціалізувати|ініціалізують|ініціалізації}
+    розпочнеться автоматично.
+
+
+    3. Ліцензійну угоду {прийнято|приймають|приймається|прийнято} після натискання
+    кнопки "Погоджуюсь".
+
+
+    4. Виберіть папку для {встановлення|встановити|встановлюють|встановлення}. Рекомендовано
+    використовувати шлях за {замовчуванням|замовчування|замовчувати|замовчуванням}.
+
+
+    5. Натисніть кнопку "Встановити". Файли {копіюються|скопійовано|копіювали|копіюються}
+    на жорсткий диск.
+
+
+    6. Після завершення {встановлення|встановити|встановлюють|встановлення} система
+    {перезавантажується|перезавантажено|перезавантажили|перезавантажується} автоматично.
+
+
+    7. При першому запуску {виконується|виконано|виконали|виконується} реєстрація
+    продукту.
+
+
+    8. Параметри {налаштовано|налаштовують|налаштується|налаштовано} відповідно до
+    вимог {користувача|користувач|користувачем|користувача}.
+
+
+    **Примітка:** Технічну підтримку {забезпечено|забезпечують|забезпечується|забезпечено}
+    протягом гарантійного терміну.
+
+
+    **Увага!** Перед {експлуатацією|експлуатація|експлуатувати|експлуатацією} уважно
+    прочитайте {документацію|документація|документувати|документацію}. Усі {компоненти|компонент|компонентом|компоненти}
+    перевірено на відповідність стандартам.
+
+    '
+  blanks:
+  - answer: встановлення
+    options:
+    - встановлення
+    - встановлюють
+    - встановили
+  - answer: сайту
+    options:
+    - сайту
+    - сайт
+    - сайтом
+  - answer: ініціалізації
+    options:
+    - ініціалізації
+    - ініціалізувати
+    - ініціалізують
+  - answer: прийнято
+    options:
+    - прийнято
+    - приймають
+    - приймається
+  - answer: встановлення
+    options:
+    - встановлення
+    - встановити
+    - встановлюють
+  - answer: замовчуванням
+    options:
+    - замовчуванням
+    - замовчування
+    - замовчувати
+  - answer: копіюються
+    options:
+    - копіюються
+    - скопійовано
+    - копіювали
+  - answer: встановлення
+    options:
+    - встановлення
+    - встановити
+    - встановлюють
+  - answer: перезавантажується
+    options:
+    - перезавантажується
+    - перезавантажено
+    - перезавантажили
+  - answer: виконується
+    options:
+    - виконується
+    - виконано
+    - виконали
+  - answer: налаштовано
+    options:
+    - налаштовано
+    - налаштовують
+    - налаштується
+  - answer: користувача
+    options:
+    - користувача
+    - користувач
+    - користувачем
+  - answer: забезпечено
+    options:
+    - забезпечено
+    - забезпечують
+    - забезпечується
+  - answer: експлуатацією
+    options:
+    - експлуатацією
+    - експлуатація
+    - експлуатувати
+  - answer: документацію
+    options:
+    - документацію
+    - документація
+    - документувати
+  - answer: компоненти
+    options:
+    - компоненти
+    - компонент
+    - компонентом
+  blank_count: 16
+  complete_passage: '**Інструкція з встановлення програмного забезпечення**
+
+
+    1. Завантажте інсталяційний файл з офіційного сайту.
+
+
+    2. Запустіть завантажений файл. Процес ініціалізації розпочнеться автоматично.
+
+
+    3. Ліцензійну угоду прийнято після натискання кнопки "Погоджуюсь".
+
+
+    4. Виберіть папку для встановлення. Рекомендовано використовувати шлях за замовчуванням.
+
+
+    5. Натисніть кнопку "Встановити". Файли копіюються на жорсткий диск.
+
+
+    6. Після завершення встановлення система перезавантажується автоматично.
+
+
+    7. При першому запуску виконується реєстрація продукту.
+
+
+    8. Параметри налаштовано відповідно до вимог користувача.
+
+
+    **Примітка:** Технічну підтримку забезпечено протягом гарантійного терміну.
+
+
+    **Увага!** Перед експлуатацією уважно прочитайте документацію. Усі компоненти
+    перевірено на відповідність стандартам.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть технічні інструкції
   jumbled_words: []
@@ -741,14 +910,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яка головна ознака науково-технічного стилю мови?
   options:
-  - text: Емоційність та образність
-    correct: false
-  - text: Точність та однозначність термінів
-    correct: true
-  - text: Використання діалектизмів
-    correct: false
-  - text: Художня виразність
-    correct: false
+  - '{''text'': ''Емоційність та образність'', ''correct'': False}'
+  - '{''text'': ''Точність та однозначність термінів'', ''correct'': True}'
+  - '{''text'': ''Використання діалектизмів'', ''correct'': False}'
+  - '{''text'': ''Художня виразність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -760,14 +925,10 @@ items:
   question: Яка пасивна конструкція найчастіше використовується для опису технічних
     процесів?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -778,14 +939,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яка конструкція є типовою для технічних інструкцій?
   options:
-  - text: Умовний спосіб
-    correct: false
-  - text: Наказовий спосіб
-    correct: true
-  - text: Минулий час
-    correct: false
-  - text: Майбутній час
-    correct: false
+  - '{''text'': ''Умовний спосіб'', ''correct'': False}'
+  - '{''text'': ''Наказовий спосіб'', ''correct'': True}'
+  - '{''text'': ''Минулий час'', ''correct'': False}'
+  - '{''text'': ''Майбутній час'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -796,14 +953,11 @@ items:
   title: Ознаки науково-технічного стилю
   question: Як правильно ввести абревіатуру в технічний текст?
   options:
-  - text: Використовувати тільки скорочення
-    correct: false
-  - text: Спочатку повна форма, потім у дужках скорочення
-    correct: true
-  - text: Спочатку скорочення, потім повна форма
-    correct: false
-  - text: Абревіатури не вживаються в технічних текстах
-    correct: false
+  - '{''text'': ''Використовувати тільки скорочення'', ''correct'': False}'
+  - '{''text'': ''Спочатку повна форма, потім у дужках скорочення'', ''correct'':
+    True}'
+  - '{''text'': ''Спочатку скорочення, потім повна форма'', ''correct'': False}'
+  - '{''text'': ''Абревіатури не вживаються в технічних текстах'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -814,14 +968,11 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яке речення відповідає науково-технічному стилю?
   options:
-  - text: Комп'ютер глючить і не хоче працювати.
-    correct: false
-  - text: Система виявляє нестабільну роботу через апаратну несправність.
-    correct: true
-  - text: Ця залізяка знову зламалась.
-    correct: false
-  - text: Мій комп стає дуже гарячим.
-    correct: false
+  - '{''text'': "Комп''ютер глючить і не хоче працювати.", ''correct'': False}'
+  - '{''text'': ''Система виявляє нестабільну роботу через апаратну несправність.'',
+    ''correct'': True}'
+  - '{''text'': ''Ця залізяка знову зламалась.'', ''correct'': False}'
+  - '{''text'': ''Мій комп стає дуже гарячим.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -832,14 +983,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Що означає абревіатура "ПЗ" у технічних текстах?
   options:
-  - text: Персональний запис
-    correct: false
-  - text: Програмне забезпечення
-    correct: true
-  - text: Початкова заява
-    correct: false
-  - text: Проектна заявка
-    correct: false
+  - '{''text'': ''Персональний запис'', ''correct'': False}'
+  - '{''text'': ''Програмне забезпечення'', ''correct'': True}'
+  - '{''text'': ''Початкова заява'', ''correct'': False}'
+  - '{''text'': ''Проектна заявка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -850,14 +997,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яка форма дієслова є правильною для технічної інструкції?
   options:
-  - text: Натиснув би кнопку
-    correct: false
-  - text: Натисніть кнопку
-    correct: true
-  - text: Натиснув кнопку
-    correct: false
-  - text: Натискаючи кнопку
-    correct: false
+  - '{''text'': ''Натиснув би кнопку'', ''correct'': False}'
+  - '{''text'': ''Натисніть кнопку'', ''correct'': True}'
+  - '{''text'': ''Натиснув кнопку'', ''correct'': False}'
+  - '{''text'': ''Натискаючи кнопку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -868,14 +1011,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яке слово є розмовним і не вживається в технічних текстах?
   options:
-  - text: Пристрій
-    correct: false
-  - text: Девайс
-    correct: true
-  - text: Обладнання
-    correct: false
-  - text: Апаратура
-    correct: false
+  - '{''text'': ''Пристрій'', ''correct'': False}'
+  - '{''text'': ''Девайс'', ''correct'': True}'
+  - '{''text'': ''Обладнання'', ''correct'': False}'
+  - '{''text'': ''Апаратура'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -886,14 +1025,11 @@ items:
   title: Ознаки науково-технічного стилю
   question: Як правильно оформити технічну примітку?
   options:
-  - text: Примітка — це важливо!
-    correct: false
-  - text: Примітка. Параметри налаштування можуть бути змінено.
-    correct: true
-  - text: Пс-с, зверни увагу!
-    correct: false
-  - text: УВАГА!!! Треба знати!
-    correct: false
+  - '{''text'': ''Примітка — це важливо!'', ''correct'': False}'
+  - '{''text'': ''Примітка. Параметри налаштування можуть бути змінено.'', ''correct'':
+    True}'
+  - '{''text'': ''Пс-с, зверни увагу!'', ''correct'': False}'
+  - '{''text'': ''УВАГА!!! Треба знати!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -904,14 +1040,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яка структура є типовою для технічних інструкцій?
   options:
-  - text: Розповідь з діалогами
-    correct: false
-  - text: Нумеровані кроки з короткими реченнями
-    correct: true
-  - text: Вільний текст без структури
-    correct: false
-  - text: Поетичні строфи
-    correct: false
+  - '{''text'': ''Розповідь з діалогами'', ''correct'': False}'
+  - '{''text'': ''Нумеровані кроки з короткими реченнями'', ''correct'': True}'
+  - '{''text'': ''Вільний текст без структури'', ''correct'': False}'
+  - '{''text'': ''Поетичні строфи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -922,14 +1054,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Що означає "калібрування" в технічному контексті?
   options:
-  - text: Встановлення програми
-    correct: false
-  - text: Налаштування точності вимірювального приладу
-    correct: true
-  - text: Видалення даних
-    correct: false
-  - text: Підключення до мережі
-    correct: false
+  - '{''text'': ''Встановлення програми'', ''correct'': False}'
+  - '{''text'': ''Налаштування точності вимірювального приладу'', ''correct'': True}'
+  - '{''text'': ''Видалення даних'', ''correct'': False}'
+  - '{''text'': ''Підключення до мережі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -940,14 +1068,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яке речення містить правильну пасивну конструкцію для технічного тексту?
   options:
-  - text: Програма є встановлена на комп'ютері.
-    correct: false
-  - text: Програму встановлено на комп'ютері.
-    correct: true
-  - text: Програма встановили на комп'ютері.
-    correct: false
-  - text: Програму встановлювали на комп'ютері.
-    correct: false
+  - '{''text'': "Програма є встановлена на комп''ютері.", ''correct'': False}'
+  - '{''text'': "Програму встановлено на комп''ютері.", ''correct'': True}'
+  - '{''text'': "Програма встановили на комп''ютері.", ''correct'': False}'
+  - '{''text'': "Програму встановлювали на комп''ютері.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -958,14 +1082,11 @@ items:
   title: Ознаки науково-технічного стилю
   question: Як правильно описати технічну характеристику?
   options:
-  - text: Температура — приблизно 40 градусів, може більше.
-    correct: false
-  - text: Робоча температура — від 0°C до +40°C.
-    correct: true
-  - text: Воно нагрівається до якоїсь температури.
-    correct: false
-  - text: Температура нормальна.
-    correct: false
+  - '{''text'': ''Температура — приблизно 40 градусів, може більше.'', ''correct'':
+    False}'
+  - '{''text'': ''Робоча температура — від 0°C до +40°C.'', ''correct'': True}'
+  - '{''text'': ''Воно нагрівається до якоїсь температури.'', ''correct'': False}'
+  - '{''text'': ''Температура нормальна.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -976,14 +1097,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Що означає "специфікація" в технічному контексті?
   options:
-  - text: Загальний опис продукту
-    correct: false
-  - text: Документ з детальними технічними вимогами
-    correct: true
-  - text: Рекламний матеріал
-    correct: false
-  - text: Інструкція з експлуатації
-    correct: false
+  - '{''text'': ''Загальний опис продукту'', ''correct'': False}'
+  - '{''text'': ''Документ з детальними технічними вимогами'', ''correct'': True}'
+  - '{''text'': ''Рекламний матеріал'', ''correct'': False}'
+  - '{''text'': ''Інструкція з експлуатації'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -994,14 +1111,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яке слово є синонімом до "несправність" у технічному контексті?
   options:
-  - text: Краса
-    correct: false
-  - text: Збій
-    correct: true
-  - text: Успіх
-    correct: false
-  - text: Швидкість
-    correct: false
+  - '{''text'': ''Краса'', ''correct'': False}'
+  - '{''text'': ''Збій'', ''correct'': True}'
+  - '{''text'': ''Успіх'', ''correct'': False}'
+  - '{''text'': ''Швидкість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1012,14 +1125,10 @@ items:
   title: Ознаки науково-технічного стилю
   question: Яка форма є правильною для опису процесу в технічному тексті?
   options:
-  - text: Дані обробляють.
-    correct: false
-  - text: Дані обробляються.
-    correct: true
-  - text: Дані обробили.
-    correct: false
-  - text: Дані будуть обробити.
-    correct: false
+  - '{''text'': ''Дані обробляють.'', ''correct'': False}'
+  - '{''text'': ''Дані обробляються.'', ''correct'': True}'
+  - '{''text'': ''Дані обробили.'', ''correct'': False}'
+  - '{''text'': ''Дані будуть обробити.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1139,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка основна функція науково-технічного стилю?
   options:
-  - text: Розважати читача
-    correct: false
-  - text: Передавати точну технічну інформацію
-    correct: true
-  - text: Переконувати в політичних поглядах
-    correct: false
-  - text: Виражати емоції автора
-    correct: false
+  - '{''text'': ''Розважати читача'', ''correct'': False}'
+  - '{''text'': ''Передавати точну технічну інформацію'', ''correct'': True}'
+  - '{''text'': ''Переконувати в політичних поглядах'', ''correct'': False}'
+  - '{''text'': ''Виражати емоції автора'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1049,14 +1154,10 @@ items:
   question: Яка пасивна конструкція є типовою для опису завершеної дії в технічних
     текстах?
   options:
-  - text: Зворотна (-ся)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
-  - text: Дієприкметникова
-    correct: false
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
+  - '{''text'': ''Дієприкметникова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1067,14 +1168,11 @@ items:
   title: Комплексна перевірка знань
   question: Чому в технічних текстах не рекомендується використовувати синоніми?
   options:
-  - text: Синоніми роблять текст надто довгим
-    correct: false
-  - text: Один термін для одного поняття забезпечує точність
-    correct: true
-  - text: Синоніми важко перекладати
-    correct: false
-  - text: Синоніми застарілі
-    correct: false
+  - '{''text'': ''Синоніми роблять текст надто довгим'', ''correct'': False}'
+  - '{''text'': ''Один термін для одного поняття забезпечує точність'', ''correct'':
+    True}'
+  - '{''text'': ''Синоніми важко перекладати'', ''correct'': False}'
+  - '{''text'': ''Синоніми застарілі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1085,14 +1183,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно оформити першу згадку абревіатури USB?
   options:
-  - text: USB
-    correct: true
-  - text: Universal Serial Bus (USB)
-    correct: false
-  - text: USB (Universal Serial Bus)
-    correct: false
-  - text: (USB) Universal Serial Bus
-    correct: false
+  - '{''text'': ''USB'', ''correct'': True}'
+  - '{''text'': ''Universal Serial Bus (USB)'', ''correct'': False}'
+  - '{''text'': ''USB (Universal Serial Bus)'', ''correct'': False}'
+  - '{''text'': ''(USB) Universal Serial Bus'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1103,14 +1197,11 @@ items:
   title: Комплексна перевірка знань
   question: Яке речення є найбільш технічно коректним?
   options:
-  - text: Пристрій працює нестабільно через апаратну несправність.
-    correct: true
-  - text: Девайс глючить бо щось зламалось.
-    correct: false
-  - text: Ця штука не хоче робити.
-    correct: false
-  - text: Комп завис і не включається.
-    correct: false
+  - '{''text'': ''Пристрій працює нестабільно через апаратну несправність.'', ''correct'':
+    True}'
+  - '{''text'': ''Девайс глючить бо щось зламалось.'', ''correct'': False}'
+  - '{''text'': ''Ця штука не хоче робити.'', ''correct'': False}'
+  - '{''text'': ''Комп завис і не включається.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1121,14 +1212,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка структура є типовою для технічних інструкцій?
   options:
-  - text: Вільний текст без структури
-    correct: false
-  - text: Нумеровані кроки з короткими реченнями
-    correct: true
-  - text: Діалоги між персонажами
-    correct: false
-  - text: Поетичні строфи
-    correct: false
+  - '{''text'': ''Вільний текст без структури'', ''correct'': False}'
+  - '{''text'': ''Нумеровані кроки з короткими реченнями'', ''correct'': True}'
+  - '{''text'': ''Діалоги між персонажами'', ''correct'': False}'
+  - '{''text'': ''Поетичні строфи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1139,14 +1226,11 @@ items:
   title: Комплексна перевірка знань
   question: Чим відрізняється "калібрування" від "налаштування"?
   options:
-  - text: Це синоніми
-    correct: false
-  - text: Калібрування — спеціальне налаштування для точності вимірювань
-    correct: true
-  - text: Налаштування точніший термін
-    correct: false
-  - text: Калібрування — розмовне слово
-    correct: false
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''Калібрування — спеціальне налаштування для точності вимірювань'',
+    ''correct'': True}'
+  - '{''text'': ''Налаштування точніший термін'', ''correct'': False}'
+  - '{''text'': ''Калібрування — розмовне слово'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1157,14 +1241,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма є правильною — "Програму встановлено" чи "Програма є встановлена"?
   options:
-  - text: Тільки перша
-    correct: true
-  - text: Тільки друга
-    correct: false
-  - text: Обидві правильні
-    correct: false
-  - text: Обидві неправильні
-    correct: false
+  - '{''text'': ''Тільки перша'', ''correct'': True}'
+  - '{''text'': ''Тільки друга'', ''correct'': False}'
+  - '{''text'': ''Обидві правильні'', ''correct'': False}'
+  - '{''text'': ''Обидві неправильні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1175,14 +1255,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно описати технічну характеристику температури?
   options:
-  - text: Температура нормальна
-    correct: false
-  - text: Робоча температура від 0°C до +40°C
-    correct: true
-  - text: Температура як завжди
-    correct: false
-  - text: Гаряче, але не дуже
-    correct: false
+  - '{''text'': ''Температура нормальна'', ''correct'': False}'
+  - '{''text'': ''Робоча температура від 0°C до +40°C'', ''correct'': True}'
+  - '{''text'': ''Температура як завжди'', ''correct'': False}'
+  - '{''text'': ''Гаряче, але не дуже'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1193,14 +1269,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово є неприпустимим у технічній документації?
   options:
-  - text: Пристрій
-    correct: false
-  - text: Обладнання
-    correct: false
-  - text: Девайс
-    correct: true
-  - text: Апаратура
-    correct: false
+  - '{''text'': ''Пристрій'', ''correct'': False}'
+  - '{''text'': ''Обладнання'', ''correct'': False}'
+  - '{''text'': ''Девайс'', ''correct'': True}'
+  - '{''text'': ''Апаратура'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1211,14 +1283,10 @@ items:
   title: Комплексна перевірка знань
   question: Яку роль відіграє нумерація в технічних інструкціях?
   options:
-  - text: Робить текст красивішим
-    correct: false
-  - text: Забезпечує логічну послідовність дій
-    correct: true
-  - text: Збільшує обсяг тексту
-    correct: false
-  - text: Ускладнює розуміння
-    correct: false
+  - '{''text'': ''Робить текст красивішим'', ''correct'': False}'
+  - '{''text'': ''Забезпечує логічну послідовність дій'', ''correct'': True}'
+  - '{''text'': ''Збільшує обсяг тексту'', ''correct'': False}'
+  - '{''text'': ''Ускладнює розуміння'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1229,14 +1297,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно перекласти "The system is being initialized"?
   options:
-  - text: Система є ініціалізована.
-    correct: false
-  - text: Система ініціалізується.
-    correct: true
-  - text: Систему ініціалізують.
-    correct: false
-  - text: Система буде ініціалізована.
-    correct: false
+  - '{''text'': ''Система є ініціалізована.'', ''correct'': False}'
+  - '{''text'': ''Система ініціалізується.'', ''correct'': True}'
+  - '{''text'': ''Систему ініціалізують.'', ''correct'': False}'
+  - '{''text'': ''Система буде ініціалізована.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1247,14 +1311,10 @@ items:
   title: Комплексна перевірка знань
   question: Що означає "ДСТУ" в технічних текстах?
   options:
-  - text: Державний стандарт України
-    correct: true
-  - text: Документ стандартного типу України
-    correct: false
-  - text: Дослідження стандартних технічних умов
-    correct: false
-  - text: Допоміжна система технічного управління
-    correct: false
+  - '{''text'': ''Державний стандарт України'', ''correct'': True}'
+  - '{''text'': ''Документ стандартного типу України'', ''correct'': False}'
+  - '{''text'': ''Дослідження стандартних технічних умов'', ''correct'': False}'
+  - '{''text'': ''Допоміжна система технічного управління'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1265,14 +1325,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма дієслова використовується в технічних інструкціях?
   options:
-  - text: Минулий час
-    correct: false
-  - text: Наказовий спосіб
-    correct: true
-  - text: Умовний спосіб
-    correct: false
-  - text: Дієприслівник
-    correct: false
+  - '{''text'': ''Минулий час'', ''correct'': False}'
+  - '{''text'': ''Наказовий спосіб'', ''correct'': True}'
+  - '{''text'': ''Умовний спосіб'', ''correct'': False}'
+  - '{''text'': ''Дієприслівник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1283,14 +1339,10 @@ items:
   title: Комплексна перевірка знань
   question: Чому технічний стиль уникає емоційного забарвлення?
   options:
-  - text: Емоції заважають розумінню
-    correct: false
-  - text: Об'єктивність забезпечує точність інформації
-    correct: true
-  - text: Автори не мають емоцій
-    correct: false
-  - text: Це забороняє закон
-    correct: false
+  - '{''text'': ''Емоції заважають розумінню'', ''correct'': False}'
+  - '{''text'': "Об''єктивність забезпечує точність інформації", ''correct'': True}'
+  - '{''text'': ''Автори не мають емоцій'', ''correct'': False}'
+  - '{''text'': ''Це забороняє закон'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1301,14 +1353,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка різниця між "несправність", "збій" та "відмова"?
   options:
-  - text: Це синоніми
-    correct: false
-  - text: Різний ступінь серйозності проблеми
-    correct: true
-  - text: Різні частини мови
-    correct: false
-  - text: Використовуються в різних галузях
-    correct: false
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''Різний ступінь серйозності проблеми'', ''correct'': True}'
+  - '{''text'': ''Різні частини мови'', ''correct'': False}'
+  - '{''text'': ''Використовуються в різних галузях'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

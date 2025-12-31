@@ -1,7 +1,7 @@
 module: 22-motion-full-prefix-integration
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/22-motion-full-prefix-integration.md
-generated: '2025-12-29T00:22:00.050220'
+generated: '2025-12-30T19:49:27.863081'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 6
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 8
   translate: 8
   true-false: 8
+total_items: 45
 item_count: 45
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -316,6 +318,7 @@ items:
     - приїхали
     - переїхали
     - поїхали
+  blank_count: 14
   complete_passage: Минулого тижня ми {приїхали} до Києва на поїзді рано вранці. Ми
     {вийшли} на вокзалі і {підійшли} до карти міста. Спочатку ми {пішли} до готелю
     пішки через центр. Ми {перейшли} широкий бульвар і {зайшли} до кафе на сніданок.
@@ -380,14 +383,10 @@ items:
   title: Логіка префіксів
   question: Я вчора добирався до бібліотеки і там взяв нову книгу для свого дослідження.
   options:
-  - text: зайшов
-    correct: true
-  - text: пройшов
-    correct: false
-  - text: вийшов
-    correct: false
-  - text: підійшов
-    correct: false
+  - '{''text'': ''зайшов'', ''correct'': True}'
+  - '{''text'': ''пройшов'', ''correct'': False}'
+  - '{''text'': ''вийшов'', ''correct'': False}'
+  - '{''text'': ''підійшов'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -399,14 +398,10 @@ items:
   question: Ми з друзями рухалися пішки через річку по старому дерев'яному мосту вчора
     ввечері.
   options:
-  - text: зайшли
-    correct: false
-  - text: перейшли
-    correct: true
-  - text: прийшли
-    correct: false
-  - text: підійшли
-    correct: false
+  - '{''text'': ''зайшли'', ''correct'': False}'
+  - '{''text'': ''перейшли'', ''correct'': True}'
+  - '{''text'': ''прийшли'', ''correct'': False}'
+  - '{''text'': ''підійшли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -418,14 +413,10 @@ items:
   question: Сьогодні вранці студенти нарешті досягли вершини гори після довгого та
     важкого підйому.
   options:
-  - text: прийшли
-    correct: false
-  - text: зайшли
-    correct: false
-  - text: дійшли
-    correct: true
-  - text: пройшли
-    correct: false
+  - '{''text'': ''прийшли'', ''correct'': False}'
+  - '{''text'': ''зайшли'', ''correct'': False}'
+  - '{''text'': ''дійшли'', ''correct'': True}'
+  - '{''text'': ''пройшли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -437,14 +428,10 @@ items:
   question: Учора ввечері моя сестра вийшла з будинку і швидко побігла до автобусної
     зупинки.
   options:
-  - text: пішла
-    correct: true
-  - text: прийшла
-    correct: false
-  - text: вийшла
-    correct: false
-  - text: зайшла
-    correct: false
+  - '{''text'': ''пішла'', ''correct'': True}'
+  - '{''text'': ''прийшла'', ''correct'': False}'
+  - '{''text'': ''вийшла'', ''correct'': False}'
+  - '{''text'': ''зайшла'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -456,14 +443,10 @@ items:
   question: Минулої п'ятниці туристи підходили ближче до старовинного пам'ятника на
     центральній площі міста.
   options:
-  - text: прийшли
-    correct: false
-  - text: підійшли
-    correct: true
-  - text: дійшли
-    correct: false
-  - text: перейшли
-    correct: false
+  - '{''text'': ''прийшли'', ''correct'': False}'
+  - '{''text'': ''підійшли'', ''correct'': True}'
+  - '{''text'': ''дійшли'', ''correct'': False}'
+  - '{''text'': ''перейшли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -475,14 +458,10 @@ items:
   question: Діти сьогодні залишили кінотеатр після закінчення цікавого фільму про
     пригоди в космосі.
   options:
-  - text: вийшли
-    correct: true
-  - text: зайшли
-    correct: false
-  - text: прийшли
-    correct: false
-  - text: підійшли
-    correct: false
+  - '{''text'': ''вийшли'', ''correct'': True}'
+  - '{''text'': ''зайшли'', ''correct'': False}'
+  - '{''text'': ''прийшли'', ''correct'': False}'
+  - '{''text'': ''підійшли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -493,14 +472,10 @@ items:
   title: Логіка префіксів
   question: Учора ми їхали повз великий торговий центр і бачили там багато людей.
   options:
-  - text: переїхали
-    correct: false
-  - text: проїжджали
-    correct: true
-  - text: приїхали
-    correct: false
-  - text: заїхали
-    correct: false
+  - '{''text'': ''переїхали'', ''correct'': False}'
+  - '{''text'': ''проїжджали'', ''correct'': True}'
+  - '{''text'': ''приїхали'', ''correct'': False}'
+  - '{''text'': ''заїхали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -511,14 +486,10 @@ items:
   title: Логіка префіксів
   question: Моя бабуся вчора прибула до нашого міста на поїзді з далекого села.
   options:
-  - text: приїхала
-    correct: true
-  - text: виїхала
-    correct: false
-  - text: переїхала
-    correct: false
-  - text: заїхала
-    correct: false
+  - '{''text'': ''приїхала'', ''correct'': True}'
+  - '{''text'': ''виїхала'', ''correct'': False}'
+  - '{''text'': ''переїхала'', ''correct'': False}'
+  - '{''text'': ''заїхала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -530,14 +501,10 @@ items:
   source_sentence: I left home early this morning.
   answer: ''
   options:
-  - text: Я вийшов з дому рано сьогодні вранці.
-    correct: true
-  - text: Я прийшов додому рано сьогодні вранці.
-    correct: false
-  - text: Я зайшов додому рано сьогодні вранці.
-    correct: false
-  - text: Я підійшов додому рано сьогодні вранці.
-    correct: false
+  - '{''text'': ''Я вийшов з дому рано сьогодні вранці.'', ''correct'': True}'
+  - '{''text'': ''Я прийшов додому рано сьогодні вранці.'', ''correct'': False}'
+  - '{''text'': ''Я зайшов додому рано сьогодні вранці.'', ''correct'': False}'
+  - '{''text'': ''Я підійшов додому рано сьогодні вранці.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -548,14 +515,10 @@ items:
   source_sentence: We crossed the street near the park.
   answer: ''
   options:
-  - text: Ми перейшли вулицю біля парку.
-    correct: true
-  - text: Ми пройшли вулицю біля парку.
-    correct: false
-  - text: Ми прийшли вулицю біля парку.
-    correct: false
-  - text: Ми зайшли вулицю біля парку.
-    correct: false
+  - '{''text'': ''Ми перейшли вулицю біля парку.'', ''correct'': True}'
+  - '{''text'': ''Ми пройшли вулицю біля парку.'', ''correct'': False}'
+  - '{''text'': ''Ми прийшли вулицю біля парку.'', ''correct'': False}'
+  - '{''text'': ''Ми зайшли вулицю біля парку.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -566,14 +529,10 @@ items:
   source_sentence: She approached the window and looked outside.
   answer: ''
   options:
-  - text: Вона підійшла до вікна і подивилася надвір.
-    correct: true
-  - text: Вона прийшла до вікна і подивилася надвір.
-    correct: false
-  - text: Вона вийшла до вікна і подивилася надвір.
-    correct: false
-  - text: Вона зайшла до вікна і подивилася надвір.
-    correct: false
+  - '{''text'': ''Вона підійшла до вікна і подивилася надвір.'', ''correct'': True}'
+  - '{''text'': ''Вона прийшла до вікна і подивилася надвір.'', ''correct'': False}'
+  - '{''text'': ''Вона вийшла до вікна і подивилася надвір.'', ''correct'': False}'
+  - '{''text'': ''Вона зайшла до вікна і подивилася надвір.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -584,14 +543,10 @@ items:
   source_sentence: They stopped by the cafe on the way home.
   answer: ''
   options:
-  - text: Вони зайшли до кафе по дорозі додому.
-    correct: true
-  - text: Вони прийшли до кафе по дорозі додому.
-    correct: false
-  - text: Вони вийшли до кафе по дорозі додому.
-    correct: false
-  - text: Вони підійшли до кафе по дорозі додому.
-    correct: false
+  - '{''text'': ''Вони зайшли до кафе по дорозі додому.'', ''correct'': True}'
+  - '{''text'': ''Вони прийшли до кафе по дорозі додому.'', ''correct'': False}'
+  - '{''text'': ''Вони вийшли до кафе по дорозі додому.'', ''correct'': False}'
+  - '{''text'': ''Вони підійшли до кафе по дорозі додому.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -602,14 +557,10 @@ items:
   source_sentence: The bus drove past our house yesterday.
   answer: ''
   options:
-  - text: Автобус проїжджав повз наш будинок вчора.
-    correct: true
-  - text: Автобус переїжджав повз наш будинок вчора.
-    correct: false
-  - text: Автобус приїжджав повз наш будинок вчора.
-    correct: false
-  - text: Автобус заїжджав повз наш будинок вчора.
-    correct: false
+  - '{''text'': ''Автобус проїжджав повз наш будинок вчора.'', ''correct'': True}'
+  - '{''text'': ''Автобус переїжджав повз наш будинок вчора.'', ''correct'': False}'
+  - '{''text'': ''Автобус приїжджав повз наш будинок вчора.'', ''correct'': False}'
+  - '{''text'': ''Автобус заїжджав повз наш будинок вчора.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -620,14 +571,14 @@ items:
   source_sentence: We finally reached the mountain peak after a long climb.
   answer: ''
   options:
-  - text: Ми нарешті дійшли до вершини гори після довгого підйому.
-    correct: true
-  - text: Ми нарешті прийшли до вершини гори після довгого підйому.
-    correct: false
-  - text: Ми нарешті зайшли до вершини гори після довгого підйому.
-    correct: false
-  - text: Ми нарешті пройшли до вершини гори після довгого підйому.
-    correct: false
+  - '{''text'': ''Ми нарешті дійшли до вершини гори після довгого підйому.'', ''correct'':
+    True}'
+  - '{''text'': ''Ми нарешті прийшли до вершини гори після довгого підйому.'', ''correct'':
+    False}'
+  - '{''text'': ''Ми нарешті зайшли до вершини гори після довгого підйому.'', ''correct'':
+    False}'
+  - '{''text'': ''Ми нарешті пройшли до вершини гори після довгого підйому.'', ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -638,14 +589,14 @@ items:
   source_sentence: My parents arrived in the city yesterday evening by train.
   answer: ''
   options:
-  - text: Мої батьки приїхали до міста вчора ввечері на поїзді.
-    correct: true
-  - text: Мої батьки виїхали до міста вчора ввечері на поїзді.
-    correct: false
-  - text: Мої батьки переїхали до міста вчора ввечері на поїзді.
-    correct: false
-  - text: Мої батьки заїхали до міста вчора ввечері на поїзді.
-    correct: false
+  - '{''text'': ''Мої батьки приїхали до міста вчора ввечері на поїзді.'', ''correct'':
+    True}'
+  - '{''text'': ''Мої батьки виїхали до міста вчора ввечері на поїзді.'', ''correct'':
+    False}'
+  - '{''text'': ''Мої батьки переїхали до міста вчора ввечері на поїзді.'', ''correct'':
+    False}'
+  - '{''text'': ''Мої батьки заїхали до міста вчора ввечері на поїзді.'', ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -656,14 +607,10 @@ items:
   source_sentence: The children entered the room quietly during the lesson.
   answer: ''
   options:
-  - text: Діти увійшли в кімнату тихо під час уроку.
-    correct: true
-  - text: Діти вийшли в кімнату тихо під час уроку.
-    correct: false
-  - text: Діти зайшли в кімнату тихо під час уроку.
-    correct: false
-  - text: Діти прийшли в кімнату тихо під час уроку.
-    correct: false
+  - '{''text'': ''Діти увійшли в кімнату тихо під час уроку.'', ''correct'': True}'
+  - '{''text'': ''Діти вийшли в кімнату тихо під час уроку.'', ''correct'': False}'
+  - '{''text'': ''Діти зайшли в кімнату тихо під час уроку.'', ''correct'': False}'
+  - '{''text'': ''Діти прийшли в кімнату тихо під час уроку.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

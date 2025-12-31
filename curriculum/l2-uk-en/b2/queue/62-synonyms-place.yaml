@@ -1,0 +1,746 @@
+module: 62-synonyms-place
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/62-synonyms-place.md
+generated: '2025-12-30T20:09:24.970446'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 10
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 51
+item_count: 51
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Я йду там, щоб зустріти вас біля входу в метро.
+  error: там
+  answer: туди
+  sentence_corrected: Я йду туди, щоб зустріти вас біля входу в метро.
+  options:
+  - туди
+  - сюди
+  - звідси
+  - всюди
+  original_explanation: На запитання 'куди?' відповідає 'туди'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Він стоїть сюди і чекає на вантажівку вже цілу годину.
+  error: сюди
+  answer: тут
+  sentence_corrected: Він стоїть тут і чекає на вантажівку вже цілу годину.
+  options:
+  - тут
+  - там
+  - поруч
+  - близько
+  original_explanation: Для статичного положення використовується 'тут'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Ми побачили птаха поруч, на самісінькому обрії вдалині.
+  error: поруч
+  answer: далеко
+  sentence_corrected: Ми побачили птаха далеко, на самісінькому обрії вдалині.
+  options:
+  - далеко
+  - близько
+  - тут
+  - тутечки
+  original_explanation: Обрій знаходиться далеко.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Ідіть он там, прямо на мене, я вас бачу.
+  error: on tam
+  answer: сюди
+  sentence_corrected: Ідіть он там, прямо на мене, я вас бачу.
+  options:
+  - сюди
+  - туди
+  - звідти
+  - ніде
+  original_explanation: Напрямок руху до мовця — це 'сюди'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Ніде в нашому холодильнику лежать лише свіжі яблука.
+  error: Ніде
+  answer: Тут
+  sentence_corrected: Тут в нашому холодильнику лежать лише свіжі яблука.
+  options:
+  - Тут
+  - Всюди
+  - Десь
+  - Кудись
+  original_explanation: '''Ніде'' суперечить наявності речей.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Кудись я вже був у цьому місті раніше, але забув де.
+  error: Кудись
+  answer: Десь
+  sentence_corrected: Десь я вже був у цьому місті раніше, але забув де.
+  options:
+  - Десь
+  - Там
+  - Тут
+  - Звідкись
+  original_explanation: Для невизначеного місця використовується 'десь'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Виходьте сюди з автобуса, бо ваша зупинка вже минула.
+  error: сюди
+  answer: звідси
+  sentence_corrected: Виходьте звідси з автобуса, бо ваша зупинка вже минула.
+  options:
+  - звідси
+  - туди
+  - всюди
+  - ніде
+  original_explanation: Рух з певного місця — це 'звідси'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте місце
+  sentence_with_error: Тісна кімната здавалася неозорим степом для мандрівника.
+  error: неозорим
+  answer: маленьким
+  sentence_corrected: Тісна кімната здавалася маленьким степом для мандрівника.
+  options:
+  - маленьким
+  - широким
+  - далеким
+  - високим
+  original_explanation: Тісна кімната — антонім неозорого простору.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Ми перетнули [___] заповідника і побачили рідкісних птахів.
+  answer: межу
+  complete_sentence: Ми перетнули [межу] заповідника і побачили рідкісних птахів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Ця промислова [___] міста потребує термінової реновації.
+  answer: зона
+  complete_sentence: Ця промислова [зона] міста потребує термінової реновації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Він шукав зручне [___], щоб поставити намет.
+  answer: місце
+  complete_sentence: Він шукав зручне [місце], щоб поставити намет.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: '[___] перед нашими очима був абсолютно порожнім.'
+  answer: Простір
+  complete_sentence: '[Простір] перед нашими очима був абсолютно порожнім.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: У цьому [___] міста завжди дуже гамірно та багато машин.
+  answer: районі
+  complete_sentence: У цьому [районі] міста завжди дуже гамірно та багато машин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Ми визначили критичну [___] на карті нашого маршруту.
+  answer: точку
+  complete_sentence: Ми визначили критичну [точку] на карті нашого маршруту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: На [___] міста розташовані великі складські приміщення.
+  answer: околиці
+  complete_sentence: На [околиці] міста розташовані великі складські приміщення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Херсонська [___] славиться своїми кавунами та сонцем.
+  answer: область
+  complete_sentence: Херсонська [область] славиться своїми кавунами та сонцем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Сонце повільно ховалося за далекий [___].
+  answer: обрій
+  complete_sentence: Сонце повільно ховалося за далекий [обрій].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Оберіть масштаб простору
+  sentence_template: Ми створили затишний [___] для відпочинку в нашому саду.
+  answer: куточок
+  complete_sentence: Ми створили затишний [куточок] для відпочинку в нашому саду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Шлях мандрівника
+  passage_template: 'Моя подорож почалася {тут|там|ніде|тут}, у самому центрі {Миколаєва|Херсона|Одеси|Миколаєва}.
+    Я стояв {поруч|далеко|всюди|поруч} із готелем і чекав на таксі. «Їдьмо {сюди|туди|звідси|сюди}!»
+    — крикнув водій. Ми вирушили {кудись|десь|нікуди|кудись} у бік моря. Дорога була
+    {довгою|близькою|тісною|довгою}. {Там|Тут|Всюди|Там}, на горизонті, вже виднілося
+    {Чорне|Азовське|Біле|Чорне} море. {Звідси|Звідти|Всюди|Звідси} відкривався {неозорий|вузький|тісний|неозорий}
+    простір. Я відчував, що {всюди|ніде|десь|всюди} панує спокій. Ми зупинилися в
+    новій {локації|зоні|точці|локації} біля берега. На {цьому|тому|іншому|цьому} місці
+    колись була фортеця. {Навколо|Всюди|Ніде|Навколо} нас були лише скелі та вода.
+    Я хотів залишитися {тутечки|там|далеко|тутечки} назавжди. Але час кликав {туди|сюди|звідси|туди},
+    далі на південь. Ми поїхали {звідси|сюди|туди|звідси} ввечері. {Десь|Кудись|Ніде|Десь}
+    у душі я знав, що повернуся. Мій внутрішній {компас|шлях|світ|компас} завжди покаже
+    вірний {напрямок|місце|пункт|напрямок}. Територія {щастя|суму|розпачу|щастя} була
+    знайдена.
+
+    '
+  blanks:
+  - answer: тут
+    options:
+    - тут
+    - там
+    - ніде
+  - answer: Миколаєва
+    options:
+    - Миколаєва
+    - Херсона
+    - Одеси
+  - answer: поруч
+    options:
+    - поруч
+    - далеко
+    - всюди
+  - answer: сюди
+    options:
+    - сюди
+    - туди
+    - звідси
+  - answer: кудись
+    options:
+    - кудись
+    - десь
+    - нікуди
+  - answer: довгою
+    options:
+    - довгою
+    - близькою
+    - тісною
+  - answer: Там
+    options:
+    - Там
+    - Тут
+    - Всюди
+  - answer: Чорне
+    options:
+    - Чорне
+    - Азовське
+    - Біле
+  - answer: Звідси
+    options:
+    - Звідси
+    - Звідти
+    - Всюди
+  - answer: неозорий
+    options:
+    - неозорий
+    - вузький
+    - тісний
+  - answer: всюди
+    options:
+    - всюди
+    - ніде
+    - десь
+  - answer: локації
+    options:
+    - локації
+    - зоні
+    - точці
+  - answer: цьому
+    options:
+    - цьому
+    - тому
+    - іншому
+  - answer: Навколо
+    options:
+    - Навколо
+    - Всюди
+    - Ніде
+  - answer: тутечки
+    options:
+    - тутечки
+    - там
+    - далеко
+  - answer: туди
+    options:
+    - туди
+    - сюди
+    - звідси
+  - answer: звідси
+    options:
+    - звідси
+    - сюди
+    - туди
+  - answer: Десь
+    options:
+    - Десь
+    - Кудись
+    - Ніде
+  - answer: компас
+    options:
+    - компас
+    - шлях
+    - світ
+  - answer: напрямок
+    options:
+    - напрямок
+    - місце
+    - пункт
+  - answer: щастя
+    options:
+    - щастя
+    - суму
+    - розпачу
+  blank_count: 21
+  complete_passage: 'Моя подорож почалася тут, у самому центрі Миколаєва. Я стояв
+    поруч із готелем і чекав на таксі. «Їдьмо сюди!» — крикнув водій. Ми вирушили
+    кудись у бік моря. Дорога була довгою. Там, на горизонті, вже виднілося Чорне
+    море. Звідси відкривався неозорий простір. Я відчував, що всюди панує спокій.
+    Ми зупинилися в новій локації біля берега. На цьому місці колись була фортеця.
+    Навколо нас були лише скелі та вода. Я хотів залишитися тутечки назавжди. Але
+    час кликав туди, далі на південь. Ми поїхали звідси ввечері. Десь у душі я знав,
+    що повернуся. Мій внутрішній компас завжди покаже вірний напрямок. Територія щастя
+    була знайдена.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Я перебуваю тут на центральній площі біля ратуші і з великим терпінням чекаю
+    на ваш приїзд.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Он там за широкою річкою починається надзвичайно мальовничий заповідник
+    де кожен може знайти свій спокій та натхнення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Локація Шацьких озер на Волині — це приклад гармонійного поєднання чистої
+    води та густого лісу для відпочинку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Коли ви питаєте дорогу в Херсоні вам можуть ввічливо сказати що потрібне
+    місце розташоване ось тут поруч.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Всюди добре а вдома найкраще оскільки саме дім є центром нашого особистого
+    всесвіту та відчуття безпеки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Звідси відкривається найкращий вид на річку тому ми вирішили зупинитися
+    саме на цьому місці для нашого пікніка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Ми маємо кудись обов'язково поїхати на вихідні щоб повністю відпочити від
+    нескінченного міського галасу та щоденного стресу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть просторове речення
+  jumbled_words: []
+  answer: Простір пам'яті у кожному місті вимагає особливого ставлення та дуже точних
+    слів для вшанування нашої героїчної історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Ви стоїте прямо біля пам'ятника і хочете точно вказати на це місце. Ви
+    кажете...
+  options:
+  - '{''text'': ''ось тут'', ''correct'': True}'
+  - '{''text'': ''десь там'', ''correct'': False}'
+  - '{''text'': ''звідкись'', ''correct'': False}'
+  - '{''text'': ''ніде'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Ви в гостях у бабусі, в дуже затишній маленькій кімнаті. Яке слово підкреслить
+    цей затишок?
+  options:
+  - '{''text'': ''тутечки'', ''correct'': True}'
+  - '{''text'': ''на цій території'', ''correct'': False}'
+  - '{''text'': ''в даній локації'', ''correct'': False}'
+  - '{''text'': ''в зоні''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Офіційний представник розповідає про історичні події на конкретному полі.
+    Він каже...
+  options:
+  - '{''text'': ''на цьому місці'', ''correct'': True}'
+  - '{''text'': ''тутечки'', ''correct'': False}'
+  - '{''text'': ''десь там'', ''correct'': False}'
+  - '{''text'': ''сюди'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Ви бачите птаха дуже далеко за обрієм. Яке слово підкреслить цю нескінченну
+    відстань?
+  options:
+  - '{''text'': ''ген-ген'', ''correct'': True}'
+  - '{''text'': ''близько'', ''correct'': False}'
+  - '{''text'': ''поруч'', ''correct'': False}'
+  - '{''text'': ''тут'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Як ви назвете обмежений простір, де відбуваються зйомки фільму?
+  options:
+  - '{''text'': ''локація'', ''correct'': True}'
+  - '{''text'': ''обрій'', ''correct'': False}'
+  - '{''text'': ''межа'', ''correct'': False}'
+  - '{''text'': ''вічність''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: 'Ви хочете поїхати відпочити, але ще не обрали конкретне місто. Ви кажете:
+    ''Я маю...'''
+  options:
+  - '{''text'': ''кудись поїхати'', ''correct'': True}'
+  - '{''text'': ''тут залишитися'', ''correct'': False}'
+  - '{''text'': ''звідси втекти'', ''correct'': False}'
+  - '{''text'': ''всюди бути''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Яке слово описує адміністративну одиницю в Україні (наприклад, Полтавська)?
+  options:
+  - '{''text'': ''область'', ''correct'': True}'
+  - '{''text'': ''точка'', ''correct'': False}'
+  - '{''text'': ''куточок'', ''correct'': False}'
+  - '{''text'': ''межа''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Орієнтування у просторі
+  question: Ви перебуваєте в центрі подій і хочете, щоб всі підійшли до вас. Ви гукаєте...
+  options:
+  - '{''text'': ''всі сюди!'', ''correct'': True}'
+  - '{''text'': ''всі туди!'', ''correct'': False}'
+  - '{''text'': ''всі звідси!'', ''correct'': False}'
+  - '{''text'': ''всі там!''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Яке місце у Києві названо 'простором пам'яті'?
+  options:
+  - '{''text'': ''Бабин Яр'', ''correct'': True}'
+  - '{''text'': ''Хрещатик'', ''correct'': False}'
+  - '{''text'': ''Гідропарк'', ''correct'': False}'
+  - '{''text'': ''Троєщина''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Яка локація на Волині згадана у тексті?
+  options:
+  - '{''text'': ''Шацькі озера'', ''correct'': True}'
+  - '{''text'': ''Карпати'', ''correct'': False}'
+  - '{''text'': ''Одеса'', ''correct'': False}'
+  - '{''text'': ''Дніпро''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Що вчить нас простір степу?
+  options:
+  - '{''text'': ''неозорості думок'', ''correct'': True}'
+  - '{''text'': ''садівництва'', ''correct'': False}'
+  - '{''text'': ''будівництва'', ''correct'': False}'
+  - '{''text'': ''бігу''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Який термін описує 'місце у мережі'?
+  options:
+  - '{''text'': ''віртуальна локація'', ''correct'': True}'
+  - '{''text'': ''океан'', ''correct'': False}'
+  - '{''text'': ''район'', ''correct'': False}'
+  - '{''text'': ''село''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Що означає 'тутешність'?
+  options:
+  - '{''text'': ''приналежність до місця'', ''correct'': True}'
+  - '{''text'': ''швидкість'', ''correct'': False}'
+  - '{''text'': ''бажання бути всюди'', ''correct'': False}'
+  - '{''text'': ''мовчання''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: В якому місті є Личаківське кладовище?
+  options:
+  - '{''text'': ''Львів'', ''correct'': True}'
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': ''Херсон'', ''correct'': False}'
+  - '{''text'': ''Миколаїв''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Яку функцію має меморіальна лексика?
+  options:
+  - '{''text'': "з''єднувати з корінням", ''correct'': True}'
+  - '{''text'': ''прикрашати вулиці'', ''correct'': False}'
+  - '{''text'': ''продавати квитки'', ''correct'': False}'
+  - '{''text'': ''міняти назви''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Простір пам'яті
+  question: Що таке 'інклюзивне місто'?
+  options:
+  - '{''text'': ''доступне для всіх'', ''correct'': True}'
+  - '{''text'': ''дороге'', ''correct'': False}'
+  - '{''text'': ''без парків'', ''correct'': False}'
+  - '{''text'': ''порожнє''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: Слово 'локація' є сучасним терміном.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: '''Тут'' і ''сюди'' — це повні синоніми.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: Вираз 'на цьому самому місці' є урочистим.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: '''Ген-ген'' описує дуже близьку відстань.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: Слово 'всюди' означає те саме, що й 'скрізь'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: '''Околиця'' — це центральна частина міста.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: '''Поруч'' вказує на безпосередню близькість.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси локацій
+  statement: Слово 'ніде' означає повну відсутність місця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

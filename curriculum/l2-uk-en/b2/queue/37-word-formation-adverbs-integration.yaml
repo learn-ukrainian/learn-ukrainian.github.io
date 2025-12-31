@@ -1,15 +1,18 @@
 module: 37-word-formation-adverbs-integration
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/37-word-formation-adverbs-integration.md
-generated: '2025-12-29T18:39:56.403251'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.445260'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у прислівниках та демінутивах
@@ -574,6 +577,138 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст правильними прислівниками та демінутивами
+  passage_template: 'Село Петрівка — це місце, де я {завжди|завждий|завждісно|завжди}
+    відчуваю спокій. Життя тут тече {повільно|повільне|повілно|повільно}, не так,
+    як {там|тамо|тама|там}, у великому місті. Магазин знаходиться {близько|близьке|близечко|близько}
+    від дому.
+
+
+    Мій {хлопчик|хлопчичок|хлопченок|хлопчик} Михайлик {швидко|швидо|швидке|швидко}
+    біжить до річки. "{Сонечко|Сонячко|Соненько|Сонечко} моє!" — кличе бабуся. Вона
+    {гарно|гарне|гарнісно|гарно} готує борщ. "Моя {донечка|доньочка|доненька|донечка},
+    іди їсти!" — каже вона.
+
+
+    Надворі дме {вітрище|вітріще|вітерище|вітрище} — такий сильний! Минулої зими був
+    страшний {морозище|морозіще|морозисько|морозище}. Але люди {рідко|рідке|рідкісно|рідко}
+    скаржаться, {часто|частий|частісно|часто} згадують минуле.
+
+
+    Вона говорить {по-українськи|поукраїнськи|українськи|по-українськи} дуже {добре|добро|доброно|добре}.
+    Треба жити {по-новому|поновому|новому|по-новому}, але традиції зберігати. Вона
+    вирішила дивитися на світ {по-іншому|поіншому|іншому|по-іншому}.
+
+    '
+  blanks:
+  - answer: завжди
+    options:
+    - завжди
+    - завждий
+    - завждісно
+  - answer: повільно
+    options:
+    - повільно
+    - повільне
+    - повілно
+  - answer: там
+    options:
+    - там
+    - тамо
+    - тама
+  - answer: близько
+    options:
+    - близько
+    - близьке
+    - близечко
+  - answer: хлопчик
+    options:
+    - хлопчик
+    - хлопчичок
+    - хлопченок
+  - answer: швидко
+    options:
+    - швидко
+    - швидо
+    - швидке
+  - answer: Сонечко
+    options:
+    - Сонечко
+    - Сонячко
+    - Соненько
+  - answer: гарно
+    options:
+    - гарно
+    - гарне
+    - гарнісно
+  - answer: донечка
+    options:
+    - донечка
+    - доньочка
+    - доненька
+  - answer: вітрище
+    options:
+    - вітрище
+    - вітріще
+    - вітерище
+  - answer: морозище
+    options:
+    - морозище
+    - морозіще
+    - морозисько
+  - answer: рідко
+    options:
+    - рідко
+    - рідке
+    - рідкісно
+  - answer: часто
+    options:
+    - часто
+    - частий
+    - частісно
+  - answer: по-українськи
+    options:
+    - по-українськи
+    - поукраїнськи
+    - українськи
+  - answer: добре
+    options:
+    - добре
+    - добро
+    - доброно
+  - answer: по-новому
+    options:
+    - по-новому
+    - поновому
+    - новому
+  - answer: по-іншому
+    options:
+    - по-іншому
+    - поіншому
+    - іншому
+  blank_count: 17
+  complete_passage: 'Село Петрівка — це місце, де я завжди відчуваю спокій. Життя
+    тут тече повільно, не так, як там, у великому місті. Магазин знаходиться близько
+    від дому.
+
+
+    Мій хлопчик Михайлик швидко біжить до річки. "Сонечко моє!" — кличе бабуся. Вона
+    гарно готує борщ. "Моя донечка, іди їсти!" — каже вона.
+
+
+    Надворі дме вітрище — такий сильний! Минулої зими був страшний морозище. Але люди
+    рідко скаржаться, часто згадують минуле.
+
+
+    Вона говорить по-українськи дуже добре. Треба жити по-новому, але традиції зберігати.
+    Вона вирішила дивитися на світ по-іншому.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з прислівниками
   jumbled_words: []
@@ -707,14 +842,10 @@ items:
   question: Який прислівник утворюється від прикметника "швидкий" за допомогою суфікса
     -о?
   options:
-  - text: швидо
-    correct: false
-  - text: швидко
-    correct: true
-  - text: швидке
-    correct: false
-  - text: пошвидку
-    correct: false
+  - '{''text'': ''швидо'', ''correct'': False}'
+  - '{''text'': ''швидко'', ''correct'': True}'
+  - '{''text'': ''швидке'', ''correct'': False}'
+  - '{''text'': ''пошвидку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -725,14 +856,10 @@ items:
   title: Творення прислівників від прикметників
   question: Яка модель використовується для творення прислівника "по-українськи"?
   options:
-  - text: прикм. + -о
-    correct: false
-  - text: по- + прикм. + -ськи
-    correct: true
-  - text: по- + прикм. + -ому
-    correct: false
-  - text: прикм. + -е
-    correct: false
+  - '{''text'': ''прикм. + -о'', ''correct'': False}'
+  - '{''text'': ''по- + прикм. + -ськи'', ''correct'': True}'
+  - '{''text'': ''по- + прикм. + -ому'', ''correct'': False}'
+  - '{''text'': ''прикм. + -е'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -743,14 +870,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який прислівник утворюється від прикметника "добрий"?
   options:
-  - text: добро
-    correct: false
-  - text: добре
-    correct: true
-  - text: доброно
-    correct: false
-  - text: по-доброму
-    correct: false
+  - '{''text'': ''добро'', ''correct'': False}'
+  - '{''text'': ''добре'', ''correct'': True}'
+  - '{''text'': ''доброно'', ''correct'': False}'
+  - '{''text'': ''по-доброму'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -761,14 +884,10 @@ items:
   title: Творення прислівників від прикметників
   question: Як правильно написати прислівник "по-новому"?
   options:
-  - text: поновому
-    correct: false
-  - text: по новому
-    correct: false
-  - text: по-новому
-    correct: true
-  - text: по-ново
-    correct: false
+  - '{''text'': ''поновому'', ''correct'': False}'
+  - '{''text'': ''по новому'', ''correct'': False}'
+  - '{''text'': ''по-новому'', ''correct'': True}'
+  - '{''text'': ''по-ново'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -779,14 +898,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який суфікс використовується для творення демінутива "хлопчик" від "хлопець"?
   options:
-  - text: -ик
-    correct: false
-  - text: -чик
-    correct: true
-  - text: -ок
-    correct: false
-  - text: -ечок
-    correct: false
+  - '{''text'': ''-ик'', ''correct'': False}'
+  - '{''text'': ''-чик'', ''correct'': True}'
+  - '{''text'': ''-ок'', ''correct'': False}'
+  - '{''text'': ''-ечок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -797,14 +912,10 @@ items:
   title: Творення прислівників від прикметників
   question: Яке слово є аугментативом (збільшувальною формою) від "вітер"?
   options:
-  - text: вітерець
-    correct: false
-  - text: вітерок
-    correct: false
-  - text: вітрище
-    correct: true
-  - text: вітерочок
-    correct: false
+  - '{''text'': ''вітерець'', ''correct'': False}'
+  - '{''text'': ''вітерок'', ''correct'': False}'
+  - '{''text'': ''вітрище'', ''correct'': True}'
+  - '{''text'': ''вітерочок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -815,14 +926,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який прислівник означає "in a different way"?
   options:
-  - text: по-старому
-    correct: false
-  - text: по-новому
-    correct: false
-  - text: по-іншому
-    correct: true
-  - text: по-різному
-    correct: false
+  - '{''text'': ''по-старому'', ''correct'': False}'
+  - '{''text'': ''по-новому'', ''correct'': False}'
+  - '{''text'': ''по-іншому'', ''correct'': True}'
+  - '{''text'': ''по-різному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -833,14 +940,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який демінутив утворюється від іменника "донька"?
   options:
-  - text: доньчик
-    correct: false
-  - text: донечка
-    correct: true
-  - text: доньочка
-    correct: false
-  - text: доненька
-    correct: false
+  - '{''text'': ''доньчик'', ''correct'': False}'
+  - '{''text'': ''донечка'', ''correct'': True}'
+  - '{''text'': ''доньочка'', ''correct'': False}'
+  - '{''text'': ''доненька'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -851,14 +954,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який прислівник частоти означає "always"?
   options:
-  - text: часто
-    correct: false
-  - text: рідко
-    correct: false
-  - text: завжди
-    correct: true
-  - text: інколи
-    correct: false
+  - '{''text'': ''часто'', ''correct'': False}'
+  - '{''text'': ''рідко'', ''correct'': False}'
+  - '{''text'': ''завжди'', ''correct'': True}'
+  - '{''text'': ''інколи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -869,14 +968,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який термін означає "наука про творення слів"?
   options:
-  - text: суфікс
-    correct: false
-  - text: словотвір
-    correct: true
-  - text: морфологія
-    correct: false
-  - text: синтаксис
-    correct: false
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''словотвір'', ''correct'': True}'
+  - '{''text'': ''морфологія'', ''correct'': False}'
+  - '{''text'': ''синтаксис'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -887,14 +982,10 @@ items:
   title: Творення прислівників від прикметників
   question: Як правильно утворити прислівник від "гарний"?
   options:
-  - text: гарне
-    correct: false
-  - text: гарно
-    correct: true
-  - text: по-гарному
-    correct: false
-  - text: гарнісно
-    correct: false
+  - '{''text'': ''гарне'', ''correct'': False}'
+  - '{''text'': ''гарно'', ''correct'': True}'
+  - '{''text'': ''по-гарному'', ''correct'': False}'
+  - '{''text'': ''гарнісно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -905,14 +996,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який демінутив утворюється від "сонце"?
   options:
-  - text: сонячко
-    correct: false
-  - text: сонечко
-    correct: true
-  - text: сонечник
-    correct: false
-  - text: соненько
-    correct: false
+  - '{''text'': ''сонячко'', ''correct'': False}'
+  - '{''text'': ''сонечко'', ''correct'': True}'
+  - '{''text'': ''сонечник'', ''correct'': False}'
+  - '{''text'': ''соненько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -923,14 +1010,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який прислівник місця означає "here"?
   options:
-  - text: там
-    correct: false
-  - text: тут
-    correct: true
-  - text: далеко
-    correct: false
-  - text: близько
-    correct: false
+  - '{''text'': ''там'', ''correct'': False}'
+  - '{''text'': ''тут'', ''correct'': True}'
+  - '{''text'': ''далеко'', ''correct'': False}'
+  - '{''text'': ''близько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -941,14 +1024,10 @@ items:
   title: Творення прислівників від прикметників
   question: Як утворити аугментатив від "холод"?
   options:
-  - text: холодок
-    correct: false
-  - text: холодець
-    correct: false
-  - text: холодище
-    correct: true
-  - text: холоднище
-    correct: false
+  - '{''text'': ''холодок'', ''correct'': False}'
+  - '{''text'': ''холодець'', ''correct'': False}'
+  - '{''text'': ''холодище'', ''correct'': True}'
+  - '{''text'': ''холоднище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -959,14 +1038,10 @@ items:
   title: Творення прислівників від прикметників
   question: Який прислівник означає "rarely"?
   options:
-  - text: часто
-    correct: false
-  - text: завжди
-    correct: false
-  - text: інколи
-    correct: false
-  - text: рідко
-    correct: true
+  - '{''text'': ''часто'', ''correct'': False}'
+  - '{''text'': ''завжди'', ''correct'': False}'
+  - '{''text'': ''інколи'', ''correct'': False}'
+  - '{''text'': ''рідко'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -977,14 +1052,10 @@ items:
   title: Творення прислівників від прикметників
   question: Що таке суфікс у словотворенні?
   options:
-  - text: Частина слова перед коренем
-    correct: false
-  - text: Частина слова після кореня
-    correct: true
-  - text: Закінчення слова
-    correct: false
-  - text: Корінь слова
-    correct: false
+  - '{''text'': ''Частина слова перед коренем'', ''correct'': False}'
+  - '{''text'': ''Частина слова після кореня'', ''correct'': True}'
+  - '{''text'': ''Закінчення слова'', ''correct'': False}'
+  - '{''text'': ''Корінь слова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -995,14 +1066,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Яка модель творення прислівників є найпоширенішою в українській мові?
   options:
-  - text: по-...-ськи
-    correct: false
-  - text: -о/-е
-    correct: true
-  - text: по-...-ому
-    correct: false
-  - text: -існо
-    correct: false
+  - '{''text'': ''по-...-ськи'', ''correct'': False}'
+  - '{''text'': ''-о/-е'', ''correct'': True}'
+  - '{''text'': ''по-...-ому'', ''correct'': False}'
+  - '{''text'': ''-існо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1013,14 +1080,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як утворити прислівник від прикметника "добрий"?
   options:
-  - text: добро
-    correct: false
-  - text: добре
-    correct: true
-  - text: по-доброму
-    correct: false
-  - text: добрісно
-    correct: false
+  - '{''text'': ''добро'', ''correct'': False}'
+  - '{''text'': ''добре'', ''correct'': True}'
+  - '{''text'': ''по-доброму'', ''correct'': False}'
+  - '{''text'': ''добрісно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1031,14 +1094,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як правильно написати прислівник "по-українськи"?
   options:
-  - text: Разом
-    correct: false
-  - text: Через дефіс
-    correct: true
-  - text: Окремо
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Разом'', ''correct'': False}'
+  - '{''text'': ''Через дефіс'', ''correct'': True}'
+  - '{''text'': ''Окремо'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1049,14 +1108,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який суфікс використовується для творення аугментативів?
   options:
-  - text: -ик/-чик
-    correct: false
-  - text: -ечка/-ечко
-    correct: false
-  - text: -ище
-    correct: true
-  - text: -енька
-    correct: false
+  - '{''text'': ''-ик/-чик'', ''correct'': False}'
+  - '{''text'': ''-ечка/-ечко'', ''correct'': False}'
+  - '{''text'': ''-ище'', ''correct'': True}'
+  - '{''text'': ''-енька'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1067,14 +1122,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який демінутив правильний від "сонце"?
   options:
-  - text: сонячко
-    correct: false
-  - text: сонечко
-    correct: true
-  - text: соненько
-    correct: false
-  - text: сонечник
-    correct: false
+  - '{''text'': ''сонячко'', ''correct'': False}'
+  - '{''text'': ''сонечко'', ''correct'': True}'
+  - '{''text'': ''соненько'', ''correct'': False}'
+  - '{''text'': ''сонечник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1085,14 +1136,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Що означає прислівник "по-новому"?
   options:
-  - text: По-старому
-    correct: false
-  - text: Так само
-    correct: false
-  - text: На новий лад
-    correct: true
-  - text: Зовсім
-    correct: false
+  - '{''text'': ''По-старому'', ''correct'': False}'
+  - '{''text'': ''Так само'', ''correct'': False}'
+  - '{''text'': ''На новий лад'', ''correct'': True}'
+  - '{''text'': ''Зовсім'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1103,14 +1150,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прислівник означає "sometimes"?
   options:
-  - text: завжди
-    correct: false
-  - text: рідко
-    correct: false
-  - text: часто
-    correct: false
-  - text: інколи
-    correct: true
+  - '{''text'': ''завжди'', ''correct'': False}'
+  - '{''text'': ''рідко'', ''correct'': False}'
+  - '{''text'': ''часто'', ''correct'': False}'
+  - '{''text'': ''інколи'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1121,14 +1164,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Що таке "словотвір" у лінгвістиці?
   options:
-  - text: Наука про звуки
-    correct: false
-  - text: Наука про творення слів
-    correct: true
-  - text: Наука про речення
-    correct: false
-  - text: Наука про значення слів
-    correct: false
+  - '{''text'': ''Наука про звуки'', ''correct'': False}'
+  - '{''text'': ''Наука про творення слів'', ''correct'': True}'
+  - '{''text'': ''Наука про речення'', ''correct'': False}'
+  - '{''text'': ''Наука про значення слів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1139,14 +1178,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який демінутив правильний від "донька"?
   options:
-  - text: доньочка
-    correct: false
-  - text: донечка
-    correct: true
-  - text: доненька
-    correct: false
-  - text: донечонька
-    correct: false
+  - '{''text'': ''доньочка'', ''correct'': False}'
+  - '{''text'': ''донечка'', ''correct'': True}'
+  - '{''text'': ''доненька'', ''correct'': False}'
+  - '{''text'': ''донечонька'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1157,14 +1192,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Для яких стилів характерні демінутиви?
   options:
-  - text: Науковий та офіційний
-    correct: false
-  - text: Розмовний та художній
-    correct: true
-  - text: Тільки офіційний
-    correct: false
-  - text: Тільки науковий
-    correct: false
+  - '{''text'': ''Науковий та офіційний'', ''correct'': False}'
+  - '{''text'': ''Розмовний та художній'', ''correct'': True}'
+  - '{''text'': ''Тільки офіційний'', ''correct'': False}'
+  - '{''text'': ''Тільки науковий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1175,14 +1206,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як правильно написати прислівник "по-іншому"?
   options:
-  - text: поіншому
-    correct: false
-  - text: по іншому
-    correct: false
-  - text: по-іншому
-    correct: true
-  - text: іншому
-    correct: false
+  - '{''text'': ''поіншому'', ''correct'': False}'
+  - '{''text'': ''по іншому'', ''correct'': False}'
+  - '{''text'': ''по-іншому'', ''correct'': True}'
+  - '{''text'': ''іншому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1193,14 +1220,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прислівник утворюється від "повільний"?
   options:
-  - text: повільне
-    correct: false
-  - text: повільно
-    correct: true
-  - text: по-повільному
-    correct: false
-  - text: повілно
-    correct: false
+  - '{''text'': ''повільне'', ''correct'': False}'
+  - '{''text'': ''повільно'', ''correct'': True}'
+  - '{''text'': ''по-повільному'', ''correct'': False}'
+  - '{''text'': ''повілно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1211,14 +1234,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Що означає аугментатив "морозище"?
   options:
-  - text: Маленький мороз
-    correct: false
-  - text: Дуже сильний мороз
-    correct: true
-  - text: Легкий мороз
-    correct: false
-  - text: Весняний мороз
-    correct: false
+  - '{''text'': ''Маленький мороз'', ''correct'': False}'
+  - '{''text'': ''Дуже сильний мороз'', ''correct'': True}'
+  - '{''text'': ''Легкий мороз'', ''correct'': False}'
+  - '{''text'': ''Весняний мороз'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1229,14 +1248,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прислівник місця означає "there"?
   options:
-  - text: тут
-    correct: false
-  - text: там
-    correct: true
-  - text: далеко
-    correct: false
-  - text: близько
-    correct: false
+  - '{''text'': ''тут'', ''correct'': False}'
+  - '{''text'': ''там'', ''correct'': True}'
+  - '{''text'': ''далеко'', ''correct'': False}'
+  - '{''text'': ''близько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1247,14 +1262,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який демінутив правильний від "хлопець"?
   options:
-  - text: хлопчичок
-    correct: false
-  - text: хлопчик
-    correct: true
-  - text: хлопченок
-    correct: false
-  - text: хлопчишок
-    correct: false
+  - '{''text'': ''хлопчичок'', ''correct'': False}'
+  - '{''text'': ''хлопчик'', ''correct'': True}'
+  - '{''text'': ''хлопченок'', ''correct'': False}'
+  - '{''text'': ''хлопчишок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1265,14 +1276,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Яка функція прислівників на по-...-ськи?
   options:
-  - text: Позначення часу
-    correct: false
-  - text: Позначення мови та культурних особливостей
-    correct: true
-  - text: Позначення кількості
-    correct: false
-  - text: Позначення причини
-    correct: false
+  - '{''text'': ''Позначення часу'', ''correct'': False}'
+  - '{''text'': ''Позначення мови та культурних особливостей'', ''correct'': True}'
+  - '{''text'': ''Позначення кількості'', ''correct'': False}'
+  - '{''text'': ''Позначення причини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

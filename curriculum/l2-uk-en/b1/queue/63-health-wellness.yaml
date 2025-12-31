@@ -1,15 +1,18 @@
 module: 63-health-wellness
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/63-health-wellness.md
-generated: '2025-12-29T00:22:03.376276'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.055400'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -267,6 +270,123 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті про здоров'я
+  passage_template: 'Сучасне життя повне {стресу|тривоги|стресу|радості}. Робота,
+    сім''я, новини — все це впливає на наше {самопочуття|здоров''я|самопочуття|лікування}.
+    Хронічний стрес може призвести до серйозних {хвороб|симптомів|хвороб|вправ}: від
+    проблем із серцем до {депресії|тривоги|депресії|терапії}.
+
+
+    Що робити? По-перше, дбайте про {сон|їжу|сон|роботу} — спіть не менше семи годин.
+    По-друге, займайтеся регулярними {вправами|хворобами|вправами|проблемами}: навіть
+    30 хвилин ходьби щодня покращують {стан|симптом|стан|режим} організму.
+
+
+    Якщо {тривога|радість|тривога|енергія} не проходить, зверніться до {психолога|друга|психолога|тренера}.
+    {Терапія|Хвороба|Терапія|Дієта} — це не слабкість, а турбота про {ментальне|фізичне|ментальне|соціальне}
+    здоров''я.
+
+
+    Пам''ятайте: {профілактика|лікування|профілактика|хвороба} краща за лікування.
+    Дотримуйтеся {режиму|стресу|режиму|хвороби} дня та їжте {здорову|шкідливу|здорову|нездорову}
+    їжу.
+
+    '
+  blanks:
+  - answer: радості
+    options:
+    - стресу
+    - тривоги
+    - стресу
+  - answer: лікування
+    options:
+    - самопочуття
+    - здоров'я
+    - самопочуття
+  - answer: вправ
+    options:
+    - хвороб
+    - симптомів
+    - хвороб
+  - answer: терапії
+    options:
+    - депресії
+    - тривоги
+    - депресії
+  - answer: роботу
+    options:
+    - сон
+    - їжу
+    - сон
+  - answer: проблемами
+    options:
+    - вправами
+    - хворобами
+    - вправами
+  - answer: режим
+    options:
+    - стан
+    - симптом
+    - стан
+  - answer: енергія
+    options:
+    - тривога
+    - радість
+    - тривога
+  - answer: тренера
+    options:
+    - психолога
+    - друга
+    - психолога
+  - answer: Дієта
+    options:
+    - Терапія
+    - Хвороба
+    - Терапія
+  - answer: соціальне
+    options:
+    - ментальне
+    - фізичне
+    - ментальне
+  - answer: хвороба
+    options:
+    - профілактика
+    - лікування
+    - профілактика
+  - answer: хвороби
+    options:
+    - режиму
+    - стресу
+    - режиму
+  - answer: нездорову
+    options:
+    - здорову
+    - шкідливу
+    - здорову
+  blank_count: 14
+  complete_passage: 'Сучасне життя повне радості. Робота, сім''я, новини — все це
+    впливає на наше лікування. Хронічний стрес може призвести до серйозних вправ:
+    від проблем із серцем до терапії.
+
+
+    Що робити? По-перше, дбайте про роботу — спіть не менше семи годин. По-друге,
+    займайтеся регулярними проблемами: навіть 30 хвилин ходьби щодня покращують режим
+    організму.
+
+
+    Якщо енергія не проходить, зверніться до тренера. Дієта — це не слабкість, а турбота
+    про соціальне здоров''я.
+
+
+    Пам''ятайте: хвороба краща за лікування. Дотримуйтеся хвороби дня та їжте нездорову
+    їжу.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про здоров'я
   jumbled_words: []
@@ -336,14 +456,10 @@ items:
   question: Яке слово означає загальний стан організму людини, її фізичне та психічне
     благополуччя?
   options:
-  - text: самопочуття
-    correct: false
-  - text: здоров'я
-    correct: true
-  - text: стан
-    correct: false
-  - text: організм
-    correct: false
+  - '{''text'': ''самопочуття'', ''correct'': False}'
+  - '{''text'': "здоров''я", ''correct'': True}'
+  - '{''text'': ''стан'', ''correct'': False}'
+  - '{''text'': ''організм'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -355,14 +471,10 @@ items:
   question: Яке слово використовують, щоб описати, як людина себе відчуває в конкретний
     момент часу?
   options:
-  - text: здоров'я
-    correct: false
-  - text: стан
-    correct: false
-  - text: самопочуття
-    correct: true
-  - text: імунітет
-    correct: false
+  - '{''text'': "здоров''я", ''correct'': False}'
+  - '{''text'': ''стан'', ''correct'': False}'
+  - '{''text'': ''самопочуття'', ''correct'': True}'
+  - '{''text'': ''імунітет'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -374,14 +486,10 @@ items:
   question: Що означає слово "профілактика" в контексті медицини та здорового способу
     життя?
   options:
-  - text: лікування хвороби
-    correct: false
-  - text: запобігання хворобам
-    correct: true
-  - text: відновлення після операції
-    correct: false
-  - text: медичний огляд
-    correct: false
+  - '{''text'': ''лікування хвороби'', ''correct'': False}'
+  - '{''text'': ''запобігання хворобам'', ''correct'': True}'
+  - '{''text'': ''відновлення після операції'', ''correct'': False}'
+  - '{''text'': ''медичний огляд'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -392,14 +500,10 @@ items:
   title: Розуміння лексики здоров'я та самопочуття
   question: Яке слово описує захисну систему організму, що допомагає боротися з інфекціями?
   options:
-  - text: організм
-    correct: false
-  - text: лікування
-    correct: false
-  - text: стан
-    correct: false
-  - text: імунітет
-    correct: true
+  - '{''text'': ''організм'', ''correct'': False}'
+  - '{''text'': ''лікування'', ''correct'': False}'
+  - '{''text'': ''стан'', ''correct'': False}'
+  - '{''text'': ''імунітет'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -410,14 +514,11 @@ items:
   title: Розуміння лексики здоров'я та самопочуття
   question: Яка різниця між словами "здоровий" та "корисний" у контексті їжі?
   options:
-  - text: Це повні синоніми без різниці
-    correct: false
-  - text: '"Здоровий" — про стан організму, "корисний" — про користь для здоров''я'
-    correct: true
-  - text: '"Корисний" більш формальне слово'
-    correct: false
-  - text: '"Здоровий" використовують тільки для людей'
-    correct: false
+  - '{''text'': ''Це повні синоніми без різниці'', ''correct'': False}'
+  - '{''text'': ''"Здоровий" — про стан організму, "корисний" — про користь для здоров\''я'',
+    ''correct'': True}'
+  - '{''text'': ''"Корисний" більш формальне слово'', ''correct'': False}'
+  - '{''text'': ''"Здоровий" використовують тільки для людей'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -429,14 +530,10 @@ items:
   question: Яке дієслово найкраще поєднується зі словом "лікування" для позначення
     процесу?
   options:
-  - text: мати лікування
-    correct: false
-  - text: робити лікування
-    correct: false
-  - text: пройти лікування
-    correct: true
-  - text: давати лікування
-    correct: false
+  - '{''text'': ''мати лікування'', ''correct'': False}'
+  - '{''text'': ''робити лікування'', ''correct'': False}'
+  - '{''text'': ''пройти лікування'', ''correct'': True}'
+  - '{''text'': ''давати лікування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -448,14 +545,10 @@ items:
   question: Що означає слово "залежність" у контексті шкідливих звичок та здорового
     способу життя?
   options:
-  - text: корисна звичка
-    correct: false
-  - text: патологічна потреба в чомусь
-    correct: true
-  - text: режим дня
-    correct: false
-  - text: фізична активність
-    correct: false
+  - '{''text'': ''корисна звичка'', ''correct'': False}'
+  - '{''text'': ''патологічна потреба в чомусь'', ''correct'': True}'
+  - '{''text'': ''режим дня'', ''correct'': False}'
+  - '{''text'': ''фізична активність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -467,14 +560,10 @@ items:
   question: Яке слово використовують для опису психологічного стану хвилювання та
     неспокою?
   options:
-  - text: депресія
-    correct: false
-  - text: стрес
-    correct: false
-  - text: тривога
-    correct: true
-  - text: терапія
-    correct: false
+  - '{''text'': ''депресія'', ''correct'': False}'
+  - '{''text'': ''стрес'', ''correct'': False}'
+  - '{''text'': ''тривога'', ''correct'': True}'
+  - '{''text'': ''терапія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

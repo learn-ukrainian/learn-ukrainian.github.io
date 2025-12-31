@@ -884,17 +884,17 @@ def main():
             level_dir = lang_dir / level_folder
             level = level_folder.upper()
 
-            # Find module files
+            # Find module files (supports 2-3 digit module numbers)
             md_files = sorted([
                 f for f in os.listdir(level_dir)
-                if re.match(r"^\d{2}-.*\.md$", f) or re.match(r"^module-\d+\.md$", f)
+                if re.match(r"^\d{2,3}-.*\.md$", f) or re.match(r"^module-\d+\.md$", f)
             ])
 
             print(f"\n  📁 Level {level} ({len(md_files)} modules)")
 
             for md_file in md_files:
-                # Extract module number
-                match = re.match(r"^(\d{2})-", md_file) or re.match(r"^module-(\d+)", md_file)
+                # Extract module number (supports 2-3 digit module numbers)
+                match = re.match(r"^(\d{2,3})-", md_file) or re.match(r"^module-(\d+)", md_file)
                 module_num = int(match.group(1)) if match else 0
 
                 if target_module_num and module_num != target_module_num:

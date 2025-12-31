@@ -1,0 +1,1112 @@
+version: "1.0"
+activities:
+  - type: quiz
+    id: franko-bio-quiz
+    title: "Життя Івана Франка"
+    instruction: "Виберіть правильну відповідь на основі прочитаного тексту."
+    items:
+      - question: "Згідно з текстом, де народився Іван Франко?"
+        options:
+          - text: "У селі Нагуєвичі на Львівщині"
+            correct: true
+          - text: "У Львові"
+            correct: false
+          - text: "У Києві"
+            correct: false
+          - text: "У Дрогобичі"
+            correct: false
+      - question: "Згідно з текстом, ким був батько Франка?"
+        options:
+          - text: "Сільським ковалем"
+            correct: true
+          - text: "Священиком"
+            correct: false
+          - text: "Учителем"
+            correct: false
+          - text: "Поміщиком"
+            correct: false
+      - question: "Згідно з текстом, скільки разів австрійська влада арештовувала Франка?"
+        options:
+          - text: "Тричі"
+            correct: true
+          - text: "Один раз"
+            correct: false
+          - text: "П'ять разів"
+            correct: false
+          - text: "Жодного разу"
+            correct: false
+      - question: "Згідно з текстом, скільки мов знав Франко?"
+        options:
+          - text: "14 мов"
+            correct: true
+          - text: "5 мов"
+            correct: false
+          - text: "3 мови"
+            correct: false
+          - text: "20 мов"
+            correct: false
+      - question: "Згідно з текстом, на яку премію був номінований Франко?"
+        options:
+          - text: "На Нобелівську премію"
+            correct: true
+          - text: "На Пулітцерівську премію"
+            correct: false
+          - text: "На Шевченківську премію"
+            correct: false
+          - text: "На Гонкурівську премію"
+            correct: false
+      - question: "Згідно з текстом, скільки творів написав Франко?"
+        options:
+          - text: "Понад 5000"
+            correct: true
+          - text: "Близько 500"
+            correct: false
+          - text: "Приблизно 100"
+            correct: false
+          - text: "Більше 10000"
+            correct: false
+      - question: "Згідно з текстом, коли помер Іван Франко?"
+        options:
+          - text: "28 травня 1916 року"
+            correct: true
+          - text: "27 серпня 1856 року"
+            correct: false
+          - text: "1 серпня 1913 року"
+            correct: false
+          - text: "6 травня 1910 року"
+            correct: false
+      - question: "Як у тексті описано похорон Франка?"
+        options:
+          - text: "Масова демонстрація національного духу"
+            correct: true
+          - text: "Тиха церемонія для родини"
+            correct: false
+          - text: "Державний похорон з військовими почестями"
+            correct: false
+          - text: "Похорон за кордоном"
+            correct: false
+      - question: "Згідно з текстом, яке товариство очолив Грушевський у Львові?"
+        options:
+          - text: "Наукове товариство імені Шевченка"
+            correct: true
+          - text: "Просвіта"
+            correct: false
+          - text: "Кирило-Мефодіївське братство"
+            correct: false
+          - text: "Українська бесіда"
+            correct: false
+      - question: "Згідно з текстом, який роман Франка порівнюється з «Жерміналь» Золя?"
+        options:
+          - text: "«Борислав сміється»"
+            correct: true
+          - text: "«Каменярі»"
+            correct: false
+          - text: "«Захар Беркут»"
+            correct: false
+          - text: "«Перехресні стежки»"
+            correct: false
+      - question: "Як автор тексту характеризує Галичину кінця XIX століття?"
+        options:
+          - text: "Унікальне місце з більшими свободами для українців"
+            correct: true
+          - text: "Найгірше місце для українців"
+            correct: false
+          - text: "Цілком русифікована територія"
+            correct: false
+          - text: "Провінція без культурного життя"
+            correct: false
+      - question: "Що, згідно з текстом, символізує «скала» у поемі «Каменярі»?"
+        options:
+          - text: "Перешкоди на шляху до свободи"
+            correct: true
+          - text: "Карпатські гори"
+            correct: false
+          - text: "Стіни тюрми"
+            correct: false
+          - text: "Імперський трон"
+            correct: false
+      - question: "До чого, згідно з текстом, закликав Франко у «Каменярях»?"
+        options:
+          - text: "До щоденної праці в освіті та культурі"
+            correct: true
+          - text: "До збройного повстання"
+            correct: false
+          - text: "До еміграції"
+            correct: false
+          - text: "До підкорення імперії"
+            correct: false
+      - question: "Яку ідеологію, згідно з текстом, сповідував молодий Франко?"
+        options:
+          - text: "Соціалістичні ідеї"
+            correct: true
+          - text: "Монархізм"
+            correct: false
+          - text: "Анархізм"
+            correct: false
+          - text: "Консерватизм"
+            correct: false
+      - question: "Що, згідно з текстом, стало причиною смерті Франка?"
+        options:
+          - text: "Хвороба, погіршена злиднями"
+            correct: true
+          - text: "Арешт і ув'язнення"
+            correct: false
+          - text: "Нещасний випадок"
+            correct: false
+          - text: "Війна"
+            correct: false
+      - question: "Як текст характеризує Франка як науковця?"
+        options:
+          - text: "Досліджував літературу, фольклор, історію"
+            correct: true
+          - text: "Займався тільки політикою"
+            correct: false
+          - text: "Був виключно поетом"
+            correct: false
+          - text: "Ніколи не займався наукою"
+            correct: false
+
+  - type: quiz
+    id: lesya-bio-quiz
+    title: "Життя Лесі Українки"
+    instruction: "Виберіть правильну відповідь на основі прочитаного тексту."
+    items:
+      - question: "Згідно з текстом, яке справжнє ім'я Лесі Українки?"
+        options:
+          - text: "Лариса Косач"
+            correct: true
+          - text: "Олена Пчілка"
+            correct: false
+          - text: "Марія Вілінська"
+            correct: false
+          - text: "Ольга Кобилянська"
+            correct: false
+      - question: "Згідно з текстом, ким була мати Лесі Українки?"
+        options:
+          - text: "Письменницею та громадською діячкою"
+            correct: true
+          - text: "Селянкою"
+            correct: false
+          - text: "Вчителькою"
+            correct: false
+          - text: "Лікаркою"
+            correct: false
+      - question: "Згідно з текстом, на яку хворобу захворіла Леся у 9 років?"
+        options:
+          - text: "Туберкульоз кісток"
+            correct: true
+          - text: "Пневмонію"
+            correct: false
+          - text: "Тиф"
+            correct: false
+          - text: "Холеру"
+            correct: false
+      - question: "Згідно з текстом, де Леся написала «Лісову пісню»?"
+        options:
+          - text: "У Єгипті"
+            correct: true
+          - text: "У Львові"
+            correct: false
+          - text: "У Києві"
+            correct: false
+          - text: "У Грузії"
+            correct: false
+      - question: "Згідно з текстом, хто такий Михайло Драгоманов для Лесі?"
+        options:
+          - text: "Дядько"
+            correct: true
+          - text: "Батько"
+            correct: false
+          - text: "Чоловік"
+            correct: false
+          - text: "Брат"
+            correct: false
+      - question: "Згідно з текстом, коли була написана «Лісова пісня»?"
+        options:
+          - text: "У 1911 році"
+            correct: true
+          - text: "У 1871 році"
+            correct: false
+          - text: "У 1897 році"
+            correct: false
+          - text: "У 1913 році"
+            correct: false
+      - question: "Як текст описує образ Мавки?"
+        options:
+          - text: "Символ чистоти, природи, духовності"
+            correct: true
+          - text: "Символ смерті"
+            correct: false
+          - text: "Символ багатства"
+            correct: false
+          - text: "Символ помсти"
+            correct: false
+      - question: "Згідно з текстом, скільки років прожила Леся Українка?"
+        options:
+          - text: "42 роки"
+            correct: true
+          - text: "47 років"
+            correct: false
+          - text: "36 років"
+            correct: false
+          - text: "65 років"
+            correct: false
+      - question: "Які античні сюжети, згідно з текстом, використовувала Леся?"
+        options:
+          - text: "У драмах «Кассандра», «Оргія»"
+            correct: true
+          - text: "Тільки в поезії"
+            correct: false
+          - text: "Ніколи не зверталася до античності"
+            correct: false
+          - text: "Тільки в прозі"
+            correct: false
+      - question: "Згідно з текстом, де померла Леся Українка?"
+        options:
+          - text: "У Сурамі (Грузія)"
+            correct: true
+          - text: "У Києві"
+            correct: false
+          - text: "У Єгипті"
+            correct: false
+          - text: "У Львові"
+            correct: false
+      - question: "Як текст характеризує стиль Лесі Українки?"
+        options:
+          - text: "Модернізм"
+            correct: true
+          - text: "Реалізм"
+            correct: false
+          - text: "Класицизм"
+            correct: false
+          - text: "Романтизм"
+            correct: false
+      - question: "Що, згідно з текстом, критикувала Леся Українка?"
+        options:
+          - text: "Російську культурну експансію"
+            correct: true
+          - text: "Австрійську владу"
+            correct: false
+          - text: "Польську шляхту"
+            correct: false
+          - text: "Українську інтелігенцію"
+            correct: false
+      - question: "Яких авторів, згідно з текстом, читала Леся в оригіналі?"
+        options:
+          - text: "Данте, Байрона, Гейне"
+            correct: true
+          - text: "Толстого, Достоєвського"
+            correct: false
+          - text: "Тільки українських авторів"
+            correct: false
+          - text: "Французьких класиків"
+            correct: false
+      - question: "Як текст описує дух Лесі порівняно з її тілом?"
+        options:
+          - text: "Титанічний дух при слабкому тілі"
+            correct: true
+          - text: "Слабкий дух і тіло"
+            correct: false
+          - text: "Міцне тіло і слабкий дух"
+            correct: false
+          - text: "Обидва були міцними"
+            correct: false
+      - question: "Що символізує перетворення Мавки на вербу?"
+        options:
+          - text: "Безсмертя мистецтва"
+            correct: true
+          - text: "Кінець життя"
+            correct: false
+          - text: "Поразку"
+            correct: false
+          - text: "Забуття"
+            correct: false
+      - question: "Як називає текст патріотизм Лесі Українки?"
+        options:
+          - text: "Національним, а не соціальним"
+            correct: true
+          - text: "Соціальним"
+            correct: false
+          - text: "Пролетарським"
+            correct: false
+          - text: "Імперським"
+            correct: false
+
+  - type: quiz
+    id: hrinchenko-bio-quiz
+    title: "Життя Бориса Грінченка"
+    instruction: "Виберіть правильну відповідь на основі прочитаного тексту."
+    items:
+      - question: "Згідно з текстом, де народився Борис Грінченко?"
+        options:
+          - text: "На Харківщині"
+            correct: true
+          - text: "У Львові"
+            correct: false
+          - text: "У Києві"
+            correct: false
+          - text: "На Полтавщині"
+            correct: false
+      - question: "Згідно з текстом, скільки слів містить словник Грінченка?"
+        options:
+          - text: "Понад 68 000"
+            correct: true
+          - text: "Близько 10 000"
+            correct: false
+          - text: "Приблизно 100 000"
+            correct: false
+          - text: "Менше 50 000"
+            correct: false
+      - question: "Згідно з текстом, скільки томів має словник Грінченка?"
+        options:
+          - text: "4 томи"
+            correct: true
+          - text: "2 томи"
+            correct: false
+          - text: "6 томів"
+            correct: false
+          - text: "10 томів"
+            correct: false
+      - question: "Коли, згідно з текстом, був опублікований словник Грінченка?"
+        options:
+          - text: "У 1907–1909 роках"
+            correct: true
+          - text: "У 1876 році"
+            correct: false
+          - text: "У 1920 році"
+            correct: false
+          - text: "У 1850 році"
+            correct: false
+      - question: "Згідно з текстом, скільки підручників написав Грінченко?"
+        options:
+          - text: "Понад 100"
+            correct: true
+          - text: "Близько 20"
+            correct: false
+          - text: "Менше 10"
+            correct: false
+          - text: "Більше 500"
+            correct: false
+      - question: "З ким, згідно з текстом, полемізував Грінченко?"
+        options:
+          - text: "З Михайлом Драгомановим"
+            correct: true
+          - text: "З Іваном Франком"
+            correct: false
+          - text: "З Тарасом Шевченком"
+            correct: false
+          - text: "З Лесею Українкою"
+            correct: false
+      - question: "Яких авторів, згідно з текстом, перекладав Грінченко?"
+        options:
+          - text: "Шекспіра, Байрона, Гете"
+            correct: true
+          - text: "Тільки польських авторів"
+            correct: false
+          - text: "Російських класиків"
+            correct: false
+          - text: "Французьких романтиків"
+            correct: false
+      - question: "Згідно з текстом, де помер Грінченко?"
+        options:
+          - text: "В Оспедалетті (Італія)"
+            correct: true
+          - text: "У Києві"
+            correct: false
+          - text: "У Харкові"
+            correct: false
+          - text: "У Львові"
+            correct: false
+      - question: "Згідно з текстом, скільки років прожив Грінченко?"
+        options:
+          - text: "46 років"
+            correct: true
+          - text: "42 роки"
+            correct: false
+          - text: "60 років"
+            correct: false
+          - text: "55 років"
+            correct: false
+      - question: "Яку позицію, згідно з текстом, відстоював Грінченко?"
+        options:
+          - text: "Інтелігент повинен служити народу"
+            correct: true
+          - text: "Народ повинен служити інтелігенції"
+            correct: false
+          - text: "Треба емігрувати з України"
+            correct: false
+          - text: "Культура не важлива"
+            correct: false
+      - question: "Як збирав матеріал Грінченко, згідно з текстом?"
+        options:
+          - text: "Листувався з сотнями кореспондентів"
+            correct: true
+          - text: "Тільки з книг"
+            correct: false
+          - text: "Тільки в одному регіоні"
+            correct: false
+          - text: "Не збирав сам, мав помічників"
+            correct: false
+      - question: "Від чого, згідно з текстом, помер Грінченко?"
+        options:
+          - text: "Від туберкульозу"
+            correct: true
+          - text: "Від старості"
+            correct: false
+          - text: "Від нещасного випадку"
+            correct: false
+          - text: "На війні"
+            correct: false
+      - question: "Як текст характеризує твори Грінченка?"
+        options:
+          - text: "Реалістичні твори про село"
+            correct: true
+          - text: "Романтичні поеми"
+            correct: false
+          - text: "Модерністські драми"
+            correct: false
+          - text: "Фантастичні оповідання"
+            correct: false
+      - question: "Яку роль словника Грінченка підкреслює текст?"
+        options:
+          - text: "Основа для всіх наступних лексикографічних праць"
+            correct: true
+          - text: "Застарілий і непотрібний"
+            correct: false
+          - text: "Тільки історичний документ"
+            correct: false
+          - text: "Праця без наукової цінності"
+            correct: false
+      - question: "Що, згідно з текстом, вважав Грінченко фундаментом нації?"
+        options:
+          - text: "Освіту рідною мовою"
+            correct: true
+          - text: "Військову силу"
+            correct: false
+          - text: "Економіку"
+            correct: false
+          - text: "Політику"
+            correct: false
+      - question: "Ким був Грінченко за професією, згідно з текстом?"
+        options:
+          - text: "Учителем, письменником, етнографом"
+            correct: true
+          - text: "Тільки політиком"
+            correct: false
+          - text: "Військовим"
+            correct: false
+          - text: "Священиком"
+            correct: false
+
+  - type: match-up
+    id: vocab-definitions
+    title: "Словниковий запас: визначення"
+    instruction: "З'єднайте слово з його значенням."
+    pairs:
+      - term: "Каменяр"
+        definition: "Той, хто працею торує шлях"
+      - term: "Мавка"
+        definition: "Лісова німфа, міфічна істота"
+      - term: "Словник"
+        definition: "Систематизований збірник слів мови"
+      - term: "Модернізм"
+        definition: "Літературно-мистецький напрям XX століття"
+      - term: "Спадщина"
+        definition: "Те, що залишається нащадкам"
+      - term: "Титан"
+        definition: "Велична, могутня постать"
+      - term: "Феєрія"
+        definition: "Драма з елементами казки та фантастики"
+      - term: "Алегорія"
+        definition: "Художній прийом з переносним змістом"
+      - term: "Полеміст"
+        definition: "Той, хто веде публічні дискусії"
+      - term: "Етнограф"
+        definition: "Дослідник культури і побуту народу"
+      - term: "Лексикограф"
+        definition: "Укладач словників"
+      - term: "Незламність"
+        definition: "Здатність не здаватися під тиском"
+      - term: "Систематизувати"
+        definition: "Упорядкувати за певним принципом"
+      - term: "Фундамент"
+        definition: "Основа, на якій будується щось"
+      - term: "Інтелект"
+        definition: "Розумова здатність людини"
+      - term: "Девіз"
+        definition: "Гасло, головний принцип"
+
+  - type: match-up
+    id: authors-works
+    title: "Автори та твори"
+    instruction: "З'єднайте автора з його твором."
+    pairs:
+      - term: "Іван Франко"
+        definition: "«Каменярі»"
+      - term: "Іван Франко"
+        definition: "«Борислав сміється»"
+      - term: "Леся Українка"
+        definition: "«Лісова пісня»"
+      - term: "Леся Українка"
+        definition: "«Кассандра»"
+      - term: "Леся Українка"
+        definition: "«Оргія»"
+      - term: "Борис Грінченко"
+        definition: "Словник української мови"
+      - term: "Іван Франко"
+        definition: "«Захар Беркут»"
+      - term: "Леся Українка"
+        definition: "«Руфін і Прісцілла»"
+      - term: "Франко"
+        definition: "Науковець НТШ"
+      - term: "Грінченко"
+        definition: "100+ підручників"
+      - term: "Леся Українка"
+        definition: "Модерністські драми"
+      - term: "Франко"
+        definition: "Номінант на Нобелівську премію"
+      - term: "Грінченко"
+        definition: "Дискусія з Драгомановим"
+      - term: "Леся Українка"
+        definition: "Образ Мавки"
+      - term: "Франко"
+        definition: "Образ скали"
+      - term: "Грінченко"
+        definition: "68 000 слів"
+
+  - type: cloze
+    id: biography-cloze
+    title: "Біографії титанів"
+    instruction: "Заповніть пропуски в тексті."
+    passage: |
+      Іван Франко народився в селі {Нагуєвичі} на Львівщині. Його батько був {ковалем}. Франко володів {чотирнадцятьма} мовами. Його найвідоміша поема — "{Каменярі}". Він написав понад {п'ять тисяч} творів. Франко був номінований на {Нобелівську} премію.
+
+      Леся Українка (справжнє ім'я — Лариса {Косач}) народилася на Волині. У дев'ять років вона захворіла на {туберкульоз}. Її найвідоміший твір — драма-феєрія "{Лісова пісня}". Головна героїня цього твору — {Мавка}. Леся померла у {сорок два} роки.
+
+      Борис Грінченко народився на {Харківщині}. Він уклав {чотиритомний} словник української мови. Словник містить понад {шістдесят вісім} тисяч слів. Грінченко також написав понад сто {підручників} для шкіл. Він полемізував із {Драгомановим}.
+
+  - type: true-false
+    id: myths-reality
+    title: "Правда чи міф?"
+    instruction: "Визначте, чи твердження відповідає тексту."
+    items:
+      - question: "Згідно з текстом, Франко був провінційним письменником без європейського визнання."
+        answer: false
+      - question: "Згідно з текстом, Леся Українка критикувала російську культурну експансію."
+        answer: true
+      - question: "Згідно з текстом, словник Грінченка містить понад 68 000 слів."
+        answer: true
+      - question: "Згідно з текстом, Франко закликав до збройного повстання у «Каменярях»."
+        answer: false
+      - question: "Згідно з текстом, Леся Українка написала «Лісову пісню» в Україні."
+        answer: false
+      - question: "Згідно з текстом, Грінченко полемізував з Драгомановим про роль інтелігенції."
+        answer: true
+      - question: "Згідно з текстом, усі троє титанів були частиною європейського модернізму."
+        answer: true
+      - question: "Згідно з текстом, образ Мавки символізує смерть і забуття."
+        answer: false
+      - question: "Згідно з текстом, Франко тричі був заарештований австрійською владою."
+        answer: true
+      - question: "Згідно з текстом, Леся Українка жила до глибокої старості."
+        answer: false
+      - question: "Згідно з текстом, Грінченко збирав слова, листуючись з кореспондентами."
+        answer: true
+      - question: "Згідно з текстом, «Борислав сміється» написаний пізніше за «Жерміналь» Золя."
+        answer: false
+      - question: "Згідно з текстом, дядько Лесі — Михайло Драгоманов — був політичним мислителем."
+        answer: true
+      - question: "Згідно з текстом, Франко помер у 1916 році під час Першої світової війни."
+        answer: true
+      - question: "Згідно з текстом, Грінченко написав понад 100 підручників."
+        answer: true
+      - question: "Згідно з текстом, Леся Українка ніколи не зверталася до античних сюжетів."
+        answer: false
+
+  - type: fill-in
+    id: fill-in-context
+    title: "Історична лексика в контексті"
+    instruction: "Виберіть правильне слово для заповнення пропуску."
+    items:
+      - sentence: "Іван Франко був справжнім [___] української культури."
+        answer: "каменярем"
+        options: ["каменярем", "титаном", "політиком", "вояком"]
+      - sentence: "Леся Українка створила образ [___] у «Лісовій пісні»."
+        answer: "Мавки"
+        options: ["Мавки", "Катерини", "Оксани", "Наталки"]
+      - sentence: "Грінченко [___] українську мову у своєму словнику."
+        answer: "систематизував"
+        options: ["систематизував", "забув", "знищив", "ігнорував"]
+      - sentence: "«Каменярі» стали [___] української інтелігенції."
+        answer: "маніфестом"
+        options: ["маніфестом", "казкою", "розвагою", "помилкою"]
+      - sentence: "Мавка є символом [___], що перемагає смерть."
+        answer: "краси"
+        options: ["краси", "помсти", "багатства", "влади"]
+      - sentence: "Словник Грінченка містить чотири [___]."
+        answer: "томи"
+        options: ["томи", "сторінки", "слова", "речення"]
+      - sentence: "Франко закликав до щоденної культурної [___]."
+        answer: "праці"
+        options: ["праці", "війни", "втечі", "капітуляції"]
+      - sentence: "[___] Лесі Українки не зламала її духу."
+        answer: "Хвороба"
+        options: ["Хвороба", "Слава", "Багатство", "Молодість"]
+      - sentence: "Грінченко вважав освіту рідною мовою [___] нації."
+        answer: "фундаментом"
+        options: ["фундаментом", "проблемою", "помилкою", "загрозою"]
+      - sentence: "Леся Українка писала [___] драми задовго до моди на цей жанр."
+        answer: "модерністські"
+        options: ["модерністські", "класичні", "романтичні", "реалістичні"]
+      - sentence: "Франко досліджував літературу, [___], історію."
+        answer: "фольклор"
+        options: ["фольклор", "політику", "економіку", "медицину"]
+      - sentence: "«Лісова пісня» — це драма-[___]."
+        answer: "феєрія"
+        options: ["феєрія", "комедія", "трагедія", "фарс"]
+      - sentence: "Грінченко листувався з [___] кореспондентів."
+        answer: "сотнями"
+        options: ["сотнями", "двома", "одним", "ніким"]
+      - sentence: "Франко був [___] на Нобелівську премію."
+        answer: "номінований"
+        options: ["номінований", "нагороджений", "відмовлений", "забутий"]
+      - sentence: "Спадщина титанів — не музейний експонат, а жива [___]."
+        answer: "сила"
+        options: ["сила", "слабкість", "помилка", "проблема"]
+      - sentence: "Львів став неофіційною [___] українського інтелектуального життя."
+        answer: "столицею"
+        options: ["столицею", "провінцією", "пустелею", "в'язницею"]
+
+  - type: unjumble
+    id: quotes-unjumble
+    title: "Відновіть цитати"
+    instruction: "Складіть слова у правильному порядку."
+    items:
+      - prompt: "скалу / Лупайте / сю"
+        answer: "Лупайте сю скалу!"
+      - prompt: "жити / вічно / буду / Я"
+        answer: "Я буду вічно жити!"
+      - prompt: "не / вмирає / що / маю / Я / серці / в / те"
+        answer: "Я в серці маю те, що не вмирає."
+      - prompt: "жива / Ні / Я"
+        answer: "Ні! Я жива!"
+      - prompt: "спинить / ні / вам / жар / рук / холод / не / Нехай / ні"
+        answer: "Нехай ні жар, ні холод вам не спинить рук!"
+      - prompt: "воля / скалою / За / там"
+        answer: "Там, за скалою — воля!"
+      - prompt: "щастя / скалою / за / Там"
+        answer: "Там, за скалою — щастя!"
+      - prompt: "русин / є / Я"
+        answer: "Я є русин."
+      - prompt: "вмерти / русином / хочу / і"
+        answer: "І русином хочу вмерти."
+      - prompt: "народу / служити / Інтелігент / повинен"
+        answer: "Інтелігент повинен служити народу."
+      - prompt: "нації / мовою / рідною / Освіта / фундамент"
+        answer: "Освіта рідною мовою — фундамент нації."
+      - prompt: "сильніший / за / імперію / Дух"
+        answer: "Дух сильніший за імперію."
+      - prompt: "культурі / праця / в / щоденна / Важлива"
+        answer: "Важлива щоденна праця в культурі."
+      - prompt: "модернізму / частиною / були / Вони / європейського"
+        answer: "Вони були частиною європейського модернізму."
+      - prompt: "слів / тисяч / шістдесят / вісім / Понад"
+        answer: "Понад шістдесят вісім тисяч слів."
+      - prompt: "творів / тисяч / п'ять / Понад"
+        answer: "Понад п'ять тисяч творів."
+
+  - type: group-sort
+    id: authors-facts
+    title: "Факти про титанів"
+    instruction: "Розподіліть факти за авторами."
+    groups:
+      - name: "Іван Франко"
+        items:
+          - "Народився в Нагуєвичах"
+          - "Батько був ковалем"
+          - "Знав 14 мов"
+          - "Написав «Каменярі»"
+          - "Тричі арештовувався"
+          - "Номінований на Нобелівську премію"
+          - "Помер у 1916 році"
+          - "Автор роману «Борислав сміється»"
+      - name: "Леся Українка"
+        items:
+          - "Справжнє ім'я — Лариса Косач"
+          - "Мати — Олена Пчілка"
+          - "Дядько — Драгоманов"
+          - "Хворіла на туберкульоз"
+          - "Написала «Лісову пісню»"
+          - "Померла в 42 роки"
+          - "Створила образ Мавки"
+          - "Писала модерністські драми"
+      - name: "Борис Грінченко"
+        items:
+          - "Народився на Харківщині"
+          - "Уклав 4-томний словник"
+          - "68 000 слів у словнику"
+          - "Написав 100+ підручників"
+          - "Полемізував з Драгомановим"
+          - "Помер в Італії"
+          - "Перекладав Шекспіра"
+          - "Був учителем"
+
+  - type: error-correction
+    id: grammar-errors
+    title: "Виправте помилки"
+    instruction: "Знайдіть і виправте граматичну помилку в реченні."
+    items:
+      - sentence: "Франко був номінована на Нобелівську премію."
+        error: "номінована"
+        answer: "номінований"
+        options: ["номінована", "номінований", "номіновано", "номінування"]
+        explanation: "Франко — чоловік, тому прикметник має чоловічий рід: «номінований»."
+      - sentence: "Леся написала драму, присвячений українській культурі."
+        error: "присвячений"
+        answer: "присвячену"
+        options: ["присвячений", "присвячену", "присвяченим", "присвячене"]
+        explanation: "Драма — жіночий рід, знахідний відмінок: «присвячену»."
+      - sentence: "Словник Грінченка містили понад 68 тисяч слів."
+        error: "містили"
+        answer: "містив"
+        options: ["містили", "містив", "містить", "містила"]
+        explanation: "Словник — однина, чоловічий рід, минулий час: «містив»."
+      - sentence: "Мавка є символом краси, що не вмирають."
+        error: "вмирають"
+        answer: "вмирає"
+        options: ["вмирають", "вмирає", "вмирав", "вмирала"]
+        explanation: "Краса — однина: «що не вмирає»."
+      - sentence: "Франко закликав до щоденного праці."
+        error: "щоденного"
+        answer: "щоденної"
+        options: ["щоденного", "щоденної", "щоденним", "щоденну"]
+        explanation: "Праця — жіночий рід, родовий відмінок: «щоденної праці»."
+      - sentence: "Леся Українка читала Данте в оригіналом."
+        error: "оригіналом"
+        answer: "оригіналі"
+        options: ["оригіналом", "оригіналі", "оригінал", "оригіналу"]
+        explanation: "Прийменник «в» вимагає місцевого відмінка: «в оригіналі»."
+      - sentence: "Грінченко листувався із сотнею кореспондентів."
+        error: "сотнею"
+        answer: "сотнями"
+        options: ["сотнею", "сотнями", "сотні", "сотню"]
+        explanation: "У тексті сказано «з сотнями» (множина), а не «з сотнею»."
+      - sentence: "Франко досліджувала літературу і фольклор."
+        error: "досліджувала"
+        answer: "досліджував"
+        options: ["досліджувала", "досліджував", "досліджувало", "досліджували"]
+        explanation: "Франко — чоловік: «досліджував»."
+      - sentence: "Драма «Лісова пісня» був написана в 1911 році."
+        error: "був"
+        answer: "була"
+        options: ["був", "була", "було", "були"]
+        explanation: "Драма — жіночий рід: «була написана»."
+      - sentence: "Чотири томи словника стали фундаментам української лексикографії."
+        error: "фундаментам"
+        answer: "фундаментом"
+        options: ["фундаментам", "фундаментом", "фундаменту", "фундамент"]
+        explanation: "Орудний відмінок однини: «фундаментом»."
+      - sentence: "Леся критикувала російську культурна експансія."
+        error: "культурна"
+        answer: "культурну"
+        options: ["культурна", "культурну", "культурної", "культурним"]
+        explanation: "Знахідний відмінок: «культурну експансію»."
+      - sentence: "Франко був європейським інтелектуалом світової рівня."
+        error: "рівня"
+        answer: "рівню"
+        options: ["рівня", "рівню", "рівень", "рівнем"]
+        explanation: "Родовий відмінок з прийменником: «світового рівню» (або «рівня» — обидва варіанти можливі, але в контексті «рівню» природніше)."
+      - sentence: "Грінченко вважав освіту фундамент нації."
+        error: "фундамент"
+        answer: "фундаментом"
+        options: ["фундамент", "фундаментом", "фундаменту", "фундаменті"]
+        explanation: "Орудний відмінок після «вважав»: «фундаментом»."
+      - sentence: "Модернізм був літературно-мистецький напрям XX століття."
+        error: "напрям"
+        answer: "напрямом"
+        options: ["напрям", "напрямом", "напряму", "напрямі"]
+        explanation: "Орудний відмінок після «був»: «напрямом»."
+      - sentence: "Спадщина титанів залишиться живим для наступних поколінь."
+        error: "живим"
+        answer: "живою"
+        options: ["живим", "живою", "живої", "живе"]
+        explanation: "Спадщина — жіночий рід: «залишиться живою»."
+      - sentence: "Леся перетворилася у символ незламність."
+        error: "незламність"
+        answer: "незламності"
+        options: ["незламність", "незламності", "незламністю", "незламним"]
+        explanation: "Родовий відмінок після «символ»: «символ незламності»."
+
+  - type: mark-the-words
+    id: find-passive
+    title: "Знайдіть пасивні конструкції"
+    instruction: "Позначте всі форми пасивного стану в тексті."
+    text: |
+      Іван Франко *був номінований* на Нобелівську премію. Його твори *були перекладені* багатьма мовами. Словник Грінченка *був опублікований* у 1907–1909 роках. «Лісова пісня» *була написана* в Єгипті. Франко *був заарештований* австрійською владою тричі. Леся Українка *була прикута* до ліжка хворобою. Словник *вважається* основою української лексикографії. Ці автори *визнаються* титанами культури.
+
+  - type: select
+    id: multiple-correct
+    title: "Виберіть усі правильні відповіді"
+    instruction: "Оберіть усі твердження, що відповідають тексту."
+    items:
+      - question: "Які з цих фактів правдиві про Франка?"
+        options:
+          - text: "Знав 14 мов"
+            correct: true
+          - text: "Народився у Львові"
+            correct: false
+          - text: "Написав понад 5000 творів"
+            correct: true
+          - text: "Ніколи не був заарештований"
+            correct: false
+          - text: "Був номінований на Нобелівську премію"
+            correct: true
+          - text: "Помер у Петербурзі"
+            correct: false
+      - question: "Які з цих фактів правдиві про Лесю Українку?"
+        options:
+          - text: "Справжнє ім'я — Лариса Косач"
+            correct: true
+          - text: "Мати — Олена Пчілка"
+            correct: true
+          - text: "Написала «Каменярів»"
+            correct: false
+          - text: "Хворіла на туберкульоз"
+            correct: true
+          - text: "Дожила до 70 років"
+            correct: false
+          - text: "Критикувала російську експансію"
+            correct: true
+      - question: "Які з цих фактів правдиві про Грінченка?"
+        options:
+          - text: "Уклав 4-томний словник"
+            correct: true
+          - text: "Словник містить 68 000 слів"
+            correct: true
+          - text: "Народився у Львові"
+            correct: false
+          - text: "Написав 100+ підручників"
+            correct: true
+          - text: "Полемізував з Драгомановим"
+            correct: true
+          - text: "Помер у Києві"
+            correct: false
+      - question: "Що характеризує всіх трьох титанів?"
+        options:
+          - text: "Були частиною європейського модернізму"
+            correct: true
+          - text: "Померли від туберкульозу"
+            correct: false
+          - text: "Працювали в умовах мовних заборон"
+            correct: true
+          - text: "Жили у XX столітті (частково)"
+            correct: true
+          - text: "Всі троє були поетами"
+            correct: false
+          - text: "Залишили значну спадщину"
+            correct: true
+      - question: "Які теми піднімали твори Лесі Українки?"
+        options:
+          - text: "Свобода і гідність"
+            correct: true
+          - text: "Античні сюжети"
+            correct: true
+          - text: "Біблійні мотиви"
+            correct: true
+          - text: "Тільки побутові теми"
+            correct: false
+          - text: "Опір тиранії"
+            correct: true
+          - text: "Виключно комічні ситуації"
+            correct: false
+      - question: "Які напрямки діяльності Франка згадуються в тексті?"
+        options:
+          - text: "Поезія"
+            correct: true
+          - text: "Наукові дослідження"
+            correct: true
+          - text: "Переклади"
+            correct: true
+          - text: "Музика"
+            correct: false
+          - text: "Романи та оповідання"
+            correct: true
+          - text: "Живопис"
+            correct: false
+
+  - type: translate
+    id: translate-terms
+    title: "Переклад термінів"
+    instruction: "Виберіть правильний переклад."
+    items:
+      - source: "Каменяр"
+        options:
+          - text: "Stonecutter"
+            correct: true
+          - text: "Bricklayer"
+            correct: false
+          - text: "Carpenter"
+            correct: false
+          - text: "Blacksmith"
+            correct: false
+      - source: "Мавка"
+        options:
+          - text: "Forest nymph"
+            correct: true
+          - text: "Witch"
+            correct: false
+          - text: "Princess"
+            correct: false
+          - text: "Goddess"
+            correct: false
+      - source: "Словник"
+        options:
+          - text: "Dictionary"
+            correct: true
+          - text: "Novel"
+            correct: false
+          - text: "Poem"
+            correct: false
+          - text: "Letter"
+            correct: false
+      - source: "Спадщина"
+        options:
+          - text: "Legacy"
+            correct: true
+          - text: "Childhood"
+            correct: false
+          - text: "Problem"
+            correct: false
+          - text: "Enemy"
+            correct: false
+      - source: "Титан"
+        options:
+          - text: "Titan"
+            correct: true
+          - text: "Child"
+            correct: false
+          - text: "Beginner"
+            correct: false
+          - text: "Enemy"
+            correct: false
+      - source: "Модернізм"
+        options:
+          - text: "Modernism"
+            correct: true
+          - text: "Classicism"
+            correct: false
+          - text: "Romanticism"
+            correct: false
+          - text: "Realism"
+            correct: false
+      - source: "Незламність"
+        options:
+          - text: "Invincibility"
+            correct: true
+          - text: "Weakness"
+            correct: false
+          - text: "Sadness"
+            correct: false
+          - text: "Happiness"
+            correct: false
+      - source: "Лексикограф"
+        options:
+          - text: "Lexicographer"
+            correct: true
+          - text: "Historian"
+            correct: false
+          - text: "Politician"
+            correct: false
+          - text: "Soldier"
+            correct: false
+      - source: "Феєрія"
+        options:
+          - text: "Fairy tale play"
+            correct: true
+          - text: "Tragedy"
+            correct: false
+          - text: "Comedy"
+            correct: false
+          - text: "Documentary"
+            correct: false
+      - source: "Фундамент"
+        options:
+          - text: "Foundation"
+            correct: true
+          - text: "Roof"
+            correct: false
+          - text: "Wall"
+            correct: false
+          - text: "Window"
+            correct: false
+      - source: "Алегорія"
+        options:
+          - text: "Allegory"
+            correct: true
+          - text: "Biography"
+            correct: false
+          - text: "History"
+            correct: false
+          - text: "Geography"
+            correct: false
+      - source: "Полеміст"
+        options:
+          - text: "Polemicist"
+            correct: true
+          - text: "Pacifist"
+            correct: false
+          - text: "Optimist"
+            correct: false
+          - text: "Pessimist"
+            correct: false
+      - source: "Інтелект"
+        options:
+          - text: "Intellect"
+            correct: true
+          - text: "Instinct"
+            correct: false
+          - text: "Emotion"
+            correct: false
+          - text: "Reaction"
+            correct: false
+      - source: "Праця"
+        options:
+          - text: "Work/Labor"
+            correct: true
+          - text: "Rest"
+            correct: false
+          - text: "Sleep"
+            correct: false
+          - text: "Play"
+            correct: false
+      - source: "Девіз"
+        options:
+          - text: "Motto"
+            correct: true
+          - text: "Secret"
+            correct: false
+          - text: "Problem"
+            correct: false
+          - text: "Question"
+            correct: false
+      - source: "Драма"
+        options:
+          - text: "Drama"
+            correct: true
+          - text: "Comedy"
+            correct: false
+          - text: "Song"
+            correct: false
+          - text: "Dance"
+            correct: false
+
+  - type: cloze
+    id: decolonization-cloze
+    title: "Деколонізаційний погляд"
+    instruction: "Заповніть пропуски в тексті про деколонізацію."
+    passage: |
+      Російська імперія свідомо {применшувала} значення української культури. Вона називала її «{малоросійською}» екзотикою. Радянська влада потім {присвоїла} цих авторів як «радянських {класиків}». Вона {вилучила} з їхніх творів антиімперський зміст.
+
+      Насправді Франко, Леся та Грінченко були {європейськими} інтелектуалами світового рівня. Франко був номінований на {Нобелівську} премію. Леся писала {модерністські} драми. Грінченко створив {наукову} працю рівня найкращих словників {Європи}.
+
+      Сьогодні ми {повертаємо} їм справжній голос. Їхній {модернізм} був не імітацією, а {оригінальним} внеском у світову {культуру}. Українська література кінця XIX століття не була {провінційною}. Ці {титани} заслуговують визнання.

@@ -1,15 +1,18 @@
 module: 31-numeral-declension-time-dates
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/31-numeral-declension-time-dates.md
-generated: '2025-12-29T18:22:02.511672'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.152064'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 26
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 106
+total_items: 107
+item_count: 107
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у виразах часу та дат
@@ -520,6 +523,141 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Прочитайте розклад і заповніть пропуски
+  passage_template: 'Розклад конференції на {п''ятнадцяте|п''ятнадцятого|п''ятнадцятому|п''ятнадцяте}
+    березня.
+
+
+    Реєстрація учасників починається о {дев''ятій|дев''ятого|дев''яту|дев''ятій} годині
+    ранку. Офіційне відкриття — {о|об|у|на} десятій. Перша сесія триватиме з десятої
+    {до|на|по|у} дванадцятої.
+
+
+    Обідня перерва — {рівно|точно|саме|якраз} опівдні. {О|Об|У|На} першій годині відновлюємо
+    роботу. Друга сесія закінчиться за {чверть|четверту|чвертю|четвертої} четверта.
+
+
+    Кава-брейк — {пів|половина|полу|полі} на п''яту. Заключна дискусія почнеться о
+    {п''ятій|п''ятого|п''яту|п''ятої}. Офіційне закриття — не пізніше {шостої|шосту|шоста|шостим}.
+
+
+    Вечірня програма — з {сьомої|сьому|сьома|сьомим} до {десятої|десяту|десята|десятим}.
+    Банкет починається рівно {о|об|у|на} восьмій годині {вечора|ранку|дня|ночі}.
+
+
+    Просимо підтвердити участь до {десятого|десяте|десятому|десять} березня. Реєстрація
+    закривається {опівночі|опівдні|ввечері|вранці}.
+
+    '
+  blanks:
+  - answer: п'ятнадцяте
+    options:
+    - п'ятнадцяте
+    - п'ятнадцятого
+    - п'ятнадцятому
+  - answer: дев'ятій
+    options:
+    - дев'ятій
+    - дев'ятого
+    - дев'яту
+  - answer: на
+    options:
+    - о
+    - об
+    - у
+  - answer: у
+    options:
+    - до
+    - на
+    - по
+  - answer: якраз
+    options:
+    - рівно
+    - точно
+    - саме
+  - answer: На
+    options:
+    - О
+    - Об
+    - У
+  - answer: четвертої
+    options:
+    - чверть
+    - четверту
+    - чвертю
+  - answer: полі
+    options:
+    - пів
+    - половина
+    - полу
+  - answer: п'ятої
+    options:
+    - п'ятій
+    - п'ятого
+    - п'яту
+  - answer: шостим
+    options:
+    - шостої
+    - шосту
+    - шоста
+  - answer: сьомим
+    options:
+    - сьомої
+    - сьому
+    - сьома
+  - answer: десятим
+    options:
+    - десятої
+    - десяту
+    - десята
+  - answer: на
+    options:
+    - о
+    - об
+    - у
+  - answer: ночі
+    options:
+    - вечора
+    - ранку
+    - дня
+  - answer: десять
+    options:
+    - десятого
+    - десяте
+    - десятому
+  - answer: вранці
+    options:
+    - опівночі
+    - опівдні
+    - ввечері
+  blank_count: 16
+  complete_passage: 'Розклад конференції на п''ятнадцяте березня.
+
+
+    Реєстрація учасників починається о дев''ятій годині ранку. Офіційне відкриття
+    — на десятій. Перша сесія триватиме з десятої у дванадцятої.
+
+
+    Обідня перерва — якраз опівдні. На першій годині відновлюємо роботу. Друга сесія
+    закінчиться за четвертої четверта.
+
+
+    Кава-брейк — полі на п''яту. Заключна дискусія почнеться о п''ятої. Офіційне закриття
+    — не пізніше шостим.
+
+
+    Вечірня програма — з сьомим до десятим. Банкет починається рівно на восьмій годині
+    ночі.
+
+
+    Просимо підтвердити участь до десять березня. Реєстрація закривається вранці.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про час і дати
   jumbled_words: []
@@ -652,14 +790,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як правильно сказати «at 2 o'clock» у формальному стилі?
   options:
-  - text: о другому годині
-    correct: false
-  - text: о другій годині
-    correct: true
-  - text: о другій година
-    correct: false
-  - text: на другий годині
-    correct: false
+  - '{''text'': ''о другому годині'', ''correct'': False}'
+  - '{''text'': ''о другій годині'', ''correct'': True}'
+  - '{''text'': ''о другій година'', ''correct'': False}'
+  - '{''text'': ''на другий годині'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -670,14 +804,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка правильна форма для «half past twelve»?
   options:
-  - text: пів дванадцятої
-    correct: false
-  - text: пів на першу
-    correct: true
-  - text: пів на дванадцяту
-    correct: false
-  - text: половина першої
-    correct: false
+  - '{''text'': ''пів дванадцятої'', ''correct'': False}'
+  - '{''text'': ''пів на першу'', ''correct'': True}'
+  - '{''text'': ''пів на дванадцяту'', ''correct'': False}'
+  - '{''text'': ''половина першої'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -688,14 +818,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як сказати «quarter to three» українською?
   options:
-  - text: за чверть третя
-    correct: true
-  - text: чверть до третьої
-    correct: false
-  - text: три без чверті
-    correct: false
-  - text: за чверть третьої
-    correct: false
+  - '{''text'': ''за чверть третя'', ''correct'': True}'
+  - '{''text'': ''чверть до третьої'', ''correct'': False}'
+  - '{''text'': ''три без чверті'', ''correct'': False}'
+  - '{''text'': ''за чверть третьої'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -706,14 +832,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка форма правильна для «twenty past six»?
   options:
-  - text: двадцять після шостої
-    correct: false
-  - text: двадцять по шостій
-    correct: true
-  - text: двадцять на шостій
-    correct: false
-  - text: шоста двадцять
-    correct: false
+  - '{''text'': ''двадцять після шостої'', ''correct'': False}'
+  - '{''text'': ''двадцять по шостій'', ''correct'': True}'
+  - '{''text'': ''двадцять на шостій'', ''correct'': False}'
+  - '{''text'': ''шоста двадцять'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -724,14 +846,10 @@ items:
   title: Вибір правильного вираження часу
   question: О котрій годині це означає «опівдні»?
   options:
-  - text: О 0:00
-    correct: false
-  - text: О 6:00
-    correct: false
-  - text: О 12:00
-    correct: true
-  - text: О 18:00
-    correct: false
+  - '{''text'': ''О 0:00'', ''correct'': False}'
+  - '{''text'': ''О 6:00'', ''correct'': False}'
+  - '{''text'': ''О 12:00'', ''correct'': True}'
+  - '{''text'': ''О 18:00'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -742,14 +860,10 @@ items:
   title: Вибір правильного вираження часу
   question: Який прийменник вживаємо перед «одинадцятій»?
   options:
-  - text: о
-    correct: false
-  - text: об
-    correct: true
-  - text: у
-    correct: false
-  - text: на
-    correct: false
+  - '{''text'': ''о'', ''correct'': False}'
+  - '{''text'': ''об'', ''correct'': True}'
+  - '{''text'': ''у'', ''correct'': False}'
+  - '{''text'': ''на'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -760,14 +874,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як правильно сказати 7:30?
   options:
-  - text: пів сьомої
-    correct: false
-  - text: пів на восьму
-    correct: true
-  - text: половина сьомої
-    correct: false
-  - text: пів на сьому
-    correct: false
+  - '{''text'': ''пів сьомої'', ''correct'': False}'
+  - '{''text'': ''пів на восьму'', ''correct'': True}'
+  - '{''text'': ''половина сьомої'', ''correct'': False}'
+  - '{''text'': ''пів на сьому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -778,14 +888,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка форма правильна для «at five minutes past nine»?
   options:
-  - text: п'ять по дев'ятій
-    correct: true
-  - text: дев'ята п'ять
-    correct: false
-  - text: п'ять після дев'ятої
-    correct: false
-  - text: п'ять на дев'ятій
-    correct: false
+  - '{''text'': "п''ять по дев''ятій", ''correct'': True}'
+  - '{''text'': "дев''ята п''ять", ''correct'': False}'
+  - '{''text'': "п''ять після дев''ятої", ''correct'': False}'
+  - '{''text'': "п''ять на дев''ятій", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -796,14 +902,10 @@ items:
   title: Вибір правильного вираження часу
   question: Що означає «за десять восьма»?
   options:
-  - text: 470
-    correct: true
-  - text: 490
-    correct: false
-  - text: 430
-    correct: false
-  - text: 530
-    correct: false
+  - '{''text'': 470, ''correct'': True}'
+  - '{''text'': 490, ''correct'': False}'
+  - '{''text'': 430, ''correct'': False}'
+  - '{''text'': 530, ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -814,14 +916,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка форма правильна для офіційного оголошення о 14:30?
   options:
-  - text: о чотирнадцятій тридцять
-    correct: true
-  - text: о другій тридцять
-    correct: false
-  - text: пів на третю
-    correct: false
-  - text: о другій годині тридцять хвилин
-    correct: false
+  - '{''text'': ''о чотирнадцятій тридцять'', ''correct'': True}'
+  - '{''text'': ''о другій тридцять'', ''correct'': False}'
+  - '{''text'': ''пів на третю'', ''correct'': False}'
+  - '{''text'': ''о другій годині тридцять хвилин'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -832,14 +930,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як правильно сказати «at midnight»?
   options:
-  - text: о півночі
-    correct: false
-  - text: опівночі
-    correct: true
-  - text: о дванадцятій ночі
-    correct: false
-  - text: о нулі годин
-    correct: false
+  - '{''text'': ''о півночі'', ''correct'': False}'
+  - '{''text'': ''опівночі'', ''correct'': True}'
+  - '{''text'': ''о дванадцятій ночі'', ''correct'': False}'
+  - '{''text'': ''о нулі годин'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -850,14 +944,10 @@ items:
   title: Вибір правильного вираження часу
   question: Що означає «чверть на другу»?
   options:
-  - text: 75
-    correct: true
-  - text: 135
-    correct: false
-  - text: 105
-    correct: false
-  - text: 165
-    correct: false
+  - '{''text'': 75, ''correct'': True}'
+  - '{''text'': 135, ''correct'': False}'
+  - '{''text'': 105, ''correct'': False}'
+  - '{''text'': 165, ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -868,14 +958,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка форма правильна для «from 9 to 5»?
   options:
-  - text: з дев'ятої до п'ятої
-    correct: true
-  - text: від дев'ять до п'ять
-    correct: false
-  - text: з дев'яту до п'яту
-    correct: false
-  - text: з дев'ятий до п'ятий
-    correct: false
+  - '{''text'': "з дев''ятої до п''ятої", ''correct'': True}'
+  - '{''text'': "від дев''ять до п''ять", ''correct'': False}'
+  - '{''text'': "з дев''яту до п''яту", ''correct'': False}'
+  - '{''text'': "з дев''ятий до п''ятий", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -886,14 +972,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як правильно сказати 6:45?
   options:
-  - text: за чверть сьома
-    correct: true
-  - text: за чверть шоста
-    correct: false
-  - text: чверть до сьомої
-    correct: false
-  - text: без чверті сьома
-    correct: false
+  - '{''text'': ''за чверть сьома'', ''correct'': True}'
+  - '{''text'': ''за чверть шоста'', ''correct'': False}'
+  - '{''text'': ''чверть до сьомої'', ''correct'': False}'
+  - '{''text'': ''без чверті сьома'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -904,14 +986,10 @@ items:
   title: Вибір правильного вираження часу
   question: Яка форма правильна у реченні «Зустріч о ___ годині»?
   options:
-  - text: третя
-    correct: false
-  - text: третю
-    correct: false
-  - text: третій
-    correct: true
-  - text: третьої
-    correct: false
+  - '{''text'': ''третя'', ''correct'': False}'
+  - '{''text'': ''третю'', ''correct'': False}'
+  - '{''text'': ''третій'', ''correct'': True}'
+  - '{''text'': ''третьої'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -922,14 +1000,10 @@ items:
   title: Вибір правильного вираження часу
   question: Як сказати «ten minutes to eight» українською?
   options:
-  - text: за десять восьма
-    correct: true
-  - text: десять до восьмої
-    correct: false
-  - text: восьма без десяти
-    correct: false
-  - text: за десять восьмої
-    correct: false
+  - '{''text'': ''за десять восьма'', ''correct'': True}'
+  - '{''text'': ''десять до восьмої'', ''correct'': False}'
+  - '{''text'': ''восьма без десяти'', ''correct'': False}'
+  - '{''text'': ''за десять восьмої'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -940,14 +1014,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: У якому реченні дата вжита правильно для позначення події?
   options:
-  - text: Конференція відбудеться двадцяте травня.
-    correct: false
-  - text: Конференція відбудеться двадцятого травня.
-    correct: true
-  - text: Конференція відбудеться на двадцяте травня.
-    correct: false
-  - text: Конференція відбудеться у двадцятому травні.
-    correct: false
+  - '{''text'': ''Конференція відбудеться двадцяте травня.'', ''correct'': False}'
+  - '{''text'': ''Конференція відбудеться двадцятого травня.'', ''correct'': True}'
+  - '{''text'': ''Конференція відбудеться на двадцяте травня.'', ''correct'': False}'
+  - '{''text'': ''Конференція відбудеться у двадцятому травні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -958,14 +1028,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка різниця між «опівдні» та «опівночі»?
   options:
-  - text: Опівдні — 0:00, опівночі — 12:00.
-    correct: false
-  - text: Опівдні — 12:00, опівночі — 0:00.
-    correct: true
-  - text: Немає різниці, це синоніми.
-    correct: false
-  - text: Опівдні — ранок, опівночі — вечір.
-    correct: false
+  - '{''text'': ''Опівдні — 0:00, опівночі — 12:00.'', ''correct'': False}'
+  - '{''text'': ''Опівдні — 12:00, опівночі — 0:00.'', ''correct'': True}'
+  - '{''text'': ''Немає різниці, це синоніми.'', ''correct'': False}'
+  - '{''text'': ''Опівдні — ранок, опівночі — вечір.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -976,14 +1042,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: У якому випадку вживаємо «об» замість «о»?
   options:
-  - text: Перед приголосними.
-    correct: false
-  - text: Перед голосними.
-    correct: true
-  - text: Завжди можна обидва.
-    correct: false
-  - text: Тільки з годинами.
-    correct: false
+  - '{''text'': ''Перед приголосними.'', ''correct'': False}'
+  - '{''text'': ''Перед голосними.'', ''correct'': True}'
+  - '{''text'': ''Завжди можна обидва.'', ''correct'': False}'
+  - '{''text'': ''Тільки з годинами.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -994,14 +1056,11 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Чому «пів третьої» вважається русизмом?
   options:
-  - text: Це російське слово.
-    correct: false
-  - text: Правильна українська конструкція — «пів на третю».
-    correct: true
-  - text: Це архаїзм.
-    correct: false
-  - text: Це діалектизм.
-    correct: false
+  - '{''text'': ''Це російське слово.'', ''correct'': False}'
+  - '{''text'': ''Правильна українська конструкція — «пів на третю».'', ''correct'':
+    True}'
+  - '{''text'': ''Це архаїзм.'', ''correct'': False}'
+  - '{''text'': ''Це діалектизм.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1012,14 +1071,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Який відмінок вживається після прийменника «до» з датами?
   options:
-  - text: Називний.
-    correct: false
-  - text: Знахідний.
-    correct: false
-  - text: Родовий.
-    correct: true
-  - text: Місцевий.
-    correct: false
+  - '{''text'': ''Називний.'', ''correct'': False}'
+  - '{''text'': ''Знахідний.'', ''correct'': False}'
+  - '{''text'': ''Родовий.'', ''correct'': True}'
+  - '{''text'': ''Місцевий.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1085,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка форма правильна для 11:45?
   options:
-  - text: За чверть дванадцята.
-    correct: true
-  - text: За чверть дванадцятої.
-    correct: false
-  - text: Чверть до дванадцятої.
-    correct: false
-  - text: Дванадцята без чверті.
-    correct: false
+  - '{''text'': ''За чверть дванадцята.'', ''correct'': True}'
+  - '{''text'': ''За чверть дванадцятої.'', ''correct'': False}'
+  - '{''text'': ''Чверть до дванадцятої.'', ''correct'': False}'
+  - '{''text'': ''Дванадцята без чверті.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1048,14 +1099,11 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Чому порядкові числівники при датах мають закінчення -е?
   options:
-  - text: Це особлива форма для дат.
-    correct: false
-  - text: Вони узгоджуються зі словом «число» (середній рід).
-    correct: true
-  - text: Це множина.
-    correct: false
-  - text: Це наказовий спосіб.
-    correct: false
+  - '{''text'': ''Це особлива форма для дат.'', ''correct'': False}'
+  - '{''text'': ''Вони узгоджуються зі словом «число» (середній рід).'', ''correct'':
+    True}'
+  - '{''text'': ''Це множина.'', ''correct'': False}'
+  - '{''text'': ''Це наказовий спосіб.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1066,14 +1114,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка форма правильна для «у березні»?
   options:
-  - text: Це родовий відмінок.
-    correct: false
-  - text: Це місцевий відмінок.
-    correct: true
-  - text: Це знахідний відмінок.
-    correct: false
-  - text: Це давальний відмінок.
-    correct: false
+  - '{''text'': ''Це родовий відмінок.'', ''correct'': False}'
+  - '{''text'': ''Це місцевий відмінок.'', ''correct'': True}'
+  - '{''text'': ''Це знахідний відмінок.'', ''correct'': False}'
+  - '{''text'': ''Це давальний відмінок.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1084,14 +1128,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка конструкція правильна для періоду «з 1 до 10 січня»?
   options:
-  - text: З першого до десятого січня.
-    correct: true
-  - text: З перше до десяте січня.
-    correct: false
-  - text: Від перший до десятий січня.
-    correct: false
-  - text: З першому до десятому січня.
-    correct: false
+  - '{''text'': ''З першого до десятого січня.'', ''correct'': True}'
+  - '{''text'': ''З перше до десяте січня.'', ''correct'': False}'
+  - '{''text'': ''Від перший до десятий січня.'', ''correct'': False}'
+  - '{''text'': ''З першому до десятому січня.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1102,14 +1142,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Що означає «чверть на другу»?
   options:
-  - text: 135.0
-    correct: false
-  - text: 75.0
-    correct: true
-  - text: 105.0
-    correct: false
-  - text: 165.0
-    correct: false
+  - '{''text'': 135.0, ''correct'': False}'
+  - '{''text'': 75.0, ''correct'': True}'
+  - '{''text'': 105.0, ''correct'': False}'
+  - '{''text'': 165.0, ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1120,14 +1156,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка форма правильна для «birthday»?
   options:
-  - text: День народження.
-    correct: true
-  - text: Дата народження.
-    correct: false
-  - text: Свято народження.
-    correct: false
-  - text: Час народження.
-    correct: false
+  - '{''text'': ''День народження.'', ''correct'': True}'
+  - '{''text'': ''Дата народження.'', ''correct'': False}'
+  - '{''text'': ''Свято народження.'', ''correct'': False}'
+  - '{''text'': ''Час народження.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1138,14 +1170,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яке слово є українським відповідником до «deadline»?
   options:
-  - text: Дедлайн.
-    correct: false
-  - text: Кінцевий строк.
-    correct: false
-  - text: Крайній термін.
-    correct: true
-  - text: Останній день.
-    correct: false
+  - '{''text'': ''Дедлайн.'', ''correct'': False}'
+  - '{''text'': ''Кінцевий строк.'', ''correct'': False}'
+  - '{''text'': ''Крайній термін.'', ''correct'': True}'
+  - '{''text'': ''Останній день.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1156,14 +1184,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка форма правильна для «at 14:30» в офіційному стилі?
   options:
-  - text: О чотирнадцятій тридцять.
-    correct: true
-  - text: О другій тридцять.
-    correct: false
-  - text: Пів на третю.
-    correct: false
-  - text: О другій годині тридцять хвилин.
-    correct: false
+  - '{''text'': ''О чотирнадцятій тридцять.'', ''correct'': True}'
+  - '{''text'': ''О другій тридцять.'', ''correct'': False}'
+  - '{''text'': ''Пів на третю.'', ''correct'': False}'
+  - '{''text'': ''О другій годині тридцять хвилин.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1174,14 +1198,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка різниця між «річниця» і «ювілей»?
   options:
-  - text: Немає різниці.
-    correct: false
-  - text: Ювілей — кругла дата (10, 25, 50 років).
-    correct: true
-  - text: Річниця — тільки перший рік.
-    correct: false
-  - text: Ювілей — тільки для людей.
-    correct: false
+  - '{''text'': ''Немає різниці.'', ''correct'': False}'
+  - '{''text'': ''Ювілей — кругла дата (10, 25, 50 років).'', ''correct'': True}'
+  - '{''text'': ''Річниця — тільки перший рік.'', ''correct'': False}'
+  - '{''text'': ''Ювілей — тільки для людей.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1192,14 +1212,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: Яка форма правильна для «п'ять хвилин після третьої»?
   options:
-  - text: П'ять по третя.
-    correct: false
-  - text: П'ять по третій.
-    correct: true
-  - text: П'ять по третьої.
-    correct: false
-  - text: П'ять після третьої.
-    correct: false
+  - '{''text'': "П''ять по третя.", ''correct'': False}'
+  - '{''text'': "П''ять по третій.", ''correct'': True}'
+  - '{''text'': "П''ять по третьої.", ''correct'': False}'
+  - '{''text'': "П''ять після третьої.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1210,14 +1226,10 @@ items:
   title: 'Поглиблена перевірка: Час і дати'
   question: У якому відмінку стоїть місяць у виразі «п'ятого січня»?
   options:
-  - text: У називному.
-    correct: false
-  - text: У родовому.
-    correct: true
-  - text: У місцевому.
-    correct: false
-  - text: У знахідному.
-    correct: false
+  - '{''text'': ''У називному.'', ''correct'': False}'
+  - '{''text'': ''У родовому.'', ''correct'': True}'
+  - '{''text'': ''У місцевому.'', ''correct'': False}'
+  - '{''text'': ''У знахідному.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

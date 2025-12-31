@@ -1,0 +1,1423 @@
+module: 92-ivan-mazepa-i-derzhavnyk
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/92-ivan-mazepa-i-derzhavnyk.md
+generated: '2025-12-30T19:49:17.536042'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа став гетьманом у 1687 рік.
+  error: рік
+  answer: році
+  sentence_corrected: Мазепа став гетьманом у 1687 році.
+  options:
+  - рік
+  - році
+  - року
+  - роком
+  original_explanation: Прийменник «у» з датою вимагає місцевого відмінка — у році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Він здобув освіту в Києво-Могилянській колегія.
+  error: колегія
+  answer: колегії
+  sentence_corrected: Він здобув освіту в Києво-Могилянській колегії.
+  options:
+  - колегія
+  - колегії
+  - колегію
+  - колегією
+  original_explanation: Прийменник «в» вимагає місцевого відмінка — в колегії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Коломацькі статті обмежували автономія Гетьманщини.
+  error: автономія
+  answer: автономію
+  sentence_corrected: Коломацькі статті обмежували автономію Гетьманщини.
+  options:
+  - автономія
+  - автономію
+  - автономії
+  - автономією
+  original_explanation: Дієслово «обмежувати» вимагає знахідного відмінка — обмежували
+    автономію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа грав роль вірний слуги.
+  error: вірний
+  answer: вірного
+  sentence_corrected: Мазепа грав роль вірного слуги.
+  options:
+  - вірний
+  - вірного
+  - вірному
+  - вірним
+  original_explanation: Іменник «слуги» в родовому відмінку, тому прикметник теж у
+    родовому — вірного.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Гетьман володів понад ста тисячі селян.
+  error: тисячі
+  answer: тисячами
+  sentence_corrected: Гетьман володів понад ста тисячами селян.
+  options:
+  - тисячі
+  - тисячами
+  - тисяч
+  - тисячу
+  original_explanation: Після «понад сто» потрібен орудний відмінок множини — тисячами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Батурин був гетьманською столиця.
+  error: столиця
+  answer: столицею
+  sentence_corrected: Батурин був гетьманською столицею.
+  options:
+  - столиця
+  - столицею
+  - столиці
+  - столицю
+  original_explanation: 'Присудок з дієсловом «був» — орудний відмінок: «був столицею».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепинське бароко — унікальний архітектурна стиль.
+  error: архітектурна
+  answer: архітектурний
+  sentence_corrected: Мазепинське бароко — унікальний архітектурний стиль.
+  options:
+  - архітектурна
+  - архітектурний
+  - архітектурне
+  - архітектурної
+  original_explanation: Іменник «стиль» чоловічого роду, тому прикметник теж чоловічого
+    — архітектурний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Анафема була політичним інструмент.
+  error: інструмент
+  answer: інструментом
+  sentence_corrected: Анафема була політичним інструментом.
+  options:
+  - інструмент
+  - інструментом
+  - інструменту
+  - інструменті
+  original_explanation: 'Присудок з дієсловом «була» — орудний відмінок: «була інструментом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа знав п'ять європейські мов.
+  error: європейські
+  answer: європейських
+  sentence_corrected: Мазепа знав п'ять європейських мов.
+  options:
+  - європейські
+  - європейських
+  - європейським
+  - європейськими
+  original_explanation: Після числівника «п'ять» потрібен родовий відмінок множини
+    — п'ять мов (яких?) європейських.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Він подорожував до Німеччина і Франції.
+  error: Німеччина
+  answer: Німеччини
+  sentence_corrected: Він подорожував до Німеччини і Франції.
+  options:
+  - Німеччина
+  - Німеччини
+  - Німеччину
+  - Німеччиною
+  original_explanation: Прийменник «до» вимагає родового відмінка — до Німеччини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дружба з Петром був політичним інструментом.
+  error: був
+  answer: була
+  sentence_corrected: Дружба з Петром була політичним інструментом.
+  options:
+  - був
+  - була
+  - було
+  - були
+  original_explanation: Іменник «дружба» жіночого роду, тому дієслово теж жіночого
+    — була.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Правління Мазепи тривав двадцять років.
+  error: тривав
+  answer: тривало
+  sentence_corrected: Правління Мазепи тривало двадцять років.
+  options:
+  - тривав
+  - тривало
+  - тривала
+  - тривали
+  original_explanation: Іменник «правління» середнього роду, тому дієслово теж середнього
+    — тривало.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Гетьманщина оговталася після Руїна.
+  error: Руїна
+  answer: Руїни
+  sentence_corrected: Гетьманщина оговталася після Руїни.
+  options:
+  - Руїна
+  - Руїни
+  - Руїну
+  - Руїною
+  original_explanation: Прийменник «після» вимагає родового відмінка — після Руїни.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Самойловича заслали до Сибір.
+  error: Сибір
+  answer: Сибіру
+  sentence_corrected: Самойловича заслали до Сибіру.
+  options:
+  - Сибір
+  - Сибіру
+  - Сибіром
+  - Сибірі
+  original_explanation: Прийменник «до» вимагає родового відмінка — до Сибіру.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Петрик підняв повстання в 1692 рік.
+  error: рік
+  answer: році
+  sentence_corrected: Петрик підняв повстання в 1692 році.
+  options:
+  - рік
+  - році
+  - року
+  - роком
+  original_explanation: Прийменник «в» з датою вимагає місцевого відмінка — в році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа захищав інтересів Гетьманщини.
+  error: інтересів
+  answer: інтереси
+  sentence_corrected: Мазепа захищав інтереси Гетьманщини.
+  options:
+  - інтересів
+  - інтереси
+  - інтересам
+  - інтересами
+  original_explanation: Дієслово «захищати» вимагає знахідного відмінка — захищав
+    інтереси.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Іван Мазепа став _____ у 1687 році.
+  answer: гетьманом
+  complete_sentence: Іван Мазепа став гетьманом__ у 1687 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа здобув освіту в Києво-Могилянській _____.
+  answer: колегії
+  complete_sentence: Мазепа здобув освіту в Києво-Могилянській колегії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Коломацькі статті обмежували _____ Гетьманщини.
+  answer: автономію
+  complete_sentence: Коломацькі статті обмежували автономію__ Гетьманщини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа грав роль вірного _____ царя.
+  answer: слуги
+  complete_sentence: Мазепа грав роль вірного слуги__ царя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Багатство робило Мазепу _____ від московських субсидій.
+  answer: незалежним
+  complete_sentence: Багатство робило Мазепу незалежним__ від московських субсидій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Батурин був гетьманською _____.
+  answer: столицею
+  complete_sentence: Батурин був гетьманською столицею__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа володів понад 100 000 _____.
+  answer: селян
+  complete_sentence: Мазепа володів понад 100 000 селян__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Анафема була політичним _____, а не релігійним актом.
+  answer: інструментом
+  complete_sentence: Анафема була політичним інструментом__, а не релігійним актом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепинське бароко — унікальний _____ стиль.
+  answer: архітектурний
+  complete_sentence: Мазепинське бароко — унікальний архітектурний__ стиль.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа перебував при дворі польського _____.
+  answer: короля
+  complete_sentence: Мазепа перебував при дворі польського короля__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Самойлович був звинувачений у невдалому Кримському _____.
+  answer: поході
+  complete_sentence: Самойлович був звинувачений у невдалому Кримському поході__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Петрик підняв _____ проти Мазепи в 1692 році.
+  answer: повстання
+  complete_sentence: Петрик підняв повстання__ проти Мазепи в 1692 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа підтримував православну церкву під юрисдикцією _____.
+  answer: Константинополя
+  complete_sentence: Мазепа підтримував православну церкву під юрисдикцією Константинополя__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Правління Мазепи принесло _____ після десятиліть хаосу.
+  answer: стабільність
+  complete_sentence: Правління Мазепи принесло стабільність__ після десятиліть хаосу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа був справжнім _____, який вільно почувався в королівському
+    палаці.
+  answer: європейцем
+  complete_sentence: Мазепа був справжнім європейцем__, який вільно почувався в королівському
+    палаці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Дружба з Петром I була політичним _____.
+  answer: інструментом
+  complete_sentence: Дружба з Петром I була політичним інструментом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа став _____ у 1687 році.
+  answer: гетьманом
+  complete_sentence: Мазепа став гетьманом__ у 1687 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Він здобув освіту в Києво-Могилянській _____.
+  answer: колегії
+  complete_sentence: Він здобув освіту в Києво-Могилянській колегії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Коломацькі статті обмежували _____ Гетьманщини.
+  answer: автономію
+  complete_sentence: Коломацькі статті обмежували автономію__ Гетьманщини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа грав роль вірного _____.
+  answer: слуги
+  complete_sentence: Мазепа грав роль вірного слуги__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Його багатство давало йому _____.
+  answer: незалежність
+  complete_sentence: Його багатство давало йому незалежність__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Батурин був гетьманською _____.
+  answer: столицею
+  complete_sentence: Батурин був гетьманською столицею__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Анафема була політичним _____.
+  answer: інструментом
+  complete_sentence: Анафема була політичним інструментом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа знав п'ять європейських _____.
+  answer: мов
+  complete_sentence: Мазепа знав п'ять європейських мов__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гетьманщина оговталася після _____.
+  answer: Руїни
+  complete_sentence: Гетьманщина оговталася після Руїни__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Самойловича заслали до _____.
+  answer: Сибіру
+  complete_sentence: Самойловича заслали до Сибіру__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Він володів понад ста _____ селян.
+  answer: тисячами
+  complete_sentence: Він володів понад ста тисячами__ селян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа захищав _____ Гетьманщини.
+  answer: інтереси
+  complete_sentence: Мазепа захищав інтереси__ Гетьманщини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Петрик підняв повстання в 1692 _____.
+  answer: році
+  complete_sentence: Петрик підняв повстання в 1692 році__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дружба з Петром була політичним _____.
+  answer: інструментом
+  complete_sentence: Дружба з Петром була політичним інструментом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Він подорожував до _____ і Франції.
+  answer: Німеччини
+  complete_sentence: Він подорожував до Німеччини__ і Франції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Правління _____ тривало двадцять років.
+  answer: Мазепи
+  complete_sentence: Правління Мазепи__ тривало двадцять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про Мазепу
+  passage_template: 'Іван Мазепа став {гетьманом|царем|королем|гетьманом} у 1687 році
+    на Коломацькій {раді|битві|угоді|раді}. Він здобув {освіту|владу|багатство|освіту}
+    в Києво-Могилянській {колегії|академії|школі|колегії} та при дворі {польського|московського|турецького|польського}
+    короля.
+
+
+    Коломацькі статті {обмежували|розширювали|скасовували|обмежували} автономію Гетьманщини.
+    Мазепа грав роль {вірного|невірного|байдужого|вірного} слуги, але насправді захищав
+    українські {інтереси|території|армії|інтереси}.
+
+
+    За {правління|повстання|втечу|правління} Мазепи Гетьманщина {відродилася|занепала|зникла|відродилася}
+    після Руїни. Він володів понад ста {тисячами|сотнями|десятками|тисячами} селян.
+    {Батурин|Київ|Львів|Батурин} став {процвітаючим|занепалим|зруйнованим|процвітаючим}
+    містом.
+
+
+    Мазепинське {бароко|рококо|готика|бароко} — унікальний {архітектурний|музичний|літературний|архітектурний}
+    стиль. Анафема на Мазепу була {політичним|релігійним|військовим|політичним} інструментом.
+    Сьогодні він зображений на {банкноті|марці|монеті|банкноті} в 10 гривень.
+
+    '
+  blanks:
+  - answer: гетьманом
+    options:
+    - гетьманом
+    - царем
+    - королем
+  - answer: раді
+    options:
+    - раді
+    - битві
+    - угоді
+  - answer: освіту
+    options:
+    - освіту
+    - владу
+    - багатство
+  - answer: колегії
+    options:
+    - колегії
+    - академії
+    - школі
+  - answer: польського
+    options:
+    - польського
+    - московського
+    - турецького
+  - answer: обмежували
+    options:
+    - обмежували
+    - розширювали
+    - скасовували
+  - answer: вірного
+    options:
+    - вірного
+    - невірного
+    - байдужого
+  - answer: інтереси
+    options:
+    - інтереси
+    - території
+    - армії
+  - answer: правління
+    options:
+    - правління
+    - повстання
+    - втечу
+  - answer: відродилася
+    options:
+    - відродилася
+    - занепала
+    - зникла
+  - answer: тисячами
+    options:
+    - тисячами
+    - сотнями
+    - десятками
+  - answer: Батурин
+    options:
+    - Батурин
+    - Київ
+    - Львів
+  - answer: процвітаючим
+    options:
+    - процвітаючим
+    - занепалим
+    - зруйнованим
+  - answer: бароко
+    options:
+    - бароко
+    - рококо
+    - готика
+  - answer: архітектурний
+    options:
+    - архітектурний
+    - музичний
+    - літературний
+  - answer: політичним
+    options:
+    - політичним
+    - релігійним
+    - військовим
+  - answer: банкноті
+    options:
+    - банкноті
+    - марці
+    - монеті
+  blank_count: 17
+  complete_passage: 'Іван Мазепа став гетьманом у 1687 році на Коломацькій раді. Він
+    здобув освіту в Києво-Могилянській колегії та при дворі польського короля.
+
+
+    Коломацькі статті обмежували автономію Гетьманщини. Мазепа грав роль вірного слуги,
+    але насправді захищав українські інтереси.
+
+
+    За правління Мазепи Гетьманщина відродилася після Руїни. Він володів понад ста
+    тисячами селян. Батурин став процвітаючим містом.
+
+
+    Мазепинське бароко — унікальний архітектурний стиль. Анафема на Мазепу була політичним
+    інструментом. Сьогодні він зображений на банкноті в 10 гривень.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепа став гетьманом у 1687 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Він здобув освіту у Києво-Могилянській колегії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Коломацькі статті обмежували автономію Гетьманщини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепа грав роль вірного слуги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Його багатство давало йому незалежність.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Авторитарне правління принесло стабільність.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Гетьман володів понад ста тисячами селян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепинське бароко — унікальний архітектурний стиль.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Церковна анафема була політичним інструментом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепа знав п'ять європейських мов.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Батурин був гетьманською столицею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Дружба з Петром була політичним інструментом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепа захищав автономію Гетьманщини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Гетьманщина відродилася після Руїни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Мазепа був справжнім освіченим європейцем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Мазепу
+  jumbled_words: []
+  answer: Він зображений на банкноті в 10 гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, коли Іван Мазепа став гетьманом?
+  options:
+  - '{''text'': ''У 1687 році на Коломацькій раді'', ''correct'': True}'
+  - '{''text'': ''У 1659 році після Конотопської битви'', ''correct'': False}'
+  - '{''text'': ''У 1654 році після Переяславської угоди'', ''correct'': False}'
+  - '{''text'': ''У 1709 році після Полтавської битви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, де Мазепа здобув освіту?
+  options:
+  - '{''text'': ''Тільки в Москві'', ''correct'': False}'
+  - '{''text'': ''У Києво-Могилянській колегії та при дворі польського короля'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки в Запорозькій Січі'', ''correct'': False}'
+  - '{''text'': ''У Стамбулі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст характеризує освіту Мазепи?
+  options:
+  - '{''text'': ''Недостатню для політика'', ''correct'': False}'
+  - '{''text'': ''Унікальну серед козацької старшини'', ''correct'': True}'
+  - '{''text'': ''Типову для козаків'', ''correct'': False}'
+  - '{''text'': ''Виключно військову'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, чому Самойловича усунули від влади?
+  options:
+  - '{''text'': ''Через військову перемогу'', ''correct'': False}'
+  - '{''text'': ''Його звинуватили у невдалому Кримському поході'', ''correct'': True}'
+  - '{''text'': ''Через добровільну відставку'', ''correct'': False}'
+  - '{''text'': ''Через смерть'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст описує Коломацькі статті?
+  options:
+  - '{''text'': ''Як документ, що розширював автономію'', ''correct'': False}'
+  - '{''text'': ''Як документ, що обмежував автономію Гетьманщини'', ''correct'':
+    True}'
+  - '{''text'': ''Як військовий союз'', ''correct'': False}'
+  - '{''text'': ''Як торговельну угоду'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, яку стратегію обрав Мазепа щодо Москви?
+  options:
+  - '{''text'': ''Відкритий опір'', ''correct'': False}'
+  - '{''text'': ''Грав роль вірного слуги, захищаючи автономію'', ''correct'': True}'
+  - '{''text'': ''Повна покора'', ''correct'': False}'
+  - '{''text'': ''Ігнорування'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст характеризує стосунки Мазепи з Петром I?
+  options:
+  - '{''text'': ''Постійний конфлікт'', ''correct'': False}'
+  - '{''text'': ''Дружба як політичний інструмент'', ''correct'': True}'
+  - '{''text'': ''Щира особиста дружба'', ''correct'': False}'
+  - '{''text'': ''Повна відсутність контактів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, скільки селян мав Мазепа?
+  options:
+  - '{''text'': ''Близько 10 000'', ''correct'': False}'
+  - '{''text'': ''Понад 100 000'', ''correct'': True}'
+  - '{''text'': ''Близько 1 000'', ''correct'': False}'
+  - '{''text'': ''Не мав селян'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст описує правління Мазепи?
+  options:
+  - '{''text'': ''Демократичне'', ''correct'': False}'
+  - '{''text'': ''Авторитарне, але стабільне'', ''correct'': True}'
+  - '{''text'': ''Хаотичне'', ''correct'': False}'
+  - '{''text'': ''Слабке'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, що таке «мазепинське бароко»?
+  options:
+  - '{''text'': ''Музичний стиль'', ''correct'': False}'
+  - '{''text'': ''Архітектурний стиль церков'', ''correct'': True}'
+  - '{''text'': ''Літературний напрям'', ''correct'': False}'
+  - '{''text'': ''Військова тактика'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст пояснює багатство Мазепи?
+  options:
+  - '{''text'': ''Тільки як особисту розкіш'', ''correct'': False}'
+  - '{''text'': ''Як джерело політичної незалежності'', ''correct'': True}'
+  - '{''text'': ''Як проблему'', ''correct'': False}'
+  - '{''text'': ''Як подарунок від царя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, хто такий Петрик?
+  options:
+  - '{''text'': ''Союзник Мазепи'', ''correct'': False}'
+  - '{''text'': ''Сотник, який підняв повстання проти Мазепи'', ''correct'': True}'
+  - '{''text'': ''Московський воєвода'', ''correct'': False}'
+  - '{''text'': ''Польський король'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст характеризує Батурин за часів Мазепи?
+  options:
+  - '{''text'': ''Занепале село'', ''correct'': False}'
+  - '{''text'': ''Процвітаюче місто з палацами і церквами'', ''correct'': True}'
+  - '{''text'': ''Військову фортецю'', ''correct'': False}'
+  - '{''text'': ''Невелике містечко'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, де зображений Мазепа сьогодні?
+  options:
+  - '{''text'': ''На російських рублях'', ''correct'': False}'
+  - '{''text'': ''На банкноті в 10 гривень'', ''correct'': True}'
+  - '{''text'': ''Ніде'', ''correct'': False}'
+  - '{''text'': ''На євро'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Як текст описує анафему на Мазепу?
+  options:
+  - '{''text'': ''Як справедливе покарання'', ''correct'': False}'
+  - '{''text'': ''Як політичний інструмент'', ''correct'': True}'
+  - '{''text'': ''Як релігійний акт'', ''correct'': False}'
+  - '{''text'': ''Як помилку церкви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Івана Мазепу
+  question: Згідно з текстом, скільки мов знав Мазепа?
+  options:
+  - '{''text'': ''Тільки українську'', ''correct'': False}'
+  - '{''text'': "П''ять мов", ''correct'': True}'
+  - '{''text'': ''Дві мови'', ''correct'': False}'
+  - '{''text'': ''Три мови'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як сучасник описує молодого Мазепу в першому джерелі?
+  options:
+  - '{''text'': ''Як неосвіченого козака'', ''correct'': False}'
+  - '{''text'': ''Як юнака з надзвичайним розумом'', ''correct'': True}'
+  - '{''text'': ''Як слабкого дипломата'', ''correct'': False}'
+  - '{''text'': ''Як московського агента'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «говорить латиною вільно як поляк» у джерелі?
+  options:
+  - '{''text'': ''Мазепа був поляком'', ''correct'': False}'
+  - '{''text'': ''Він досконало володів латиною'', ''correct'': True}'
+  - '{''text'': ''Він не знав латини'', ''correct'': False}'
+  - '{''text'': ''Він ненавидів поляків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Коломацькі статті визначають завдання гетьмана і старшини?
+  options:
+  - '{''text'': ''Захищати автономію України'', ''correct'': False}'
+  - '{''text'': ''Дбати про поєднання українців із росіянами'', ''correct'': True}'
+  - '{''text'': ''Воювати з Москвою'', ''correct'': False}'
+  - '{''text'': ''Підтримувати Польщу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «жодної різниці і ворожнечі не чинили» в статтях?
+  options:
+  - '{''text'': ''Заклик до миру'', ''correct'': False}'
+  - '{''text'': ''Вимога асиміляції українців'', ''correct'': True}'
+  - '{''text'': ''Захист автономії'', ''correct'': False}'
+  - '{''text'': ''Підтримка різноманіття'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому сучасник порівнює Мазепу з тим, хто «народився в королівському палаці»?
+  options:
+  - '{''text'': ''Мазепа був принцом'', ''correct'': False}'
+  - '{''text'': ''Він чудово поводився при дворі'', ''correct'': True}'
+  - '{''text'': ''Він народився в палаці'', ''correct'': False}'
+  - '{''text'': ''Він ненавидів палаци'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що Мазепа знав німецьку «як саксонець»?
+  options:
+  - '{''text'': ''Він був німцем'', ''correct'': False}'
+  - '{''text'': ''Він досконало володів німецькою'', ''correct'': True}'
+  - '{''text'': ''Він не знав німецької'', ''correct'': False}'
+  - '{''text'': ''Він жив у Саксонії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Коломацькі статті говорять про «шлюби»?
+  options:
+  - '{''text'': ''Для любові'', ''correct'': False}'
+  - '{''text'': ''Як інструмент асиміляції'', ''correct'': True}'
+  - '{''text'': ''Для збільшення населення'', ''correct'': False}'
+  - '{''text'': ''Для миру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння Мазепи?
+  options:
+  - '{''text'': ''Вони розважають'', ''correct'': False}'
+  - '{''text'': ''Вони дають погляд сучасників'', ''correct'': True}'
+  - '{''text'': ''Вони короткі'', ''correct'': False}'
+  - '{''text'': ''Вони прості'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє цитата з польського дипломата?
+  options:
+  - '{''text'': ''Критика Мазепи'', ''correct'': False}'
+  - '{''text'': ''Підтвердження його освіченості та здібностей'', ''correct'': True}'
+  - '{''text'': ''Заповнення місця'', ''correct'': False}'
+  - '{''text'': ''Розвага'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає слово «Малоросійський» у Коломацьких статтях?
+  options:
+  - '{''text'': ''Маленький'', ''correct'': False}'
+  - '{''text'': ''Колоніальна назва для українців'', ''correct'': True}'
+  - '{''text'': ''Почесний титул'', ''correct'': False}'
+  - '{''text'': ''Географічний термін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як два джерела доповнюють одне одного?
+  options:
+  - '{''text'': ''Вони суперечать'', ''correct'': False}'
+  - '{''text'': ''Перше — про особу, друге — про політику'', ''correct'': True}'
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Коломацькі статті важливі як історичне джерело?
+  options:
+  - '{''text'': ''Тільки як юридичний документ'', ''correct'': False}'
+  - '{''text'': ''Показують імперську політику асиміляції'', ''correct'': True}'
+  - '{''text'': ''Не мають значення'', ''correct'': False}'
+  - '{''text'': ''Тільки для юристів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який стиль мови використовує перше джерело?
+  options:
+  - '{''text'': ''Офіційний'', ''correct'': False}'
+  - '{''text'': ''Описовий, оцінний'', ''correct'': True}'
+  - '{''text'': ''Поетичний'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому автор першого джерела згадує «ґрунтовність» Мазепи?
+  options:
+  - '{''text'': ''Критика'', ''correct'': False}'
+  - '{''text'': ''Похвала його серйозності та надійності'', ''correct'': True}'
+  - '{''text'': ''Іронія'', ''correct'': False}'
+  - '{''text'': ''Помилка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що джерело написав польський дипломат?
+  options:
+  - '{''text'': ''Ніякого'', ''correct'': False}'
+  - '{''text'': ''Незалежна оцінка від представника іншої держави'', ''correct'':
+    True}'
+  - '{''text'': ''Ворожа оцінка'', ''correct'': False}'
+  - '{''text'': ''Дружня оцінка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому стаття 11 Коломацьких статей особливо важлива?
+  options:
+  - '{''text'': ''Вона найдовша'', ''correct'': False}'
+  - '{''text'': ''Вона вперше вимагає асиміляції українців'', ''correct'': True}'
+  - '{''text'': ''Вона про економіку'', ''correct'': False}'
+  - '{''text'': ''Вона про армію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа народився близько 1639 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа знав тільки українську мову.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Коломацькі статті розширювали автономію Гетьманщини.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа володів понад 100 000 селян.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Батурин був гетьманською столицею.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа ніколи не подорожував Європою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Петро I вважав Мазепу другом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа відкрито опирався московській владі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, анафема на Мазепу була релігійним актом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, мазепинське бароко — архітектурний стиль.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Самойловича заслали до Сибіру.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа був пажем при дворі московського царя.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Петрик підняв повстання в 1692 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа зображений на банкноті в 10 гривень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, правління Мазепи було демократичним.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Мазепу
+  statement: Згідно з текстом, Мазепа був генеральним осавулом до обрання гетьманом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

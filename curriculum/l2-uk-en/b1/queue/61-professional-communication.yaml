@@ -1,15 +1,18 @@
 module: 61-professional-communication
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/61-professional-communication.md
-generated: '2025-12-29T00:22:03.238593'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.002419'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 14
-item_count: 52
+total_items: 53
+item_count: 53
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -275,6 +278,129 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'IT-компанія у Львові шукає {керівника|колегу|керівника|підлеглого}
+    відділу продажів. {Обов''язки|Вимоги|Обов''язки|Умови}: управління {командою|офісом|командою|нарадою}
+    з семи співробітників, проведення щотижневих {нарад|звітів|нарад|проєктів}.
+
+
+    Вимоги: три роки {досвіду|зарплати|досвіду|відпустки} на подібній {посаді|вакансії|посаді|офісі},
+    {навички|премії|навички|дедлайни} комунікації та переговорів.
+
+
+    Пропонуємо: конкурентну {зарплату|нараду|зарплату|презентацію}, {премії|звіти|премії|завдання}
+    за результатами, можливість {кар''єрного|лікарняного|кар''єрного|офісного} зростання.
+
+
+    Надсилайте {резюме|звіти|резюме|презентації} на нашу пошту. Після розгляду запрошуємо
+    на {співбесіду|нараду|співбесіду|зустріч}. Ідеальний {кандидат|колега|кандидат|керівник}
+    отримає роботу.
+
+
+    Ми цінуємо {професіоналізм|лікарняний|професіоналізм|відпустку} та {продуктивність|премію|продуктивність|зарплату}
+    наших співробітників.
+
+    '
+  blanks:
+  - answer: підлеглого
+    options:
+    - керівника
+    - колегу
+    - керівника
+  - answer: Умови
+    options:
+    - Обов'язки
+    - Вимоги
+    - Обов'язки
+  - answer: нарадою
+    options:
+    - командою
+    - офісом
+    - командою
+  - answer: проєктів
+    options:
+    - нарад
+    - звітів
+    - нарад
+  - answer: відпустки
+    options:
+    - досвіду
+    - зарплати
+    - досвіду
+  - answer: офісі
+    options:
+    - посаді
+    - вакансії
+    - посаді
+  - answer: дедлайни
+    options:
+    - навички
+    - премії
+    - навички
+  - answer: презентацію
+    options:
+    - зарплату
+    - нараду
+    - зарплату
+  - answer: завдання
+    options:
+    - премії
+    - звіти
+    - премії
+  - answer: офісного
+    options:
+    - кар'єрного
+    - лікарняного
+    - кар'єрного
+  - answer: презентації
+    options:
+    - резюме
+    - звіти
+    - резюме
+  - answer: зустріч
+    options:
+    - співбесіду
+    - нараду
+    - співбесіду
+  - answer: керівник
+    options:
+    - кандидат
+    - колега
+    - кандидат
+  - answer: відпустку
+    options:
+    - професіоналізм
+    - лікарняний
+    - професіоналізм
+  - answer: зарплату
+    options:
+    - продуктивність
+    - премію
+    - продуктивність
+  blank_count: 15
+  complete_passage: 'IT-компанія у Львові шукає підлеглого відділу продажів. Умови:
+    управління нарадою з семи співробітників, проведення щотижневих проєктів.
+
+
+    Вимоги: три роки відпустки на подібній офісі, дедлайни комунікації та переговорів.
+
+
+    Пропонуємо: конкурентну презентацію, завдання за результатами, можливість офісного
+    зростання.
+
+
+    Надсилайте презентації на нашу пошту. Після розгляду запрошуємо на зустріч. Ідеальний
+    керівник отримає роботу.
+
+
+    Ми цінуємо відпустку та зарплату наших співробітників.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -343,14 +469,10 @@ items:
   title: Розуміння професійної лексики
   question: Яке слово означає людину, якій ви підпорядковані на роботі?
   options:
-  - text: колега
-    correct: false
-  - text: підлеглий
-    correct: false
-  - text: керівник
-    correct: true
-  - text: співробітник
-    correct: false
+  - '{''text'': ''колега'', ''correct'': False}'
+  - '{''text'': ''підлеглий'', ''correct'': False}'
+  - '{''text'': ''керівник'', ''correct'': True}'
+  - '{''text'': ''співробітник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -361,14 +483,10 @@ items:
   title: Розуміння професійної лексики
   question: Як називається офіційна робоча зустріч з обговоренням питань?
   options:
-  - text: презентація
-    correct: false
-  - text: нарада
-    correct: true
-  - text: звіт
-    correct: false
-  - text: проєкт
-    correct: false
+  - '{''text'': ''презентація'', ''correct'': False}'
+  - '{''text'': ''нарада'', ''correct'': True}'
+  - '{''text'': ''звіт'', ''correct'': False}'
+  - '{''text'': ''проєкт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -379,14 +497,10 @@ items:
   title: Розуміння професійної лексики
   question: Яке слово означає "deadline" українською в професійному контексті?
   options:
-  - text: завдання
-    correct: false
-  - text: проєкт
-    correct: false
-  - text: дедлайн
-    correct: true
-  - text: звіт
-    correct: false
+  - '{''text'': ''завдання'', ''correct'': False}'
+  - '{''text'': ''проєкт'', ''correct'': False}'
+  - '{''text'': ''дедлайн'', ''correct'': True}'
+  - '{''text'': ''звіт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -397,14 +511,10 @@ items:
   title: Розуміння професійної лексики
   question: Що таке "підвищення" в контексті кар'єри?
   options:
-  - text: збільшення зарплати
-    correct: false
-  - text: отримання вищої посади
-    correct: true
-  - text: нове завдання
-    correct: false
-  - text: зміна офісу
-    correct: false
+  - '{''text'': ''збільшення зарплати'', ''correct'': False}'
+  - '{''text'': ''отримання вищої посади'', ''correct'': True}'
+  - '{''text'': ''нове завдання'', ''correct'': False}'
+  - '{''text'': ''зміна офісу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -415,14 +525,10 @@ items:
   title: Розуміння професійної лексики
   question: Яке дієслово найкраще поєднується зі словом "нараду"?
   options:
-  - text: робити нараду
-    correct: false
-  - text: мати нараду
-    correct: false
-  - text: проводити нараду
-    correct: true
-  - text: давати нараду
-    correct: false
+  - '{''text'': ''робити нараду'', ''correct'': False}'
+  - '{''text'': ''мати нараду'', ''correct'': False}'
+  - '{''text'': ''проводити нараду'', ''correct'': True}'
+  - '{''text'': ''давати нараду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -434,14 +540,10 @@ items:
   question: Як називається документ з інформацією про досвід та освіту для пошуку
     роботи?
   options:
-  - text: звіт
-    correct: false
-  - text: презентація
-    correct: false
-  - text: резюме
-    correct: true
-  - text: проєкт
-    correct: false
+  - '{''text'': ''звіт'', ''correct'': False}'
+  - '{''text'': ''презентація'', ''correct'': False}'
+  - '{''text'': ''резюме'', ''correct'': True}'
+  - '{''text'': ''проєкт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -452,14 +554,11 @@ items:
   title: Розуміння професійної лексики
   question: Яка різниця між "нарадою" та "зустріччю"?
   options:
-  - text: Це повні синоніми
-    correct: false
-  - text: '"Нарада" — формальніша, "зустріч" — ширше поняття'
-    correct: true
-  - text: '"Зустріч" — тільки з клієнтами'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Нарада" — формальніша, "зустріч" — ширше поняття'', ''correct'':
+    True}'
+  - '{''text'': ''"Зустріч" — тільки з клієнтами'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -470,14 +569,10 @@ items:
   title: Розуміння професійної лексики
   question: Що означає слово "лікарняний" в контексті роботи?
   options:
-  - text: лікарня
-    correct: false
-  - text: відпустка через хворобу
-    correct: true
-  - text: медична страховка
-    correct: false
-  - text: візит до лікаря
-    correct: false
+  - '{''text'': ''лікарня'', ''correct'': False}'
+  - '{''text'': ''відпустка через хворобу'', ''correct'': True}'
+  - '{''text'': ''медична страховка'', ''correct'': False}'
+  - '{''text'': ''візит до лікаря'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

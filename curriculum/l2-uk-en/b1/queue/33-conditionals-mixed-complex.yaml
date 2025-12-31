@@ -1,7 +1,7 @@
 module: 33-conditionals-mixed-complex
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/33-conditionals-mixed-complex.md
-generated: '2025-12-29T00:22:00.982063'
+generated: '2025-12-30T19:49:28.170771'
 scope: error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 6
@@ -9,7 +9,9 @@ activity_counts:
   unjumble: 6
   quiz: 8
   true-false: 8
+total_items: 44
 item_count: 44
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилку
@@ -315,14 +317,10 @@ items:
   question: Яке речення є прикладом змішаної умови, де минула подія впливає на теперішню
     ситуацію?
   options:
-  - text: Якби я вивчив тоді, зараз би знав відповідь.
-    correct: true
-  - text: Якби я мав час, допоміг би тобі.
-    correct: false
-  - text: Якщо матимеш час, зателефонуй мені.
-    correct: false
-  - text: Якби він прийшов, ми б поговорили.
-    correct: false
+  - '{''text'': ''Якби я вивчив тоді, зараз би знав відповідь.'', ''correct'': True}'
+  - '{''text'': ''Якби я мав час, допоміг би тобі.'', ''correct'': False}'
+  - '{''text'': ''Якщо матимеш час, зателефонуй мені.'', ''correct'': False}'
+  - '{''text'': ''Якби він прийшов, ми б поговорили.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -334,14 +332,11 @@ items:
   question: Яке речення є прикладом змішаної умови, де теперішня риса пояснює минулу
     подію?
   options:
-  - text: Якби я вивчив, знав би зараз.
-    correct: false
-  - text: Якби я був сміливішим, сказав би їй правду тоді.
-    correct: true
-  - text: Якщо хочеш, допоможу тобі.
-    correct: false
-  - text: Якби він прийшов, поговорили б.
-    correct: false
+  - '{''text'': ''Якби я вивчив, знав би зараз.'', ''correct'': False}'
+  - '{''text'': ''Якби я був сміливішим, сказав би їй правду тоді.'', ''correct'':
+    True}'
+  - '{''text'': ''Якщо хочеш, допоможу тобі.'', ''correct'': False}'
+  - '{''text'': ''Якби він прийшов, поговорили б.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -353,14 +348,11 @@ items:
   question: Яке з наведених речень є правильною ланцюговою умовою з кількома підрядними
     реченнями в українській мові?
   options:
-  - text: Якщо прийде, і якщо матиме час, поговоримо з ним.
-    correct: true
-  - text: Якщо прийде, і якби мав час, поговоримо.
-    correct: false
-  - text: Якби прийшов, і якщо матиме час, поговоримо.
-    correct: false
-  - text: Якщо й якщо прийде матиме час, поговоримо.
-    correct: false
+  - '{''text'': ''Якщо прийде, і якщо матиме час, поговоримо з ним.'', ''correct'':
+    True}'
+  - '{''text'': ''Якщо прийде, і якби мав час, поговоримо.'', ''correct'': False}'
+  - '{''text'': ''Якби прийшов, і якщо матиме час, поговоримо.'', ''correct'': False}'
+  - '{''text'': ''Якщо й якщо прийде матиме час, поговоримо.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -371,14 +363,10 @@ items:
   title: Виберіть правильну відповідь
   question: Як правильно виразити думку «If I had studied then, I would know now»?
   options:
-  - text: Якщо вивчу, знатиму зараз.
-    correct: false
-  - text: Якби я вивчив тоді, зараз би знав.
-    correct: true
-  - text: Якби я вивчу, знав би зараз.
-    correct: false
-  - text: Якщо вивчив, знаю зараз.
-    correct: false
+  - '{''text'': ''Якщо вивчу, знатиму зараз.'', ''correct'': False}'
+  - '{''text'': ''Якби я вивчив тоді, зараз би знав.'', ''correct'': True}'
+  - '{''text'': ''Якби я вивчу, знав би зараз.'', ''correct'': False}'
+  - '{''text'': ''Якщо вивчив, знаю зараз.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -390,14 +378,10 @@ items:
   question: Яка саме конструкція використовується для вираження альтернативного наслідку
     в українському умовному реченні?
   options:
-  - text: тому що
-    correct: false
-  - text: хоча
-    correct: false
-  - text: інакше
-    correct: true
-  - text: тобто
-    correct: false
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''хоча'', ''correct'': False}'
+  - '{''text'': ''інакше'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -409,14 +393,10 @@ items:
   question: Чому в реченні «Якби я вивчив тоді, зараз би знав» потрібна частка «б»
     у наслідку?
   options:
-  - text: Тому що це минулий час.
-    correct: false
-  - text: Тому що суб'єкти різні.
-    correct: false
-  - text: Тому що наслідок є гіпотетичним.
-    correct: true
-  - text: Тому що це теперішній час.
-    correct: false
+  - '{''text'': ''Тому що це минулий час.'', ''correct'': False}'
+  - '{''text'': "Тому що суб''єкти різні.", ''correct'': False}'
+  - '{''text'': ''Тому що наслідок є гіпотетичним.'', ''correct'': True}'
+  - '{''text'': ''Тому що це теперішній час.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -428,14 +408,11 @@ items:
   question: Яке з наведених речень є прикладом наслідкового ланцюга умов у реалістичному
     сценарії?
   options:
-  - text: Якби мав гроші, купив би машину.
-    correct: false
-  - text: Якщо вивчиш мову, знайдеш роботу. А якщо знайдеш, заробиш гроші.
-    correct: true
-  - text: Якби прийшов, поговорили б з ним.
-    correct: false
-  - text: Якщо хочеш, допоможу тобі зараз.
-    correct: false
+  - '{''text'': ''Якби мав гроші, купив би машину.'', ''correct'': False}'
+  - '{''text'': ''Якщо вивчиш мову, знайдеш роботу. А якщо знайдеш, заробиш гроші.'',
+    ''correct'': True}'
+  - '{''text'': ''Якби прийшов, поговорили б з ним.'', ''correct'': False}'
+  - '{''text'': ''Якщо хочеш, допоможу тобі зараз.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -447,14 +424,10 @@ items:
   question: Як можна визначити, чи потрібна змішана умова, чи стандартна нереальна
     в конкретному випадку?
   options:
-  - text: За кількістю слів у реченні.
-    correct: false
-  - text: За родом підмета в реченні.
-    correct: false
-  - text: За тим, чи збігаються часи умови та наслідку.
-    correct: true
-  - text: За позицією частки «б».
-    correct: false
+  - '{''text'': ''За кількістю слів у реченні.'', ''correct'': False}'
+  - '{''text'': ''За родом підмета в реченні.'', ''correct'': False}'
+  - '{''text'': ''За тим, чи збігаються часи умови та наслідку.'', ''correct'': True}'
+  - '{''text'': ''За позицією частки «б».'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,7 +1,7 @@
 module: 59-media-news
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/59-media-news.md
-generated: '2025-12-29T00:22:03.111318'
+generated: '2025-12-30T19:49:28.948255'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 8
   translate: 8
   true-false: 14
+total_items: 61
 item_count: 61
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -307,126 +309,95 @@ items:
 
     '
   blanks:
-  - id: 1
-    answer: видання
+  - answer: видання
     options:
     - видання
     - журнал
     - газета
-    - тираж
-  - id: 2
-    answer: читачів
+  - answer: читачів
     options:
     - читачів
     - глядачів
     - слухачів
-    - редакторів
-  - id: 3
-    answer: Телебачення
+  - answer: Телебачення
     options:
     - Телебачення
     - Радіо
     - Преса
-    - Інтернет
-  - id: 4
-    answer: Журналісти
+  - answer: Журналісти
     options:
     - Журналісти
     - Читачі
     - Глядачі
-    - Слухачі
-  - id: 5
-    answer: репортажі
+  - answer: репортажі
     options:
     - репортажі
     - книги
     - пісні
-    - картини
-  - id: 6
-    answer: кореспонденти
+  - answer: кореспонденти
     options:
     - кореспонденти
     - редактори
     - видавці
-    - читачі
-  - id: 7
-    answer: аудиторії
+  - answer: аудиторії
     options:
     - аудиторії
     - редакції
     - рубрики
-    - тиражу
-  - id: 8
-    answer: Радіо
+  - answer: Радіо
     options:
     - Радіо
     - Газета
     - Журнал
-    - Стаття
-  - id: 9
-    answer: слухачів
+  - answer: слухачів
     options:
     - слухачів
     - читачів
     - глядачів
-    - редакторів
-  - id: 10
-    answer: преса
+  - answer: преса
     options:
     - преса
     - інтернет
     - телебачення
-    - радіо
-  - id: 11
-    answer: журналістиці
+  - answer: журналістиці
     options:
     - журналістиці
     - музиці
     - спорті
-    - медицині
-  - id: 12
-    answer: фактів
+  - answer: фактів
     options:
     - фактів
     - чуток
     - думок
-    - ідей
-  - id: 13
-    answer: джерело
+  - answer: джерело
     options:
     - джерело
     - чутка
     - стаття
-    - рубрика
-  - id: 14
-    answer: Чутки
+  - answer: Чутки
     options:
     - Чутки
     - Факти
     - Новини
-    - Статті
+  blank_count: 14
   complete_passage: 'Українська медіа-сфера представлена різноманітними виданнями.
-    «Українська правда» — провідне інтернет-{видання|журнал|газета|видання}, засноване
-    у 2000 році. Мільйони {читачів|глядачів|слухачів|читачів} щомісяця відвідують
-    цей сайт. {Телебачення|Радіо|Преса|Телебачення} представлене кількома великими
+    «Українська правда» — провідне інтернет-видання, засноване у 2000 році. Мільйони
+    читачів щомісяця відвідують цей сайт. Телебачення представлене кількома великими
     каналами: «1+1», ICTV, «Україна».
 
 
-    {Журналісти|Читачі|Глядачі|Журналісти} цих каналів щодня готують {репортажі|книги|пісні|репортажі}
-    з усієї країни. Особливо важливу роль відіграють {кореспонденти|редактори|видавці|кореспонденти},
-    які працюють у зоні бойових дій. Вони ризикують життям, щоб донести правду до
-    {аудиторії|редакції|рубрики|аудиторії}.
+    Журналісти цих каналів щодня готують репортажі з усієї країни. Особливо важливу
+    роль відіграють кореспонденти, які працюють у зоні бойових дій. Вони ризикують
+    життям, щоб донести правду до аудиторії.
 
 
-    {Радіо|Газета|Журнал|Радіо} залишається популярним: «Українське радіо», «Радіо
-    Свобода» мають мільйонну аудиторію {слухачів|читачів|глядачів|слухачів}. Друкована
-    {преса|інтернет|телебачення|преса} — «Дзеркало тижня», «День» — зберігає свої
+    Радіо залишається популярним: «Українське радіо», «Радіо Свобода» мають мільйонну
+    аудиторію слухачів. Друкована преса — «Дзеркало тижня», «День» — зберігає свої
     позиції.
 
 
-    Найважливіше в {журналістиці|музиці|спорті|журналістиці} — це перевірка {фактів|чуток|думок|фактів}.
-    Надійне {джерело|чутка|стаття|джерело} інформації — основа якісної роботи. {Чутки|Факти|Новини|Чутки}
-    без підтвердження не повинні публікуватися.
+    Найважливіше в журналістиці — це перевірка фактів. Надійне джерело інформації
+    — основа якісної роботи. Чутки без підтвердження не повинні публікуватися.
 
     '
   validate:
@@ -501,14 +472,10 @@ items:
   title: Розуміння медіа-лексики
   question: Яке слово описує людину, яка пише статті та проводить розслідування?
   options:
-  - text: читач
-    correct: false
-  - text: глядач
-    correct: false
-  - text: журналіст
-    correct: true
-  - text: слухач
-    correct: false
+  - '{''text'': ''читач'', ''correct'': False}'
+  - '{''text'': ''глядач'', ''correct'': False}'
+  - '{''text'': ''журналіст'', ''correct'': True}'
+  - '{''text'': ''слухач'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -519,14 +486,10 @@ items:
   title: Розуміння медіа-лексики
   question: Що означає вираз "за словами журналіста" на початку новини?
   options:
-  - text: журналіст написав слова
-    correct: false
-  - text: це цитата або інформація від журналіста
-    correct: true
-  - text: журналіст вивчає слова
-    correct: false
-  - text: журналіст читає вголос
-    correct: false
+  - '{''text'': ''журналіст написав слова'', ''correct'': False}'
+  - '{''text'': ''це цитата або інформація від журналіста'', ''correct'': True}'
+  - '{''text'': ''журналіст вивчає слова'', ''correct'': False}'
+  - '{''text'': ''журналіст читає вголос'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -537,14 +500,11 @@ items:
   title: Розуміння медіа-лексики
   question: Чим відрізняється репортаж від статті у журналістиці?
   options:
-  - text: репортаж — це тільки відео
-    correct: false
-  - text: стаття — це тільки для газет
-    correct: false
-  - text: репортаж — з місця подій, стаття — написаний текст
-    correct: true
-  - text: немає різниці між ними
-    correct: false
+  - '{''text'': ''репортаж — це тільки відео'', ''correct'': False}'
+  - '{''text'': ''стаття — це тільки для газет'', ''correct'': False}'
+  - '{''text'': ''репортаж — з місця подій, стаття — написаний текст'', ''correct'':
+    True}'
+  - '{''text'': ''немає різниці між ними'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -555,14 +515,11 @@ items:
   title: Розуміння медіа-лексики
   question: Яка різниця між фактом і чуткою в журналістиці?
   options:
-  - text: факт — це правда, чутка — це брехня
-    correct: false
-  - text: факт — перевірена інформація, чутка — неперевірена
-    correct: true
-  - text: факт — для газет, чутка — для радіо
-    correct: false
-  - text: немає різниці
-    correct: false
+  - '{''text'': ''факт — це правда, чутка — це брехня'', ''correct'': False}'
+  - '{''text'': ''факт — перевірена інформація, чутка — неперевірена'', ''correct'':
+    True}'
+  - '{''text'': ''факт — для газет, чутка — для радіо'', ''correct'': False}'
+  - '{''text'': ''немає різниці'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -573,14 +530,10 @@ items:
   title: Розуміння медіа-лексики
   question: Що таке "тираж" газети або журналу?
   options:
-  - text: кількість сторінок
-    correct: false
-  - text: кількість надрукованих примірників
-    correct: true
-  - text: кількість журналістів
-    correct: false
-  - text: кількість рубрик
-    correct: false
+  - '{''text'': ''кількість сторінок'', ''correct'': False}'
+  - '{''text'': ''кількість надрукованих примірників'', ''correct'': True}'
+  - '{''text'': ''кількість журналістів'', ''correct'': False}'
+  - '{''text'': ''кількість рубрик'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -591,14 +544,10 @@ items:
   title: Розуміння медіа-лексики
   question: Хто такий кореспондент у журналістиці?
   options:
-  - text: людина, яка читає новини
-    correct: false
-  - text: журналіст, який працює в іншому місці
-    correct: true
-  - text: редактор газети
-    correct: false
-  - text: власник видання
-    correct: false
+  - '{''text'': ''людина, яка читає новини'', ''correct'': False}'
+  - '{''text'': ''журналіст, який працює в іншому місці'', ''correct'': True}'
+  - '{''text'': ''редактор газети'', ''correct'': False}'
+  - '{''text'': ''власник видання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -609,14 +558,11 @@ items:
   title: Розуміння медіа-лексики
   question: Що означає вираз "джерело повідомляє, що..." в новинах?
   options:
-  - text: редактор написав статтю
-    correct: false
-  - text: інформація надходить від певної особи чи організації
-    correct: true
-  - text: журналіст придумав історію
-    correct: false
-  - text: це офіційна заява уряду
-    correct: false
+  - '{''text'': ''редактор написав статтю'', ''correct'': False}'
+  - '{''text'': ''інформація надходить від певної особи чи організації'', ''correct'':
+    True}'
+  - '{''text'': ''журналіст придумав історію'', ''correct'': False}'
+  - '{''text'': ''це офіційна заява уряду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -627,14 +573,11 @@ items:
   title: Розуміння медіа-лексики
   question: Яку роль виконує редактор у виданні або на телеканалі?
   options:
-  - text: пише всі статті
-    correct: false
-  - text: читає новини в ефірі
-    correct: false
-  - text: визначає політику та контролює якість матеріалів
-    correct: true
-  - text: продає рекламу
-    correct: false
+  - '{''text'': ''пише всі статті'', ''correct'': False}'
+  - '{''text'': ''читає новини в ефірі'', ''correct'': False}'
+  - '{''text'': ''визначає політику та контролює якість матеріалів'', ''correct'':
+    True}'
+  - '{''text'': ''продає рекламу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -646,14 +589,10 @@ items:
   source_sentence: I read about it in the newspaper.
   answer: ''
   options:
-  - text: Я читав про це в газету.
-    correct: false
-  - text: Я читав про це в газеті.
-    correct: true
-  - text: Я читаю про це в газета.
-    correct: false
-  - text: Я читати про це в газеті.
-    correct: false
+  - '{''text'': ''Я читав про це в газету.'', ''correct'': False}'
+  - '{''text'': ''Я читав про це в газеті.'', ''correct'': True}'
+  - '{''text'': ''Я читаю про це в газета.'', ''correct'': False}'
+  - '{''text'': ''Я читати про це в газеті.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -664,14 +603,10 @@ items:
   source_sentence: According to the journalist, negotiations continue.
   answer: ''
   options:
-  - text: За словами журналіста, переговори тривають.
-    correct: true
-  - text: За словами журналіст, переговори тривають.
-    correct: false
-  - text: Словами журналіста, переговори тривають.
-    correct: false
-  - text: За слова журналіста, переговори тривають.
-    correct: false
+  - '{''text'': ''За словами журналіста, переговори тривають.'', ''correct'': True}'
+  - '{''text'': ''За словами журналіст, переговори тривають.'', ''correct'': False}'
+  - '{''text'': ''Словами журналіста, переговори тривають.'', ''correct'': False}'
+  - '{''text'': ''За слова журналіста, переговори тривають.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -682,14 +617,10 @@ items:
   source_sentence: The source reports that the agreement is close.
   answer: ''
   options:
-  - text: Джерело повідомляє, що угода близька.
-    correct: true
-  - text: Джерело повідомляти, що угода близька.
-    correct: false
-  - text: Джерело повідомляє, що угода близько.
-    correct: false
-  - text: Джерела повідомляє, що угода близька.
-    correct: false
+  - '{''text'': ''Джерело повідомляє, що угода близька.'', ''correct'': True}'
+  - '{''text'': ''Джерело повідомляти, що угода близька.'', ''correct'': False}'
+  - '{''text'': ''Джерело повідомляє, що угода близько.'', ''correct'': False}'
+  - '{''text'': ''Джерела повідомляє, що угода близька.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -700,14 +631,10 @@ items:
   source_sentence: The journalist took an interview with the minister.
   answer: ''
   options:
-  - text: Журналіст взяв інтерв'ю з міністра.
-    correct: false
-  - text: Журналіст взяв інтерв'ю з міністром.
-    correct: true
-  - text: Журналіст взяв інтерв'ю у міністр.
-    correct: false
-  - text: Журналіст бере інтерв'ю з міністром.
-    correct: false
+  - '{''text'': "Журналіст взяв інтерв''ю з міністра.", ''correct'': False}'
+  - '{''text'': "Журналіст взяв інтерв''ю з міністром.", ''correct'': True}'
+  - '{''text'': "Журналіст взяв інтерв''ю у міністр.", ''correct'': False}'
+  - '{''text'': "Журналіст бере інтерв''ю з міністром.", ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -718,14 +645,11 @@ items:
   source_sentence: Young people get news mostly from the internet.
   answer: ''
   options:
-  - text: Молодь отримує новини переважно з інтернету.
-    correct: true
-  - text: Молодь отримує новини переважно з інтернет.
-    correct: false
-  - text: Молоді отримують новини переважно з інтернету.
-    correct: false
-  - text: Молодь отримувати новини переважно з інтернету.
-    correct: false
+  - '{''text'': ''Молодь отримує новини переважно з інтернету.'', ''correct'': True}'
+  - '{''text'': ''Молодь отримує новини переважно з інтернет.'', ''correct'': False}'
+  - '{''text'': ''Молоді отримують новини переважно з інтернету.'', ''correct'': False}'
+  - '{''text'': ''Молодь отримувати новини переважно з інтернету.'', ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -736,14 +660,10 @@ items:
   source_sentence: This is just a rumor, there is no official confirmation.
   answer: ''
   options:
-  - text: Це лише чутки, офіційного підтвердження немає.
-    correct: true
-  - text: Це лише чутка, офіційний підтвердження немає.
-    correct: false
-  - text: Це лише чутки, офіційне підтвердження немає.
-    correct: false
-  - text: Це лише чутки, офіційного підтвердження нема.
-    correct: false
+  - '{''text'': ''Це лише чутки, офіційного підтвердження немає.'', ''correct'': True}'
+  - '{''text'': ''Це лише чутка, офіційний підтвердження немає.'', ''correct'': False}'
+  - '{''text'': ''Це лише чутки, офіційне підтвердження немає.'', ''correct'': False}'
+  - '{''text'': ''Це лише чутки, офіційного підтвердження нема.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -754,14 +674,10 @@ items:
   source_sentence: The editor determines the policy of the publication.
   answer: ''
   options:
-  - text: Редактор визначає політику видання.
-    correct: true
-  - text: Редактор визначає політика видання.
-    correct: false
-  - text: Редактор визначити політику видання.
-    correct: false
-  - text: Редактори визначає політику видання.
-    correct: false
+  - '{''text'': ''Редактор визначає політику видання.'', ''correct'': True}'
+  - '{''text'': ''Редактор визначає політика видання.'', ''correct'': False}'
+  - '{''text'': ''Редактор визначити політику видання.'', ''correct'': False}'
+  - '{''text'': ''Редактори визначає політику видання.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -772,14 +688,14 @@ items:
   source_sentence: The evening edition of the news starts at nine o'clock.
   answer: ''
   options:
-  - text: Вечірній випуск новин починається о дев'ятій годині.
-    correct: true
-  - text: Вечірній випуск новин починається в дев'ять годин.
-    correct: false
-  - text: Вечірній випуск новин починаються о дев'ятій годині.
-    correct: false
-  - text: Вечірній випуск новини починається о дев'ятій годині.
-    correct: false
+  - '{''text'': "Вечірній випуск новин починається о дев''ятій годині.", ''correct'':
+    True}'
+  - '{''text'': "Вечірній випуск новин починається в дев''ять годин.", ''correct'':
+    False}'
+  - '{''text'': "Вечірній випуск новин починаються о дев''ятій годині.", ''correct'':
+    False}'
+  - '{''text'': "Вечірній випуск новини починається о дев''ятій годині.", ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null

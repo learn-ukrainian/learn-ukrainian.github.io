@@ -1,15 +1,18 @@
 module: 58-describing-changes
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/58-describing-changes.md
-generated: '2025-12-29T00:22:03.047144'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:28.919619'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в реченнях
@@ -259,6 +262,133 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в економічному тексті
+  passage_template: 'За останній квартал українська економіка демонструвала позитивну
+    динаміку. ВВП {зріс|впав|зріс|стабілізувався} на чотири відсотки. Курс гривні
+    {стабілізувався|погіршився|стабілізувався|зріс} на рівні сорока однієї гривні
+    за долар.
+
+
+    Однак інфляція {коливалася|покращилася|коливалася|стабілізувалася} між п''ятьма
+    та вісьмома відсотками. Ціни на енергоносії {стрімко|поступово|стрімко|незначно}
+    зросли на початку року, але потім {поступово|різко|поступово|раптово} знизилися.
+
+
+    Рівень безробіття {зменшився|збільшився|зменшився|стабілізувався} до шести відсотків.
+    Бізнес-активність {прискорюється|сповільнюється|прискорюється|погіршується}, особливо
+    у сфері технологій.
+
+
+    Експерти прогнозують, що ситуація {покращиться|погіршиться|покращиться|коливатиметься}
+    до кінця року. Темп реформ {сповільнився|прискорився|сповільнився|стабілізувався}
+    через бюрократію, але загальна тенденція — позитивна.
+
+
+    На думку аналітиків, економіка {розширюється|звужується|розширюється|падає}, незважаючи
+    на зовнішні виклики. Інвестиції {збільшуються|зменшуються|збільшуються|коливаються}
+    {значно|незначно|значно|повільно}. Міжнародний тиск на агресора {посилюється|послаблюється|посилюється|спадає},
+    а соціальна напруга {спадає|наростає|спадає|посилюється}.
+
+    '
+  blanks:
+  - answer: стабілізувався
+    options:
+    - зріс
+    - впав
+    - зріс
+  - answer: зріс
+    options:
+    - стабілізувався
+    - погіршився
+    - стабілізувався
+  - answer: стабілізувалася
+    options:
+    - коливалася
+    - покращилася
+    - коливалася
+  - answer: незначно
+    options:
+    - стрімко
+    - поступово
+    - стрімко
+  - answer: раптово
+    options:
+    - поступово
+    - різко
+    - поступово
+  - answer: стабілізувався
+    options:
+    - зменшився
+    - збільшився
+    - зменшився
+  - answer: погіршується
+    options:
+    - прискорюється
+    - сповільнюється
+    - прискорюється
+  - answer: коливатиметься
+    options:
+    - покращиться
+    - погіршиться
+    - покращиться
+  - answer: стабілізувався
+    options:
+    - сповільнився
+    - прискорився
+    - сповільнився
+  - answer: падає
+    options:
+    - розширюється
+    - звужується
+    - розширюється
+  - answer: коливаються
+    options:
+    - збільшуються
+    - зменшуються
+    - збільшуються
+  - answer: повільно
+    options:
+    - значно
+    - незначно
+    - значно
+  - answer: спадає
+    options:
+    - посилюється
+    - послаблюється
+    - посилюється
+  - answer: посилюється
+    options:
+    - спадає
+    - наростає
+    - спадає
+  blank_count: 14
+  complete_passage: 'За останній квартал українська економіка демонструвала позитивну
+    динаміку. ВВП стабілізувався на чотири відсотки. Курс гривні зріс на рівні сорока
+    однієї гривні за долар.
+
+
+    Однак інфляція стабілізувалася між п''ятьма та вісьмома відсотками. Ціни на енергоносії
+    незначно зросли на початку року, але потім раптово знизилися.
+
+
+    Рівень безробіття стабілізувався до шести відсотків. Бізнес-активність погіршується,
+    особливо у сфері технологій.
+
+
+    Експерти прогнозують, що ситуація коливатиметься до кінця року. Темп реформ стабілізувався
+    через бюрократію, але загальна тенденція — позитивна.
+
+
+    На думку аналітиків, економіка падає, незважаючи на зовнішні виклики. Інвестиції
+    коливаються повільно. Міжнародний тиск на агресора спадає, а соціальна напруга
+    посилюється.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про зміни
   jumbled_words: []
@@ -327,14 +457,10 @@ items:
   title: Розуміння лексики змін
   question: Яке слово означає "to increase" або "to grow" у контексті цін та показників?
   options:
-  - text: падати
-    correct: false
-  - text: зростати
-    correct: true
-  - text: коливатися
-    correct: false
-  - text: стабілізуватися
-    correct: false
+  - '{''text'': ''падати'', ''correct'': False}'
+  - '{''text'': ''зростати'', ''correct'': True}'
+  - '{''text'': ''коливатися'', ''correct'': False}'
+  - '{''text'': ''стабілізуватися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -345,14 +471,10 @@ items:
   title: Розуміння лексики змін
   question: Яке слово використовується для опису несподіваної різкої зміни?
   options:
-  - text: поступово
-    correct: false
-  - text: повільно
-    correct: false
-  - text: раптово
-    correct: true
-  - text: незначно
-    correct: false
+  - '{''text'': ''поступово'', ''correct'': False}'
+  - '{''text'': ''повільно'', ''correct'': False}'
+  - '{''text'': ''раптово'', ''correct'': True}'
+  - '{''text'': ''незначно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -363,14 +485,10 @@ items:
   title: Розуміння лексики змін
   question: Що означає "коливатися" у контексті курсу валюти?
   options:
-  - text: to fall sharply
-    correct: false
-  - text: to fluctuate
-    correct: true
-  - text: to stabilize
-    correct: false
-  - text: to improve
-    correct: false
+  - '{''text'': ''to fall sharply'', ''correct'': False}'
+  - '{''text'': ''to fluctuate'', ''correct'': True}'
+  - '{''text'': ''to stabilize'', ''correct'': False}'
+  - '{''text'': ''to improve'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -381,14 +499,11 @@ items:
   title: Розуміння лексики змін
   question: Яка різниця між "різко" та "стрімко"?
   options:
-  - text: Це повні синоніми
-    correct: false
-  - text: '"Різко" — несподівано, "стрімко" — дуже швидко з інтенсивністю'
-    correct: true
-  - text: '"Стрімко" — тільки про падіння'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Різко" — несподівано, "стрімко" — дуже швидко з інтенсивністю'',
+    ''correct'': True}'
+  - '{''text'': ''"Стрімко" — тільки про падіння'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -399,14 +514,10 @@ items:
   title: Розуміння лексики змін
   question: Яке дієслово описує процес збільшення масштабу бізнесу?
   options:
-  - text: звужуватися
-    correct: false
-  - text: зменшуватися
-    correct: false
-  - text: розширюватися
-    correct: true
-  - text: сповільнюватися
-    correct: false
+  - '{''text'': ''звужуватися'', ''correct'': False}'
+  - '{''text'': ''зменшуватися'', ''correct'': False}'
+  - '{''text'': ''розширюватися'', ''correct'': True}'
+  - '{''text'': ''сповільнюватися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -417,14 +528,10 @@ items:
   title: Розуміння лексики змін
   question: Яке слово означає "gradually" — поступову зміну без різких стрибків?
   options:
-  - text: різко
-    correct: false
-  - text: раптово
-    correct: false
-  - text: поступово
-    correct: true
-  - text: стрімко
-    correct: false
+  - '{''text'': ''різко'', ''correct'': False}'
+  - '{''text'': ''раптово'', ''correct'': False}'
+  - '{''text'': ''поступово'', ''correct'': True}'
+  - '{''text'': ''стрімко'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -436,14 +543,10 @@ items:
   question: Яке дієслово використовується, коли ситуація перестає змінюватися і стає
     стабільною?
   options:
-  - text: коливатися
-    correct: false
-  - text: прискорюватися
-    correct: false
-  - text: стабілізуватися
-    correct: true
-  - text: погіршуватися
-    correct: false
+  - '{''text'': ''коливатися'', ''correct'': False}'
+  - '{''text'': ''прискорюватися'', ''correct'': False}'
+  - '{''text'': ''стабілізуватися'', ''correct'': True}'
+  - '{''text'': ''погіршуватися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -454,14 +557,10 @@ items:
   title: Розуміння лексики змін
   question: Що означає "сповільнюватися" у контексті економічного розвитку?
   options:
-  - text: to speed up
-    correct: false
-  - text: to slow down
-    correct: true
-  - text: to stop
-    correct: false
-  - text: to reverse
-    correct: false
+  - '{''text'': ''to speed up'', ''correct'': False}'
+  - '{''text'': ''to slow down'', ''correct'': True}'
+  - '{''text'': ''to stop'', ''correct'': False}'
+  - '{''text'': ''to reverse'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

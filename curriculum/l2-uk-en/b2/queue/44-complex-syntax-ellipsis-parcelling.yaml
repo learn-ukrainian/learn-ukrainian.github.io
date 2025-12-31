@@ -1,15 +1,18 @@
 module: 44-complex-syntax-ellipsis-parcelling
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/44-complex-syntax-ellipsis-parcelling.md
-generated: '2025-12-29T23:57:51.794664'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.862544'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -586,6 +589,149 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть художній текст
+  passage_template: 'Вокзал. Люди. {Сльози|Радість|Сонце|Сльози}.
+
+
+    Вона стояла біля потяга. {Мовчки|Голосно|Весело|Мовчки}. Він тримав її руку. {Міцно|Слабко|Легко|Міцно}.
+    Ніби боявся відпустити.
+
+
+    — Ти {куди|коли|чому|куди}? — прошепотіла вона.
+
+    — Не знаю. {Скоро|Ніколи|Завтра|Скоро}. Сподіваюся.
+
+
+    Потяг загудів. {Востаннє|Вперше|Тихо|Востаннє}. Він подивився їй в очі. Довго.
+    {Ніжно|Холодно|Строго|Ніжно}. І відвернувся.
+
+
+    — Я чекатиму. {Завжди|Ніколи|Недовго|Завжди}.
+
+    — {Знаю|Сумніваюся|Забуду|Знаю}.
+
+
+    Двері зачинилися. {Тихо|Голосно|Швидко|Тихо}. Без крику. Без {сліз|радості|слів|сліз}.
+    Тільки тиша. Глуха. {Болюча|Приємна|Тепла|Болюча}. Нескінченна.
+
+
+    Він їхав. {Далеко|Близько|Швидко|Далеко}. Невідомо куди. Невідомо на {скільки|коли|чому|скільки}.
+    Але вона {знала|думала|сподівалась|знала} — він повернеться. {Обов''язково|Ніколи|Можливо|Обов''язково}.
+
+    '
+  blanks:
+  - answer: Сльози
+    options:
+    - Сльози
+    - Радість
+    - Сонце
+  - answer: Мовчки
+    options:
+    - Мовчки
+    - Голосно
+    - Весело
+  - answer: Міцно
+    options:
+    - Міцно
+    - Слабко
+    - Легко
+  - answer: куди
+    options:
+    - куди
+    - коли
+    - чому
+  - answer: Скоро
+    options:
+    - Скоро
+    - Ніколи
+    - Завтра
+  - answer: Востаннє
+    options:
+    - Востаннє
+    - Вперше
+    - Тихо
+  - answer: Ніжно
+    options:
+    - Ніжно
+    - Холодно
+    - Строго
+  - answer: Завжди
+    options:
+    - Завжди
+    - Ніколи
+    - Недовго
+  - answer: Знаю
+    options:
+    - Знаю
+    - Сумніваюся
+    - Забуду
+  - answer: Тихо
+    options:
+    - Тихо
+    - Голосно
+    - Швидко
+  - answer: сліз
+    options:
+    - сліз
+    - радості
+    - слів
+  - answer: Болюча
+    options:
+    - Болюча
+    - Приємна
+    - Тепла
+  - answer: Далеко
+    options:
+    - Далеко
+    - Близько
+    - Швидко
+  - answer: скільки
+    options:
+    - скільки
+    - коли
+    - чому
+  - answer: знала
+    options:
+    - знала
+    - думала
+    - сподівалась
+  - answer: Обов'язково
+    options:
+    - Обов'язково
+    - Ніколи
+    - Можливо
+  blank_count: 16
+  complete_passage: 'Вокзал. Люди. Сльози.
+
+
+    Вона стояла біля потяга. Мовчки. Він тримав її руку. Міцно. Ніби боявся відпустити.
+
+
+    — Ти куди? — прошепотіла вона.
+
+    — Не знаю. Скоро. Сподіваюся.
+
+
+    Потяг загудів. Востаннє. Він подивився їй в очі. Довго. Ніжно. І відвернувся.
+
+
+    — Я чекатиму. Завжди.
+
+    — Знаю.
+
+
+    Двері зачинилися. Тихо. Без крику. Без сліз. Тільки тиша. Глуха. Болюча. Нескінченна.
+
+
+    Він їхав. Далеко. Невідомо куди. Невідомо на скільки. Але вона знала — він повернеться.
+    Обов''язково.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Створіть парцельовані речення
   jumbled_words: []
@@ -718,14 +864,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Що таке еліпсис у синтаксисі?
   options:
-  - text: Пропуск слів, які легко відновити з контексту
-    correct: true
-  - text: Повторення однакових слів для наголосу
-    correct: false
-  - text: Перестановка слів у реченні
-    correct: false
-  - text: Додавання зайвих слів для краси
-    correct: false
+  - '{''text'': ''Пропуск слів, які легко відновити з контексту'', ''correct'': True}'
+  - '{''text'': ''Повторення однакових слів для наголосу'', ''correct'': False}'
+  - '{''text'': ''Перестановка слів у реченні'', ''correct'': False}'
+  - '{''text'': ''Додавання зайвих слів для краси'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -736,14 +878,11 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Що таке парцеляція?
   options:
-  - text: Об'єднання коротких речень в одне довге
-    correct: false
-  - text: Розчленування речення на фрагменти, відділені крапками
-    correct: true
-  - text: Видалення всіх прикметників з речення
-    correct: false
-  - text: Заміна іменників займенниками
-    correct: false
+  - '{''text'': "Об''єднання коротких речень в одне довге", ''correct'': False}'
+  - '{''text'': ''Розчленування речення на фрагменти, відділені крапками'', ''correct'':
+    True}'
+  - '{''text'': ''Видалення всіх прикметників з речення'', ''correct'': False}'
+  - '{''text'': ''Заміна іменників займенниками'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -754,14 +893,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яке слово пропущено в реченні "Я — додому"?
   options:
-  - text: Дієслово руху (йду/їду)
-    correct: true
-  - text: Прикметник
-    correct: false
-  - text: Прислівник
-    correct: false
-  - text: Сполучник
-    correct: false
+  - '{''text'': ''Дієслово руху (йду/їду)'', ''correct'': True}'
+  - '{''text'': ''Прикметник'', ''correct'': False}'
+  - '{''text'': ''Прислівник'', ''correct'': False}'
+  - '{''text'': ''Сполучник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -772,14 +907,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: В якому стилі найчастіше використовується еліпсис?
   options:
-  - text: Офіційно-діловому
-    correct: false
-  - text: Розмовному та художньому
-    correct: true
-  - text: Науковому
-    correct: false
-  - text: Публіцистичному
-    correct: false
+  - '{''text'': ''Офіційно-діловому'', ''correct'': False}'
+  - '{''text'': ''Розмовному та художньому'', ''correct'': True}'
+  - '{''text'': ''Науковому'', ''correct'': False}'
+  - '{''text'': ''Публіцистичному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -790,14 +921,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яка функція парцеляції в реченні "Він пішов. Назавжди."?
   options:
-  - text: Скорочення тексту
-    correct: false
-  - text: Посилення емоційного впливу
-    correct: true
-  - text: Виправлення граматичної помилки
-    correct: false
-  - text: Уникнення повторів
-    correct: false
+  - '{''text'': ''Скорочення тексту'', ''correct'': False}'
+  - '{''text'': ''Посилення емоційного впливу'', ''correct'': True}'
+  - '{''text'': ''Виправлення граматичної помилки'', ''correct'': False}'
+  - '{''text'': ''Уникнення повторів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -808,14 +935,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яке речення є прикладом еліпсису?
   options:
-  - text: Я йду додому зараз.
-    correct: false
-  - text: Ти куди?
-    correct: true
-  - text: Він поїхав до Києва.
-    correct: false
-  - text: Вона працює в офісі.
-    correct: false
+  - '{''text'': ''Я йду додому зараз.'', ''correct'': False}'
+  - '{''text'': ''Ти куди?'', ''correct'': True}'
+  - '{''text'': ''Він поїхав до Києва.'', ''correct'': False}'
+  - '{''text'': ''Вона працює в офісі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -826,14 +949,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яке речення є прикладом парцеляції?
   options:
-  - text: Він прийшов нарешті.
-    correct: false
-  - text: Він прийшов. Нарешті.
-    correct: true
-  - text: Нарешті він прийшов.
-    correct: false
-  - text: Прийшов він нарешті.
-    correct: false
+  - '{''text'': ''Він прийшов нарешті.'', ''correct'': False}'
+  - '{''text'': ''Він прийшов. Нарешті.'', ''correct'': True}'
+  - '{''text'': ''Нарешті він прийшов.'', ''correct'': False}'
+  - '{''text'': ''Прийшов він нарешті.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -844,14 +963,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Чому еліпсис небажаний у науковому стилі?
   options:
-  - text: Він робить текст занадто коротким
-    correct: false
-  - text: Він може призвести до неоднозначності
-    correct: true
-  - text: Він застарілий
-    correct: false
-  - text: Він занадто простий
-    correct: false
+  - '{''text'': ''Він робить текст занадто коротким'', ''correct'': False}'
+  - '{''text'': ''Він може призвести до неоднозначності'', ''correct'': True}'
+  - '{''text'': ''Він застарілий'', ''correct'': False}'
+  - '{''text'': ''Він занадто простий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -862,14 +977,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яке слово пропущено в діалозі "— Каву? — Так"?
   options:
-  - text: Дієслово "хочеш/бажаєш"
-    correct: true
-  - text: Прикметник "гарячу"
-    correct: false
-  - text: Іменник "чашку"
-    correct: false
-  - text: Прислівник "зараз"
-    correct: false
+  - '{''text'': ''Дієслово "хочеш/бажаєш"'', ''correct'': True}'
+  - '{''text'': ''Прикметник "гарячу"'', ''correct'': False}'
+  - '{''text'': ''Іменник "чашку"'', ''correct'': False}'
+  - '{''text'': ''Прислівник "зараз"'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -880,14 +991,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яка помилка допущена в реченні "Я. Пішов. У. Магазин."?
   options:
-  - text: Неправильний порядок слів
-    correct: false
-  - text: Надмірна парцеляція несамостійних слів
-    correct: true
-  - text: Відсутність підмета
-    correct: false
-  - text: Неправильна форма дієслова
-    correct: false
+  - '{''text'': ''Неправильний порядок слів'', ''correct'': False}'
+  - '{''text'': ''Надмірна парцеляція несамостійних слів'', ''correct'': True}'
+  - '{''text'': ''Відсутність підмета'', ''correct'': False}'
+  - '{''text'': ''Неправильна форма дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -898,14 +1005,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Що означає речення "Він — як батько"?
   options:
-  - text: Він є батьком
-    correct: false
-  - text: Він схожий на батька
-    correct: true
-  - text: Він живе з батьком
-    correct: false
-  - text: Він працює як батько
-    correct: false
+  - '{''text'': ''Він є батьком'', ''correct'': False}'
+  - '{''text'': ''Він схожий на батька'', ''correct'': True}'
+  - '{''text'': ''Він живе з батьком'', ''correct'': False}'
+  - '{''text'': ''Він працює як батько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -916,14 +1019,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яка функція парцеляції в рекламі "Нове. Сучасне. Українське."?
   options:
-  - text: Економія місця
-    correct: false
-  - text: Створення ритму та наголошення кожної якості
-    correct: true
-  - text: Виправлення помилок
-    correct: false
-  - text: Дотримання граматичних правил
-    correct: false
+  - '{''text'': ''Економія місця'', ''correct'': False}'
+  - '{''text'': ''Створення ритму та наголошення кожної якості'', ''correct'': True}'
+  - '{''text'': ''Виправлення помилок'', ''correct'': False}'
+  - '{''text'': ''Дотримання граматичних правил'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -934,14 +1033,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: В якому випадку еліпсис доречний?
   options:
-  - text: У науковій статті
-    correct: false
-  - text: У офіційному листі
-    correct: false
-  - text: У діалозі близьких друзів
-    correct: true
-  - text: У юридичному документі
-    correct: false
+  - '{''text'': ''У науковій статті'', ''correct'': False}'
+  - '{''text'': ''У офіційному листі'', ''correct'': False}'
+  - '{''text'': ''У діалозі близьких друзів'', ''correct'': True}'
+  - '{''text'': ''У юридичному документі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -952,14 +1047,10 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яке слово пропущено в питанні "А він що?"?
   options:
-  - text: сказав/зробив
-    correct: true
-  - text: хоче
-    correct: false
-  - text: думає
-    correct: false
-  - text: знає
-    correct: false
+  - '{''text'': ''сказав/зробив'', ''correct'': True}'
+  - '{''text'': ''хоче'', ''correct'': False}'
+  - '{''text'': ''думає'', ''correct'': False}'
+  - '{''text'': ''знає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -970,14 +1061,11 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Яка різниця між еліпсисом та парцеляцією?
   options:
-  - text: Еліпсис — пропуск слів, парцеляція — розбиття крапками
-    correct: true
-  - text: Це синоніми
-    correct: false
-  - text: Еліпсис — для поезії, парцеляція — для прози
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Еліпсис — пропуск слів, парцеляція — розбиття крапками'', ''correct'':
+    True}'
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''Еліпсис — для поезії, парцеляція — для прози'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -988,14 +1076,11 @@ items:
   title: Розуміння еліпсису та парцеляції
   question: Хто з українських письменників майстерно використовував еліпсис та парцеляцію?
   options:
-  - text: Тільки Тарас Шевченко
-    correct: false
-  - text: Тільки Леся Українка
-    correct: false
-  - text: Коцюбинський, Леся Українка, Ліна Костенко та інші
-    correct: true
-  - text: Ніхто з українських письменників
-    correct: false
+  - '{''text'': ''Тільки Тарас Шевченко'', ''correct'': False}'
+  - '{''text'': ''Тільки Леся Українка'', ''correct'': False}'
+  - '{''text'': ''Коцюбинський, Леся Українка, Ліна Костенко та інші'', ''correct'':
+    True}'
+  - '{''text'': ''Ніхто з українських письменників'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1006,14 +1091,11 @@ items:
   title: Комплексна перевірка
   question: Яка головна різниця між еліпсисом і парцеляцією?
   options:
-  - text: Еліпсис — пропуск слів, парцеляція — розбиття крапками
-    correct: true
-  - text: Це синоніми
-    correct: false
-  - text: Еліпсис — для прози, парцеляція — для поезії
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Еліпсис — пропуск слів, парцеляція — розбиття крапками'', ''correct'':
+    True}'
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''Еліпсис — для прози, парцеляція — для поезії'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1024,14 +1106,10 @@ items:
   title: Комплексна перевірка
   question: У якому стилі еліпсис найбільш природний?
   options:
-  - text: У науковому
-    correct: false
-  - text: У розмовному та художньому
-    correct: true
-  - text: У офіційно-діловому
-    correct: false
-  - text: У технічному
-    correct: false
+  - '{''text'': ''У науковому'', ''correct'': False}'
+  - '{''text'': ''У розмовному та художньому'', ''correct'': True}'
+  - '{''text'': ''У офіційно-діловому'', ''correct'': False}'
+  - '{''text'': ''У технічному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1042,14 +1120,10 @@ items:
   title: Комплексна перевірка
   question: Що означає речення "Ми переможемо. Обов''язково."?
   options:
-  - text: Два окремі речення без зв'язку
-    correct: false
-  - text: Парцеляція для наголосу на впевненості
-    correct: true
-  - text: Граматична помилка
-    correct: false
-  - text: Незавершена думка
-    correct: false
+  - '{''text'': "Два окремі речення без зв''язку", ''correct'': False}'
+  - '{''text'': ''Парцеляція для наголосу на впевненості'', ''correct'': True}'
+  - '{''text'': ''Граматична помилка'', ''correct'': False}'
+  - '{''text'': ''Незавершена думка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1060,14 +1134,10 @@ items:
   title: Комплексна перевірка
   question: Яке слово пропущено в еліпсисі "Вона — як зірка"?
   options:
-  - text: Дієслово буття (є/була)
-    correct: false
-  - text: Прикметник (красива/яскрава)
-    correct: true
-  - text: Займенник
-    correct: false
-  - text: Прислівник
-    correct: false
+  - '{''text'': ''Дієслово буття (є/була)'', ''correct'': False}'
+  - '{''text'': ''Прикметник (красива/яскрава)'', ''correct'': True}'
+  - '{''text'': ''Займенник'', ''correct'': False}'
+  - '{''text'': ''Прислівник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1078,14 +1148,11 @@ items:
   title: Комплексна перевірка
   question: Чому парцеляція недоречна в юридичних документах?
   options:
-  - text: Вона занадто проста
-    correct: false
-  - text: Юридичні тексти вимагають повноти й однозначності
-    correct: true
-  - text: Її важко читати
-    correct: false
-  - text: Вона застаріла
-    correct: false
+  - '{''text'': ''Вона занадто проста'', ''correct'': False}'
+  - '{''text'': ''Юридичні тексти вимагають повноти й однозначності'', ''correct'':
+    True}'
+  - '{''text'': ''Її важко читати'', ''correct'': False}'
+  - '{''text'': ''Вона застаріла'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1096,14 +1163,10 @@ items:
   title: Комплексна перевірка
   question: Яка функція парцеляції в рекламі "Нове. Сучасне. Українське."?
   options:
-  - text: Скорочення тексту
-    correct: false
-  - text: Ритм і наголос на кожній якості
-    correct: true
-  - text: Виправлення помилок
-    correct: false
-  - text: Офіційність
-    correct: false
+  - '{''text'': ''Скорочення тексту'', ''correct'': False}'
+  - '{''text'': ''Ритм і наголос на кожній якості'', ''correct'': True}'
+  - '{''text'': ''Виправлення помилок'', ''correct'': False}'
+  - '{''text'': ''Офіційність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1114,14 +1177,11 @@ items:
   title: Комплексна перевірка
   question: Чому речення "Я. Пішов. У. Магазин." є неправильним?
   options:
-  - text: Занадто коротке
-    correct: false
-  - text: Прийменники та займенники не парцелюються окремо
-    correct: true
-  - text: Неправильний порядок слів
-    correct: false
-  - text: Відсутній підмет
-    correct: false
+  - '{''text'': ''Занадто коротке'', ''correct'': False}'
+  - '{''text'': ''Прийменники та займенники не парцелюються окремо'', ''correct'':
+    True}'
+  - '{''text'': ''Неправильний порядок слів'', ''correct'': False}'
+  - '{''text'': ''Відсутній підмет'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1132,14 +1192,10 @@ items:
   title: Комплексна перевірка
   question: Що є спільного між еліпсисом та парцеляцією?
   options:
-  - text: Вони тотожні
-    correct: false
-  - text: Обидва — стилістичні засоби для виразності
-    correct: true
-  - text: Обидва пропускають слова
-    correct: false
-  - text: Обидва об'єднують речення
-    correct: false
+  - '{''text'': ''Вони тотожні'', ''correct'': False}'
+  - '{''text'': ''Обидва — стилістичні засоби для виразності'', ''correct'': True}'
+  - '{''text'': ''Обидва пропускають слова'', ''correct'': False}'
+  - '{''text'': "Обидва об''єднують речення", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1150,14 +1206,10 @@ items:
   title: Комплексна перевірка
   question: Як еліпсис впливає на діалог?
   options:
-  - text: Робить його штучним
-    correct: false
-  - text: Надає природності та лаконічності
-    correct: true
-  - text: Ускладнює розуміння
-    correct: false
-  - text: Робить офіційним
-    correct: false
+  - '{''text'': ''Робить його штучним'', ''correct'': False}'
+  - '{''text'': ''Надає природності та лаконічності'', ''correct'': True}'
+  - '{''text'': ''Ускладнює розуміння'', ''correct'': False}'
+  - '{''text'': ''Робить офіційним'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1168,14 +1220,10 @@ items:
   title: Комплексна перевірка
   question: Хто з українських поетів відомий майстерним використанням парцеляції?
   options:
-  - text: Тільки Тарас Шевченко
-    correct: false
-  - text: Тільки Іван Франко
-    correct: false
-  - text: Ліна Костенко та інші сучасні поети
-    correct: true
-  - text: Ніхто не використовував
-    correct: false
+  - '{''text'': ''Тільки Тарас Шевченко'', ''correct'': False}'
+  - '{''text'': ''Тільки Іван Франко'', ''correct'': False}'
+  - '{''text'': ''Ліна Костенко та інші сучасні поети'', ''correct'': True}'
+  - '{''text'': ''Ніхто не використовував'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1186,14 +1234,11 @@ items:
   title: Комплексна перевірка
   question: У якому випадку еліпсис може бути недоречним?
   options:
-  - text: У розмові з другом
-    correct: false
-  - text: Коли контекст не робить пропущене слово очевидним
-    correct: true
-  - text: У художньому творі
-    correct: false
-  - text: У поезії
-    correct: false
+  - '{''text'': ''У розмові з другом'', ''correct'': False}'
+  - '{''text'': ''Коли контекст не робить пропущене слово очевидним'', ''correct'':
+    True}'
+  - '{''text'': ''У художньому творі'', ''correct'': False}'
+  - '{''text'': ''У поезії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1204,14 +1249,11 @@ items:
   title: Комплексна перевірка
   question: Що означає "недомовленість" як стилістичний ефект еліпсису?
   options:
-  - text: Граматичну помилку
-    correct: false
-  - text: Навмисне незавершення думки для художнього ефекту
-    correct: true
-  - text: Брак слів у мовця
-    correct: false
-  - text: Неуважність автора
-    correct: false
+  - '{''text'': ''Граматичну помилку'', ''correct'': False}'
+  - '{''text'': ''Навмисне незавершення думки для художнього ефекту'', ''correct'':
+    True}'
+  - '{''text'': ''Брак слів у мовця'', ''correct'': False}'
+  - '{''text'': ''Неуважність автора'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1222,14 +1264,10 @@ items:
   title: Комплексна перевірка
   question: Яка функція тире в еліпсисі "Я — додому"?
   options:
-  - text: Граматична помилка
-    correct: false
-  - text: Позначає місце пропущеного дієслова
-    correct: true
-  - text: Прикраса
-    correct: false
-  - text: Розділовий знак
-    correct: false
+  - '{''text'': ''Граматична помилка'', ''correct'': False}'
+  - '{''text'': ''Позначає місце пропущеного дієслова'', ''correct'': True}'
+  - '{''text'': ''Прикраса'', ''correct'': False}'
+  - '{''text'': ''Розділовий знак'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1240,14 +1278,11 @@ items:
   title: Комплексна перевірка
   question: Чим парцеляція відрізняється від простого списку?
   options:
-  - text: Нічим не відрізняється
-    correct: false
-  - text: Парцеляція — це розбите речення, список — перелік окремих елементів
-    correct: true
-  - text: Список довший
-    correct: false
-  - text: Парцеляція завжди коротша
-    correct: false
+  - '{''text'': ''Нічим не відрізняється'', ''correct'': False}'
+  - '{''text'': ''Парцеляція — це розбите речення, список — перелік окремих елементів'',
+    ''correct'': True}'
+  - '{''text'': ''Список довший'', ''correct'': False}'
+  - '{''text'': ''Парцеляція завжди коротша'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1258,14 +1293,10 @@ items:
   title: Комплексна перевірка
   question: Як визначити, чи доречний еліпсис у конкретному тексті?
   options:
-  - text: Еліпсис завжди доречний
-    correct: false
-  - text: За регістром тексту та ясністю контексту
-    correct: true
-  - text: Еліпсис ніколи не доречний
-    correct: false
-  - text: За довжиною речення
-    correct: false
+  - '{''text'': ''Еліпсис завжди доречний'', ''correct'': False}'
+  - '{''text'': ''За регістром тексту та ясністю контексту'', ''correct'': True}'
+  - '{''text'': ''Еліпсис ніколи не доречний'', ''correct'': False}'
+  - '{''text'': ''За довжиною речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1276,14 +1307,11 @@ items:
   title: Комплексна перевірка
   question: Яку роль відіграє парцеляція в сучасних соціальних мережах?
   options:
-  - text: Ніякої
-    correct: false
-  - text: Створює емоційність і ритм коротких повідомлень
-    correct: true
-  - text: Ускладнює розуміння
-    correct: false
-  - text: Робить тексти офіційними
-    correct: false
+  - '{''text'': ''Ніякої'', ''correct'': False}'
+  - '{''text'': ''Створює емоційність і ритм коротких повідомлень'', ''correct'':
+    True}'
+  - '{''text'': ''Ускладнює розуміння'', ''correct'': False}'
+  - '{''text'': ''Робить тексти офіційними'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

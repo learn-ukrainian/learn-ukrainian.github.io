@@ -1,15 +1,18 @@
 module: 38-one-member-sentences
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/38-one-member-sentences.md
-generated: '2025-12-29T18:53:54.808782'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.496135'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у вживанні односкладних речень
@@ -578,6 +581,135 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски правильними формами
+  passage_template: '{Ніч|День|Ранок|Ніч}. {Тиша|Шум|Галас|Тиша}. Зорі мерехтять на
+    небі. {Йдемо|Йдуть|Йде|Йдемо} повільно стежкою через ліс.
+
+
+    {Холодно|Холодний|Холодне|Холодно} і {вітряно|вітер|вітряний|вітряно}. {Мені|Мене|Мною|Мені}
+    некомфортно, але {продовжуємо|продовжують|продовжує|продовжуємо} іти далі.
+
+
+    {Кажуть|Кажу|Каже|Кажуть}, що десь тут є стара хата. {Треба|Потрібний|Потрібна|Треба}
+    знайти її до світанку. {Темніє|Темний|Темно|Темніє} швидко.
+
+
+    {Ось|Он|Тут|Ось} і стежка. {Видно|Бачу|Бачать|Видно} вогник удалині. {Спішимо|Спішать|Спішить|Спішимо}
+    до нього.
+
+
+    {Осінь|Осінній|Осіннє|Осінь}. {Дощ|Дощовий|Дощить|Дощ}. Листя падає. {Сумно|Сумний|Сумна|Сумно}
+    на душі, але {знаємо|знають|знає|знаємо}, що все буде добре.
+
+    '
+  blanks:
+  - answer: Ніч
+    options:
+    - Ніч
+    - День
+    - Ранок
+  - answer: Тиша
+    options:
+    - Тиша
+    - Шум
+    - Галас
+  - answer: Йдемо
+    options:
+    - Йдемо
+    - Йдуть
+    - Йде
+  - answer: Холодно
+    options:
+    - Холодно
+    - Холодний
+    - Холодне
+  - answer: вітряно
+    options:
+    - вітряно
+    - вітер
+    - вітряний
+  - answer: Мені
+    options:
+    - Мені
+    - Мене
+    - Мною
+  - answer: продовжуємо
+    options:
+    - продовжуємо
+    - продовжують
+    - продовжує
+  - answer: Кажуть
+    options:
+    - Кажуть
+    - Кажу
+    - Каже
+  - answer: Треба
+    options:
+    - Треба
+    - Потрібний
+    - Потрібна
+  - answer: Темніє
+    options:
+    - Темніє
+    - Темний
+    - Темно
+  - answer: Ось
+    options:
+    - Ось
+    - Он
+    - Тут
+  - answer: Видно
+    options:
+    - Видно
+    - Бачу
+    - Бачать
+  - answer: Спішимо
+    options:
+    - Спішимо
+    - Спішать
+    - Спішить
+  - answer: Осінь
+    options:
+    - Осінь
+    - Осінній
+    - Осіннє
+  - answer: Дощ
+    options:
+    - Дощ
+    - Дощовий
+    - Дощить
+  - answer: Сумно
+    options:
+    - Сумно
+    - Сумний
+    - Сумна
+  - answer: знаємо
+    options:
+    - знаємо
+    - знають
+    - знає
+  blank_count: 17
+  complete_passage: 'Ніч. Тиша. Зорі мерехтять на небі. Йдемо повільно стежкою через
+    ліс.
+
+
+    Холодно і вітряно. Мені некомфортно, але продовжуємо іти далі.
+
+
+    Кажуть, що десь тут є стара хата. Треба знайти її до світанку. Темніє швидко.
+
+
+    Ось і стежка. Видно вогник удалині. Спішимо до нього.
+
+
+    Осінь. Дощ. Листя падає. Сумно на душі, але знаємо, що все буде добре.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть односкладні речення
   jumbled_words: []
@@ -710,14 +842,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є означено-особовим із присудком у формі першої особи множини?
   options:
-  - text: На кручі посадимо молодий сад.
-    correct: true
-  - text: У селі кажуть різне.
-    correct: false
-  - text: Надворі темніє.
-    correct: false
-  - text: Ніч. Тиша. Зорі.
-    correct: false
+  - '{''text'': ''На кручі посадимо молодий сад.'', ''correct'': True}'
+  - '{''text'': ''У селі кажуть різне.'', ''correct'': False}'
+  - '{''text'': ''Надворі темніє.'', ''correct'': False}'
+  - '{''text'': ''Ніч. Тиша. Зорі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -728,14 +856,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є неозначено-особовим із невизначеним діячем у минулому часі?
   options:
-  - text: Нам подали чаю на станції.
-    correct: true
-  - text: Люблю цю пісню.
-    correct: false
-  - text: Мені холодно тут.
-    correct: false
-  - text: Осінь. Листопад.
-    correct: false
+  - '{''text'': ''Нам подали чаю на станції.'', ''correct'': True}'
+  - '{''text'': ''Люблю цю пісню.'', ''correct'': False}'
+  - '{''text'': ''Мені холодно тут.'', ''correct'': False}'
+  - '{''text'': ''Осінь. Листопад.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -746,14 +870,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є безособовим і виражає стан природи чи довкілля?
   options:
-  - text: Надворі темніє.
-    correct: true
-  - text: Кажуть, буде дощ.
-    correct: false
-  - text: Йдемо додому.
-    correct: false
-  - text: Весна. Квіти.
-    correct: false
+  - '{''text'': ''Надворі темніє.'', ''correct'': True}'
+  - '{''text'': ''Кажуть, буде дощ.'', ''correct'': False}'
+  - '{''text'': ''Йдемо додому.'', ''correct'': False}'
+  - '{''text'': ''Весна. Квіти.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -765,14 +885,10 @@ items:
   question: Яке речення є номінативним і складається лише з іменників у називному
     відмінку?
   options:
-  - text: Ніч. Тиша. Зорі.
-    correct: true
-  - text: Мені сумно.
-    correct: false
-  - text: Перед святом прикрашають будинки.
-    correct: false
-  - text: Дивлюся на тебе.
-    correct: false
+  - '{''text'': ''Ніч. Тиша. Зорі.'', ''correct'': True}'
+  - '{''text'': ''Мені сумно.'', ''correct'': False}'
+  - '{''text'': ''Перед святом прикрашають будинки.'', ''correct'': False}'
+  - '{''text'': ''Дивлюся на тебе.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -784,14 +900,10 @@ items:
   question: У якому реченні присудок виражений безособовим дієсловом зі значенням
     стану людини?
   options:
-  - text: Мені холодно.
-    correct: true
-  - text: У селі кажуть.
-    correct: false
-  - text: Пишу листа.
-    correct: false
-  - text: Дорога. Поле.
-    correct: false
+  - '{''text'': ''Мені холодно.'', ''correct'': True}'
+  - '{''text'': ''У селі кажуть.'', ''correct'': False}'
+  - '{''text'': ''Пишу листа.'', ''correct'': False}'
+  - '{''text'': ''Дорога. Поле.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -802,14 +914,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є означено-особовим з наказовим способом дієслова другої особи?
   options:
-  - text: І про мене не забудьте згадати.
-    correct: true
-  - text: Тут не курять.
-    correct: false
-  - text: Треба поспішати.
-    correct: false
-  - text: Який чудовий день!
-    correct: false
+  - '{''text'': ''І про мене не забудьте згадати.'', ''correct'': True}'
+  - '{''text'': ''Тут не курять.'', ''correct'': False}'
+  - '{''text'': ''Треба поспішати.'', ''correct'': False}'
+  - '{''text'': ''Який чудовий день!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -820,14 +928,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є неозначено-особовим і передає загальноприйняту думку людей?
   options:
-  - text: У селі кажуть, що весна буде рання.
-    correct: true
-  - text: Люблю тебе!
-    correct: false
-  - text: На душі сумно.
-    correct: false
-  - text: Київ! Древня столиця!
-    correct: false
+  - '{''text'': ''У селі кажуть, що весна буде рання.'', ''correct'': True}'
+  - '{''text'': ''Люблю тебе!'', ''correct'': False}'
+  - '{''text'': ''На душі сумно.'', ''correct'': False}'
+  - '{''text'': ''Київ! Древня столиця!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -838,14 +942,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є безособовим із значенням необхідності чи потреби?
   options:
-  - text: Треба поспішати.
-    correct: true
-  - text: Перед святом прикрашають.
-    correct: false
-  - text: Сідай і слухай.
-    correct: false
-  - text: Дорога довга.
-    correct: false
+  - '{''text'': ''Треба поспішати.'', ''correct'': True}'
+  - '{''text'': ''Перед святом прикрашають.'', ''correct'': False}'
+  - '{''text'': ''Сідай і слухай.'', ''correct'': False}'
+  - '{''text'': ''Дорога довга.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -856,14 +956,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є номінативним з емоційно-оцінним значенням захоплення?
   options:
-  - text: Київ! Древня столиця!
-    correct: true
-  - text: Надворі вітряно.
-    correct: false
-  - text: Двері відчинили.
-    correct: false
-  - text: Йду на роботу.
-    correct: false
+  - '{''text'': ''Київ! Древня столиця!'', ''correct'': True}'
+  - '{''text'': ''Надворі вітряно.'', ''correct'': False}'
+  - '{''text'': ''Двері відчинили.'', ''correct'': False}'
+  - '{''text'': ''Йду на роботу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -874,14 +970,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є означено-особовим з присудком у формі першої особи однини?
   options:
-  - text: Дивлюся на тебе й не надивлюся.
-    correct: true
-  - text: Нам принесли квитки.
-    correct: false
-  - text: Мені соромно.
-    correct: false
-  - text: Зима. Сніг. Мороз.
-    correct: false
+  - '{''text'': ''Дивлюся на тебе й не надивлюся.'', ''correct'': True}'
+  - '{''text'': ''Нам принесли квитки.'', ''correct'': False}'
+  - '{''text'': ''Мені соромно.'', ''correct'': False}'
+  - '{''text'': ''Зима. Сніг. Мороз.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -893,14 +985,10 @@ items:
   question: У якому реченні використано безособову конструкцію із пасивним дієприкметником
     на -но?
   options:
-  - text: Там усе правильно записано.
-    correct: true
-  - text: Співають птахи в саду.
-    correct: false
-  - text: Ідемо до парку.
-    correct: false
-  - text: Літо. Спека. Сонце.
-    correct: false
+  - '{''text'': ''Там усе правильно записано.'', ''correct'': True}'
+  - '{''text'': ''Співають птахи в саду.'', ''correct'': False}'
+  - '{''text'': ''Ідемо до парку.'', ''correct'': False}'
+  - '{''text'': ''Літо. Спека. Сонце.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -911,14 +999,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є неозначено-особовим і описує дію невідомої особи?
   options:
-  - text: Двері відчинили без стуку.
-    correct: true
-  - text: Люблю читати.
-    correct: false
-  - text: На дворі холодно.
-    correct: false
-  - text: Ранок. Світанок.
-    correct: false
+  - '{''text'': ''Двері відчинили без стуку.'', ''correct'': True}'
+  - '{''text'': ''Люблю читати.'', ''correct'': False}'
+  - '{''text'': ''На дворі холодно.'', ''correct'': False}'
+  - '{''text'': ''Ранок. Світанок.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -929,14 +1013,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є безособовим і виражає заборону або неможливість?
   options:
-  - text: Тут не можна курити.
-    correct: true
-  - text: Кажуть, він приїхав.
-    correct: false
-  - text: Пишемо диктант.
-    correct: false
-  - text: Вечір. Місяць.
-    correct: false
+  - '{''text'': ''Тут не можна курити.'', ''correct'': True}'
+  - '{''text'': ''Кажуть, він приїхав.'', ''correct'': False}'
+  - '{''text'': ''Пишемо диктант.'', ''correct'': False}'
+  - '{''text'': ''Вечір. Місяць.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -947,14 +1027,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є номінативним і використовується для опису пейзажу?
   options:
-  - text: Дорога довга. Чагарі, долини.
-    correct: true
-  - text: Мені весело.
-    correct: false
-  - text: Тут не палять.
-    correct: false
-  - text: Йдеш додому?
-    correct: false
+  - '{''text'': ''Дорога довга. Чагарі, долини.'', ''correct'': True}'
+  - '{''text'': ''Мені весело.'', ''correct'': False}'
+  - '{''text'': ''Тут не палять.'', ''correct'': False}'
+  - '{''text'': ''Йдеш додому?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -965,14 +1041,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є означено-особовим і виражає запрошення до спільної дії?
   options:
-  - text: Спробуймо цю страву!
-    correct: true
-  - text: Вас запрошують до зали.
-    correct: false
-  - text: Темно і тихо.
-    correct: false
-  - text: Осінь уже.
-    correct: false
+  - '{''text'': ''Спробуймо цю страву!'', ''correct'': True}'
+  - '{''text'': ''Вас запрошують до зали.'', ''correct'': False}'
+  - '{''text'': ''Темно і тихо.'', ''correct'': False}'
+  - '{''text'': ''Осінь уже.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -983,14 +1055,10 @@ items:
   title: Визначення типу односкладного речення
   question: Яке речення є безособовим і виражає внутрішній психологічний стан людини?
   options:
-  - text: На душі сумно.
-    correct: true
-  - text: Приймають заявки.
-    correct: false
-  - text: Читаю книгу.
-    correct: false
-  - text: Ніч. Місяць. Зорі.
-    correct: false
+  - '{''text'': ''На душі сумно.'', ''correct'': True}'
+  - '{''text'': ''Приймають заявки.'', ''correct'': False}'
+  - '{''text'': ''Читаю книгу.'', ''correct'': False}'
+  - '{''text'': ''Ніч. Місяць. Зорі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1002,14 +1070,11 @@ items:
   question: Яку стилістичну функцію виконують номінативні речення "Ніч. Тиша. Зорі."
     у художньому тексті?
   options:
-  - text: Створюють імпресіоністичний ефект фрагментарності образу.
-    correct: true
-  - text: Передають точну наукову інформацію.
-    correct: false
-  - text: Виражають наказ або заборону.
-    correct: false
-  - text: Вказують на невизначеного діяча.
-    correct: false
+  - '{''text'': ''Створюють імпресіоністичний ефект фрагментарності образу.'', ''correct'':
+    True}'
+  - '{''text'': ''Передають точну наукову інформацію.'', ''correct'': False}'
+  - '{''text'': ''Виражають наказ або заборону.'', ''correct'': False}'
+  - '{''text'': ''Вказують на невизначеного діяча.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1021,14 +1086,10 @@ items:
   question: Чому в розмовному мовленні часто вживаються означено-особові речення без
     підмета?
   options:
-  - text: Для економії слів і природності мовлення.
-    correct: true
-  - text: Через недостатню освіту мовців.
-    correct: false
-  - text: Тому що це єдина правильна форма.
-    correct: false
-  - text: Для офіційності висловлювання.
-    correct: false
+  - '{''text'': ''Для економії слів і природності мовлення.'', ''correct'': True}'
+  - '{''text'': ''Через недостатню освіту мовців.'', ''correct'': False}'
+  - '{''text'': ''Тому що це єдина правильна форма.'', ''correct'': False}'
+  - '{''text'': ''Для офіційності висловлювання.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1039,14 +1100,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Яку функцію виконують неозначено-особові речення в оголошеннях та інструкціях?
   options:
-  - text: Створюють нейтральність та ввічливість без вказівки на конкретного діяча.
-    correct: true
-  - text: Виражають емоційну оцінку.
-    correct: false
-  - text: Описують стан природи.
-    correct: false
-  - text: Називають предмети і явища.
-    correct: false
+  - '{''text'': ''Створюють нейтральність та ввічливість без вказівки на конкретного
+    діяча.'', ''correct'': True}'
+  - '{''text'': ''Виражають емоційну оцінку.'', ''correct'': False}'
+  - '{''text'': ''Описують стан природи.'', ''correct'': False}'
+  - '{''text'': ''Називають предмети і явища.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1057,15 +1115,12 @@ items:
   title: Стилістичні функції односкладних речень
   question: Чому Михайло Коцюбинський вважається майстром безособових речень?
   options:
-  - text: Він використовував їх для передачі настрою та атмосфери в імпресіоністичних
-      описах.
-    correct: true
-  - text: Він писав тільки безособовими реченнями.
-    correct: false
-  - text: Він винайшов безособові речення.
-    correct: false
-  - text: Він критикував використання безособових речень.
-    correct: false
+  - '{''text'': ''Він використовував їх для передачі настрою та атмосфери в імпресіоністичних
+    описах.'', ''correct'': True}'
+  - '{''text'': ''Він писав тільки безособовими реченнями.'', ''correct'': False}'
+  - '{''text'': ''Він винайшов безособові речення.'', ''correct'': False}'
+  - '{''text'': ''Він критикував використання безособових речень.'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -1077,14 +1132,11 @@ items:
   question: Яку стилістичну функцію виконує означено-особове речення "Люблю тебе!"
     порівняно з "Я люблю тебе"?
   options:
-  - text: Посилює емоційність та експресивність висловлювання.
-    correct: true
-  - text: Робить висловлювання більш офіційним.
-    correct: false
-  - text: Вказує на невизначеного діяча.
-    correct: false
-  - text: Описує стан природи.
-    correct: false
+  - '{''text'': ''Посилює емоційність та експресивність висловлювання.'', ''correct'':
+    True}'
+  - '{''text'': ''Робить висловлювання більш офіційним.'', ''correct'': False}'
+  - '{''text'': ''Вказує на невизначеного діяча.'', ''correct'': False}'
+  - '{''text'': ''Описує стан природи.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1095,14 +1147,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Для якого стилю характерне найбільше вживання номінативних речень?
   options:
-  - text: Художнього, особливо поезії та імпресіоністичної прози.
-    correct: true
-  - text: Офіційно-ділового.
-    correct: false
-  - text: Наукового.
-    correct: false
-  - text: Розмовного.
-    correct: false
+  - '{''text'': ''Художнього, особливо поезії та імпресіоністичної прози.'', ''correct'':
+    True}'
+  - '{''text'': ''Офіційно-ділового.'', ''correct'': False}'
+  - '{''text'': ''Наукового.'', ''correct'': False}'
+  - '{''text'': ''Розмовного.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1114,14 +1163,11 @@ items:
   question: Яку функцію виконують безособові речення зі словами "треба", "можна",
     "не можна"?
   options:
-  - text: Виражають модальні значення необхідності, дозволу, заборони.
-    correct: true
-  - text: Називають предмети і явища.
-    correct: false
-  - text: Вказують на конкретного діяча.
-    correct: false
-  - text: Описують пейзаж.
-    correct: false
+  - '{''text'': ''Виражають модальні значення необхідності, дозволу, заборони.'',
+    ''correct'': True}'
+  - '{''text'': ''Називають предмети і явища.'', ''correct'': False}'
+  - '{''text'': ''Вказують на конкретного діяча.'', ''correct'': False}'
+  - '{''text'': ''Описують пейзаж.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1132,14 +1178,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Чому односкладні речення ефективні в заголовках і рекламі?
   options:
-  - text: Вони лаконічні, динамічні та легко запам'ятовуються.
-    correct: true
-  - text: Вони є обов'язковими за правилами реклами.
-    correct: false
-  - text: Вони є найдовшими типами речень.
-    correct: false
-  - text: Вони використовуються тільки в рекламі.
-    correct: false
+  - '{''text'': "Вони лаконічні, динамічні та легко запам''ятовуються.", ''correct'':
+    True}'
+  - '{''text'': "Вони є обов''язковими за правилами реклами.", ''correct'': False}'
+  - '{''text'': ''Вони є найдовшими типами речень.'', ''correct'': False}'
+  - '{''text'': ''Вони використовуються тільки в рекламі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1150,14 +1193,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Яку роль відіграють неозначено-особові речення в прислів'ях і приказках?
   options:
-  - text: Передають узагальнену мудрість, що стосується всіх людей.
-    correct: true
-  - text: Вказують на конкретну історичну особу.
-    correct: false
-  - text: Описують погоду.
-    correct: false
-  - text: Виражають особисті почуття автора.
-    correct: false
+  - '{''text'': ''Передають узагальнену мудрість, що стосується всіх людей.'', ''correct'':
+    True}'
+  - '{''text'': ''Вказують на конкретну історичну особу.'', ''correct'': False}'
+  - '{''text'': ''Описують погоду.'', ''correct'': False}'
+  - '{''text'': ''Виражають особисті почуття автора.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1168,14 +1208,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Яка особливість безособових речень із формами на -но, -то (записано, зроблено)?
   options:
-  - text: Вони виражають результат дії без вказівки на виконавця.
-    correct: true
-  - text: Вони завжди мають підмет.
-    correct: false
-  - text: Вони вживаються тільки в розмовному стилі.
-    correct: false
-  - text: Вони виражають наказ.
-    correct: false
+  - '{''text'': ''Вони виражають результат дії без вказівки на виконавця.'', ''correct'':
+    True}'
+  - '{''text'': ''Вони завжди мають підмет.'', ''correct'': False}'
+  - '{''text'': ''Вони вживаються тільки в розмовному стилі.'', ''correct'': False}'
+  - '{''text'': ''Вони виражають наказ.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1187,14 +1224,12 @@ items:
   question: Чому надмірне використання односкладних речень може бути стилістичною
     помилкою?
   options:
-  - text: Текст може стати занадто фрагментарним і втратити зв'язність.
-    correct: true
-  - text: Односкладні речення заборонені в літературній мові.
-    correct: false
-  - text: Вони є граматично неправильними.
-    correct: false
-  - text: Вони роблять текст занадто довгим.
-    correct: false
+  - '{''text'': "Текст може стати занадто фрагментарним і втратити зв''язність.",
+    ''correct'': True}'
+  - '{''text'': ''Односкладні речення заборонені в літературній мові.'', ''correct'':
+    False}'
+  - '{''text'': ''Вони є граматично неправильними.'', ''correct'': False}'
+  - '{''text'': ''Вони роблять текст занадто довгим.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1205,14 +1240,10 @@ items:
   title: Стилістичні функції односкладних речень
   question: У якому жанрі сценічні ремарки часто складаються з номінативних речень?
   options:
-  - text: У драматургії (п'єси, сценарії).
-    correct: true
-  - text: У наукових статтях.
-    correct: false
-  - text: У ділових листах.
-    correct: false
-  - text: У підручниках.
-    correct: false
+  - '{''text'': "У драматургії (п''єси, сценарії).", ''correct'': True}'
+  - '{''text'': ''У наукових статтях.'', ''correct'': False}'
+  - '{''text'': ''У ділових листах.'', ''correct'': False}'
+  - '{''text'': ''У підручниках.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1223,14 +1254,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Яку стилістичну функцію виконують безособові речення в описі погоди?
   options:
-  - text: Передають об'єктивний стан без суб'єкта дії.
-    correct: true
-  - text: Вказують на конкретну особу, яка спостерігає погоду.
-    correct: false
-  - text: Виражають наказ змінити погоду.
-    correct: false
-  - text: Називають погоду як об'єкт.
-    correct: false
+  - '{''text'': "Передають об''єктивний стан без суб''єкта дії.", ''correct'': True}'
+  - '{''text'': ''Вказують на конкретну особу, яка спостерігає погоду.'', ''correct'':
+    False}'
+  - '{''text'': ''Виражають наказ змінити погоду.'', ''correct'': False}'
+  - '{''text'': "Називають погоду як об''єкт.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1241,14 +1269,11 @@ items:
   title: Стилістичні функції односкладних речень
   question: Яка перевага означено-особових речень у наказах та інструкціях?
   options:
-  - text: Вони звучать природно і прямо, без зайвої деталізації.
-    correct: true
-  - text: Вони є обов'язковими за законом.
-    correct: false
-  - text: Вони є найдовшими типами речень.
-    correct: false
-  - text: Вони виражають невизначеність діяча.
-    correct: false
+  - '{''text'': ''Вони звучать природно і прямо, без зайвої деталізації.'', ''correct'':
+    True}'
+  - '{''text'': "Вони є обов''язковими за законом.", ''correct'': False}'
+  - '{''text'': ''Вони є найдовшими типами речень.'', ''correct'': False}'
+  - '{''text'': ''Вони виражають невизначеність діяча.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1259,14 +1284,10 @@ items:
   title: Стилістичні функції односкладних речень
   question: Що об'єднує всі типи односкладних речень як синтаксичну категорію?
   options:
-  - text: Наявність лише одного головного члена речення.
-    correct: true
-  - text: Обов'язкова відсутність присудка.
-    correct: false
-  - text: Використання тільки іменників.
-    correct: false
-  - text: Вживання тільки в розмовному стилі.
-    correct: false
+  - '{''text'': ''Наявність лише одного головного члена речення.'', ''correct'': True}'
+  - '{''text'': "Обов''язкова відсутність присудка.", ''correct'': False}'
+  - '{''text'': ''Використання тільки іменників.'', ''correct'': False}'
+  - '{''text'': ''Вживання тільки в розмовному стилі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1278,14 +1299,11 @@ items:
   question: Яка рекомендована кількість рівнів вкладеності для читабельного тексту
     з односкладними реченнями?
   options:
-  - text: Чергування односкладних і двоскладних для балансу.
-    correct: true
-  - text: Тільки односкладні речення.
-    correct: false
-  - text: Тільки двоскладні речення.
-    correct: false
-  - text: Не більше одного односкладного на абзац.
-    correct: false
+  - '{''text'': ''Чергування односкладних і двоскладних для балансу.'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки односкладні речення.'', ''correct'': False}'
+  - '{''text'': ''Тільки двоскладні речення.'', ''correct'': False}'
+  - '{''text'': ''Не більше одного односкладного на абзац.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

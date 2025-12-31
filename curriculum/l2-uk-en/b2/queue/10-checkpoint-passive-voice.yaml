@@ -1,15 +1,18 @@
 module: 10-checkpoint-passive-voice
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/10-checkpoint-passive-voice.md
-generated: '2025-12-29T21:25:20.720199'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.061878'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 18
   fill-in: 26
+  cloze: 1
   unjumble: 16
   quiz: 30
   true-false: 12
-item_count: 102
+total_items: 103
+item_count: 103
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки в пасивному стані (M02-03)
@@ -552,6 +555,152 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Інтеграційний текст (M01-09)
+  passage_template: 'Новий закон про енергоефективність {прийнято|ухвалено|приймається|прийнято}
+    Верховною Радою.
+
+    Законопроєкт {розроблявся|розроблюється|розроблено|розроблявся} експертами протягом
+    двох років.
+
+    Численні консультації {проведено|проводились|провели|проведено} з громадськістю
+    та бізнесом.
+
+    Депутатам {пояснили|пояснено|пояснюється|пояснили} всі аспекти нового законодавства.
+
+    Пропозиції {обговорювалися|обговорено|обговорюються|обговорювалися} на засіданні
+    комітету.
+
+    Будівлі, {збудовані|збудовано|будуються|збудовані} після 2025 року, матимуть суворі
+    стандарти.
+
+    Стандарти {затверджені|затверджено|затверджуються|затверджені} урядом України.
+
+    Нові вимоги {впроваджуватимуться|впроваджено|впровадили|впроваджуватимуться} поступово
+    протягом п''яти років.
+
+    Контроль {здійснюватиметься|здійснено|здійснюється|здійснюватиметься} регіональними
+    органами.
+
+    Порушників {штрафуватимуть|оштрафовано|штрафують|штрафуватимуть} за недотримання
+    норм.
+
+    Як {повідомили|повідомлено|повідомляється|повідомили} в міністерстві, результати
+    очікуються скоро.
+
+    Експертам {надано|надається|надали|надано} всі повноваження для контролю.
+
+    Перші звіти {опублікують|опубліковано|публікуються|опублікують} наступного року.
+
+    Громадянам {рекомендовано|рекомендується|рекомендували|рекомендовано} дотримуватися
+    нових правил.
+
+    '
+  blanks:
+  - answer: прийнято
+    options:
+    - прийнято
+    - ухвалено
+    - приймається
+  - answer: розроблявся
+    options:
+    - розроблявся
+    - розроблюється
+    - розроблено
+  - answer: проведено
+    options:
+    - проведено
+    - проводились
+    - провели
+  - answer: пояснили
+    options:
+    - пояснили
+    - пояснено
+    - пояснюється
+  - answer: обговорювалися
+    options:
+    - обговорювалися
+    - обговорено
+    - обговорюються
+  - answer: збудовані
+    options:
+    - збудовані
+    - збудовано
+    - будуються
+  - answer: затверджені
+    options:
+    - затверджені
+    - затверджено
+    - затверджуються
+  - answer: впроваджуватимуться
+    options:
+    - впроваджуватимуться
+    - впроваджено
+    - впровадили
+  - answer: здійснюватиметься
+    options:
+    - здійснюватиметься
+    - здійснено
+    - здійснюється
+  - answer: штрафуватимуть
+    options:
+    - штрафуватимуть
+    - оштрафовано
+    - штрафують
+  - answer: повідомили
+    options:
+    - повідомили
+    - повідомлено
+    - повідомляється
+  - answer: надано
+    options:
+    - надано
+    - надається
+    - надали
+  - answer: опублікують
+    options:
+    - опублікують
+    - опубліковано
+    - публікуються
+  - answer: рекомендовано
+    options:
+    - рекомендовано
+    - рекомендується
+    - рекомендували
+  blank_count: 14
+  complete_passage: 'Новий закон про енергоефективність прийнято Верховною Радою.
+
+    Законопроєкт розроблявся експертами протягом двох років.
+
+    Численні консультації проведено з громадськістю та бізнесом.
+
+    Депутатам пояснили всі аспекти нового законодавства.
+
+    Пропозиції обговорювалися на засіданні комітету.
+
+    Будівлі, збудовані після 2025 року, матимуть суворі стандарти.
+
+    Стандарти затверджені урядом України.
+
+    Нові вимоги впроваджуватимуться поступово протягом п''яти років.
+
+    Контроль здійснюватиметься регіональними органами.
+
+    Порушників штрафуватимуть за недотримання норм.
+
+    Як повідомили в міністерстві, результати очікуються скоро.
+
+    Експертам надано всі повноваження для контролю.
+
+    Перші звіти опублікують наступного року.
+
+    Громадянам рекомендовано дотримуватися нових правил.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть пасивні речення (M01-06)
   jumbled_words: []
@@ -684,14 +833,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Книгу написано автором»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: true
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -702,14 +847,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Стаття була перекладена професором»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: true
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -720,14 +861,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Проєкт розробляється командою»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: true
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': True}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -738,14 +875,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Мені сказали про збори»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: true
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -756,14 +889,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Документи підписані директором»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: true
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -774,14 +903,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Рішення прийнято одноголосно»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: true
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -792,14 +917,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Ці товари продаються в магазині»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: true
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': True}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -810,14 +931,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Йому порадили звернутися до лікаря»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: true
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -828,14 +945,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Експеримент проводиться в лабораторії»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: false
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: true
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': True}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -846,14 +959,10 @@ items:
   title: Визначення типу пасиву (M01)
   question: 'Яка пасивна форма використана: «Лист був відправлений учора»?'
   options:
-  - text: Дієприкметниковий пасив (-ний/-тий)
-    correct: true
-  - text: Безособовий пасив (-но/-то)
-    correct: false
-  - text: Рефлексивний пасив (-ся)
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: false
+  - '{''text'': ''Дієприкметниковий пасив (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособовий пасив (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Рефлексивний пасив (-ся)'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -864,14 +973,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Який регістр типовий для безособового пасиву -но/-то?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Художній
-    correct: false
-  - text: Науковий
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -882,14 +987,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Який регістр типовий для пасиву з 3-ю особою множини?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -900,14 +1001,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Який регістр типовий для рефлексивного пасиву -ся?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -918,14 +1015,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Яка форма найдоречніша в офіційному документі?
   options:
-  - text: Мені сказали про зміни
-    correct: false
-  - text: Про зміни повідомлено
-    correct: true
-  - text: Про зміни повідомляється
-    correct: false
-  - text: Про зміни повідомили
-    correct: false
+  - '{''text'': ''Мені сказали про зміни'', ''correct'': False}'
+  - '{''text'': ''Про зміни повідомлено'', ''correct'': True}'
+  - '{''text'': ''Про зміни повідомляється'', ''correct'': False}'
+  - '{''text'': ''Про зміни повідомили'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -936,14 +1029,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Яка форма найдоречніша в науковій статті?
   options:
-  - text: Експеримент проведено
-    correct: false
-  - text: Експеримент проводився
-    correct: true
-  - text: Провели експеримент
-    correct: false
-  - text: Експеримент був проведений
-    correct: false
+  - '{''text'': ''Експеримент проведено'', ''correct'': False}'
+  - '{''text'': ''Експеримент проводився'', ''correct'': True}'
+  - '{''text'': ''Провели експеримент'', ''correct'': False}'
+  - '{''text'': ''Експеримент був проведений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -954,14 +1043,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Яка форма найдоречніша в розмовній ситуації?
   options:
-  - text: Наказ підписано директором
-    correct: false
-  - text: Наказ підписаний директором
-    correct: false
-  - text: Наказ підписується
-    correct: false
-  - text: Директор підписав наказ
-    correct: true
+  - '{''text'': ''Наказ підписано директором'', ''correct'': False}'
+  - '{''text'': ''Наказ підписаний директором'', ''correct'': False}'
+  - '{''text'': ''Наказ підписується'', ''correct'': False}'
+  - '{''text'': ''Директор підписав наказ'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -972,14 +1057,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Яка форма найдоречніша в художньому тексті?
   options:
-  - text: Пісню написано поетом
-    correct: false
-  - text: Пісня написана великим поетом
-    correct: true
-  - text: Пісню написали
-    correct: false
-  - text: Пісня пишеться
-    correct: false
+  - '{''text'': ''Пісню написано поетом'', ''correct'': False}'
+  - '{''text'': ''Пісня написана великим поетом'', ''correct'': True}'
+  - '{''text'': ''Пісню написали'', ''correct'': False}'
+  - '{''text'': ''Пісня пишеться'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -990,14 +1071,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: 'Яка стилістична помилка в реченні: «У побутовій розмові рішення прийнято»?'
   options:
-  - text: Неправильний час
-    correct: false
-  - text: Змішування регістрів
-    correct: true
-  - text: Неправильний відмінок
-    correct: false
-  - text: Помилки немає
-    correct: false
+  - '{''text'': ''Неправильний час'', ''correct'': False}'
+  - '{''text'': ''Змішування регістрів'', ''correct'': True}'
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1008,14 +1085,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Яку форму використати в новинах для цитування невизначеного джерела?
   options:
-  - text: Було повідомлено
-    correct: false
-  - text: Повідомляється
-    correct: false
-  - text: Повідомили
-    correct: true
-  - text: Повідомлений
-    correct: false
+  - '{''text'': ''Було повідомлено'', ''correct'': False}'
+  - '{''text'': ''Повідомляється'', ''correct'': False}'
+  - '{''text'': ''Повідомили'', ''correct'': True}'
+  - '{''text'': ''Повідомлений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1026,14 +1099,10 @@ items:
   title: Вибір регістру для пасиву (M06)
   question: Який пасив найменш офіційний?
   options:
-  - text: Документ підписано
-    correct: false
-  - text: Документ підписаний
-    correct: false
-  - text: Мені показали документ
-    correct: true
-  - text: Документ підписується
-    correct: false
+  - '{''text'': ''Документ підписано'', ''correct'': False}'
+  - '{''text'': ''Документ підписаний'', ''correct'': False}'
+  - '{''text'': ''Мені показали документ'', ''correct'': True}'
+  - '{''text'': ''Документ підписується'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1044,14 +1113,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: 'Яке підрядне речення еквівалентне: «студент, читаючий книгу»?'
   options:
-  - text: студент, який читає книгу
-    correct: true
-  - text: студент, якого читають
-    correct: false
-  - text: студент, прочитаний книгою
-    correct: false
-  - text: студент, прочитавши книгу
-    correct: false
+  - '{''text'': ''студент, який читає книгу'', ''correct'': True}'
+  - '{''text'': ''студент, якого читають'', ''correct'': False}'
+  - '{''text'': ''студент, прочитаний книгою'', ''correct'': False}'
+  - '{''text'': ''студент, прочитавши книгу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1062,14 +1127,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: 'Який дієприкметник еквівалентний: «книга, яку написали»?'
   options:
-  - text: написана книга
-    correct: true
-  - text: писана книга
-    correct: false
-  - text: пишуча книга
-    correct: false
-  - text: написавша книга
-    correct: false
+  - '{''text'': ''написана книга'', ''correct'': True}'
+  - '{''text'': ''писана книга'', ''correct'': False}'
+  - '{''text'': ''пишуча книга'', ''correct'': False}'
+  - '{''text'': ''написавша книга'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1080,14 +1141,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Що означає «колишній директор»?
   options:
-  - text: директор, який був раніше
-    correct: true
-  - text: директор, який буде
-    correct: false
-  - text: директор, який є зараз
-    correct: false
-  - text: директор, якого немає
-    correct: false
+  - '{''text'': ''директор, який був раніше'', ''correct'': True}'
+  - '{''text'': ''директор, який буде'', ''correct'': False}'
+  - '{''text'': ''директор, який є зараз'', ''correct'': False}'
+  - '{''text'': ''директор, якого немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1098,14 +1155,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: 'Яка форма сучасніша: «працюючий» чи «який працює»?'
   options:
-  - text: який працює
-    correct: true
-  - text: працюючий
-    correct: false
-  - text: обидві однаково сучасні
-    correct: false
-  - text: працюючий сучасніший
-    correct: false
+  - '{''text'': ''який працює'', ''correct'': True}'
+  - '{''text'': ''працюючий'', ''correct'': False}'
+  - '{''text'': ''обидві однаково сучасні'', ''correct'': False}'
+  - '{''text'': ''працюючий сучасніший'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1116,14 +1169,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Як трансформувати «документ, підписаний директором» у підрядне речення?
   options:
-  - text: документ, який підписав директор
-    correct: true
-  - text: документ, який підписаний
-    correct: false
-  - text: документ, що підписує директор
-    correct: false
-  - text: документ, підписавши директором
-    correct: false
+  - '{''text'': ''документ, який підписав директор'', ''correct'': True}'
+  - '{''text'': ''документ, який підписаний'', ''correct'': False}'
+  - '{''text'': ''документ, що підписує директор'', ''correct'': False}'
+  - '{''text'': ''документ, підписавши директором'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1134,14 +1183,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Чому «новоприбулий» не потребує трансформації?
   options:
-  - text: Це лексикалізована форма
-    correct: true
-  - text: Це сучасний дієприкметник
-    correct: false
-  - text: Це дієслово
-    correct: false
-  - text: Це прислівник
-    correct: false
+  - '{''text'': ''Це лексикалізована форма'', ''correct'': True}'
+  - '{''text'': ''Це сучасний дієприкметник'', ''correct'': False}'
+  - '{''text'': ''Це дієслово'', ''correct'': False}'
+  - '{''text'': ''Це прислівник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1152,14 +1197,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Який варіант природніший у розмові?
   options:
-  - text: Людина, яка знає правду
-    correct: true
-  - text: Людина, знаюча правду
-    correct: false
-  - text: Знаюча правду людина
-    correct: false
-  - text: Правду знаюча людина
-    correct: false
+  - '{''text'': ''Людина, яка знає правду'', ''correct'': True}'
+  - '{''text'': ''Людина, знаюча правду'', ''correct'': False}'
+  - '{''text'': ''Знаюча правду людина'', ''correct'': False}'
+  - '{''text'': ''Правду знаюча людина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1170,14 +1211,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Що означає «вищезгаданий документ»?
   options:
-  - text: документ, про який згадували вище
-    correct: true
-  - text: документ, який згадає вище
-    correct: false
-  - text: документ, який згадує вище
-    correct: false
-  - text: документ вище
-    correct: false
+  - '{''text'': ''документ, про який згадували вище'', ''correct'': True}'
+  - '{''text'': ''документ, який згадає вище'', ''correct'': False}'
+  - '{''text'': ''документ, який згадує вище'', ''correct'': False}'
+  - '{''text'': ''документ вище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1188,14 +1225,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Як утворити підрядне речення від «минулий рік»?
   options:
-  - text: рік, що минув
-    correct: true
-  - text: рік, який минулий
-    correct: false
-  - text: рік, минувши
-    correct: false
-  - text: рік, минаючий
-    correct: false
+  - '{''text'': ''рік, що минув'', ''correct'': True}'
+  - '{''text'': ''рік, який минулий'', ''correct'': False}'
+  - '{''text'': ''рік, минувши'', ''correct'': False}'
+  - '{''text'': ''рік, минаючий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1206,14 +1239,10 @@ items:
   title: Трансформації дієприкметників (M07-09)
   question: Яка форма правильна для офіційного документа?
   options:
-  - text: вищезгаданий документ
-    correct: true
-  - text: документ, про який згадували вище
-    correct: false
-  - text: документ вище
-    correct: false
-  - text: згаданий вище документ
-    correct: false
+  - '{''text'': ''вищезгаданий документ'', ''correct'': True}'
+  - '{''text'': ''документ, про який згадували вище'', ''correct'': False}'
+  - '{''text'': ''документ вище'', ''correct'': False}'
+  - '{''text'': ''згаданий вище документ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

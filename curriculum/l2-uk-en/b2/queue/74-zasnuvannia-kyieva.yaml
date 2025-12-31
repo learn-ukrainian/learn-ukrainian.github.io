@@ -1,15 +1,18 @@
 module: 74-zasnuvannia-kyieva
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/74-zasnuvannia-kyieva.md
-generated: '2025-12-30T00:57:47.868587'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:16.614174'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Граматика в історичних реченнях
@@ -585,6 +588,139 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст про легенду Києва
+  passage_template: 'Згідно з {легендою|історією|казкою|легендою}, Київ заснували
+    три {брати|воїни|князі|брати} — Кий, Щек і Хорив — та їхня {сестра|мати|дружина|сестра}
+    Либідь. Старший брат Кий був {князем|царем|вождем|князем} свого племені полян.
+    Брати вирішили заснувати {місто|село|фортецю|місто} на пагорбах над {Дніпром|морем|озером|Дніпром}.
+
+
+    Кожен обрав собі {гору|долину|острів|гору}: Кий осів на Старокиївській, Щек —
+    на Щекавиці, а Хорив — на Хоривиці. Місто {назвали|збудували|оборонили|назвали}
+    на честь старшого брата — Києвом. Річку назвали на честь {сестри|матері|дружини|сестри}
+    — Либіддю.
+
+
+    {Літопис|Роман|Переказ|Літопис} розповідає, що Кий {подорожував|воював|торгував|подорожував}
+    до Константинополя. Імператор прийняв його з великою {пошаною|армією|делегацією|пошаною}.
+    Кий навіть заснував місто Київець на {Дунаї|Дністрі|Бузі|Дунаї}.
+
+
+    Після смерті братів їхні {нащадки|сусіди|вороги|нащадки} продовжили правити Києвом.
+    Місто поступово {зростало|занепадало|змінювалося|зростало}, приєднуючи сусідні
+    племена. Поляни сплачували {данину|гроші|товари|данину} хозарам — могутньому {каганату|царству|імперії|каганату}.
+
+    '
+  blanks:
+  - answer: легендою
+    options:
+    - легендою
+    - історією
+    - казкою
+  - answer: брати
+    options:
+    - брати
+    - воїни
+    - князі
+  - answer: сестра
+    options:
+    - сестра
+    - мати
+    - дружина
+  - answer: князем
+    options:
+    - князем
+    - царем
+    - вождем
+  - answer: місто
+    options:
+    - місто
+    - село
+    - фортецю
+  - answer: Дніпром
+    options:
+    - Дніпром
+    - морем
+    - озером
+  - answer: гору
+    options:
+    - гору
+    - долину
+    - острів
+  - answer: назвали
+    options:
+    - назвали
+    - збудували
+    - оборонили
+  - answer: сестри
+    options:
+    - сестри
+    - матері
+    - дружини
+  - answer: Літопис
+    options:
+    - Літопис
+    - Роман
+    - Переказ
+  - answer: подорожував
+    options:
+    - подорожував
+    - воював
+    - торгував
+  - answer: пошаною
+    options:
+    - пошаною
+    - армією
+    - делегацією
+  - answer: Дунаї
+    options:
+    - Дунаї
+    - Дністрі
+    - Бузі
+  - answer: нащадки
+    options:
+    - нащадки
+    - сусіди
+    - вороги
+  - answer: зростало
+    options:
+    - зростало
+    - занепадало
+    - змінювалося
+  - answer: данину
+    options:
+    - данину
+    - гроші
+    - товари
+  - answer: каганату
+    options:
+    - каганату
+    - царству
+    - імперії
+  blank_count: 17
+  complete_passage: 'Згідно з легендою, Київ заснували три брати — Кий, Щек і Хорив
+    — та їхня сестра Либідь. Старший брат Кий був князем свого племені полян. Брати
+    вирішили заснувати місто на пагорбах над Дніпром.
+
+
+    Кожен обрав собі гору: Кий осів на Старокиївській, Щек — на Щекавиці, а Хорив
+    — на Хоривиці. Місто назвали на честь старшого брата — Києвом. Річку назвали на
+    честь сестри — Либіддю.
+
+
+    Літопис розповідає, що Кий подорожував до Константинополя. Імператор прийняв його
+    з великою пошаною. Кий навіть заснував місто Київець на Дунаї.
+
+
+    Після смерті братів їхні нащадки продовжили правити Києвом. Місто поступово зростало,
+    приєднуючи сусідні племена. Поляни сплачували данину хозарам — могутньому каганату.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про історію Києва
   jumbled_words: []
@@ -717,14 +853,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, хто був старшим із братів-засновників Києва?
   options:
-  - text: Щек
-    correct: false
-  - text: Хорив
-    correct: false
-  - text: Кий
-    correct: true
-  - text: Аскольд
-    correct: false
+  - '{''text'': ''Щек'', ''correct'': False}'
+  - '{''text'': ''Хорив'', ''correct'': False}'
+  - '{''text'': ''Кий'', ''correct'': True}'
+  - '{''text'': ''Аскольд'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -736,14 +868,10 @@ items:
   question: Згідно з текстом, яке джерело є головним свідченням легенди про заснування
     Києва?
   options:
-  - text: Візантійські хроніки
-    correct: false
-  - text: '"Повість минулих літ"'
-    correct: true
-  - text: Хозарські документи
-    correct: false
-  - text: Скандинавські саги
-    correct: false
+  - '{''text'': ''Візантійські хроніки'', ''correct'': False}'
+  - '{''text'': ''"Повість минулих літ"'', ''correct'': True}'
+  - '{''text'': ''Хозарські документи'', ''correct'': False}'
+  - '{''text'': ''Скандинавські саги'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -754,14 +882,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, як називався торговельний шлях, що проходив через Київ?
   options:
-  - text: Шовковий шлях
-    correct: false
-  - text: Бурштиновий шлях
-    correct: false
-  - text: Шлях «з варягів у греки»
-    correct: true
-  - text: Чорноморський шлях
-    correct: false
+  - '{''text'': ''Шовковий шлях'', ''correct'': False}'
+  - '{''text'': ''Бурштиновий шлях'', ''correct'': False}'
+  - '{''text'': ''Шлях «з варягів у греки»'', ''correct'': True}'
+  - '{''text'': ''Чорноморський шлях'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -772,14 +896,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, кому поляни сплачували данину до приходу варягів?
   options:
-  - text: Візантійській імперії
-    correct: false
-  - text: Хозарському каганату
-    correct: true
-  - text: Скандинавським конунгам
-    correct: false
-  - text: Болгарському царству
-    correct: false
+  - '{''text'': ''Візантійській імперії'', ''correct'': False}'
+  - '{''text'': ''Хозарському каганату'', ''correct'': True}'
+  - '{''text'': ''Скандинавським конунгам'', ''correct'': False}'
+  - '{''text'': ''Болгарському царству'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -790,14 +910,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Як автор тексту характеризує роль Кия?
   options:
-  - text: Як простого ватажка
-    correct: false
-  - text: Як справжнього державного діяча
-    correct: true
-  - text: Як варязького воїна
-    correct: false
-  - text: Як хозарського намісника
-    correct: false
+  - '{''text'': ''Як простого ватажка'', ''correct'': False}'
+  - '{''text'': ''Як справжнього державного діяча'', ''correct'': True}'
+  - '{''text'': ''Як варязького воїна'', ''correct'': False}'
+  - '{''text'': ''Як хозарського намісника'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -808,14 +924,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, куди подорожував Кий за літописом?
   options:
-  - text: До Рима
-    correct: false
-  - text: До Скандинавії
-    correct: false
-  - text: До Константинополя
-    correct: true
-  - text: До Хозарії
-    correct: false
+  - '{''text'': ''До Рима'', ''correct'': False}'
+  - '{''text'': ''До Скандинавії'', ''correct'': False}'
+  - '{''text'': ''До Константинополя'', ''correct'': True}'
+  - '{''text'': ''До Хозарії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -826,14 +938,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Як текст пояснює значення виразу «матір городів руських»?
   options:
-  - text: Як «російська столиця»
-    correct: false
-  - text: Як «головне місто Русі»
-    correct: true
-  - text: Як «найстаріше місто»
-    correct: false
-  - text: Як «священне місто»
-    correct: false
+  - '{''text'': ''Як «російська столиця»'', ''correct'': False}'
+  - '{''text'': ''Як «головне місто Русі»'', ''correct'': True}'
+  - '{''text'': ''Як «найстаріше місто»'', ''correct'': False}'
+  - '{''text'': ''Як «священне місто»'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -844,14 +952,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, коли варяги Аскольд і Дір захопили Київ?
   options:
-  - text: Близько 800 року
-    correct: false
-  - text: Близько 860 року
-    correct: true
-  - text: Близько 900 року
-    correct: false
-  - text: Близько 988 року
-    correct: false
+  - '{''text'': ''Близько 800 року'', ''correct'': False}'
+  - '{''text'': ''Близько 860 року'', ''correct'': True}'
+  - '{''text'': ''Близько 900 року'', ''correct'': False}'
+  - '{''text'': ''Близько 988 року'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -862,14 +966,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Як текст характеризує претензії Росії на київську спадщину?
   options:
-  - text: Як законні претензії
-    correct: false
-  - text: Як історичний ревізіонізм
-    correct: true
-  - text: Як неважливі
-    correct: false
-  - text: Як частково обґрунтовані
-    correct: false
+  - '{''text'': ''Як законні претензії'', ''correct'': False}'
+  - '{''text'': ''Як історичний ревізіонізм'', ''correct'': True}'
+  - '{''text'': ''Як неважливі'', ''correct'': False}'
+  - '{''text'': ''Як частково обґрунтовані'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -880,14 +980,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, якою була друга назва Києва за візантійськими джерелами?
   options:
-  - text: Константинополь
-    correct: false
-  - text: Самватас
-    correct: true
-  - text: Києвець
-    correct: false
-  - text: Вишгород
-    correct: false
+  - '{''text'': ''Константинополь'', ''correct'': False}'
+  - '{''text'': ''Самватас'', ''correct'': True}'
+  - '{''text'': ''Києвець'', ''correct'': False}'
+  - '{''text'': ''Вишгород'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -898,14 +994,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, коли Москва виникла як місто?
   options:
-  - text: У IX столітті
-    correct: false
-  - text: У X столітті
-    correct: false
-  - text: У XII столітті
-    correct: true
-  - text: У XIV столітті
-    correct: false
+  - '{''text'': ''У IX столітті'', ''correct'': False}'
+  - '{''text'': ''У X столітті'', ''correct'': False}'
+  - '{''text'': ''У XII столітті'', ''correct'': True}'
+  - '{''text'': ''У XIV столітті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -916,14 +1008,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Як текст характеризує хозар?
   options:
-  - text: Як слов'янський народ
-    correct: false
-  - text: Як могутній тюркський народ
-    correct: true
-  - text: Як скандинавських торговців
-    correct: false
-  - text: Як візантійських союзників
-    correct: false
+  - '{''text'': "Як слов''янський народ", ''correct'': False}'
+  - '{''text'': ''Як могутній тюркський народ'', ''correct'': True}'
+  - '{''text'': ''Як скандинавських торговців'', ''correct'': False}'
+  - '{''text'': ''Як візантійських союзників'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -934,14 +1022,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, яку релігію прийняла хозарська еліта?
   options:
-  - text: Християнство
-    correct: false
-  - text: Іслам
-    correct: false
-  - text: Іудаїзм
-    correct: true
-  - text: Язичництво
-    correct: false
+  - '{''text'': ''Християнство'', ''correct'': False}'
+  - '{''text'': ''Іслам'', ''correct'': False}'
+  - '{''text'': ''Іудаїзм'', ''correct'': True}'
+  - '{''text'': ''Язичництво'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -953,14 +1037,10 @@ items:
   question: Згідно з текстом, що символізував Кий під час російського вторгнення 2022
     року?
   options:
-  - text: Мирне співіснування
-    correct: false
-  - text: Опір
-    correct: true
-  - text: Торгівлю
-    correct: false
-  - text: Релігійну єдність
-    correct: false
+  - '{''text'': ''Мирне співіснування'', ''correct'': False}'
+  - '{''text'': ''Опір'', ''correct'': True}'
+  - '{''text'': ''Торгівлю'', ''correct'': False}'
+  - '{''text'': ''Релігійну єдність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -971,14 +1051,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Згідно з текстом, коли було встановлено пам'ятник засновникам Києва?
   options:
-  - text: 1972 року
-    correct: false
-  - text: 1982 року
-    correct: true
-  - text: 1992 року
-    correct: false
-  - text: 2002 року
-    correct: false
+  - '{''text'': ''1972 року'', ''correct'': False}'
+  - '{''text'': ''1982 року'', ''correct'': True}'
+  - '{''text'': ''1992 року'', ''correct'': False}'
+  - '{''text'': ''2002 року'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -989,14 +1065,10 @@ items:
   title: Розуміння тексту про заснування Києва
   question: Що везли варяги на південь, згідно з текстом?
   options:
-  - text: Шовки та прянощі
-    correct: false
-  - text: Хутра, мед, рабів
-    correct: true
-  - text: Золото та срібло
-    correct: false
-  - text: Зброю та коней
-    correct: false
+  - '{''text'': ''Шовки та прянощі'', ''correct'': False}'
+  - '{''text'': ''Хутра, мед, рабів'', ''correct'': True}'
+  - '{''text'': ''Золото та срібло'', ''correct'': False}'
+  - '{''text'': ''Зброю та коней'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1007,14 +1079,10 @@ items:
   title: Аналіз первинних джерел
   question: У цитаті з «Повісті минулих літ» згадується «бір великий». Що це означає?
   options:
-  - text: Великий палац
-    correct: false
-  - text: Великий ліс
-    correct: true
-  - text: Велике поле
-    correct: false
-  - text: Велике озеро
-    correct: false
+  - '{''text'': ''Великий палац'', ''correct'': False}'
+  - '{''text'': ''Великий ліс'', ''correct'': True}'
+  - '{''text'': ''Велике поле'', ''correct'': False}'
+  - '{''text'': ''Велике озеро'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1026,14 +1094,11 @@ items:
   question: Згідно з цитатою Костянтина Багрянородного, звідки приходили човни до
     Києва?
   options:
-  - text: Тільки з Новгорода
-    correct: false
-  - text: З багатьох міст, включаючи Новгород, Смоленськ, Чернігів
-    correct: true
-  - text: Тільки з Константинополя
-    correct: false
-  - text: Тільки з Хозарії
-    correct: false
+  - '{''text'': ''Тільки з Новгорода'', ''correct'': False}'
+  - '{''text'': ''З багатьох міст, включаючи Новгород, Смоленськ, Чернігів'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки з Константинополя'', ''correct'': False}'
+  - '{''text'': ''Тільки з Хозарії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1044,14 +1109,10 @@ items:
   title: Аналіз первинних джерел
   question: Яку другу назву Києва згадує Костянтин Багрянородний?
   options:
-  - text: Константинополь
-    correct: false
-  - text: Самватас
-    correct: true
-  - text: Київець
-    correct: false
-  - text: Вишгород
-    correct: false
+  - '{''text'': ''Константинополь'', ''correct'': False}'
+  - '{''text'': ''Самватас'', ''correct'': True}'
+  - '{''text'': ''Київець'', ''correct'': False}'
+  - '{''text'': ''Вишгород'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1063,14 +1124,10 @@ items:
   question: У цитаті з літопису сказано «сидів Кий на горі». Що означає дієслово «сидіти»
     в цьому контексті?
   options:
-  - text: Відпочивати
-    correct: false
-  - text: Правити, мешкати
-    correct: true
-  - text: Воювати
-    correct: false
-  - text: Торгувати
-    correct: false
+  - '{''text'': ''Відпочивати'', ''correct'': False}'
+  - '{''text'': ''Правити, мешкати'', ''correct'': True}'
+  - '{''text'': ''Воювати'', ''correct'': False}'
+  - '{''text'': ''Торгувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1081,14 +1138,11 @@ items:
   title: Аналіз первинних джерел
   question: Чому в літопису згадується, що навколо міста «ловили звіра»?
   options:
-  - text: Щоб показати, що жителі були мисливцями
-    correct: false
-  - text: Щоб підкреслити давність та автентичність поселення
-    correct: true
-  - text: Щоб описати клімат
-    correct: false
-  - text: Щоб пояснити назву річки
-    correct: false
+  - '{''text'': ''Щоб показати, що жителі були мисливцями'', ''correct'': False}'
+  - '{''text'': ''Щоб підкреслити давність та автентичність поселення'', ''correct'':
+    True}'
+  - '{''text'': ''Щоб описати клімат'', ''correct'': False}'
+  - '{''text'': ''Щоб пояснити назву річки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1099,14 +1153,10 @@ items:
   title: Аналіз первинних джерел
   question: Хто такий Святослав, згаданий у візантійському джерелі?
   options:
-  - text: Засновник Києва
-    correct: false
-  - text: Візантійський імператор
-    correct: false
-  - text: Київський князь, син Ігоря
-    correct: true
-  - text: Хозарський каган
-    correct: false
+  - '{''text'': ''Засновник Києва'', ''correct'': False}'
+  - '{''text'': ''Візантійський імператор'', ''correct'': False}'
+  - '{''text'': ''Київський князь, син Ігоря'', ''correct'': True}'
+  - '{''text'': ''Хозарський каган'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1117,14 +1167,10 @@ items:
   title: Аналіз первинних джерел
   question: Про що свідчить список міст у візантійському джерелі?
   options:
-  - text: Про занепад Києва
-    correct: false
-  - text: Про розгалужену торговельну мережу Русі
-    correct: true
-  - text: Про могутність Візантії
-    correct: false
-  - text: Про хозарську загрозу
-    correct: false
+  - '{''text'': ''Про занепад Києва'', ''correct'': False}'
+  - '{''text'': ''Про розгалужену торговельну мережу Русі'', ''correct'': True}'
+  - '{''text'': ''Про могутність Візантії'', ''correct'': False}'
+  - '{''text'': ''Про хозарську загрозу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1135,14 +1181,10 @@ items:
   title: Аналіз первинних джерел
   question: Яка гора згадується в літопису як місце оселення Кия?
   options:
-  - text: Щекавиця
-    correct: false
-  - text: Хоривиця
-    correct: false
-  - text: Гора, «де нині узвіз Боричів»
-    correct: true
-  - text: Гора Хом'як
-    correct: false
+  - '{''text'': ''Щекавиця'', ''correct'': False}'
+  - '{''text'': ''Хоривиця'', ''correct'': False}'
+  - '{''text'': ''Гора, «де нині узвіз Боричів»'', ''correct'': True}'
+  - '{''text'': "Гора Хом''як", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1153,14 +1195,10 @@ items:
   title: Аналіз первинних джерел
   question: Як літопис описує процес найменування міста?
   options:
-  - text: Місто назвала Либідь
-    correct: false
-  - text: Місто назвали греки
-    correct: false
-  - text: Брати назвали місто на честь найстаршого
-    correct: true
-  - text: Місто назвали хозари
-    correct: false
+  - '{''text'': ''Місто назвала Либідь'', ''correct'': False}'
+  - '{''text'': ''Місто назвали греки'', ''correct'': False}'
+  - '{''text'': ''Брати назвали місто на честь найстаршого'', ''correct'': True}'
+  - '{''text'': ''Місто назвали хозари'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1171,14 +1209,10 @@ items:
   title: Аналіз первинних джерел
   question: У візантійському джерелі згадується «зовнішня Росія». Що це означає?
   options:
-  - text: Територія поза Візантією
-    correct: false
-  - text: Північні руські землі (на відміну від Києва)
-    correct: true
-  - text: Хозарія
-    correct: false
-  - text: Скандинавія
-    correct: false
+  - '{''text'': ''Територія поза Візантією'', ''correct'': False}'
+  - '{''text'': ''Північні руські землі (на відміну від Києва)'', ''correct'': True}'
+  - '{''text'': ''Хозарія'', ''correct'': False}'
+  - '{''text'': ''Скандинавія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1189,14 +1223,10 @@ items:
   title: Аналіз первинних джерел
   question: Який жанр представляє «Повість минулих літ»?
   options:
-  - text: Художній роман
-    correct: false
-  - text: Історичний літопис
-    correct: true
-  - text: Філософський трактат
-    correct: false
-  - text: Релігійний гімн
-    correct: false
+  - '{''text'': ''Художній роман'', ''correct'': False}'
+  - '{''text'': ''Історичний літопис'', ''correct'': True}'
+  - '{''text'': ''Філософський трактат'', ''correct'': False}'
+  - '{''text'': ''Релігійний гімн'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1207,14 +1237,10 @@ items:
   title: Аналіз первинних джерел
   question: Чому візантійське джерело є важливим для підтвердження легенди?
   options:
-  - text: Тому що воно старіше за літопис
-    correct: false
-  - text: Тому що це незалежне свідчення з іншої країни
-    correct: true
-  - text: Тому що його автор був у Києві
-    correct: false
-  - text: Тому що воно написане українською
-    correct: false
+  - '{''text'': ''Тому що воно старіше за літопис'', ''correct'': False}'
+  - '{''text'': ''Тому що це незалежне свідчення з іншої країни'', ''correct'': True}'
+  - '{''text'': ''Тому що його автор був у Києві'', ''correct'': False}'
+  - '{''text'': ''Тому що воно написане українською'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1225,14 +1251,10 @@ items:
   title: Аналіз первинних джерел
   question: Як автор літопису ставиться до легенди про заснування?
   options:
-  - text: Критично, як до вигадки
-    correct: false
-  - text: Як до історичного факту
-    correct: true
-  - text: Нейтрально, без оцінки
-    correct: false
-  - text: Негативно
-    correct: false
+  - '{''text'': ''Критично, як до вигадки'', ''correct'': False}'
+  - '{''text'': ''Як до історичного факту'', ''correct'': True}'
+  - '{''text'': ''Нейтрально, без оцінки'', ''correct'': False}'
+  - '{''text'': ''Негативно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1243,14 +1265,11 @@ items:
   title: Аналіз первинних джерел
   question: Яка мета цитування первинних джерел у модулі?
   options:
-  - text: Розвага читачів
-    correct: false
-  - text: Підтвердження історичних фактів автентичними документами
-    correct: true
-  - text: Заповнення обсягу тексту
-    correct: false
-  - text: Демонстрація давньоукраїнської мови
-    correct: false
+  - '{''text'': ''Розвага читачів'', ''correct'': False}'
+  - '{''text'': ''Підтвердження історичних фактів автентичними документами'', ''correct'':
+    True}'
+  - '{''text'': ''Заповнення обсягу тексту'', ''correct'': False}'
+  - '{''text'': ''Демонстрація давньоукраїнської мови'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1261,14 +1280,11 @@ items:
   title: Аналіз первинних джерел
   question: Чому в модулі наведено два різні джерела?
   options:
-  - text: Щоб показати суперечності
-    correct: false
-  - text: Щоб дати різні перспективи — руську і візантійську
-    correct: true
-  - text: Тому що одного джерела недостатньо
-    correct: false
-  - text: Для порівняння мов
-    correct: false
+  - '{''text'': ''Щоб показати суперечності'', ''correct'': False}'
+  - '{''text'': ''Щоб дати різні перспективи — руську і візантійську'', ''correct'':
+    True}'
+  - '{''text'': ''Тому що одного джерела недостатньо'', ''correct'': False}'
+  - '{''text'': ''Для порівняння мов'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1279,14 +1295,10 @@ items:
   title: Аналіз первинних джерел
   question: Що означає слово «городок» у давньоруській мові?
   options:
-  - text: Маленьке місто
-    correct: false
-  - text: Укріплене поселення
-    correct: true
-  - text: Торговельний центр
-    correct: false
-  - text: Релігійний центр
-    correct: false
+  - '{''text'': ''Маленьке місто'', ''correct'': False}'
+  - '{''text'': ''Укріплене поселення'', ''correct'': True}'
+  - '{''text'': ''Торговельний центр'', ''correct'': False}'
+  - '{''text'': ''Релігійний центр'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,0 +1,61 @@
+# Audit Report: 100-shevchenko-awakening.md
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 1773/1750
+- **Activities:** ✅ 14/14
+- **Density:** ✅ All > 16
+- **Unique_types:** ✅ 10/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 7/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 40/35
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Richness:** ✅ 99% (history)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 99% (minimum: 95%)
+**Module Type:** history
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| primary_sources | 13 | 3 | 100% | 24% | 23.8% |
+| engagement | 6 | 6 | 100% | 14% | 14.3% |
+| timeline_markers | 30 | 10 | 100% | 14% | 14.3% |
+| decolonization | 15 | 2 | 100% | 14% | 14.3% |
+| cultural | 5 | 4 | 100% | 10% | 9.5% |
+| visual | 5 | 4 | 100% | 10% | 9.5% |
+| variety | 0.99 | - | 99% | 5% | 4.7% |
+| paragraph_var | 1.00 | - | 100% | 5% | 4.8% |
+| questions | 4 | 3 | 100% | 5% | 4.8% |
+| **TOTAL** | | | | | **100.0%** |
+
+## MDX VALIDATION
+✅ No issues found
+
+## HTML VALIDATION
+### Errors
+- ❌ 2 JS errors
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Шевченко і пробудження** | ⚪️ | 59 | Skipped |
+| **Вступ** | ⚪️ | 127 | Skipped |
+| **Від кріпака до художника** | ⚪️ | 142 | Skipped |
+| **"Кобзар" і народження нової літератури** | ⚪️ | 215 | Skipped |
+| **Три літа і особиста драма** | ⚪️ | 188 | Skipped |
+| **Кирило-Мефодіївське братство** | ⚪️ | 137 | Skipped |
+| **Арешт і заслання** | ⚪️ | 296 | Skipped |
+| **Останній шлях: повернення в Україну** | ⚪️ | 196 | Skipped |
+| **Первинні джерела** | ⚪️ | 82 | Skipped |
+| **Деколонізаційний погляд** | ⚪️ | 152 | Skipped |
+| **Ресурси** | ⚪️ | 59 | Skipped |
+| **Підсумок** | ✅ | 120 | Included in Core |
+| **Словник** | ⚪️ | 0 | Skipped |

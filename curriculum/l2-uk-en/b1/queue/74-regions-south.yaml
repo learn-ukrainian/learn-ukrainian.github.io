@@ -1,15 +1,18 @@
 module: 74-regions-south
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/74-regions-south.md
-generated: '2025-12-29T00:22:04.147374'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.426467'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 10
   true-false: 12
-item_count: 50
+total_items: 51
+item_count: 51
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -256,6 +259,126 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст про Південну Україну
+  passage_template: 'Південна Україна — це регіон {степів|гір|степів|лісів} та морів.
+    Головне місто — {Одеса|Київ|Одеса|Львів}, засноване у {1794|1654|1794|1918} році.
+
+
+    {Одеса|Херсон|Одеса|Миколаїв} — головний {порт|курорт|порт|завод} України. Місто
+    славиться своїм {гумором|театром|гумором|музеєм} та {архітектурою|їжею|архітектурою|музикою}.
+    {Потьомкінські|Київські|Потьомкінські|Львівські} сходи відомі на весь світ.
+
+
+    {Миколаїв|Одеса|Миколаїв|Херсон} — місто {корабелів|рибалок|корабелів|туристів}.
+    {Херсон|Миколаїв|Херсон|Одеса} славиться {кавунами|яблуками|кавунами|грушами}.
+
+
+    На півдні живуть різні народи: {греки|поляки|греки|чехи}, {болгари|німці|болгари|французи},
+    {татари|литовці|татари|латиші}. Це {багатонаціональний|однорідний|багатонаціональний|малий}
+    регіон.
+
+    '
+  blanks:
+  - answer: лісів
+    options:
+    - степів
+    - гір
+    - степів
+  - answer: Львів
+    options:
+    - Одеса
+    - Київ
+    - Одеса
+  - answer: '1918'
+    options:
+    - '1794'
+    - '1654'
+    - '1794'
+  - answer: Миколаїв
+    options:
+    - Одеса
+    - Херсон
+    - Одеса
+  - answer: завод
+    options:
+    - порт
+    - курорт
+    - порт
+  - answer: музеєм
+    options:
+    - гумором
+    - театром
+    - гумором
+  - answer: музикою
+    options:
+    - архітектурою
+    - їжею
+    - архітектурою
+  - answer: Львівські
+    options:
+    - Потьомкінські
+    - Київські
+    - Потьомкінські
+  - answer: Херсон
+    options:
+    - Миколаїв
+    - Одеса
+    - Миколаїв
+  - answer: туристів
+    options:
+    - корабелів
+    - рибалок
+    - корабелів
+  - answer: Одеса
+    options:
+    - Херсон
+    - Миколаїв
+    - Херсон
+  - answer: грушами
+    options:
+    - кавунами
+    - яблуками
+    - кавунами
+  - answer: чехи
+    options:
+    - греки
+    - поляки
+    - греки
+  - answer: французи
+    options:
+    - болгари
+    - німці
+    - болгари
+  - answer: латиші
+    options:
+    - татари
+    - литовці
+    - татари
+  - answer: малий
+    options:
+    - багатонаціональний
+    - однорідний
+    - багатонаціональний
+  blank_count: 16
+  complete_passage: 'Південна Україна — це регіон лісів та морів. Головне місто —
+    Львів, засноване у 1918 році.
+
+
+    Миколаїв — головний завод України. Місто славиться своїм музеєм та музикою. Львівські
+    сходи відомі на весь світ.
+
+
+    Херсон — місто туристів. Одеса славиться грушами.
+
+
+    На півдні живуть різні народи: чехи, французи, латиші. Це малий регіон.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про Південну Україну
   jumbled_words: []
@@ -325,14 +448,10 @@ items:
   question: Одеса є головним портом України і центром культурного життя на півдні.
     Коли було засновано це унікальне місто на березі Чорного моря?
   options:
-  - text: 1654 року
-    correct: false
-  - text: 1794 року
-    correct: true
-  - text: 1856 року
-    correct: false
-  - text: 1918 року
-    correct: false
+  - '{''text'': ''1654 року'', ''correct'': False}'
+  - '{''text'': ''1794 року'', ''correct'': True}'
+  - '{''text'': ''1856 року'', ''correct'': False}'
+  - '{''text'': ''1918 року'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -344,14 +463,10 @@ items:
   question: Південна Україна славиться своїм теплим кліматом та родючими землями.
     Яка сільськогосподарська культура є основною для цього регіону?
   options:
-  - text: Картопля
-    correct: false
-  - text: Пшениця
-    correct: true
-  - text: Цукровий буряк
-    correct: false
-  - text: Льон
-    correct: false
+  - '{''text'': ''Картопля'', ''correct'': False}'
+  - '{''text'': ''Пшениця'', ''correct'': True}'
+  - '{''text'': ''Цукровий буряк'', ''correct'': False}'
+  - '{''text'': ''Льон'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -363,14 +478,10 @@ items:
   question: Одеський гумор відомий на весь світ завдяки особливому стилю жартів та
     мовної гри. Який письменник прославив цей гумор?
   options:
-  - text: Тарас Шевченко
-    correct: false
-  - text: Михайло Жванецький
-    correct: true
-  - text: Іван Франко
-    correct: false
-  - text: Леся Українка
-    correct: false
+  - '{''text'': ''Тарас Шевченко'', ''correct'': False}'
+  - '{''text'': ''Михайло Жванецький'', ''correct'': True}'
+  - '{''text'': ''Іван Франко'', ''correct'': False}'
+  - '{''text'': ''Леся Українка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -382,14 +493,10 @@ items:
   question: Миколаїв є важливим промисловим центром південної України. Чому це місто
     називають «містом корабелів»?
   options:
-  - text: Там багато моряків
-    correct: false
-  - text: Там будують кораблі
-    correct: true
-  - text: Там ловлять рибу
-    correct: false
-  - text: Там продають човни
-    correct: false
+  - '{''text'': ''Там багато моряків'', ''correct'': False}'
+  - '{''text'': ''Там будують кораблі'', ''correct'': True}'
+  - '{''text'': ''Там ловлять рибу'', ''correct'': False}'
+  - '{''text'': ''Там продають човни'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -401,14 +508,10 @@ items:
   question: Херсонська область відома не лише портом, а й особливим сільськогосподарським
     продуктом. Який фрукт став символом Херсона?
   options:
-  - text: Яблуко
-    correct: false
-  - text: Кавун
-    correct: true
-  - text: Груша
-    correct: false
-  - text: Слива
-    correct: false
+  - '{''text'': ''Яблуко'', ''correct'': False}'
+  - '{''text'': ''Кавун'', ''correct'': True}'
+  - '{''text'': ''Груша'', ''correct'': False}'
+  - '{''text'': ''Слива'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -420,14 +523,10 @@ items:
   question: Південна Україна є регіоном багатьох народів, які століттями жили тут
     разом. Хто є корінним народом Криму?
   options:
-  - text: Греки
-    correct: false
-  - text: Болгари
-    correct: false
-  - text: Татари
-    correct: true
-  - text: Молдовани
-    correct: false
+  - '{''text'': ''Греки'', ''correct'': False}'
+  - '{''text'': ''Болгари'', ''correct'': False}'
+  - '{''text'': ''Татари'', ''correct'': True}'
+  - '{''text'': ''Молдовани'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -439,14 +538,10 @@ items:
   question: Чорне море є найбільшим водоймищем південної України. Що сталося з Кримом
     у 2014 році?
   options:
-  - text: Його приєднали до ЄС
-    correct: false
-  - text: Його окупувала Росія
-    correct: true
-  - text: Він отримав незалежність
-    correct: false
-  - text: Там було землетрус
-    correct: false
+  - '{''text'': ''Його приєднали до ЄС'', ''correct'': False}'
+  - '{''text'': ''Його окупувала Росія'', ''correct'': True}'
+  - '{''text'': ''Він отримав незалежність'', ''correct'': False}'
+  - '{''text'': ''Там було землетрус'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -458,14 +553,10 @@ items:
   question: Грецькі колонії на узбережжі Чорного моря існували ще в античні часи.
     Яка з цих колоній була заснована греками?
   options:
-  - text: Київ
-    correct: false
-  - text: Ольвія
-    correct: true
-  - text: Львів
-    correct: false
-  - text: Харків
-    correct: false
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': ''Ольвія'', ''correct'': True}'
+  - '{''text'': ''Львів'', ''correct'': False}'
+  - '{''text'': ''Харків'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -477,14 +568,10 @@ items:
   question: Архітектура Одеси відображає її багатонаціональну історію. Хто будував
     це місто?
   options:
-  - text: Тільки українці
-    correct: false
-  - text: Італійці, французи, греки
-    correct: true
-  - text: Тільки росіяни
-    correct: false
-  - text: Тільки турки
-    correct: false
+  - '{''text'': ''Тільки українці'', ''correct'': False}'
+  - '{''text'': ''Італійці, французи, греки'', ''correct'': True}'
+  - '{''text'': ''Тільки росіяни'', ''correct'': False}'
+  - '{''text'': ''Тільки турки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -496,14 +583,10 @@ items:
   question: Азовське море є частиною південного регіону України. Чим воно відрізняється
     від Чорного моря?
   options:
-  - text: Воно глибше
-    correct: false
-  - text: Воно мілке і тепле
-    correct: true
-  - text: Воно солоніше
-    correct: false
-  - text: Воно холодне
-    correct: false
+  - '{''text'': ''Воно глибше'', ''correct'': False}'
+  - '{''text'': ''Воно мілке і тепле'', ''correct'': True}'
+  - '{''text'': ''Воно солоніше'', ''correct'': False}'
+  - '{''text'': ''Воно холодне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

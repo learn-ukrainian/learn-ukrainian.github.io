@@ -1,15 +1,18 @@
 module: 33-word-formation-person-suffixes
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/33-word-formation-person-suffixes.md
-generated: '2025-12-29T18:41:12.057618'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.240153'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у словотворенні назв осіб
@@ -576,6 +579,157 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст назвами осіб
+  passage_template: 'Сучасне суспільство потребує фахівців різних професій. У бібліотеці
+    працює {бібліотекар|воротар|письменник|бібліотекар}, який допомагає {читачам|слухачам|глядачам|читачам}
+    знайти потрібні книги. {Відвідувачі|Споживачі|Робітники|Відвідувачі} бібліотеки
+    також можуть відвідувати лекції.
+
+
+    В університеті {викладачі|письменники|робітники|викладачі} передають знання студентам.
+    Багато з них також є {науковцями|глядачами|споживачами|науковцями}, які займаються
+    дослідженнями. {Слухачі|Читачі|Глядачі|Слухачі} курсів отримують сертифікати після
+    навчання.
+
+
+    {Письменники|Робітники|Споживачі|Письменники} створюють художні твори, які читають
+    мільйони людей. {Журналісти|Воротарі|Каменярі|Журналісти} інформують суспільство
+    про важливі події. {Творці|Слухачі|Читачі|Творці} нових ідей рухають прогрес уперед.
+
+
+    {Робітники|Письменники|Викладачі|Робітники} заводів виробляють продукцію, а {споживачі|науковці|митці|споживачі}
+    обирають найкращі товари. {Представники|Творці|Мовці|Представники} різних професій
+    разом будують майбутнє країни.
+
+
+    У сфері мистецтва працюють {митці|робітники|споживачі|митці}, які збагачують духовне
+    життя суспільства. Кожен {дослідник|глядач|слухач|дослідник} вносить свій внесок
+    у розвиток науки. {Працівники|Письменники|Глядачі|Працівники} культури зберігають
+    національну спадщину.
+
+
+    На футбольному полі {воротар|читач|слухач|воротар} захищає ворота команди. {Каменярі|Письменники|Науковці|Каменярі}
+    будують міцні споруди з каменю.
+
+    '
+  blanks:
+  - answer: бібліотекар
+    options:
+    - бібліотекар
+    - воротар
+    - письменник
+  - answer: читачам
+    options:
+    - читачам
+    - слухачам
+    - глядачам
+  - answer: Відвідувачі
+    options:
+    - Відвідувачі
+    - Споживачі
+    - Робітники
+  - answer: викладачі
+    options:
+    - викладачі
+    - письменники
+    - робітники
+  - answer: науковцями
+    options:
+    - науковцями
+    - глядачами
+    - споживачами
+  - answer: Слухачі
+    options:
+    - Слухачі
+    - Читачі
+    - Глядачі
+  - answer: Письменники
+    options:
+    - Письменники
+    - Робітники
+    - Споживачі
+  - answer: Журналісти
+    options:
+    - Журналісти
+    - Воротарі
+    - Каменярі
+  - answer: Творці
+    options:
+    - Творці
+    - Слухачі
+    - Читачі
+  - answer: Робітники
+    options:
+    - Робітники
+    - Письменники
+    - Викладачі
+  - answer: споживачі
+    options:
+    - споживачі
+    - науковці
+    - митці
+  - answer: Представники
+    options:
+    - Представники
+    - Творці
+    - Мовці
+  - answer: митці
+    options:
+    - митці
+    - робітники
+    - споживачі
+  - answer: дослідник
+    options:
+    - дослідник
+    - глядач
+    - слухач
+  - answer: Працівники
+    options:
+    - Працівники
+    - Письменники
+    - Глядачі
+  - answer: воротар
+    options:
+    - воротар
+    - читач
+    - слухач
+  - answer: Каменярі
+    options:
+    - Каменярі
+    - Письменники
+    - Науковці
+  blank_count: 17
+  complete_passage: 'Сучасне суспільство потребує фахівців різних професій. У бібліотеці
+    працює бібліотекар, який допомагає читачам знайти потрібні книги. Відвідувачі
+    бібліотеки також можуть відвідувати лекції.
+
+
+    В університеті викладачі передають знання студентам. Багато з них також є науковцями,
+    які займаються дослідженнями. Слухачі курсів отримують сертифікати після навчання.
+
+
+    Письменники створюють художні твори, які читають мільйони людей. Журналісти інформують
+    суспільство про важливі події. Творці нових ідей рухають прогрес уперед.
+
+
+    Робітники заводів виробляють продукцію, а споживачі обирають найкращі товари.
+    Представники різних професій разом будують майбутнє країни.
+
+
+    У сфері мистецтва працюють митці, які збагачують духовне життя суспільства. Кожен
+    дослідник вносить свій внесок у розвиток науки. Працівники культури зберігають
+    національну спадщину.
+
+
+    На футбольному полі воротар захищає ворота команди. Каменярі будують міцні споруди
+    з каменю.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з назвами осіб
   jumbled_words: []
@@ -709,14 +863,10 @@ items:
   question: Який суфікс використовується для утворення назв осіб від іменників, що
     позначають професію?
   options:
-  - text: -ість
-    correct: false
-  - text: -ар/-яр
-    correct: true
-  - text: -ння
-    correct: false
-  - text: -ок
-    correct: false
+  - '{''text'': ''-ість'', ''correct'': False}'
+  - '{''text'': ''-ар/-яр'', ''correct'': True}'
+  - '{''text'': ''-ння'', ''correct'': False}'
+  - '{''text'': ''-ок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -727,14 +877,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Від якого слова утворено іменник «читач»?
   options:
-  - text: читання
-    correct: false
-  - text: читати
-    correct: true
-  - text: читальня
-    correct: false
-  - text: читаний
-    correct: false
+  - '{''text'': ''читання'', ''correct'': False}'
+  - '{''text'': ''читати'', ''correct'': True}'
+  - '{''text'': ''читальня'', ''correct'': False}'
+  - '{''text'': ''читаний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -745,14 +891,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Який суфікс використано у слові «робітник»?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: false
-  - text: -ник
-    correct: true
-  - text: -ець
-    correct: false
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': False}'
+  - '{''text'': ''-ник'', ''correct'': True}'
+  - '{''text'': ''-ець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -763,14 +905,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Яке слово позначає того, хто слухає?
   options:
-  - text: слухання
-    correct: false
-  - text: слух
-    correct: false
-  - text: слухач
-    correct: true
-  - text: слухавка
-    correct: false
+  - '{''text'': ''слухання'', ''correct'': False}'
+  - '{''text'': ''слух'', ''correct'': False}'
+  - '{''text'': ''слухач'', ''correct'': True}'
+  - '{''text'': ''слухавка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -781,14 +919,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Який суфікс утворює назви осіб від дієслів?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: true
-  - text: -ник
-    correct: false
-  - text: -іст
-    correct: false
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': True}'
+  - '{''text'': ''-ник'', ''correct'': False}'
+  - '{''text'': ''-іст'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -799,14 +933,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Від якого слова утворено іменник «воротар»?
   options:
-  - text: ворота
-    correct: true
-  - text: воротити
-    correct: false
-  - text: вратар
-    correct: false
-  - text: ворог
-    correct: false
+  - '{''text'': ''ворота'', ''correct'': True}'
+  - '{''text'': ''воротити'', ''correct'': False}'
+  - '{''text'': ''вратар'', ''correct'': False}'
+  - '{''text'': ''ворог'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -817,14 +947,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Яке слово НЕ є назвою особи?
   options:
-  - text: письменник
-    correct: false
-  - text: читач
-    correct: false
-  - text: словник
-    correct: true
-  - text: робітник
-    correct: false
+  - '{''text'': ''письменник'', ''correct'': False}'
+  - '{''text'': ''читач'', ''correct'': False}'
+  - '{''text'': ''словник'', ''correct'': True}'
+  - '{''text'': ''робітник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -835,14 +961,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Який суфікс використано у слові «науковець»?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: false
-  - text: -ник
-    correct: false
-  - text: -овець
-    correct: true
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': False}'
+  - '{''text'': ''-ник'', ''correct'': False}'
+  - '{''text'': ''-овець'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -853,14 +975,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Від якого слова утворено іменник «викладач»?
   options:
-  - text: виклад
-    correct: false
-  - text: викладати
-    correct: true
-  - text: викладка
-    correct: false
-  - text: викладення
-    correct: false
+  - '{''text'': ''виклад'', ''correct'': False}'
+  - '{''text'': ''викладати'', ''correct'': True}'
+  - '{''text'': ''викладка'', ''correct'': False}'
+  - '{''text'': ''викладення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -871,14 +989,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Яке слово позначає того, хто працює з каменем?
   options:
-  - text: каменяр
-    correct: true
-  - text: камінник
-    correct: false
-  - text: каменач
-    correct: false
-  - text: камінщик
-    correct: false
+  - '{''text'': ''каменяр'', ''correct'': True}'
+  - '{''text'': ''камінник'', ''correct'': False}'
+  - '{''text'': ''каменач'', ''correct'': False}'
+  - '{''text'': ''камінщик'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -889,14 +1003,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Який рід мають іменники з суфіксом -ач?
   options:
-  - text: Жіночий
-    correct: false
-  - text: Середній
-    correct: false
-  - text: Чоловічий
-    correct: true
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Жіночий'', ''correct'': False}'
+  - '{''text'': ''Середній'', ''correct'': False}'
+  - '{''text'': ''Чоловічий'', ''correct'': True}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -907,14 +1017,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Від якого слова утворено іменник «письменник»?
   options:
-  - text: писати
-    correct: false
-  - text: письмо
-    correct: true
-  - text: писання
-    correct: false
-  - text: писар
-    correct: false
+  - '{''text'': ''писати'', ''correct'': False}'
+  - '{''text'': ''письмо'', ''correct'': True}'
+  - '{''text'': ''писання'', ''correct'': False}'
+  - '{''text'': ''писар'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -925,14 +1031,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Яке слово позначає того, хто споживає товари?
   options:
-  - text: споживання
-    correct: false
-  - text: споживач
-    correct: true
-  - text: споживчий
-    correct: false
-  - text: спожива
-    correct: false
+  - '{''text'': ''споживання'', ''correct'': False}'
+  - '{''text'': ''споживач'', ''correct'': True}'
+  - '{''text'': ''споживчий'', ''correct'': False}'
+  - '{''text'': ''спожива'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -943,14 +1045,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Який суфікс використано у слові «журналіст»?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: false
-  - text: -ник
-    correct: false
-  - text: -іст
-    correct: true
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': False}'
+  - '{''text'': ''-ник'', ''correct'': False}'
+  - '{''text'': ''-іст'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -961,14 +1059,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Від якого слова утворено іменник «творець»?
   options:
-  - text: творіння
-    correct: false
-  - text: творити
-    correct: true
-  - text: творчість
-    correct: false
-  - text: твір
-    correct: false
+  - '{''text'': ''творіння'', ''correct'': False}'
+  - '{''text'': ''творити'', ''correct'': True}'
+  - '{''text'': ''творчість'', ''correct'': False}'
+  - '{''text'': ''твір'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -979,14 +1073,10 @@ items:
   title: Визначення типу суфікса для назв осіб
   question: Яке слово позначає того, хто доглядає за вівцями?
   options:
-  - text: вівчар
-    correct: true
-  - text: вівник
-    correct: false
-  - text: вівач
-    correct: false
-  - text: вівець
-    correct: false
+  - '{''text'': ''вівчар'', ''correct'': True}'
+  - '{''text'': ''вівник'', ''correct'': False}'
+  - '{''text'': ''вівач'', ''correct'': False}'
+  - '{''text'': ''вівець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -998,14 +1088,10 @@ items:
   question: Який суфікс найчастіше використовується для творення назв виконавців дії
     від дієслів?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: true
-  - text: -ник
-    correct: false
-  - text: -ець
-    correct: false
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': True}'
+  - '{''text'': ''-ник'', ''correct'': False}'
+  - '{''text'': ''-ець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1016,14 +1102,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яка пара слів правильно ілюструє відношення «базове слово — назва особи»?
   options:
-  - text: читання — читач
-    correct: false
-  - text: читати — читач
-    correct: true
-  - text: читальня — читач
-    correct: false
-  - text: читаний — читач
-    correct: false
+  - '{''text'': ''читання — читач'', ''correct'': False}'
+  - '{''text'': ''читати — читач'', ''correct'': True}'
+  - '{''text'': ''читальня — читач'', ''correct'': False}'
+  - '{''text'': ''читаний — читач'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1034,14 +1116,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке слово НЕ є назвою особи?
   options:
-  - text: письменник
-    correct: false
-  - text: словник
-    correct: true
-  - text: робітник
-    correct: false
-  - text: працівник
-    correct: false
+  - '{''text'': ''письменник'', ''correct'': False}'
+  - '{''text'': ''словник'', ''correct'': True}'
+  - '{''text'': ''робітник'', ''correct'': False}'
+  - '{''text'': ''працівник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1052,14 +1130,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Який рід мають усі назви осіб з суфіксом -ар/-яр?
   options:
-  - text: Жіночий
-    correct: false
-  - text: Середній
-    correct: false
-  - text: Чоловічий
-    correct: true
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Жіночий'', ''correct'': False}'
+  - '{''text'': ''Середній'', ''correct'': False}'
+  - '{''text'': ''Чоловічий'', ''correct'': True}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1070,14 +1144,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке слово є русизмом?
   options:
-  - text: читач
-    correct: false
-  - text: читатель
-    correct: true
-  - text: слухач
-    correct: false
-  - text: глядач
-    correct: false
+  - '{''text'': ''читач'', ''correct'': False}'
+  - '{''text'': ''читатель'', ''correct'': True}'
+  - '{''text'': ''слухач'', ''correct'': False}'
+  - '{''text'': ''глядач'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1088,14 +1158,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Від якого типу слів утворюються назви осіб з суфіксом -ар/-яр?
   options:
-  - text: Від дієслів
-    correct: false
-  - text: Від іменників
-    correct: true
-  - text: Від прикметників
-    correct: false
-  - text: Від прислівників
-    correct: false
+  - '{''text'': ''Від дієслів'', ''correct'': False}'
+  - '{''text'': ''Від іменників'', ''correct'': True}'
+  - '{''text'': ''Від прикметників'', ''correct'': False}'
+  - '{''text'': ''Від прислівників'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1106,14 +1172,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке слово утворено за іншою моделлю, ніж решта?
   options:
-  - text: читач
-    correct: false
-  - text: слухач
-    correct: false
-  - text: бібліотекар
-    correct: true
-  - text: споживач
-    correct: false
+  - '{''text'': ''читач'', ''correct'': False}'
+  - '{''text'': ''слухач'', ''correct'': False}'
+  - '{''text'': ''бібліотекар'', ''correct'': True}'
+  - '{''text'': ''споживач'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1124,14 +1186,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яка правильна форма від дієслова «споживати»?
   options:
-  - text: споживатель
-    correct: false
-  - text: споживач
-    correct: true
-  - text: споживальник
-    correct: false
-  - text: споживець
-    correct: false
+  - '{''text'': ''споживатель'', ''correct'': False}'
+  - '{''text'': ''споживач'', ''correct'': True}'
+  - '{''text'': ''споживальник'', ''correct'': False}'
+  - '{''text'': ''споживець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1142,14 +1200,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Який суфікс використано у слові «науковець»?
   options:
-  - text: -ець
-    correct: false
-  - text: -овець
-    correct: true
-  - text: -ник
-    correct: false
-  - text: -ач
-    correct: false
+  - '{''text'': ''-ець'', ''correct'': False}'
+  - '{''text'': ''-овець'', ''correct'': True}'
+  - '{''text'': ''-ник'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1160,14 +1214,12 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яка різниця між «письменник» і «писар»?
   options:
-  - text: Це синоніми
-    correct: false
-  - text: '"Письменник" — автор книг, "писар" — той, хто переписує'
-    correct: true
-  - text: '"Писар" — автор книг, "письменник" — той, хто переписує'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''"Письменник" — автор книг, "писар" — той, хто переписує'', ''correct'':
+    True}'
+  - '{''text'': ''"Писар" — автор книг, "письменник" — той, хто переписує'', ''correct'':
+    False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1178,14 +1230,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке слово утворено від іменника «камінь»?
   options:
-  - text: камінник
-    correct: false
-  - text: каменяр
-    correct: true
-  - text: камінач
-    correct: false
-  - text: камінець
-    correct: false
+  - '{''text'': ''камінник'', ''correct'': False}'
+  - '{''text'': ''каменяр'', ''correct'': True}'
+  - '{''text'': ''камінач'', ''correct'': False}'
+  - '{''text'': ''камінець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1196,14 +1244,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Який суфікс позначає рід занять або роль?
   options:
-  - text: -ар
-    correct: false
-  - text: -ач
-    correct: false
-  - text: -ник
-    correct: true
-  - text: -ість
-    correct: false
+  - '{''text'': ''-ар'', ''correct'': False}'
+  - '{''text'': ''-ач'', ''correct'': False}'
+  - '{''text'': ''-ник'', ''correct'': True}'
+  - '{''text'': ''-ість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1214,14 +1258,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке речення містить помилку у назві особи?
   options:
-  - text: Читач залишив відгук про книгу.
-    correct: false
-  - text: Слухатель курсів отримав сертифікат.
-    correct: true
-  - text: Викладач провів лекцію.
-    correct: false
-  - text: Науковець опублікував статтю.
-    correct: false
+  - '{''text'': ''Читач залишив відгук про книгу.'', ''correct'': False}'
+  - '{''text'': ''Слухатель курсів отримав сертифікат.'', ''correct'': True}'
+  - '{''text'': ''Викладач провів лекцію.'', ''correct'': False}'
+  - '{''text'': ''Науковець опублікував статтю.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1232,14 +1272,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Скільки основних суфіксів для творення назв осіб розглянуто в модулі?
   options:
-  - text: Один
-    correct: false
-  - text: Два
-    correct: false
-  - text: Три
-    correct: true
-  - text: Чотири
-    correct: false
+  - '{''text'': ''Один'', ''correct'': False}'
+  - '{''text'': ''Два'', ''correct'': False}'
+  - '{''text'': ''Три'', ''correct'': True}'
+  - '{''text'': ''Чотири'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1250,14 +1286,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Яке слово є запозиченням, а не українським словотворенням?
   options:
-  - text: бібліотекар
-    correct: false
-  - text: читач
-    correct: false
-  - text: майстер
-    correct: true
-  - text: робітник
-    correct: false
+  - '{''text'': ''бібліотекар'', ''correct'': False}'
+  - '{''text'': ''читач'', ''correct'': False}'
+  - '{''text'': ''майстер'', ''correct'': True}'
+  - '{''text'': ''робітник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1268,14 +1300,10 @@ items:
   title: Комплексна перевірка знань про назви осіб
   question: Від якого слова утворено іменник «дослідник»?
   options:
-  - text: дослід
-    correct: false
-  - text: дослідити
-    correct: true
-  - text: дослідження
-    correct: false
-  - text: досліджувати
-    correct: false
+  - '{''text'': ''дослід'', ''correct'': False}'
+  - '{''text'': ''дослідити'', ''correct'': True}'
+  - '{''text'': ''дослідження'', ''correct'': False}'
+  - '{''text'': ''досліджувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

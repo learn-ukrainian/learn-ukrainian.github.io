@@ -1,15 +1,18 @@
 module: 04-reflexive-passive
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/04-reflexive-passive.md
-generated: '2025-12-29T21:25:25.793726'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.759644'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -578,6 +581,142 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть науковий текст
+  passage_template: 'У цьому дослідженні {досліджуються|аналізуються|вивчаються|досліджуються}
+    причини змін клімату. Дані {збираються|зберігаються|передаються|збираються} з
+    метеорологічних станцій по всьому світу. Результати {аналізуються|публікуються|обговорюються|аналізуються}
+    за допомогою сучасних комп''ютерних програм. Інформація {передається|зберігається|публікується|передається}
+    до центрального сервера.
+
+
+    Гіпотези {перевіряються|досліджуються|формулюються|перевіряються} експериментально.
+    Нові методи {розробляються|застосовуються|впроваджуються|розробляються} командою
+    вчених. Висновки {формулюються|публікуються|обговорюються|формулюються} на основі
+    отриманих даних. Помилки {виправляються|виявляються|ігноруються|виправляються}
+    негайно.
+
+
+    Результати досліджень {публікуються|обговорюються|аналізуються|публікуються} у
+    провідних наукових журналах. Вони {обговорюються|публікуються|аналізуються|обговорюються}
+    на міжнародних конференціях. Нові дослідження {плануються|проводяться|завершуються|плануються}
+    на наступний рік. Проєкти {фінансуються|завершуються|скасовуються|фінансуються}
+    міжнародними організаціями.
+
+
+    Питання екології {розглядаються|ігноруються|відкладаються|розглядаються} урядами
+    багатьох країн. Нові закони {приймаються|скасовуються|ігноруються|приймаються}
+    для захисту довкілля. Технології очищення {вдосконалюються|зникають|забуваються|вдосконалюються}
+    з кожним роком. Альтернативні джерела енергії {використовуються|забороняються|ігноруються|використовуються}
+    дедалі активніше.
+
+    '
+  blanks:
+  - answer: досліджуються
+    options:
+    - досліджуються
+    - аналізуються
+    - вивчаються
+  - answer: збираються
+    options:
+    - збираються
+    - зберігаються
+    - передаються
+  - answer: аналізуються
+    options:
+    - аналізуються
+    - публікуються
+    - обговорюються
+  - answer: передається
+    options:
+    - передається
+    - зберігається
+    - публікується
+  - answer: перевіряються
+    options:
+    - перевіряються
+    - досліджуються
+    - формулюються
+  - answer: розробляються
+    options:
+    - розробляються
+    - застосовуються
+    - впроваджуються
+  - answer: формулюються
+    options:
+    - формулюються
+    - публікуються
+    - обговорюються
+  - answer: виправляються
+    options:
+    - виправляються
+    - виявляються
+    - ігноруються
+  - answer: публікуються
+    options:
+    - публікуються
+    - обговорюються
+    - аналізуються
+  - answer: обговорюються
+    options:
+    - обговорюються
+    - публікуються
+    - аналізуються
+  - answer: плануються
+    options:
+    - плануються
+    - проводяться
+    - завершуються
+  - answer: фінансуються
+    options:
+    - фінансуються
+    - завершуються
+    - скасовуються
+  - answer: розглядаються
+    options:
+    - розглядаються
+    - ігноруються
+    - відкладаються
+  - answer: приймаються
+    options:
+    - приймаються
+    - скасовуються
+    - ігноруються
+  - answer: вдосконалюються
+    options:
+    - вдосконалюються
+    - зникають
+    - забуваються
+  - answer: використовуються
+    options:
+    - використовуються
+    - забороняються
+    - ігноруються
+  blank_count: 16
+  complete_passage: 'У цьому дослідженні досліджуються причини змін клімату. Дані
+    збираються з метеорологічних станцій по всьому світу. Результати аналізуються
+    за допомогою сучасних комп''ютерних програм. Інформація передається до центрального
+    сервера.
+
+
+    Гіпотези перевіряються експериментально. Нові методи розробляються командою вчених.
+    Висновки формулюються на основі отриманих даних. Помилки виправляються негайно.
+
+
+    Результати досліджень публікуються у провідних наукових журналах. Вони обговорюються
+    на міжнародних конференціях. Нові дослідження плануються на наступний рік. Проєкти
+    фінансуються міжнародними організаціями.
+
+
+    Питання екології розглядаються урядами багатьох країн. Нові закони приймаються
+    для захисту довкілля. Технології очищення вдосконалюються з кожним роком. Альтернативні
+    джерела енергії використовуються дедалі активніше.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -710,14 +849,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яка основна функція рефлексивного пасиву з -ся в українській мові?
   options:
-  - text: Підкреслити результат дії
-    correct: false
-  - text: Підкреслити процес дії
-    correct: true
-  - text: Вказати на минулу дію
-    correct: false
-  - text: Виразити наказ
-    correct: false
+  - '{''text'': ''Підкреслити результат дії'', ''correct'': False}'
+  - '{''text'': ''Підкреслити процес дії'', ''correct'': True}'
+  - '{''text'': ''Вказати на минулу дію'', ''correct'': False}'
+  - '{''text'': ''Виразити наказ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -728,14 +863,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Як утворюється рефлексивний пасив у теперішньому часі для слова «досліджувати»?
   options:
-  - text: досліджено
-    correct: false
-  - text: досліджується
-    correct: true
-  - text: досліджений
-    correct: false
-  - text: дослідили
-    correct: false
+  - '{''text'': ''досліджено'', ''correct'': False}'
+  - '{''text'': ''досліджується'', ''correct'': True}'
+  - '{''text'': ''досліджений'', ''correct'': False}'
+  - '{''text'': ''дослідили'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -746,14 +877,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: У якому регістрі рефлексивний пасив з -ся використовується найчастіше?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Епістолярний
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Епістолярний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -764,14 +891,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яким відмінком виражається агент дії в рефлексивному пасиві?
   options:
-  - text: Називним
-    correct: false
-  - text: Родовим
-    correct: false
-  - text: Давальним
-    correct: false
-  - text: Орудним
-    correct: true
+  - '{''text'': ''Називним'', ''correct'': False}'
+  - '{''text'': ''Родовим'', ''correct'': False}'
+  - '{''text'': ''Давальним'', ''correct'': False}'
+  - '{''text'': ''Орудним'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -782,14 +905,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яке речення є прикладом рефлексивного пасиву з -ся?
   options:
-  - text: Будинок побудовано.
-    correct: false
-  - text: Будинок побудований.
-    correct: false
-  - text: Будинок будується.
-    correct: true
-  - text: Будинок будували.
-    correct: false
+  - '{''text'': ''Будинок побудовано.'', ''correct'': False}'
+  - '{''text'': ''Будинок побудований.'', ''correct'': False}'
+  - '{''text'': ''Будинок будується.'', ''correct'': True}'
+  - '{''text'': ''Будинок будували.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -800,14 +919,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яка різниця між «Рішення прийнято» та «Рішення приймається»?
   options:
-  - text: Немає різниці
-    correct: false
-  - text: Перше — процес, друге — результат
-    correct: false
-  - text: Перше — результат, друге — процес
-    correct: true
-  - text: Обидва вказують на процес
-    correct: false
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''Перше — процес, друге — результат'', ''correct'': False}'
+  - '{''text'': ''Перше — результат, друге — процес'', ''correct'': True}'
+  - '{''text'': ''Обидва вказують на процес'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -818,14 +933,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Коли в реченні з рефлексивним пасивом слід опустити агента?
   options:
-  - text: Завжди
-    correct: false
-  - text: Коли агент невідомий або неважливий
-    correct: true
-  - text: Ніколи
-    correct: false
-  - text: Тільки в науковому стилі
-    correct: false
+  - '{''text'': ''Завжди'', ''correct'': False}'
+  - '{''text'': ''Коли агент невідомий або неважливий'', ''correct'': True}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
+  - '{''text'': ''Тільки в науковому стилі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -836,14 +947,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яке дієслово правильно узгоджене з підметом у рефлексивному пасиві?
   options:
-  - text: Документи готується.
-    correct: false
-  - text: Документи готуються.
-    correct: true
-  - text: Документи готувався.
-    correct: false
-  - text: Документи готуватися.
-    correct: false
+  - '{''text'': ''Документи готується.'', ''correct'': False}'
+  - '{''text'': ''Документи готуються.'', ''correct'': True}'
+  - '{''text'': ''Документи готувався.'', ''correct'': False}'
+  - '{''text'': ''Документи готуватися.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -854,14 +961,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яка форма пасиву краща для технічної документації?
   options:
-  - text: -но/-то
-    correct: false
-  - text: -ся
-    correct: true
-  - text: -ний/-тий
-    correct: false
-  - text: Активний стан
-    correct: false
+  - '{''text'': ''-но/-то'', ''correct'': False}'
+  - '{''text'': ''-ся'', ''correct'': True}'
+  - '{''text'': ''-ний/-тий'', ''correct'': False}'
+  - '{''text'': ''Активний стан'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -872,14 +975,11 @@ items:
   title: Утворення рефлексивного пасиву
   question: Чим відрізняється зворотне -ся від пасивного -ся?
   options:
-  - text: Нічим, це одне й те саме
-    correct: false
-  - text: У зворотному суб'єкт діє на себе, у пасивному — дію виконує хтось інший
-    correct: true
-  - text: Зворотне використовується тільки з людьми
-    correct: false
-  - text: Пасивне не може мати агента
-    correct: false
+  - '{''text'': ''Нічим, це одне й те саме'', ''correct'': False}'
+  - '{''text'': "У зворотному суб''єкт діє на себе, у пасивному — дію виконує хтось
+    інший", ''correct'': True}'
+  - '{''text'': ''Зворотне використовується тільки з людьми'', ''correct'': False}'
+  - '{''text'': ''Пасивне не може мати агента'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -890,14 +990,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яке речення найкраще підходить для наукової статті?
   options:
-  - text: Ми проводимо експеримент.
-    correct: false
-  - text: Експеримент проводиться щодня.
-    correct: true
-  - text: Експеримент проведено.
-    correct: false
-  - text: Проводили експеримент.
-    correct: false
+  - '{''text'': ''Ми проводимо експеримент.'', ''correct'': False}'
+  - '{''text'': ''Експеримент проводиться щодня.'', ''correct'': True}'
+  - '{''text'': ''Експеримент проведено.'', ''correct'': False}'
+  - '{''text'': ''Проводили експеримент.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -909,14 +1005,10 @@ items:
   question: Яка форма рефлексивного пасиву вживається в минулому часі для «публікувати»
     (жіночий рід)?
   options:
-  - text: публікувалася
-    correct: true
-  - text: публікується
-    correct: false
-  - text: публікувався
-    correct: false
-  - text: опубліковано
-    correct: false
+  - '{''text'': ''публікувалася'', ''correct'': True}'
+  - '{''text'': ''публікується'', ''correct'': False}'
+  - '{''text'': ''публікувався'', ''correct'': False}'
+  - '{''text'': ''опубліковано'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -927,14 +1019,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: У якому реченні правильно виражений агент?
   options:
-  - text: Закон застосовується судів.
-    correct: false
-  - text: Закон застосовується суди.
-    correct: false
-  - text: Закон застосовується судами.
-    correct: true
-  - text: Закон застосовується судам.
-    correct: false
+  - '{''text'': ''Закон застосовується судів.'', ''correct'': False}'
+  - '{''text'': ''Закон застосовується суди.'', ''correct'': False}'
+  - '{''text'': ''Закон застосовується судами.'', ''correct'': True}'
+  - '{''text'': ''Закон застосовується судам.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -945,14 +1033,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яке речення є граматично неправильним?
   options:
-  - text: Дані аналізуються щодня.
-    correct: false
-  - text: Результати публікуються в журналі.
-    correct: false
-  - text: Успіх досягається важкою працею.
-    correct: true
-  - text: Проблема вирішується поступово.
-    correct: false
+  - '{''text'': ''Дані аналізуються щодня.'', ''correct'': False}'
+  - '{''text'': ''Результати публікуються в журналі.'', ''correct'': False}'
+  - '{''text'': ''Успіх досягається важкою працею.'', ''correct'': True}'
+  - '{''text'': ''Проблема вирішується поступово.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -963,14 +1047,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Коли краще використовувати -ся пасив замість -но/-то?
   options:
-  - text: Для завершених дій
-    correct: false
-  - text: Для регулярних або тривалих дій
-    correct: true
-  - text: Для офіційних документів
-    correct: false
-  - text: Для розмовного мовлення
-    correct: false
+  - '{''text'': ''Для завершених дій'', ''correct'': False}'
+  - '{''text'': ''Для регулярних або тривалих дій'', ''correct'': True}'
+  - '{''text'': ''Для офіційних документів'', ''correct'': False}'
+  - '{''text'': ''Для розмовного мовлення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -981,14 +1061,10 @@ items:
   title: Утворення рефлексивного пасиву
   question: Яка форма майбутнього часу рефлексивного пасиву правильна для «зберігати»?
   options:
-  - text: буде зберігатися
-    correct: true
-  - text: зберігатиме
-    correct: false
-  - text: буде зберігано
-    correct: false
-  - text: зберігатиметься його
-    correct: false
+  - '{''text'': ''буде зберігатися'', ''correct'': True}'
+  - '{''text'': ''зберігатиме'', ''correct'': False}'
+  - '{''text'': ''буде зберігано'', ''correct'': False}'
+  - '{''text'': ''зберігатиметься його'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -999,14 +1075,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для опису тривалого наукового процесу?
   options:
-  - text: Проблему досліджено.
-    correct: false
-  - text: Проблема досліджується.
-    correct: true
-  - text: Проблема досліджена.
-    correct: false
-  - text: Проблему дослідили.
-    correct: false
+  - '{''text'': ''Проблему досліджено.'', ''correct'': False}'
+  - '{''text'': ''Проблема досліджується.'', ''correct'': True}'
+  - '{''text'': ''Проблема досліджена.'', ''correct'': False}'
+  - '{''text'': ''Проблему дослідили.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1017,14 +1089,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати в офіційному документі про завершену дію?
   options:
-  - text: Рішення приймається.
-    correct: false
-  - text: Рішення прийнято.
-    correct: true
-  - text: Рішення приймали.
-    correct: false
-  - text: Рішення приймають.
-    correct: false
+  - '{''text'': ''Рішення приймається.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято.'', ''correct'': True}'
+  - '{''text'': ''Рішення приймали.'', ''correct'': False}'
+  - '{''text'': ''Рішення приймають.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1035,14 +1103,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для опису властивості об'єкта?
   options:
-  - text: Книгу прочитано.
-    correct: false
-  - text: Книга прочитана.
-    correct: false
-  - text: Книга читається легко.
-    correct: true
-  - text: Книгу читають.
-    correct: false
+  - '{''text'': ''Книгу прочитано.'', ''correct'': False}'
+  - '{''text'': ''Книга прочитана.'', ''correct'': False}'
+  - '{''text'': ''Книга читається легко.'', ''correct'': True}'
+  - '{''text'': ''Книгу читають.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1053,14 +1117,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати в технічній документації?
   options:
-  - text: Налаштування змінено.
-    correct: false
-  - text: Налаштування змінюються в меню.
-    correct: true
-  - text: Налаштування змінені.
-    correct: false
-  - text: Налаштування змінили.
-    correct: false
+  - '{''text'': ''Налаштування змінено.'', ''correct'': False}'
+  - '{''text'': ''Налаштування змінюються в меню.'', ''correct'': True}'
+  - '{''text'': ''Налаштування змінені.'', ''correct'': False}'
+  - '{''text'': ''Налаштування змінили.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1071,14 +1131,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для регулярної дії?
   options:
-  - text: Збори проведено.
-    correct: false
-  - text: Збори проводяться щотижня.
-    correct: true
-  - text: Збори проведені.
-    correct: false
-  - text: Збори провели.
-    correct: false
+  - '{''text'': ''Збори проведено.'', ''correct'': False}'
+  - '{''text'': ''Збори проводяться щотижня.'', ''correct'': True}'
+  - '{''text'': ''Збори проведені.'', ''correct'': False}'
+  - '{''text'': ''Збори провели.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1089,14 +1145,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати, коли агент важливий?
   options:
-  - text: Закон застосовується судами.
-    correct: true
-  - text: Закон застосовано.
-    correct: false
-  - text: Закон застосований.
-    correct: false
-  - text: Закон застосували.
-    correct: false
+  - '{''text'': ''Закон застосовується судами.'', ''correct'': True}'
+  - '{''text'': ''Закон застосовано.'', ''correct'': False}'
+  - '{''text'': ''Закон застосований.'', ''correct'': False}'
+  - '{''text'': ''Закон застосували.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1107,14 +1159,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яка форма найкраща для наукової статті про методологію?
   options:
-  - text: Ми використовуємо метод.
-    correct: false
-  - text: Метод використовується.
-    correct: true
-  - text: Метод використано.
-    correct: false
-  - text: Використали метод.
-    correct: false
+  - '{''text'': ''Ми використовуємо метод.'', ''correct'': False}'
+  - '{''text'': ''Метод використовується.'', ''correct'': True}'
+  - '{''text'': ''Метод використано.'', ''correct'': False}'
+  - '{''text'': ''Використали метод.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1125,14 +1173,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для опису поточних новин?
   options:
-  - text: Переговори проведено.
-    correct: false
-  - text: Переговори ведуться.
-    correct: true
-  - text: Переговори проведені.
-    correct: false
-  - text: Переговори провели.
-    correct: false
+  - '{''text'': ''Переговори проведено.'', ''correct'': False}'
+  - '{''text'': ''Переговори ведуться.'', ''correct'': True}'
+  - '{''text'': ''Переговори проведені.'', ''correct'': False}'
+  - '{''text'': ''Переговори провели.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1143,14 +1187,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для завершеної одноразової дії?
   options:
-  - text: Лист надсилається.
-    correct: false
-  - text: Лист надіслано.
-    correct: true
-  - text: Лист надсилають.
-    correct: false
-  - text: Лист надсилався.
-    correct: false
+  - '{''text'': ''Лист надсилається.'', ''correct'': False}'
+  - '{''text'': ''Лист надіслано.'', ''correct'': True}'
+  - '{''text'': ''Лист надсилають.'', ''correct'': False}'
+  - '{''text'': ''Лист надсилався.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1161,14 +1201,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яка форма найкраща для розмовного мовлення?
   options:
-  - text: Проблема вирішується.
-    correct: false
-  - text: Проблему вирішено.
-    correct: false
-  - text: Проблему вирішили.
-    correct: true
-  - text: Проблема вирішена.
-    correct: false
+  - '{''text'': ''Проблема вирішується.'', ''correct'': False}'
+  - '{''text'': ''Проблему вирішено.'', ''correct'': False}'
+  - '{''text'': ''Проблему вирішили.'', ''correct'': True}'
+  - '{''text'': ''Проблема вирішена.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1179,14 +1215,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для опису автоматичного процесу?
   options:
-  - text: Дані збережено.
-    correct: false
-  - text: Дані зберігаються автоматично.
-    correct: true
-  - text: Дані збережені.
-    correct: false
-  - text: Дані зберегли.
-    correct: false
+  - '{''text'': ''Дані збережено.'', ''correct'': False}'
+  - '{''text'': ''Дані зберігаються автоматично.'', ''correct'': True}'
+  - '{''text'': ''Дані збережені.'', ''correct'': False}'
+  - '{''text'': ''Дані зберегли.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1197,14 +1229,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Коли краще опустити агента?
   options:
-  - text: Коли агент — конкретна особа
-    correct: false
-  - text: Коли агент невідомий або неважливий
-    correct: true
-  - text: Завжди
-    correct: false
-  - text: Ніколи
-    correct: false
+  - '{''text'': ''Коли агент — конкретна особа'', ''correct'': False}'
+  - '{''text'': ''Коли агент невідомий або неважливий'', ''correct'': True}'
+  - '{''text'': ''Завжди'', ''correct'': False}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1215,14 +1243,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для опису виробничого процесу?
   options:
-  - text: Продукцію виготовлено.
-    correct: false
-  - text: Продукція виготовляється.
-    correct: true
-  - text: Продукція виготовлена.
-    correct: false
-  - text: Продукцію виготовили.
-    correct: false
+  - '{''text'': ''Продукцію виготовлено.'', ''correct'': False}'
+  - '{''text'': ''Продукція виготовляється.'', ''correct'': True}'
+  - '{''text'': ''Продукція виготовлена.'', ''correct'': False}'
+  - '{''text'': ''Продукцію виготовили.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1233,14 +1257,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яка форма найкраща для художнього опису?
   options:
-  - text: Книга написана талановитим автором.
-    correct: true
-  - text: Книга пишеться талановитим автором.
-    correct: false
-  - text: Книгу написано.
-    correct: false
-  - text: Книгу написали.
-    correct: false
+  - '{''text'': ''Книга написана талановитим автором.'', ''correct'': True}'
+  - '{''text'': ''Книга пишеться талановитим автором.'', ''correct'': False}'
+  - '{''text'': ''Книгу написано.'', ''correct'': False}'
+  - '{''text'': ''Книгу написали.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1251,14 +1271,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яку форму краще використати для майбутньої регулярної дії?
   options:
-  - text: Дослідження буде проводитися.
-    correct: true
-  - text: Дослідження буде проведено.
-    correct: false
-  - text: Дослідження проведуть.
-    correct: false
-  - text: Дослідження буде проведене.
-    correct: false
+  - '{''text'': ''Дослідження буде проводитися.'', ''correct'': True}'
+  - '{''text'': ''Дослідження буде проведено.'', ''correct'': False}'
+  - '{''text'': ''Дослідження проведуть.'', ''correct'': False}'
+  - '{''text'': ''Дослідження буде проведене.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1269,14 +1285,10 @@ items:
   title: Вибір правильної пасивної форми
   question: Яка форма найкраща для оголошення про прийом документів?
   options:
-  - text: Заявки приймаються до кінця місяця.
-    correct: true
-  - text: Заявки прийнято до кінця місяця.
-    correct: false
-  - text: Заявки прийняті до кінця місяця.
-    correct: false
-  - text: Заявки приймуть до кінця місяця.
-    correct: false
+  - '{''text'': ''Заявки приймаються до кінця місяця.'', ''correct'': True}'
+  - '{''text'': ''Заявки прийнято до кінця місяця.'', ''correct'': False}'
+  - '{''text'': ''Заявки прийняті до кінця місяця.'', ''correct'': False}'
+  - '{''text'': ''Заявки приймуть до кінця місяця.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

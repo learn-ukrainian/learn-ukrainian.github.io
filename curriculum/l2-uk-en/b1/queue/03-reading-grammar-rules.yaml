@@ -1,7 +1,7 @@
 module: 03-reading-grammar-rules
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/03-reading-grammar-rules.md
-generated: '2025-12-29T00:21:58.426612'
+generated: '2025-12-30T19:49:27.210749'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 14
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 28
   translate: 14
   true-false: 14
+total_items: 113
 item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок
@@ -598,6 +600,7 @@ items:
     - Порівняйте
     - Напишіть
     - Прочитайте
+  blank_count: 14
   complete_passage: 'Прикметник {узгоджується} з іменником за родом, числом і відмінком.
     {Наприклад}, «гарна книга» — жіночий рід. {Зверніть увагу} на закінчення: -а для
     жіночого роду. {На відміну від} англійської, українська має граматичний рід. {Подібно
@@ -734,14 +737,10 @@ items:
   question: Коли граматика каже "родовий відмінок використовується після 'без'", що
     вона пояснює?
   options:
-  - text: коли вживати родовий відмінок
-    correct: true
-  - text: що означає родовий відмінок
-    correct: false
-  - text: як утворити родовий відмінок
-    correct: false
-  - text: чому існує родовий відмінок
-    correct: false
+  - '{''text'': ''коли вживати родовий відмінок'', ''correct'': True}'
+  - '{''text'': ''що означає родовий відмінок'', ''correct'': False}'
+  - '{''text'': ''як утворити родовий відмінок'', ''correct'': False}'
+  - '{''text'': ''чому існує родовий відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -752,14 +751,10 @@ items:
   title: Пояснювальні конструкції
   question: Якщо підручник пише "доконаний вид означає завершену дію", що він пояснює?
   options:
-  - text: коли вживати доконаний вид
-    correct: false
-  - text: що означає доконаний вид
-    correct: true
-  - text: як утворити доконаний вид
-    correct: false
-  - text: де вживати доконаний вид
-    correct: false
+  - '{''text'': ''коли вживати доконаний вид'', ''correct'': False}'
+  - '{''text'': ''що означає доконаний вид'', ''correct'': True}'
+  - '{''text'': ''як утворити доконаний вид'', ''correct'': False}'
+  - '{''text'': ''де вживати доконаний вид'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -770,14 +765,10 @@ items:
   title: Пояснювальні конструкції
   question: Інструкція "порівняйте ці два речення" просить вас зробити що?
   options:
-  - text: порівняти речення
-    correct: true
-  - text: написати речення
-    correct: false
-  - text: прочитати речення
-    correct: false
-  - text: перекласти речення
-    correct: false
+  - '{''text'': ''порівняти речення'', ''correct'': True}'
+  - '{''text'': ''написати речення'', ''correct'': False}'
+  - '{''text'': ''прочитати речення'', ''correct'': False}'
+  - '{''text'': ''перекласти речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -788,14 +779,10 @@ items:
   title: Пояснювальні конструкції
   question: Коли бачите "зверніть увагу на закінчення", що від вас очікують?
   options:
-  - text: уважно подивитися на закінчення
-    correct: true
-  - text: змінити закінчення
-    correct: false
-  - text: видалити закінчення
-    correct: false
-  - text: додати закінчення
-    correct: false
+  - '{''text'': ''уважно подивитися на закінчення'', ''correct'': True}'
+  - '{''text'': ''змінити закінчення'', ''correct'': False}'
+  - '{''text'': ''видалити закінчення'', ''correct'': False}'
+  - '{''text'': ''додати закінчення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -806,14 +793,10 @@ items:
   title: Пояснювальні конструкції
   question: Слово "наприклад" у граматичному тексті підручника означає яку конструкцію?
   options:
-  - text: for example
-    correct: true
-  - text: in contrast
-    correct: false
-  - text: therefore
-    correct: false
-  - text: however
-    correct: false
+  - '{''text'': ''for example'', ''correct'': True}'
+  - '{''text'': ''in contrast'', ''correct'': False}'
+  - '{''text'': ''therefore'', ''correct'': False}'
+  - '{''text'': ''however'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -824,14 +807,10 @@ items:
   title: Пояснювальні конструкції
   question: Фраза "на відміну від англійської" у граматичному поясненні показує що?
   options:
-  - text: контраст з англійською
-    correct: true
-  - text: схожість з англійською
-    correct: false
-  - text: переклад на англійську
-    correct: false
-  - text: походження з англійської
-    correct: false
+  - '{''text'': ''контраст з англійською'', ''correct'': True}'
+  - '{''text'': ''схожість з англійською'', ''correct'': False}'
+  - '{''text'': ''переклад на англійську'', ''correct'': False}'
+  - '{''text'': ''походження з англійської'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -842,14 +821,10 @@ items:
   title: Пояснювальні конструкції
   question: Коли підручник пише "отже, це іменник", що означає слово "отже"?
   options:
-  - text: for example
-    correct: false
-  - text: however
-    correct: false
-  - text: therefore
-    correct: true
-  - text: similar to
-    correct: false
+  - '{''text'': ''for example'', ''correct'': False}'
+  - '{''text'': ''however'', ''correct'': False}'
+  - '{''text'': ''therefore'', ''correct'': True}'
+  - '{''text'': ''similar to'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -860,14 +835,10 @@ items:
   title: Пояснювальні конструкції
   question: Фраза "подібно до російської" у граматичному поясненні показує яке відношення?
   options:
-  - text: контраст з російською
-    correct: false
-  - text: схожість з російською
-    correct: true
-  - text: переклад на російську
-    correct: false
-  - text: походження з російської
-    correct: false
+  - '{''text'': ''контраст з російською'', ''correct'': False}'
+  - '{''text'': ''схожість з російською'', ''correct'': True}'
+  - '{''text'': ''переклад на російську'', ''correct'': False}'
+  - '{''text'': ''походження з російської'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -878,14 +849,10 @@ items:
   title: Пояснювальні конструкції
   question: Слово "тобто" у граматичному тексті означає яку конструкцію англійською?
   options:
-  - text: for example
-    correct: false
-  - text: that is, in other words
-    correct: true
-  - text: therefore
-    correct: false
-  - text: however
-    correct: false
+  - '{''text'': ''for example'', ''correct'': False}'
+  - '{''text'': ''that is, in other words'', ''correct'': True}'
+  - '{''text'': ''therefore'', ''correct'': False}'
+  - '{''text'': ''however'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -896,14 +863,10 @@ items:
   title: Пояснювальні конструкції
   question: Фраза "таким чином утворюється множина" у підручнику означає що?
   options:
-  - text: thus the plural is formed
-    correct: true
-  - text: the plural does not form
-    correct: false
-  - text: compare the plural
-    correct: false
-  - text: note the plural
-    correct: false
+  - '{''text'': ''thus the plural is formed'', ''correct'': True}'
+  - '{''text'': ''the plural does not form'', ''correct'': False}'
+  - '{''text'': ''compare the plural'', ''correct'': False}'
+  - '{''text'': ''note the plural'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -914,14 +877,10 @@ items:
   title: Пояснювальні конструкції
   question: Коли граматика пише "виражає адресата", вона пояснює що?
   options:
-  - text: коли вживати форму
-    correct: false
-  - text: що форма означає
-    correct: true
-  - text: як утворити форму
-    correct: false
-  - text: де знайти форму
-    correct: false
+  - '{''text'': ''коли вживати форму'', ''correct'': False}'
+  - '{''text'': ''що форма означає'', ''correct'': True}'
+  - '{''text'': ''як утворити форму'', ''correct'': False}'
+  - '{''text'': ''де знайти форму'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -932,14 +891,10 @@ items:
   title: Пояснювальні конструкції
   question: Інструкція "вживається для опису" у граматиці пояснює яку функцію?
   options:
-  - text: коли використовувати форму
-    correct: true
-  - text: що означає форма
-    correct: false
-  - text: як написати форму
-    correct: false
-  - text: чому існує форма
-    correct: false
+  - '{''text'': ''коли використовувати форму'', ''correct'': True}'
+  - '{''text'': ''що означає форма'', ''correct'': False}'
+  - '{''text'': ''як написати форму'', ''correct'': False}'
+  - '{''text'': ''чому існує форма'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -950,14 +905,10 @@ items:
   title: Пояснювальні конструкції
   question: Слово "вказує на" у граматичному тексті означає яку конструкцію?
   options:
-  - text: is used
-    correct: false
-  - text: means
-    correct: false
-  - text: indicates
-    correct: true
-  - text: compares
-    correct: false
+  - '{''text'': ''is used'', ''correct'': False}'
+  - '{''text'': ''means'', ''correct'': False}'
+  - '{''text'': ''indicates'', ''correct'': True}'
+  - '{''text'': ''compares'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -968,14 +919,10 @@ items:
   title: Пояснювальні конструкції
   question: Фраза "показує зменшувальне значення" у граматиці пояснює яку характеристику?
   options:
-  - text: коли використовувати
-    correct: false
-  - text: яке значення має
-    correct: true
-  - text: як утворити
-    correct: false
-  - text: де знайти
-    correct: false
+  - '{''text'': ''коли використовувати'', ''correct'': False}'
+  - '{''text'': ''яке значення має'', ''correct'': True}'
+  - '{''text'': ''як утворити'', ''correct'': False}'
+  - '{''text'': ''де знайти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -986,14 +933,10 @@ items:
   title: Словотвір
   question: Найменша значуща частина слова, від якої утворюються інші слова — це що?
   options:
-  - text: корінь
-    correct: true
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: закінчення
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': True}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''закінчення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1004,14 +947,10 @@ items:
   title: Словотвір
   question: Частина слова, яка стоїть перед коренем і змінює значення — це що?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: true
-  - text: закінчення
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': True}'
+  - '{''text'': ''закінчення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1022,14 +961,10 @@ items:
   title: Словотвір
   question: Частина слова, яка стоїть після кореня і утворює нові слова — це що?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: true
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': True}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1040,14 +975,10 @@ items:
   title: Словотвір
   question: Частина слова без закінчення у словотворенні — це яка частина?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: true
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1058,14 +989,10 @@ items:
   title: Словотвір
   question: Англійське граматичне слово "root" українською перекладається як що?
   options:
-  - text: корінь
-    correct: true
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': True}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1076,14 +1003,10 @@ items:
   title: Словотвір
   question: Англійське граматичне слово "suffix" українською перекладається як що?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: true
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': True}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1094,14 +1017,10 @@ items:
   title: Словотвір
   question: Англійське граматичне слово "prefix" українською перекладається як що?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: true
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': True}'
+  - '{''text'': ''основа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1112,14 +1031,10 @@ items:
   title: Словотвір
   question: Коли граматика каже "це виняток", що вона означає?
   options:
-  - text: це не підпорядковується правилу
-    correct: true
-  - text: це підпорядковується правилу
-    correct: false
-  - text: це нове правило
-    correct: false
-  - text: це старе правило
-    correct: false
+  - '{''text'': ''це не підпорядковується правилу'', ''correct'': True}'
+  - '{''text'': ''це підпорядковується правилу'', ''correct'': False}'
+  - '{''text'': ''це нове правило'', ''correct'': False}'
+  - '{''text'': ''це старе правило'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1130,14 +1045,10 @@ items:
   title: Словотвір
   question: Коли граматика каже "це правило", що вона означає?
   options:
-  - text: це виняток
-    correct: false
-  - text: це закономірність
-    correct: true
-  - text: це помилка
-    correct: false
-  - text: це питання
-    correct: false
+  - '{''text'': ''це виняток'', ''correct'': False}'
+  - '{''text'': ''це закономірність'', ''correct'': True}'
+  - '{''text'': ''це помилка'', ''correct'': False}'
+  - '{''text'': ''це питання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1148,14 +1059,10 @@ items:
   title: Словотвір
   question: У дієслові "написати" яка частина слова є коренем?
   options:
-  - text: на-
-    correct: false
-  - text: -пис-
-    correct: true
-  - text: -а-
-    correct: false
-  - text: -ти
-    correct: false
+  - '{''text'': ''на-'', ''correct'': False}'
+  - '{''text'': ''-пис-'', ''correct'': True}'
+  - '{''text'': ''-а-'', ''correct'': False}'
+  - '{''text'': ''-ти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1166,14 +1073,10 @@ items:
   title: Словотвір
   question: У дієслові "написати" яка частина слова є префіксом?
   options:
-  - text: на-
-    correct: true
-  - text: -пис-
-    correct: false
-  - text: -а-
-    correct: false
-  - text: -ти
-    correct: false
+  - '{''text'': ''на-'', ''correct'': True}'
+  - '{''text'': ''-пис-'', ''correct'': False}'
+  - '{''text'': ''-а-'', ''correct'': False}'
+  - '{''text'': ''-ти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1184,14 +1087,10 @@ items:
   title: Словотвір
   question: Англійське граматичне слово "stem" українською перекладається як що?
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: true
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1202,14 +1101,10 @@ items:
   title: Словотвір
   question: Слово "форма" у граматичному контексті означає яке поняття?
   options:
-  - text: exception
-    correct: false
-  - text: form
-    correct: true
-  - text: root
-    correct: false
-  - text: suffix
-    correct: false
+  - '{''text'': ''exception'', ''correct'': False}'
+  - '{''text'': ''form'', ''correct'': True}'
+  - '{''text'': ''root'', ''correct'': False}'
+  - '{''text'': ''suffix'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1220,14 +1115,10 @@ items:
   title: Словотвір
   question: Коли інструкція каже "утворіть форму", вона просить що?
   options:
-  - text: create the form
-    correct: true
-  - text: find the form
-    correct: false
-  - text: delete the form
-    correct: false
-  - text: compare the form
-    correct: false
+  - '{''text'': ''create the form'', ''correct'': True}'
+  - '{''text'': ''find the form'', ''correct'': False}'
+  - '{''text'': ''delete the form'', ''correct'': False}'
+  - '{''text'': ''compare the form'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1239,14 +1130,10 @@ items:
   source_sentence: is used
   answer: ''
   options:
-  - text: використовується
-    correct: true
-  - text: означає
-    correct: false
-  - text: показує
-    correct: false
-  - text: виражає
-    correct: false
+  - '{''text'': ''використовується'', ''correct'': True}'
+  - '{''text'': ''означає'', ''correct'': False}'
+  - '{''text'': ''показує'', ''correct'': False}'
+  - '{''text'': ''виражає'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1257,14 +1144,10 @@ items:
   source_sentence: means
   answer: ''
   options:
-  - text: використовується
-    correct: false
-  - text: означає
-    correct: true
-  - text: показує
-    correct: false
-  - text: виражає
-    correct: false
+  - '{''text'': ''використовується'', ''correct'': False}'
+  - '{''text'': ''означає'', ''correct'': True}'
+  - '{''text'': ''показує'', ''correct'': False}'
+  - '{''text'': ''виражає'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1275,14 +1158,10 @@ items:
   source_sentence: compare
   answer: ''
   options:
-  - text: порівняйте
-    correct: true
-  - text: напишіть
-    correct: false
-  - text: прочитайте
-    correct: false
-  - text: знайдіть
-    correct: false
+  - '{''text'': ''порівняйте'', ''correct'': True}'
+  - '{''text'': ''напишіть'', ''correct'': False}'
+  - '{''text'': ''прочитайте'', ''correct'': False}'
+  - '{''text'': ''знайдіть'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1293,14 +1172,10 @@ items:
   source_sentence: pay attention
   answer: ''
   options:
-  - text: зверніть увагу
-    correct: true
-  - text: порівняйте
-    correct: false
-  - text: напишіть
-    correct: false
-  - text: знайдіть
-    correct: false
+  - '{''text'': ''зверніть увагу'', ''correct'': True}'
+  - '{''text'': ''порівняйте'', ''correct'': False}'
+  - '{''text'': ''напишіть'', ''correct'': False}'
+  - '{''text'': ''знайдіть'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1311,14 +1186,10 @@ items:
   source_sentence: for example
   answer: ''
   options:
-  - text: наприклад
-    correct: true
-  - text: тобто
-    correct: false
-  - text: отже
-    correct: false
-  - text: однак
-    correct: false
+  - '{''text'': ''наприклад'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''однак'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1329,14 +1200,10 @@ items:
   source_sentence: therefore
   answer: ''
   options:
-  - text: наприклад
-    correct: false
-  - text: тобто
-    correct: false
-  - text: отже
-    correct: true
-  - text: однак
-    correct: false
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': True}'
+  - '{''text'': ''однак'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1347,14 +1214,10 @@ items:
   source_sentence: in contrast to
   answer: ''
   options:
-  - text: на відміну від
-    correct: true
-  - text: подібно до
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: тобто
-    correct: false
+  - '{''text'': ''на відміну від'', ''correct'': True}'
+  - '{''text'': ''подібно до'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''тобто'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1365,14 +1228,10 @@ items:
   source_sentence: similar to
   answer: ''
   options:
-  - text: на відміну від
-    correct: false
-  - text: подібно до
-    correct: true
-  - text: наприклад
-    correct: false
-  - text: тобто
-    correct: false
+  - '{''text'': ''на відміну від'', ''correct'': False}'
+  - '{''text'': ''подібно до'', ''correct'': True}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''тобто'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1383,14 +1242,10 @@ items:
   source_sentence: root
   answer: ''
   options:
-  - text: корінь
-    correct: true
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': True}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1401,14 +1256,10 @@ items:
   source_sentence: suffix
   answer: ''
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: true
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': True}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1419,14 +1270,10 @@ items:
   source_sentence: prefix
   answer: ''
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: true
-  - text: основа
-    correct: false
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': True}'
+  - '{''text'': ''основа'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1437,14 +1284,10 @@ items:
   source_sentence: exception
   answer: ''
   options:
-  - text: правило
-    correct: false
-  - text: виняток
-    correct: true
-  - text: форма
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''правило'', ''correct'': False}'
+  - '{''text'': ''виняток'', ''correct'': True}'
+  - '{''text'': ''форма'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1455,14 +1298,10 @@ items:
   source_sentence: rule
   answer: ''
   options:
-  - text: правило
-    correct: true
-  - text: виняток
-    correct: false
-  - text: форма
-    correct: false
-  - text: основа
-    correct: false
+  - '{''text'': ''правило'', ''correct'': True}'
+  - '{''text'': ''виняток'', ''correct'': False}'
+  - '{''text'': ''форма'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1473,14 +1312,10 @@ items:
   source_sentence: stem
   answer: ''
   options:
-  - text: корінь
-    correct: false
-  - text: суфікс
-    correct: false
-  - text: префікс
-    correct: false
-  - text: основа
-    correct: true
+  - '{''text'': ''корінь'', ''correct'': False}'
+  - '{''text'': ''суфікс'', ''correct'': False}'
+  - '{''text'': ''префікс'', ''correct'': False}'
+  - '{''text'': ''основа'', ''correct'': True}'
   validate:
     source_valid: null
     answer_valid: null

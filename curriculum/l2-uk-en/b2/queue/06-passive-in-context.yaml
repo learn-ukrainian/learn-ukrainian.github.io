@@ -1,15 +1,18 @@
 module: 06-passive-in-context
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/06-passive-in-context.md
-generated: '2025-12-29T21:25:22.374331'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.861570'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте регістрові помилки
@@ -578,6 +581,155 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст відповідними формами пасиву
+  passage_template: 'Офіційний документ:
+
+    На засіданні ради {прийнято|прийняли|приймається|прийнято} рішення про затвердження
+    бюджету. Зміни {внесено|вносяться|внесли|внесено} відповідно до пропозицій. Протокол
+    {підписано|підписується|підписали|підписано} всіма членами.
+
+
+    Наукова стаття:
+
+    У дослідженні {аналізуються|проаналізовано|проаналізували|аналізуються} лінгвістичні
+    особливості. Дані {обробляються|оброблено|обробили|обробляються} за допомогою
+    програми. Результати {порівнюються|порівняно|порівняли|порівнюються} з попередніми.
+
+
+    Художній текст:
+
+    {Написаний|Написано|Написали|Написаний} майстром твір вражає. {Забуті|Забуто|Забули|Забуті}
+    слова оживають. {Зігріті|Зігріто|Зігріли|Зігріті} сонцем квіти розквітли.
+
+
+    Розмовне мовлення:
+
+    {Сказали|Сказано|Говориться|Сказали}, що буде свято. {Передали|Передано|Передається|Передали}
+    по радіо новини. {Закрили|Закрито|Закривається|Закрили} магазин на ремонт.
+
+
+    Юридичний документ:
+
+    Угоду {укладено|укладається|уклали|укладено} на п''ять років. Права та обов''язки
+    сторін {визначено|визначаються|визначили|визначено} у додатках. Контракт {підписано|підписується|підписали|підписано}
+    обома сторонами. Документи {передано|передаються|передали|передано} до архіву.
+
+    '
+  blanks:
+  - answer: прийнято
+    options:
+    - прийнято
+    - прийняли
+    - приймається
+  - answer: внесено
+    options:
+    - внесено
+    - вносяться
+    - внесли
+  - answer: підписано
+    options:
+    - підписано
+    - підписується
+    - підписали
+  - answer: аналізуються
+    options:
+    - аналізуються
+    - проаналізовано
+    - проаналізували
+  - answer: обробляються
+    options:
+    - обробляються
+    - оброблено
+    - обробили
+  - answer: порівнюються
+    options:
+    - порівнюються
+    - порівняно
+    - порівняли
+  - answer: Написаний
+    options:
+    - Написаний
+    - Написано
+    - Написали
+  - answer: Забуті
+    options:
+    - Забуті
+    - Забуто
+    - Забули
+  - answer: Зігріті
+    options:
+    - Зігріті
+    - Зігріто
+    - Зігріли
+  - answer: Сказали
+    options:
+    - Сказали
+    - Сказано
+    - Говориться
+  - answer: Передали
+    options:
+    - Передали
+    - Передано
+    - Передається
+  - answer: Закрили
+    options:
+    - Закрили
+    - Закрито
+    - Закривається
+  - answer: укладено
+    options:
+    - укладено
+    - укладається
+    - уклали
+  - answer: визначено
+    options:
+    - визначено
+    - визначаються
+    - визначили
+  - answer: підписано
+    options:
+    - підписано
+    - підписується
+    - підписали
+  - answer: передано
+    options:
+    - передано
+    - передаються
+    - передали
+  blank_count: 16
+  complete_passage: 'Офіційний документ:
+
+    На засіданні ради прийнято рішення про затвердження бюджету. Зміни внесено відповідно
+    до пропозицій. Протокол підписано всіма членами.
+
+
+    Наукова стаття:
+
+    У дослідженні аналізуються лінгвістичні особливості. Дані обробляються за допомогою
+    програми. Результати порівнюються з попередніми.
+
+
+    Художній текст:
+
+    Написаний майстром твір вражає. Забуті слова оживають. Зігріті сонцем квіти розквітли.
+
+
+    Розмовне мовлення:
+
+    Сказали, що буде свято. Передали по радіо новини. Закрили магазин на ремонт.
+
+
+    Юридичний документ:
+
+    Угоду укладено на п''ять років. Права та обов''язки сторін визначено у додатках.
+    Контракт підписано обома сторонами. Документи передано до архіву.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення у правильному порядку
   jumbled_words: []
@@ -710,14 +862,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка пасивна форма є типовою для офіційно-ділового стилю?
   options:
-  - text: Книгу читають.
-    correct: false
-  - text: Книгу прочитано.
-    correct: true
-  - text: Книга читається.
-    correct: false
-  - text: Прочитана книга лежить на столі.
-    correct: false
+  - '{''text'': ''Книгу читають.'', ''correct'': False}'
+  - '{''text'': ''Книгу прочитано.'', ''correct'': True}'
+  - '{''text'': ''Книга читається.'', ''correct'': False}'
+  - '{''text'': ''Прочитана книга лежить на столі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -728,14 +876,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка пасивна форма найчастіше використовується в наукових текстах?
   options:
-  - text: Дані проаналізовано.
-    correct: false
-  - text: Дані проаналізували.
-    correct: false
-  - text: Дані аналізуються.
-    correct: true
-  - text: Проаналізовані дані.
-    correct: false
+  - '{''text'': ''Дані проаналізовано.'', ''correct'': False}'
+  - '{''text'': ''Дані проаналізували.'', ''correct'': False}'
+  - '{''text'': ''Дані аналізуються.'', ''correct'': True}'
+  - '{''text'': ''Проаналізовані дані.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -746,14 +890,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: У якому реченні використано розмовний пасив?
   options:
-  - text: Рішення прийнято.
-    correct: false
-  - text: Сказали, що буде дощ.
-    correct: true
-  - text: Рішення приймається.
-    correct: false
-  - text: Прийняте рішення важливе.
-    correct: false
+  - '{''text'': ''Рішення прийнято.'', ''correct'': False}'
+  - '{''text'': ''Сказали, що буде дощ.'', ''correct'': True}'
+  - '{''text'': ''Рішення приймається.'', ''correct'': False}'
+  - '{''text'': ''Прийняте рішення важливе.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -764,14 +904,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка форма пасиву надає тексту книжного, художнього звучання?
   options:
-  - text: -но/-то
-    correct: false
-  - text: -ся
-    correct: false
-  - text: -ний/-тий
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''-но/-то'', ''correct'': False}'
+  - '{''text'': ''-ся'', ''correct'': False}'
+  - '{''text'': ''-ний/-тий'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -782,14 +918,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яке речення є стилістично невідповідним для офіційного документа?
   options:
-  - text: Наказ видано.
-    correct: false
-  - text: Рішення прийнято.
-    correct: false
-  - text: Мені сказали прийти.
-    correct: true
-  - text: Протокол підписано.
-    correct: false
+  - '{''text'': ''Наказ видано.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято.'', ''correct'': False}'
+  - '{''text'': ''Мені сказали прийти.'', ''correct'': True}'
+  - '{''text'': ''Протокол підписано.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -800,14 +932,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: У науковій статті правильно написати...
   options:
-  - text: Результати отримали вчора.
-    correct: false
-  - text: Результати отримано вчора.
-    correct: false
-  - text: Результати отримуються протягом експерименту.
-    correct: true
-  - text: Отримані результати важливі.
-    correct: false
+  - '{''text'': ''Результати отримали вчора.'', ''correct'': False}'
+  - '{''text'': ''Результати отримано вчора.'', ''correct'': False}'
+  - '{''text'': ''Результати отримуються протягом експерименту.'', ''correct'': True}'
+  - '{''text'': ''Отримані результати важливі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -818,14 +946,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яке речення найкраще підходить для художнього тексту?
   options:
-  - text: Листа написано.
-    correct: false
-  - text: Листа написали.
-    correct: false
-  - text: Лист пишеться.
-    correct: false
-  - text: Написаний від руки лист торкнув серце.
-    correct: true
+  - '{''text'': ''Листа написано.'', ''correct'': False}'
+  - '{''text'': ''Листа написали.'', ''correct'': False}'
+  - '{''text'': ''Лист пишеться.'', ''correct'': False}'
+  - '{''text'': ''Написаний від руки лист торкнув серце.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -836,14 +960,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка форма пасиву підкреслює процес, а не результат?
   options:
-  - text: -но/-то
-    correct: false
-  - text: -ся
-    correct: true
-  - text: -ний/-тий
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''-но/-то'', ''correct'': False}'
+  - '{''text'': ''-ся'', ''correct'': True}'
+  - '{''text'': ''-ний/-тий'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -854,14 +974,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: У протоколі засідання правильно написати...
   options:
-  - text: Питання обговорили.
-    correct: false
-  - text: Питання обговорюється.
-    correct: false
-  - text: Обговорене питання.
-    correct: false
-  - text: Питання обговорено.
-    correct: true
+  - '{''text'': ''Питання обговорили.'', ''correct'': False}'
+  - '{''text'': ''Питання обговорюється.'', ''correct'': False}'
+  - '{''text'': ''Обговорене питання.'', ''correct'': False}'
+  - '{''text'': ''Питання обговорено.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -872,14 +988,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яке речення є типовим для технічної документації?
   options:
-  - text: Прилад налаштовано.
-    correct: false
-  - text: Прилад налаштували.
-    correct: false
-  - text: Прилад налаштовується автоматично.
-    correct: true
-  - text: Налаштований прилад працює добре.
-    correct: false
+  - '{''text'': ''Прилад налаштовано.'', ''correct'': False}'
+  - '{''text'': ''Прилад налаштували.'', ''correct'': False}'
+  - '{''text'': ''Прилад налаштовується автоматично.'', ''correct'': True}'
+  - '{''text'': ''Налаштований прилад працює добре.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -890,14 +1002,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: У повсякденній розмові природно сказати...
   options:
-  - text: Магазин закрито.
-    correct: false
-  - text: Магазин закривається.
-    correct: false
-  - text: Закрили магазин.
-    correct: true
-  - text: Закритий магазин.
-    correct: false
+  - '{''text'': ''Магазин закрито.'', ''correct'': False}'
+  - '{''text'': ''Магазин закривається.'', ''correct'': False}'
+  - '{''text'': ''Закрили магазин.'', ''correct'': True}'
+  - '{''text'': ''Закритий магазин.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -908,14 +1016,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка форма НЕ підходить для наукового стилю?
   options:
-  - text: Дані аналізуються.
-    correct: false
-  - text: Гіпотеза перевіряється.
-    correct: false
-  - text: Нам сказали результати.
-    correct: true
-  - text: Експеримент проводиться.
-    correct: false
+  - '{''text'': ''Дані аналізуються.'', ''correct'': False}'
+  - '{''text'': ''Гіпотеза перевіряється.'', ''correct'': False}'
+  - '{''text'': ''Нам сказали результати.'', ''correct'': True}'
+  - '{''text'': ''Експеримент проводиться.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -926,14 +1030,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Для юридичного документа найкраще використати...
   options:
-  - text: Угоду підписали.
-    correct: false
-  - text: Угода підписується.
-    correct: false
-  - text: Підписана угода.
-    correct: false
-  - text: Угоду підписано.
-    correct: true
+  - '{''text'': ''Угоду підписали.'', ''correct'': False}'
+  - '{''text'': ''Угода підписується.'', ''correct'': False}'
+  - '{''text'': ''Підписана угода.'', ''correct'': False}'
+  - '{''text'': ''Угоду підписано.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -944,14 +1044,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яке речення демонструє змішування регістрів?
   options:
-  - text: Рішення прийнято. Документи передано.
-    correct: false
-  - text: Дані аналізуються. Результати порівнюються.
-    correct: false
-  - text: Рішення прийнято. Мені сказали чекати.
-    correct: true
-  - text: Кажуть, буде дощ. Передали по радіо.
-    correct: false
+  - '{''text'': ''Рішення прийнято. Документи передано.'', ''correct'': False}'
+  - '{''text'': ''Дані аналізуються. Результати порівнюються.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято. Мені сказали чекати.'', ''correct'': True}'
+  - '{''text'': ''Кажуть, буде дощ. Передали по радіо.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -962,14 +1058,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: У рецензії на книгу доречно написати...
   options:
-  - text: Роман написано.
-    correct: false
-  - text: Роман пишеться.
-    correct: false
-  - text: Написаний талановито роман вражає.
-    correct: true
-  - text: Написали роман.
-    correct: false
+  - '{''text'': ''Роман написано.'', ''correct'': False}'
+  - '{''text'': ''Роман пишеться.'', ''correct'': False}'
+  - '{''text'': ''Написаний талановито роман вражає.'', ''correct'': True}'
+  - '{''text'': ''Написали роман.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -980,14 +1072,10 @@ items:
   title: Визначення регістру за пасивною формою
   question: Яка форма найкраще передає невідомість агента дії?
   options:
-  - text: -но/-то
-    correct: false
-  - text: -ся
-    correct: false
-  - text: -ний/-тий
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''-но/-то'', ''correct'': False}'
+  - '{''text'': ''-ся'', ''correct'': False}'
+  - '{''text'': ''-ний/-тий'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -998,14 +1086,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете офіційний лист до міністерства. Яку форму використати?
   options:
-  - text: Нам повідомили про зміни.
-    correct: false
-  - text: Про зміни повідомлено.
-    correct: true
-  - text: Про зміни повідомляється.
-    correct: false
-  - text: Повідомлене про зміни.
-    correct: false
+  - '{''text'': ''Нам повідомили про зміни.'', ''correct'': False}'
+  - '{''text'': ''Про зміни повідомлено.'', ''correct'': True}'
+  - '{''text'': ''Про зміни повідомляється.'', ''correct'': False}'
+  - '{''text'': ''Повідомлене про зміни.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1016,14 +1100,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете наукову статтю. Як описати процес дослідження?
   options:
-  - text: Дані зібрали протягом року.
-    correct: false
-  - text: Дані зібрано протягом року.
-    correct: false
-  - text: Дані збираються протягом року.
-    correct: true
-  - text: Зібрані дані протягом року.
-    correct: false
+  - '{''text'': ''Дані зібрали протягом року.'', ''correct'': False}'
+  - '{''text'': ''Дані зібрано протягом року.'', ''correct'': False}'
+  - '{''text'': ''Дані збираються протягом року.'', ''correct'': True}'
+  - '{''text'': ''Зібрані дані протягом року.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1034,14 +1114,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви описуєте картину в музейному каталозі. Яку форму обрати?
   options:
-  - text: Картину написали в 1920 році.
-    correct: false
-  - text: Картину написано в 1920 році.
-    correct: false
-  - text: Картина пишеться в 1920 році.
-    correct: false
-  - text: Написана в 1920 році картина вражає.
-    correct: true
+  - '{''text'': ''Картину написали в 1920 році.'', ''correct'': False}'
+  - '{''text'': ''Картину написано в 1920 році.'', ''correct'': False}'
+  - '{''text'': ''Картина пишеться в 1920 році.'', ''correct'': False}'
+  - '{''text'': ''Написана в 1920 році картина вражає.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1052,14 +1128,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви розповідаєте другові новину. Яку форму використати?
   options:
-  - text: Повідомлено, що магазин закривається.
-    correct: false
-  - text: Магазин закривається.
-    correct: false
-  - text: Сказали, що магазин закривають.
-    correct: true
-  - text: Закритий магазин.
-    correct: false
+  - '{''text'': ''Повідомлено, що магазин закривається.'', ''correct'': False}'
+  - '{''text'': ''Магазин закривається.'', ''correct'': False}'
+  - '{''text'': ''Сказали, що магазин закривають.'', ''correct'': True}'
+  - '{''text'': ''Закритий магазин.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1070,14 +1142,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви готуєте протокол засідання. Як зафіксувати рішення?
   options:
-  - text: Вирішили затвердити бюджет.
-    correct: false
-  - text: Вирішено затвердити бюджет.
-    correct: true
-  - text: Вирішується затвердити бюджет.
-    correct: false
-  - text: Затверджений бюджет.
-    correct: false
+  - '{''text'': ''Вирішили затвердити бюджет.'', ''correct'': False}'
+  - '{''text'': ''Вирішено затвердити бюджет.'', ''correct'': True}'
+  - '{''text'': ''Вирішується затвердити бюджет.'', ''correct'': False}'
+  - '{''text'': ''Затверджений бюджет.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1088,14 +1156,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете інструкцію до приладу. Як описати його роботу?
   options:
-  - text: Прилад увімкнули.
-    correct: false
-  - text: Прилад увімкнуто.
-    correct: false
-  - text: Прилад вмикається натисканням кнопки.
-    correct: true
-  - text: Увімкнений прилад.
-    correct: false
+  - '{''text'': ''Прилад увімкнули.'', ''correct'': False}'
+  - '{''text'': ''Прилад увімкнуто.'', ''correct'': False}'
+  - '{''text'': ''Прилад вмикається натисканням кнопки.'', ''correct'': True}'
+  - '{''text'': ''Увімкнений прилад.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1106,14 +1170,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете пост у соціальній мережі. Яку форму обрати?
   options:
-  - text: Оголошено, що буде концерт.
-    correct: false
-  - text: Оголошується концерт.
-    correct: false
-  - text: Оголосили, що буде концерт.
-    correct: true
-  - text: Оголошений концерт.
-    correct: false
+  - '{''text'': ''Оголошено, що буде концерт.'', ''correct'': False}'
+  - '{''text'': ''Оголошується концерт.'', ''correct'': False}'
+  - '{''text'': ''Оголосили, що буде концерт.'', ''correct'': True}'
+  - '{''text'': ''Оголошений концерт.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1124,14 +1184,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви готуєте юридичний висновок. Як оформити рішення?
   options:
-  - text: Справу закрили.
-    correct: false
-  - text: Справу закрито за відсутністю доказів.
-    correct: true
-  - text: Справа закривається.
-    correct: false
-  - text: Закрита справа.
-    correct: false
+  - '{''text'': ''Справу закрили.'', ''correct'': False}'
+  - '{''text'': ''Справу закрито за відсутністю доказів.'', ''correct'': True}'
+  - '{''text'': ''Справа закривається.'', ''correct'': False}'
+  - '{''text'': ''Закрита справа.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1142,14 +1198,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете рецензію на книгу. Як описати стиль автора?
   options:
-  - text: Мову збагатили народною мудрістю.
-    correct: false
-  - text: Мову збагачено народною мудрістю.
-    correct: false
-  - text: Мова, збагачена народною мудрістю, звучить.
-    correct: true
-  - text: Мова збагачується.
-    correct: false
+  - '{''text'': ''Мову збагатили народною мудрістю.'', ''correct'': False}'
+  - '{''text'': ''Мову збагачено народною мудрістю.'', ''correct'': False}'
+  - '{''text'': ''Мова, збагачена народною мудрістю, звучить.'', ''correct'': True}'
+  - '{''text'': ''Мова збагачується.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1160,14 +1212,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви телефонуєте другові. Як передати новину?
   options:
-  - text: Повідомлено, що екзамен перенесли.
-    correct: false
-  - text: Екзамен переноситься.
-    correct: false
-  - text: Сказали, що екзамен перенесли.
-    correct: true
-  - text: Перенесений екзамен.
-    correct: false
+  - '{''text'': ''Повідомлено, що екзамен перенесли.'', ''correct'': False}'
+  - '{''text'': ''Екзамен переноситься.'', ''correct'': False}'
+  - '{''text'': ''Сказали, що екзамен перенесли.'', ''correct'': True}'
+  - '{''text'': ''Перенесений екзамен.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1178,14 +1226,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви готуєте наказ директора. Яку форму використати?
   options:
-  - text: Призначили Петренка на посаду.
-    correct: false
-  - text: Петренка призначено на посаду.
-    correct: true
-  - text: Петренко призначається.
-    correct: false
-  - text: Призначений Петренко.
-    correct: false
+  - '{''text'': ''Призначили Петренка на посаду.'', ''correct'': False}'
+  - '{''text'': ''Петренка призначено на посаду.'', ''correct'': True}'
+  - '{''text'': ''Петренко призначається.'', ''correct'': False}'
+  - '{''text'': ''Призначений Петренко.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1196,14 +1240,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете дослідницький звіт. Як описати результати?
   options:
-  - text: Результати отримали минулого тижня.
-    correct: false
-  - text: Результати отримано.
-    correct: false
-  - text: Результати отримуються й аналізуються.
-    correct: true
-  - text: Отримані результати.
-    correct: false
+  - '{''text'': ''Результати отримали минулого тижня.'', ''correct'': False}'
+  - '{''text'': ''Результати отримано.'', ''correct'': False}'
+  - '{''text'': ''Результати отримуються й аналізуються.'', ''correct'': True}'
+  - '{''text'': ''Отримані результати.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1214,14 +1254,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви описуєте пейзаж у художньому творі. Яку форму обрати?
   options:
-  - text: Поля вкрили снігом.
-    correct: false
-  - text: Поля вкрито снігом.
-    correct: false
-  - text: Поля вкриваються снігом.
-    correct: false
-  - text: Вкриті снігом поля здавалися безкрайніми.
-    correct: true
+  - '{''text'': ''Поля вкрили снігом.'', ''correct'': False}'
+  - '{''text'': ''Поля вкрито снігом.'', ''correct'': False}'
+  - '{''text'': ''Поля вкриваються снігом.'', ''correct'': False}'
+  - '{''text'': ''Вкриті снігом поля здавалися безкрайніми.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1232,14 +1268,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви обговорюєте новини з колегою. Яку форму використати?
   options:
-  - text: Оголошено підвищення зарплат.
-    correct: false
-  - text: Зарплати підвищуються.
-    correct: false
-  - text: Чули, що зарплати підвищать?
-    correct: true
-  - text: Підвищені зарплати.
-    correct: false
+  - '{''text'': ''Оголошено підвищення зарплат.'', ''correct'': False}'
+  - '{''text'': ''Зарплати підвищуються.'', ''correct'': False}'
+  - '{''text'': ''Чули, що зарплати підвищать?'', ''correct'': True}'
+  - '{''text'': ''Підвищені зарплати.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1250,14 +1282,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви готуєте постанову уряду. Яку форму використати?
   options:
-  - text: Зміни ввели з 1 січня.
-    correct: false
-  - text: Зміни введено з 1 січня.
-    correct: true
-  - text: Зміни вводяться.
-    correct: false
-  - text: Введені зміни.
-    correct: false
+  - '{''text'': ''Зміни ввели з 1 січня.'', ''correct'': False}'
+  - '{''text'': ''Зміни введено з 1 січня.'', ''correct'': True}'
+  - '{''text'': ''Зміни вводяться.'', ''correct'': False}'
+  - '{''text'': ''Введені зміни.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1268,14 +1296,10 @@ items:
   title: Аналіз контексту та вибір форми
   question: Ви пишете тези до конференції. Як описати методологію?
   options:
-  - text: Ми застосували комбінований підхід.
-    correct: false
-  - text: Застосовано комбінований підхід.
-    correct: false
-  - text: Застосовується комбінований підхід.
-    correct: true
-  - text: Застосований підхід.
-    correct: false
+  - '{''text'': ''Ми застосували комбінований підхід.'', ''correct'': False}'
+  - '{''text'': ''Застосовано комбінований підхід.'', ''correct'': False}'
+  - '{''text'': ''Застосовується комбінований підхід.'', ''correct'': True}'
+  - '{''text'': ''Застосований підхід.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

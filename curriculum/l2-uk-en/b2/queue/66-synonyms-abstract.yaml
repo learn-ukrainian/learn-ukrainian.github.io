@@ -1,0 +1,744 @@
+module: 66-synonyms-abstract
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/66-synonyms-abstract.md
+generated: '2025-12-30T21:24:38.212760'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 10
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 51
+item_count: 51
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Його тверда гіпотеза не змінилася навіть під тиском фактів.
+  error: гіпотеза
+  answer: позиція
+  sentence_corrected: Його тверда позиція не змінилася навіть під тиском фактів.
+  options:
+  - позиція
+  - здогадка
+  - припущення
+  - чутка
+  original_explanation: Гіпотеза — це те, що змінюється під впливом фактів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Ми маємо намір життя — бути щасливими і вільними.
+  error: намір
+  answer: мету
+  sentence_corrected: Ми маємо мету життя — бути щасливими і вільними.
+  options:
+  - мету
+  - тактику
+  - здогадку
+  - гіпотезу
+  original_explanation: Для життєвого орієнтира використовується слово 'мета'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Вчений розробив складний здогад розвитку всесвіту протягом
+    десятиліть.
+  error: здогад
+  answer: теорію
+  sentence_corrected: Вчений розробив складний теорію розвитку всесвіту протягом десятиліть.
+  options:
+  - теорію
+  - намір
+  - тактику
+  - припущення
+  original_explanation: Тривала робота вченого втілюється в теорію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Підставою мого вчинку була випадкова муха, що пролетіла повз.
+  error: Підставою
+  answer: Причиною
+  sentence_corrected: Причиною мого вчинку була випадкова муха, що пролетіла повз.
+  options:
+  - Причиною
+  - Аргументом
+  - Гіпотезою
+  - Висновоком
+  original_explanation: Випадкові події є причинами, а не логічними підставами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Моя концепція на вечір — просто почитати книжку.
+  error: концепція
+  answer: план
+  sentence_corrected: Моя план на вечір — просто почитати книжку.
+  options:
+  - план
+  - теорія
+  - гіпотеза
+  - стратегія
+  original_explanation: Для простих справ використовується слово 'план'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Ми зробили здогад, що проєкт завершено успішно.
+  error: здогад
+  answer: висновок
+  sentence_corrected: Ми зробили висновок, що проєкт завершено успішно.
+  options:
+  - висновок
+  - намір
+  - тактику
+  - припущення
+  original_explanation: На основі фактів роблять висновок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: Його стратегія вибачення перед другом була дуже невдалою.
+  error: стратегія
+  answer: тактика
+  sentence_corrected: Його тактика вибачення перед другом була дуже невдалою.
+  options:
+  - тактика
+  - концепція
+  - теорія
+  - істина
+  original_explanation: Для конкретних коротких дій використовується слово 'тактика'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте думку
+  sentence_with_error: У нього виникла віра випити чаю з лимоном.
+  error: віра
+  answer: ідея
+  sentence_corrected: У нього виникла ідея випити чаю з лимоном.
+  options:
+  - ідея
+  - теорія
+  - гіпотеза
+  - концепція
+  original_explanation: Раптове бажання — це ідея.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Старий філософ завжди шукав глибоку [___] в кожному явищі.
+  answer: сутність
+  complete_sentence: Старий філософ завжди шукав глибоку [сутність] в кожному явищі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Ваша [___] зору на цю проблему є досить оригінальною.
+  answer: точка
+  complete_sentence: Ваша [точка] зору на цю проблему є досить оригінальною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Він залишився вірним своїм демократичним [___] до кінця життя.
+  answer: переконанням
+  complete_sentence: Він залишився вірним своїм демократичним [переконанням] до кінця
+    життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Для успіху бізнесу нам потрібна чітка [___] на наступні десять
+    років.
+  answer: стратегія
+  complete_sentence: Для успіху бізнесу нам потрібна чітка [стратегія] на наступні
+    десять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Основним [___] його діяльності була допомога дітям.
+  answer: мотивом
+  complete_sentence: Основним [мотивом] його діяльності була допомога дітям.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Це лише моє перше [___], я можу помилятися.
+  answer: припущення
+  complete_sentence: Це лише моє перше [припущення], я можу помилятися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Ми маємо сформувати нові суспільні [___] для розвитку країни.
+  answer: цінності
+  complete_sentence: Ми маємо сформувати нові суспільні [цінності] для розвитку країни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Я маємо [___] відвідати замок у Луцьку наступного тижня.
+  answer: намір
+  complete_sentence: Я маємо [намір] відвідати замок у Луцьку наступного тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Він виклав свою [___] у новій книзі, що стала бестселером.
+  answer: концепцію
+  complete_sentence: Він виклав свою [концепцію] у новій книзі, що стала бестселером.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Відтінки абстракції
+  sentence_template: Ваш останній [___] був абсолютно незаперечним.
+  answer: доказ
+  complete_sentence: Ваш останній [доказ] був абсолютно незаперечним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Лабіринт думок
+  passage_template: 'Сьогодні в {Житомирі|Луцьку|Києві|Житомирі} відбулася цікава
+    дискусія. Кожен учасник мав свою {думку|річ|силу|думку}. Ми обговорювали нова
+    {концепцію|пісню|гру|концепцію} розвитку освіти. У науковця виникла смілива {ідея|хвилина|втома|ідея},
+    яка вразила всіх. Він висунув {гіпотезу|стіну|каву|гіпотезу} про вплив технологій
+    на мозок. Це було лише {припущення|забуття|мовчання|припущення}, але воно виглядало
+    логічним. Його {аргументи|крики|пісні|аргументи} були дуже переконливими. Хоча
+    деякі колеги мали зовсім інші {погляди|сумніви|жарти|погляди}. Для декого це був
+    лише {здогад|сон|день|здогад}, що потребує перевірки. Ми використовували базові
+    наукові {поняття|слова|звуки|поняття}. Наша {теорія|втома|паніка|теорія} ще потребує
+    {доказів|грошей|книг|доказів}. Проте {висновок|кінець|крах|висновок} був спільним:
+    треба діяти. Ми маємо чіткий {намір|сум|біль|намір} продовжувати дослідження.
+    Нашою головною {метою|грою|жартом|метою} є розвиток громади. Ми будуємо власну
+    {стратегію|тактику|гру|стратегія} на майбутнє. Кожен {вчинок|злочин|сон|вчинок}
+    має бути обдуманим. Це наша офіційна {позиція|гра|втома|позиція}. Ми віримо в
+    {істину|паніку|хаос|істину}.
+
+    '
+  blanks:
+  - answer: Житомирі
+    options:
+    - Житомирі
+    - Луцьку
+    - Києві
+  - answer: думку
+    options:
+    - думку
+    - річ
+    - силу
+  - answer: концепцію
+    options:
+    - концепцію
+    - пісню
+    - гру
+  - answer: ідея
+    options:
+    - ідея
+    - хвилина
+    - втома
+  - answer: гіпотезу
+    options:
+    - гіпотезу
+    - стіну
+    - каву
+  - answer: припущення
+    options:
+    - припущення
+    - забуття
+    - мовчання
+  - answer: аргументи
+    options:
+    - аргументи
+    - крики
+    - пісні
+  - answer: погляди
+    options:
+    - погляди
+    - сумніви
+    - жарти
+  - answer: здогад
+    options:
+    - здогад
+    - сон
+    - день
+  - answer: поняття
+    options:
+    - поняття
+    - слова
+    - звуки
+  - answer: теорія
+    options:
+    - теорія
+    - втома
+    - паніка
+  - answer: доказів
+    options:
+    - доказів
+    - грошей
+    - книг
+  - answer: висновок
+    options:
+    - висновок
+    - кінець
+    - крах
+  - answer: намір
+    options:
+    - намір
+    - сум
+    - біль
+  - answer: метою
+    options:
+    - метою
+    - грою
+    - жартом
+  - answer: стратегія
+    options:
+    - стратегію
+    - тактику
+    - гру
+  - answer: вчинок
+    options:
+    - вчинок
+    - злочин
+    - сон
+  - answer: позиція
+    options:
+    - позиція
+    - гра
+    - втома
+  - answer: істину
+    options:
+    - істину
+    - паніку
+    - хаос
+  blank_count: 19
+  complete_passage: 'Сьогодні в Житомирі відбулася цікава дискусія. Кожен учасник
+    мав свою думку. Ми обговорювали нова концепцію розвитку освіти. У науковця виникла
+    смілива ідея, яка вразила всіх. Він висунув гіпотезу про вплив технологій на мозок.
+    Це було лише припущення, але воно виглядало логічним. Його аргументи були дуже
+    переконливими. Хоча деякі колеги мали зовсім інші погляди. Для декого це був лише
+    здогад, що потребує перевірки. Ми використовували базові наукові поняття. Наша
+    теорія ще потребує доказів. Проте висновок був спільним: треба діяти. Ми маємо
+    чіткий намір продовжувати дослідження. Нашою головною метою є розвиток громади.
+    Ми будуємо власну стратегія на майбутнє. Кожен вчинок має бути обдуманим. Це наша
+    офіційна позиція. Ми віримо в істину.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Лиш той хто має в серці велику ідею здатен творити справжнє майбутнє для
+    свого народу та своєї країни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Вміння критично оцінювати власні гіпотези та бути готовим визнати помилковість
+    припущень є ознакою високої інтелектуальної культури кожної людини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Нова концепція розвитку міста передбачає створення великої кількості зелених
+    зон та пішохідних маршрутів у самому історичному центрі Луцька.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Ми маємо всі законні підстави для перегляду цієї важливої угоди з нашими
+    міжнародними партнерами у зв'язку зі зміною економічних обставин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Основним мотивом його шляхетного вчинку була щира турбота про майбутнє громади
+    та бажання допомогти тим хто найбільше цього потребував.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Теорія відносності змінила наше фундаментальне розуміння часу та простору
+    відкривши абсолютно нові горизонти для розвитку сучасної світової фізичної науки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Вивчаючи синоніми абстрактних понять ви насправді вивчаєте архітектуру власної
+    свободи та вчитеся мислити більш глибоко та системно щодня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть інтелектуальну фразу
+  jumbled_words: []
+  answer: Бути принциповим у власних цінностях але відкритим до нових поглядів — це
+    ідеальний шлях до розвитку зрілої та вільної особистості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Ви маєте тверду віру в демократичні цінності, яку не змінять жодні обставини.
+    Це ваші...
+  options:
+  - '{''text'': ''переконання'', ''correct'': True}'
+  - '{''text'': ''здогади'', ''correct'': False}'
+  - '{''text'': ''гіпотези'', ''correct'': False}'
+  - '{''text'': ''наміри'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Ви запропонували загальну систему поглядів на реформування освіти. Ви
+    створили...
+  options:
+  - '{''text'': ''концепцію'', ''correct'': True}'
+  - '{''text'': ''тактику'', ''correct'': False}'
+  - '{''text'': ''припущення'', ''correct'': False}'
+  - '{''text'': ''мотив'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Ви ставите перед собою дуже високий, ідеальний орієнтир на все життя.
+    Це ваша...
+  options:
+  - '{''text'': ''мета'', ''correct'': True}'
+  - '{''text'': ''ціль'', ''correct'': False}'
+  - '{''text'': ''тактика'', ''correct'': False}'
+  - '{''text'': ''здогад'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Вчений висунув ідею, яка ще не має фактичних доказів, але виглядає логічною.
+    Це...
+  options:
+  - '{''text'': ''гіпотеза'', ''correct'': True}'
+  - '{''text'': ''теорія'', ''correct'': False}'
+  - '{''text'': ''доказ'', ''correct'': False}'
+  - '{''text'': ''висновок''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Ви хочете підкреслити конкретну точку, якої має досягти ваш бізнес-проєкт.
+    Це...
+  options:
+  - '{''text'': ''ціль'', ''correct'': True}'
+  - '{''text'': ''мета'', ''correct'': False}'
+  - '{''text'': ''віра'', ''correct'': False}'
+  - '{''text'': ''сутність''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Що є 'логічною формою думки, яка відображає суттєві ознаки предмета'?
+  options:
+  - '{''text'': ''поняття'', ''correct'': True}'
+  - '{''text'': ''уявлення'', ''correct'': False}'
+  - '{''text'': ''здогад'', ''correct'': False}'
+  - '{''text'': ''мотив''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Ви зробили остаточне судження після тривалих дебатів та аналізу фактів.
+    Ви зробили...
+  options:
+  - '{''text'': ''висновок'', ''correct'': True}'
+  - '{''text'': ''припущення'', ''correct'': False}'
+  - '{''text'': ''гіпотезу'', ''correct'': False}'
+  - '{''text'': ''намір''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Світ ідей
+  question: Що вказує на внутрішню силу, яка змусила людину вчинити саме так?
+  options:
+  - '{''text'': ''мотив'', ''correct'': True}'
+  - '{''text'': ''аргумент'', ''correct'': False}'
+  - '{''text'': ''план'', ''correct'': False}'
+  - '{''text'': ''теорія''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Чиї державницькі погляди згадані у вступі?
+  options:
+  - '{''text'': "В''ячеслава Липинського", ''correct'': True}'
+  - '{''text'': ''Грушевського'', ''correct'': False}'
+  - '{''text'': ''Франка'', ''correct'': False}'
+  - '{''text'': ''Шевченка''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Що таке 'філософія серця' Сковороди?
+  options:
+  - '{''text'': ''пошук істинної людини всередині'', ''correct'': True}'
+  - '{''text'': ''анатомія'', ''correct'': False}'
+  - '{''text'': ''банки'', ''correct'': False}'
+  - '{''text'': ''дороги''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Який жанр пісні пов'язаний зі словом 'думка'?
+  options:
+  - '{''text'': ''дума'', ''correct'': True}'
+  - '{''text'': ''коломийка'', ''correct'': False}'
+  - '{''text'': ''щедрівка'', ''correct'': False}'
+  - '{''text'': ''веснянка''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Де втілені ідеї минулих епох?
+  options:
+  - '{''text'': ''Житомир та Луцьк'', ''correct'': True}'
+  - '{''text'': ''Одеса'', ''correct'': False}'
+  - '{''text'': ''Суми'', ''correct'': False}'
+  - '{''text'': ''Київ''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Що таке 'суспільний договір'?
+  options:
+  - '{''text'': ''концепція взаємодії людей і держави'', ''correct'': True}'
+  - '{''text'': ''оренда'', ''correct'': False}'
+  - '{''text'': ''футбол'', ''correct'': False}'
+  - '{''text'': ''меню''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Який поет досліджував теорії щастя?
+  options:
+  - '{''text'': ''Іван Франко'', ''correct'': True}'
+  - '{''text'': ''Леся Українка'', ''correct'': False}'
+  - '{''text'': ''Василь Стус'', ''correct'': False}'
+  - '{''text'': ''Костенко''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Що таке 'національна ідея'?
+  options:
+  - '{''text'': ''стратегічний орієнтир для майбутнього'', ''correct'': True}'
+  - '{''text'': ''рецепт'', ''correct'': False}'
+  - '{''text'': ''маршрут'', ''correct'': False}'
+  - '{''text'': ''правила''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Абстракції в культурі
+  question: Що вчить нас філософська традиція?
+  options:
+  - '{''text'': ''шукати істину і діяти'', ''correct'': True}'
+  - '{''text'': ''тільки говорити'', ''correct'': False}'
+  - '{''text'': ''ігнорувати теорії'', ''correct'': False}'
+  - '{''text'': ''не мати переконань''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: Слово 'мета' частіше стосується життєвих орієнтирів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: '''Гіпотеза'' — це те саме, що й ''теорія''.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: Слово 'здогад' вказує на наявність усіх доказів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: '''Концепція'' може бути загальним задумом проєкту.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: Слово 'думка' пов'язане лише з логікою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: '''Стратегія'' охоплює масштабні цілі.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: '''Підстава'' має бути логічною.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда про ідеї
+  statement: Слово 'переконання' означає сумнів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

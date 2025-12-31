@@ -1,0 +1,722 @@
+module: 54-idioms-nature
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/54-idioms-nature.md
+generated: '2025-12-30T19:49:16.259362'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 8
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 49
+item_count: 49
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Вивести його на прозору воду.
+  error: прозору
+  answer: чисту
+  sentence_corrected: Вивести його на чисту воду.
+  options:
+  - чисту
+  - білу
+  - свіжу
+  - глибоку
+  original_explanation: Сталий вираз використовує саме слово 'чисту'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Він лив забагато молока у звіті.
+  error: молока
+  answer: води
+  sentence_corrected: Він лив забагато води у звіті.
+  options:
+  - води
+  - вина
+  - бруду
+  - слів
+  original_explanation: 'Правильно: ''лити воду''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Як у дзеркало дивився — все вгадав.
+  error: дзеркало
+  answer: воду
+  sentence_corrected: Як у воду дивився — все вгадав.
+  options:
+  - воду
+  - книгу
+  - вікно
+  - небо
+  original_explanation: 'Правильно: ''як у воду дивився''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Гратися з сірниками — це небезпечно.
+  error: сірниками
+  answer: вогнем
+  sentence_corrected: Гратися з вогнем — це небезпечно.
+  options:
+  - вогнем
+  - світлом
+  - вітром
+  - грошима
+  original_explanation: У фразеології вживається слово 'вогнем'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Вийти мокрим з води після скандалу.
+  error: мокрим
+  answer: сухим
+  sentence_corrected: Вийти сухим з води після скандалу.
+  options:
+  - сухим
+  - чистим
+  - білим
+  - живим
+  original_explanation: 'Правильно: ''вийти сухим з води''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Пройти вогонь, воду і залізні труби.
+  error: залізні
+  answer: мідні
+  sentence_corrected: Пройти вогонь, воду і мідні труби.
+  options:
+  - мідні
+  - сталеві
+  - пластикові
+  - золоті
+  original_explanation: 'Повний вираз: ''вогонь, воду і мідні труби''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Асфальт іде з-під ніг від жаху.
+  error: асфальт
+  answer: ґрунт
+  sentence_corrected: Асфальт іде з-під ніг від жаху.
+  options:
+  - ґрунт
+  - земля
+  - килим
+  - паркет
+  original_explanation: 'Правильно: ''ґрунт іде з-під ніг''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки стихій
+  sentence_with_error: Протяг у голові молодика гуляє.
+  error: протяг
+  answer: вітер
+  sentence_corrected: Протяг у голові молодика гуляє.
+  options:
+  - вітер
+  - туман
+  - холод
+  - шум
+  original_explanation: 'Правильно: ''вітер у голові''.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Я знав, що він бреше, і нарешті вивів його на чисту [___].
+  answer: воду
+  complete_sentence: Я знав, що він бреше, і нарешті вивів його на чисту [воду].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Не варто [___] з вогнем, це може закінчитися трагедією.
+  answer: гратися
+  complete_sentence: Не варто [гратися] з вогнем, це може закінчитися трагедією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Ти [___] у воду дивився — все сталося саме так, як ти передбачив.
+  answer: як
+  complete_sentence: Ти [як] у воду дивився — все сталося саме так, як ти передбачив.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Він розповідав цілу годину, але просто [___] воду.
+  answer: лив
+  complete_sentence: Він розповідав цілу годину, але просто [лив] воду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Після такої новини в мене [___] пішов з-під ніг.
+  answer: ґрунт
+  complete_sentence: Після такої новини в мене [ґрунт] пішов з-під ніг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: У нього ще [___] у голові гуляє, він не думає про майбутнє.
+  answer: вітер
+  complete_sentence: У нього ще [вітер] у голові гуляє, він не думає про майбутнє.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Цей чоловік [___] крізь вогонь і воду, йому можна довіряти.
+  answer: пройшов
+  complete_sentence: Цей чоловік [пройшов] крізь вогонь і воду, йому можна довіряти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Стихії у словах
+  sentence_template: Як йому завжди вдається виходити [___] з води?
+  answer: сухим
+  complete_sentence: Як йому завжди вдається виходити [сухим] з води?
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Історія про випробування
+  passage_template: 'Наш новий бізнес-партнер спочатку здався нам дуже надійним, але
+    мій колега {як|мов|наче|як} у воду дивився, коли сказав: "Будьте з ним {обережні|уважні|тихі|обережні}".
+    Виявилося, що цей чоловік просто {лив|брав|ніс|лив} воду на зустрічах, уникаючи
+    конкретних {цифр|слів|планів|цифр}. Ми вирішили {вивести|витягти|вигнати|вивести}
+    його на чисту {воду|стежку|дорогу|воду} і почали власну перевірку. Коли ми дізналися
+    про його минулі махінації, у нас буквально {ґрунт|земля|лід|ґрунт} пішов з-під
+    {ніг|рук|очей|ніг}. Ми зрозуміли, що {гралися|боролися|йшли|гралися} з вогнем,
+    довіряючи такому {шахраєві|ворогу|другу|шахраєві}. На щастя, нам вдалося {вийти|вибігти|випливти|вийти}
+    сухими з {води|річки|моря|води} і вчасно розірвати контракт. Цей досвід став для
+    нас справжнім {випробуванням|уроком|святом|випробуванням}. Мій колега — людина,
+    яка {пройшла|вибігла|випливла|пройшла} вогонь і воду в бізнесі, тому він відчув
+    {фальш|брехню|обман|фальш} одразу. Тепер я знаю, що не можна бути людиною з {вітром|вогнем|водою|вітром}
+    у голові, коли йдеться про великі {гроші|справи|плани|гроші}. Життєва {стабільність|опора|сила|стабільність}
+    потребує уваги до деталей. Ми стали {сильнішими|кращими|мудрішими|сильнішими}
+    після цієї історії.
+
+    '
+  blanks:
+  - answer: як
+    options:
+    - як
+    - мов
+    - наче
+  - answer: обережні
+    options:
+    - обережні
+    - уважні
+    - тихі
+  - answer: лив
+    options:
+    - лив
+    - брав
+    - ніс
+  - answer: цифр
+    options:
+    - цифр
+    - слів
+    - планів
+  - answer: вивести
+    options:
+    - вивести
+    - витягти
+    - вигнати
+  - answer: воду
+    options:
+    - воду
+    - стежку
+    - дорогу
+  - answer: ґрунт
+    options:
+    - ґрунт
+    - земля
+    - лід
+  - answer: ніг
+    options:
+    - ніг
+    - рук
+    - очей
+  - answer: гралися
+    options:
+    - гралися
+    - боролися
+    - йшли
+  - answer: шахраєві
+    options:
+    - шахраєві
+    - ворогу
+    - другу
+  - answer: вийти
+    options:
+    - вийти
+    - вибігти
+    - випливти
+  - answer: води
+    options:
+    - води
+    - річки
+    - моря
+  - answer: випробуванням
+    options:
+    - випробуванням
+    - уроком
+    - святом
+  - answer: пройшла
+    options:
+    - пройшла
+    - вибігла
+    - випливла
+  - answer: фальш
+    options:
+    - фальш
+    - брехню
+    - обман
+  - answer: вітром
+    options:
+    - вітром
+    - вогнем
+    - водою
+  - answer: гроші
+    options:
+    - гроші
+    - справи
+    - плани
+  - answer: стабільність
+    options:
+    - стабільність
+    - опора
+    - сила
+  - answer: сильнішими
+    options:
+    - сильнішими
+    - кращими
+    - мудрішими
+  blank_count: 19
+  complete_passage: 'Наш новий бізнес-партнер спочатку здався нам дуже надійним, але
+    мій колега як у воду дивився, коли сказав: "Будьте з ним обережні". Виявилося,
+    що цей чоловік просто лив воду на зустрічах, уникаючи конкретних цифр. Ми вирішили
+    вивести його на чисту воду і почали власну перевірку. Коли ми дізналися про його
+    минулі махінації, у нас буквально ґрунт пішов з-під ніг. Ми зрозуміли, що гралися
+    з вогнем, довіряючи такому шахраєві. На щастя, нам вдалося вийти сухими з води
+    і вчасно розірвати контракт. Цей досвід став для нас справжнім випробуванням.
+    Мій колега — людина, яка пройшла вогонь і воду в бізнесі, тому він відчув фальш
+    одразу. Тепер я знаю, що не можна бути людиною з вітром у голові, коли йдеться
+    про великі гроші. Життєва стабільність потребує уваги до деталей. Ми стали сильнішими
+    після цієї історії.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Виведемо ми злочинця на чисту воду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Спікер лив забагато води у своїй промові.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Ти справді як у воду дивився.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Не треба тобі гратися з вогнем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Йому вдалося вийти сухим з води.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: У мене ґрунт іде з-під ніг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Вітер у твоїй молодій голові гуляє.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Зберіть речення
+  jumbled_words: []
+  answer: Ми пройшли вогонь і воду разом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Ваш знайомий знав, що акції компанії впадуть, ще за місяць до кризи. Як
+    про нього можна сказати?
+  options:
+  - '{''text'': ''Він як у воду дивився.'', ''correct'': True}'
+  - '{''text'': ''Він лив багато води.'', ''correct'': False}'
+  - '{''text'': ''Він вивів усіх на чисту воду.'', ''correct'': False}'
+  - '{''text'': ''У нього вітер у голові.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Студент написав реферат на 20 сторінок, але в ньому немає жодного факту
+    чи цифри. Що він зробив?
+  options:
+  - '{''text'': ''Він просто лив воду.'', ''correct'': True}'
+  - '{''text'': ''Він пройшов крізь вогонь і воду.'', ''correct'': False}'
+  - '{''text'': ''Він вийшов сухим з води.'', ''correct'': False}'
+  - '{''text'': ''Він грався з вогнем.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Політик порушив закон, але завдяки адвокатам не отримав жодного штрафу.
+    Який вираз пасує?
+  options:
+  - '{''text'': ''Він вийшов сухим з води.'', ''correct'': True}'
+  - '{''text'': ''Він вивів усіх на чисту воду.'', ''correct'': False}'
+  - '{''text'': ''У нього ґрунт іде з-під ніг.'', ''correct'': False}'
+  - '{''text'': ''Він як у воду дивився.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Хлопець постійно змінює свої плани, ніде не працює і думає лише про вечірки.
+    Хто він?
+  options:
+  - '{''text'': ''Людина, у якої вітер у голові.'', ''correct'': True}'
+  - '{''text'': ''Людина, яка пройшла вогонь і воду.'', ''correct'': False}'
+  - '{''text'': ''Людина, яка грається з вогнем.'', ''correct'': False}'
+  - '{''text'': ''Людина, яка ллє воду.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Після раптового звільнення чоловік відчув себе повністю розгубленим і
+    безпорадним. Що з ним сталося?
+  options:
+  - '{''text'': ''У нього ґрунт пішов з-під ніг.'', ''correct'': True}'
+  - '{''text'': ''Він вивів шефа на чисту воду.'', ''correct'': False}'
+  - '{''text'': ''Він вийшов сухим з води.'', ''correct'': False}'
+  - '{''text'': ''Він грався з вогнем.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Новий співробітник вирішив ігнорувати правила кібербезпеки в банку. Що
+    він робить?
+  options:
+  - '{''text'': ''Він грається з вогнем.'', ''correct'': True}'
+  - '{''text'': ''Він як у воду дивиться.'', ''correct'': False}'
+  - '{''text'': ''Він ллє забагато води.'', ''correct'': False}'
+  - '{''text'': ''Він пройшов вогонь і воду.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Ветеран війни, який пережив багато битв та поранень, повернувся додому.
+    Про нього кажуть...
+  options:
+  - '{''text'': ''Він пройшов крізь вогонь і воду.'', ''correct'': True}'
+  - '{''text'': ''Він вивів ворога на чисту воду.'', ''correct'': False}'
+  - '{''text'': ''У нього вітер у голові гуляє.'', ''correct'': False}'
+  - '{''text'': ''Він вийшов сухим з води.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Стихії в житті
+  question: Після довгого слідства детектив нарешті знайшов докази проти злочинця.
+    Що він зробив?
+  options:
+  - '{''text'': ''Він вивів його на чисту воду.'', ''correct'': True}'
+  - '{''text'': ''Він лив воду під час слідства.'', ''correct'': False}'
+  - '{''text'': ''Він грався з вогнем.'', ''correct'': False}'
+  - '{''text'': ''Він як у воду дивився.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Яка стихія в українській мові найчастіше асоціюється з поняттям істини?
+  options:
+  - '{''text'': ''Вода'', ''correct'': True}'
+  - '{''text'': ''Вогонь'', ''correct'': False}'
+  - '{''text'': ''Вітер'', ''correct'': False}'
+  - '{''text'': ''Земля''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Яке озеро, згадане в тексті, відоме своєю неймовірною чистотою?
+  options:
+  - '{''text'': ''Світязь'', ''correct'': True}'
+  - '{''text'': ''Синевир'', ''correct'': False}'
+  - '{''text'': ''Ялпуг'', ''correct'': False}'
+  - '{''text'': ''Кунігунда''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Що буквально означає вираз 'мідні труби' у повному варіанті ідіоми про
+    вогонь і воду?
+  options:
+  - '{''text'': ''Випробування славою'', ''correct'': True}'
+  - '{''text'': ''Музичний інструмент'', ''correct'': False}'
+  - '{''text'': ''Сантехнічні роботи'', ''correct'': False}'
+  - '{''text'': ''Військовий похід''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Чому легковажність асоціюється саме з вітром?
+  options:
+  - '{''text'': ''Через мінливість та відсутність ваги'', ''correct'': True}'
+  - '{''text'': ''Бо вітер — це завжди весело'', ''correct'': False}'
+  - '{''text'': ''Бо вітер приносить дощ'', ''correct'': False}'
+  - '{''text'': ''Це випадкова асоціація''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Яка річка України є головним джерелом образів 'водного шляху'?
+  options:
+  - '{''text'': ''Дніпро'', ''correct'': True}'
+  - '{''text'': ''Дністер'', ''correct'': False}'
+  - '{''text'': ''Десна'', ''correct'': False}'
+  - '{''text'': ''Прут''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: В якому регіоні Михайло Коцюбинський змальовував магічну силу вогню (ватри)?
+  options:
+  - '{''text'': ''Карпати'', ''correct'': True}'
+  - '{''text'': ''Крим'', ''correct'': False}'
+  - '{''text'': ''Поділля'', ''correct'': False}'
+  - '{''text'': ''Донбас''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Що символізує 'земля' для українського хлібороба?
+  options:
+  - '{''text'': ''Опору та матір-годувальницю'', ''correct'': True}'
+  - '{''text'': ''Тільки місце для роботи'', ''correct'': False}'
+  - '{''text'': ''Бруд та втому'', ''correct'': False}'
+  - '{''text'': ''Загрозу''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Традиції та мова
+  question: Який вираз найкраще описує журналіста-розслідувача?
+  options:
+  - '{''text'': ''Він виводить на чисту воду.'', ''correct'': True}'
+  - '{''text'': ''Він ллє забагато води.'', ''correct'': False}'
+  - '{''text'': ''У нього вітер у голові.'', ''correct'': False}'
+  - '{''text'': ''Він як у воду дивиться.''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: Вираз 'лити воду' означає займатися благодійністю, допомагаючи спраглим.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: '''Вийти сухим з води'' — це про людину, яка змогла уникнути заслуженого
+    покарання.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: '''Гратися з вогнем'' вживається, коли ми хочемо похвалити чиюсь сміливість.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: Ідіома 'як у воду дивився' стосується людей з гарною інтуїцією або даром
+    передбачення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: Вираз 'ґрунт іде з-під ніг' описує відчуття великої радості та польоту.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: '''Вітер у голові'' кажуть про людину, яка дуже швидко думає та приймає
+    рішення.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: '''Вивести на чисту воду'' — значить викрити чиїсь приховані нечесні
+    дії.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ілюзія?
+  statement: '''Пройти вогонь і воду'' означає мати дуже легке та безтурботне життя.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

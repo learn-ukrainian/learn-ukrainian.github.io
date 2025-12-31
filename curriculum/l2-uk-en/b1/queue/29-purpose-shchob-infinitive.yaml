@@ -1,7 +1,7 @@
 module: 29-purpose-shchob-infinitive
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/29-purpose-shchob-infinitive.md
-generated: '2025-12-29T00:22:00.688646'
+generated: '2025-12-30T19:49:28.074419'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 14
   true-false: 14
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -388,6 +390,7 @@ items:
     - побачив
     - бачив
     answer: побачити
+  blank_count: 14
   complete_passage: 'Минулого тижня я вирішив поїхати в Карпати, щоб [___:1] від міської
     суєти. Я встав дуже рано, щоб [___:2] на ранковий автобус вчасно. По дорозі я
     зупинився на заправці, щоб [___:3] каву та перекусити.
@@ -487,14 +490,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про приїзд із наміром надати
     допомогу з роботою?
   options:
-  - text: допомогти
-    correct: true
-  - text: допоможу
-    correct: false
-  - text: допоміг
-    correct: false
-  - text: допомагав
-    correct: false
+  - '{''text'': ''допомогти'', ''correct'': True}'
+  - '{''text'': ''допоможу'', ''correct'': False}'
+  - '{''text'': ''допоміг'', ''correct'': False}'
+  - '{''text'': ''допомагав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -506,14 +505,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про навчання з метою здобуття
     професії лікаря?
   options:
-  - text: стати
-    correct: true
-  - text: стане
-    correct: false
-  - text: стала
-    correct: false
-  - text: ставала
-    correct: false
+  - '{''text'': ''стати'', ''correct'': True}'
+  - '{''text'': ''стане'', ''correct'': False}'
+  - '{''text'': ''стала'', ''correct'': False}'
+  - '{''text'': ''ставала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -525,14 +520,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про роботу допізна з метою
     вчасного завершення проекту?
   options:
-  - text: завершити
-    correct: true
-  - text: завершить
-    correct: false
-  - text: завершив
-    correct: false
-  - text: завершував
-    correct: false
+  - '{''text'': ''завершити'', ''correct'': True}'
+  - '{''text'': ''завершить'', ''correct'': False}'
+  - '{''text'': ''завершив'', ''correct'': False}'
+  - '{''text'': ''завершував'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -544,14 +535,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про збори з метою обговорення
     важливого питання?
   options:
-  - text: обговорити
-    correct: true
-  - text: обговоримо
-    correct: false
-  - text: обговорили
-    correct: false
-  - text: обговорювали
-    correct: false
+  - '{''text'': ''обговорити'', ''correct'': True}'
+  - '{''text'': ''обговоримо'', ''correct'': False}'
+  - '{''text'': ''обговорили'', ''correct'': False}'
+  - '{''text'': ''обговорювали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -563,14 +550,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про поїздку за кордон з
     метою здобуття вищої освіти?
   options:
-  - text: здобути
-    correct: true
-  - text: здобуде
-    correct: false
-  - text: здобула
-    correct: false
-  - text: здобувала
-    correct: false
+  - '{''text'': ''здобути'', ''correct'': True}'
+  - '{''text'': ''здобуде'', ''correct'': False}'
+  - '{''text'': ''здобула'', ''correct'': False}'
+  - '{''text'': ''здобувала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -582,14 +565,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про зупинку з метою милування
     красивим краєвидом?
   options:
-  - text: подивитися
-    correct: true
-  - text: подивлюся
-    correct: false
-  - text: подивився
-    correct: false
-  - text: дивився
-    correct: false
+  - '{''text'': ''подивитися'', ''correct'': True}'
+  - '{''text'': ''подивлюся'', ''correct'': False}'
+  - '{''text'': ''подивився'', ''correct'': False}'
+  - '{''text'': ''дивився'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -601,14 +580,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про ранній підйом з метою
     потрапити на потяг?
   options:
-  - text: встигнути
-    correct: true
-  - text: встигне
-    correct: false
-  - text: встиг
-    correct: false
-  - text: встигав
-    correct: false
+  - '{''text'': ''встигнути'', ''correct'': True}'
+  - '{''text'': ''встигне'', ''correct'': False}'
+  - '{''text'': ''встиг'', ''correct'': False}'
+  - '{''text'': ''встигав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -620,14 +595,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про прихід гостей з метою
     привітання з днем народження?
   options:
-  - text: привітати
-    correct: true
-  - text: привітають
-    correct: false
-  - text: привітали
-    correct: false
-  - text: привітували
-    correct: false
+  - '{''text'': ''привітати'', ''correct'': True}'
+  - '{''text'': ''привітають'', ''correct'': False}'
+  - '{''text'': ''привітали'', ''correct'': False}'
+  - '{''text'': ''привітували'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -639,14 +610,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про читання книг з метою
     розширення знань?
   options:
-  - text: знати
-    correct: true
-  - text: знаю
-    correct: false
-  - text: знав
-    correct: false
-  - text: дізнаюся
-    correct: false
+  - '{''text'': ''знати'', ''correct'': True}'
+  - '{''text'': ''знаю'', ''correct'': False}'
+  - '{''text'': ''знав'', ''correct'': False}'
+  - '{''text'': ''дізнаюся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -658,14 +625,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про вихід надвір з метою
     подихати свіжим повітрям?
   options:
-  - text: подихати
-    correct: true
-  - text: подихає
-    correct: false
-  - text: подихала
-    correct: false
-  - text: дихала
-    correct: false
+  - '{''text'': ''подихати'', ''correct'': True}'
+  - '{''text'': ''подихає'', ''correct'': False}'
+  - '{''text'': ''подихала'', ''correct'': False}'
+  - '{''text'': ''дихала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -677,14 +640,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про тренування з метою
     перемоги у змаганнях?
   options:
-  - text: перемогти
-    correct: true
-  - text: переможемо
-    correct: false
-  - text: перемогли
-    correct: false
-  - text: перемагали
-    correct: false
+  - '{''text'': ''перемогти'', ''correct'': True}'
+  - '{''text'': ''переможемо'', ''correct'': False}'
+  - '{''text'': ''перемогли'', ''correct'': False}'
+  - '{''text'': ''перемагали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -696,14 +655,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про роботу з метою забезпечення
     родини?
   options:
-  - text: забезпечити
-    correct: true
-  - text: забезпечить
-    correct: false
-  - text: забезпечив
-    correct: false
-  - text: забезпечував
-    correct: false
+  - '{''text'': ''забезпечити'', ''correct'': True}'
+  - '{''text'': ''забезпечить'', ''correct'': False}'
+  - '{''text'': ''забезпечив'', ''correct'': False}'
+  - '{''text'': ''забезпечував'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -715,14 +670,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про вивчення мови з метою
     спілкування з місцевими?
   options:
-  - text: спілкуватися
-    correct: true
-  - text: спілкуюся
-    correct: false
-  - text: спілкувався
-    correct: false
-  - text: поспілкуюся
-    correct: false
+  - '{''text'': ''спілкуватися'', ''correct'': True}'
+  - '{''text'': ''спілкуюся'', ''correct'': False}'
+  - '{''text'': ''спілкувався'', ''correct'': False}'
+  - '{''text'': ''поспілкуюся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -734,14 +685,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення про заощадження грошей
     з метою придбання автомобіля?
   options:
-  - text: купити
-    correct: true
-  - text: купить
-    correct: false
-  - text: купила
-    correct: false
-  - text: купувала
-    correct: false
+  - '{''text'': ''купити'', ''correct'': True}'
+  - '{''text'': ''купить'', ''correct'': False}'
+  - '{''text'': ''купила'', ''correct'': False}'
+  - '{''text'': ''купувала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

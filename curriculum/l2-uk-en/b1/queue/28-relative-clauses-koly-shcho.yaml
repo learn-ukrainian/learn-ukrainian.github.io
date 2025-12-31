@@ -1,7 +1,7 @@
 module: 28-relative-clauses-koly-shcho
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/28-relative-clauses-koly-shcho.md
-generated: '2025-12-29T00:22:00.589920'
+generated: '2025-12-30T19:49:28.042788'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 14
   true-false: 14
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -391,6 +393,7 @@ items:
     - який
     - де
     answer: коли
+  blank_count: 14
   complete_passage: 'Минулого року я згадував день, [___:1] вперше приїхав до Києва
     на навчання. Це був момент, [___:2] моє життя змінилося назавжди і безповоротно.
     Все, [___:3] я знав про столицю раніше, виявилося неповним і поверховим.
@@ -487,14 +490,10 @@ items:
   question: Який сполучник потрібно вставити в речення про день, коли познайомилися
     і він був теплим?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -506,14 +505,10 @@ items:
   question: Який сполучник потрібно вставити в речення про те, що він сказав і воно
     здивувало присутніх?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яке
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яке'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -525,14 +520,10 @@ items:
   question: Який сполучник потрібно вставити в речення про момент, коли зрозумів правду
     і це було болісно?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -544,14 +535,10 @@ items:
   question: Який сполучник потрібно вставити в речення про все, що ви знаєте про цю
     справу?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яке
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яке'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -563,14 +550,10 @@ items:
   question: Який сполучник потрібно вставити в речення про час, коли жили в селі і
     було щасливо?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -582,14 +565,10 @@ items:
   question: Який сполучник потрібно вставити в речення про факт, що це правда і він
     неоспорний?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -601,14 +580,10 @@ items:
   question: Який сполучник потрібно вставити в речення про рік, коли народилася і
     він був складним?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -620,14 +595,10 @@ items:
   question: Який сполучник потрібно вставити в речення про щось, що турбує вас уже
     давно?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яке
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яке'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -639,14 +610,10 @@ items:
   question: Який сполучник потрібно вставити в речення про вечір, коли він зробив
     пропозицію?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -658,14 +625,10 @@ items:
   question: Який сполучник потрібно вставити в речення про ідею, що все можливо і
     вона надихає?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яка
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -677,14 +640,10 @@ items:
   question: Який сполучник потрібно вставити в речення про нічого, що здивувало б
     вас у цій справі?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яке
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яке'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -696,14 +655,10 @@ items:
   question: Який сполучник потрібно вставити в речення про мить, коли все змінилося
     раптово?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: яка
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -715,14 +670,10 @@ items:
   question: Який сполучник потрібно вставити в речення про думку, що ви помилилися
     і вона тривожить?
   options:
-  - text: коли
-    correct: false
-  - text: що
-    correct: true
-  - text: яка
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -733,14 +684,10 @@ items:
   title: Коли чи що?
   question: Який сполучник потрібно вставити в речення про епоху, коли жили наші предки?
   options:
-  - text: коли
-    correct: true
-  - text: що
-    correct: false
-  - text: яка
-    correct: false
-  - text: де
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

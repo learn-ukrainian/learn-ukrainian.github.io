@@ -1,15 +1,18 @@
 module: 23-register-media-journalistic
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/23-register-media-journalistic.md
-generated: '2025-12-29T22:44:11.900224'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.729194'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в заголовках
@@ -576,6 +579,116 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть лід-абзац
+  passage_template: 'Президент України Володимир Зеленський {підписав|ухвалив|затвердив|підписав}
+    закон про реформу освіти {у|в|на|у} вівторок, 15 жовтня. {Документ|Закон|Він|Документ}
+    передбачає збільшення фінансування шкіл {та|і|а|та} підвищення зарплат вчителям
+    на 20%. {Закон|Документ|Він|Закон} набуде чинності {з|від|після|з} 1 січня наступного
+    року. {Реформа|Закон|Документ|Реформа} є частиною ширшої програми модернізації
+    освітньої {системи|галузі|сфери|системи} країни. {За словами|На думку|Як повідомляє|За
+    словами} міністра освіти, це історичний {момент|день|крок|момент} для України.
+    {Опозиція|Критики|Експерти|Опозиція} заявила про намір оскаржити {закон|рішення|документ|закон}
+    у Конституційному Суді. Як {повідомляє|зазначає|каже|повідомляє} прес-служба парламенту,
+    {за|проти|про|за} законопроєкт проголосували 287 {депутатів|народних депутатів|парламентарів|депутатів}.
+    Голосування {відбулось|пройшло|було|відбулось} учора ввечері.
+
+    '
+  blanks:
+  - answer: підписав
+    options:
+    - підписав
+    - ухвалив
+    - затвердив
+  - answer: у
+    options:
+    - у
+    - в
+    - на
+  - answer: Документ
+    options:
+    - Документ
+    - Закон
+    - Він
+  - answer: та
+    options:
+    - та
+    - і
+    - а
+  - answer: Закон
+    options:
+    - Закон
+    - Документ
+    - Він
+  - answer: з
+    options:
+    - з
+    - від
+    - після
+  - answer: Реформа
+    options:
+    - Реформа
+    - Закон
+    - Документ
+  - answer: системи
+    options:
+    - системи
+    - галузі
+    - сфери
+  - answer: За словами
+    options:
+    - За словами
+    - На думку
+    - Як повідомляє
+  - answer: момент
+    options:
+    - момент
+    - день
+    - крок
+  - answer: Опозиція
+    options:
+    - Опозиція
+    - Критики
+    - Експерти
+  - answer: закон
+    options:
+    - закон
+    - рішення
+    - документ
+  - answer: повідомляє
+    options:
+    - повідомляє
+    - зазначає
+    - каже
+  - answer: за
+    options:
+    - за
+    - проти
+    - про
+  - answer: депутатів
+    options:
+    - депутатів
+    - народних депутатів
+    - парламентарів
+  - answer: відбулось
+    options:
+    - відбулось
+    - пройшло
+    - було
+  blank_count: 16
+  complete_passage: 'Президент України Володимир Зеленський підписав закон про реформу
+    освіти у вівторок, 15 жовтня. Документ передбачає збільшення фінансування шкіл
+    та підвищення зарплат вчителям на 20%. Закон набуде чинності з 1 січня наступного
+    року. Реформа є частиною ширшої програми модернізації освітньої системи країни.
+    За словами міністра освіти, це історичний момент для України. Опозиція заявила
+    про намір оскаржити закон у Конституційному Суді. Як повідомляє прес-служба парламенту,
+    за законопроєкт проголосували 287 депутатів. Голосування відбулось учора ввечері.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть заголовки
   jumbled_words: []
@@ -708,14 +821,11 @@ items:
   title: Граматика новинних заголовків
   question: Яка основна особливість синтаксису новинних заголовків?
   options:
-  - text: Використання складних речень
-    correct: false
-  - text: Телеграфний стиль — максимум інформації за мінімум слів
-    correct: true
-  - text: Обов'язкове вживання займенників
-    correct: false
-  - text: Використання художніх засобів
-    correct: false
+  - '{''text'': ''Використання складних речень'', ''correct'': False}'
+  - '{''text'': ''Телеграфний стиль — максимум інформації за мінімум слів'', ''correct'':
+    True}'
+  - '{''text'': "Обов''язкове вживання займенників", ''correct'': False}'
+  - '{''text'': ''Використання художніх засобів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -726,14 +836,11 @@ items:
   title: Граматика новинних заголовків
   question: Який заголовок є граматично правильним для новини?
   options:
-  - text: Наш президент підписав цей важливий закон
-    correct: false
-  - text: Президент підписав закон
-    correct: true
-  - text: Президентом було підписано закон
-    correct: false
-  - text: Президент, який є головою держави, підписав закон
-    correct: false
+  - '{''text'': ''Наш президент підписав цей важливий закон'', ''correct'': False}'
+  - '{''text'': ''Президент підписав закон'', ''correct'': True}'
+  - '{''text'': ''Президентом було підписано закон'', ''correct'': False}'
+  - '{''text'': ''Президент, який є головою держави, підписав закон'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -744,14 +851,10 @@ items:
   title: Граматика новинних заголовків
   question: 'Яка функція двокрапки у заголовку "Освіта: основні зміни"?'
   options:
-  - text: Позначення прямої мови
-    correct: false
-  - text: Структурування інформації — тема та пояснення
-    correct: true
-  - text: Виділення емоційного акценту
-    correct: false
-  - text: Граматична помилка
-    correct: false
+  - '{''text'': ''Позначення прямої мови'', ''correct'': False}'
+  - '{''text'': ''Структурування інформації — тема та пояснення'', ''correct'': True}'
+  - '{''text'': ''Виділення емоційного акценту'', ''correct'': False}'
+  - '{''text'': ''Граматична помилка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -762,14 +865,10 @@ items:
   title: Граматика новинних заголовків
   question: Який принцип лежить в основі структури лід-абзацу?
   options:
-  - text: Хронологічний виклад
-    correct: false
-  - text: Принцип 5W+H — хто, що, коли, де, чому, як
-    correct: true
-  - text: Від часткового до загального
-    correct: false
-  - text: Емоційний вплив
-    correct: false
+  - '{''text'': ''Хронологічний виклад'', ''correct'': False}'
+  - '{''text'': ''Принцип 5W+H — хто, що, коли, де, чому, як'', ''correct'': True}'
+  - '{''text'': ''Від часткового до загального'', ''correct'': False}'
+  - '{''text'': ''Емоційний вплив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -780,14 +879,10 @@ items:
   title: Граматика новинних заголовків
   question: Що означає принцип "перевернутої піраміди" в журналістиці?
   options:
-  - text: Найважливіше — в кінці тексту
-    correct: false
-  - text: Найважливіше — на початку тексту
-    correct: true
-  - text: Рівномірний розподіл інформації
-    correct: false
-  - text: Хронологічний порядок
-    correct: false
+  - '{''text'': ''Найважливіше — в кінці тексту'', ''correct'': False}'
+  - '{''text'': ''Найважливіше — на початку тексту'', ''correct'': True}'
+  - '{''text'': ''Рівномірний розподіл інформації'', ''correct'': False}'
+  - '{''text'': ''Хронологічний порядок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -798,14 +893,10 @@ items:
   title: Граматика новинних заголовків
   question: Яка конструкція атрибуції є правильною?
   options:
-  - text: За словами міністра, реформа необхідна
-    correct: true
-  - text: Міністр за словами, реформа необхідна
-    correct: false
-  - text: Реформа за словами міністра необхідна
-    correct: false
-  - text: Словами міністра, реформа необхідна
-    correct: false
+  - '{''text'': ''За словами міністра, реформа необхідна'', ''correct'': True}'
+  - '{''text'': ''Міністр за словами, реформа необхідна'', ''correct'': False}'
+  - '{''text'': ''Реформа за словами міністра необхідна'', ''correct'': False}'
+  - '{''text'': ''Словами міністра, реформа необхідна'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -816,14 +907,10 @@ items:
   title: Граматика новинних заголовків
   question: Яке дієслово атрибуції є найбільш нейтральним?
   options:
-  - text: Визнав
-    correct: false
-  - text: Зазначив
-    correct: true
-  - text: Зізнався
-    correct: false
-  - text: Стверджував
-    correct: false
+  - '{''text'': ''Визнав'', ''correct'': False}'
+  - '{''text'': ''Зазначив'', ''correct'': True}'
+  - '{''text'': ''Зізнався'', ''correct'': False}'
+  - '{''text'': ''Стверджував'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -834,14 +921,10 @@ items:
   title: Граматика новинних заголовків
   question: Що таке маркер упередженості в медіатексті?
   options:
-  - text: Цитата експерта
-    correct: false
-  - text: Статистичні дані
-    correct: false
-  - text: Мовний засіб, що виражає приховану оцінку
-    correct: true
-  - text: Посилання на джерело
-    correct: false
+  - '{''text'': ''Цитата експерта'', ''correct'': False}'
+  - '{''text'': ''Статистичні дані'', ''correct'': False}'
+  - '{''text'': ''Мовний засіб, що виражає приховану оцінку'', ''correct'': True}'
+  - '{''text'': ''Посилання на джерело'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +935,10 @@ items:
   title: Граматика новинних заголовків
   question: Яке слово є маркером позитивної оцінки?
   options:
-  - text: Скандальний
-    correct: false
-  - text: Так званий
-    correct: false
-  - text: Історичний
-    correct: true
-  - text: Суперечливий
-    correct: false
+  - '{''text'': ''Скандальний'', ''correct'': False}'
+  - '{''text'': ''Так званий'', ''correct'': False}'
+  - '{''text'': ''Історичний'', ''correct'': True}'
+  - '{''text'': ''Суперечливий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -870,14 +949,10 @@ items:
   title: Граматика новинних заголовків
   question: Яке слово є маркером негативної оцінки?
   options:
-  - text: Безпрецедентний
-    correct: false
-  - text: Реформатор
-    correct: false
-  - text: Буцімто
-    correct: true
-  - text: Довгоочікуваний
-    correct: false
+  - '{''text'': ''Безпрецедентний'', ''correct'': False}'
+  - '{''text'': ''Реформатор'', ''correct'': False}'
+  - '{''text'': ''Буцімто'', ''correct'': True}'
+  - '{''text'': ''Довгоочікуваний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +963,10 @@ items:
   title: Граматика новинних заголовків
   question: Який жанр журналістики має найбільшу нейтральність?
   options:
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: false
-  - text: Новина
-    correct: true
-  - text: Репортаж
-    correct: false
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
+  - '{''text'': ''Новина'', ''correct'': True}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -906,14 +977,10 @@ items:
   title: Граматика новинних заголовків
   question: Що характеризує репортаж на відміну від новини?
   options:
-  - text: Більша нейтральність
-    correct: false
-  - text: Наочність, деталі, емоції
-    correct: true
-  - text: Відсутність цитат
-    correct: false
-  - text: Коротший обсяг
-    correct: false
+  - '{''text'': ''Більша нейтральність'', ''correct'': False}'
+  - '{''text'': ''Наочність, деталі, емоції'', ''correct'': True}'
+  - '{''text'': ''Відсутність цитат'', ''correct'': False}'
+  - '{''text'': ''Коротший обсяг'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +991,11 @@ items:
   title: Граматика новинних заголовків
   question: Що означає конструкція "як повідомляє прес-служба"?
   options:
-  - text: Пряма цитата
-    correct: false
-  - text: Інституційна атрибуція — джерелом є організація
-    correct: true
-  - text: Особиста думка автора
-    correct: false
-  - text: Непідтверджена інформація
-    correct: false
+  - '{''text'': ''Пряма цитата'', ''correct'': False}'
+  - '{''text'': ''Інституційна атрибуція — джерелом є організація'', ''correct'':
+    True}'
+  - '{''text'': ''Особиста думка автора'', ''correct'': False}'
+  - '{''text'': ''Непідтверджена інформація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -942,14 +1006,11 @@ items:
   title: Граматика новинних заголовків
   question: Яка мовна особливість характерна для прес-релізу?
   options:
-  - text: Критичний тон
-    correct: false
-  - text: Представлення інформації вигідно для організації
-    correct: true
-  - text: Нейтральна подача фактів
-    correct: false
-  - text: Різні точки зору
-    correct: false
+  - '{''text'': ''Критичний тон'', ''correct'': False}'
+  - '{''text'': ''Представлення інформації вигідно для організації'', ''correct'':
+    True}'
+  - '{''text'': ''Нейтральна подача фактів'', ''correct'': False}'
+  - '{''text'': ''Різні точки зору'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -960,14 +1021,11 @@ items:
   title: Граматика новинних заголовків
   question: Що означає "правило двох джерел" у журналістиці?
   options:
-  - text: Новина має бути коротшою за два абзаци
-    correct: false
-  - text: Факт повинен бути підтверджений двома незалежними джерелами
-    correct: true
-  - text: Потрібно цитувати двох експертів
-    correct: false
-  - text: Новина має бути в двох версіях
-    correct: false
+  - '{''text'': ''Новина має бути коротшою за два абзаци'', ''correct'': False}'
+  - '{''text'': ''Факт повинен бути підтверджений двома незалежними джерелами'', ''correct'':
+    True}'
+  - '{''text'': ''Потрібно цитувати двох експертів'', ''correct'': False}'
+  - '{''text'': ''Новина має бути в двох версіях'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +1036,10 @@ items:
   title: Граматика новинних заголовків
   question: Який заголовок є прикладом негативної упередженості?
   options:
-  - text: Парламент ухвалив закон
-    correct: false
-  - text: Скандальний закон ухвалено всупереч протестам
-    correct: true
-  - text: Закон про освіту набув чинності
-    correct: false
-  - text: Депутати проголосували за законопроєкт
-    correct: false
+  - '{''text'': ''Парламент ухвалив закон'', ''correct'': False}'
+  - '{''text'': ''Скандальний закон ухвалено всупереч протестам'', ''correct'': True}'
+  - '{''text'': ''Закон про освіту набув чинності'', ''correct'': False}'
+  - '{''text'': ''Депутати проголосували за законопроєкт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -996,14 +1050,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр характеризується нейтральною подачею фактів без оцінок?
   options:
-  - text: Коментар
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Новина
-    correct: true
-  - text: Редакційна стаття
-    correct: false
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Новина'', ''correct'': True}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1014,14 +1064,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр передбачає відкриту оцінку та позицію автора?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: true
-  - text: Інтерв'ю
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': True}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1032,14 +1078,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр використовує формат "питання-відповідь"?
   options:
-  - text: Репортаж
-    correct: false
-  - text: Новина
-    correct: false
-  - text: Коментар
-    correct: false
-  - text: Інтерв'ю
-    correct: true
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': "Інтерв''ю", ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1050,14 +1092,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр показує подію зсередини з деталями та емоціями?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: true
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1068,14 +1106,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр виражає офіційну позицію видання?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: true
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1086,14 +1120,10 @@ items:
   title: Визначення жанрів журналістики
   question: До якого жанру належить текст з конструкцією "Ми вважаємо, що..."?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Інтерв'ю
-    correct: false
-  - text: Редакційна стаття
-    correct: true
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1104,14 +1134,10 @@ items:
   title: Визначення жанрів журналістики
   question: До якого жанру належить текст "Ми на місці події. Тут панує напруга..."?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: true
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1122,14 +1148,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр зазвичай не підписується іменем автора?
   options:
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: true
-  - text: Інтерв'ю
-    correct: false
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': True}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1140,14 +1162,10 @@ items:
   title: Визначення жанрів журналістики
   question: У якому жанрі найчастіше використовують риторичні питання?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: true
-  - text: Інтерв'ю
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': True}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1158,14 +1176,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр вимагає мінімум двох незалежних джерел?
   options:
-  - text: Новина
-    correct: true
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: false
-  - text: Репортаж
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1176,14 +1190,10 @@ items:
   title: Визначення жанрів журналістики
   question: До якого жанру належить текст "– Пане міністре, як ви оцінюєте ситуацію?"?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Інтерв'ю
-    correct: true
-  - text: Коментар
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': "Інтерв''ю", ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1194,14 +1204,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр зазвичай має найбільший обсяг?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: true
-  - text: Коментар
-    correct: false
-  - text: Заголовок
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Заголовок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1212,14 +1218,10 @@ items:
   title: Визначення жанрів журналістики
   question: До якого жанру належить текст "Це рішення може мати серйозні наслідки..."?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: true
-  - text: Інтерв'ю
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': True}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1230,14 +1232,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр використовує конструкцію "За нашими спостереженнями"?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: true
-  - text: Коментар
-    correct: false
-  - text: Редакційна стаття
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': True}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1248,14 +1246,10 @@ items:
   title: Визначення жанрів журналістики
   question: Який жанр найчастіше використовує пряму мову?
   options:
-  - text: Новина
-    correct: false
-  - text: Коментар
-    correct: false
-  - text: Інтерв'ю
-    correct: true
-  - text: Редакційна стаття
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': False}'
+  - '{''text'': "Інтерв''ю", ''correct'': True}'
+  - '{''text'': ''Редакційна стаття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1266,14 +1260,10 @@ items:
   title: Визначення жанрів журналістики
   question: До якого жанру належить текст "Чому влада ігнорує голос народу?"?
   options:
-  - text: Новина
-    correct: false
-  - text: Репортаж
-    correct: false
-  - text: Коментар
-    correct: true
-  - text: Інтерв'ю
-    correct: false
+  - '{''text'': ''Новина'', ''correct'': False}'
+  - '{''text'': ''Репортаж'', ''correct'': False}'
+  - '{''text'': ''Коментар'', ''correct'': True}'
+  - '{''text'': "Інтерв''ю", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

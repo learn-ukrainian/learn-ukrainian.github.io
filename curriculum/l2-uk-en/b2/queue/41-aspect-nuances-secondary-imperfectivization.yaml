@@ -1,15 +1,18 @@
 module: 41-aspect-nuances-secondary-imperfectivization
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/41-aspect-nuances-secondary-imperfectivization.md
-generated: '2025-12-30T00:05:40.531167'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.696779'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 64
+  cloze: 1
   unjumble: 32
   quiz: 10
   true-false: 16
-item_count: 138
+total_items: 139
+item_count: 139
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте видові помилки
@@ -912,6 +915,140 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'Марина працює редактором у видавництві. Вона щодня {переглядає|перегляне|переглянула|переглядає}
+    нові рукописи та {виправляє|виправить|виправила|виправляє} помилки. Іноді їй доводиться
+    {переписувати|переписати|переписала|переписувати} цілі абзаци.
+
+
+    Її колега Андрій {записує|запише|записав|записує} всі зауваження в електронний
+    журнал. Він {надає|надасть|надав|надає} звіти керівництву щотижня. Разом вони
+    {обговорюють|обговорять|обговорили|обговорюють} складні випадки.
+
+
+    Редакторська робота вимагає уваги до деталей. Марина {перевіряє|перевірить|перевірила|перевіряє}
+    кожне речення і {пояснює|пояснить|пояснила|пояснює} авторам необхідні зміни. Вона
+    {допомагає|допоможе|допомогла|допомагає} молодим письменникам покращити їхні тексти.
+
+
+    Робочий день у видавництві {починається|почнеться|почався|починається} о дев''ятій
+    ранку. Марина {приходить|прийде|прийшла|приходить} завжди вчасно і {готує|приготує|приготувала|готує}
+    план на день.
+
+
+    Увечері Марина {повертається|повернеться|повернулася|повертається} додому та {відпочиває|відпочине|відпочила|відпочиває}.
+    Вона {читає|прочитає|прочитала|читає} нові книги і {засинає|засне|заснула|засинає}
+    пізно ввечері.
+
+    '
+  blanks:
+  - answer: переглядає
+    options:
+    - переглядає
+    - перегляне
+    - переглянула
+  - answer: виправляє
+    options:
+    - виправляє
+    - виправить
+    - виправила
+  - answer: переписувати
+    options:
+    - переписувати
+    - переписати
+    - переписала
+  - answer: записує
+    options:
+    - записує
+    - запише
+    - записав
+  - answer: надає
+    options:
+    - надає
+    - надасть
+    - надав
+  - answer: обговорюють
+    options:
+    - обговорюють
+    - обговорять
+    - обговорили
+  - answer: перевіряє
+    options:
+    - перевіряє
+    - перевірить
+    - перевірила
+  - answer: пояснює
+    options:
+    - пояснює
+    - пояснить
+    - пояснила
+  - answer: допомагає
+    options:
+    - допомагає
+    - допоможе
+    - допомогла
+  - answer: починається
+    options:
+    - починається
+    - почнеться
+    - почався
+  - answer: приходить
+    options:
+    - приходить
+    - прийде
+    - прийшла
+  - answer: готує
+    options:
+    - готує
+    - приготує
+    - приготувала
+  - answer: повертається
+    options:
+    - повертається
+    - повернеться
+    - повернулася
+  - answer: відпочиває
+    options:
+    - відпочиває
+    - відпочине
+    - відпочила
+  - answer: читає
+    options:
+    - читає
+    - прочитає
+    - прочитала
+  - answer: засинає
+    options:
+    - засинає
+    - засне
+    - заснула
+  blank_count: 16
+  complete_passage: 'Марина працює редактором у видавництві. Вона щодня переглядає
+    нові рукописи та виправляє помилки. Іноді їй доводиться переписувати цілі абзаци.
+
+
+    Її колега Андрій записує всі зауваження в електронний журнал. Він надає звіти
+    керівництву щотижня. Разом вони обговорюють складні випадки.
+
+
+    Редакторська робота вимагає уваги до деталей. Марина перевіряє кожне речення і
+    пояснює авторам необхідні зміни. Вона допомагає молодим письменникам покращити
+    їхні тексти.
+
+
+    Робочий день у видавництві починається о дев''ятій ранку. Марина приходить завжди
+    вчасно і готує план на день.
+
+
+    Увечері Марина повертається додому та відпочиває. Вона читає нові книги і засинає
+    пізно ввечері.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -1172,14 +1309,11 @@ items:
   title: Розуміння вторинної імперфективації
   question: Що таке вторинна імперфективація?
   options:
-  - text: Утворення доконаного дієслова від недоконаного
-    correct: false
-  - text: Утворення недоконаного дієслова від доконаного з префіксом
-    correct: true
-  - text: Додавання префікса до дієслова
-    correct: false
-  - text: Зміна значення дієслова
-    correct: false
+  - '{''text'': ''Утворення доконаного дієслова від недоконаного'', ''correct'': False}'
+  - '{''text'': ''Утворення недоконаного дієслова від доконаного з префіксом'', ''correct'':
+    True}'
+  - '{''text'': ''Додавання префікса до дієслова'', ''correct'': False}'
+  - '{''text'': ''Зміна значення дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1190,14 +1324,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Який суфікс є найпродуктивнішим для вторинної імперфективації?
   options:
-  - text: -ва-
-    correct: false
-  - text: -а-/-я-
-    correct: false
-  - text: -ува-/-юва-
-    correct: true
-  - text: -и-
-    correct: false
+  - '{''text'': ''-ва-'', ''correct'': False}'
+  - '{''text'': ''-а-/-я-'', ''correct'': False}'
+  - '{''text'': ''-ува-/-юва-'', ''correct'': True}'
+  - '{''text'': ''-и-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1208,14 +1338,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Яке значення виражає речення "Він щодня перечитував цю книгу"?
   options:
-  - text: Одноразова дія
-    correct: false
-  - text: Ітеративне (повторювана дія)
-    correct: true
-  - text: Завершена дія
-    correct: false
-  - text: Майбутня дія
-    correct: false
+  - '{''text'': ''Одноразова дія'', ''correct'': False}'
+  - '{''text'': ''Ітеративне (повторювана дія)'', ''correct'': True}'
+  - '{''text'': ''Завершена дія'', ''correct'': False}'
+  - '{''text'': ''Майбутня дія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1226,14 +1352,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Від якого дієслова утворено "допомагати"?
   options:
-  - text: допомогти
-    correct: true
-  - text: помагати
-    correct: false
-  - text: могти
-    correct: false
-  - text: помогти
-    correct: false
+  - '{''text'': ''допомогти'', ''correct'': True}'
+  - '{''text'': ''помагати'', ''correct'': False}'
+  - '{''text'': ''могти'', ''correct'': False}'
+  - '{''text'': ''помогти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1244,14 +1366,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Чому не можна сказати "Я щодня перечитав цю книгу"?
   options:
-  - text: Це неправильна форма
-    correct: false
-  - text: Доконаний вид несумісний з регулярністю
-    correct: true
-  - text: Слово "щодня" неправильне
-    correct: false
-  - text: Потрібен майбутній час
-    correct: false
+  - '{''text'': ''Це неправильна форма'', ''correct'': False}'
+  - '{''text'': ''Доконаний вид несумісний з регулярністю'', ''correct'': True}'
+  - '{''text'': ''Слово "щодня" неправильне'', ''correct'': False}'
+  - '{''text'': ''Потрібен майбутній час'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1262,14 +1380,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Яка видова пара правильна?
   options:
-  - text: переписати — переписувати
-    correct: true
-  - text: писати — переписувати
-    correct: false
-  - text: переписувати — написати
-    correct: false
-  - text: писати — писувати
-    correct: false
+  - '{''text'': ''переписати — переписувати'', ''correct'': True}'
+  - '{''text'': ''писати — переписувати'', ''correct'': False}'
+  - '{''text'': ''переписувати — написати'', ''correct'': False}'
+  - '{''text'': ''писати — писувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1280,14 +1394,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Який суфікс використовується після голосної основи?
   options:
-  - text: -ува-
-    correct: false
-  - text: -ва-
-    correct: true
-  - text: -а-
-    correct: false
-  - text: -юва-
-    correct: false
+  - '{''text'': ''-ува-'', ''correct'': False}'
+  - '{''text'': ''-ва-'', ''correct'': True}'
+  - '{''text'': ''-а-'', ''correct'': False}'
+  - '{''text'': ''-юва-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1298,14 +1408,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Що означає "дуративне значення"?
   options:
-  - text: Повторювана дія
-    correct: false
-  - text: Тривалий процес
-    correct: true
-  - text: Завершена дія
-    correct: false
-  - text: Майбутня дія
-    correct: false
+  - '{''text'': ''Повторювана дія'', ''correct'': False}'
+  - '{''text'': ''Тривалий процес'', ''correct'': True}'
+  - '{''text'': ''Завершена дія'', ''correct'': False}'
+  - '{''text'': ''Майбутня дія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1316,14 +1422,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Яка форма правильна для опису звички?
   options:
-  - text: Він відвідав бабусю щотижня
-    correct: false
-  - text: Він відвідує бабусю щотижня
-    correct: true
-  - text: Він відвідить бабусю щотижня
-    correct: false
-  - text: Він відвідати бабусю щотижня
-    correct: false
+  - '{''text'': ''Він відвідав бабусю щотижня'', ''correct'': False}'
+  - '{''text'': ''Він відвідує бабусю щотижня'', ''correct'': True}'
+  - '{''text'': ''Він відвідить бабусю щотижня'', ''correct'': False}'
+  - '{''text'': ''Він відвідати бабусю щотижня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1334,14 +1436,10 @@ items:
   title: Розуміння вторинної імперфективації
   question: Яке чергування відбувається у парі "виробити — виробляти"?
   options:
-  - text: б → бл
-    correct: true
-  - text: в → вл
-    correct: false
-  - text: п → пл
-    correct: false
-  - text: ф → фл
-    correct: false
+  - '{''text'': ''б → бл'', ''correct'': True}'
+  - '{''text'': ''в → вл'', ''correct'': False}'
+  - '{''text'': ''п → пл'', ''correct'': False}'
+  - '{''text'': ''ф → фл'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

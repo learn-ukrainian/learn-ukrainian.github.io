@@ -1,16 +1,19 @@
 module: 41-checkpoint-complex-sentences-2
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/41-checkpoint-complex-sentences-2.md
-generated: '2025-12-29T00:22:01.626623'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:28.398513'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 32
   translate: 8
   true-false: 12
-item_count: 82
+total_items: 83
+item_count: 83
+sample_percent: null
 items:
 - activity: error-correction
   title: Комплексний тест
@@ -284,6 +287,104 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Комплексний текст
+  passage_template: 'Минулого тижня я мав важливу співбесіду. {Хоча|Тому що|Коли|Щоб}
+    я нервував, вирішив бути впевненим у собі. {Коли|Поки|Хоча|Тому що} я прийшов
+    до офісу, секретарка запитала, {чи|що|щоб|як} я маю призначений час. Я відповів,
+    {що|чи|щоб|де} маю зустріч о десятій.
+
+
+    Менеджер запросив мене в кабінет. {Поки|Коли|Після того як|Тому що} ми розмовляли,
+    він робив нотатки. Він запитав, {де|чи|що|щоб} я працював раніше. Я пояснив, {що|чи|щоб|де}
+    шукаю нові можливості, {тому що|тому|хоча|поки} хочу розвиватися.
+
+
+    {Попри|Хоча|Тому що|Коли} втому, я відповідав впевнено. {Після того як|Поки|Хоча|Тому
+    що} співбесіда закінчилась, менеджер сказав, {що|чи|щоб|де} зателефонує наступного
+    тижня. Він порадив, {щоб|що|чи|як} я не хвилювався.
+
+    '
+  blanks:
+  - answer: Щоб
+    options:
+    - Хоча
+    - Тому що
+    - Коли
+  - answer: Тому що
+    options:
+    - Коли
+    - Поки
+    - Хоча
+  - answer: як
+    options:
+    - чи
+    - що
+    - щоб
+  - answer: де
+    options:
+    - що
+    - чи
+    - щоб
+  - answer: Тому що
+    options:
+    - Поки
+    - Коли
+    - Після того як
+  - answer: щоб
+    options:
+    - де
+    - чи
+    - що
+  - answer: де
+    options:
+    - що
+    - чи
+    - щоб
+  - answer: поки
+    options:
+    - тому що
+    - тому
+    - хоча
+  - answer: Коли
+    options:
+    - Попри
+    - Хоча
+    - Тому що
+  - answer: Тому що
+    options:
+    - Після того як
+    - Поки
+    - Хоча
+  - answer: де
+    options:
+    - що
+    - чи
+    - щоб
+  - answer: як
+    options:
+    - щоб
+    - що
+    - чи
+  blank_count: 12
+  complete_passage: 'Минулого тижня я мав важливу співбесіду. Щоб я нервував, вирішив
+    бути впевненим у собі. Тому що я прийшов до офісу, секретарка запитала, як я маю
+    призначений час. Я відповів, де маю зустріч о десятій.
+
+
+    Менеджер запросив мене в кабінет. Тому що ми розмовляли, він робив нотатки. Він
+    запитав, щоб я працював раніше. Я пояснив, де шукаю нові можливості, поки хочу
+    розвиватися.
+
+
+    Коли втому, я відповідав впевнено. Тому що співбесіда закінчилась, менеджер сказав,
+    де зателефонує наступного тижня. Він порадив, як я не хвилювався.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Комплексний тест
   jumbled_words: []
@@ -354,14 +455,10 @@ items:
   question: Який сполучник найчастіше використовується для вираження поступки та протиставлення
     в українській мові?
   options:
-  - text: хоча
-    correct: true
-  - text: тому що
-    correct: false
-  - text: якщо
-    correct: false
-  - text: коли
-    correct: false
+  - '{''text'': ''хоча'', ''correct'': True}'
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''якщо'', ''correct'': False}'
+  - '{''text'': ''коли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -373,14 +470,10 @@ items:
   question: Який вираз використовується як формальний та офіційний синонім сполучника
     «хоча» в діловому стилі мовлення?
   options:
-  - text: попри
-    correct: false
-  - text: незважаючи на те що
-    correct: true
-  - text: проте
-    correct: false
-  - text: бо
-    correct: false
+  - '{''text'': ''попри'', ''correct'': False}'
+  - '{''text'': ''незважаючи на те що'', ''correct'': True}'
+  - '{''text'': ''проте'', ''correct'': False}'
+  - '{''text'': ''бо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -392,14 +485,10 @@ items:
   question: Як правильно використати «попри» в реченні для вираження поступки у формальному
     стилі мовлення?
   options:
-  - text: Попри дощ, ми пішли гуляти.
-    correct: true
-  - text: Попри йшов дощ, ми пішли.
-    correct: false
-  - text: Хоча попри дощ, пішли.
-    correct: false
-  - text: Попри що дощ, пішли.
-    correct: false
+  - '{''text'': ''Попри дощ, ми пішли гуляти.'', ''correct'': True}'
+  - '{''text'': ''Попри йшов дощ, ми пішли.'', ''correct'': False}'
+  - '{''text'': ''Хоча попри дощ, пішли.'', ''correct'': False}'
+  - '{''text'': ''Попри що дощ, пішли.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -411,14 +500,10 @@ items:
   question: Яке з наведених нижче речень правильно виражає допустове значення з протиставленням
     та сполучником?
   options:
-  - text: Було холодно, проте ми пішли гуляти.
-    correct: true
-  - text: Було холодно, хоча пішли гуляти.
-    correct: false
-  - text: Попри холодно, ми пішли.
-    correct: false
-  - text: Незважаючи холодно, пішли.
-    correct: false
+  - '{''text'': ''Було холодно, проте ми пішли гуляти.'', ''correct'': True}'
+  - '{''text'': ''Було холодно, хоча пішли гуляти.'', ''correct'': False}'
+  - '{''text'': ''Попри холодно, ми пішли.'', ''correct'': False}'
+  - '{''text'': ''Незважаючи холодно, пішли.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -430,14 +515,11 @@ items:
   question: Як правильно поєднати допустовий сполучник з причиновим у складному реченні
     для вираження складної логіки?
   options:
-  - text: Хоча він хворів, пішов на роботу, тому що мав важливу зустріч.
-    correct: true
-  - text: Хоча він хворів, тому що пішов на роботу.
-    correct: false
-  - text: Тому що хворів, хоча пішов.
-    correct: false
-  - text: Хоча тому що хворів, пішов.
-    correct: false
+  - '{''text'': ''Хоча він хворів, пішов на роботу, тому що мав важливу зустріч.'',
+    ''correct'': True}'
+  - '{''text'': ''Хоча він хворів, тому що пішов на роботу.'', ''correct'': False}'
+  - '{''text'': ''Тому що хворів, хоча пішов.'', ''correct'': False}'
+  - '{''text'': ''Хоча тому що хворів, пішов.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -449,14 +531,10 @@ items:
   question: Яке слово використовується як прийменник з іменником для вираження поступки
     та подолання перешкод?
   options:
-  - text: попри
-    correct: true
-  - text: хоча
-    correct: false
-  - text: проте
-    correct: false
-  - text: незважаючи на те що
-    correct: false
+  - '{''text'': ''попри'', ''correct'': True}'
+  - '{''text'': ''хоча'', ''correct'': False}'
+  - '{''text'': ''проте'', ''correct'': False}'
+  - '{''text'': ''незважаючи на те що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -468,14 +546,10 @@ items:
   question: Як правильно виразити підсилене допустове значення українською мовою в
     офіційному стилі мовлення?
   options:
-  - text: хоча
-    correct: false
-  - text: хоча й
-    correct: true
-  - text: попри
-    correct: false
-  - text: проте
-    correct: false
+  - '{''text'': ''хоча'', ''correct'': False}'
+  - '{''text'': ''хоча й'', ''correct'': True}'
+  - '{''text'': ''попри'', ''correct'': False}'
+  - '{''text'': ''проте'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -487,14 +561,11 @@ items:
   question: Яке речення правильно поєднує допустовий сполучник з часовим для вираження
     складної думки?
   options:
-  - text: Хоча він втомився, продовжував працювати, поки не закінчив проєкт.
-    correct: true
-  - text: Хоча поки він втомився, закінчив.
-    correct: false
-  - text: Поки хоча втомився, продовжував.
-    correct: false
-  - text: Втомився хоча поки, закінчив.
-    correct: false
+  - '{''text'': ''Хоча він втомився, продовжував працювати, поки не закінчив проєкт.'',
+    ''correct'': True}'
+  - '{''text'': ''Хоча поки він втомився, закінчив.'', ''correct'': False}'
+  - '{''text'': ''Поки хоча втомився, продовжував.'', ''correct'': False}'
+  - '{''text'': ''Втомився хоча поки, закінчив.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -506,14 +577,10 @@ items:
   question: Який сполучник вводить причину після наслідку в українській мові для пояснення
     дії в реченні?
   options:
-  - text: тому що
-    correct: true
-  - text: тому
-    correct: false
-  - text: отже
-    correct: false
-  - text: оскільки
-    correct: false
+  - '{''text'': ''тому що'', ''correct'': True}'
+  - '{''text'': ''тому'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''оскільки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -525,14 +592,10 @@ items:
   question: Який сполучник використовується для вираження наслідку після причини в
     українській мові у складних реченнях?
   options:
-  - text: тому що
-    correct: false
-  - text: тому
-    correct: true
-  - text: бо
-    correct: false
-  - text: оскільки
-    correct: false
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''тому'', ''correct'': True}'
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''оскільки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -544,14 +607,10 @@ items:
   question: Який сполучник зазвичай ставиться на початку речення з причиною перед
     наслідком у стилі офіційного мовлення?
   options:
-  - text: тому що
-    correct: false
-  - text: бо
-    correct: false
-  - text: оскільки
-    correct: true
-  - text: тому
-    correct: false
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''оскільки'', ''correct'': True}'
+  - '{''text'': ''тому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -563,14 +622,10 @@ items:
   question: Як правильно виразити причинно-наслідковий зв'язок з «тому що» в українській
     мові правильно?
   options:
-  - text: Він запізнився, тому що автобус не приїхав.
-    correct: true
-  - text: Тому що він запізнився, автобус не приїхав.
-    correct: false
-  - text: Він запізнився тому, що автобус.
-    correct: false
-  - text: Він тому що запізнився, автобус.
-    correct: false
+  - '{''text'': ''Він запізнився, тому що автобус не приїхав.'', ''correct'': True}'
+  - '{''text'': ''Тому що він запізнився, автобус не приїхав.'', ''correct'': False}'
+  - '{''text'': ''Він запізнився тому, що автобус.'', ''correct'': False}'
+  - '{''text'': ''Він тому що запізнився, автобус.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -582,14 +637,11 @@ items:
   question: Яка різниця між «бо» і «тому що» в українській мові з точки зору стилістики
     мовлення?
   options:
-  - text: «Бо» — розмовний стиль, «тому що» — нейтральний.
-    correct: true
-  - text: «Бо» — офіційний, «тому що» — розмовний.
-    correct: false
-  - text: Немає різниці в значенні.
-    correct: false
-  - text: «Бо» завжди на початку речення.
-    correct: false
+  - '{''text'': ''«Бо» — розмовний стиль, «тому що» — нейтральний.'', ''correct'':
+    True}'
+  - '{''text'': ''«Бо» — офіційний, «тому що» — розмовний.'', ''correct'': False}'
+  - '{''text'': ''Немає різниці в значенні.'', ''correct'': False}'
+  - '{''text'': ''«Бо» завжди на початку речення.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -601,14 +653,10 @@ items:
   question: Який сполучник використовується для вираження формального причинового
     зв'язку на початку академічного речення?
   options:
-  - text: бо
-    correct: false
-  - text: тому що
-    correct: false
-  - text: через те що
-    correct: true
-  - text: тому
-    correct: false
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''через те що'', ''correct'': True}'
+  - '{''text'': ''тому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -620,14 +668,10 @@ items:
   question: Як правильно виразити наслідок з «отже» в українській мові для підсумовування
     думки в реченні?
   options:
-  - text: Він захворів, отже не прийшов на роботу.
-    correct: true
-  - text: Отже він захворів, не прийшов.
-    correct: false
-  - text: Він отже захворів не прийшов.
-    correct: false
-  - text: Захворів отже не прийшов він.
-    correct: false
+  - '{''text'': ''Він захворів, отже не прийшов на роботу.'', ''correct'': True}'
+  - '{''text'': ''Отже він захворів, не прийшов.'', ''correct'': False}'
+  - '{''text'': ''Він отже захворів не прийшов.'', ''correct'': False}'
+  - '{''text'': ''Захворів отже не прийшов він.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -639,14 +683,11 @@ items:
   question: Яке речення правильно поєднує причиновий і наслідковий сполучники в одному
     складному висловлюванні?
   options:
-  - text: Оскільки йшов дощ, ми залишились вдома, тому не змогли зустрітись.
-    correct: true
-  - text: Тому що оскільки дощ, залишились.
-    correct: false
-  - text: Оскільки тому дощ йшов, залишились.
-    correct: false
-  - text: Йшов дощ оскільки тому залишились.
-    correct: false
+  - '{''text'': ''Оскільки йшов дощ, ми залишились вдома, тому не змогли зустрітись.'',
+    ''correct'': True}'
+  - '{''text'': ''Тому що оскільки дощ, залишились.'', ''correct'': False}'
+  - '{''text'': ''Оскільки тому дощ йшов, залишились.'', ''correct'': False}'
+  - '{''text'': ''Йшов дощ оскільки тому залишились.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -658,14 +699,10 @@ items:
   question: Який сполучник використовується для вираження одночасності двох дій в
     українській мові в часових реченнях?
   options:
-  - text: коли
-    correct: false
-  - text: поки
-    correct: true
-  - text: після того як
-    correct: false
-  - text: перш ніж
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''поки'', ''correct'': True}'
+  - '{''text'': ''після того як'', ''correct'': False}'
+  - '{''text'': ''перш ніж'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -677,14 +714,10 @@ items:
   question: Який сполучник виражає негайну і миттєву послідовність дій в українській
     мові для часових речень?
   options:
-  - text: коли
-    correct: false
-  - text: поки
-    correct: false
-  - text: як тільки
-    correct: true
-  - text: до того як
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''поки'', ''correct'': False}'
+  - '{''text'': ''як тільки'', ''correct'': True}'
+  - '{''text'': ''до того як'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -696,14 +729,10 @@ items:
   question: Який сполучник використовується для дії, що передує іншій дії, тобто означає
     «перед» у часових реченнях?
   options:
-  - text: після того як
-    correct: false
-  - text: перш ніж
-    correct: true
-  - text: поки
-    correct: false
-  - text: як тільки
-    correct: false
+  - '{''text'': ''після того як'', ''correct'': False}'
+  - '{''text'': ''перш ніж'', ''correct'': True}'
+  - '{''text'': ''поки'', ''correct'': False}'
+  - '{''text'': ''як тільки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -715,14 +744,10 @@ items:
   question: Як правильно виразити послідовність дій з «після того як» в українській
     мові в реченні?
   options:
-  - text: Після того як ми поснідали, вийшли з дому.
-    correct: true
-  - text: Ми поснідали після того як вийшли.
-    correct: false
-  - text: Після ми того як поснідали, вийшли.
-    correct: false
-  - text: Поснідали після того як ми вийшли.
-    correct: false
+  - '{''text'': ''Після того як ми поснідали, вийшли з дому.'', ''correct'': True}'
+  - '{''text'': ''Ми поснідали після того як вийшли.'', ''correct'': False}'
+  - '{''text'': ''Після ми того як поснідали, вийшли.'', ''correct'': False}'
+  - '{''text'': ''Поснідали після того як ми вийшли.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -734,14 +759,10 @@ items:
   question: Яке з наведених речень правильно використовує «поки» для вираження одночасності
     двох паралельних дій?
   options:
-  - text: Поки вона готувала, діти грались у кімнаті.
-    correct: true
-  - text: Поки вона приготувала, діти пограли.
-    correct: false
-  - text: Готувала поки діти грались вона.
-    correct: false
-  - text: Діти поки грались, вона готувала.
-    correct: false
+  - '{''text'': ''Поки вона готувала, діти грались у кімнаті.'', ''correct'': True}'
+  - '{''text'': ''Поки вона приготувала, діти пограли.'', ''correct'': False}'
+  - '{''text'': ''Готувала поки діти грались вона.'', ''correct'': False}'
+  - '{''text'': ''Діти поки грались, вона готувала.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -753,14 +774,10 @@ items:
   question: Який сполучник використовується для загального часового відношення в українській
     мові як універсальний варіант?
   options:
-  - text: коли
-    correct: true
-  - text: поки
-    correct: false
-  - text: доки
-    correct: false
-  - text: щойно
-    correct: false
+  - '{''text'': ''коли'', ''correct'': True}'
+  - '{''text'': ''поки'', ''correct'': False}'
+  - '{''text'': ''доки'', ''correct'': False}'
+  - '{''text'': ''щойно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -772,14 +789,10 @@ items:
   question: Як правильно виразити «до того як» в українській мові для дії, що передує
     іншій дії в реченні?
   options:
-  - text: До того як почався дощ, ми повернулися додому.
-    correct: true
-  - text: Почався дощ до того як ми повернулися.
-    correct: false
-  - text: До того як ми повернулися, почався дощ.
-    correct: false
-  - text: Ми до того як дощ почався повернулися.
-    correct: false
+  - '{''text'': ''До того як почався дощ, ми повернулися додому.'', ''correct'': True}'
+  - '{''text'': ''Почався дощ до того як ми повернулися.'', ''correct'': False}'
+  - '{''text'': ''До того як ми повернулися, почався дощ.'', ''correct'': False}'
+  - '{''text'': ''Ми до того як дощ почався повернулися.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -791,14 +804,11 @@ items:
   question: Яке речення правильно поєднує кілька часових сполучників у складному висловлюванні
     з послідовністю подій?
   options:
-  - text: Коли він прийшов, поки чекав, зателефонував друг.
-    correct: true
-  - text: Поки коли він прийшов, зателефонував.
-    correct: false
-  - text: Він коли поки прийшов, зателефонував друг.
-    correct: false
-  - text: Зателефонував коли поки він прийшов.
-    correct: false
+  - '{''text'': ''Коли він прийшов, поки чекав, зателефонував друг.'', ''correct'':
+    True}'
+  - '{''text'': ''Поки коли він прийшов, зателефонував.'', ''correct'': False}'
+  - '{''text'': ''Він коли поки прийшов, зателефонував друг.'', ''correct'': False}'
+  - '{''text'': ''Зателефонував коли поки він прийшов.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -810,14 +820,10 @@ items:
   question: Який сполучник вводить непряме твердження в українській мові для переказу
     чужих слів?
   options:
-  - text: що
-    correct: true
-  - text: чи
-    correct: false
-  - text: щоб
-    correct: false
-  - text: який
-    correct: false
+  - '{''text'': ''що'', ''correct'': True}'
+  - '{''text'': ''чи'', ''correct'': False}'
+  - '{''text'': ''щоб'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -829,14 +835,10 @@ items:
   question: Який сполучник використовується для непрямих загальних питань типу «так/ні»
     в українській мові?
   options:
-  - text: що
-    correct: false
-  - text: чи
-    correct: true
-  - text: щоб
-    correct: false
-  - text: коли
-    correct: false
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''чи'', ''correct'': True}'
+  - '{''text'': ''щоб'', ''correct'': False}'
+  - '{''text'': ''коли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -848,14 +850,10 @@ items:
   question: Яка саме граматична конструкція використовується для непрямих наказів
     і прохань в українській мові?
   options:
-  - text: що + теперішній час
-    correct: false
-  - text: чи + майбутній час
-    correct: false
-  - text: щоб + минулий час
-    correct: true
-  - text: який + інфінітив
-    correct: false
+  - '{''text'': ''що + теперішній час'', ''correct'': False}'
+  - '{''text'': ''чи + майбутній час'', ''correct'': False}'
+  - '{''text'': ''щоб + минулий час'', ''correct'': True}'
+  - '{''text'': ''який + інфінітив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -867,14 +865,11 @@ items:
   question: Як змінюються займенники в непрямій мові при передачі чужих слів третьою
     особою в реченні?
   options:
-  - text: «я» змінюється на «він/вона», «ти» на «я», «ми» на «вони»
-    correct: true
-  - text: Займенники не змінюються.
-    correct: false
-  - text: «я» змінюється на «ти», «ти» на «я»
-    correct: false
-  - text: Тільки присвійні змінюються.
-    correct: false
+  - '{''text'': ''«я» змінюється на «він/вона», «ти» на «я», «ми» на «вони»'', ''correct'':
+    True}'
+  - '{''text'': ''Займенники не змінюються.'', ''correct'': False}'
+  - '{''text'': ''«я» змінюється на «ти», «ти» на «я»'', ''correct'': False}'
+  - '{''text'': ''Тільки присвійні змінюються.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -886,14 +881,10 @@ items:
   question: Яким знаком закінчується непряме питання в українській мові на відміну
     від прямого питання?
   options:
-  - text: Знаком питання.
-    correct: false
-  - text: Крапкою.
-    correct: true
-  - text: Знаком оклику.
-    correct: false
-  - text: Двокрапкою.
-    correct: false
+  - '{''text'': ''Знаком питання.'', ''correct'': False}'
+  - '{''text'': ''Крапкою.'', ''correct'': True}'
+  - '{''text'': ''Знаком оклику.'', ''correct'': False}'
+  - '{''text'': ''Двокрапкою.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -905,14 +896,10 @@ items:
   question: Який саме порядок слів використовується в непрямих питаннях в українській
     мові як обов'язковий?
   options:
-  - text: Прямий (підмет + присудок).
-    correct: true
-  - text: Інвертований (присудок + підмет).
-    correct: false
-  - text: Довільний.
-    correct: false
-  - text: Як у прямому питанні.
-    correct: false
+  - '{''text'': ''Прямий (підмет + присудок).'', ''correct'': True}'
+  - '{''text'': ''Інвертований (присудок + підмет).'', ''correct'': False}'
+  - '{''text'': ''Довільний.'', ''correct'': False}'
+  - '{''text'': ''Як у прямому питанні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +911,10 @@ items:
   question: Як правильно передати пряме питання «Де ти працюєш?» у непрямій мові від
     третьої особи?
   options:
-  - text: Він запитав, де я працюю.
-    correct: true
-  - text: Він запитав, чи я працюю.
-    correct: false
-  - text: 'Він запитав: де працюю я?'
-    correct: false
-  - text: Він запитав, де працюю я.
-    correct: false
+  - '{''text'': ''Він запитав, де я працюю.'', ''correct'': True}'
+  - '{''text'': ''Він запитав, чи я працюю.'', ''correct'': False}'
+  - '{''text'': ''Він запитав: де працюю я?'', ''correct'': False}'
+  - '{''text'': ''Він запитав, де працюю я.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -943,14 +926,10 @@ items:
   question: Яке дієслово введення найкраще виражає емоційне настійливе прохання в
     непрямій мові українською?
   options:
-  - text: попросити
-    correct: false
-  - text: сказати
-    correct: false
-  - text: наказати
-    correct: false
-  - text: благати
-    correct: true
+  - '{''text'': ''попросити'', ''correct'': False}'
+  - '{''text'': ''сказати'', ''correct'': False}'
+  - '{''text'': ''наказати'', ''correct'': False}'
+  - '{''text'': ''благати'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -962,14 +941,11 @@ items:
   source_sentence: Although he was tired, he continued working on the important project.
   answer: ''
   options:
-  - text: Хоча він втомився, продовжував працювати над важливим проєктом.
-    correct: true
-  - text: Тому що він втомився, продовжував працювати.
-    correct: false
-  - text: Хоча втомився він, продовжував працювати.
-    correct: false
-  - text: Він хоча втомився, продовжував працювати.
-    correct: false
+  - '{''text'': ''Хоча він втомився, продовжував працювати над важливим проєктом.'',
+    ''correct'': True}'
+  - '{''text'': ''Тому що він втомився, продовжував працювати.'', ''correct'': False}'
+  - '{''text'': ''Хоча втомився він, продовжував працювати.'', ''correct'': False}'
+  - '{''text'': ''Він хоча втомився, продовжував працювати.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -980,14 +956,11 @@ items:
   source_sentence: Since it was raining heavily, we decided to stay at home all day.
   answer: ''
   options:
-  - text: Оскільки йшов сильний дощ, ми вирішили залишитись вдома весь день.
-    correct: true
-  - text: Тому що йшов дощ, ми вирішили залишитись.
-    correct: false
-  - text: Йшов дощ, оскільки залишились вдома.
-    correct: false
-  - text: Ми оскільки йшов дощ, залишились вдома.
-    correct: false
+  - '{''text'': ''Оскільки йшов сильний дощ, ми вирішили залишитись вдома весь день.'',
+    ''correct'': True}'
+  - '{''text'': ''Тому що йшов дощ, ми вирішили залишитись.'', ''correct'': False}'
+  - '{''text'': ''Йшов дощ, оскільки залишились вдома.'', ''correct'': False}'
+  - '{''text'': ''Ми оскільки йшов дощ, залишились вдома.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -999,14 +972,11 @@ items:
     living room.
   answer: ''
   options:
-  - text: Поки вона готувала вечерю, діти грались у вітальні.
-    correct: true
-  - text: Коли вона готувала, діти грались.
-    correct: false
-  - text: Вона готувала, поки діти грались.
-    correct: false
-  - text: Готувала поки діти грались вона.
-    correct: false
+  - '{''text'': ''Поки вона готувала вечерю, діти грались у вітальні.'', ''correct'':
+    True}'
+  - '{''text'': ''Коли вона готувала, діти грались.'', ''correct'': False}'
+  - '{''text'': ''Вона готувала, поки діти грались.'', ''correct'': False}'
+  - '{''text'': ''Готувала поки діти грались вона.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1017,14 +987,11 @@ items:
   source_sentence: He said that he would definitely come to the meeting tomorrow evening.
   answer: ''
   options:
-  - text: Він сказав, що обов'язково прийде на зустріч завтра ввечері.
-    correct: true
-  - text: Він сказав, що я прийду на зустріч.
-    correct: false
-  - text: Він сказав, чи прийде на зустріч.
-    correct: false
-  - text: Він сказав прийти на зустріч завтра.
-    correct: false
+  - '{''text'': "Він сказав, що обов''язково прийде на зустріч завтра ввечері.", ''correct'':
+    True}'
+  - '{''text'': ''Він сказав, що я прийду на зустріч.'', ''correct'': False}'
+  - '{''text'': ''Він сказав, чи прийде на зустріч.'', ''correct'': False}'
+  - '{''text'': ''Він сказав прийти на зустріч завтра.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1035,14 +1002,11 @@ items:
   source_sentence: She asked if I had free time this evening for a conversation.
   answer: ''
   options:
-  - text: Вона запитала, чи я маю вільний час сьогодні ввечері для розмови.
-    correct: true
-  - text: Вона запитала, що я маю час.
-    correct: false
-  - text: Вона запитала, я маю час?
-    correct: false
-  - text: Вона запитала, чи маю я час?
-    correct: false
+  - '{''text'': ''Вона запитала, чи я маю вільний час сьогодні ввечері для розмови.'',
+    ''correct'': True}'
+  - '{''text'': ''Вона запитала, що я маю час.'', ''correct'': False}'
+  - '{''text'': ''Вона запитала, я маю час?'', ''correct'': False}'
+  - '{''text'': ''Вона запитала, чи маю я час?'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1054,14 +1018,11 @@ items:
     less about work.
   answer: ''
   options:
-  - text: Лікар порадив, щоб пацієнт більше відпочивав і менше нервував через роботу.
-    correct: true
-  - text: Лікар порадив, щоб пацієнт відпочиває.
-    correct: false
-  - text: Лікар порадив пацієнта відпочивати.
-    correct: false
-  - text: Лікар порадив, що пацієнт відпочиває.
-    correct: false
+  - '{''text'': ''Лікар порадив, щоб пацієнт більше відпочивав і менше нервував через
+    роботу.'', ''correct'': True}'
+  - '{''text'': ''Лікар порадив, щоб пацієнт відпочиває.'', ''correct'': False}'
+  - '{''text'': ''Лікар порадив пацієнта відпочивати.'', ''correct'': False}'
+  - '{''text'': ''Лікар порадив, що пацієнт відпочиває.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1073,14 +1034,11 @@ items:
     river.
   answer: ''
   options:
-  - text: Після того як ми поснідали, пішли на прогулянку в парк біля річки.
-    correct: true
-  - text: Коли поснідали, пішли на прогулянку.
-    correct: false
-  - text: Ми поснідали після того як пішли.
-    correct: false
-  - text: Після поснідали, пішли гуляти.
-    correct: false
+  - '{''text'': ''Після того як ми поснідали, пішли на прогулянку в парк біля річки.'',
+    ''correct'': True}'
+  - '{''text'': ''Коли поснідали, пішли на прогулянку.'', ''correct'': False}'
+  - '{''text'': ''Ми поснідали після того як пішли.'', ''correct'': False}'
+  - '{''text'': ''Після поснідали, пішли гуляти.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1092,14 +1050,11 @@ items:
     the city.
   answer: ''
   options:
-  - text: Як тільки дощ закінчився, ми вирішили поїхати на пікнік за місто.
-    correct: true
-  - text: Коли дощ закінчився, поїхали.
-    correct: false
-  - text: Поки дощ закінчився, поїхали.
-    correct: false
-  - text: Дощ закінчився як тільки поїхали.
-    correct: false
+  - '{''text'': ''Як тільки дощ закінчився, ми вирішили поїхати на пікнік за місто.'',
+    ''correct'': True}'
+  - '{''text'': ''Коли дощ закінчився, поїхали.'', ''correct'': False}'
+  - '{''text'': ''Поки дощ закінчився, поїхали.'', ''correct'': False}'
+  - '{''text'': ''Дощ закінчився як тільки поїхали.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

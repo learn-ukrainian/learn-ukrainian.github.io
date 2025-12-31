@@ -1,7 +1,7 @@
 module: 26-relative-clauses-yakyi
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/26-relative-clauses-yakyi.md
-generated: '2025-12-29T00:22:00.406461'
+generated: '2025-12-30T19:49:27.978651'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 14
   true-false: 14
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у формі який
@@ -387,6 +389,7 @@ items:
     - якої
     - якою
     answer: яку
+  blank_count: 14
   complete_passage: 'Минулого місяця я познайомився з колегою, [___:1] працює в нашому
     відділі. Це жінка, [___:2] зовуть Олена, і вона дуже компетентна у своїй справі.
     Проекти, над [___:3] вона працювала раніше, були дуже успішними та інноваційними.
@@ -480,14 +483,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про студента, що
     добре вчиться й отримає стипендію?
   options:
-  - text: який
-    correct: true
-  - text: яка
-    correct: false
-  - text: якого
-    correct: false
-  - text: яку
-    correct: false
+  - '{''text'': ''який'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''якого'', ''correct'': False}'
+  - '{''text'': ''яку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -499,14 +498,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про книгу, яку читаєте
     й вона дуже цікава?
   options:
-  - text: який
-    correct: false
-  - text: яку
-    correct: true
-  - text: яка
-    correct: false
-  - text: якої
-    correct: false
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''яку'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''якої'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -518,14 +513,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про людину, якій
     ви допомагали і вона подякувала?
   options:
-  - text: яку
-    correct: false
-  - text: якій
-    correct: true
-  - text: яка
-    correct: false
-  - text: якою
-    correct: false
+  - '{''text'': ''яку'', ''correct'': False}'
+  - '{''text'': ''якій'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''якою'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -537,14 +528,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про місто, де ви
     живете і воно дуже красиве?
   options:
-  - text: який
-    correct: false
-  - text: якому
-    correct: true
-  - text: яке
-    correct: false
-  - text: якого
-    correct: false
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''якому'', ''correct'': True}'
+  - '{''text'': ''яке'', ''correct'': False}'
+  - '{''text'': ''якого'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -556,14 +543,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про ручку, якою
     пишете і вона дуже зручна?
   options:
-  - text: яку
-    correct: false
-  - text: якою
-    correct: true
-  - text: яка
-    correct: false
-  - text: якій
-    correct: false
+  - '{''text'': ''яку'', ''correct'': False}'
+  - '{''text'': ''якою'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''якій'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -575,14 +558,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про друга, про якого
     ви розповідали і він приїхав?
   options:
-  - text: якого
-    correct: true
-  - text: який
-    correct: false
-  - text: якому
-    correct: false
-  - text: яким
-    correct: false
+  - '{''text'': ''якого'', ''correct'': True}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''якому'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -594,14 +573,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про студентів, які
     здали іспит і можуть йти додому?
   options:
-  - text: які
-    correct: true
-  - text: яких
-    correct: false
-  - text: яким
-    correct: false
-  - text: якими
-    correct: false
+  - '{''text'': ''які'', ''correct'': True}'
+  - '{''text'': ''яких'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': False}'
+  - '{''text'': ''якими'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -613,14 +588,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про колегу, з яким
     працюєте в офісі кожного дня?
   options:
-  - text: який
-    correct: false
-  - text: яким
-    correct: true
-  - text: якого
-    correct: false
-  - text: якому
-    correct: false
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': True}'
+  - '{''text'': ''якого'', ''correct'': False}'
+  - '{''text'': ''якому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -632,14 +603,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про дітей, які граються
     у дворі і дуже веселі?
   options:
-  - text: які
-    correct: true
-  - text: яких
-    correct: false
-  - text: яким
-    correct: false
-  - text: якими
-    correct: false
+  - '{''text'': ''які'', ''correct'': True}'
+  - '{''text'': ''яких'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': False}'
+  - '{''text'': ''якими'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -651,14 +618,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про людину, яку
     ви зустріли вчора на вулиці?
   options:
-  - text: яку
-    correct: true
-  - text: яка
-    correct: false
-  - text: якої
-    correct: false
-  - text: якій
-    correct: false
+  - '{''text'': ''яку'', ''correct'': True}'
+  - '{''text'': ''яка'', ''correct'': False}'
+  - '{''text'': ''якої'', ''correct'': False}'
+  - '{''text'': ''якій'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -670,14 +633,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про причини, через
     які це сталося і вони невідомі?
   options:
-  - text: які
-    correct: true
-  - text: яких
-    correct: false
-  - text: яким
-    correct: false
-  - text: якими
-    correct: false
+  - '{''text'': ''які'', ''correct'': True}'
+  - '{''text'': ''яких'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': False}'
+  - '{''text'': ''якими'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -689,14 +648,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про проект, над
     яким ви працюєте і він важливий?
   options:
-  - text: яким
-    correct: true
-  - text: який
-    correct: false
-  - text: якого
-    correct: false
-  - text: якому
-    correct: false
+  - '{''text'': ''яким'', ''correct'': True}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''якого'', ''correct'': False}'
+  - '{''text'': ''якому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -708,14 +663,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про село, яке знаходиться
     за лісом і воно дуже старе?
   options:
-  - text: яке
-    correct: true
-  - text: який
-    correct: false
-  - text: якого
-    correct: false
-  - text: якому
-    correct: false
+  - '{''text'': ''яке'', ''correct'': True}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''якого'', ''correct'': False}'
+  - '{''text'': ''якому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -727,14 +678,10 @@ items:
   question: Яку форму слова "який" потрібно використати в реченні про друзів, для
     яких готуєте вечерю і вони прийдуть?
   options:
-  - text: яких
-    correct: true
-  - text: які
-    correct: false
-  - text: яким
-    correct: false
-  - text: якими
-    correct: false
+  - '{''text'': ''яких'', ''correct'': True}'
+  - '{''text'': ''які'', ''correct'': False}'
+  - '{''text'': ''яким'', ''correct'': False}'
+  - '{''text'': ''якими'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,15 +1,18 @@
 module: 76-ukrainian-music-today
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/76-ukrainian-music-today.md
-generated: '2025-12-29T00:22:04.277682'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.482072'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 10
   true-false: 12
-item_count: 50
+total_items: 51
+item_count: 51
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в реченнях про музику
@@ -262,6 +265,126 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Текст про українську музику
+  passage_template: 'Українська музика переживає справжній {ренесанс|занепад|ренесанс|кризу}
+    за останні десятиліття. Україна тричі {перемагала|програвала|перемагала|виступала}
+    на Євробаченні: у 2004 році Руслана виграла з {енергійною|сумною|енергійною|повільною}
+    піснею "Wild Dances".
+
+
+    Сучасна українська сцена дуже {різноманітна|однакова|різноманітна|обмежена}. Гурт
+    Onuka поєднує {електронну|класичну|електронну|рок} музику з народними інструментами.
+    DakhaBrakha створює унікальний "{етно-хаос|рок-н-рол|етно-хаос|джаз}", експериментуючи
+    з різними {традиціями|правилами|традиціями|законами}.
+
+
+    У сфері репу Alyona Alyona стала справжньою {зіркою|початківцем|зіркою|невідомою}.
+    Вона виступала на {Coachella|Євробаченні|Coachella|Atlas Weekend} та інших міжнародних
+    {фестивалях|стадіонах|фестивалях|клубах}.
+
+
+    До 2022 року в Україні проходили великі музичні {фестивалі|концерти|фестивалі|змагання}.
+    Atlas Weekend у {Києві|Львові|Києві|Одесі} збирав до 500 тисяч {відвідувачів|артистів|відвідувачів|пісень}.
+    Leopolis Jazz Fest у Львові став одним з найкращих {джазових|рокових|джазових|попових}
+    фестивалів Східної Європи.
+
+    '
+  blanks:
+  - answer: кризу
+    options:
+    - ренесанс
+    - занепад
+    - ренесанс
+  - answer: виступала
+    options:
+    - перемагала
+    - програвала
+    - перемагала
+  - answer: повільною
+    options:
+    - енергійною
+    - сумною
+    - енергійною
+  - answer: обмежена
+    options:
+    - різноманітна
+    - однакова
+    - різноманітна
+  - answer: рок
+    options:
+    - електронну
+    - класичну
+    - електронну
+  - answer: джаз
+    options:
+    - етно-хаос
+    - рок-н-рол
+    - етно-хаос
+  - answer: законами
+    options:
+    - традиціями
+    - правилами
+    - традиціями
+  - answer: невідомою
+    options:
+    - зіркою
+    - початківцем
+    - зіркою
+  - answer: Atlas Weekend
+    options:
+    - Coachella
+    - Євробаченні
+    - Coachella
+  - answer: клубах
+    options:
+    - фестивалях
+    - стадіонах
+    - фестивалях
+  - answer: змагання
+    options:
+    - фестивалі
+    - концерти
+    - фестивалі
+  - answer: Одесі
+    options:
+    - Києві
+    - Львові
+    - Києві
+  - answer: пісень
+    options:
+    - відвідувачів
+    - артистів
+    - відвідувачів
+  - answer: попових
+    options:
+    - джазових
+    - рокових
+    - джазових
+  blank_count: 14
+  complete_passage: 'Українська музика переживає справжній кризу за останні десятиліття.
+    Україна тричі виступала на Євробаченні: у 2004 році Руслана виграла з повільною
+    піснею "Wild Dances".
+
+
+    Сучасна українська сцена дуже обмежена. Гурт Onuka поєднує рок музику з народними
+    інструментами. DakhaBrakha створює унікальний "джаз", експериментуючи з різними
+    законами.
+
+
+    У сфері репу Alyona Alyona стала справжньою невідомою. Вона виступала на Atlas
+    Weekend та інших міжнародних клубах.
+
+
+    До 2022 року в Україні проходили великі музичні змагання. Atlas Weekend у Одесі
+    збирав до 500 тисяч пісень. Leopolis Jazz Fest у Львові став одним з найкращих
+    попових фестивалів Східної Європи.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про музику
   jumbled_words: []
@@ -331,14 +454,10 @@ items:
   question: Який український гурт став символом нової української музики в 1990-х
     роках і досі залишається найпопулярнішим рок-гуртом країни?
   options:
-  - text: Скрябін
-    correct: false
-  - text: Океан Ельзи
-    correct: true
-  - text: Вопл Відоплясова
-    correct: false
-  - text: Тартак
-    correct: false
+  - '{''text'': ''Скрябін'', ''correct'': False}'
+  - '{''text'': ''Океан Ельзи'', ''correct'': True}'
+  - '{''text'': ''Вопл Відоплясова'', ''correct'': False}'
+  - '{''text'': ''Тартак'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -350,14 +469,10 @@ items:
   question: Яка українська співачка вперше принесла Україні перемогу на Євробаченні
     у 2004 році з піснею, що поєднувала електронну музику з карпатськими мотивами?
   options:
-  - text: Джамала
-    correct: false
-  - text: Тіна Кароль
-    correct: false
-  - text: Руслана
-    correct: true
-  - text: Ані Лорак
-    correct: false
+  - '{''text'': ''Джамала'', ''correct'': False}'
+  - '{''text'': ''Тіна Кароль'', ''correct'': False}'
+  - '{''text'': ''Руслана'', ''correct'': True}'
+  - '{''text'': ''Ані Лорак'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -369,14 +484,10 @@ items:
   question: Про що була пісня "1944" Джамали, з якою вона перемогла на Євробаченні
     2016 року?
   options:
-  - text: Про кохання та розлуку
-    correct: false
-  - text: Про депортацію кримських татар
-    correct: true
-  - text: Про Другу світову війну
-    correct: false
-  - text: Про незалежність України
-    correct: false
+  - '{''text'': ''Про кохання та розлуку'', ''correct'': False}'
+  - '{''text'': ''Про депортацію кримських татар'', ''correct'': True}'
+  - '{''text'': ''Про Другу світову війну'', ''correct'': False}'
+  - '{''text'': ''Про незалежність України'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -388,14 +499,10 @@ items:
   question: Який український гурт переміг на Євробаченні 2022 року з піснею "Stefania",
     яка поєднувала реп із народними мотивами?
   options:
-  - text: Go_A
-    correct: false
-  - text: Onuka
-    correct: false
-  - text: Kalush Orchestra
-    correct: true
-  - text: DakhaBrakha
-    correct: false
+  - '{''text'': ''Go_A'', ''correct'': False}'
+  - '{''text'': ''Onuka'', ''correct'': False}'
+  - '{''text'': ''Kalush Orchestra'', ''correct'': True}'
+  - '{''text'': ''DakhaBrakha'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -407,14 +514,10 @@ items:
   question: Який український гурт відомий своїм стилем "етно-хаос" і поєднанням різних
     етнічних традицій у музиці?
   options:
-  - text: Onuka
-    correct: false
-  - text: DakhaBrakha
-    correct: true
-  - text: Go_A
-    correct: false
-  - text: Latexfauna
-    correct: false
+  - '{''text'': ''Onuka'', ''correct'': False}'
+  - '{''text'': ''DakhaBrakha'', ''correct'': True}'
+  - '{''text'': ''Go_A'', ''correct'': False}'
+  - '{''text'': ''Latexfauna'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -425,14 +528,10 @@ items:
   title: Розуміння українського музичного контексту
   question: Скільки разів Україна перемагала на Євробаченні станом на 2022 рік?
   options:
-  - text: Один раз
-    correct: false
-  - text: Два рази
-    correct: false
-  - text: Три рази
-    correct: true
-  - text: Чотири рази
-    correct: false
+  - '{''text'': ''Один раз'', ''correct'': False}'
+  - '{''text'': ''Два рази'', ''correct'': False}'
+  - '{''text'': ''Три рази'', ''correct'': True}'
+  - '{''text'': ''Чотири рази'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -444,14 +543,10 @@ items:
   question: Який український музичний фестиваль збирав до 500 тисяч відвідувачів за
     чотири дні і проходив у Києві?
   options:
-  - text: Країна Мрій
-    correct: false
-  - text: Leopolis Jazz Fest
-    correct: false
-  - text: Atlas Weekend
-    correct: true
-  - text: Koktebel Jazz Festival
-    correct: false
+  - '{''text'': ''Країна Мрій'', ''correct'': False}'
+  - '{''text'': ''Leopolis Jazz Fest'', ''correct'': False}'
+  - '{''text'': ''Atlas Weekend'', ''correct'': True}'
+  - '{''text'': ''Koktebel Jazz Festival'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -463,14 +558,10 @@ items:
   question: Хто заснував музичний фестиваль "Країна Мрій", присвячений українській
     музиці?
   options:
-  - text: Святослав Вакарчук
-    correct: false
-  - text: Олег Скрипка
-    correct: true
-  - text: Олег Псюк
-    correct: false
-  - text: Руслана
-    correct: false
+  - '{''text'': ''Святослав Вакарчук'', ''correct'': False}'
+  - '{''text'': ''Олег Скрипка'', ''correct'': True}'
+  - '{''text'': ''Олег Псюк'', ''correct'': False}'
+  - '{''text'': ''Руслана'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -482,14 +573,10 @@ items:
   question: Яка українська реперка виступала на Coachella та інших міжнародних фестивалях
     і співає про реальне життя та соціальні теми?
   options:
-  - text: Jerry Heil
-    correct: false
-  - text: Alyona Alyona
-    correct: true
-  - text: Джамала
-    correct: false
-  - text: Onuka
-    correct: false
+  - '{''text'': ''Jerry Heil'', ''correct'': False}'
+  - '{''text'': ''Alyona Alyona'', ''correct'': True}'
+  - '{''text'': ''Джамала'', ''correct'': False}'
+  - '{''text'': ''Onuka'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -501,14 +588,10 @@ items:
   question: Який український гурт поєднує електронну музику з народними інструментами,
     і їхні кліпи вважаються витворами мистецтва?
   options:
-  - text: DakhaBrakha
-    correct: false
-  - text: Go_A
-    correct: false
-  - text: Onuka
-    correct: true
-  - text: Океан Ельзи
-    correct: false
+  - '{''text'': ''DakhaBrakha'', ''correct'': False}'
+  - '{''text'': ''Go_A'', ''correct'': False}'
+  - '{''text'': ''Onuka'', ''correct'': True}'
+  - '{''text'': ''Океан Ельзи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

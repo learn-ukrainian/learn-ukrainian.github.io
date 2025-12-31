@@ -1,15 +1,18 @@
 module: 85-b1-vocabulary-integration
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/85-b1-vocabulary-integration.md
-generated: '2025-12-29T00:22:05.032670'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.771736'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 14
+  cloze: 1
   unjumble: 12
   quiz: 14
   true-false: 14
-item_count: 68
+total_items: 69
+item_count: 69
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в лексиці та колокаціях
@@ -405,6 +408,129 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті про Україну
+  passage_template: 'Україна переживає період трансформації та {викликів|проблем|викликів|рішень}.
+    Країна стикається з численними {проблемами|ідеями|проблемами|думками}: від екологічних
+    питань до економічних труднощів. {Проте|Тому|Проте|Також} українці демонструють
+    неймовірну стійкість та оптимізм у складних умовах.
+
+
+    {На думку|У думці|На думку|За думкою} експертів, ключем до успіху є системний
+    {підхід|метод|підхід|спосіб}. {По-перше|Проте|По-перше|Також}, потрібні реформи
+    в освіті та охороні здоров''я. {По-друге|Проте|По-друге|Отже}, важливо підтримувати
+    інновації та технологічний розвиток. IT-сектор уже показує вражаючі {результати|наслідки|результати|висновки}.
+
+
+    {Крім того|Проте|Крім того|Тому}, культурна {спадщина|проблема|спадщина|думка}
+    України — ще одне джерело сили. Від традицій Карпат до сучасного мистецтва Києва
+    — культурне різноманіття об''єднує {громади|проблеми|громади|думки} по всій країні.
+
+
+    {Таким чином|По-перше|Таким чином|Проте}, можна зробити {висновок|рішення|висновок|думку}:
+    майбутнє України залежить від рішень, які приймаються сьогодні. Потрібно продовжувати
+    {сталий|швидкий|сталий|великий} розвиток та зберігати культурні {традиції|проблеми|традиції|рішення}.
+
+    '
+  blanks:
+  - answer: рішень
+    options:
+    - викликів
+    - проблем
+    - викликів
+  - answer: думками
+    options:
+    - проблемами
+    - ідеями
+    - проблемами
+  - answer: Також
+    options:
+    - Проте
+    - Тому
+    - Проте
+  - answer: За думкою
+    options:
+    - На думку
+    - У думці
+    - На думку
+  - answer: спосіб
+    options:
+    - підхід
+    - метод
+    - підхід
+  - answer: Також
+    options:
+    - По-перше
+    - Проте
+    - По-перше
+  - answer: Отже
+    options:
+    - По-друге
+    - Проте
+    - По-друге
+  - answer: висновки
+    options:
+    - результати
+    - наслідки
+    - результати
+  - answer: Тому
+    options:
+    - Крім того
+    - Проте
+    - Крім того
+  - answer: думка
+    options:
+    - спадщина
+    - проблема
+    - спадщина
+  - answer: думки
+    options:
+    - громади
+    - проблеми
+    - громади
+  - answer: Проте
+    options:
+    - Таким чином
+    - По-перше
+    - Таким чином
+  - answer: думку
+    options:
+    - висновок
+    - рішення
+    - висновок
+  - answer: великий
+    options:
+    - сталий
+    - швидкий
+    - сталий
+  - answer: рішення
+    options:
+    - традиції
+    - проблеми
+    - традиції
+  blank_count: 15
+  complete_passage: 'Україна переживає період трансформації та рішень. Країна стикається
+    з численними думками: від екологічних питань до економічних труднощів. Також українці
+    демонструють неймовірну стійкість та оптимізм у складних умовах.
+
+
+    За думкою експертів, ключем до успіху є системний спосіб. Також, потрібні реформи
+    в освіті та охороні здоров''я. Отже, важливо підтримувати інновації та технологічний
+    розвиток. IT-сектор уже показує вражаючі висновки.
+
+
+    Тому, культурна думка України — ще одне джерело сили. Від традицій Карпат до сучасного
+    мистецтва Києва — культурне різноманіття об''єднує думки по всій країні.
+
+
+    Проте, можна зробити думку: майбутнє України залежить від рішень, які приймаються
+    сьогодні. Потрібно продовжувати великий розвиток та зберігати культурні рішення.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з лексикою B1
   jumbled_words: []
@@ -505,14 +631,12 @@ items:
   title: Комплексний огляд лексики B1
   question: Яка різниця між словами "рішення" та "розв'язання" в українській мові?
   options:
-  - text: Це повні синоніми, їх можна завжди замінювати
-    correct: false
-  - text: '"Рішення" означає вибір, а "розв''язання" — процес подолання проблеми'
-    correct: true
-  - text: '"Рішення" використовується тільки в офіційних документах'
-    correct: false
-  - text: '"Розв''язання" означає математичну формулу'
-    correct: false
+  - '{''text'': ''Це повні синоніми, їх можна завжди замінювати'', ''correct'': False}'
+  - '{''text'': ''"Рішення" означає вибір, а "розв\''язання" — процес подолання проблеми'',
+    ''correct'': True}'
+  - '{''text'': ''"Рішення" використовується тільки в офіційних документах'', ''correct'':
+    False}'
+  - '{''text'': ''"Розв\''язання" означає математичну формулу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -524,14 +648,10 @@ items:
   question: Який дискурсний маркер використовується для введення контрастної думки
     в українській мові?
   options:
-  - text: по-перше
-    correct: false
-  - text: таким чином
-    correct: false
-  - text: проте
-    correct: true
-  - text: крім того
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
+  - '{''text'': ''проте'', ''correct'': True}'
+  - '{''text'': ''крім того'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -543,14 +663,10 @@ items:
   question: Яке слово означає "sustainable development" українською мовою в екологічному
     контексті?
   options:
-  - text: швидкий розвиток
-    correct: false
-  - text: економічний розвиток
-    correct: false
-  - text: сталий розвиток
-    correct: true
-  - text: культурний розвиток
-    correct: false
+  - '{''text'': ''швидкий розвиток'', ''correct'': False}'
+  - '{''text'': ''економічний розвиток'', ''correct'': False}'
+  - '{''text'': ''сталий розвиток'', ''correct'': True}'
+  - '{''text'': ''культурний розвиток'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -561,14 +677,10 @@ items:
   title: Комплексний огляд лексики B1
   question: Яке дієслово найкраще поєднується зі словом "рішення" в українській мові?
   options:
-  - text: зробити рішення
-    correct: false
-  - text: прийняти рішення
-    correct: true
-  - text: мати рішення
-    correct: false
-  - text: давати рішення
-    correct: false
+  - '{''text'': ''зробити рішення'', ''correct'': False}'
+  - '{''text'': ''прийняти рішення'', ''correct'': True}'
+  - '{''text'': ''мати рішення'', ''correct'': False}'
+  - '{''text'': ''давати рішення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -580,14 +692,10 @@ items:
   question: Яке слово означає "career growth" або "promotion" в українській професійній
     лексиці?
   options:
-  - text: кар'єрне зростання
-    correct: true
-  - text: робочий рух
-    correct: false
-  - text: посадове збільшення
-    correct: false
-  - text: професійний підйом
-    correct: false
+  - '{''text'': "кар''єрне зростання", ''correct'': True}'
+  - '{''text'': ''робочий рух'', ''correct'': False}'
+  - '{''text'': ''посадове збільшення'', ''correct'': False}'
+  - '{''text'': ''професійний підйом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -598,14 +706,10 @@ items:
   title: Комплексний огляд лексики B1
   question: Який регіон України відомий своєю австро-угорською архітектурою та кав'ярнями?
   options:
-  - text: Слобожанщина
-    correct: false
-  - text: Полісся
-    correct: false
-  - text: Галичина (Львів)
-    correct: true
-  - text: Причорномор'я
-    correct: false
+  - '{''text'': ''Слобожанщина'', ''correct'': False}'
+  - '{''text'': ''Полісся'', ''correct'': False}'
+  - '{''text'': ''Галичина (Львів)'', ''correct'': True}'
+  - '{''text'': "Причорномор''я", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -617,14 +721,10 @@ items:
   question: Яке слово використовується для опису "challenge" у контексті глобальних
     проблем?
   options:
-  - text: виклик
-    correct: true
-  - text: дзвінок
-    correct: false
-  - text: запрошення
-    correct: false
-  - text: звернення
-    correct: false
+  - '{''text'': ''виклик'', ''correct'': True}'
+  - '{''text'': ''дзвінок'', ''correct'': False}'
+  - '{''text'': ''запрошення'', ''correct'': False}'
+  - '{''text'': ''звернення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -636,14 +736,10 @@ items:
   question: Яка фраза використовується для ввічливого вираження особистої думки українською
     мовою?
   options:
-  - text: Я думаю що
-    correct: false
-  - text: На мою думку
-    correct: true
-  - text: У моїй голові
-    correct: false
-  - text: Моя опінія є
-    correct: false
+  - '{''text'': ''Я думаю що'', ''correct'': False}'
+  - '{''text'': ''На мою думку'', ''correct'': True}'
+  - '{''text'': ''У моїй голові'', ''correct'': False}'
+  - '{''text'': ''Моя опінія є'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -654,14 +750,10 @@ items:
   title: Комплексний огляд лексики B1
   question: Яке слово описує "consequence" з негативною конотацією в українській мові?
   options:
-  - text: результат
-    correct: false
-  - text: наслідок
-    correct: true
-  - text: висновок
-    correct: false
-  - text: підсумок
-    correct: false
+  - '{''text'': ''результат'', ''correct'': False}'
+  - '{''text'': ''наслідок'', ''correct'': True}'
+  - '{''text'': ''висновок'', ''correct'': False}'
+  - '{''text'': ''підсумок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -672,14 +764,10 @@ items:
   title: Комплексний огляд лексики B1
   question: Яке слово означає "gap" у контексті прогалин у знаннях в українській мові?
   options:
-  - text: діра
-    correct: false
-  - text: прогалина
-    correct: true
-  - text: яма
-    correct: false
-  - text: пробіл
-    correct: false
+  - '{''text'': ''діра'', ''correct'': False}'
+  - '{''text'': ''прогалина'', ''correct'': True}'
+  - '{''text'': ''яма'', ''correct'': False}'
+  - '{''text'': ''пробіл'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -691,14 +779,10 @@ items:
   question: Який дискурсний маркер використовується для додавання інформації в українській
     мові?
   options:
-  - text: проте
-    correct: false
-  - text: натомість
-    correct: false
-  - text: крім того
-    correct: true
-  - text: отже
-    correct: false
+  - '{''text'': ''проте'', ''correct'': False}'
+  - '{''text'': ''натомість'', ''correct'': False}'
+  - '{''text'': ''крім того'', ''correct'': True}'
+  - '{''text'': ''отже'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -710,14 +794,10 @@ items:
   question: Яке слово означає "to apply" у контексті застосування знань українською
     мовою?
   options:
-  - text: прикладати
-    correct: false
-  - text: застосовувати
-    correct: true
-  - text: накладати
-    correct: false
-  - text: подавати
-    correct: false
+  - '{''text'': ''прикладати'', ''correct'': False}'
+  - '{''text'': ''застосовувати'', ''correct'': True}'
+  - '{''text'': ''накладати'', ''correct'': False}'
+  - '{''text'': ''подавати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -728,14 +808,10 @@ items:
   title: Комплексний огляд лексики B1
   question: Який регіон України відомий своєю промисловістю та технологічним сектором?
   options:
-  - text: Закарпаття
-    correct: false
-  - text: Буковина
-    correct: false
-  - text: Харківщина
-    correct: true
-  - text: Волинь
-    correct: false
+  - '{''text'': ''Закарпаття'', ''correct'': False}'
+  - '{''text'': ''Буковина'', ''correct'': False}'
+  - '{''text'': ''Харківщина'', ''correct'': True}'
+  - '{''text'': ''Волинь'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -747,14 +823,10 @@ items:
   question: Яке слово використовується для опису "comprehensive" у контексті огляду
     українською мовою?
   options:
-  - text: великий
-    correct: false
-  - text: комплексний
-    correct: true
-  - text: важкий
-    correct: false
-  - text: широкий
-    correct: false
+  - '{''text'': ''великий'', ''correct'': False}'
+  - '{''text'': ''комплексний'', ''correct'': True}'
+  - '{''text'': ''важкий'', ''correct'': False}'
+  - '{''text'': ''широкий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

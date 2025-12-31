@@ -1,15 +1,18 @@
 module: 69-synonymy-speaking-verbs
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/69-synonymy-speaking-verbs.md
-generated: '2025-12-29T00:22:03.771065'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.217703'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -258,6 +261,123 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Вчора відбулася прес-конференція міністра освіти. Він {повідомив|сказав|повідомив|розповів}
+    про нові реформи в системі освіти. Міністр {пояснив|казав|пояснив|говорив} причини
+    змін та {наголосив|сказав|наголосив|говорив} на їх важливості.
+
+
+    Журналісти {ставили|казали|ставили|говорили} багато запитань. Один із них {зауважив|сказав|зауважив|нагадав},
+    що попередня реформа не була успішною. Міністр {погодився|сказав|погодився|наполягав}
+    з критикою частково, але {підкреслив|казав|підкреслив|говорив}, що цього разу
+    підхід інший.
+
+
+    Опозиція {стверджує|каже|стверджує|говорить}, що реформи недостатні. Вони {наполягають|говорять|наполягають|кажуть}
+    на радикальніших змінах. Проте уряд не {погоджується|говорить|погоджується|каже}
+    з такою позицією. Експерти {описують|кажуть|описують|говорять} ситуацію як складну.
+
+
+    На завершення міністр {нагадав|сказав|нагадав|згадав} про терміни впровадження
+    реформ. Він {додав|сказав|додав|говорив}, що очікує підтримки від громадськості.
+    Прес-секретар {оголосила|сказала|оголосила|повідомила} про завершення конференції.
+
+    '
+  blanks:
+  - answer: розповів
+    options:
+    - повідомив
+    - сказав
+    - повідомив
+  - answer: говорив
+    options:
+    - пояснив
+    - казав
+    - пояснив
+  - answer: говорив
+    options:
+    - наголосив
+    - сказав
+    - наголосив
+  - answer: говорили
+    options:
+    - ставили
+    - казали
+    - ставили
+  - answer: нагадав
+    options:
+    - зауважив
+    - сказав
+    - зауважив
+  - answer: наполягав
+    options:
+    - погодився
+    - сказав
+    - погодився
+  - answer: говорив
+    options:
+    - підкреслив
+    - казав
+    - підкреслив
+  - answer: говорить
+    options:
+    - стверджує
+    - каже
+    - стверджує
+  - answer: кажуть
+    options:
+    - наполягають
+    - говорять
+    - наполягають
+  - answer: каже
+    options:
+    - погоджується
+    - говорить
+    - погоджується
+  - answer: говорять
+    options:
+    - описують
+    - кажуть
+    - описують
+  - answer: згадав
+    options:
+    - нагадав
+    - сказав
+    - нагадав
+  - answer: говорив
+    options:
+    - додав
+    - сказав
+    - додав
+  - answer: повідомила
+    options:
+    - оголосила
+    - сказала
+    - оголосила
+  blank_count: 14
+  complete_passage: 'Вчора відбулася прес-конференція міністра освіти. Він розповів
+    про нові реформи в системі освіти. Міністр говорив причини змін та говорив на
+    їх важливості.
+
+
+    Журналісти говорили багато запитань. Один із них нагадав, що попередня реформа
+    не була успішною. Міністр наполягав з критикою частково, але говорив, що цього
+    разу підхід інший.
+
+
+    Опозиція говорить, що реформи недостатні. Вони кажуть на радикальніших змінах.
+    Проте уряд не каже з такою позицією. Експерти говорять ситуацію як складну.
+
+
+    На завершення міністр згадав про терміни впровадження реформ. Він говорив, що
+    очікує підтримки від громадськості. Прес-секретар повідомила про завершення конференції.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -327,14 +447,10 @@ items:
   question: Яке дієслово використовується для передачі конкретного повідомлення, наприклад
     "Він ... що прийде завтра"?
   options:
-  - text: говорити
-    correct: false
-  - text: казати
-    correct: true
-  - text: розповідати
-    correct: false
-  - text: повідомляти
-    correct: false
+  - '{''text'': ''говорити'', ''correct'': False}'
+  - '{''text'': ''казати'', ''correct'': True}'
+  - '{''text'': ''розповідати'', ''correct'': False}'
+  - '{''text'': ''повідомляти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -346,14 +462,10 @@ items:
   question: Яке дієслово найкраще підходить для опису наративного мовлення, наприклад
     оповідання історії?
   options:
-  - text: казати
-    correct: false
-  - text: говорити
-    correct: false
-  - text: розповідати
-    correct: true
-  - text: стверджувати
-    correct: false
+  - '{''text'': ''казати'', ''correct'': False}'
+  - '{''text'': ''говорити'', ''correct'': False}'
+  - '{''text'': ''розповідати'', ''correct'': True}'
+  - '{''text'': ''стверджувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -364,14 +476,10 @@ items:
   title: Розуміння дієслів мовлення
   question: Яке дієслово є найбільш офіційним для передачі інформації у ЗМІ?
   options:
-  - text: казати
-    correct: false
-  - text: говорити
-    correct: false
-  - text: розповідати
-    correct: false
-  - text: повідомляти
-    correct: true
+  - '{''text'': ''казати'', ''correct'': False}'
+  - '{''text'': ''говорити'', ''correct'': False}'
+  - '{''text'': ''розповідати'', ''correct'': False}'
+  - '{''text'': ''повідомляти'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -382,14 +490,10 @@ items:
   title: Розуміння дієслів мовлення
   question: З яким прийменником вживається дієслово "наполягати"?
   options:
-  - text: наполягати про
-    correct: false
-  - text: наполягати на
-    correct: true
-  - text: наполягати з
-    correct: false
-  - text: наполягати до
-    correct: false
+  - '{''text'': ''наполягати про'', ''correct'': False}'
+  - '{''text'': ''наполягати на'', ''correct'': True}'
+  - '{''text'': ''наполягати з'', ''correct'': False}'
+  - '{''text'': ''наполягати до'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -400,14 +504,10 @@ items:
   title: Розуміння дієслів мовлення
   question: Яке дієслово означає "to remind" українською?
   options:
-  - text: згадувати
-    correct: false
-  - text: нагадувати
-    correct: true
-  - text: зауважувати
-    correct: false
-  - text: додавати
-    correct: false
+  - '{''text'': ''згадувати'', ''correct'': False}'
+  - '{''text'': ''нагадувати'', ''correct'': True}'
+  - '{''text'': ''зауважувати'', ''correct'': False}'
+  - '{''text'': ''додавати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -418,14 +518,10 @@ items:
   title: Розуміння дієслів мовлення
   question: Яке дієслово використовується в академічних текстах для акцентування важливості?
   options:
-  - text: казати
-    correct: false
-  - text: говорити
-    correct: false
-  - text: наголошувати
-    correct: true
-  - text: розповідати
-    correct: false
+  - '{''text'': ''казати'', ''correct'': False}'
+  - '{''text'': ''говорити'', ''correct'': False}'
+  - '{''text'': ''наголошувати'', ''correct'': True}'
+  - '{''text'': ''розповідати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -436,14 +532,11 @@ items:
   title: Розуміння дієслів мовлення
   question: Яка різниця між "згадувати" та "нагадувати"?
   options:
-  - text: Це синоніми
-    correct: false
-  - text: '"Згадувати" — про минуле, "нагадувати" — спонукати пригадати'
-    correct: true
-  - text: '"Згадувати" формальніше'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''"Згадувати" — про минуле, "нагадувати" — спонукати пригадати'',
+    ''correct'': True}'
+  - '{''text'': ''"Згадувати" формальніше'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -454,14 +547,10 @@ items:
   title: Розуміння дієслів мовлення
   question: Яке дієслово означає офіційно проголошувати результати або рішення?
   options:
-  - text: повідомляти
-    correct: false
-  - text: заявляти
-    correct: false
-  - text: оголошувати
-    correct: true
-  - text: стверджувати
-    correct: false
+  - '{''text'': ''повідомляти'', ''correct'': False}'
+  - '{''text'': ''заявляти'', ''correct'': False}'
+  - '{''text'': ''оголошувати'', ''correct'': True}'
+  - '{''text'': ''стверджувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

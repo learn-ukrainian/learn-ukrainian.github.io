@@ -1,15 +1,18 @@
 module: 66-business-basics
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/66-business-basics.md
-generated: '2025-12-29T00:22:03.577568'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.138067'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -259,6 +262,128 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Київська ІТ-{компанія|фірма|компанія|підприємство} TechHub оголосила
+    про залучення 50 мільйонів доларів {інвестицій|прибутку|інвестицій|збитків}. Ці
+    кошти {підприємство|компанія|підприємство|фірма} планує використати для виходу
+    на нові {ринки|продажі|ринки|проєкти}.
+
+
+    За словами {менеджменту|маркетингу|менеджменту|бюджету}, {стратегія|ідея|стратегія|проблема}
+    компанії — подвоїти кількість {клієнтів|партнерів|клієнтів|постачальників} за
+    три роки.
+
+
+    {Партнером|Клієнтом|Партнером|Конкурентом} раунду інвестицій став відомий міжнародний
+    фонд. {Угода|Контракт|Угода|Презентація} передбачає не лише фінансування, а й
+    доступ до мережі {постачальників|конкурентів|постачальників|збитків}.
+
+
+    "Це важливий крок для нашого {бізнесу|ринку|бізнесу|продажу}," — сказав засновник.
+    "Ми плануємо розширити команду та збільшити {продажі|збитки|продажі|капітал} вдвічі."
+
+
+    Компанія очікує отримати перший {прибуток|збиток|прибуток|бюджет} вже наступного
+    року. Це буде великий успіх для українського {стартапу|банку|стартапу|підприємства}.
+
+    '
+  blanks:
+  - answer: підприємство
+    options:
+    - компанія
+    - фірма
+    - компанія
+  - answer: збитків
+    options:
+    - інвестицій
+    - прибутку
+    - інвестицій
+  - answer: фірма
+    options:
+    - підприємство
+    - компанія
+    - підприємство
+  - answer: проєкти
+    options:
+    - ринки
+    - продажі
+    - ринки
+  - answer: бюджету
+    options:
+    - менеджменту
+    - маркетингу
+    - менеджменту
+  - answer: проблема
+    options:
+    - стратегія
+    - ідея
+    - стратегія
+  - answer: постачальників
+    options:
+    - клієнтів
+    - партнерів
+    - клієнтів
+  - answer: Конкурентом
+    options:
+    - Партнером
+    - Клієнтом
+    - Партнером
+  - answer: Презентація
+    options:
+    - Угода
+    - Контракт
+    - Угода
+  - answer: збитків
+    options:
+    - постачальників
+    - конкурентів
+    - постачальників
+  - answer: продажу
+    options:
+    - бізнесу
+    - ринку
+    - бізнесу
+  - answer: капітал
+    options:
+    - продажі
+    - збитки
+    - продажі
+  - answer: бюджет
+    options:
+    - прибуток
+    - збиток
+    - прибуток
+  - answer: підприємства
+    options:
+    - стартапу
+    - банку
+    - стартапу
+  blank_count: 14
+  complete_passage: 'Київська ІТ-підприємство TechHub оголосила про залучення 50 мільйонів
+    доларів збитків. Ці кошти фірма планує використати для виходу на нові проєкти.
+
+
+    За словами бюджету, проблема компанії — подвоїти кількість постачальників за три
+    роки.
+
+
+    Конкурентом раунду інвестицій став відомий міжнародний фонд. Презентація передбачає
+    не лише фінансування, а й доступ до мережі збитків.
+
+
+    "Це важливий крок для нашого продажу," — сказав засновник. "Ми плануємо розширити
+    команду та збільшити капітал вдвічі."
+
+
+    Компанія очікує отримати перший бюджет вже наступного року. Це буде великий успіх
+    для українського підприємства.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -327,14 +452,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Яке слово означає "business" у значенні "справа, діяльність" українською?
   options:
-  - text: компанія
-    correct: false
-  - text: бізнес
-    correct: true
-  - text: фірма
-    correct: false
-  - text: підприємство
-    correct: false
+  - '{''text'': ''компанія'', ''correct'': False}'
+  - '{''text'': ''бізнес'', ''correct'': True}'
+  - '{''text'': ''фірма'', ''correct'': False}'
+  - '{''text'': ''підприємство'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -345,14 +466,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Яке слово найчастіше використовується для опису великої міжнародної компанії?
   options:
-  - text: фірма
-    correct: false
-  - text: установа
-    correct: false
-  - text: корпорація
-    correct: true
-  - text: організація
-    correct: false
+  - '{''text'': ''фірма'', ''correct'': False}'
+  - '{''text'': ''установа'', ''correct'': False}'
+  - '{''text'': ''корпорація'', ''correct'': True}'
+  - '{''text'': ''організація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -363,14 +480,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Що означає слово "постачальник"?
   options:
-  - text: client
-    correct: false
-  - text: supplier
-    correct: true
-  - text: partner
-    correct: false
-  - text: competitor
-    correct: false
+  - '{''text'': ''client'', ''correct'': False}'
+  - '{''text'': ''supplier'', ''correct'': True}'
+  - '{''text'': ''partner'', ''correct'': False}'
+  - '{''text'': ''competitor'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -381,14 +494,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Яке дієслово найкраще поєднується зі словом "контракт"?
   options:
-  - text: вести контракт
-    correct: false
-  - text: робити контракт
-    correct: false
-  - text: підписати контракт
-    correct: true
-  - text: залучити контракт
-    correct: false
+  - '{''text'': ''вести контракт'', ''correct'': False}'
+  - '{''text'': ''робити контракт'', ''correct'': False}'
+  - '{''text'': ''підписати контракт'', ''correct'': True}'
+  - '{''text'': ''залучити контракт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -399,14 +508,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Що означає "зазнати збитків"?
   options:
-  - text: to make profit
-    correct: false
-  - text: to suffer losses
-    correct: true
-  - text: to attract investments
-    correct: false
-  - text: to sign a contract
-    correct: false
+  - '{''text'': ''to make profit'', ''correct'': False}'
+  - '{''text'': ''to suffer losses'', ''correct'': True}'
+  - '{''text'': ''to attract investments'', ''correct'': False}'
+  - '{''text'': ''to sign a contract'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -417,14 +522,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Яке слово використовується для банків та державних органів?
   options:
-  - text: компанія
-    correct: false
-  - text: фірма
-    correct: false
-  - text: підприємство
-    correct: false
-  - text: установа
-    correct: true
+  - '{''text'': ''компанія'', ''correct'': False}'
+  - '{''text'': ''фірма'', ''correct'': False}'
+  - '{''text'': ''підприємство'', ''correct'': False}'
+  - '{''text'': ''установа'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -435,14 +536,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Що означає "залучити інвестиції"?
   options:
-  - text: to spend investments
-    correct: false
-  - text: to lose investments
-    correct: false
-  - text: to attract investments
-    correct: true
-  - text: to reject investments
-    correct: false
+  - '{''text'': ''to spend investments'', ''correct'': False}'
+  - '{''text'': ''to lose investments'', ''correct'': False}'
+  - '{''text'': ''to attract investments'', ''correct'': True}'
+  - '{''text'': ''to reject investments'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -453,14 +550,10 @@ items:
   title: Розуміння бізнес-термінів
   question: Яка різниця між "прибуток" та "збиток"?
   options:
-  - text: Це синоніми
-    correct: false
-  - text: '"Прибуток" — profit, "збиток" — loss'
-    correct: true
-  - text: '"Прибуток" формальніше'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''"Прибуток" — profit, "збиток" — loss'', ''correct'': True}'
+  - '{''text'': ''"Прибуток" формальніше'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

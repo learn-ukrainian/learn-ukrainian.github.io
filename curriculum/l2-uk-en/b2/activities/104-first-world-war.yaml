@@ -1,0 +1,546 @@
+- type: quiz
+  id: ww1-facts
+  title: 'Перша світова: Факти'
+  items:
+  - question: Коли почалася Перша світова війна?
+    options:
+    - text: 1914 рік
+      correct: true
+    - text: 1918 рік
+      correct: false
+    - text: 1939 рік
+      correct: false
+    - text: 1905 рік
+      correct: false
+  - question: У складі якої армії було створено Легіон УСС?
+    options:
+    - text: Австро-Угорської
+      correct: true
+    - text: Російської
+      correct: false
+    - text: Німецької
+      correct: false
+    - text: Французької
+      correct: false
+  - question: Скільки українців воювало на боці Росії?
+    options:
+    - text: 3,5 мільйона
+      correct: true
+    - text: 250 тисяч
+      correct: false
+    - text: 10 мільйонів
+      correct: false
+    - text: 50 тисяч
+      correct: false
+  - question: Яка гора стала місцем бойової слави УСС?
+    options:
+    - text: Маківка
+      correct: true
+    - text: Говерла
+      correct: false
+    - text: Еверест
+      correct: false
+    - text: Лисоня
+      correct: false
+  - question: Хто такий Василь Вишиваний?
+    options:
+    - text: Австрійський ерцгерцог Вільгельм Габсбург
+      correct: true
+    - text: Командир російської армії
+      correct: false
+    - text: Відомий поет
+      correct: false
+    - text: Гетьман України
+      correct: false
+  - question: Як називалася пісня-гімн УСС?
+    options:
+    - text: Ой у лузі червона калина
+      correct: true
+    - text: Ще не вмерла України...
+      correct: false
+    - text: Реве та стогне Дніпро широкий
+      correct: false
+    - text: Червона рута
+      correct: false
+  - question: Що таке 'Пресова кватира'?
+    options:
+    - text: Культурно-мистецький осередок УСС
+      correct: true
+    - text: Штаб артилерії
+      correct: false
+    - text: Лікарня для поранених
+      correct: false
+    - text: Склад зброї
+      correct: false
+  - question: Кого називали 'січовиками'?
+    options:
+    - text: Вояків УСС
+      correct: true
+    - text: Російських солдатів
+      correct: false
+    - text: Австрійських офіцерів
+      correct: false
+    - text: Полонених
+      correct: false
+  - question: Хто очолив Листопадовий чин у Львові?
+    options:
+    - text: Дмитро Вітовський
+      correct: true
+    - text: Михайло Грушевський
+      correct: false
+    - text: Олена Степанів
+      correct: false
+    - text: Симон Петлюра
+      correct: false
+  - question: Що таке Брусиловський прорив?
+    options:
+    - text: Масштабний наступ російських військ у 1916 році
+      correct: true
+    - text: Мирний договір
+      correct: false
+    - text: Будівництво залізниці
+      correct: false
+    - text: Вихід України з війни
+      correct: false
+- type: match-up
+  id: war-vocab
+  title: Військова лексика
+  pairs:
+  - term: Окоп
+    definition: Trench
+  - term: Фронт
+    definition: Front line
+  - term: Мобілізація
+    definition: Mobilization
+  - term: Артилерія
+    definition: Artillery
+  - term: Полон
+    definition: Captivity
+  - term: Біженець
+    definition: Refugee
+  - term: Кулемет
+    definition: Machine gun
+  - term: Шпиталь
+    definition: Hospital
+  - term: Наступ
+    definition: Offensive
+  - term: Прорив
+    definition: Breakthrough
+  - term: Героїзм
+    definition: Heroism
+  - term: Поразка
+    definition: Defeat
+- type: cloze
+  id: uss-history
+  title: Історія Легіону УСС
+  passage: 'Легіон Українських Січових Стрільців було створено у серпні {1914} року.
+
+    Це було перше українське {національне} військове формування.
+
+    До складу легіону входили переважно молоді {інтелектуали}: студенти, вчителі, митці.
+
+    Австрійська влада боялася українського {сепаратизму}, тому обмежила чисельність легіону.
+
+    Перші бої відбулися в {Карпатах}.
+
+    Найвідоміша битва сталася на горі {Маківка} у 1915 році.
+
+    Стрільці зупинили наступ {російських} військ.
+
+    У легіоні панував високий {патріотичний} дух.
+
+    Вояки носили однострій з українськими {відзнаками}.
+
+    Гімном січовиків стала пісня "Ой у лузі {червона} калина".
+
+    Справжнім другом стрільців був Василь {Вишиваний} (Вільгельм Габсбург).
+
+    УСС стали ядром майбутньої армії {УНР}.
+
+    Вони боролися за незалежну соборну {Україну}.
+
+    Багато стрільців загинуло в боротьбі з {більшовиками}.
+
+    Пам''ять про них збереглася в стрілецьких {піснях}.
+
+    Сьогодні ми вшановуємо їх як {героїв}.
+
+    Олена Степанів стала першою жінкою-{офіцером}.
+
+    Листопадовий чин у Львові відбувся 1 {листопада} 1918 року.
+
+    '
+- type: true-false
+  id: ww1-myths
+  title: Правда чи міф?
+  items:
+  - question: Українці воювали лише на боці Австрії.
+    answer: false
+  - question: Перша світова війна почалася у 1914 році.
+    answer: true
+  - question: Василь Вишиваний був українцем за походженням.
+    answer: false
+  - question: Легіон УСС складався з професійних військових.
+    answer: false
+  - question: Гора Маківка знаходиться в Карпатах.
+    answer: true
+  - question: УСС займалися лише війною і не цікавилися культурою.
+    answer: false
+  - question: Талергоф — це назва гори.
+    answer: false
+  - question: Пісня 'Ой у лузі...' була написана у 2022 році.
+    answer: false
+- type: group-sort
+  id: blocs-sort
+  title: Сторони конфлікту
+  groups:
+  - name: Антанта
+    items:
+    - Російська імперія
+    - Франція
+    - Велика Британія
+    - Італія (з 1915)
+    - США (з 1917)
+    - 3.5 млн українців
+    - Румунія
+    - Генерал Брусилов
+  - name: Центральні держави
+    items:
+    - Австро-Угорщина
+    - Німецька імперія
+    - Османська імперія
+    - Болгарія
+    - Легіон УСС
+    - 250 тисяч українців
+    - Василь Вишиваний
+    - Франц Йосиф I
+- type: dialogue-reorder
+  id: trench-talk
+  title: Розмова в окопі
+  lines:
+  - text: Ти чув? Кажуть, на тій стороні теж українці.
+    order: 1
+    speaker: ''
+  - text: Невже? Звідки ти знаєш?
+    order: 2
+    speaker: ''
+  - text: Хлопці ходили в розвідку, чули розмову.
+    order: 3
+    speaker: ''
+  - text: Господи, це ж ми в своїх стріляємо!
+    order: 4
+    speaker: ''
+  - text: Так, це проклята війна.
+    order: 5
+    speaker: ''
+  - text: Але ми мусимо тримати оборону.
+    order: 6
+    speaker: ''
+  - text: Коли вже це все скінчиться?
+    order: 7
+    speaker: ''
+  - text: Коли проженемо ворога з нашої землі.
+    order: 8
+    speaker: ''
+  - text: Дай Бог дожити до перемоги.
+    order: 9
+    speaker: ''
+  - text: Доживемо, друже. Слава Україні!
+    order: 10
+    speaker: ''
+  - text: Героям Слава!
+    order: 11
+    speaker: ''
+  - text: Тихо! Здається, йдуть.
+    order: 12
+    speaker: ''
+- type: select
+  id: synonyms
+  title: Синоніми та антоніми
+  instruction: Оберіть правильний варіант.
+  items:
+  - question: 'Синонім до слова ''Битва'':'
+    options:
+    - text: Бій
+      correct: true
+    - text: Мир
+      correct: false
+    - text: Спокій
+      correct: false
+    - text: Тиша
+      correct: false
+  - question: 'Антонім до слова ''Перемога'':'
+    options:
+    - text: Поразка
+      correct: true
+    - text: Тріумф
+      correct: false
+    - text: Успіх
+      correct: false
+    - text: Вікторія
+      correct: false
+  - question: 'Синонім до слова ''Військо'':'
+    options:
+    - text: Армія
+      correct: true
+    - text: Школа
+      correct: false
+    - text: Лікарня
+      correct: false
+    - text: Завод
+      correct: false
+  - question: 'Антонім до слова ''Ворог'':'
+    options:
+    - text: Друг
+      correct: true
+    - text: Супротивник
+      correct: false
+    - text: Опонент
+      correct: false
+    - text: Нападник
+      correct: false
+  - question: 'Синонім до слова ''Окоп'':'
+    options:
+    - text: Траншея
+      correct: true
+    - text: Палац
+      correct: false
+    - text: Вежа
+      correct: false
+    - text: Міст
+      correct: false
+  - question: 'Синонім до слова ''Сотник'':'
+    options:
+    - text: Командир
+      correct: true
+    - text: Рядовий
+      correct: false
+    - text: Кухар
+      correct: false
+    - text: Лікар
+      correct: false
+- type: unjumble
+  id: song-lyrics
+  title: Відновіть рядки пісні
+  items:
+  - scrambled: Ой у лузі червона калина похилилася,
+    answer: Ой у лузі червона калина похилилася,
+  - scrambled: Чогось наша славна Україна зажурилася.
+    answer: Чогось наша славна Україна зажурилася.
+  - scrambled: А ми тую червону калину підіймемо,
+    answer: А ми тую червону калину підіймемо,
+  - scrambled: А ми нашу славну Україну, гей, гей, розвеселимо!
+    answer: А ми нашу славну Україну, гей, гей, розвеселимо!
+  - scrambled: Марширують наші добровольці у кривавий тан,
+    answer: Марширують наші добровольці у кривавий тан,
+  - scrambled: Визволяти братів-українців з ворожих кайдан.
+    answer: Визволяти братів-українців з ворожих кайдан.
+- type: match-up
+  id: people-roles
+  title: Особи та ролі
+  pairs:
+  - term: Микола II
+    definition: Russian Tsar
+  - term: Франц Йосиф I
+    definition: Austrian Emperor
+  - term: Вільгельм Габсбург
+    definition: Vasyl Vyshyvany
+  - term: Кость Левицький
+    definition: Head of GUR
+  - term: Михайло Галущинський
+    definition: First USS Commander
+  - term: Роман Купчинський
+    definition: Poet-rifleman
+  - term: Олена Степанів
+    definition: Officer woman
+  - term: Генерал Брусилов
+    definition: Russian General
+- type: mark-the-words
+  id: find-verbs
+  title: Знайдіть дієслова минулого часу
+  text: Війна *почалася* раптово. Солдати *йшли* на фронт. Вони *вірили* у перемогу. В окопах *було* холодно. Артилерія *гриміла* день і ніч. Багато хто *загинув*. Але надія не *вмирала*. Стрільці *співали* пісні. Вони *мріяли* про волю. Україна *чекала* на них. Перемога *прийшла* не скоро.
+- type: cloze
+  id: grammar-cases
+  title: 'Граматика: Відмінки'
+  passage: 'Солдати йшли на (війна) {війну}.
+
+    Вони сиділи в (окопи) {окопах}.
+
+    Командир дав наказ (армія) {армії}.
+
+    Ми співаємо пісню про (калина) {калину}.
+
+    Пам''ятник (герої) {героям} стоїть у Львові.
+
+    Без (зброя) {зброї} не можна воювати.
+
+    Вони мріяли про (воля) {волю}.
+
+    Допомога (поранені) {пораненим} була необхідна.
+
+    Жінки служили як (офіцери) {офіцери}.
+
+    Прорив стався на (Волинь) {Волині}.
+
+    Ми чистили (зброя) {зброю} щодня.
+
+    Сотник говорив з (генерал) {генералом}.
+
+    Ми бачили (ворог) {ворога} в лісі.
+
+    Лист (мама) {мамі} був дуже довгим.
+
+    Солдати хотіли (мир) {миру}, а не війни.
+
+    Україна стала незалежною (держава) {державою}.
+
+    '
+- type: quiz
+  id: final-review
+  title: Підсумковий тест
+  items:
+  - question: Що було головною метою УСС?
+    options:
+    - text: Боротьба за незалежність України
+      correct: true
+    - text: Захист Австрійської імперії
+      correct: false
+    - text: Здобуття нових територій
+      correct: false
+    - text: Отримання нагород
+      correct: false
+  - question: Яке значення мала Перша світова для України?
+    options:
+    - text: Катастрофа і водночас школа державності
+      correct: true
+    - text: Період розквіту економіки
+      correct: false
+    - text: Час миру і спокою
+      correct: false
+    - text: Втрата національної ідентичності
+      correct: false
+  - question: Що робили стрільці в 'Пресовій кватирі'?
+    options:
+    - text: Створювали мистецтво і літературу
+      correct: true
+    - text: Чистили зброю
+      correct: false
+    - text: Допитували полонених
+      correct: false
+    - text: Спали
+      correct: false
+  - question: Чому українці опинилися по різні боки фронту?
+    options:
+    - text: Бо їхні землі були розділені між імперіями
+      correct: true
+    - text: Бо вони так хотіли
+      correct: false
+    - text: Бо це була громадянська війна
+      correct: false
+    - text: Бо вони ненавиділи одне одного
+      correct: false
+  - question: Хто став першою жінкою-офіцером?
+    options:
+    - text: Олена Степанів
+      correct: true
+    - text: Леся Українка
+      correct: false
+    - text: Ольга Кобилянська
+      correct: false
+    - text: Марко Вовчок
+      correct: false
+  - question: Коли відбувся Листопадовий чин?
+    options:
+    - text: 1 листопада 1918
+      correct: true
+    - text: 1 вересня 1914
+      correct: false
+    - text: 22 січня 1919
+      correct: false
+    - text: 24 серпня 1991
+      correct: false
+  - question: Що таке ЗУНР?
+    options:
+    - text: Західноукраїнська Народна Республіка
+      correct: true
+    - text: З'єднана Українська Народна Республіка
+      correct: false
+    - text: Загальна Українська Народна Рада
+      correct: false
+    - text: Зелений Український Народний Рух
+      correct: false
+  - question: Де були поховані жертви Талергофу?
+    options:
+    - text: У Граці (Австрія)
+      correct: true
+    - text: У Львові
+      correct: false
+    - text: У Києві
+      correct: false
+    - text: На горі Маківка
+      correct: false
+- type: writing
+  id: reflection
+  title: Рефлексія
+  question: Чому пісня 'Ой у лузі червона калина' стала символом опору і у 1914, і у 2022 році? Що спільного між цими двома війнами?
+  min_words: 50
+- type: dialogue-reorder
+  id: uss-meeting
+  title: Зустріч з Вишиваним
+  lines:
+  - text: Доброго здоров'я, пане сотнику!
+    order: 1
+    speaker: ''
+  - text: Вітаю, стрільці! Як настрій?
+    order: 2
+    speaker: ''
+  - text: Бойовий, як завжди.
+    order: 3
+    speaker: ''
+  - text: Ви, кажуть, з самої Відня?
+    order: 4
+    speaker: ''
+  - text: Так, але серцем я в Україні.
+    order: 5
+    speaker: ''
+  - text: Чому ви носите вишиванку?
+    order: 6
+    speaker: ''
+  - text: Бо це одяг вільних людей.
+    order: 7
+    speaker: ''
+  - text: Ми підемо з вами хоч на край світу!
+    order: 8
+    speaker: ''
+  - text: Підемо до Києва, хлопці.
+    order: 9
+    speaker: ''
+  - text: За Вільну Україну!
+    order: 10
+    speaker: ''
+  - text: Слава Україні!
+    order: 11
+    speaker: ''
+  - text: Героям Слава!
+    order: 12
+    speaker: ''
+- type: match-up
+  id: chronology
+  title: Хронологія подій
+  pairs:
+  - term: Серпень 1914
+    definition: Створення Легіону УСС
+  - term: Весна 1915
+    definition: Битва на горі Маківка
+  - term: '1916'
+    definition: Брусиловський прорив
+  - term: 1 листопада 1918
+    definition: Листопадовий чин
+  - term: 3 серпня 1914
+    definition: Маніфест Головної Української Ради
+  - term: '1948'
+    definition: Смерть Василя Вишиваного
+  - term: '1917'
+    definition: Початок Української Революції
+  - term: '2022'
+    definition: Пісня 'Червона Калина' стала хітом

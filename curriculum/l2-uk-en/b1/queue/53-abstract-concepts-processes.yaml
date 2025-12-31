@@ -1,15 +1,18 @@
 module: 53-abstract-concepts-processes
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/53-abstract-concepts-processes.md
-generated: '2025-12-29T00:22:02.669853'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:28.756993'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 50
+total_items: 51
+item_count: 51
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -275,6 +278,120 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Українська економіка демонструє {зростання|спадання|зростання|кризу}
+    після складного періоду. {Процес|Криза|Процес|Занепад} {відновлення|погіршення|відновлення|спадання}
+    триває вже другий рік. Експерти відзначають {покращення|погіршення|покращення|занепад}
+    інвестиційного клімату.
+
+
+    Водночас деякі галузі переживають {трансформацію|стабілізацію|трансформацію|кризу}.
+    Традиційне виробництво демонструє {скорочення|розширення|скорочення|зростання},
+    а IT-сектор показує стрімкий {розвиток|занепад|розвиток|регрес}.
+
+
+    Уряд планує {модернізацію|кризу|модернізацію|занепад} інфраструктури. {Реформа|Криза|Реформа|Занепад}
+    освіти вже почалася. Експерти очікують {стабілізацію|кризу|стабілізацію|занепад}
+    цін у наступному кварталі.
+
+
+    Загальна {тенденція|криза|тенденція|регрес} позитивна: {прогрес|регрес|прогрес|занепад}
+    очевидний. Головне завдання — {прискорення|сповільнення|прискорення|зупинка} {реформ|криз|реформ|занепаду}.
+
+    '
+  blanks:
+  - answer: кризу
+    options:
+    - зростання
+    - спадання
+    - зростання
+  - answer: Занепад
+    options:
+    - Процес
+    - Криза
+    - Процес
+  - answer: спадання
+    options:
+    - відновлення
+    - погіршення
+    - відновлення
+  - answer: занепад
+    options:
+    - покращення
+    - погіршення
+    - покращення
+  - answer: кризу
+    options:
+    - трансформацію
+    - стабілізацію
+    - трансформацію
+  - answer: зростання
+    options:
+    - скорочення
+    - розширення
+    - скорочення
+  - answer: регрес
+    options:
+    - розвиток
+    - занепад
+    - розвиток
+  - answer: занепад
+    options:
+    - модернізацію
+    - кризу
+    - модернізацію
+  - answer: Занепад
+    options:
+    - Реформа
+    - Криза
+    - Реформа
+  - answer: занепад
+    options:
+    - стабілізацію
+    - кризу
+    - стабілізацію
+  - answer: регрес
+    options:
+    - тенденція
+    - криза
+    - тенденція
+  - answer: занепад
+    options:
+    - прогрес
+    - регрес
+    - прогрес
+  - answer: зупинка
+    options:
+    - прискорення
+    - сповільнення
+    - прискорення
+  - answer: занепаду
+    options:
+    - реформ
+    - криз
+    - реформ
+  blank_count: 14
+  complete_passage: 'Українська економіка демонструє кризу після складного періоду.
+    Занепад спадання триває вже другий рік. Експерти відзначають занепад інвестиційного
+    клімату.
+
+
+    Водночас деякі галузі переживають кризу. Традиційне виробництво демонструє зростання,
+    а IT-сектор показує стрімкий регрес.
+
+
+    Уряд планує занепад інфраструктури. Занепад освіти вже почалася. Експерти очікують
+    занепад цін у наступному кварталі.
+
+
+    Загальна регрес позитивна: занепад очевидний. Головне завдання — зупинка занепаду.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -343,14 +460,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке слово означає "поступові, природні зміни з часом"?
   options:
-  - text: революція
-    correct: false
-  - text: еволюція
-    correct: true
-  - text: криза
-    correct: false
-  - text: реформа
-    correct: false
+  - '{''text'': ''революція'', ''correct'': False}'
+  - '{''text'': ''еволюція'', ''correct'': True}'
+  - '{''text'': ''криза'', ''correct'': False}'
+  - '{''text'': ''реформа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -361,14 +474,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке слово є антонімом до "зростання"?
   options:
-  - text: підвищення
-    correct: false
-  - text: розширення
-    correct: false
-  - text: спадання
-    correct: true
-  - text: збільшення
-    correct: false
+  - '{''text'': ''підвищення'', ''correct'': False}'
+  - '{''text'': ''розширення'', ''correct'': False}'
+  - '{''text'': ''спадання'', ''correct'': True}'
+  - '{''text'': ''збільшення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -379,14 +488,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке слово використовується для опису різкого, докорінного перетворення?
   options:
-  - text: адаптація
-    correct: false
-  - text: стабілізація
-    correct: false
-  - text: еволюція
-    correct: false
-  - text: революція
-    correct: true
+  - '{''text'': ''адаптація'', ''correct'': False}'
+  - '{''text'': ''стабілізація'', ''correct'': False}'
+  - '{''text'': ''еволюція'', ''correct'': False}'
+  - '{''text'': ''революція'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -397,14 +502,10 @@ items:
   title: Розуміння лексики процесів
   question: Що означає слово "модернізація"?
   options:
-  - text: повернення до старого
-    correct: false
-  - text: оновлення, осучаснення
-    correct: true
-  - text: погіршення стану
-    correct: false
-  - text: стабільність без змін
-    correct: false
+  - '{''text'': ''повернення до старого'', ''correct'': False}'
+  - '{''text'': ''оновлення, осучаснення'', ''correct'': True}'
+  - '{''text'': ''погіршення стану'', ''correct'': False}'
+  - '{''text'': ''стабільність без змін'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -415,14 +516,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке дієслово найкраще поєднується зі словом "прогрес"?
   options:
-  - text: переживати прогрес
-    correct: false
-  - text: досягти прогресу
-    correct: true
-  - text: внести прогрес
-    correct: false
-  - text: спостерігати за прогресом
-    correct: false
+  - '{''text'': ''переживати прогрес'', ''correct'': False}'
+  - '{''text'': ''досягти прогресу'', ''correct'': True}'
+  - '{''text'': ''внести прогрес'', ''correct'': False}'
+  - '{''text'': ''спостерігати за прогресом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -433,14 +530,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке слово означає "пристосування до нових умов"?
   options:
-  - text: трансформація
-    correct: false
-  - text: модернізація
-    correct: false
-  - text: адаптація
-    correct: true
-  - text: революція
-    correct: false
+  - '{''text'': ''трансформація'', ''correct'': False}'
+  - '{''text'': ''модернізація'', ''correct'': False}'
+  - '{''text'': ''адаптація'', ''correct'': True}'
+  - '{''text'': ''революція'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +544,10 @@ items:
   title: Розуміння лексики процесів
   question: Що є антонімом до "прогрес"?
   options:
-  - text: розвиток
-    correct: false
-  - text: регрес
-    correct: true
-  - text: процес
-    correct: false
-  - text: зміна
-    correct: false
+  - '{''text'': ''розвиток'', ''correct'': False}'
+  - '{''text'': ''регрес'', ''correct'': True}'
+  - '{''text'': ''процес'', ''correct'': False}'
+  - '{''text'': ''зміна'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -469,14 +558,10 @@ items:
   title: Розуміння лексики процесів
   question: Яке слово описує період труднощів в економіці?
   options:
-  - text: підйом
-    correct: false
-  - text: стабілізація
-    correct: false
-  - text: криза
-    correct: true
-  - text: прискорення
-    correct: false
+  - '{''text'': ''підйом'', ''correct'': False}'
+  - '{''text'': ''стабілізація'', ''correct'': False}'
+  - '{''text'': ''криза'', ''correct'': True}'
+  - '{''text'': ''прискорення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

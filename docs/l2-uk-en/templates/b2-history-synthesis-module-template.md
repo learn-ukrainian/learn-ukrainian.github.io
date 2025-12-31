@@ -1,0 +1,520 @@
+# B2 History Synthesis Module Template
+
+**Purpose:** Reference template for B2 Ukrainian history synthesis modules (M83, M108, M119, M125, M131)
+
+**Based on:** `b2-history-module-template.md` — inherits decolonization standards
+
+**Related Issues:** [#332](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/332)
+
+> **Note:** Regular history modules (M71-82, M84-107, etc.) use `b2-history-module-template.md` instead.
+
+---
+
+## What is a Synthesis Module?
+
+Synthesis modules **culminate** each historical era with thematic analysis rather than quiz-style testing. They connect cause/effect relationships across multiple modules and link historical events to modern Ukrainian identity.
+
+### Key Differences from Standard Checkpoint
+
+| Aspect | Standard Checkpoint | Synthesis Module |
+|--------|---------------------|------------------|
+| **Focus** | Testing grammar/vocab recall | Analyzing historical themes |
+| **Format** | Quiz, gap-fill, MCQ | Essay, timeline, discussion |
+| **New content** | Minimal | Extended synthesis text (500+ words) |
+| **Assessment** | Right/wrong answers | Argumentative quality |
+| **Flow** | Interrupts narrative | Culminates narrative arc |
+| **Vocabulary** | Review only | Review in new contexts |
+
+---
+
+## Synthesis Modules Overview
+
+| Module | Title | Era Covered | Modules Synthesized |
+|--------|-------|-------------|---------------------|
+| M83 | Синтез: Від витоків до литовської доби | Origins → Lithuania | M71-82 (12 modules) |
+| M108 | Синтез: Козацька спадщина | Cossack Era | M84-107 (24 modules) |
+| M119 | Синтез: Століття випробувань | 20th Century Trauma | M109-118 (10 modules) |
+| M125 | Синтез: Відновлення державності | Independence Era | M120-124 (5 modules) |
+| M131 | Синтез: Війна за існування | 2014-Present War | M126-130 (5 modules) |
+
+---
+
+## Quick Reference Checklist
+
+Before submitting a B2 synthesis module, verify:
+
+### Synthesis-Specific Requirements
+- [ ] **CBI pedagogy:** Content-Based Instruction with Thematic Analysis
+- [ ] **Era overview:** 500+ word synthesis text connecting ALL modules in era
+- [ ] **Chronology activity:** Timeline reconstruction (12+ events)
+- [ ] **Era vocabulary:** Review of 25+ key terms from era (NOT new vocabulary)
+- [ ] **Essay task:** 250-400 word analytical prompt with model answer
+- [ ] **Present connection:** Link to modern Ukraine (post-2014/2022)
+- [ ] **Decolonization lens:** Ukraine-centric perspective throughout
+- [ ] **Immersion:** 100% Ukrainian (English only in vocabulary translations)
+- [ ] **Word count:** 1500+ words total
+- [ ] **Activities:** 10-12 activities (fewer than regular modules, more analytical)
+
+---
+
+## Module Structure (Synthesis-Specific)
+
+### 1. Frontmatter
+
+```yaml
+---
+module: b2-XX
+title: "Синтез: [Era Title]"
+phase: "B2.3 [Ukrainian History]"
+pedagogy: "CBI"
+register: "публіцистичний"
+tags:
+  - history
+  - synthesis
+  - [era-tag]
+grammar:
+  - "Analytical writing"
+  - "Cause-effect structures"
+vocabulary_focus:
+  - "Era-specific terminology review"
+  - "Historical argumentation"
+objectives:
+  - "Синтезувати знання з модулів [XX]-[YY]"
+  - "Аналізувати причинно-наслідкові зв'язки в історичному контексті"
+  - "Формулювати аргументовані висновки про історичні події"
+vocabulary_count: 30
+---
+```
+
+### 2. Era Overview Section — 500+ words
+
+```markdown
+# Синтез: [Era Title]
+
+> 🎯 **Чому це важливо?**
+>
+> [Explain significance of this era for Ukrainian identity]
+> [Preview the synthesis: what themes connect the modules?]
+> [Frame decolonization perspective for the entire era]
+
+## Узагальнення епохи: [Era Name]
+
+### Вступ
+
+[100-150 words: Opening that frames the era as a whole]
+
+### Основні теми епохи
+
+**Тема 1: [Theme Name]**
+
+[150-200 words connecting multiple modules through this theme]
+[Reference specific events from M[XX], M[YY], M[ZZ]]
+
+**Тема 2: [Theme Name]**
+
+[150-200 words connecting multiple modules through this theme]
+
+**Тема 3: [Theme Name]**
+
+[150-200 words connecting multiple modules through this theme]
+
+### Причинно-наслідкові зв'язки
+
+[100-150 words explicitly connecting cause → effect across the era]
+
+> 🌍 **Сучасна перспектива**
+>
+> [How does understanding this era help us understand today's Ukraine?]
+```
+
+### 3. Chronology Section
+
+```markdown
+---
+
+## Хронологія: [Era Name]
+
+Розставте події в хронологічному порядку та визначте їхній зв'язок.
+
+### Ключові дати епохи
+
+| Рік | Подія | Значення |
+|-----|-------|----------|
+| [year] | [event from M71] | [brief significance] |
+| [year] | [event from M72] | [brief significance] |
+| [year] | [event from M73] | [brief significance] |
+[... 12+ events covering ALL modules in era]
+
+### Хронологічне завдання
+
+Розташуйте ці події у правильному порядку:
+
+1. [Event A - scrambled]
+2. [Event B - scrambled]
+3. [Event C - scrambled]
+[... 8-10 events]
+
+> [!solution] Правильний порядок
+> 1. [Correct first event] ([year])
+> 2. [Correct second event] ([year])
+> [...]
+
+> 💡 **Чи знали ви?**
+>
+> [Interesting chronological fact — e.g., what events happened simultaneously in Europe?]
+```
+
+### 4. Era Vocabulary Review Section
+
+```markdown
+---
+
+## Словник епохи: [Era Name]
+
+Ці терміни з модулів [XX]-[YY] є ключовими для розуміння епохи.
+
+### Політична лексика
+
+| Слово | Значення | Контекст епохи |
+|-------|----------|----------------|
+| **[term1]** | [definition in Ukrainian] | [how it applies to this era] |
+| **[term2]** | [definition in Ukrainian] | [how it applies to this era] |
+[... 8-10 political terms]
+
+### Соціально-культурна лексика
+
+| Слово | Значення | Контекст епохи |
+|-------|----------|----------------|
+| **[term1]** | [definition in Ukrainian] | [how it applies to this era] |
+[... 8-10 socio-cultural terms]
+
+### Історіографічна лексика
+
+| Слово | Значення | Контекст епохи |
+|-------|----------|----------------|
+| **[term1]** | [definition in Ukrainian] | [how it applies to this era] |
+[... 5-8 historiographical terms]
+
+### Застосування в контексті
+
+Заповніть пропуски словами з таблиць вище:
+
+1. [Sentence with blank using term1]
+   > [!answer] [term1]
+
+2. [Sentence with blank using term2]
+   > [!answer] [term2]
+
+[... 8-10 contextual exercises]
+```
+
+### 5. Analytical Essay Section
+
+```markdown
+---
+
+## Есе-аналіз: [Thematic Question]
+
+### Завдання
+
+Напишіть есе на 250-400 слів на одну з наступних тем:
+
+**Тема 1:** [Compare/contrast question]
+> Наприклад: "Порівняйте роль [X] та [Y] у формуванні української державності."
+
+**Тема 2:** [Cause/effect question]
+> Наприклад: "Як події [X] вплинули на [Y]?"
+
+**Тема 3:** [Evaluation question]
+> Наприклад: "Чи можна вважати [X] поворотним моментом в історії України? Аргументуйте."
+
+### Структура есе
+
+1. **Вступ (50-75 слів):** Сформулюйте тезу — вашу головну думку
+2. **Аргумент 1 (75-100 слів):** Перший доказ з прикладом з епохи
+3. **Аргумент 2 (75-100 слів):** Другий доказ з прикладом з епохи
+4. **Висновок (50-75 слів):** Підсумуйте та зв'яжіть із сучасністю
+
+### Корисні конструкції для аргументації
+
+| Функція | Вирази |
+|---------|--------|
+| Теза | На мою думку... / Я вважаю, що... / Очевидно, що... |
+| Аргумент | По-перше... / По-друге... / Крім того... |
+| Приклад | Наприклад... / Яскравим прикладом є... / Це підтверджує... |
+| Протиставлення | Однак... / З іншого боку... / Незважаючи на це... |
+| Висновок | Отже... / Таким чином... / Підсумовуючи... |
+
+### Зразок есе (Тема 1)
+
+> **Тема:** [Essay prompt]
+>
+> [300-400 word model essay demonstrating:
+> - Clear thesis statement
+> - Two well-developed arguments with historical evidence
+> - Proper use of argumentative language
+> - Connection to modern Ukraine
+> - Decolonization perspective]
+>
+> *Цей зразок демонструє структуру та стиль академічного есе.*
+
+> ⚠️ **Деколонізація в аргументації**
+>
+> [Reminder about avoiding Russian imperial framing in essays]
+> [Encourage use of Ukrainian primary sources and historians]
+```
+
+### 6. Connection to Present Section
+
+```markdown
+---
+
+## Зв'язок із сьогоденням
+
+### Як ця епоха формує сучасну Україну?
+
+[200-300 words connecting historical era to post-2014/2022 context]
+
+**Політичний вимір:**
+[How political patterns from this era appear today]
+
+**Культурний вимір:**
+[How cultural elements from this era persist]
+
+**Ідентичність:**
+[How this era shapes Ukrainian national identity]
+
+### Дискусійні питання
+
+Обговоріть у групі або поміркуйте самостійно:
+
+1. [Discussion question linking past to present]
+2. [Discussion question about modern relevance]
+3. [Discussion question about decolonization]
+
+> 🌍 **Реальне життя**
+>
+> [Concrete example of how this history appears in daily Ukrainian life today]
+> [Reference to current events, memorials, place names, etc.]
+```
+
+### 7. Summary Section
+
+```markdown
+---
+
+# Підсумок
+
+## Ключові висновки епохи
+
+| Аспект | Основний висновок |
+|--------|-------------------|
+| Політика | [One-sentence political conclusion] |
+| Культура | [One-sentence cultural conclusion] |
+| Ідентичність | [One-sentence identity conclusion] |
+| Спадщина | [One-sentence legacy conclusion] |
+
+## Модулі цієї епохи
+
+| Модуль | Тема | Ключова подія |
+|--------|------|---------------|
+| M[XX] | [Title] | [Key event] |
+| M[YY] | [Title] | [Key event] |
+[... all modules in era]
+
+## Що далі?
+
+[Preview of next historical era and its connection to this one]
+
+> ✅ **Самоперевірка**
+>
+> Чи можете ви:
+> - [ ] Пояснити основні теми епохи [Era Name]?
+> - [ ] Розташувати ключові події в хронологічному порядку?
+> - [ ] Написати аргументоване есе про цю епоху?
+> - [ ] Пов'язати історичні події із сучасною Україною?
+>
+> Якщо так — ви готові до наступної епохи!
+```
+
+### 8. Vocabulary Section
+
+```markdown
+---
+
+# Словник
+
+| Слово | Переклад | Примітки |
+|-------|----------|----------|
+| **синтез** | synthesis | об'єднання знань |
+| **узагальнення** | generalization | загальний висновок |
+| **причинно-наслідковий** | cause-and-effect | зв'язок причини та наслідку |
+| **аргументація** | argumentation | система доказів |
+| **теза** | thesis | головна думка |
+[... 25-30 items: mix of historiographical, argumentative, and era-specific terms]
+```
+
+---
+
+## Synthesis-Specific Activities
+
+### Activity Mix (10-12 activities)
+
+Unlike regular modules (14+ activities), synthesis modules have fewer but more analytical activities:
+
+| Activity Type | Count | Purpose |
+|---------------|-------|---------|
+| **quiz** | 2 | Test understanding of themes and connections |
+| **match-up** | 2 | Connect events, figures, consequences |
+| **group-sort** | 1 | Categorize by theme, period, or significance |
+| **fill-in** | 2 | Vocabulary in context |
+| **unjumble** | 1 | Chronological ordering |
+| **cloze** | 1 | Extended synthesis passage |
+| **select** | 1 | Multiple correct answers for complex questions |
+| **error-correction** | 1-2 | Historical and linguistic accuracy |
+
+### Activity Design Principles
+
+**1. Test SYNTHESIS, not recall:**
+```markdown
+## quiz: Тематичний аналіз
+
+1. Яка спільна тема об'єднує події в модулях M71-M75?
+   - [ ] Релігійні конфлікти
+   - [x] Формування державності
+   - [ ] Економічний розвиток
+   - [ ] Культурне піднесення
+   > Усі ці модулі показують різні аспекти державотворення.
+```
+
+**2. Test CONNECTIONS, not facts:**
+```markdown
+## match-up: Причини та наслідки
+
+| Подія | Наслідок |
+|-------|----------|
+| Хрещення Русі | Культурна інтеграція з Європою |
+| Монгольська навала | Перенесення центру на захід |
+| Люблінська унія | Посилення полонізації |
+```
+
+**3. Test ARGUMENTATION, not memorization:**
+```markdown
+## select: Аргументи для есе
+
+Які з цих тверджень можна використати як аргументи в есе про роль козацтва?
+
+- [x] Козацтво створило традицію виборної влади
+- [x] Січ була прикладом військової демократії
+- [ ] Козаки підтримували абсолютну монархію
+- [x] Козацький міф формує сучасну ідентичність
+```
+
+---
+
+## Example Essay Prompts by Synthesis Module
+
+### M83: Від витоків до литовської доби
+
+**Prompt 1:** Порівняйте роль Київської Русі та Галицько-Волинського князівства у збереженні української державності.
+
+**Prompt 2:** Як монгольська навала змінила вектор українського історичного розвитку?
+
+**Prompt 3:** Чи можна вважати литовський період "золотою добою" для українських земель?
+
+### M108: Козацька спадщина
+
+**Prompt 1:** Порівняйте політичні проекти Богдана Хмельницького та Івана Мазепи.
+
+**Prompt 2:** Як Переяславська угода вплинула на долю української державності?
+
+**Prompt 3:** Чому козацький міф залишається важливим для сучасної української ідентичності?
+
+### M119: Століття випробувань
+
+**Prompt 1:** Порівняйте спроби створення української держави в 1918 та 1991 роках.
+
+**Prompt 2:** Як Голодомор вплинув на українську національну свідомість?
+
+**Prompt 3:** Чому XX століття називають "століттям випробувань" для України?
+
+### M125: Відновлення державності
+
+**Prompt 1:** Які уроки з подій 1991-2013 років є актуальними для сучасної України?
+
+**Prompt 2:** Як Помаранчева революція змінила політичну культуру України?
+
+**Prompt 3:** Чому Революція Гідності стала поворотним моментом в історії України?
+
+### M131: Війна за існування
+
+**Prompt 1:** Як російська агресія змінила українську національну ідентичність?
+
+**Prompt 2:** Порівняйте українську боротьбу 2014-2022 з історичними прикладами національного спротиву.
+
+**Prompt 3:** Яку роль відіграє деколонізація у сучасній війні за незалежність?
+
+---
+
+## Model Answer Format
+
+Each synthesis module must include ONE complete model essay (300-400 words) demonstrating:
+
+```markdown
+### Зразок есе
+
+**Тема:** [Full essay prompt]
+
+---
+
+**Вступ**
+
+[Thesis statement: clear position on the question]
+[Brief preview of arguments]
+
+**Аргумент 1**
+
+[Topic sentence]
+[Historical evidence from the era]
+[Analysis connecting evidence to thesis]
+
+**Аргумент 2**
+
+[Topic sentence]
+[Historical evidence from the era]
+[Analysis connecting evidence to thesis]
+
+**Висновок**
+
+[Restatement of thesis]
+[Connection to modern Ukraine]
+[Final thought on significance]
+
+---
+
+*Кількість слів: ~350*
+
+**Аналіз зразка:**
+- ✅ Чітка теза
+- ✅ Два аргументи з доказами
+- ✅ Зв'язок із сучасністю
+- ✅ Деколонізаційна перспектива
+```
+
+---
+
+## Related Documentation
+
+- **Base template:** `docs/l2-uk-en/templates/b2-history-module-template.md`
+- **B2 Curriculum Plan:** `docs/l2-uk-en/B2-CURRICULUM-PLAN.md`
+- **Decolonization guidelines:** Referenced in history template
+- **Activity Reference:** `docs/ACTIVITY-MARKDOWN-REFERENCE.md`
+- **Checkpoint comparison:** `docs/l2-uk-en/templates/b1-checkpoint-module-template.md`
+
+---
+
+**Last Updated:** 2025-12-30
+**Template Version:** 1.0
+
+**Changelog:**
+- v1.0 (2025-12-30): Initial creation per Issue #332

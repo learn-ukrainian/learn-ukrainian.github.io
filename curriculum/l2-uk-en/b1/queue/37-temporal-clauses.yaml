@@ -1,16 +1,19 @@
 module: 37-temporal-clauses
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/37-temporal-clauses.md
-generated: '2025-12-29T00:22:01.240902'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:28.271364'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   translate: 8
   true-false: 12
-item_count: 56
+total_items: 57
+item_count: 57
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилку
@@ -259,6 +262,127 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Минулого літа я вирішив подорожувати Україною. {Як тільки|Поки|Перш
+    ніж|Коли} я приїхав до Львова, одразу пішов до старого міста. {Поки|Після того
+    як|Перш ніж|До того як} я гуляв центром, фотографував кожну будівлю. {Після того
+    як|Поки|Коли|До того як} обійшов увесь центр, зайшов у кав''ярню.
+
+
+    {Поки|Після того як|Перш ніж|Як тільки} я пив каву, познайомився з цікавою людиною.
+    {Як тільки|Поки не|Перш ніж|До того як} ми почали розмовляти, час минув непомітно.
+    {Перш ніж|Після того як|Поки|Як тільки} попрощатися, ми обмінялися контактами.
+
+
+    {З тих пір як|Перш ніж|До того як|Як тільки} я приїхав додому, часто згадую ту
+    подорож. {Кожного разу коли|Після того як|Перш ніж|Поки} я бачу фотографії, знову
+    відчуваю ту атмосферу. {Поки|Поки не|Як тільки|Коли} не поїду туди знову, буду
+    мріяти про це місто.
+
+
+    {Як тільки|Поки|Перш ніж|До того як} настане наступне літо, обов''язково повернуся.
+    {Як тільки|Поки|Перш ніж|Після того як} побачу знайомі вулиці, відчую щастя. {Перш
+    ніж|Після того як|Поки|Як тільки} почну подорож, ретельно сплануюю маршрут. {Як
+    тільки|Поки|Перш ніж|До того як} все буде готово, вирушу в дорогу. {Кожного разу
+    коли|Після того як|Перш ніж|Поки} подорожую, завжди відкриваю для себе нове.
+
+    '
+  blanks:
+  - answer: Коли
+    options:
+    - Як тільки
+    - Поки
+    - Перш ніж
+  - answer: До того як
+    options:
+    - Поки
+    - Після того як
+    - Перш ніж
+  - answer: До того як
+    options:
+    - Після того як
+    - Поки
+    - Коли
+  - answer: Як тільки
+    options:
+    - Поки
+    - Після того як
+    - Перш ніж
+  - answer: До того як
+    options:
+    - Як тільки
+    - Поки не
+    - Перш ніж
+  - answer: Як тільки
+    options:
+    - Перш ніж
+    - Після того як
+    - Поки
+  - answer: Як тільки
+    options:
+    - З тих пір як
+    - Перш ніж
+    - До того як
+  - answer: Поки
+    options:
+    - Кожного разу коли
+    - Після того як
+    - Перш ніж
+  - answer: Коли
+    options:
+    - Поки
+    - Поки не
+    - Як тільки
+  - answer: До того як
+    options:
+    - Як тільки
+    - Поки
+    - Перш ніж
+  - answer: Після того як
+    options:
+    - Як тільки
+    - Поки
+    - Перш ніж
+  - answer: Як тільки
+    options:
+    - Перш ніж
+    - Після того як
+    - Поки
+  - answer: До того як
+    options:
+    - Як тільки
+    - Поки
+    - Перш ніж
+  - answer: Поки
+    options:
+    - Кожного разу коли
+    - Після того як
+    - Перш ніж
+  blank_count: 14
+  complete_passage: 'Минулого літа я вирішив подорожувати Україною. Коли я приїхав
+    до Львова, одразу пішов до старого міста. До того як я гуляв центром, фотографував
+    кожну будівлю. До того як обійшов увесь центр, зайшов у кав''ярню.
+
+
+    Як тільки я пив каву, познайомився з цікавою людиною. До того як ми почали розмовляти,
+    час минув непомітно. Як тільки попрощатися, ми обмінялися контактами.
+
+
+    Як тільки я приїхав додому, часто згадую ту подорож. Поки я бачу фотографії, знову
+    відчуваю ту атмосферу. Коли не поїду туди знову, буду мріяти про це місто.
+
+
+    До того як настане наступне літо, обов''язково повернуся. Після того як побачу
+    знайомі вулиці, відчую щастя. Як тільки почну подорож, ретельно сплануюю маршрут.
+    До того як все буде готово, вирушу в дорогу. Поки подорожую, завжди відкриваю
+    для себе нове.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з розсипаних слів
   jumbled_words: []
@@ -328,14 +452,10 @@ items:
   question: Який сполучник використовується для вираження одночасних дій, що відбуваються
     паралельно у часі?
   options:
-  - text: у той час як
-    correct: true
-  - text: після того як
-    correct: false
-  - text: перш ніж
-    correct: false
-  - text: як тільки
-    correct: false
+  - '{''text'': ''у той час як'', ''correct'': True}'
+  - '{''text'': ''після того як'', ''correct'': False}'
+  - '{''text'': ''перш ніж'', ''correct'': False}'
+  - '{''text'': ''як тільки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -347,14 +467,11 @@ items:
   question: Яке з наведених речень правильно виражає послідовність подій з використанням
     сполучника часу?
   options:
-  - text: Коли він прийшов, ми говорили.
-    correct: false
-  - text: Після того як він пішов, ми продовжили розмову.
-    correct: true
-  - text: Поки вона готувала, він читав газету.
-    correct: false
-  - text: У той час як батьки відпочивали, діти гралися.
-    correct: false
+  - '{''text'': ''Коли він прийшов, ми говорили.'', ''correct'': False}'
+  - '{''text'': ''Після того як він пішов, ми продовжили розмову.'', ''correct'':
+    True}'
+  - '{''text'': ''Поки вона готувала, він читав газету.'', ''correct'': False}'
+  - '{''text'': ''У той час як батьки відпочивали, діти гралися.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -366,14 +483,10 @@ items:
   question: Який сполучник використовується для вираження дії, яка відбувається безпосередньо
     перед іншою дією?
   options:
-  - text: після того як
-    correct: false
-  - text: як тільки
-    correct: false
-  - text: перш ніж
-    correct: true
-  - text: відтоді як
-    correct: false
+  - '{''text'': ''після того як'', ''correct'': False}'
+  - '{''text'': ''як тільки'', ''correct'': False}'
+  - '{''text'': ''перш ніж'', ''correct'': True}'
+  - '{''text'': ''відтоді як'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -385,14 +498,10 @@ items:
   question: Як правильно завершити речення з використанням часового сполучника «Чекай
     тут, поки я ___»?
   options:
-  - text: прийду
-    correct: false
-  - text: не прийду
-    correct: true
-  - text: приходжу
-    correct: false
-  - text: приходив
-    correct: false
+  - '{''text'': ''прийду'', ''correct'': False}'
+  - '{''text'': ''не прийду'', ''correct'': True}'
+  - '{''text'': ''приходжу'', ''correct'': False}'
+  - '{''text'': ''приходив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -404,14 +513,10 @@ items:
   question: Який сполучник найкраще передає ідею миттєвої реакції на подію в українській
     мові?
   options:
-  - text: коли
-    correct: false
-  - text: поки
-    correct: false
-  - text: як тільки
-    correct: true
-  - text: в міру того як
-    correct: false
+  - '{''text'': ''коли'', ''correct'': False}'
+  - '{''text'': ''поки'', ''correct'': False}'
+  - '{''text'': ''як тільки'', ''correct'': True}'
+  - '{''text'': ''в міру того як'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -423,14 +528,11 @@ items:
   question: Яке з наведених речень містить часовий сполучник, що виражає регулярність
     повторюваних подій?
   options:
-  - text: Коли він прийшов, ми обідали.
-    correct: false
-  - text: Після того як пішов дощ, з'явилась веселка.
-    correct: false
-  - text: Кожного разу коли він приходить, приносить квіти.
-    correct: true
-  - text: Перш ніж піти, він попрощався з усіма.
-    correct: false
+  - '{''text'': ''Коли він прийшов, ми обідали.'', ''correct'': False}'
+  - '{''text'': "Після того як пішов дощ, з''явилась веселка.", ''correct'': False}'
+  - '{''text'': ''Кожного разу коли він приходить, приносить квіти.'', ''correct'':
+    True}'
+  - '{''text'': ''Перш ніж піти, він попрощався з усіма.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -442,14 +544,10 @@ items:
   question: Який сполучник використовується для вираження дії, яка триває протягом
     усього періоду іншої дії?
   options:
-  - text: як тільки
-    correct: false
-  - text: поки
-    correct: true
-  - text: щойно
-    correct: false
-  - text: після того як
-    correct: false
+  - '{''text'': ''як тільки'', ''correct'': False}'
+  - '{''text'': ''поки'', ''correct'': True}'
+  - '{''text'': ''щойно'', ''correct'': False}'
+  - '{''text'': ''після того як'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -461,14 +559,11 @@ items:
   question: Яка основна відмінність між сполучниками «щойно» та «з тих пір як» у вираженні
     часових відношень?
   options:
-  - text: «Щойно» — миттєвість, «з тих пір як» — тривалість від минулого
-    correct: true
-  - text: Немає відмінності, вони синоніми.
-    correct: false
-  - text: «Щойно» — книжний, «з тих пір як» — розмовний.
-    correct: false
-  - text: «Щойно» — майбутнє, «з тих пір як» — минуле.
-    correct: false
+  - '{''text'': ''«Щойно» — миттєвість, «з тих пір як» — тривалість від минулого'',
+    ''correct'': True}'
+  - '{''text'': ''Немає відмінності, вони синоніми.'', ''correct'': False}'
+  - '{''text'': ''«Щойно» — книжний, «з тих пір як» — розмовний.'', ''correct'': False}'
+  - '{''text'': ''«Щойно» — майбутнє, «з тих пір як» — минуле.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -480,14 +575,11 @@ items:
   source_sentence: When he came, we were already having dinner with the whole family.
   answer: ''
   options:
-  - text: Коли він прийшов, ми вже вечеряли з усією сім'єю.
-    correct: true
-  - text: Після того як він прийшов, ми вечеряли.
-    correct: false
-  - text: Перш ніж він прийшов, ми вечеряли.
-    correct: false
-  - text: Поки він прийшов, ми вечеряли.
-    correct: false
+  - '{''text'': "Коли він прийшов, ми вже вечеряли з усією сім''єю.", ''correct'':
+    True}'
+  - '{''text'': ''Після того як він прийшов, ми вечеряли.'', ''correct'': False}'
+  - '{''text'': ''Перш ніж він прийшов, ми вечеряли.'', ''correct'': False}'
+  - '{''text'': ''Поки він прийшов, ми вечеряли.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -498,14 +590,10 @@ items:
   source_sentence: As soon as the sun rose, we set off on our journey.
   answer: ''
   options:
-  - text: Як тільки сонце зійшло, ми вирушили в дорогу.
-    correct: true
-  - text: Коли сонце зійшло, ми вирушили.
-    correct: false
-  - text: Поки сонце сходило, ми вирушили.
-    correct: false
-  - text: Перш ніж сонце зійшло, ми вирушили.
-    correct: false
+  - '{''text'': ''Як тільки сонце зійшло, ми вирушили в дорогу.'', ''correct'': True}'
+  - '{''text'': ''Коли сонце зійшло, ми вирушили.'', ''correct'': False}'
+  - '{''text'': ''Поки сонце сходило, ми вирушили.'', ''correct'': False}'
+  - '{''text'': ''Перш ніж сонце зійшло, ми вирушили.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -516,14 +604,10 @@ items:
   source_sentence: Before leaving, he said goodbye to everyone in the office.
   answer: ''
   options:
-  - text: Перш ніж піти, він попрощався з усіма в офісі.
-    correct: true
-  - text: Після того як пішов, він попрощався.
-    correct: false
-  - text: Коли пішов, він попрощався.
-    correct: false
-  - text: Поки йшов, він прощався.
-    correct: false
+  - '{''text'': ''Перш ніж піти, він попрощався з усіма в офісі.'', ''correct'': True}'
+  - '{''text'': ''Після того як пішов, він попрощався.'', ''correct'': False}'
+  - '{''text'': ''Коли пішов, він попрощався.'', ''correct'': False}'
+  - '{''text'': ''Поки йшов, він прощався.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -534,14 +618,11 @@ items:
   source_sentence: Wait here until I return from the store with groceries.
   answer: ''
   options:
-  - text: Чекай тут, поки я не повернуся з магазину з продуктами.
-    correct: true
-  - text: Чекай тут, поки я повернуся.
-    correct: false
-  - text: Чекай тут, коли я повернуся.
-    correct: false
-  - text: Чекай тут, після того як повернуся.
-    correct: false
+  - '{''text'': ''Чекай тут, поки я не повернуся з магазину з продуктами.'', ''correct'':
+    True}'
+  - '{''text'': ''Чекай тут, поки я повернуся.'', ''correct'': False}'
+  - '{''text'': ''Чекай тут, коли я повернуся.'', ''correct'': False}'
+  - '{''text'': ''Чекай тут, після того як повернуся.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -552,14 +633,10 @@ items:
   source_sentence: While she was cooking dinner, he was reading a newspaper.
   answer: ''
   options:
-  - text: Поки вона готувала вечерю, він читав газету.
-    correct: true
-  - text: Коли вона готувала вечерю, він читав.
-    correct: false
-  - text: Після того як вона готувала, він читав.
-    correct: false
-  - text: Перш ніж вона готувала, він читав.
-    correct: false
+  - '{''text'': ''Поки вона готувала вечерю, він читав газету.'', ''correct'': True}'
+  - '{''text'': ''Коли вона готувала вечерю, він читав.'', ''correct'': False}'
+  - '{''text'': ''Після того як вона готувала, він читав.'', ''correct'': False}'
+  - '{''text'': ''Перш ніж вона готувала, він читав.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -570,14 +647,11 @@ items:
   source_sentence: Every time I visit this city, I remember my childhood years.
   answer: ''
   options:
-  - text: Кожного разу коли я відвідую це місто, згадую дитячі роки.
-    correct: true
-  - text: Коли я відвідую це місто, згадую.
-    correct: false
-  - text: Після того як відвідую місто, згадую.
-    correct: false
-  - text: Поки відвідую місто, згадую.
-    correct: false
+  - '{''text'': ''Кожного разу коли я відвідую це місто, згадую дитячі роки.'', ''correct'':
+    True}'
+  - '{''text'': ''Коли я відвідую це місто, згадую.'', ''correct'': False}'
+  - '{''text'': ''Після того як відвідую місто, згадую.'', ''correct'': False}'
+  - '{''text'': ''Поки відвідую місто, згадую.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -588,14 +662,11 @@ items:
   source_sentence: Since he moved to another city, we rarely see each other.
   answer: ''
   options:
-  - text: З тих пір як він переїхав до іншого міста, ми рідко бачимося.
-    correct: true
-  - text: Коли він переїхав, ми рідко бачимося.
-    correct: false
-  - text: Після того як він переїхав, ми бачимося.
-    correct: false
-  - text: Перш ніж він переїхав, ми бачилися.
-    correct: false
+  - '{''text'': ''З тих пір як він переїхав до іншого міста, ми рідко бачимося.'',
+    ''correct'': True}'
+  - '{''text'': ''Коли він переїхав, ми рідко бачимося.'', ''correct'': False}'
+  - '{''text'': ''Після того як він переїхав, ми бачимося.'', ''correct'': False}'
+  - '{''text'': ''Перш ніж він переїхав, ми бачилися.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -606,14 +677,11 @@ items:
   source_sentence: As night approached, it was getting darker and colder.
   answer: ''
   options:
-  - text: В міру того як ніч наближалась, ставало темніше й холодніше.
-    correct: true
-  - text: Коли ніч наближалась, ставало темно.
-    correct: false
-  - text: Як тільки ніч настала, стало темно.
-    correct: false
-  - text: Поки ніч наближалась, було темно.
-    correct: false
+  - '{''text'': ''В міру того як ніч наближалась, ставало темніше й холодніше.'',
+    ''correct'': True}'
+  - '{''text'': ''Коли ніч наближалась, ставало темно.'', ''correct'': False}'
+  - '{''text'': ''Як тільки ніч настала, стало темно.'', ''correct'': False}'
+  - '{''text'': ''Поки ніч наближалась, було темно.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

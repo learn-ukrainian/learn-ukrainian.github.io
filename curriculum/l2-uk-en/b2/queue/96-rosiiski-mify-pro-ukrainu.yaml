@@ -1,0 +1,1447 @@
+module: 96-rosiiski-mify-pro-ukrainu
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/96-rosiiski-mify-pro-ukrainu.md
+generated: '2025-12-30T19:49:17.751159'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Російські міфи про Україну є систематичною брехнею.
+  error: none
+  answer: none
+  sentence_corrected: Російські міфи про Україну є систематичною брехнею.
+  options:
+  - брехнею
+  - брехня
+  - брехні
+  - брехню
+  original_explanation: Речення правильне — це тримає учнів уважними.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: УНР проголосила незалежність у 1918 років.
+  error: років
+  answer: році
+  sentence_corrected: УНР проголосила незалежність у 1918 році.
+  options:
+  - років
+  - році
+  - рік
+  - роком
+  original_explanation: Прийменник «у» з роком вимагає місцевого відмінка — у році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Валуєвський циркуляр забороняв українську мова.
+  error: мова
+  answer: мову
+  sentence_corrected: Валуєвський циркуляр забороняв українську мову.
+  options:
+  - мова
+  - мову
+  - мови
+  - мовою
+  original_explanation: Дієслово «забороняти» вимагає знахідного відмінка — забороняв
+    що? мову.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Деколонізація починається зі знанням правди.
+  error: знанням
+  answer: знання
+  sentence_corrected: Деколонізація починається зі знання правди.
+  options:
+  - знанням
+  - знання
+  - знань
+  - знанні
+  original_explanation: Прийменник «зі» вимагає родового відмінка — зі чого? знання.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Пропаганда є інструментом колоніальної маніпуляцію.
+  error: маніпуляцію
+  answer: маніпуляції
+  sentence_corrected: Пропаганда є інструментом колоніальної маніпуляції.
+  options:
+  - маніпуляцію
+  - маніпуляції
+  - маніпуляція
+  - маніпуляцією
+  original_explanation: Прикметник «колоніальної» вимагає родового відмінка — маніпуляції.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Київ прийняв християнства у 988 році.
+  error: християнства
+  answer: християнство
+  sentence_corrected: Київ прийняв християнство у 988 році.
+  options:
+  - християнства
+  - християнство
+  - християнством
+  - християнстві
+  original_explanation: Дієслово «прийняти» вимагає знахідного відмінка — прийняв
+    що? християнство.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Томос є відновленням історична справедливості.
+  error: історична
+  answer: історичної
+  sentence_corrected: Томос є відновленням історичної справедливості.
+  options:
+  - історична
+  - історичної
+  - історичну
+  - історичною
+  original_explanation: Прикметник узгоджується з іменником у родовому відмінку —
+    історичної справедливості.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Міф про «єдиний народ» заперечує українського права.
+  error: українського права
+  answer: українське право
+  sentence_corrected: Міф про «єдиний народ» заперечує українське право.
+  options:
+  - українського права
+  - українське право
+  - українським правом
+  - українському праву
+  original_explanation: Дієслово «заперечувати» вимагає знахідного відмінка — заперечує
+    що? право.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Війна 2022 року є кульмінацію століть пропаганди.
+  error: кульмінацію
+  answer: кульмінацією
+  sentence_corrected: Війна 2022 року є кульмінацією століть пропаганди.
+  options:
+  - кульмінацію
+  - кульмінацією
+  - кульмінації
+  - кульмінація
+  original_explanation: Конструкція «є чим» вимагає орудного відмінка — є кульмінацією.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Брехня через повторення стає «правда».
+  error: '"правда"'
+  answer: '"правдою"'
+  sentence_corrected: Брехня через повторення стає «правда».
+  options:
+  - '"правда"'
+  - '"правдою"'
+  - '"правди"'
+  - '"правду"'
+  original_explanation: Дієслово «ставати» вимагає орудного відмінка — стає чим? правдою.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Українська мова ближча до польської, ніж до російську.
+  error: російську
+  answer: російської
+  sentence_corrected: Українська мова ближча до польської, ніж до російської.
+  options:
+  - російську
+  - російської
+  - російською
+  - російська
+  original_explanation: Прийменник «до» вимагає родового відмінка — до чого? російської.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Емський указ забороняв вистави на українській наріччі.
+  error: українській наріччі
+  answer: українському наріччі
+  sentence_corrected: Емський указ забороняв вистави на українському наріччі.
+  options:
+  - українській наріччі
+  - українському наріччі
+  - українським наріччям
+  - українського наріччя
+  original_explanation: Іменник «наріччя» середнього роду — на українському наріччі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Проекція — це приписування іншим власні дій.
+  error: власні
+  answer: власних
+  sentence_corrected: Проекція — це приписування іншим власних дій.
+  options:
+  - власні
+  - власних
+  - власними
+  - власним
+  original_explanation: Іменник «дій» у родовому відмінку вимагає прикметника «власних».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Стаття Путіна є ідеологічної основою війни.
+  error: ідеологічної
+  answer: ідеологічною
+  sentence_corrected: Стаття Путіна є ідеологічною основою війни.
+  options:
+  - ідеологічної
+  - ідеологічною
+  - ідеологічна
+  - ідеологічну
+  original_explanation: Конструкція «є чим» вимагає орудного відмінка — є ідеологічною
+    основою.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Імперія використовує пропаганду для виправдання насильства.
+  error: none
+  answer: none
+  sentence_corrected: Імперія використовує пропаганду для виправдання насильства.
+  options:
+  - насильства
+  - насильство
+  - насильством
+  - насильстві
+  original_explanation: Речення правильне — прийменник «для» вимагає родового відмінка.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в деколонізаційних реченнях
+  sentence_with_error: Відмова від імперської термінології є першим кроком.
+  error: none
+  answer: none
+  sentence_corrected: Відмова від імперської термінології є першим кроком.
+  options:
+  - кроком
+  - крок
+  - кроку
+  - крокові
+  original_explanation: Речення правильне — конструкція «є чим» з орудним відмінком.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Російські _____ про Україну — це не помилки, а систематична брехня.
+  answer: міфи
+  complete_sentence: Російські міфи__ про Україну — це не помилки, а систематична
+    брехня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: _____ — це маніпулятивна інформація для впливу на свідомість.
+  answer: Пропаганда
+  complete_sentence: Пропаганда__ — це маніпулятивна інформація для впливу на свідомість.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Термін «возз'єднання» — це приклад _____ понять.
+  answer: підміни
+  complete_sentence: Термін «возз'єднання» — це приклад підміни__ понять.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Валуєвський _____ 1863 року забороняв українську мову.
+  answer: циркуляр
+  complete_sentence: Валуєвський циркуляр__ 1863 року забороняв українську мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Емський _____ повністю заборонив українську мову в публічному
+    просторі.
+  answer: указ
+  complete_sentence: Емський указ__ повністю заборонив українську мову в публічному
+    просторі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: _____ — це звільнення від колоніального впливу.
+  answer: Деколонізація
+  complete_sentence: Деколонізація__ — це звільнення від колоніального впливу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Київ прийняв християнство в _____ році.
+  answer: '988'
+  complete_sentence: Київ прийняв християнство в 988__ році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Томос про _____ Україна отримала в 2019 році.
+  answer: автокефалію
+  complete_sentence: Томос про автокефалію__ Україна отримала в 2019 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: «Новоросія» — це _____ термін для завойованих територій.
+  answer: адміністративний
+  complete_sentence: «Новоросія» — це адміністративний__ термін для завойованих територій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: _____ починається зі знання правди.
+  answer: Деколонізація
+  complete_sentence: Деколонізація__ починається зі знання правди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: УНР проголосила _____ у січні 1918 року.
+  answer: незалежність
+  complete_sentence: УНР проголосила незалежність__ у січні 1918 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Війна 2022 року — це _____ століть пропаганди.
+  answer: кульмінація
+  complete_sentence: Війна 2022 року — це кульмінація__ століть пропаганди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: _____ — це приписування іншим власних дій.
+  answer: Проекція
+  complete_sentence: Проекція__ — це приписування іншим власних дій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Українська мова ближча до польської, ніж до _____.
+  answer: російської
+  complete_sentence: Українська мова ближча до польської, ніж до російської__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: «Братерство» в російському розумінні означає _____.
+  answer: підпорядкування
+  complete_sentence: «Братерство» в російському розумінні означає підпорядкування__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Імперія завжди намагається представити підкорених як «молодших
+    _____».
+  answer: братів
+  complete_sentence: Імперія завжди намагається представити підкорених як «молодших
+    братів__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Російські міфи заперечують українське право на _____.
+  answer: державу
+  complete_sentence: Російські міфи заперечують українське право на державу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Валуєвський циркуляр забороняв друкування _____.
+  answer: книг
+  complete_sentence: Валуєвський циркуляр забороняв друкування книг__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Київ прийняв _____ у 988 році.
+  answer: християнство
+  complete_sentence: Київ прийняв християнство__ у 988 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Томос є відновленням історичної _____.
+  answer: справедливості
+  complete_sentence: Томос є відновленням історичної справедливості__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Деколонізація починається зі _____ правди.
+  answer: знання
+  complete_sentence: Деколонізація починається зі знання__ правди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Пропаганда є інструментом колоніальної _____.
+  answer: маніпуляції
+  complete_sentence: Пропаганда є інструментом колоніальної маніпуляції__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Війна 2022 року є _____ століть пропаганди.
+  answer: кульмінацією
+  complete_sentence: Війна 2022 року є кульмінацією__ століть пропаганди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Брехня через повторення стає _____.
+  answer: '"правдою"'
+  complete_sentence: Брехня через повторення стає "правдою"__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Українська мова ближча до _____, ніж до російської.
+  answer: польської
+  complete_sentence: Українська мова ближча до польської__, ніж до російської.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Емський указ забороняв вистави на українському _____.
+  answer: наріччі
+  complete_sentence: Емський указ забороняв вистави на українському наріччі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: «Братерство» означає _____ «молодшого» «старшому».
+  answer: підпорядкування
+  complete_sentence: «Братерство» означає підпорядкування__ «молодшого» «старшому».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Стаття Путіна є ідеологічною _____ війни.
+  answer: основою
+  complete_sentence: Стаття Путіна є ідеологічною основою__ війни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Проекція — це приписування іншим власних _____.
+  answer: дій
+  complete_sentence: Проекція — це приписування іншим власних дій__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: УНР проголосила _____ у 1918 році.
+  answer: незалежність
+  complete_sentence: УНР проголосила незалежність__ у 1918 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Відмова від імперської _____ — перший крок деколонізації.
+  answer: термінології
+  complete_sentence: Відмова від імперської термінології__ — перший крок деколонізації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кожен міф має конкретну _____.
+  answer: мету
+  complete_sentence: Кожен міф має конкретну мету__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про російські міфи
+  passage_template: 'Російська {пропаганда|правда|наука|пропаганда} проти України
+    — одна з найстаріших у світі. Вона {створює|спростовує|доводить|створює} міфи
+    для виправдання {насильства|дружби|співпраці|насильства}.
+
+
+    Міф про «{єдиний|різний|окремий|єдиний} народ» заперечує українське право на {державу|війну|колонізацію|державу}.
+    Насправді Україна, Росія та Білорусь — {окремі|однакові|споріднені|окремі} нації
+    з різною історією.
+
+
+    Міф про «подарунок {Леніна|Путіна|Сталіна|Леніна}» ігнорує факт, що УНР проголосила
+    {незалежність|капітуляцію|союз|незалежність} у 1918 році. Тарас {Шевченко|Пушкін|Гоголь|Шевченко}
+    писав про українську ідентичність ще в {1840-х|1920-х|1990-х|1840-х} роках.
+
+
+    Валуєвський {циркуляр|роман|словник|циркуляр} 1863 року і Емський {указ|вірш|танець|указ}
+    1876 року {забороняли|підтримували|поширювали|забороняли} українську мову. Якщо
+    українська — «діалект», навіщо її {забороняти|вивчати|підтримувати|забороняти}?
+
+
+    {Деколонізація|Колонізація|Пропаганда|Деколонізація} починається зі {знання|незнання|забуття|знання}
+    правди. Відмова від імперської {термінології|армії|економіки|термінології} — перший
+    крок до {звільнення|підкорення|знищення|звільнення}.
+
+    '
+  blanks:
+  - answer: пропаганда
+    options:
+    - пропаганда
+    - правда
+    - наука
+  - answer: створює
+    options:
+    - створює
+    - спростовує
+    - доводить
+  - answer: насильства
+    options:
+    - насильства
+    - дружби
+    - співпраці
+  - answer: єдиний
+    options:
+    - єдиний
+    - різний
+    - окремий
+  - answer: державу
+    options:
+    - державу
+    - війну
+    - колонізацію
+  - answer: окремі
+    options:
+    - окремі
+    - однакові
+    - споріднені
+  - answer: Леніна
+    options:
+    - Леніна
+    - Путіна
+    - Сталіна
+  - answer: незалежність
+    options:
+    - незалежність
+    - капітуляцію
+    - союз
+  - answer: Шевченко
+    options:
+    - Шевченко
+    - Пушкін
+    - Гоголь
+  - answer: 1840-х
+    options:
+    - 1840-х
+    - 1920-х
+    - 1990-х
+  - answer: циркуляр
+    options:
+    - циркуляр
+    - роман
+    - словник
+  - answer: указ
+    options:
+    - указ
+    - вірш
+    - танець
+  - answer: забороняли
+    options:
+    - забороняли
+    - підтримували
+    - поширювали
+  - answer: забороняти
+    options:
+    - забороняти
+    - вивчати
+    - підтримувати
+  - answer: Деколонізація
+    options:
+    - Деколонізація
+    - Колонізація
+    - Пропаганда
+  - answer: знання
+    options:
+    - знання
+    - незнання
+    - забуття
+  - answer: термінології
+    options:
+    - термінології
+    - армії
+    - економіки
+  - answer: звільнення
+    options:
+    - звільнення
+    - підкорення
+    - знищення
+  blank_count: 18
+  complete_passage: 'Російська пропаганда проти України — одна з найстаріших у світі.
+    Вона створює міфи для виправдання насильства.
+
+
+    Міф про «єдиний народ» заперечує українське право на державу. Насправді Україна,
+    Росія та Білорусь — окремі нації з різною історією.
+
+
+    Міф про «подарунок Леніна» ігнорує факт, що УНР проголосила незалежність у 1918
+    році. Тарас Шевченко писав про українську ідентичність ще в 1840-х роках.
+
+
+    Валуєвський циркуляр 1863 року і Емський указ 1876 року забороняли українську
+    мову. Якщо українська — «діалект», навіщо її забороняти?
+
+
+    Деколонізація починається зі знання правди. Відмова від імперської термінології
+    — перший крок до звільнення.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Російські міфи про Україну — це систематична брехня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Пропаганда є інструмент колоніальної маніпуляції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Історичні факти спростовують міф про «єдиний народ».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: УНР проголосила незалежність у 1918 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Київ прийняв християнство у 988 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Валуєвський циркуляр забороняв українську мову.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Томос є відновлення історичної справедливості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Деколонізація починається зі знання правди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: «Братерство» у російському розумінні означає підпорядкування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: «Новоросія» — це імперський адміністративний термін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Брехня через повторення стає «правдою».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Приписування іншим власних дій — це проекція.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Війна 2022 року — це кульмінація століть пропаганди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Українська мова ближча до польської, ніж до російської.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Міфи заперечують право України на існування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про міфи та деколонізацію
+  jumbled_words: []
+  answer: Відмова від імперської термінології — перший крок деколонізації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Згідно з текстом, яка головна мета російських міфів про Україну?
+  options:
+  - '{''text'': ''Сприяти дружбі між народами'', ''correct'': False}'
+  - '{''text'': ''Виправдати колоніальне насильство та заперечити українську ідентичність'',
+    ''correct'': True}'
+  - '{''text'': ''Покращити міжнародні відносини'', ''correct'': False}'
+  - '{''text'': ''Підтримати українську культуру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст характеризує твердження про «єдиний народ»?
+  options:
+  - '{''text'': ''Як історичну правду'', ''correct'': False}'
+  - '{''text'': ''Як пропагандистський міф для заперечення українського права на державу'',
+    ''correct'': True}'
+  - '{''text'': ''Як наукову теорію'', ''correct'': False}'
+  - '{''text'': ''Як культурну традицію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Згідно з текстом, коли Київ прийняв християнство?
+  options:
+  - '{''text'': ''У 1054 році'', ''correct'': False}'
+  - '{''text'': ''У 988 році'', ''correct'': True}'
+  - '{''text'': ''У 1686 році'', ''correct'': False}'
+  - '{''text'': ''У 2019 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст описує міф про «подарунок Леніна»?
+  options:
+  - '{''text'': ''Як історичний факт'', ''correct'': False}'
+  - '{''text'': ''Як брехню, бо УНР проголосила незалежність ще в 1918 році'', ''correct'':
+    True}'
+  - '{''text'': ''Як наукове твердження'', ''correct'': False}'
+  - '{''text'': ''Як спірну теорію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Що, згідно з текстом, означав термін «Малоросія» спочатку?
+  options:
+  - '{''text'': ''Назву України'', ''correct'': False}'
+  - '{''text'': ''Географічний термін для Галичини за церковною традицією'', ''correct'':
+    True}'
+  - '{''text'': ''Назву Росії'', ''correct'': False}'
+  - '{''text'': ''Назву Білорусі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст описує Валуєвський циркуляр 1863 року?
+  options:
+  - '{''text'': ''Як наукове твердження про українську мову'', ''correct'': False}'
+  - '{''text'': ''Як політичну заборону української мови'', ''correct'': True}'
+  - '{''text'': ''Як захист української культури'', ''correct'': False}'
+  - '{''text'': ''Як міжнародний договір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Згідно з текстом, коли було видано Емський указ?
+  options:
+  - '{''text'': ''У 1863 році'', ''correct'': False}'
+  - '{''text'': ''У 1876 році'', ''correct'': True}'
+  - '{''text'': ''У 1918 році'', ''correct'': False}'
+  - '{''text'': ''У 2021 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст характеризує отримання Томосу в 2019 році?
+  options:
+  - '{''text'': ''Як церковний розкол'', ''correct'': False}'
+  - '{''text'': ''Як відновлення історичної справедливості'', ''correct'': True}'
+  - '{''text'': ''Як російську ініціативу'', ''correct'': False}'
+  - '{''text'': ''Як технічну процедуру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Що, згідно з текстом, означає «братерство» в російському розумінні?
+  options:
+  - '{''text'': ''Рівноправне партнерство'', ''correct'': False}'
+  - '{''text'': ''Підпорядкування «молодшого брата» «старшому»'', ''correct'': True}'
+  - '{''text'': ''Взаємну повагу'', ''correct'': False}'
+  - '{''text'': ''Культурний обмін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст описує «Новоросію»?
+  options:
+  - '{''text'': ''Як споконвічну російську землю'', ''correct'': False}'
+  - '{''text'': ''Як адміністративний термін для завойованих територій'', ''correct'':
+    True}'
+  - '{''text'': ''Як незалежну державу'', ''correct'': False}'
+  - '{''text'': ''Як українську назву'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Згідно з текстом, яку функцію виконує повторення в пропаганді?
+  options:
+  - '{''text'': "Допомагає запам''ятати правду", ''correct'': False}'
+  - '{''text'': ''Перетворює брехню на «правду» через багаторазове повторення'', ''correct'':
+    True}'
+  - '{''text'': ''Підвищує освітній рівень'', ''correct'': False}'
+  - '{''text'': ''Сприяє критичному мисленню'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст пов'язує статтю Путіна 2021 року з війною?
+  options:
+  - '{''text'': "Ніяк не пов''язує", ''correct'': False}'
+  - '{''text'': ''Називає її ідеологічною основою вторгнення'', ''correct'': True}'
+  - '{''text'': ''Вважає її науковою працею'', ''correct'': False}'
+  - '{''text'': ''Описує як мирну ініціативу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Що, згідно з текстом, означає «підміна понять» у пропаганді?
+  options:
+  - '{''text'': ''Уточнення термінів'', ''correct'': False}'
+  - '{''text'': "Заміна «окупації» на «возз''єднання» тощо", ''correct'': True}'
+  - '{''text'': ''Переклад на іншу мову'', ''correct'': False}'
+  - '{''text'': ''Наукова класифікація'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст описує «проекцію» як пропагандистський прийом?
+  options:
+  - '{''text'': ''Як демонстрацію фільмів'', ''correct'': False}'
+  - '{''text'': ''Як приписування іншим власних дій'', ''correct'': True}'
+  - '{''text'': ''Як картографічний термін'', ''correct'': False}'
+  - '{''text'': ''Як психологічну допомогу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Згідно з текстом, що є першим кроком деколонізації?
+  options:
+  - '{''text'': ''Військова дія'', ''correct'': False}'
+  - '{''text'': ''Відмова від імперської термінології'', ''correct'': True}'
+  - '{''text'': ''Економічні санкції'', ''correct'': False}'
+  - '{''text'': ''Політичні переговори'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про російські міфи
+  question: Як текст характеризує війну 2022 року?
+  options:
+  - '{''text'': ''Як окремий конфлікт'', ''correct'': False}'
+  - '{''text'': ''Як кульмінацію століть російської пропаганди'', ''correct'': True}'
+  - '{''text'': ''Як непорозуміння'', ''correct'': False}'
+  - '{''text'': ''Як внутрішню справу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, стверджував Валуєвський циркуляр про українську
+    мову?
+  options:
+  - '{''text'': ''Це окрема мова'', ''correct'': False}'
+  - '{''text'': ''Це «зіпсована російська під впливом Польщі»'', ''correct'': True}'
+  - '{''text'': ''Це давня мова'', ''correct'': False}'
+  - '{''text'': ''Це мова науки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому заборона мови спростовує міф про «діалект»?
+  options:
+  - '{''text'': ''Діалекти не забороняють'', ''correct'': False}'
+  - '{''text'': ''Якщо це діалект, навіщо забороняти?'', ''correct'': True}'
+  - '{''text'': ''Заборони підтримують діалекти'', ''correct'': False}'
+  - '{''text'': ''Діалекти завжди забороняють'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, забороняв Емський указ 1876 року?
+  options:
+  - '{''text'': ''Тільки книги'', ''correct'': False}'
+  - '{''text'': ''Книги, вистави, читання, ноти українською'', ''correct'': True}'
+  - '{''text'': ''Тільки вистави'', ''correct'': False}'
+  - '{''text'': ''Тільки ноти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст характеризує цитату Троцького про Україну?
+  options:
+  - '{''text'': ''Як вираз братерства'', ''correct'': False}'
+  - '{''text'': ''Як доказ економічної мотивації захоплення'', ''correct'': True}'
+  - '{''text'': ''Як наукове твердження'', ''correct'': False}'
+  - '{''text'': ''Як вираз поваги'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, сказав патріарх Варфоломій про 1686 рік?
+  options:
+  - '{''text'': ''Передача була канонічною'', ''correct'': False}'
+  - '{''text'': ''Передача була з порушенням канонів і вимушеною'', ''correct'': True}'
+  - '{''text'': ''Москва мала право'', ''correct'': False}'
+  - '{''text'': ''Це був добровільний вибір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку тезу Путіна з 2021 року наводить текст?
+  options:
+  - '{''text'': ''Україна — окрема держава'', ''correct'': False}'
+  - '{''text'': ''«Росіяни та українці — один народ»'', ''correct'': True}'
+  - '{''text'': ''Україна має право на незалежність'', ''correct'': False}'
+  - '{''text'': ''Ленін зробив помилку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст порівнює статтю Путіна з Валуєвським циркуляром?
+  options:
+  - '{''text'': ''Вони суперечать одне одному'', ''correct'': False}'
+  - '{''text'': ''Вони повторюють ті самі міфи через 160 років'', ''correct'': True}'
+  - '{''text'': ''Путін спростовує циркуляр'', ''correct'': False}'
+  - '{''text'': ''Циркуляр був науковим'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке питання пропонує текст ставити до первинних джерел?
+  options:
+  - '{''text'': ''Хто автор?'', ''correct'': False}'
+  - '{''text'': ''«Кому вигідна ця версія історії?»'', ''correct'': True}'
+  - '{''text'': ''Коли написано?'', ''correct'': False}'
+  - '{''text'': ''Якою мовою?'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому, згідно з текстом, важливо знати про Емський указ сьогодні?
+  options:
+  - '{''text'': ''Це цікавий факт'', ''correct'': False}'
+  - '{''text'': ''Він показує систематичність імперської політики'', ''correct'':
+    True}'
+  - '{''text'': ''Він уже не діє'', ''correct'': False}'
+  - '{''text'': ''Він був добрим законом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст характеризує слова Соловйова про «відсутність історичних традицій»?
+  options:
+  - '{''text'': ''Як історичну правду'', ''correct'': False}'
+  - '{''text'': ''Як типовий приклад колоніального погляду'', ''correct'': True}'
+  - '{''text'': ''Як наукове твердження'', ''correct'': False}'
+  - '{''text'': "Як об''єктивний аналіз", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що текст каже про українську державність до 1918 року?
+  options:
+  - '{''text'': ''Її не існувало'', ''correct'': False}'
+  - '{''text'': ''Київська Русь, Галицько-Волинське князівство, Козацька держава'',
+    ''correct'': True}'
+  - '{''text'': ''Тільки Козацька держава'', ''correct'': False}'
+  - '{''text'': ''Тільки Київська Русь'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст використовує цитату Троцького про «колосальне значення» України?
+  options:
+  - '{''text'': ''Для показу любові до України'', ''correct'': False}'
+  - '{''text'': ''Для доказу економічної експлуатації як мотиву захоплення'', ''correct'':
+    True}'
+  - '{''text'': ''Для підтримки більшовицької версії'', ''correct'': False}'
+  - '{''text'': ''Для критики Троцького особисто'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку функцію, згідно з текстом, виконують первинні джерела в деколонізації?
+  options:
+  - '{''text'': ''Розважають'', ''correct'': False}'
+  - '{''text'': ''Спростовують міфи фактами'', ''correct'': True}'
+  - '{''text'': ''Підтверджують пропаганду'', ''correct'': False}'
+  - '{''text'': ''Ускладнюють розуміння'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому, згідно з текстом, важливо цитувати патріарха Варфоломія?
+  options:
+  - '{''text'': ''Він знаменитий'', ''correct'': False}'
+  - '{''text'': ''Він — глава «материнської церкви», яка мала право дати автокефалію'',
+    ''correct'': True}'
+  - '{''text'': ''Він підтримує Москву'', ''correct'': False}'
+  - '{''text'': ''Він український політик'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст радить реагувати на російські міфи в розмовах?
+  options:
+  - '{''text'': ''Мовчати'', ''correct'': False}'
+  - '{''text'': ''Спростовувати з використанням фактів і джерел'', ''correct'': True}'
+  - '{''text'': ''Погоджуватися'', ''correct'': False}'
+  - '{''text'': ''Уникати теми'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке загальне послання тексту про роль первинних джерел?
+  options:
+  - '{''text'': ''Вони не важливі'', ''correct'': False}'
+  - '{''text'': ''Вони — зброя проти імперської пропаганди'', ''correct'': True}'
+  - '{''text'': ''Вони підтримують російську версію'', ''correct'': False}'
+  - '{''text'': ''Вони застарілі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, міф про «єдиний народ» — це історична правда.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, УНР проголосила незалежність у 1918 році, до більшовиків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, Київ прийняв християнство пізніше за Москву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, Томос 2019 року — це церковний розкол.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, термін «Малоросія» був створений як колоніальна назва.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, Валуєвський циркуляр забороняв друкувати українські
+    книги.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, Емський указ видано в 1876 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, «Новоросія» — це споконвічна російська земля.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, «братерство» в російському розумінні означає рівність.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, повторення — це механізм пропаганди.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, проекція — це приписування іншим власних дій.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, стаття Путіна 2021 року — це наукова праця.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, деколонізація починається з відмови від імперської
+    термінології.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, українська мова — це діалект російської.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, війна 2022 року — це кульмінація століть пропаганди.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про російські міфи
+  statement: Згідно з текстом, Тарас Шевченко писав про українську ідентичність у
+    1840-х роках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

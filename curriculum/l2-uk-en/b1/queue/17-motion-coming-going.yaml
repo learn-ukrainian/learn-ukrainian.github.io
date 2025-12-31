@@ -1,15 +1,18 @@
 module: 17-motion-coming-going
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/17-motion-coming-going.md
-generated: '2025-12-29T00:21:59.661268'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.721441'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 8
+  cloze: 1
   unjumble: 6
   quiz: 8
   true-false: 8
-item_count: 44
+total_items: 45
+item_count: 45
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки з префіксами
@@ -321,6 +324,111 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Текст з дієсловами руху
+  passage_template: 'Учора Андрій {прийшов|приїхав|увійшов|вийшов} до офісу о дев''ятій
+    годині. Він {увійшов|вийшов|прийшов|виніс} до кабінету та почав працювати. О другій
+    годині він {вийшов|увійшов|прийшов|виїхав} з офісу на обід.
+
+    Після обіду він {повернувся|прийшов|вийшов|виїхав} та продовжив роботу. Ввечері
+    він знову {вийшов|увійшов|прийшов|приніс} з офісу та {приїхав|прийшов|виїхав|вийшов}
+    додому на автобусі.
+
+    Його дружина {прийшла|приїхала|виїхала|принесла} додому раніше. Вона {принесла|внесла|виносила|приносила}
+    продукти з магазину і {внесла|принесла|виносила|приносила} їх до кухні.
+
+    Наступного дня сім''я {виїхала|приїхала|увійшла|вийшла} з міста на відпочинок.
+    Вони {приїхали|виїхали|вийшли|увійшли} до готелю о третій годині. Діти {вибігли|увійшли|вийшли|виїхали}
+    з машини та {увійшли|вийшли|приїхали|виїхали} до готелю першими. Батько {виніс|приніс|вніс|виносив}
+    валізи з багажника.'
+  blanks:
+  - answer: вийшов
+    options:
+    - прийшов
+    - приїхав
+    - увійшов
+  - answer: виніс
+    options:
+    - увійшов
+    - вийшов
+    - прийшов
+  - answer: виїхав
+    options:
+    - вийшов
+    - увійшов
+    - прийшов
+  - answer: виїхав
+    options:
+    - повернувся
+    - прийшов
+    - вийшов
+  - answer: приніс
+    options:
+    - вийшов
+    - увійшов
+    - прийшов
+  - answer: вийшов
+    options:
+    - приїхав
+    - прийшов
+    - виїхав
+  - answer: принесла
+    options:
+    - прийшла
+    - приїхала
+    - виїхала
+  - answer: приносила
+    options:
+    - принесла
+    - внесла
+    - виносила
+  - answer: приносила
+    options:
+    - внесла
+    - принесла
+    - виносила
+  - answer: вийшла
+    options:
+    - виїхала
+    - приїхала
+    - увійшла
+  - answer: увійшли
+    options:
+    - приїхали
+    - виїхали
+    - вийшли
+  - answer: виїхали
+    options:
+    - вибігли
+    - увійшли
+    - вийшли
+  - answer: виїхали
+    options:
+    - увійшли
+    - вийшли
+    - приїхали
+  - answer: виносив
+    options:
+    - виніс
+    - приніс
+    - вніс
+  blank_count: 14
+  complete_passage: 'Учора Андрій вийшов до офісу о дев''ятій годині. Він виніс до
+    кабінету та почав працювати. О другій годині він виїхав з офісу на обід.
+
+    Після обіду він виїхав та продовжив роботу. Ввечері він знову приніс з офісу та
+    вийшов додому на автобусі.
+
+    Його дружина принесла додому раніше. Вона приносила продукти з магазину і приносила
+    їх до кухні.
+
+    Наступного дня сім''я вийшла з міста на відпочинок. Вони увійшли до готелю о третій
+    годині. Діти виїхали з машини та виїхали до готелю першими. Батько виносив валізи
+    з багажника.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -375,14 +483,10 @@ items:
   question: Який префікс додає значення "прибуття до місця призначення" в українських
     дієсловах руху?
   options:
-  - text: 'при- (наприклад: прийти, приїхати)'
-    correct: true
-  - text: 'ви- (наприклад: вийти, виїхати)'
-    correct: false
-  - text: 'в-/у- (наприклад: увійти, в''їхати)'
-    correct: false
-  - text: 'від- (наприклад: відійти, від''їхати)'
-    correct: false
+  - '{''text'': ''при- (наприклад: прийти, приїхати)'', ''correct'': True}'
+  - '{''text'': ''ви- (наприклад: вийти, виїхати)'', ''correct'': False}'
+  - '{''text'': "в-/у- (наприклад: увійти, в''їхати)", ''correct'': False}'
+  - '{''text'': "від- (наприклад: відійти, від''їхати)", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -394,14 +498,10 @@ items:
   question: Який префікс додає значення "вихід зсередини назовні" в українських дієсловах
     руху та як він впливає на вид?
   options:
-  - text: 'при- (наприклад: прийти, приїхати)'
-    correct: false
-  - text: 'ви- (наприклад: вийти, виїхати)'
-    correct: true
-  - text: 'в-/у- (наприклад: увійти, в''їхати)'
-    correct: false
-  - text: 'від- (наприклад: відійти, від''їхати)'
-    correct: false
+  - '{''text'': ''при- (наприклад: прийти, приїхати)'', ''correct'': False}'
+  - '{''text'': ''ви- (наприклад: вийти, виїхати)'', ''correct'': True}'
+  - '{''text'': "в-/у- (наприклад: увійти, в''їхати)", ''correct'': False}'
+  - '{''text'': "від- (наприклад: відійти, від''їхати)", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -413,14 +513,10 @@ items:
   question: Який префікс додає значення "вхід всередину" в українських дієсловах руху
     та як він змінює вид?
   options:
-  - text: 'при- (наприклад: прийти, приїхати)'
-    correct: false
-  - text: 'ви- (наприклад: вийти, виїхати)'
-    correct: false
-  - text: 'в-/у- (наприклад: увійти, в''їхати)'
-    correct: true
-  - text: 'від- (наприклад: відійти, від''їхати)'
-    correct: false
+  - '{''text'': ''при- (наприклад: прийти, приїхати)'', ''correct'': False}'
+  - '{''text'': ''ви- (наприклад: вийти, виїхати)'', ''correct'': False}'
+  - '{''text'': "в-/у- (наприклад: увійти, в''їхати)", ''correct'': True}'
+  - '{''text'': "від- (наприклад: відійти, від''їхати)", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +528,10 @@ items:
   question: Яке дієслово правильно перекладає "He arrived at the office on foot yesterday
     morning"?
   options:
-  - text: Він прийшов до офісу вчора вранці.
-    correct: true
-  - text: Він приїхав до офісу вчора вранці.
-    correct: false
-  - text: Він увійшов до офісу вчора вранці.
-    correct: false
-  - text: Він виїхав до офісу вчора вранці.
-    correct: false
+  - '{''text'': ''Він прийшов до офісу вчора вранці.'', ''correct'': True}'
+  - '{''text'': ''Він приїхав до офісу вчора вранці.'', ''correct'': False}'
+  - '{''text'': ''Він увійшов до офісу вчора вранці.'', ''correct'': False}'
+  - '{''text'': ''Він виїхав до офісу вчора вранці.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +543,10 @@ items:
   question: Яке дієслово правильно перекладає "The car drove into the garage carefully
     yesterday"?
   options:
-  - text: Машина приїхала до гаража.
-    correct: false
-  - text: Машина виїхала з гаража.
-    correct: false
-  - text: Машина в'їхала до гаража.
-    correct: true
-  - text: Машина вийшла з гаража.
-    correct: false
+  - '{''text'': ''Машина приїхала до гаража.'', ''correct'': False}'
+  - '{''text'': ''Машина виїхала з гаража.'', ''correct'': False}'
+  - '{''text'': "Машина в''їхала до гаража.", ''correct'': True}'
+  - '{''text'': ''Машина вийшла з гаража.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -470,14 +558,10 @@ items:
   question: Яке дієслово правильно перекладає "She left the room quickly and quietly
     without saying goodbye"?
   options:
-  - text: Вона прийшла з кімнати.
-    correct: false
-  - text: Вона вийшла з кімнати.
-    correct: true
-  - text: Вона увійшла до кімнати.
-    correct: false
-  - text: Вона приїхала з кімнати.
-    correct: false
+  - '{''text'': ''Вона прийшла з кімнати.'', ''correct'': False}'
+  - '{''text'': ''Вона вийшла з кімнати.'', ''correct'': True}'
+  - '{''text'': ''Вона увійшла до кімнати.'', ''correct'': False}'
+  - '{''text'': ''Вона приїхала з кімнати.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -489,14 +573,10 @@ items:
   question: Дієслова з префіксами при-, ви-, в-/у- є якого виду в українській мові
     та як це впливає на їх значення?
   options:
-  - text: Доконаного виду (ДВ)
-    correct: true
-  - text: Недоконаного виду (НДВ)
-    correct: false
-  - text: Обидвох видів залежно від контексту
-    correct: false
-  - text: Не мають видової категорії
-    correct: false
+  - '{''text'': ''Доконаного виду (ДВ)'', ''correct'': True}'
+  - '{''text'': ''Недоконаного виду (НДВ)'', ''correct'': False}'
+  - '{''text'': ''Обидвох видів залежно від контексту'', ''correct'': False}'
+  - '{''text'': ''Не мають видової категорії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -508,14 +588,10 @@ items:
   question: Яке дієслово є недоконаним видом (НДВ) від "прийти" в українській мові
     і як воно утворюється?
   options:
-  - text: прийшов
-    correct: false
-  - text: приходити
-    correct: true
-  - text: прибувати
-    correct: false
-  - text: приходив
-    correct: false
+  - '{''text'': ''прийшов'', ''correct'': False}'
+  - '{''text'': ''приходити'', ''correct'': True}'
+  - '{''text'': ''прибувати'', ''correct'': False}'
+  - '{''text'': ''приходив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

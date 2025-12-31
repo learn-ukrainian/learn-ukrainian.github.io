@@ -1,0 +1,1437 @@
+module: 91-ruina-ii-doroshenko
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/91-ruina-ii-doroshenko.md
+generated: '2025-12-30T19:49:17.484144'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дорошенко шукав союзу з Туреччина.
+  error: Туреччина
+  answer: Туреччиною
+  sentence_corrected: Дорошенко шукав союзу з Туреччиною.
+  options:
+  - Туреччина
+  - Туреччиною
+  - Туреччині
+  - Туреччину
+  original_explanation: Прийменник «з» (у значенні спільності) вимагає орудного відмінка
+    — з Туреччиною.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Сірко був кошовим отаман Запорозької Січі.
+  error: отаман
+  answer: отаманом
+  sentence_corrected: Сірко був кошовим отаманом Запорозької Січі.
+  options:
+  - отаман
+  - отаманом
+  - отамана
+  - отаману
+  original_explanation: 'Присудок з дієсловом «був» — орудний відмінок: «був отаманом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Чигирин був столиця козацької держави.
+  error: столиця
+  answer: столицею
+  sentence_corrected: Чигирин був столицею козацької держави.
+  options:
+  - столиця
+  - столицею
+  - столиці
+  - столицю
+  original_explanation: 'Присудок з дієсловом «був» — орудний відмінок: «був столицею».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Турки провели облогу Чигирин.
+  error: Чигирин
+  answer: Чигирина
+  sentence_corrected: Турки провели облогу Чигирина.
+  options:
+  - Чигирин
+  - Чигирина
+  - Чигирину
+  - Чигирином
+  original_explanation: Слово «облогу» вимагає родового відмінка — облогу Чигирина
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дорошенко капітулював Самойлович.
+  error: Самойлович
+  answer: Самойловичу
+  sentence_corrected: Дорошенко капітулював Самойловичу.
+  options:
+  - Самойлович
+  - Самойловичу
+  - Самойловича
+  - Самойловичем
+  original_explanation: Дієслово «капітулювати» з давальним відмінком — капітулював
+    кому? Самойловичу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Правобережжя стало спустошена земля.
+  error: земля
+  answer: землею
+  sentence_corrected: Правобережжя стало спустошена землею.
+  options:
+  - земля
+  - землею
+  - землі
+  - землю
+  original_explanation: 'Присудок з «стало» — орудний відмінок: «стало землею».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Внутрішні чвари підірвали усі зусилля Дорошенко.
+  error: Дорошенко
+  answer: Дорошенка
+  sentence_corrected: Внутрішні чвари підірвали усі зусилля Дорошенка.
+  options:
+  - Дорошенко
+  - Дорошенка
+  - Дорошенку
+  - Дорошенком
+  original_explanation: Слово «зусилля» вимагає родового відмінка — зусилля Дорошенка
+    (чиї?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Історія Дорошенка — це історія мужність та трагізму.
+  error: мужність
+  answer: мужності
+  sentence_corrected: Історія Дорошенка — це історія мужності та трагізму.
+  options:
+  - мужність
+  - мужності
+  - мужністю
+  - мужнісь
+  original_explanation: Слово «історія» вимагає родового відмінка — історія мужності
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дорошенко походив зі славетного козацького рід.
+  error: рід
+  answer: роду
+  sentence_corrected: Дорошенко походив зі славетного козацького роду.
+  options:
+  - рід
+  - роду
+  - родом
+  - роді
+  original_explanation: Прийменник «зі» з родовим відмінком — зі роду (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Сірко категорично виступив проти турецький союз.
+  error: союз
+  answer: союзу
+  sentence_corrected: Сірко категорично виступив проти турецький союзу.
+  options:
+  - союз
+  - союзу
+  - союзом
+  - союзі
+  original_explanation: Прийменник «проти» вимагає родового відмінка — проти союзу
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Османська імперія прийняла Україну під протекторат.
+  error: none
+  answer: ✓
+  sentence_corrected: Османська імперія прийняла Україну під протекторат.
+  options:
+  - Османська
+  - прийняла
+  - Україну
+  - протекторат
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дорошенко мріяв стати гетьман обох берегів.
+  error: гетьман
+  answer: гетьманом
+  sentence_corrected: Дорошенко мріяв стати гетьманом обох берегів.
+  options:
+  - гетьман
+  - гетьманом
+  - гетьмана
+  - гетьману
+  original_explanation: Дієслово «стати» вимагає орудного відмінка — стати гетьманом
+    (ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Бучацький мир був принизливий для Польща.
+  error: Польща
+  answer: Польщі
+  sentence_corrected: Бучацький мир був принизливий для Польщі.
+  options:
+  - Польща
+  - Польщі
+  - Польщу
+  - Польщею
+  original_explanation: Прийменник «для» вимагає родового відмінка — для Польщі (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конфлікт поглибив розкол серед козаки.
+  error: козаки
+  answer: козаків
+  sentence_corrected: Конфлікт поглибив розкол серед козаків.
+  options:
+  - козаки
+  - козаків
+  - козакам
+  - козаками
+  original_explanation: Прийменник «серед» вимагає родового відмінка — серед козаків
+    (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Турецька армія налічувала понад сто тисяч воїн.
+  error: воїн
+  answer: воїнів
+  sentence_corrected: Турецька армія налічувала понад сто тисяч воїнів.
+  options:
+  - воїн
+  - воїнів
+  - воїнам
+  - воїнами
+  original_explanation: Числівник «тисяч» вимагає родового відмінка множини — тисяч
+    воїнів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Після падіння Чигирин Правобережжя зазнало спустошення.
+  error: Чигирин
+  answer: Чигирина
+  sentence_corrected: Після падіння Чигирина Правобережжя зазнало спустошення.
+  options:
+  - Чигирин
+  - Чигирина
+  - Чигирину
+  - Чигирином
+  original_explanation: Слово «падіння» вимагає родового відмінка — падіння Чигирина
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Петра Дорошенка називали «_____ Руїни».
+  answer: Сонцем
+  complete_sentence: Петра Дорошенка називали «Сонцем__ Руїни».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Дорошенко мріяв стати гетьманом _____ берегів.
+  answer: обох
+  complete_sentence: Дорошенко мріяв стати гетьманом обох__ берегів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Османська імперія взяла Україну під свій _____.
+  answer: протекторат
+  complete_sentence: Османська імперія взяла Україну під свій протекторат__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Іван Сірко був кошовим _____ Запорозької Січі.
+  answer: отаманом
+  complete_sentence: Іван Сірко був кошовим отаманом__ Запорозької Січі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Чигирин був _____ козацької держави.
+  answer: столицею
+  complete_sentence: Чигирин був столицею__ козацької держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: У 1678 році турки провели другу _____ Чигирина.
+  answer: облогу
+  complete_sentence: У 1678 році турки провели другу облогу__ Чигирина.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Після падіння Чигирина Правобережжя зазнало _____.
+  answer: спустошення
+  complete_sentence: Після падіння Чигирина Правобережжя зазнало спустошення__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Дорошенко здав _____ Самойловичу в 1676 році.
+  answer: булаву
+  complete_sentence: Дорошенко здав булаву__ Самойловичу в 1676 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Сірко категорично виступив проти турецького _____.
+  answer: союзу
+  complete_sentence: Сірко категорично виступив проти турецького союзу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Конфлікт між Дорошенком і Сірком поглибив _____ серед козаків.
+  answer: розкол
+  complete_sentence: Конфлікт між Дорошенком і Сірком поглибив розкол__ серед козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Кам'янець-Подільський був найпотужнішою _____ Поділля.
+  answer: фортецею
+  complete_sentence: Кам'янець-Подільський був найпотужнішою фортецею__ Поділля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Польща підписала принизливий Бучацький _____.
+  answer: мир
+  complete_sentence: Польща підписала принизливий Бучацький мир__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Дорошенко шукав політичного _____ у Туреччині.
+  answer: захисту
+  complete_sentence: Дорошенко шукав політичного захисту__ у Туреччині.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Історія Дорошенка — це історія мужності та _____.
+  answer: трагізму
+  complete_sentence: Історія Дорошенка — це історія мужності та трагізму__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Внутрішні _____ козацтва підірвали всі зусилля Дорошенка.
+  answer: чвари
+  complete_sentence: Внутрішні чвари__ козацтва підірвали всі зусилля Дорошенка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Самойлович був вірним _____ Москви.
+  answer: ставлеником
+  complete_sentence: Самойлович був вірним ставлеником__ Москви.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дорошенка називали Сонцем _____.
+  answer: Руїни
+  complete_sentence: Дорошенка називали Сонцем Руїни__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Він мріяв стати гетьманом обох _____.
+  answer: берегів
+  complete_sentence: Він мріяв стати гетьманом обох берегів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дорошенко шукав союзу з _____.
+  answer: Туреччиною
+  complete_sentence: Дорошенко шукав союзу з Туреччиною__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Сірко був кошовим _____.
+  answer: отаманом
+  complete_sentence: Сірко був кошовим отаманом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Чигирин був _____ козацької держави.
+  answer: столицею
+  complete_sentence: Чигирин був столицею__ козацької держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Турки провели облогу _____.
+  answer: Чигирина
+  complete_sentence: Турки провели облогу Чигирина__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Правобережжя стало спустошеною _____.
+  answer: землею
+  complete_sentence: Правобережжя стало спустошеною землею__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Внутрішні чвари підірвали всі _____.
+  answer: зусилля
+  complete_sentence: Внутрішні чвари підірвали всі зусилля__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Це історія _____ та трагізму.
+  answer: мужності
+  complete_sentence: Це історія мужності__ та трагізму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дорошенко походив зі славетного _____.
+  answer: роду
+  complete_sentence: Дорошенко походив зі славетного роду__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Сірко виступив проти турецького _____.
+  answer: союзу
+  complete_sentence: Сірко виступив проти турецького союзу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Конфлікт поглибив розкол серед _____.
+  answer: козаків
+  complete_sentence: Конфлікт поглибив розкол серед козаків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Польща підписала принизливий Бучацький _____.
+  answer: мир
+  complete_sentence: Польща підписала принизливий Бучацький мир__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дорошенко отримав маєток у _____.
+  answer: Підмосков'ї
+  complete_sentence: Дорошенко отримав маєток у Підмосков'ї__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Османи взяли Україну під свій _____.
+  answer: протекторат
+  complete_sentence: Османи взяли Україну під свій протекторат__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Дорошенко здав булаву _____.
+  answer: Самойловичу
+  complete_sentence: Дорошенко здав булаву Самойловичу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про Петра Дорошенка
+  passage_template: 'Петро {Дорошенко|Сірко|Мазепа|Дорошенко} став гетьманом Правобережної
+    України в {1665|1657|1672|1665} році. Його називали «Сонцем {Руїни|Гетьманщини|Запорожжя|Руїни}».
+    Він мріяв стати гетьманом {обох|правого|лівого|обох} берегів Дніпра та {об''єднати|розділити|знищити|об''єднати}
+    Україну.
+
+
+    Дорошенко шукав союзу з {Туреччиною|Москвою|Польщею|Туреччиною}, бо ні Москва,
+    ні Польща не давали Україні {автономії|грошей|влади|автономії}. Османська імперія
+    погодилася взяти Україну під свій {протекторат|контроль|союз|протекторат}. Султан
+    {Мехмед|Сулейман|Ахмед|Мехмед} IV особисто очолив похід 1672 року.
+
+
+    Головним опонентом Дорошенка був Іван {Сірко|Мазепа|Брюховецький|Сірко} — кошовий
+    {отаман|гетьман|полковник|отаман} Запорозької Січі. Він категорично виступив {проти|за|нейтрально|проти}
+    турецького союзу. Це поглибило {розкол|єдність|мир|розкол} серед козаків.
+
+
+    У {1678|1677|1676|1678} році турки здобули та {зруйнували|відбудували|залишили|зруйнували}
+    Чигирин. Правобережжя перетворилося на {спустошену|процвітаючу|об''єднану|спустошену}
+    землю. У 1676 році Дорошенко {капітулював|переміг|втік|капітулював} і здав {булаву|армію|землі|булаву}
+    Самойловичу.
+
+    '
+  blanks:
+  - answer: Дорошенко
+    options:
+    - Дорошенко
+    - Сірко
+    - Мазепа
+  - answer: '1665'
+    options:
+    - '1665'
+    - '1657'
+    - '1672'
+  - answer: Руїни
+    options:
+    - Руїни
+    - Гетьманщини
+    - Запорожжя
+  - answer: обох
+    options:
+    - обох
+    - правого
+    - лівого
+  - answer: об'єднати
+    options:
+    - об'єднати
+    - розділити
+    - знищити
+  - answer: Туреччиною
+    options:
+    - Туреччиною
+    - Москвою
+    - Польщею
+  - answer: автономії
+    options:
+    - автономії
+    - грошей
+    - влади
+  - answer: протекторат
+    options:
+    - протекторат
+    - контроль
+    - союз
+  - answer: Мехмед
+    options:
+    - Мехмед
+    - Сулейман
+    - Ахмед
+  - answer: Сірко
+    options:
+    - Сірко
+    - Мазепа
+    - Брюховецький
+  - answer: отаман
+    options:
+    - отаман
+    - гетьман
+    - полковник
+  - answer: проти
+    options:
+    - проти
+    - за
+    - нейтрально
+  - answer: розкол
+    options:
+    - розкол
+    - єдність
+    - мир
+  - answer: '1678'
+    options:
+    - '1678'
+    - '1677'
+    - '1676'
+  - answer: зруйнували
+    options:
+    - зруйнували
+    - відбудували
+    - залишили
+  - answer: спустошену
+    options:
+    - спустошену
+    - процвітаючу
+    - об'єднану
+  - answer: капітулював
+    options:
+    - капітулював
+    - переміг
+    - втік
+  - answer: булаву
+    options:
+    - булаву
+    - армію
+    - землі
+  blank_count: 18
+  complete_passage: 'Петро Дорошенко став гетьманом Правобережної України в 1665 році.
+    Його називали «Сонцем Руїни». Він мріяв стати гетьманом обох берегів Дніпра та
+    об''єднати Україну.
+
+
+    Дорошенко шукав союзу з Туреччиною, бо ні Москва, ні Польща не давали Україні
+    автономії. Османська імперія погодилася взяти Україну під свій протекторат. Султан
+    Мехмед IV особисто очолив похід 1672 року.
+
+
+    Головним опонентом Дорошенка був Іван Сірко — кошовий отаман Запорозької Січі.
+    Він категорично виступив проти турецького союзу. Це поглибило розкол серед козаків.
+
+
+    У 1678 році турки здобули та зруйнували Чигирин. Правобережжя перетворилося на
+    спустошену землю. У 1676 році Дорошенко капітулював і здав булаву Самойловичу.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Петра Дорошенка називали Сонцем Руїни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко мріяв стати гетьманом обох берегів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко шукав союзу з Туреччиною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Сірко виступив проти турецького союзу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: У 1678 році турки зруйнували Чигирин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко капітулював, здавши булаву Самойловичу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Правобережжя стало спустошеною землею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко шукав політичного захисту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Сірко був кошовим отаманом Запорозької Січі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Конфлікт поглибив розкол серед козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Внутрішні чвари підірвали усі зусилля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Це історія мужності та трагізму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко походив зі славетного козацького роду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Чигирин був столицею козацької держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Османська імперія прийняла Україну під протекторат.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Дорошенка
+  jumbled_words: []
+  answer: Дорошенко прожив у маєтку в Підмосков'ї до 1698 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, як називали Петра Дорошенка?
+  options:
+  - '{''text'': ''Сонце Визвольної війни'', ''correct'': False}'
+  - '{''text'': ''Сонце Руїни'', ''correct'': True}'
+  - '{''text'': ''Сонце Запорожжя'', ''correct'': False}'
+  - '{''text'': ''Сонце Гетьманщини'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, яку головну мету ставив собі Дорошенко?
+  options:
+  - '{''text'': ''Союз із Москвою'', ''correct'': False}'
+  - '{''text'': "Об''єднання обох берегів Дніпра", ''correct'': True}'
+  - '{''text'': ''Знищення Запорожжя'', ''correct'': False}'
+  - '{''text'': ''Підкорення Польщі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, чому Дорошенко шукав союзу з Туреччиною?
+  options:
+  - '{''text'': ''Він хотів прийняти іслам'', ''correct'': False}'
+  - '{''text'': ''Ні Москва, ні Польща не давали справжньої автономії'', ''correct'':
+    True}'
+  - '{''text'': ''Туреччина запропонувала гроші'', ''correct'': False}'
+  - '{''text'': ''Він ненавидів християнство'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст описує умови османського протекторату?
+  options:
+  - '{''text'': ''Жорсткіші за московський'', ''correct'': False}'
+  - '{''text'': "М''якші за московський та польський контроль", ''correct'': True}'
+  - '{''text'': ''Ідентичні московському'', ''correct'': False}'
+  - '{''text'': ''Найгірші з усіх'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, хто був головним опонентом Дорошенка?
+  options:
+  - '{''text'': ''Богдан Хмельницький'', ''correct'': False}'
+  - '{''text'': ''Іван Сірко'', ''correct'': True}'
+  - '{''text'': ''Іван Мазепа'', ''correct'': False}'
+  - '{''text'': ''Іван Брюховецький'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст характеризує позицію Сірка щодо турецького союзу?
+  options:
+  - '{''text'': ''Повна підтримка'', ''correct'': False}'
+  - '{''text'': ''Категорично виступив проти'', ''correct'': True}'
+  - '{''text'': ''Нейтральна позиція'', ''correct'': False}'
+  - '{''text'': ''Часткова підтримка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, що сталося з Чигирином у 1678 році?
+  options:
+  - '{''text'': ''Місто було врятовано'', ''correct'': False}'
+  - '{''text'': ''Місто було здобуто та зруйновано'', ''correct'': True}'
+  - '{''text'': ''Місто добровільно здалося'', ''correct'': False}'
+  - '{''text'': ''Місто залишилося непошкодженим'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, коли Дорошенко капітулював?
+  options:
+  - '{''text'': ''У 1672 році'', ''correct'': False}'
+  - '{''text'': ''У 1676 році'', ''correct'': True}'
+  - '{''text'': ''У 1678 році'', ''correct'': False}'
+  - '{''text'': ''У 1680 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст описує долю Дорошенка після капітуляції?
+  options:
+  - '{''text'': ''Страчений у Москві'', ''correct'': False}'
+  - '{''text'': "Отримав маєток у Підмосков''ї", ''correct'': True}'
+  - '{''text'': ''Втік до Туреччини'', ''correct'': False}'
+  - '{''text'': ''Став ченцем'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, що сталося з Правобережжям після падіння Чигирина?
+  options:
+  - '{''text'': ''Розквітло'', ''correct'': False}'
+  - '{''text'': ''Перетворилося на спустошену землю'', ''correct'': True}'
+  - '{''text'': ''Відійшло до Польщі'', ''correct'': False}'
+  - '{''text'': ''Стало незалежним'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст пояснює конфлікт між Дорошенком і Сірком?
+  options:
+  - '{''text'': ''Особиста ворожнеча'', ''correct'': False}'
+  - '{''text'': ''Різне бачення шляху порятунку України'', ''correct'': True}'
+  - '{''text'': ''Боротьба за гроші'', ''correct'': False}'
+  - '{''text'': ''Релігійний конфлікт'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, яке місто здобули турки у 1672 році?
+  options:
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': "Кам''янець-Подільський", ''correct'': True}'
+  - '{''text'': ''Чигирин'', ''correct'': False}'
+  - '{''text'': ''Львів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст описує похід султана 1672 року?
+  options:
+  - '{''text'': ''Невдалий'', ''correct'': False}'
+  - '{''text'': ''Успішний — турки здобули Поділля'', ''correct'': True}'
+  - '{''text'': ''Нічийний результат'', ''correct'': False}'
+  - '{''text'': ''Не відбувся'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, звідки походив Дорошенко?
+  options:
+  - '{''text'': ''Із запорозької голоти'', ''correct'': False}'
+  - '{''text'': ''Зі славетного козацького роду'', ''correct'': True}'
+  - '{''text'': ''Зі шляхетської родини'', ''correct'': False}'
+  - '{''text'': "З міщанської сім''ї", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Як текст характеризує Бучацький мир?
+  options:
+  - '{''text'': ''Вигідний для Польщі'', ''correct'': False}'
+  - '{''text'': ''Принизливий для Польщі'', ''correct'': True}'
+  - '{''text'': ''Нейтральний'', ''correct'': False}'
+  - '{''text'': ''Вигідний для козаків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Петра Дорошенка
+  question: Згідно з текстом, хто командував облогою Чигирина 1678 року?
+  options:
+  - '{''text'': ''Султан Мехмед IV'', ''correct'': False}'
+  - '{''text'': ''Кара Мустафа'', ''correct'': True}'
+  - '{''text'': ''Ібрагім-паша'', ''correct'': False}'
+  - '{''text'': ''Петро Дорошенко'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як французький дипломат Шарль де Табу характеризує Дорошенка?
+  options:
+  - '{''text'': ''Як слабкого правителя'', ''correct'': False}'
+  - '{''text'': ''Як людину надзвичайної відваги та рішучості'', ''correct'': True}'
+  - '{''text'': ''Як релігійного фанатика'', ''correct'': False}'
+  - '{''text'': ''Як московського агента'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «він вірить, що козацький народ може бути вільним» у
+    джерелі?
+  options:
+  - '{''text'': ''Дорошенко був наївним'', ''correct'': False}'
+  - '{''text'': ''Дорошенко мав ідеал незалежності'', ''correct'': True}'
+  - '{''text'': ''Дорошенко був ворогом козаків'', ''correct'': False}'
+  - '{''text'': ''Дорошенко не цікавився політикою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Самійло Величко оцінює турецький союз Дорошенка?
+  options:
+  - '{''text'': ''Повністю позитивно'', ''correct'': False}'
+  - '{''text'': ''Амбівалентно — визнає мету, але критикує наслідки'', ''correct'':
+    True}'
+  - '{''text'': ''Повністю негативно'', ''correct'': False}'
+  - '{''text'': ''Нейтрально'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «три хижаки рвали нашу землю» у джерелі Величка?
+  options:
+  - '{''text'': ''Три козацькі полки ворогували'', ''correct'': False}'
+  - '{''text'': ''Три імперії (Москва, Польща, Туреччина) експлуатували Україну'',
+    ''correct'': True}'
+  - '{''text'': ''Три гетьмани боролися за владу'', ''correct'': False}'
+  - '{''text'': ''Три народи жили в Україні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому свідчення французького дипломата важливе?
+  options:
+  - '{''text'': ''Він був союзником Дорошенка'', ''correct'': False}'
+  - '{''text'': ''Це погляд нейтрального іноземного спостерігача'', ''correct'': True}'
+  - '{''text'': ''Він був ворогом козаків'', ''correct'': False}'
+  - '{''text'': ''Він жив у Чигирині'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що де Табу писав депеші до Версалю?
+  options:
+  - '{''text'': ''Він був шпигуном'', ''correct'': False}'
+  - '{''text'': ''Французький двір цікавився подіями в Україні'', ''correct'': True}'
+  - '{''text'': ''Він продавав інформацію'', ''correct'': False}'
+  - '{''text'': ''Це особиста кореспонденція'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як два джерела доповнюють одне одного?
+  options:
+  - '{''text'': ''Вони суперечать одне одному'', ''correct'': False}'
+  - '{''text'': ''Де Табу дає оцінку особи, Величко — оцінку наслідків'', ''correct'':
+    True}'
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає слово «хижак» у контексті джерела Величка?
+  options:
+  - '{''text'': ''Дика тварина'', ''correct'': False}'
+  - '{''text'': ''Імперія, яка експлуатує слабших'', ''correct'': True}'
+  - '{''text'': ''Козацький полковник'', ''correct'': False}'
+  - '{''text'': ''Торговець'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Величко пише «щоб звільнити від ляхів та москалів»?
+  options:
+  - '{''text'': ''Він ненавидів поляків і росіян'', ''correct'': False}'
+  - '{''text'': ''Це була офіційна мета союзу з Туреччиною'', ''correct'': True}'
+  - '{''text'': ''Він цитував інший документ'', ''correct'': False}'
+  - '{''text'': ''Це його особиста думка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має фраза «він не втрачає надії» у джерелі?
+  options:
+  - '{''text'': ''Дорошенко був оптимістом'', ''correct'': False}'
+  - '{''text'': ''Незважаючи на труднощі, Дорошенко продовжував боротьбу'', ''correct'':
+    True}'
+  - '{''text'': ''Дорошенко був наївним'', ''correct'': False}'
+  - '{''text'': ''Дорошенко не розумів ситуації'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Величко називає турецьке панування «новою бідою»?
+  options:
+  - '{''text'': ''Турки були гіршими за всіх'', ''correct'': False}'
+  - '{''text'': "Замість одного хижака з''явилося три", ''correct'': True}'
+  - '{''text'': ''Величко був проти будь-яких союзів'', ''correct'': False}'
+  - '{''text'': ''Турки знищили всіх козаків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який стиль мови використовує де Табу у своїй депеші?
+  options:
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційний дипломатичний'', ''correct'': True}'
+  - '{''text'': ''Поетичний'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння періоду?
+  options:
+  - '{''text'': ''Вони цікаві для читання'', ''correct'': False}'
+  - '{''text'': ''Вони дають свідчення сучасників подій'', ''correct'': True}'
+  - '{''text'': "Вони завжди об''єктивні", ''correct'': False}'
+  - '{''text'': ''Вони короткі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє слово «турчин» у джерелі Величка?
+  options:
+  - '{''text'': ''Нейтральне позначення'', ''correct'': False}'
+  - '{''text'': ''Збірний образ Османської імперії'', ''correct'': True}'
+  - '{''text'': ''Конкретна особа'', ''correct'': False}'
+  - '{''text'': ''Позитивна характеристика'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як джерела допомагають зрозуміти «деколонізаційний погляд»?
+  options:
+  - '{''text'': ''Вони підтверджують російську версію'', ''correct'': False}'
+  - '{''text'': ''Вони показують, що Україна була жертвою імперій'', ''correct'':
+    True}'
+  - '{''text'': ''Вони не мають відношення до деколонізації'', ''correct'': False}'
+  - '{''text'': ''Вони підтримують польську версію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що спільного в оцінці Дорошенка у двох джерелах?
+  options:
+  - '{''text'': ''Обидва засуджують його'', ''correct'': False}'
+  - '{''text'': ''Обидва визнають його боротьбу за Україну'', ''correct'': True}'
+  - '{''text'': ''Обидва ігнорують його'', ''correct'': False}'
+  - '{''text'': ''Вони мають протилежні оцінки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Дорошенко став гетьманом у 1665 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Дорошенко походив із селянської родини.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, турецький протекторат вимагав зміни віри.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Сірко підтримав союз із Туреччиною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, перша облога Чигирина 1677 року була невдалою для турків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Чигирин був зруйнований у 1678 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Дорошенко капітулював у 1680 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, після капітуляції Дорошенка стратили.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, султан Мехмед IV особисто очолив похід 1672 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Бучацький мир був вигідним для Польщі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Самойлович був гетьманом Лівобережжя.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Дорошенко був одружений із племінницею Хмельницького.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, османський протекторат передбачав важкі податки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, турецька армія 1678 року налічувала понад 100 тисяч
+    воїнів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, правнучка Дорошенка стала бабусею Пушкіна.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Дорошенка та період Руїни
+  statement: Згідно з текстом, Дорошенко прожив до 1698 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

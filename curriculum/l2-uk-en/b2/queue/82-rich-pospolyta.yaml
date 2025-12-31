@@ -1,0 +1,1433 @@
+module: 82-rich-pospolyta
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/82-rich-pospolyta.md
+generated: '2025-12-30T19:49:17.032939'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Люблінська унія відбулася в 1569 рік.
+  error: рік
+  answer: році
+  sentence_corrected: Люблінська унія відбулася в 1569 році.
+  options:
+  - рік
+  - році
+  - року
+  - роком
+  original_explanation: Прийменник "в" із питанням "коли?" вимагає місцевого відмінка
+    — в 1569 році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Польська шляхта отримали привілеї.
+  error: отримали
+  answer: отримала
+  sentence_corrected: Польська шляхта отримала привілеї.
+  options:
+  - отримали
+  - отримала
+  - отримав
+  - отримало
+  original_explanation: Іменник "шляхта" — збірний, жіночого роду, тому дієслово має
+    форму "отримала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Селяни працювали на поля пана.
+  error: поля
+  answer: полях
+  sentence_corrected: Селяни працювали на полях пана.
+  options:
+  - поля
+  - полях
+  - полі
+  - полями
+  original_explanation: Прийменник "на" з питанням "де?" вимагає місцевого відмінка
+    — на полях.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Острозька академія стала центром освіта.
+  error: освіта
+  answer: освіти
+  sentence_corrected: Острозька академія стала центром освіти.
+  options:
+  - освіта
+  - освіти
+  - освіту
+  - освітою
+  original_explanation: Іменник "центр" вимагає родового відмінка — центром освіти
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Берестейська унія створив греко-католицьку церкву.
+  error: створив
+  answer: створила
+  sentence_corrected: Берестейська унія створила греко-католицьку церкву.
+  options:
+  - створив
+  - створила
+  - створили
+  - створило
+  original_explanation: Іменник "унія" — жіночого роду, тому дієслово має форму "створила".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки тікали на Запорозьку Січі.
+  error: Січі
+  answer: Січ
+  sentence_corrected: Козаки тікали на Запорозьку Січ.
+  options:
+  - Січі
+  - Січ
+  - Січу
+  - Січчю
+  original_explanation: Прийменник "на" з питанням "куди?" вимагає знахідного відмінка
+    — на Січ.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Магнати володіли сотнями село.
+  error: село
+  answer: сіл
+  sentence_corrected: Магнати володіли сотнями сіл.
+  options:
+  - село
+  - сіл
+  - сіла
+  - селами
+  original_explanation: Числівник "сотні" вимагає родового відмінка множини — сотнями
+    сіл.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Православних називали схизматики.
+  error: схизматики
+  answer: схизматиками
+  sentence_corrected: Православних називали схизматиками.
+  options:
+  - схизматики
+  - схизматиками
+  - схизматиків
+  - схизматикам
+  original_explanation: Дієслово "називати" вимагає орудного відмінка — називали схизматиками
+    (ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Річ Посполита була спільна справа.
+  error: спільна справа
+  answer: спільною справою
+  sentence_corrected: Річ Посполита була спільною справою.
+  options:
+  - спільна справа
+  - спільною справою
+  - спільної справи
+  - спільній справі
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — була справою (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Костянтин Острозький заснував академія.
+  error: академія
+  answer: академію
+  sentence_corrected: Костянтин Острозький заснував академію.
+  options:
+  - академія
+  - академію
+  - академії
+  - академією
+  original_explanation: Дієслово "заснувати" вимагає знахідного відмінка — заснував
+    академію (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Польща прийняла мільйони біженець.
+  error: біженець
+  answer: біженців
+  sentence_corrected: Польща прийняла мільйони біженців.
+  options:
+  - біженець
+  - біженців
+  - біженцям
+  - біженцями
+  original_explanation: Числівник "мільйони" вимагає родового відмінка множини — мільйони
+    біженців.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Братства засновували школи і друкарня.
+  error: друкарня
+  answer: друкарні
+  sentence_corrected: Братства засновували школи і друкарні.
+  options:
+  - друкарня
+  - друкарні
+  - друкарню
+  - друкарнею
+  original_explanation: Дієслово "засновувати" вимагає знахідного відмінка множини
+    — друкарні (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Шляхта переходила на польський мова.
+  error: польський
+  answer: польську
+  sentence_corrected: Шляхта переходила на польську мова.
+  options:
+  - польський
+  - польську
+  - польської
+  - польським
+  original_explanation: Іменник "мова" — жіночого роду, тому прикметник має форму
+    "польську" (знахідний відмінок).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Панщина зростала до шести день.
+  error: день
+  answer: днів
+  sentence_corrected: Панщина зростала до шести днів.
+  options:
+  - день
+  - днів
+  - дні
+  - днями
+  original_explanation: Прийменник "до" вимагає родового відмінка — до шести днів
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козацькі повстання почалися у XVI століття.
+  error: століття
+  answer: столітті
+  sentence_corrected: Козацькі повстання почалися у XVI столітті.
+  options:
+  - століття
+  - столітті
+  - століттям
+  - століть
+  original_explanation: Прийменник "у" з питанням "коли?" вимагає місцевого відмінка
+    — у столітті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Українці зазнавали релігійний тиск.
+  error: релігійний тиск
+  answer: релігійного тиску
+  sentence_corrected: Українці зазнавали релігійного тиску.
+  options:
+  - релігійний тиск
+  - релігійного тиску
+  - релігійному тиску
+  - релігійним тиском
+  original_explanation: Дієслово "зазнавати" вимагає родового відмінка — зазнавали
+    тиску (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: 1569 року Польща і Литва об'єдналися в _____ Посполиту.
+  answer: Річ
+  complete_sentence: 1569 року Польща і Литва об'єдналися в Річ__ Посполиту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Люблінська _____ змінила долю українських земель.
+  answer: унія
+  complete_sentence: Люблінська унія__ змінила долю українських земель.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Польська _____ отримала привілеї та земельні маєтки.
+  answer: шляхта
+  complete_sentence: Польська шляхта__ отримала привілеї та земельні маєтки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ працювали на панщині кілька днів на тиждень.
+  answer: Селяни
+  complete_sentence: Селяни__ працювали на панщині кілька днів на тиждень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Великі землевласники називалися _____.
+  answer: магнатами
+  complete_sentence: Великі землевласники називалися магнатами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ — це обов'язкова праця селян на полях пана.
+  answer: Панщина
+  complete_sentence: Панщина__ — це обов'язкова праця селян на полях пана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Законодавчим органом Речі Посполитої був _____.
+  answer: сейм
+  complete_sentence: Законодавчим органом Речі Посполитої був сейм__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ унія 1596 року створила греко-католицьку церкву.
+  answer: Берестейська
+  complete_sentence: Берестейська__ унія 1596 року створила греко-католицьку церкву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Міщанські релігійні організації називалися _____.
+  answer: братствами
+  complete_sentence: Міщанські релігійні організації називалися братствами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ академія стала центром православної освіти.
+  answer: Острозька
+  complete_sentence: Острозька__ академія стала центром православної освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Процес переходу на польську культуру називається _____.
+  answer: полонізацією
+  complete_sentence: Процес переходу на польську культуру називається полонізацією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Запорозька _____ стала осередком козацької свободи.
+  answer: Січ
+  complete_sentence: Запорозька Січ__ стала осередком козацької свободи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: 1591 року повстав козацький ватажок Криштоф _____.
+  answer: Косинський
+  complete_sentence: 1591 року повстав козацький ватажок Криштоф Косинський__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Православних зневажливо називали «_____».
+  answer: схизматиками
+  complete_sentence: Православних зневажливо називали «схизматиками__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ Біблія 1581 року стала першим повним виданням.
+  answer: Острозька
+  complete_sentence: Острозька__ Біблія 1581 року стала першим повним виданням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Грошова повинність селян називалася _____.
+  answer: чиншем
+  complete_sentence: Грошова повинність селян називалася чиншем__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Люблінська унія відбулася 1569 _____.
+  answer: року
+  complete_sentence: Люблінська унія відбулася 1569 року__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Українські землі перейшли під владу _____.
+  answer: Польщі
+  complete_sentence: Українські землі перейшли під владу Польщі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Селяни працювали на _____ пана.
+  answer: полях
+  complete_sentence: Селяни працювали на полях__ пана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Магнати володіли сотнями _____.
+  answer: сіл
+  complete_sentence: Магнати володіли сотнями сіл__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Братства засновували _____ та друкарні.
+  answer: школи
+  complete_sentence: Братства засновували школи__ та друкарні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки тікали на Запорозьку _____.
+  answer: Січ
+  complete_sentence: Козаки тікали на Запорозьку Січ__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Острозька академія стала _____ освіти.
+  answer: центром
+  complete_sentence: Острозька академія стала центром__ освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Православних називали _____.
+  answer: схизматиками
+  complete_sentence: Православних називали схизматиками__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Шляхта переходила на польську _____.
+  answer: мову
+  complete_sentence: Шляхта переходила на польську мову__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Панщина зростала до шести _____.
+  answer: днів
+  complete_sentence: Панщина зростала до шести днів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Берестейська унія створила греко-католицьку _____.
+  answer: церкву
+  complete_sentence: Берестейська унія створила греко-католицьку церкву__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Польща прийняла мільйони _____.
+  answer: біженців
+  complete_sentence: Польща прийняла мільйони біженців__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Еліта масово _____.
+  answer: полонізувалася
+  complete_sentence: Еліта масово полонізувалася__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Косинський повстав 1591 _____.
+  answer: року
+  complete_sentence: Косинський повстав 1591 року__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Назва походить від _____ «res publica».
+  answer: латинського
+  complete_sentence: Назва походить від латинського__ «res publica».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кріпацтво стало _____ економіки.
+  answer: основою
+  complete_sentence: Кріпацтво стало основою__ економіки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про полонізацію
+  passage_template: '1569 року в місті {Любліні|Кракові|Варшаві|Любліні} відбулася
+    подія, що змінила долю українських земель. Польське {королівство|князівство|царство|королівство}
+    і Велике князівство Литовське об''єдналися в одну {державу|армію|церкву|державу}.
+
+
+    Після {унії|війни|революції|унії} українські землі перейшли під владу {Польщі|Литви|Москви|Польщі}.
+    Польська {шляхта|церква|армія|шляхта} отримала привілеї та земельні маєтки. Селяни
+    стали {кріпаками|козаками|міщанами|кріпаками}.
+
+
+    {Панщина|Торгівля|Освіта|Панщина} — обов''язкова праця на пана — зростала від
+    двох до {шести|двох|десяти|шести} днів на тиждень. Магнати володіли сотнями {сіл|міст|фортець|сіл}.
+
+
+    Українська еліта масово {полонізувалася|зростала|воювала|полонізувалася}. Без
+    переходу на {католицизм|православ''я|іслам|католицизм} і польську мову неможливо
+    було зробити кар''єру.
+
+
+    {Братства|Армії|Партії|Братства} ставали осередками культурного спротиву. Вони
+    засновували {школи|фортеці|армії|школи} та друкарні. {Острозька|Київська|Львівська|Острозька}
+    академія стала центром православної {освіти|торгівлі|політики|освіти}.
+
+    '
+  blanks:
+  - answer: Любліні
+    options:
+    - Любліні
+    - Кракові
+    - Варшаві
+  - answer: королівство
+    options:
+    - королівство
+    - князівство
+    - царство
+  - answer: державу
+    options:
+    - державу
+    - армію
+    - церкву
+  - answer: унії
+    options:
+    - унії
+    - війни
+    - революції
+  - answer: Польщі
+    options:
+    - Польщі
+    - Литви
+    - Москви
+  - answer: шляхта
+    options:
+    - шляхта
+    - церква
+    - армія
+  - answer: кріпаками
+    options:
+    - кріпаками
+    - козаками
+    - міщанами
+  - answer: Панщина
+    options:
+    - Панщина
+    - Торгівля
+    - Освіта
+  - answer: шести
+    options:
+    - шести
+    - двох
+    - десяти
+  - answer: сіл
+    options:
+    - сіл
+    - міст
+    - фортець
+  - answer: полонізувалася
+    options:
+    - полонізувалася
+    - зростала
+    - воювала
+  - answer: католицизм
+    options:
+    - католицизм
+    - православ'я
+    - іслам
+  - answer: Братства
+    options:
+    - Братства
+    - Армії
+    - Партії
+  - answer: школи
+    options:
+    - школи
+    - фортеці
+    - армії
+  - answer: Острозька
+    options:
+    - Острозька
+    - Київська
+    - Львівська
+  - answer: освіти
+    options:
+    - освіти
+    - торгівлі
+    - політики
+  blank_count: 16
+  complete_passage: '1569 року в місті Любліні відбулася подія, що змінила долю українських
+    земель. Польське королівство і Велике князівство Литовське об''єдналися в одну
+    державу.
+
+
+    Після унії українські землі перейшли під владу Польщі. Польська шляхта отримала
+    привілеї та земельні маєтки. Селяни стали кріпаками.
+
+
+    Панщина — обов''язкова праця на пана — зростала від двох до шести днів на тиждень.
+    Магнати володіли сотнями сіл.
+
+
+    Українська еліта масово полонізувалася. Без переходу на католицизм і польську
+    мову неможливо було зробити кар''єру.
+
+
+    Братства ставали осередками культурного спротиву. Вони засновували школи та друкарні.
+    Острозька академія стала центром православної освіти.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Люблінська унія відбулася 1569 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Польща і Литва об'єдналися.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Панщина була обов'язкова праця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Селяни працювали на полях пана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Польська шляхта отримала привілеї.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Острозька академія стала центром освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Братства засновували школи і друкарні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Запорозька Січ стала осередком свободи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: На Січі козаки були рівними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Берестейська унія створила греко-католицьку церкву.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Польські магнати скуповували українські землі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Православних зневажливо називали схизматиками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Козацькі повстання почалися у XVI столітті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Українська еліта масово полонізувалася.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Косинський повстав 1591 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Річ Посполиту
+  jumbled_words: []
+  answer: Кріпацтво в Речі Посполитій було жорстоким.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, у якому році відбулася Люблінська унія?
+  options:
+  - '{''text'': ''1556 року'', ''correct'': False}'
+  - '{''text'': ''1569 року'', ''correct'': True}'
+  - '{''text'': ''1596 року'', ''correct'': False}'
+  - '{''text'': ''1648 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, які держави об'єдналися в Річ Посполиту?
+  options:
+  - '{''text'': ''Польща і Московія'', ''correct'': False}'
+  - '{''text'': ''Польща і Велике князівство Литовське'', ''correct'': True}'
+  - '{''text'': ''Польща і Угорщина'', ''correct'': False}'
+  - '{''text'': ''Литва і Швеція'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст пояснює походження назви «Річ Посполита»?
+  options:
+  - '{''text'': ''Від імені короля'', ''correct'': False}'
+  - '{''text'': ''Від латинського «res publica» — «спільна справа»'', ''correct'':
+    True}'
+  - '{''text'': ''Від назви міста'', ''correct'': False}'
+  - '{''text'': ''Від слова «республіка»'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, яке становище українських земель було до 1569 року?
+  options:
+  - '{''text'': ''Повна незалежність'', ''correct'': False}'
+  - '{''text'': ''Значна автономія у складі Литви'', ''correct'': True}'
+  - '{''text'': ''Панування Польщі'', ''correct'': False}'
+  - '{''text'': ''Частина Московії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст характеризує панщину?
+  options:
+  - '{''text'': ''Добровільна праця'', ''correct'': False}'
+  - '{''text'': "Обов''язкова праця на полях пана", ''correct'': True}'
+  - '{''text'': ''Праця за гроші'', ''correct'': False}'
+  - '{''text'': ''Сезонна робота'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, скільки днів на тиждень могла становити панщина?
+  options:
+  - '{''text'': ''Один день'', ''correct'': False}'
+  - '{''text'': "Два-три дні спочатку, потім п''ять-шість", ''correct'': True}'
+  - '{''text'': ''Тільки один день'', ''correct'': False}'
+  - '{''text'': ''Сім днів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Коли була укладена Берестейська унія?
+  options:
+  - '{''text'': ''1569 року'', ''correct'': False}'
+  - '{''text'': ''1581 року'', ''correct'': False}'
+  - '{''text'': ''1596 року'', ''correct'': True}'
+  - '{''text'': ''1648 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст характеризує роль братств?
+  options:
+  - '{''text'': ''Торговельні організації'', ''correct'': False}'
+  - '{''text'': ''Осередки культурного спротиву'', ''correct'': True}'
+  - '{''text'': ''Військові загони'', ''correct'': False}'
+  - '{''text'': ''Податкові установи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, коли була заснована Острозька академія?
+  options:
+  - '{''text'': ''1556 року'', ''correct'': False}'
+  - '{''text'': ''1569 року'', ''correct'': False}'
+  - '{''text'': ''1576 року'', ''correct'': True}'
+  - '{''text'': ''1596 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Що таке Острозька Біблія за текстом?
+  options:
+  - '{''text'': ''Рукопис'', ''correct'': False}'
+  - '{''text'': "Перше повне видання Біблії церковнослов''янською мовою", ''correct'':
+    True}'
+  - '{''text'': ''Переклад на українську'', ''correct'': False}'
+  - '{''text'': ''Латинська Біблія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст пояснює походження слова «козак»?
+  options:
+  - '{''text'': ''Від назви зброї'', ''correct'': False}'
+  - '{''text'': ''Від тюркського «вільна людина»'', ''correct'': True}'
+  - '{''text'': ''Від назви річки'', ''correct'': False}'
+  - '{''text'': ''Від імені вождя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, де знаходилася Запорозька Січ?
+  options:
+  - '{''text'': ''Біля Києва'', ''correct'': False}'
+  - '{''text'': ''За порогами Дніпра'', ''correct'': True}'
+  - '{''text'': ''У Польщі'', ''correct'': False}'
+  - '{''text'': ''У Литві'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст характеризує сучасні польсько-українські відносини?
+  options:
+  - '{''text'': ''Ворожі'', ''correct'': False}'
+  - '{''text'': ''Стратегічне партнерство'', ''correct'': True}'
+  - '{''text'': ''Нейтральні'', ''correct'': False}'
+  - '{''text'': ''Відсутні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Згідно з текстом, хто очолив повстання 1591 року?
+  options:
+  - '{''text'': ''Богдан Хмельницький'', ''correct'': False}'
+  - '{''text'': ''Криштоф Косинський'', ''correct'': True}'
+  - '{''text'': ''Северин Наливайко'', ''correct'': False}'
+  - '{''text'': ''Петро Сагайдачний'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Як текст описує становище православних у Речі Посполитій?
+  options:
+  - '{''text'': ''Рівні права з католиками'', ''correct'': False}'
+  - '{''text'': ''Релігійні утиски і обмеження'', ''correct'': True}'
+  - '{''text'': ''Повна свобода'', ''correct'': False}'
+  - '{''text'': ''Переваги над католиками'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Річ Посполиту
+  question: Яку подію 2023 року згадує текст?
+  options:
+  - '{''text'': ''Вступ України до ЄС'', ''correct'': False}'
+  - '{''text'': ''Прийняття Польщею мільйонів українських біженців'', ''correct'':
+    True}'
+  - '{''text'': ''Підписання союзу'', ''correct'': False}'
+  - '{''text'': ''Візит президента'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: У цитаті Юрія Рогатинця автор критикує українських князів за що?
+  options:
+  - '{''text'': ''За релігійні переконання'', ''correct'': False}'
+  - '{''text'': ''За те, що пішли за чужою славою і занедбали свій народ'', ''correct'':
+    True}'
+  - '{''text'': ''За військові поразки'', ''correct'': False}'
+  - '{''text'': ''За економічні проблеми'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Рогатинець характеризує становище простого народу?
+  options:
+  - '{''text'': ''Заможне і захищене'', ''correct'': False}'
+  - '{''text'': ''Яко вівці без пастиря'', ''correct'': True}'
+  - '{''text'': ''Вільне і незалежне'', ''correct'': False}'
+  - '{''text'': ''Рівне з панами'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку мету має петиція православних до сейму 1623 року?
+  options:
+  - '{''text'': ''Подякувати за привілеї'', ''correct'': False}'
+  - '{''text'': ''Поскаржитися на релігійні утиски'', ''correct'': True}'
+  - '{''text'': ''Оголосити війну'', ''correct'': False}'
+  - '{''text'': ''Прийняти унію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Які конкретні утиски перераховує петиція православних?
+  options:
+  - '{''text'': ''Економічні проблеми'', ''correct'': False}'
+  - '{''text'': ''Відібрання церков і переслідування священиків'', ''correct'': True}'
+  - '{''text'': ''Військові поразки'', ''correct'': False}'
+  - '{''text'': ''Природні катастрофи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Скільки днів на тиждень селянин мав працювати за універсалом?
+  options:
+  - '{''text'': ''Один день'', ''correct'': False}'
+  - '{''text'': ''Два дні'', ''correct'': False}'
+  - '{''text'': ''Чотири дні'', ''correct'': True}'
+  - '{''text'': ''Сім днів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Які додаткові повинності крім панщини згадує універсал?
+  options:
+  - '{''text'': ''Тільки панщина'', ''correct'': False}'
+  - '{''text'': ''Чинш, толоки і згони'', ''correct'': True}'
+  - '{''text'': ''Військова служба'', ''correct'': False}'
+  - '{''text'': "Релігійні обов''язки", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке покарання передбачав універсал за непослух?
+  options:
+  - '{''text'': ''Страта'', ''correct'': False}'
+  - '{''text'': "Батоги або в''язниця", ''correct'': True}'
+  - '{''text'': ''Вигнання'', ''correct'': False}'
+  - '{''text'': ''Штраф'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому православні звертаються до сейму, а не до короля?
+  options:
+  - '{''text'': ''Король був католиком'', ''correct'': False}'
+  - '{''text'': ''Сейм був законодавчим органом Речі Посполитої'', ''correct'': True}'
+  - '{''text'': ''Король помер'', ''correct'': False}'
+  - '{''text'': ''Король підтримував утиски'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який регістр використовує петиція православних?
+  options:
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку мету має цитування первинних джерел у модулі?
+  options:
+  - '{''text'': ''Розвага читачів'', ''correct'': False}'
+  - '{''text'': ''Підтвердження фактів автентичними документами'', ''correct'': True}'
+  - '{''text'': ''Заповнення обсягу'', ''correct'': False}'
+  - '{''text'': ''Демонстрація старої мови'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як універсал обмежував свободу пересування селян?
+  options:
+  - '{''text'': ''Ніяк не обмежував'', ''correct'': False}'
+  - '{''text'': ''Заборонялося переходити до іншого пана без дозволу'', ''correct'':
+    True}'
+  - '{''text'': ''Заборонялося виходити з села'', ''correct'': False}'
+  - '{''text'': ''Заборонялося подорожувати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що свідчить про масовість ополячення еліти?
+  options:
+  - '{''text'': ''Один приклад'', ''correct'': False}'
+  - '{''text'': ''Рогатинець пише, що «многії з них ополячилися»'', ''correct'': True}'
+  - '{''text'': ''Статистичні дані'', ''correct'': False}'
+  - '{''text'': ''Королівський указ'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку емоційну оцінку виражає Рогатинець?
+  options:
+  - '{''text'': ''Радість'', ''correct'': False}'
+  - '{''text'': ''Сум і осуд'', ''correct'': True}'
+  - '{''text'': ''Байдужість'', ''correct'': False}'
+  - '{''text'': ''Захоплення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому петиція звертається до православної шляхти?
+  options:
+  - '{''text'': ''Тільки шляхта мала право голосу на сеймі'', ''correct'': True}'
+  - '{''text'': ''Селяни не вміли писати'', ''correct'': False}'
+  - '{''text'': ''Шляхта була багатшою'', ''correct'': False}'
+  - '{''text'': ''Шляхта була релігійнішою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який жанр представляє цитата Рогатинця?
+  options:
+  - '{''text'': ''Офіційний документ'', ''correct'': False}'
+  - '{''text'': ''Полемічний твір'', ''correct'': True}'
+  - '{''text'': ''Літопис'', ''correct'': False}'
+  - '{''text'': ''Закон'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має згадка про «віру батьків і мову материнську»?
+  options:
+  - '{''text'': ''Географічна точність'', ''correct'': False}'
+  - '{''text'': ''Підкреслення втрати національної ідентичності'', ''correct'': True}'
+  - '{''text'': ''Опис родини автора'', ''correct'': False}'
+  - '{''text'': ''Релігійна проповідь'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, Люблінська унія відбулася 1569 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, до унії українські землі належали Польщі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, панщина становила лише один день на тиждень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, Берестейська унія створила греко-католицьку церкву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, більшість українців прийняли Берестейську унію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, Острозька академія заснована 1576 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, православні мали рівні права з католиками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, братства засновували школи та друкарні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, Запорозька Січ була під владою Польщі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, слово «козак» означає «вільна людина».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, сучасна Польща ворожа до України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, 1591 року повстав Косинський.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, українська шляхта масово полонізувалася.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, Острозька Біблія була першим друкованим виданням у
+    світі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, назва «Річ Посполита» походить від латинського.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Річ Посполиту
+  statement: Згідно з текстом, у 2023 році Польща прийняла українських біженців.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

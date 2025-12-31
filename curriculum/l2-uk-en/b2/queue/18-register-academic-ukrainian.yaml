@@ -1,15 +1,18 @@
 module: 18-register-academic-ukrainian
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/18-register-academic-ukrainian.md
-generated: '2025-12-29T22:08:48.818905'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.473971'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Стилістичні помилки
@@ -575,6 +578,126 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Вступ до наукової статті
+  passage_template: '{Актуальність|Важливість|Тема|Актуальність} дослідження зумовлена
+    недостатньою вивченістю проблеми в сучасній науковій літературі. {Мета|Ціль|Завдання|Мета}
+    роботи полягає в аналізі впливу соціальних мереж на комунікативну поведінку молоді.
+    Для досягнення мети поставлено такі {завдання|задачі|цілі|завдання}: по-перше,
+    визначити основні тенденції; по-друге, проаналізувати зміни. {Об''єктом|Темою|Предметом|Об''єктом}
+    дослідження є комунікативна поведінка українських студентів. {Предметом|Об''єктом|Метою|Предметом}
+    дослідження виступають мовні особливості спілкування. {Методологічну|Теоретичну|Практичну|Методологічну}
+    основу становить поєднання кількісних та якісних методів. {Було|Є|Буде|Було} проведено
+    опитування 300 респондентів. Як {зазначає|каже|говорить|зазначає} дослідник Коваленко
+    (2023), ця проблема є актуальною. {Результати|Відповіді|Дані|Результати} дослідження
+    свідчать про суттєві зміни. {Таким|Цим|Якимось|Таким} чином, можна зробити {висновок|підсумок|результат|висновок}
+    про підтвердження гіпотези. {Перспективним|Цікавим|Можливим|Перспективним} напрямом
+    є розширення вибірки. {Практичне|Теоретичне|Наукове|Практичне} значення роботи
+    визначається можливістю застосування результатів. {Наукова|Практична|Велика|Наукова}
+    новизна полягає у виявленні нових тенденцій. {Отримані|Зібрані|Нові|Отримані}
+    дані дозволяють {стверджувати|казати|думати|стверджувати} про наявність закономірності.
+
+    '
+  blanks:
+  - answer: Актуальність
+    options:
+    - Актуальність
+    - Важливість
+    - Тема
+  - answer: Мета
+    options:
+    - Мета
+    - Ціль
+    - Завдання
+  - answer: завдання
+    options:
+    - завдання
+    - задачі
+    - цілі
+  - answer: Об'єктом
+    options:
+    - Об'єктом
+    - Темою
+    - Предметом
+  - answer: Предметом
+    options:
+    - Предметом
+    - Об'єктом
+    - Метою
+  - answer: Методологічну
+    options:
+    - Методологічну
+    - Теоретичну
+    - Практичну
+  - answer: Було
+    options:
+    - Було
+    - Є
+    - Буде
+  - answer: зазначає
+    options:
+    - зазначає
+    - каже
+    - говорить
+  - answer: Результати
+    options:
+    - Результати
+    - Відповіді
+    - Дані
+  - answer: Таким
+    options:
+    - Таким
+    - Цим
+    - Якимось
+  - answer: висновок
+    options:
+    - висновок
+    - підсумок
+    - результат
+  - answer: Перспективним
+    options:
+    - Перспективним
+    - Цікавим
+    - Можливим
+  - answer: Практичне
+    options:
+    - Практичне
+    - Теоретичне
+    - Наукове
+  - answer: Наукова
+    options:
+    - Наукова
+    - Практична
+    - Велика
+  - answer: Отримані
+    options:
+    - Отримані
+    - Зібрані
+    - Нові
+  - answer: стверджувати
+    options:
+    - стверджувати
+    - казати
+    - думати
+  blank_count: 16
+  complete_passage: 'Актуальність дослідження зумовлена недостатньою вивченістю проблеми
+    в сучасній науковій літературі. Мета роботи полягає в аналізі впливу соціальних
+    мереж на комунікативну поведінку молоді. Для досягнення мети поставлено такі завдання:
+    по-перше, визначити основні тенденції; по-друге, проаналізувати зміни. Об''єктом
+    дослідження є комунікативна поведінка українських студентів. Предметом дослідження
+    виступають мовні особливості спілкування. Методологічну основу становить поєднання
+    кількісних та якісних методів. Було проведено опитування 300 респондентів. Як
+    зазначає дослідник Коваленко (2023), ця проблема є актуальною. Результати дослідження
+    свідчать про суттєві зміни. Таким чином, можна зробити висновок про підтвердження
+    гіпотези. Перспективним напрямом є розширення вибірки. Практичне значення роботи
+    визначається можливістю застосування результатів. Наукова новизна полягає у виявленні
+    нових тенденцій. Отримані дані дозволяють стверджувати про наявність закономірності.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Наукові речення
   jumbled_words: []
@@ -707,14 +830,10 @@ items:
   title: Характеристики наукового стилю
   question: Яка головна характеристика наукового стилю української мови?
   options:
-  - text: Емоційність та експресивність
-    correct: false
-  - text: Об'єктивність та точність
-    correct: true
-  - text: Розмовність та простота
-    correct: false
-  - text: Художність та образність
-    correct: false
+  - '{''text'': ''Емоційність та експресивність'', ''correct'': False}'
+  - '{''text'': "Об''єктивність та точність", ''correct'': True}'
+  - '{''text'': ''Розмовність та простота'', ''correct'': False}'
+  - '{''text'': ''Художність та образність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -725,14 +844,10 @@ items:
   title: Характеристики наукового стилю
   question: Чому в наукових текстах уникають займенника «я»?
   options:
-  - text: Це граматична помилка
-    correct: false
-  - text: Для підкреслення об'єктивності дослідження
-    correct: true
-  - text: Це застаріла норма
-    correct: false
-  - text: Так простіше писати
-    correct: false
+  - '{''text'': ''Це граматична помилка'', ''correct'': False}'
+  - '{''text'': "Для підкреслення об''єктивності дослідження", ''correct'': True}'
+  - '{''text'': ''Це застаріла норма'', ''correct'': False}'
+  - '{''text'': ''Так простіше писати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -743,14 +858,10 @@ items:
   title: Характеристики наукового стилю
   question: Що означає термін «хеджування» в науковому тексті?
   options:
-  - text: Використання складних термінів
-    correct: false
-  - text: Пом'якшення категоричності тверджень
-    correct: true
-  - text: Цитування інших авторів
-    correct: false
-  - text: Структурування тексту
-    correct: false
+  - '{''text'': ''Використання складних термінів'', ''correct'': False}'
+  - '{''text'': "Пом''якшення категоричності тверджень", ''correct'': True}'
+  - '{''text'': ''Цитування інших авторів'', ''correct'': False}'
+  - '{''text'': ''Структурування тексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -761,14 +872,10 @@ items:
   title: Характеристики наукового стилю
   question: Який компонент наукової статті йде першим?
   options:
-  - text: Висновки
-    correct: false
-  - text: Методологія
-    correct: false
-  - text: Актуальність дослідження
-    correct: true
-  - text: Результати
-    correct: false
+  - '{''text'': ''Висновки'', ''correct'': False}'
+  - '{''text'': ''Методологія'', ''correct'': False}'
+  - '{''text'': ''Актуальність дослідження'', ''correct'': True}'
+  - '{''text'': ''Результати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -779,14 +886,10 @@ items:
   title: Характеристики наукового стилю
   question: Яка конструкція типова для наукового стилю?
   options:
-  - text: Я провів експеримент
-    correct: false
-  - text: Було проведено експеримент
-    correct: true
-  - text: Ми тут зробили дослід
-    correct: false
-  - text: Експеримент я вже провів
-    correct: false
+  - '{''text'': ''Я провів експеримент'', ''correct'': False}'
+  - '{''text'': ''Було проведено експеримент'', ''correct'': True}'
+  - '{''text'': ''Ми тут зробили дослід'', ''correct'': False}'
+  - '{''text'': ''Експеримент я вже провів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -797,14 +900,10 @@ items:
   title: Характеристики наукового стилю
   question: Що таке «номіналізація» в науковому стилі?
   options:
-  - text: Використання чисел
-    correct: false
-  - text: Перевага іменників над дієсловами
-    correct: true
-  - text: Називання авторів
-    correct: false
-  - text: Перелік термінів
-    correct: false
+  - '{''text'': ''Використання чисел'', ''correct'': False}'
+  - '{''text'': ''Перевага іменників над дієсловами'', ''correct'': True}'
+  - '{''text'': ''Називання авторів'', ''correct'': False}'
+  - '{''text'': ''Перелік термінів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -815,14 +914,10 @@ items:
   title: Характеристики наукового стилю
   question: Яке слово краще використати в науковому тексті замість «дуже багато»?
   options:
-  - text: Купа
-    correct: false
-  - text: Значна кількість
-    correct: true
-  - text: Багацько
-    correct: false
-  - text: Тонна
-    correct: false
+  - '{''text'': ''Купа'', ''correct'': False}'
+  - '{''text'': ''Значна кількість'', ''correct'': True}'
+  - '{''text'': ''Багацько'', ''correct'': False}'
+  - '{''text'': ''Тонна'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -833,14 +928,10 @@ items:
   title: Характеристики наукового стилю
   question: Як правильно ввести цитату в науковому тексті?
   options:
-  - text: Один чувак написав, що...
-    correct: false
-  - text: Як зазначає дослідник (Іваненко, 2022)...
-    correct: true
-  - text: Десь я читав, що...
-    correct: false
-  - text: Кажуть, що...
-    correct: false
+  - '{''text'': ''Один чувак написав, що...'', ''correct'': False}'
+  - '{''text'': ''Як зазначає дослідник (Іваненко, 2022)...'', ''correct'': True}'
+  - '{''text'': ''Десь я читав, що...'', ''correct'': False}'
+  - '{''text'': ''Кажуть, що...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -851,14 +942,10 @@ items:
   title: Характеристики наукового стилю
   question: Що означає «предмет дослідження» в науковій роботі?
   options:
-  - text: Фізичний об'єкт, який вивчають
-    correct: false
-  - text: Конкретний аспект об'єкта дослідження
-    correct: true
-  - text: Тема роботи
-    correct: false
-  - text: Висновки дослідження
-    correct: false
+  - '{''text'': "Фізичний об''єкт, який вивчають", ''correct'': False}'
+  - '{''text'': "Конкретний аспект об''єкта дослідження", ''correct'': True}'
+  - '{''text'': ''Тема роботи'', ''correct'': False}'
+  - '{''text'': ''Висновки дослідження'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -869,14 +956,11 @@ items:
   title: Характеристики наукового стилю
   question: Яке речення найкраще підходить для наукового стилю?
   options:
-  - text: Соціальні мережі точно шкодять молоді.
-    correct: false
-  - text: Результати вказують на потенційний негативний вплив.
-    correct: true
-  - text: Всі знають, що соціальні мережі погані.
-    correct: false
-  - text: Я думаю, що мережі шкодять.
-    correct: false
+  - '{''text'': ''Соціальні мережі точно шкодять молоді.'', ''correct'': False}'
+  - '{''text'': ''Результати вказують на потенційний негативний вплив.'', ''correct'':
+    True}'
+  - '{''text'': ''Всі знають, що соціальні мережі погані.'', ''correct'': False}'
+  - '{''text'': ''Я думаю, що мережі шкодять.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -887,14 +971,10 @@ items:
   title: Характеристики наукового стилю
   question: Що таке «анотація» наукової статті?
   options:
-  - text: Список літератури
-    correct: false
-  - text: Стислий виклад змісту статті
-    correct: true
-  - text: Вступ до статті
-    correct: false
-  - text: Висновки дослідження
-    correct: false
+  - '{''text'': ''Список літератури'', ''correct'': False}'
+  - '{''text'': ''Стислий виклад змісту статті'', ''correct'': True}'
+  - '{''text'': ''Вступ до статті'', ''correct'': False}'
+  - '{''text'': ''Висновки дослідження'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -905,14 +985,10 @@ items:
   title: Характеристики наукового стилю
   question: Яка функція виразу «таким чином» у науковому тексті?
   options:
-  - text: Вводить приклад
-    correct: false
-  - text: Сигналізує про підсумок
-    correct: true
-  - text: Вводить цитату
-    correct: false
-  - text: Починає новий розділ
-    correct: false
+  - '{''text'': ''Вводить приклад'', ''correct'': False}'
+  - '{''text'': ''Сигналізує про підсумок'', ''correct'': True}'
+  - '{''text'': ''Вводить цитату'', ''correct'': False}'
+  - '{''text'': ''Починає новий розділ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -923,14 +999,11 @@ items:
   title: Характеристики наукового стилю
   question: Чому важливо використовувати посилання в наукових текстах?
   options:
-  - text: Щоб збільшити обсяг тексту
-    correct: false
-  - text: Щоб підтвердити твердження та уникнути плагіату
-    correct: true
-  - text: Це просто традиція
-    correct: false
-  - text: Для прикраси тексту
-    correct: false
+  - '{''text'': ''Щоб збільшити обсяг тексту'', ''correct'': False}'
+  - '{''text'': ''Щоб підтвердити твердження та уникнути плагіату'', ''correct'':
+    True}'
+  - '{''text'': ''Це просто традиція'', ''correct'': False}'
+  - '{''text'': ''Для прикраси тексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -941,14 +1014,10 @@ items:
   title: Характеристики наукового стилю
   question: Який вираз використовують для обережного твердження?
   options:
-  - text: Це абсолютно точно
-    correct: false
-  - text: Можна припустити, що
-    correct: true
-  - text: Я впевнений, що
-    correct: false
-  - text: Усі погоджуються, що
-    correct: false
+  - '{''text'': ''Це абсолютно точно'', ''correct'': False}'
+  - '{''text'': ''Можна припустити, що'', ''correct'': True}'
+  - '{''text'': ''Я впевнений, що'', ''correct'': False}'
+  - '{''text'': ''Усі погоджуються, що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -959,14 +1028,10 @@ items:
   title: Характеристики наукового стилю
   question: Що означає термін «методологія» в науковому дослідженні?
   options:
-  - text: Результати дослідження
-    correct: false
-  - text: Система методів та підходів дослідження
-    correct: true
-  - text: Тема дослідження
-    correct: false
-  - text: Список літератури
-    correct: false
+  - '{''text'': ''Результати дослідження'', ''correct'': False}'
+  - '{''text'': ''Система методів та підходів дослідження'', ''correct'': True}'
+  - '{''text'': ''Тема дослідження'', ''correct'': False}'
+  - '{''text'': ''Список літератури'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -977,14 +1042,10 @@ items:
   title: Характеристики наукового стилю
   question: Яка середня довжина речення в науковому стилі порівняно з розмовним?
   options:
-  - text: Коротша
-    correct: false
-  - text: Довша
-    correct: true
-  - text: Однакова
-    correct: false
-  - text: Залежить від теми
-    correct: false
+  - '{''text'': ''Коротша'', ''correct'': False}'
+  - '{''text'': ''Довша'', ''correct'': True}'
+  - '{''text'': ''Однакова'', ''correct'': False}'
+  - '{''text'': ''Залежить від теми'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -995,14 +1056,10 @@ items:
   title: Структура наукового тексту
   question: Що входить до вступної частини наукової статті?
   options:
-  - text: Висновки та рекомендації
-    correct: false
-  - text: Актуальність, мета та завдання
-    correct: true
-  - text: Бібліографія та додатки
-    correct: false
-  - text: Результати експерименту
-    correct: false
+  - '{''text'': ''Висновки та рекомендації'', ''correct'': False}'
+  - '{''text'': ''Актуальність, мета та завдання'', ''correct'': True}'
+  - '{''text'': ''Бібліографія та додатки'', ''correct'': False}'
+  - '{''text'': ''Результати експерименту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1013,14 +1070,10 @@ items:
   title: Структура наукового тексту
   question: Де розміщують ключові слова в науковій статті?
   options:
-  - text: У висновках
-    correct: false
-  - text: Після анотації
-    correct: true
-  - text: У бібліографії
-    correct: false
-  - text: На початку тексту
-    correct: false
+  - '{''text'': ''У висновках'', ''correct'': False}'
+  - '{''text'': ''Після анотації'', ''correct'': True}'
+  - '{''text'': ''У бібліографії'', ''correct'': False}'
+  - '{''text'': ''На початку тексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1031,14 +1084,10 @@ items:
   title: Структура наукового тексту
   question: Яка функція анотації в науковій статті?
   options:
-  - text: Детально описати методологію
-    correct: false
-  - text: Стисло викласти зміст та результати
-    correct: true
-  - text: Перелічити використані джерела
-    correct: false
-  - text: Представити автора дослідження
-    correct: false
+  - '{''text'': ''Детально описати методологію'', ''correct'': False}'
+  - '{''text'': ''Стисло викласти зміст та результати'', ''correct'': True}'
+  - '{''text'': ''Перелічити використані джерела'', ''correct'': False}'
+  - '{''text'': ''Представити автора дослідження'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1049,14 +1098,10 @@ items:
   title: Структура наукового тексту
   question: Що таке наукова гіпотеза?
   options:
-  - text: Остаточний висновок дослідження
-    correct: false
-  - text: Припущення, яке перевіряється в дослідженні
-    correct: true
-  - text: Опис методів дослідження
-    correct: false
-  - text: Список використаної літератури
-    correct: false
+  - '{''text'': ''Остаточний висновок дослідження'', ''correct'': False}'
+  - '{''text'': ''Припущення, яке перевіряється в дослідженні'', ''correct'': True}'
+  - '{''text'': ''Опис методів дослідження'', ''correct'': False}'
+  - '{''text'': ''Список використаної літератури'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1067,14 +1112,11 @@ items:
   title: Структура наукового тексту
   question: Яку роль виконує бібліографія в науковій роботі?
   options:
-  - text: Збільшує обсяг тексту
-    correct: false
-  - text: Демонструє обізнаність у темі та джерела тверджень
-    correct: true
-  - text: Прикрашає текст
-    correct: false
-  - text: Замінює власні висновки
-    correct: false
+  - '{''text'': ''Збільшує обсяг тексту'', ''correct'': False}'
+  - '{''text'': ''Демонструє обізнаність у темі та джерела тверджень'', ''correct'':
+    True}'
+  - '{''text'': ''Прикрашає текст'', ''correct'': False}'
+  - '{''text'': ''Замінює власні висновки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1085,14 +1127,10 @@ items:
   title: Структура наукового тексту
   question: Де формулюють практичне значення роботи?
   options:
-  - text: У висновках
-    correct: false
-  - text: У вступі після мети та завдань
-    correct: true
-  - text: У бібліографії
-    correct: false
-  - text: У додатках
-    correct: false
+  - '{''text'': ''У висновках'', ''correct'': False}'
+  - '{''text'': ''У вступі після мети та завдань'', ''correct'': True}'
+  - '{''text'': ''У бібліографії'', ''correct'': False}'
+  - '{''text'': ''У додатках'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1103,14 +1141,10 @@ items:
   title: Структура наукового тексту
   question: Що таке наукова новизна дослідження?
   options:
-  - text: Те, що робота написана нещодавно
-    correct: false
-  - text: Внесок дослідження в науку
-    correct: true
-  - text: Використання нових методів
-    correct: false
-  - text: Велика кількість джерел
-    correct: false
+  - '{''text'': ''Те, що робота написана нещодавно'', ''correct'': False}'
+  - '{''text'': ''Внесок дослідження в науку'', ''correct'': True}'
+  - '{''text'': ''Використання нових методів'', ''correct'': False}'
+  - '{''text'': ''Велика кількість джерел'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1121,14 +1155,10 @@ items:
   title: Структура наукового тексту
   question: Яка структура висновків наукової роботи?
   options:
-  - text: Повтор усього тексту
-    correct: false
-  - text: Стислий підсумок відповідно до завдань
-    correct: true
-  - text: Нові гіпотези
-    correct: false
-  - text: Перелік помилок
-    correct: false
+  - '{''text'': ''Повтор усього тексту'', ''correct'': False}'
+  - '{''text'': ''Стислий підсумок відповідно до завдань'', ''correct'': True}'
+  - '{''text'': ''Нові гіпотези'', ''correct'': False}'
+  - '{''text'': ''Перелік помилок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1139,14 +1169,10 @@ items:
   title: Структура наукового тексту
   question: Що таке контент-аналіз у науковому дослідженні?
   options:
-  - text: Перевірка орфографії
-    correct: false
-  - text: Метод систематичного аналізу текстів
-    correct: true
-  - text: Редагування статті
-    correct: false
-  - text: Написання анотації
-    correct: false
+  - '{''text'': ''Перевірка орфографії'', ''correct'': False}'
+  - '{''text'': ''Метод систематичного аналізу текстів'', ''correct'': True}'
+  - '{''text'': ''Редагування статті'', ''correct'': False}'
+  - '{''text'': ''Написання анотації'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1157,14 +1183,11 @@ items:
   title: Структура наукового тексту
   question: Що означає репрезентативність вибірки?
   options:
-  - text: Вибірка дуже велика
-    correct: false
-  - text: Вибірка відображає характеристики генеральної сукупності
-    correct: true
-  - text: Вибірка зручна для дослідника
-    correct: false
-  - text: Вибірка містить лише студентів
-    correct: false
+  - '{''text'': ''Вибірка дуже велика'', ''correct'': False}'
+  - '{''text'': ''Вибірка відображає характеристики генеральної сукупності'', ''correct'':
+    True}'
+  - '{''text'': ''Вибірка зручна для дослідника'', ''correct'': False}'
+  - '{''text'': ''Вибірка містить лише студентів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1175,14 +1198,11 @@ items:
   title: Структура наукового тексту
   question: Яка функція розділу «Обговорення» в науковій статті?
   options:
-  - text: Переказ результатів
-    correct: false
-  - text: Інтерпретація результатів та порівняння з іншими дослідженнями
-    correct: true
-  - text: Опис методів
-    correct: false
-  - text: Формулювання мети
-    correct: false
+  - '{''text'': ''Переказ результатів'', ''correct'': False}'
+  - '{''text'': ''Інтерпретація результатів та порівняння з іншими дослідженнями'',
+    ''correct'': True}'
+  - '{''text'': ''Опис методів'', ''correct'': False}'
+  - '{''text'': ''Формулювання мети'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1193,14 +1213,10 @@ items:
   title: Структура наукового тексту
   question: Що таке рецензування наукової статті?
   options:
-  - text: Редагування тексту автором
-    correct: false
-  - text: Незалежна експертна оцінка якості роботи
-    correct: true
-  - text: Переклад статті
-    correct: false
-  - text: Публікація в журналі
-    correct: false
+  - '{''text'': ''Редагування тексту автором'', ''correct'': False}'
+  - '{''text'': ''Незалежна експертна оцінка якості роботи'', ''correct'': True}'
+  - '{''text'': ''Переклад статті'', ''correct'': False}'
+  - '{''text'': ''Публікація в журналі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1211,14 +1227,11 @@ items:
   title: Структура наукового тексту
   question: Що означає термін «апробація результатів»?
   options:
-  - text: Написання статті
-    correct: false
-  - text: Представлення результатів на конференціях та в публікаціях
-    correct: true
-  - text: Проведення експерименту
-    correct: false
-  - text: Збір даних
-    correct: false
+  - '{''text'': ''Написання статті'', ''correct'': False}'
+  - '{''text'': ''Представлення результатів на конференціях та в публікаціях'', ''correct'':
+    True}'
+  - '{''text'': ''Проведення експерименту'', ''correct'': False}'
+  - '{''text'': ''Збір даних'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1229,14 +1242,10 @@ items:
   title: Структура наукового тексту
   question: Яка різниця між монографією та статтею?
   options:
-  - text: Монографія коротша
-    correct: false
-  - text: Монографія — це велике дослідження однієї теми
-    correct: true
-  - text: Стаття важливіша
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Монографія коротша'', ''correct'': False}'
+  - '{''text'': ''Монографія — це велике дослідження однієї теми'', ''correct'': True}'
+  - '{''text'': ''Стаття важливіша'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1247,14 +1256,10 @@ items:
   title: Структура наукового тексту
   question: Що таке DOI наукової статті?
   options:
-  - text: Назва журналу
-    correct: false
-  - text: Унікальний цифровий ідентифікатор публікації
-    correct: true
-  - text: Прізвище автора
-    correct: false
-  - text: Рік публікації
-    correct: false
+  - '{''text'': ''Назва журналу'', ''correct'': False}'
+  - '{''text'': ''Унікальний цифровий ідентифікатор публікації'', ''correct'': True}'
+  - '{''text'': ''Прізвище автора'', ''correct'': False}'
+  - '{''text'': ''Рік публікації'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1265,14 +1270,10 @@ items:
   title: Структура наукового тексту
   question: Що входить до апарату дослідження?
   options:
-  - text: Тільки висновки
-    correct: false
-  - text: Мета, завдання, об'єкт, предмет, методи
-    correct: true
-  - text: Тільки бібліографія
-    correct: false
-  - text: Тільки анотація
-    correct: false
+  - '{''text'': ''Тільки висновки'', ''correct'': False}'
+  - '{''text'': "Мета, завдання, об''єкт, предмет, методи", ''correct'': True}'
+  - '{''text'': ''Тільки бібліографія'', ''correct'': False}'
+  - '{''text'': ''Тільки анотація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

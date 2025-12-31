@@ -1,7 +1,7 @@
 module: 04-sentence-structure
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/04-sentence-structure.md
-generated: '2025-12-29T00:21:58.521551'
+generated: '2025-12-30T19:49:27.262100'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 14
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 28
   translate: 14
   true-false: 14
+total_items: 113
 item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок
@@ -598,6 +600,7 @@ items:
     - пунктуація
     - синтаксис
     - лексика
+  blank_count: 14
   complete_passage: У реченні «Студент читає книгу в бібліотеці» є {підмет} і {присудок}
     як головні члени. {Підмет} — «студент», {присудок} — «читає». Слово «книгу» —
     це {додаток}, на яке спрямована дія. «В бібліотеці» — це {обставина}, що показує,
@@ -735,14 +738,10 @@ items:
   title: Члени речення
   question: Хто або що виконує дію в реченні — який це член речення?
   options:
-  - text: підмет
-    correct: true
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: false
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': True}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -753,14 +752,10 @@ items:
   title: Члени речення
   question: Яка дія виконується або який стан описується — який це член речення?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: true
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': True}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -771,14 +766,10 @@ items:
   title: Члени речення
   question: На кого або що спрямована дія — який це член речення?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: true
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': True}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -789,14 +780,10 @@ items:
   title: Члени речення
   question: Який член речення описує іменник, дає його характеристику?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: true
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -807,14 +794,10 @@ items:
   title: Члени речення
   question: Який член речення описує обставини дії — де, коли, як?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: false
-  - text: обставина
-    correct: true
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''обставина'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -826,14 +809,10 @@ items:
   question: Англійське слово "subject" перекладається українською як який граматичний
     термін?
   options:
-  - text: підмет
-    correct: true
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': True}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -845,14 +824,10 @@ items:
   question: Англійське слово "predicate" перекладається українською як який граматичний
     термін?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: true
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': True}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -864,14 +839,10 @@ items:
   question: Англійське слово "object" перекладається українською як який граматичний
     термін?
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: true
-  - text: означення
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': True}'
+  - '{''text'': ''означення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -882,14 +853,10 @@ items:
   title: Члени речення
   question: Підмет і присудок — це які важливі члени речення в українській мові?
   options:
-  - text: головні члени
-    correct: true
-  - text: другорядні члени
-    correct: false
-  - text: допоміжні члени
-    correct: false
-  - text: службові члени
-    correct: false
+  - '{''text'': ''головні члени'', ''correct'': True}'
+  - '{''text'': ''другорядні члени'', ''correct'': False}'
+  - '{''text'': ''допоміжні члени'', ''correct'': False}'
+  - '{''text'': ''службові члени'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -900,14 +867,10 @@ items:
   title: Члени речення
   question: Додаток, означення та обставина — це які саме члени українського речення?
   options:
-  - text: головні члени
-    correct: false
-  - text: другорядні члени
-    correct: true
-  - text: допоміжні члени
-    correct: false
-  - text: службові члени
-    correct: false
+  - '{''text'': ''головні члени'', ''correct'': False}'
+  - '{''text'': ''другорядні члени'', ''correct'': True}'
+  - '{''text'': ''допоміжні члени'', ''correct'': False}'
+  - '{''text'': ''службові члени'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -918,14 +881,10 @@ items:
   title: Члени речення
   question: У цьому простому реченні "Марія читає книгу" яке слово є підметом?
   options:
-  - text: Марія
-    correct: true
-  - text: читає
-    correct: false
-  - text: книгу
-    correct: false
-  - text: Марія читає
-    correct: false
+  - '{''text'': ''Марія'', ''correct'': True}'
+  - '{''text'': ''читає'', ''correct'': False}'
+  - '{''text'': ''книгу'', ''correct'': False}'
+  - '{''text'': ''Марія читає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -936,14 +895,10 @@ items:
   title: Члени речення
   question: У цьому простому реченні "Марія читає книгу" яке слово є присудком?
   options:
-  - text: Марія
-    correct: false
-  - text: читає
-    correct: true
-  - text: книгу
-    correct: false
-  - text: Марія читає
-    correct: false
+  - '{''text'': ''Марія'', ''correct'': False}'
+  - '{''text'': ''читає'', ''correct'': True}'
+  - '{''text'': ''книгу'', ''correct'': False}'
+  - '{''text'': ''Марія читає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -954,14 +909,10 @@ items:
   title: Члени речення
   question: У цьому простому реченні "Марія читає книгу" яке слово є додатком?
   options:
-  - text: Марія
-    correct: false
-  - text: читає
-    correct: false
-  - text: книгу
-    correct: true
-  - text: Марія читає
-    correct: false
+  - '{''text'': ''Марія'', ''correct'': False}'
+  - '{''text'': ''читає'', ''correct'': False}'
+  - '{''text'': ''книгу'', ''correct'': True}'
+  - '{''text'': ''Марія читає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -972,14 +923,10 @@ items:
   title: Члени речення
   question: У цьому реченні "Гарна дівчина читає" яке слово виконує роль означення?
   options:
-  - text: гарна
-    correct: true
-  - text: дівчина
-    correct: false
-  - text: читає
-    correct: false
-  - text: дівчина читає
-    correct: false
+  - '{''text'': ''гарна'', ''correct'': True}'
+  - '{''text'': ''дівчина'', ''correct'': False}'
+  - '{''text'': ''читає'', ''correct'': False}'
+  - '{''text'': ''дівчина читає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -990,14 +937,10 @@ items:
   title: Види речень
   question: Речення з однією парою підмет-присудок — яке воно?
   options:
-  - text: просте речення
-    correct: true
-  - text: складне речення
-    correct: false
-  - text: складносурядне
-    correct: false
-  - text: складнопідрядне
-    correct: false
+  - '{''text'': ''просте речення'', ''correct'': True}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
+  - '{''text'': ''складносурядне'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1008,14 +951,10 @@ items:
   title: Види речень
   question: Якщо речення має кілька частин, то яке це граматичне речення?
   options:
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: true
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: false
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': True}'
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1027,14 +966,10 @@ items:
   question: Коли частини речення рівноправні та з'єднані "і", "а", "але" — яке це
     речення?
   options:
-  - text: просте
-    correct: false
-  - text: складнопідрядне
-    correct: false
-  - text: складносурядне
-    correct: true
-  - text: підрядне
-    correct: false
+  - '{''text'': ''просте'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': False}'
+  - '{''text'': ''складносурядне'', ''correct'': True}'
+  - '{''text'': ''підрядне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1045,14 +980,10 @@ items:
   title: Види речень
   question: Коли одна частина речення залежить від іншої — яке це речення?
   options:
-  - text: просте
-    correct: false
-  - text: складнопідрядне
-    correct: true
-  - text: складносурядне
-    correct: false
-  - text: головне
-    correct: false
+  - '{''text'': ''просте'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': True}'
+  - '{''text'': ''складносурядне'', ''correct'': False}'
+  - '{''text'': ''головне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1063,14 +994,10 @@ items:
   title: Види речень
   question: Як називається незалежна частина у структурі складного українського речення?
   options:
-  - text: головне речення
-    correct: true
-  - text: підрядне речення
-    correct: false
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': True}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1081,14 +1008,10 @@ items:
   title: Види речень
   question: Як граматично називається залежна частина у складному українському реченні?
   options:
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: true
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': True}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1100,14 +1023,10 @@ items:
   question: Англійський термін "Simple sentence" перекладається українською мовою
     як який термін?
   options:
-  - text: просте речення
-    correct: true
-  - text: складне речення
-    correct: false
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: false
+  - '{''text'': ''просте речення'', ''correct'': True}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1119,14 +1038,10 @@ items:
   question: Англійський термін "Main clause" перекладається українською мовою як який
     термін?
   options:
-  - text: головне речення
-    correct: true
-  - text: підрядне речення
-    correct: false
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': True}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1138,14 +1053,10 @@ items:
   question: Англійський термін "Subordinate clause" перекладається українською мовою
     як який термін?
   options:
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: true
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': True}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1156,14 +1067,10 @@ items:
   title: Види речень
   question: До якого типу належать сполучники "і", "а", "але" в українській мові?
   options:
-  - text: сполучники сурядності
-    correct: true
-  - text: сполучники підрядності
-    correct: false
-  - text: прийменники
-    correct: false
-  - text: частки
-    correct: false
+  - '{''text'': ''сполучники сурядності'', ''correct'': True}'
+  - '{''text'': ''сполучники підрядності'', ''correct'': False}'
+  - '{''text'': ''прийменники'', ''correct'': False}'
+  - '{''text'': ''частки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1174,14 +1081,10 @@ items:
   title: Види речень
   question: До якого типу належать сполучники "що", "бо", "коли" в українській мові?
   options:
-  - text: сполучники сурядності
-    correct: false
-  - text: сполучники підрядності
-    correct: true
-  - text: прийменники
-    correct: false
-  - text: частки
-    correct: false
+  - '{''text'': ''сполучники сурядності'', ''correct'': False}'
+  - '{''text'': ''сполучники підрядності'', ''correct'': True}'
+  - '{''text'': ''прийменники'', ''correct'': False}'
+  - '{''text'': ''частки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1192,14 +1095,10 @@ items:
   title: Види речень
   question: Коли речення має лише дві слова "Я читаю" — яке воно?
   options:
-  - text: просте
-    correct: true
-  - text: складне
-    correct: false
-  - text: складносурядне
-    correct: false
-  - text: складнопідрядне
-    correct: false
+  - '{''text'': ''просте'', ''correct'': True}'
+  - '{''text'': ''складне'', ''correct'': False}'
+  - '{''text'': ''складносурядне'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1210,14 +1109,10 @@ items:
   title: Види речень
   question: '"Я читаю, а сестра пише" — яке це речення?'
   options:
-  - text: просте
-    correct: false
-  - text: складнопідрядне
-    correct: false
-  - text: складносурядне
-    correct: true
-  - text: підрядне
-    correct: false
+  - '{''text'': ''просте'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': False}'
+  - '{''text'': ''складносурядне'', ''correct'': True}'
+  - '{''text'': ''підрядне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1228,14 +1123,10 @@ items:
   title: Види речень
   question: '"Я читаю, бо люблю книги" — яке це речення?'
   options:
-  - text: просте
-    correct: false
-  - text: складнопідрядне
-    correct: true
-  - text: складносурядне
-    correct: false
-  - text: головне
-    correct: false
+  - '{''text'': ''просте'', ''correct'': False}'
+  - '{''text'': ''складнопідрядне'', ''correct'': True}'
+  - '{''text'': ''складносурядне'', ''correct'': False}'
+  - '{''text'': ''головне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1247,14 +1138,10 @@ items:
   source_sentence: subject
   answer: ''
   options:
-  - text: підмет
-    correct: true
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: false
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': True}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1265,14 +1152,10 @@ items:
   source_sentence: predicate
   answer: ''
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: true
-  - text: додаток
-    correct: false
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': True}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1283,14 +1166,10 @@ items:
   source_sentence: object
   answer: ''
   options:
-  - text: підмет
-    correct: false
-  - text: присудок
-    correct: false
-  - text: додаток
-    correct: true
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': True}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1301,14 +1180,10 @@ items:
   source_sentence: attribute
   answer: ''
   options:
-  - text: підмет
-    correct: false
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: true
-  - text: обставина
-    correct: false
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': True}'
+  - '{''text'': ''обставина'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1319,14 +1194,10 @@ items:
   source_sentence: adverbial
   answer: ''
   options:
-  - text: підмет
-    correct: false
-  - text: додаток
-    correct: false
-  - text: означення
-    correct: false
-  - text: обставина
-    correct: true
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
+  - '{''text'': ''означення'', ''correct'': False}'
+  - '{''text'': ''обставина'', ''correct'': True}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1337,14 +1208,10 @@ items:
   source_sentence: simple sentence
   answer: ''
   options:
-  - text: просте речення
-    correct: true
-  - text: складне речення
-    correct: false
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: false
+  - '{''text'': ''просте речення'', ''correct'': True}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1355,14 +1222,10 @@ items:
   source_sentence: main clause
   answer: ''
   options:
-  - text: головне речення
-    correct: true
-  - text: підрядне речення
-    correct: false
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': True}'
+  - '{''text'': ''підрядне речення'', ''correct'': False}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1373,14 +1236,10 @@ items:
   source_sentence: subordinate clause
   answer: ''
   options:
-  - text: головне речення
-    correct: false
-  - text: підрядне речення
-    correct: true
-  - text: просте речення
-    correct: false
-  - text: складне речення
-    correct: false
+  - '{''text'': ''головне речення'', ''correct'': False}'
+  - '{''text'': ''підрядне речення'', ''correct'': True}'
+  - '{''text'': ''просте речення'', ''correct'': False}'
+  - '{''text'': ''складне речення'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1391,14 +1250,10 @@ items:
   source_sentence: comma
   answer: ''
   options:
-  - text: кома
-    correct: true
-  - text: крапка
-    correct: false
-  - text: двокрапка
-    correct: false
-  - text: тире
-    correct: false
+  - '{''text'': ''кома'', ''correct'': True}'
+  - '{''text'': ''крапка'', ''correct'': False}'
+  - '{''text'': ''двокрапка'', ''correct'': False}'
+  - '{''text'': ''тире'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1409,14 +1264,10 @@ items:
   source_sentence: period
   answer: ''
   options:
-  - text: кома
-    correct: false
-  - text: крапка
-    correct: true
-  - text: двокрапка
-    correct: false
-  - text: тире
-    correct: false
+  - '{''text'': ''кома'', ''correct'': False}'
+  - '{''text'': ''крапка'', ''correct'': True}'
+  - '{''text'': ''двокрапка'', ''correct'': False}'
+  - '{''text'': ''тире'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1427,14 +1278,10 @@ items:
   source_sentence: colon
   answer: ''
   options:
-  - text: кома
-    correct: false
-  - text: крапка
-    correct: false
-  - text: двокрапка
-    correct: true
-  - text: тире
-    correct: false
+  - '{''text'': ''кома'', ''correct'': False}'
+  - '{''text'': ''крапка'', ''correct'': False}'
+  - '{''text'': ''двокрапка'', ''correct'': True}'
+  - '{''text'': ''тире'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1445,14 +1292,10 @@ items:
   source_sentence: dash
   answer: ''
   options:
-  - text: кома
-    correct: false
-  - text: крапка
-    correct: false
-  - text: двокрапка
-    correct: false
-  - text: тире
-    correct: true
+  - '{''text'': ''кома'', ''correct'': False}'
+  - '{''text'': ''крапка'', ''correct'': False}'
+  - '{''text'': ''двокрапка'', ''correct'': False}'
+  - '{''text'': ''тире'', ''correct'': True}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1463,14 +1306,10 @@ items:
   source_sentence: syntax
   answer: ''
   options:
-  - text: синтаксис
-    correct: true
-  - text: морфологія
-    correct: false
-  - text: фонетика
-    correct: false
-  - text: пунктуація
-    correct: false
+  - '{''text'': ''синтаксис'', ''correct'': True}'
+  - '{''text'': ''морфологія'', ''correct'': False}'
+  - '{''text'': ''фонетика'', ''correct'': False}'
+  - '{''text'': ''пунктуація'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -1481,14 +1320,10 @@ items:
   source_sentence: punctuation
   answer: ''
   options:
-  - text: синтаксис
-    correct: false
-  - text: морфологія
-    correct: false
-  - text: фонетика
-    correct: false
-  - text: пунктуація
-    correct: true
+  - '{''text'': ''синтаксис'', ''correct'': False}'
+  - '{''text'': ''морфологія'', ''correct'': False}'
+  - '{''text'': ''фонетика'', ''correct'': False}'
+  - '{''text'': ''пунктуація'', ''correct'': True}'
   validate:
     source_valid: null
     answer_valid: null

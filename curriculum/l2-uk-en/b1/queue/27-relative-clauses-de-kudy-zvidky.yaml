@@ -1,7 +1,7 @@
 module: 27-relative-clauses-de-kudy-zvidky
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/27-relative-clauses-de-kudy-zvidky.md
-generated: '2025-12-29T00:22:00.500759'
+generated: '2025-12-30T19:49:28.010675'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 14
   true-false: 14
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -385,6 +387,7 @@ items:
     - звідки
     - там
     answer: де
+  blank_count: 14
   complete_passage: 'Минулого року я вирішив відвідати село, [___:1] жили мої дідусь
     і бабуся все своє життя. Це місце, [___:2] я часто їздив у дитинстві на літні
     канікули. Будинок, [___:3] вони мешкали понад п''ятдесят років, стоїть на пагорбі.
@@ -486,14 +489,10 @@ items:
   question: Яке слово потрібно вставити в речення про місто, в якому народилися та
     яке дуже красиве і старовинне?
   options:
-  - text: де
-    correct: true
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: false
-  - text: там
-    correct: false
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''там'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -505,14 +504,10 @@ items:
   question: Яке слово потрібно вставити в речення про країну, до якої летимо цього
     літа та яка знаходиться в Європі?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: true
-  - text: звідки
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -524,14 +519,10 @@ items:
   question: Яке слово потрібно вставити в речення про село, з якого приїхали гості
     вчора та яке далеко в горах?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: true
-  - text: звідти
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': True}'
+  - '{''text'': ''звідти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -543,14 +534,10 @@ items:
   question: Яке слово потрібно вставити в речення про офіс, в якому вона працює вже
     п'ять років та який знаходиться в центрі?
   options:
-  - text: де
-    correct: true
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: false
-  - text: тут
-    correct: false
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''тут'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -562,14 +549,10 @@ items:
   question: Яке слово потрібно вставити в речення про регіон, до якого вони переїжджають
     на постійне проживання та який дуже мальовничий?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: true
-  - text: звідки
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -581,14 +564,10 @@ items:
   question: Яке слово потрібно вставити в речення про місто, з якого він телефонував
     учора ввечері та яке було незнайомим?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: true
-  - text: звідти
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': True}'
+  - '{''text'': ''звідти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -600,14 +579,10 @@ items:
   question: Яке слово потрібно вставити в речення про готель, в якому ми зупинилися
     на ніч та який має чудовий вид на море?
   options:
-  - text: де
-    correct: true
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: false
-  - text: там
-    correct: false
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''там'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -619,14 +594,10 @@ items:
   question: Яке слово потрібно вставити в речення про університет, до якого вона вступила
     цього року та який дуже престижний у країні?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: true
-  - text: звідки
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -638,14 +609,10 @@ items:
   question: Яке слово потрібно вставити в речення про країну, з якої походить ця традиція
     та яка має багату культурну спадщину?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: true
-  - text: звідти
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': True}'
+  - '{''text'': ''звідти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -657,14 +624,10 @@ items:
   question: Яке слово потрібно вставити в речення про парк, в якому діти граються
     щодня після школи та який нещодавно відремонтували?
   options:
-  - text: де
-    correct: true
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: false
-  - text: там
-    correct: false
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''там'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -676,14 +639,10 @@ items:
   question: Яке слово потрібно вставити в речення про аеропорт, до якого прибуває
     наш літак о третій годині та який новий?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: true
-  - text: звідки
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -695,14 +654,10 @@ items:
   question: Яке слово потрібно вставити в речення про будинок, з якого вона виїхала
     минулого місяця та який тепер порожній і занедбаний?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: true
-  - text: звідти
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': True}'
+  - '{''text'': ''звідти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -714,14 +669,10 @@ items:
   question: Яке слово потрібно вставити в речення про кав'ярню, в якій ми зустрічаємося
     з друзями щосуботи та яка затишна та приваблива?
   options:
-  - text: де
-    correct: true
-  - text: куди
-    correct: false
-  - text: звідки
-    correct: false
-  - text: там
-    correct: false
+  - '{''text'': ''де'', ''correct'': True}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''там'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -733,14 +684,10 @@ items:
   question: Яке слово потрібно вставити в речення про село, до якого ми їздимо влітку
     відпочивати щороку та яке у моїх дідуся й бабусі?
   options:
-  - text: де
-    correct: false
-  - text: куди
-    correct: true
-  - text: звідки
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''де'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': True}'
+  - '{''text'': ''звідки'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

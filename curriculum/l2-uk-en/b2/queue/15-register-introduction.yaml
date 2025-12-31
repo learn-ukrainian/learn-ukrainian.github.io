@@ -1,15 +1,18 @@
 module: 15-register-introduction
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/15-register-introduction.md
-generated: '2025-12-29T22:08:22.163827'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.323970'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Стильові помилки
@@ -588,6 +591,132 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Характеристики функціональних стилів
+  passage_template: 'Українська мова має п''ять функціональних {стилів|регістрів|діалектів|стилів}.
+    Офіційно-діловий стиль характеризується {стандартністю|емоційністю|образністю|стандартністю}
+    та безособовістю. Науковий стиль використовує {термінологію|жаргон|сленг|термінологію}
+    та логічну аргументацію. Публіцистичний стиль поєднує {інформативність|точність|стандартність|інформативність}
+    з експресивністю. Художній стиль є найбільш {індивідуальним|стандартним|формальним|індивідуальним}
+    і використовує образні засоби. Розмовний стиль характеризується {спонтанністю|офіційністю|термінологічністю|спонтанністю}
+    та невимушеністю.
+
+
+    Кожен стиль має свої мовні {засоби|правила|закони|засоби}. Офіційно-діловий використовує
+    {канцеляризми|метафори|жаргон|канцеляризми}. Науковий — {терміни|сленг|архаїзми|терміни}.
+    Публіцистичний — {оцінну|нейтральну|офіційну|оцінну} лексику. Художній — {метафори|канцеляризми|терміни|метафори}
+    та порівняння. Розмовний — {частки|терміни|канцеляризми|частки} та неповні речення.
+
+
+    Визначити стиль можна за {маркерами|авторами|датами|маркерами} — характерними
+    словами та конструкціями. Наприклад, "відповідно до" вказує на {офіційно-діловий|художній|розмовний|офіційно-діловий}
+    стиль, а "гіпотеза" — на {науковий|розмовний|художній|науковий}. Порівняння характерні
+    для {художнього|наукового|офіційного|художнього} стилю.
+
+    '
+  blanks:
+  - answer: стилів
+    options:
+    - стилів
+    - регістрів
+    - діалектів
+  - answer: стандартністю
+    options:
+    - стандартністю
+    - емоційністю
+    - образністю
+  - answer: термінологію
+    options:
+    - термінологію
+    - жаргон
+    - сленг
+  - answer: інформативність
+    options:
+    - інформативність
+    - точність
+    - стандартність
+  - answer: індивідуальним
+    options:
+    - індивідуальним
+    - стандартним
+    - формальним
+  - answer: спонтанністю
+    options:
+    - спонтанністю
+    - офіційністю
+    - термінологічністю
+  - answer: засоби
+    options:
+    - засоби
+    - правила
+    - закони
+  - answer: канцеляризми
+    options:
+    - канцеляризми
+    - метафори
+    - жаргон
+  - answer: терміни
+    options:
+    - терміни
+    - сленг
+    - архаїзми
+  - answer: оцінну
+    options:
+    - оцінну
+    - нейтральну
+    - офіційну
+  - answer: метафори
+    options:
+    - метафори
+    - канцеляризми
+    - терміни
+  - answer: частки
+    options:
+    - частки
+    - терміни
+    - канцеляризми
+  - answer: маркерами
+    options:
+    - маркерами
+    - авторами
+    - датами
+  - answer: офіційно-діловий
+    options:
+    - офіційно-діловий
+    - художній
+    - розмовний
+  - answer: науковий
+    options:
+    - науковий
+    - розмовний
+    - художній
+  - answer: художнього
+    options:
+    - художнього
+    - наукового
+    - офіційного
+  blank_count: 16
+  complete_passage: 'Українська мова має п''ять функціональних стилів. Офіційно-діловий
+    стиль характеризується стандартністю та безособовістю. Науковий стиль використовує
+    термінологію та логічну аргументацію. Публіцистичний стиль поєднує інформативність
+    з експресивністю. Художній стиль є найбільш індивідуальним і використовує образні
+    засоби. Розмовний стиль характеризується спонтанністю та невимушеністю.
+
+
+    Кожен стиль має свої мовні засоби. Офіційно-діловий використовує канцеляризми.
+    Науковий — терміни. Публіцистичний — оцінну лексику. Художній — метафори та порівняння.
+    Розмовний — частки та неповні речення.
+
+
+    Визначити стиль можна за маркерами — характерними словами та конструкціями. Наприклад,
+    "відповідно до" вказує на офіційно-діловий стиль, а "гіпотеза" — на науковий.
+    Порівняння характерні для художнього стилю.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення різних стилів
   jumbled_words: []
@@ -721,14 +850,10 @@ items:
   question: Який функціональний стиль характеризується використанням канцеляризмів
     та кліше?
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -739,14 +864,10 @@ items:
   title: Визначення функціонального стилю
   question: Який стиль використовується в наукових статтях та дисертаціях?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -757,14 +878,10 @@ items:
   title: Визначення функціонального стилю
   question: Який стиль характеризується найбільшою образністю та індивідуальністю?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -775,14 +892,10 @@ items:
   title: Визначення функціонального стилю
   question: Який стиль використовується в щоденному неофіційному спілкуванні?
   options:
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: true
-  - text: Офіційно-діловий
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -793,14 +906,10 @@ items:
   title: Визначення функціонального стилю
   question: Який стиль поєднує інформативність з експресивністю?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -811,14 +920,10 @@ items:
   title: Визначення функціонального стилю
   question: До якого стилю належить текст "Відповідно до наказу № 123..."?
   options:
-  - text: Офіційно-діловий
-    correct: true
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -829,14 +934,10 @@ items:
   title: Визначення функціонального стилю
   question: До якого стилю належить текст "Гіпотеза підтверджена експериментально"?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -847,14 +948,10 @@ items:
   title: Визначення функціонального стилю
   question: До якого стилю належить текст "Сенсація! Невідома картина Шевченка знайдена!"?
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -866,14 +963,10 @@ items:
   question: До якого стилю належить текст "Ніч лежала над містом, як чорне оксамитове
     покривало"?
   options:
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: true
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': True}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -884,14 +977,10 @@ items:
   title: Визначення функціонального стилю
   question: До якого стилю належить текст "Ну, я пішов. Бувай!"?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -902,14 +991,10 @@ items:
   title: Визначення функціонального стилю
   question: Яка основна функція офіційно-ділового стилю?
   options:
-  - text: Естетичний вплив
-    correct: false
-  - text: Регулювання відносин
-    correct: true
-  - text: Передача знань
-    correct: false
-  - text: Розвага
-    correct: false
+  - '{''text'': ''Естетичний вплив'', ''correct'': False}'
+  - '{''text'': ''Регулювання відносин'', ''correct'': True}'
+  - '{''text'': ''Передача знань'', ''correct'': False}'
+  - '{''text'': ''Розвага'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -920,14 +1005,10 @@ items:
   title: Визначення функціонального стилю
   question: Яка основна функція художнього стилю?
   options:
-  - text: Передача інформації
-    correct: false
-  - text: Регулювання відносин
-    correct: false
-  - text: Естетичний вплив
-    correct: true
-  - text: Переконання
-    correct: false
+  - '{''text'': ''Передача інформації'', ''correct'': False}'
+  - '{''text'': ''Регулювання відносин'', ''correct'': False}'
+  - '{''text'': ''Естетичний вплив'', ''correct'': True}'
+  - '{''text'': ''Переконання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -938,14 +1019,10 @@ items:
   title: Визначення функціонального стилю
   question: Що є характерною ознакою наукового стилю?
   options:
-  - text: Емоційність
-    correct: false
-  - text: Термінологічність
-    correct: true
-  - text: Образність
-    correct: false
-  - text: Невимушеність
-    correct: false
+  - '{''text'': ''Емоційність'', ''correct'': False}'
+  - '{''text'': ''Термінологічність'', ''correct'': True}'
+  - '{''text'': ''Образність'', ''correct'': False}'
+  - '{''text'': ''Невимушеність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -956,14 +1033,10 @@ items:
   title: Визначення функціонального стилю
   question: Що є характерною ознакою розмовного стилю?
   options:
-  - text: Стандартність
-    correct: false
-  - text: Об'єктивність
-    correct: false
-  - text: Спонтанність
-    correct: true
-  - text: Точність
-    correct: false
+  - '{''text'': ''Стандартність'', ''correct'': False}'
+  - '{''text'': "Об''єктивність", ''correct'': False}'
+  - '{''text'': ''Спонтанність'', ''correct'': True}'
+  - '{''text'': ''Точність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -974,14 +1047,10 @@ items:
   title: Визначення функціонального стилю
   question: Яке слово є маркером офіційно-ділового стилю?
   options:
-  - text: Вражаючий
-    correct: false
-  - text: Вищезазначений
-    correct: true
-  - text: Чудовий
-    correct: false
-  - text: Класний
-    correct: false
+  - '{''text'': ''Вражаючий'', ''correct'': False}'
+  - '{''text'': ''Вищезазначений'', ''correct'': True}'
+  - '{''text'': ''Чудовий'', ''correct'': False}'
+  - '{''text'': ''Класний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -992,14 +1061,10 @@ items:
   title: Визначення функціонального стилю
   question: Яке слово є маркером розмовного стилю?
   options:
-  - text: Відповідно
-    correct: false
-  - text: Методологія
-    correct: false
-  - text: Типу
-    correct: true
-  - text: Безпрецедентний
-    correct: false
+  - '{''text'': ''Відповідно'', ''correct'': False}'
+  - '{''text'': ''Методологія'', ''correct'': False}'
+  - '{''text'': ''Типу'', ''correct'': True}'
+  - '{''text'': ''Безпрецедентний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1011,14 +1076,10 @@ items:
   question: 'До якого стилю належить текст: "Наказую затвердити план роботи на 2024
     рік"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1091,10 @@ items:
   question: 'До якого стилю належить текст: "Результати експерименту підтверджують
     гіпотезу"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1049,14 +1106,10 @@ items:
   question: 'До якого стилю належить текст: "Скандал у парламенті! Депутати покинули
     зал!"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1067,14 +1120,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Ніч опустилась на місто, як темна завіса"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: true
-  - text: Офіційно-діловий
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': True}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1085,14 +1134,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Ну і шо, ти йдеш чи ні?"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1103,14 +1148,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Відповідно до чинного законодавства..."?'
   options:
-  - text: Офіційно-діловий
-    correct: true
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1122,14 +1163,10 @@ items:
   question: 'До якого стилю належить текст: "Методологія дослідження базувалась на
     порівняльному аналізі"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1140,14 +1177,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Його серце тріпотіло від радості"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: true
-  - text: Офіційно-діловий
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': True}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1159,14 +1192,10 @@ items:
   question: 'До якого стилю належить текст: "Чи замислювались ви, що чекає на нас
     завтра?"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1177,14 +1206,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Ну, типу, я вже йду"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1195,14 +1220,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Рішення прийнято одноголосно"?'
   options:
-  - text: Офіційно-діловий
-    correct: true
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1214,14 +1235,10 @@ items:
   question: 'До якого стилю належить текст: "Кореляція між змінними є статистично
     значущою"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1233,14 +1250,10 @@ items:
   question: 'До якого стилю належить текст: "Безпрецедентна перемога національної
     збірної!"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1252,14 +1265,10 @@ items:
   question: 'До якого стилю належить текст: "Сонце заходило, фарбуючи небо в рожеві
     кольори"?'
   options:
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: true
-  - text: Офіційно-діловий
-    correct: false
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': True}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1270,14 +1279,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "Слухай, ти чула новину?"?'
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1288,14 +1293,10 @@ items:
   title: Аналіз текстів за стилями
   question: 'До якого стилю належить текст: "На підставі вищезазначеного наказую..."?'
   options:
-  - text: Офіційно-діловий
-    correct: true
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

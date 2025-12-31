@@ -1,15 +1,18 @@
 module: 70-collocations-expressions
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/70-collocations-expressions.md
-generated: '2025-12-29T00:22:03.842014'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.304284'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 50
+total_items: 51
+item_count: 51
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -291,6 +294,121 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в діловому тексті
+  passage_template: 'Компанія "Укртех" {веде|робить|веде|має} переговори з європейськими
+    партнерами. Директор {прийняв|зробив|прийняв|мав} рішення особисто {брати|приймати|брати|мати}
+    участь у зустрічах. Він {несе|має|несе|бере} відповідальність за результат.
+
+
+    Партнери {висувають|роблять|висувають|мають} вимоги щодо якості. Компанія {звертає|робить|звертає|має}
+    увагу на всі деталі. Це {має|робить|має|бере} значення для успішної співпраці.
+
+
+    Якщо переговори {зазнають|матимуть|зазнають|роблять} невдачі, компанія втратить
+    важливу можливість. Але якщо сторони {досягнуть|зроблять|досягнуть|матимуть} успіху,
+    це {справить|зробить|справить|матиме} враження на весь ринок.
+
+
+    Освіта {грає|робить|грає|має} важливу роль у підготовці кадрів. Молоді спеціалісти
+    {набувають|беруть|набувають|мають} досвіду під час роботи. Вони {виконують|роблять|виконують|мають}
+    обов''язки відповідально. Кожен {дотримується|робить|дотримується|має} правил
+    компанії.
+
+    '
+  blanks:
+  - answer: має
+    options:
+    - веде
+    - робить
+    - веде
+  - answer: мав
+    options:
+    - прийняв
+    - зробив
+    - прийняв
+  - answer: мати
+    options:
+    - брати
+    - приймати
+    - брати
+  - answer: бере
+    options:
+    - несе
+    - має
+    - несе
+  - answer: мають
+    options:
+    - висувають
+    - роблять
+    - висувають
+  - answer: має
+    options:
+    - звертає
+    - робить
+    - звертає
+  - answer: бере
+    options:
+    - має
+    - робить
+    - має
+  - answer: роблять
+    options:
+    - зазнають
+    - матимуть
+    - зазнають
+  - answer: матимуть
+    options:
+    - досягнуть
+    - зроблять
+    - досягнуть
+  - answer: матиме
+    options:
+    - справить
+    - зробить
+    - справить
+  - answer: має
+    options:
+    - грає
+    - робить
+    - грає
+  - answer: мають
+    options:
+    - набувають
+    - беруть
+    - набувають
+  - answer: мають
+    options:
+    - виконують
+    - роблять
+    - виконують
+  - answer: має
+    options:
+    - дотримується
+    - робить
+    - дотримується
+  blank_count: 14
+  complete_passage: 'Компанія "Укртех" має переговори з європейськими партнерами.
+    Директор мав рішення особисто мати участь у зустрічах. Він бере відповідальність
+    за результат.
+
+
+    Партнери мають вимоги щодо якості. Компанія має увагу на всі деталі. Це бере значення
+    для успішної співпраці.
+
+
+    Якщо переговори роблять невдачі, компанія втратить важливу можливість. Але якщо
+    сторони матимуть успіху, це матиме враження на весь ринок.
+
+
+    Освіта має важливу роль у підготовці кадрів. Молоді спеціалісти мають досвіду
+    під час роботи. Вони мають обов''язки відповідально. Кожен має правил компанії.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з колокаціями
   jumbled_words: []
@@ -360,14 +478,10 @@ items:
   question: Яка колокація правильна для вираження "to make a decision" українською
     мовою?
   options:
-  - text: робити рішення
-    correct: false
-  - text: приймати рішення
-    correct: true
-  - text: давати рішення
-    correct: false
-  - text: мати рішення
-    correct: false
+  - '{''text'': ''робити рішення'', ''correct'': False}'
+  - '{''text'': ''приймати рішення'', ''correct'': True}'
+  - '{''text'': ''давати рішення'', ''correct'': False}'
+  - '{''text'': ''мати рішення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -378,14 +492,10 @@ items:
   title: Розуміння колокацій
   question: Як правильно сказати "to take part" українською мовою в офіційному контексті?
   options:
-  - text: приймати участь
-    correct: false
-  - text: брати участь
-    correct: true
-  - text: мати участь
-    correct: false
-  - text: давати участь
-    correct: false
+  - '{''text'': ''приймати участь'', ''correct'': False}'
+  - '{''text'': ''брати участь'', ''correct'': True}'
+  - '{''text'': ''мати участь'', ''correct'': False}'
+  - '{''text'': ''давати участь'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -396,14 +506,10 @@ items:
   title: Розуміння колокацій
   question: Що означає колокація "чинити опір" у контексті історичних подій?
   options:
-  - text: to create obstacles
-    correct: false
-  - text: to resist
-    correct: true
-  - text: to oppose legally
-    correct: false
-  - text: to complain
-    correct: false
+  - '{''text'': ''to create obstacles'', ''correct'': False}'
+  - '{''text'': ''to resist'', ''correct'': True}'
+  - '{''text'': ''to oppose legally'', ''correct'': False}'
+  - '{''text'': ''to complain'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -414,14 +520,10 @@ items:
   title: Розуміння колокацій
   question: Яке дієслово поєднується зі словом "переговори" для опису процесу їх проведення?
   options:
-  - text: робити переговори
-    correct: false
-  - text: мати переговори
-    correct: false
-  - text: вести переговори
-    correct: true
-  - text: давати переговори
-    correct: false
+  - '{''text'': ''робити переговори'', ''correct'': False}'
+  - '{''text'': ''мати переговори'', ''correct'': False}'
+  - '{''text'': ''вести переговори'', ''correct'': True}'
+  - '{''text'': ''давати переговори'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +534,10 @@ items:
   title: Розуміння колокацій
   question: Яка різниця між "грати роль" та "відігравати роль" в українській мові?
   options:
-  - text: Це повні синоніми
-    correct: false
-  - text: '"Відігравати роль" формальніше'
-    correct: true
-  - text: '"Грати роль" формальніше'
-    correct: false
-  - text: Вони мають протилежні значення
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Відігравати роль" формальніше'', ''correct'': True}'
+  - '{''text'': ''"Грати роль" формальніше'', ''correct'': False}'
+  - '{''text'': ''Вони мають протилежні значення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -450,14 +548,10 @@ items:
   title: Розуміння колокацій
   question: Що означає колокація "порушувати проблему" в контексті ділового спілкування?
   options:
-  - text: to break a problem
-    correct: false
-  - text: to cause a problem
-    correct: false
-  - text: to raise an issue
-    correct: true
-  - text: to solve a problem
-    correct: false
+  - '{''text'': ''to break a problem'', ''correct'': False}'
+  - '{''text'': ''to cause a problem'', ''correct'': False}'
+  - '{''text'': ''to raise an issue'', ''correct'': True}'
+  - '{''text'': ''to solve a problem'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -468,14 +562,10 @@ items:
   title: Розуміння колокацій
   question: Яка колокація є антонімом до "досягати успіху" в українській мові?
   options:
-  - text: мати невдачу
-    correct: false
-  - text: зазнавати невдачі
-    correct: true
-  - text: робити невдачу
-    correct: false
-  - text: приймати невдачу
-    correct: false
+  - '{''text'': ''мати невдачу'', ''correct'': False}'
+  - '{''text'': ''зазнавати невдачі'', ''correct'': True}'
+  - '{''text'': ''робити невдачу'', ''correct'': False}'
+  - '{''text'': ''приймати невдачу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -487,14 +577,10 @@ items:
   question: Як правильно сказати "to bear responsibility" українською в офіційному
     контексті?
   options:
-  - text: мати відповідальність
-    correct: false
-  - text: брати відповідальність
-    correct: false
-  - text: нести відповідальність
-    correct: true
-  - text: давати відповідальність
-    correct: false
+  - '{''text'': ''мати відповідальність'', ''correct'': False}'
+  - '{''text'': ''брати відповідальність'', ''correct'': False}'
+  - '{''text'': ''нести відповідальність'', ''correct'': True}'
+  - '{''text'': ''давати відповідальність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

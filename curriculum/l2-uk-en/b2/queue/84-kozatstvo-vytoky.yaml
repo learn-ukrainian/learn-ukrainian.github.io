@@ -1,0 +1,1431 @@
+module: 84-kozatstvo-vytoky
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/84-kozatstvo-vytoky.md
+generated: '2025-12-30T19:49:17.122045'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки жили в степ.
+  error: степ
+  answer: степу
+  sentence_corrected: Козаки жили в степу.
+  options:
+  - степ
+  - степу
+  - степом
+  - степі
+  original_explanation: Прийменник "в" із питанням "де?" вимагає місцевого відмінка
+    — в степу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Січ знаходилася на острів Хортиця.
+  error: острів
+  answer: острові
+  sentence_corrected: Січ знаходилася на острові Хортиця.
+  options:
+  - острів
+  - острові
+  - острова
+  - островом
+  original_explanation: Прийменник "на" із питанням "де?" вимагає місцевого відмінка
+    — на острові.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки обирали своїх отаман.
+  error: отаман
+  answer: отаманів
+  sentence_corrected: Козаки обирали своїх отаманів.
+  options:
+  - отаман
+  - отаманів
+  - отамана
+  - отаманами
+  original_explanation: Дієслово "обирати" вимагає знахідного відмінка множини — отаманів
+    (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Шабля була головною зброя козака.
+  error: зброя
+  answer: зброєю
+  sentence_corrected: Шабля була головною зброєю козака.
+  options:
+  - зброя
+  - зброєю
+  - зброї
+  - зброю
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — зброєю (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Татари були головними ворог козаків.
+  error: ворог
+  answer: ворогами
+  sentence_corrected: Татари були головними ворогами козаків.
+  options:
+  - ворог
+  - ворогами
+  - ворогів
+  - ворогам
+  original_explanation: Дієслово "бути" з множиною вимагає орудного відмінка — ворогами
+    (ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки використовували чайка для походів.
+  error: чайка
+  answer: чайки
+  sentence_corrected: Козаки використовували чайки для походів.
+  options:
+  - чайка
+  - чайки
+  - чайку
+  - чайкою
+  original_explanation: Дієслово "використовувати" вимагає знахідного відмінка множини
+    — чайки (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Боплан провів понад сімнадцять рік в Україні.
+  error: рік
+  answer: років
+  sentence_corrected: Боплан провів понад сімнадцять років в Україні.
+  options:
+  - рік
+  - років
+  - року
+  - роками
+  original_explanation: Числівник "сімнадцять" вимагає родового відмінка множини —
+    років.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козацтво виникло у XV століття.
+  error: століття
+  answer: столітті
+  sentence_corrected: Козацтво виникло у XV столітті.
+  options:
+  - століття
+  - столітті
+  - століттям
+  - століть
+  original_explanation: Прийменник "у" з питанням "коли?" вимагає місцевого відмінка
+    — у столітті.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Уходники виходили на сезонні промисел.
+  error: промисел
+  answer: промисли
+  sentence_corrected: Уходники виходили на сезонні промисли.
+  options:
+  - промисел
+  - промисли
+  - промислу
+  - промислом
+  original_explanation: Прикметник "сезонні" вказує на множину — промисли (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Зрада каралася смерть.
+  error: смерть
+  answer: смертю
+  sentence_corrected: Зрада каралася смертю.
+  options:
+  - смерть
+  - смертю
+  - смерті
+  - смертей
+  original_explanation: Дієслово "каратися" вимагає орудного відмінка — смертю (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки визволяли полонений з ясиру.
+  error: полонений
+  answer: полонених
+  sentence_corrected: Козаки визволяли полонених з ясиру.
+  options:
+  - полонений
+  - полонених
+  - полоненим
+  - полоненого
+  original_explanation: Дієслово "визволяти" вимагає знахідного відмінка множини —
+    полонених (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кінь був бойовим товариш козака.
+  error: товариш
+  answer: товаришем
+  sentence_corrected: Кінь був бойовим товаришем козака.
+  options:
+  - товариш
+  - товаришем
+  - товариша
+  - товаришу
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — товаришем (ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Турки боялися козак.
+  error: козак
+  answer: козаків
+  sentence_corrected: Турки боялися козаків.
+  options:
+  - козак
+  - козаків
+  - козакам
+  - козаками
+  original_explanation: Дієслово "боятися" вимагає родового відмінка множини — козаків
+    (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козацька демократія народилася з необхідність.
+  error: необхідність
+  answer: необхідності
+  sentence_corrected: Козацька демократія народилася з необхідності.
+  options:
+  - необхідність
+  - необхідності
+  - необхідністю
+  - необхідностям
+  original_explanation: Прийменник "з" вимагає родового відмінка — з необхідності
+    (з чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Дике поле було нічийна земля.
+  error: нічийна земля
+  answer: нічийною землею
+  sentence_corrected: Дике поле було нічийною землею.
+  options:
+  - нічийна земля
+  - нічийною землею
+  - нічийної землі
+  - нічийній землі
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — нічийною землею
+    (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки здійснювали похід на турецькі міста.
+  error: похід
+  answer: походи
+  sentence_corrected: Козаки здійснювали походи на турецькі міста.
+  options:
+  - похід
+  - походи
+  - походу
+  - походом
+  original_explanation: Множина "турецькі міста" вимагає множини — походи (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козаки жили в _____ — фортецях, оточених частоколом.
+  answer: січах
+  complete_sentence: Козаки жили в січах__ — фортецях, оточених частоколом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Перші козаки були _____ — виходили в степ на промисли.
+  answer: уходниками
+  complete_sentence: Перші козаки були уходниками__ — виходили в степ на промисли.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ поле простягалося на півдні України.
+  answer: Дике
+  complete_sentence: Дике__ поле простягалося на півдні України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Слово «козак» означає «вільна _____».
+  answer: людина
+  complete_sentence: Слово «козак» означає «вільна людина__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Головною зброєю козака була _____.
+  answer: шабля
+  complete_sentence: Головною зброєю козака була шабля__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козацькі човни називалися _____.
+  answer: чайками
+  complete_sentence: Козацькі човни називалися чайками__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козаки обирали своїх _____ на раді.
+  answer: отаманів
+  complete_sentence: Козаки обирали своїх отаманів__ на раді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Татари виводили українців у _____ — неволю.
+  answer: ясир
+  complete_sentence: Татари виводили українців у ясир__ — неволю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козаки називали один одного _____.
+  answer: побратимами
+  complete_sentence: Козаки називали один одного побратимами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Острів _____ став місцем Запорозької Січі.
+  answer: Хортиця
+  complete_sentence: Острів Хортиця__ став місцем Запорозької Січі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ де Боплан описав життя козаків.
+  answer: Гійом
+  complete_sentence: Гійом__ де Боплан описав життя козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козацький _____ — невеликий загін воїнів.
+  answer: курінь
+  complete_sentence: Козацький курінь__ — невеликий загін воїнів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Зрада серед козаків каралася _____.
+  answer: смертю
+  complete_sentence: Зрада серед козаків каралася смертю__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Боротьба з _____ була головним заняттям козаків.
+  answer: татарами
+  complete_sentence: Боротьба з татарами__ була головним заняттям козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Частину козаків записали до _____ на державну службу.
+  answer: реєстру
+  complete_sentence: Частину козаків записали до реєстру__ на державну службу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Проста козацька страва з борошна називалася _____.
+  answer: саламахою
+  complete_sentence: Проста козацька страва з борошна називалася саламахою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки жили в _____.
+  answer: степу
+  complete_sentence: Козаки жили в степу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Січ знаходилася на _____ Хортиця.
+  answer: острові
+  complete_sentence: Січ знаходилася на острові__ Хортиця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Шабля була головною _____ козака.
+  answer: зброєю
+  complete_sentence: Шабля була головною зброєю__ козака.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки обирали своїх _____.
+  answer: отаманів
+  complete_sentence: Козаки обирали своїх отаманів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Татари були головними _____ козаків.
+  answer: ворогами
+  complete_sentence: Татари були головними ворогами__ козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки визволяли _____ з ясиру.
+  answer: полонених
+  complete_sentence: Козаки визволяли полонених__ з ясиру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Зрада каралася _____.
+  answer: смертю
+  complete_sentence: Зрада каралася смертю__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Боплан провів понад сімнадцять _____ в Україні.
+  answer: років
+  complete_sentence: Боплан провів понад сімнадцять років__ в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козацтво виникло у XV _____.
+  answer: столітті
+  complete_sentence: Козацтво виникло у XV столітті__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кінь був бойовим _____ козака.
+  answer: товаришем
+  complete_sentence: Кінь був бойовим товаришем__ козака.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Уходники виходили на сезонні _____.
+  answer: промисли
+  complete_sentence: Уходники виходили на сезонні промисли__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Чайки використовували для морських _____.
+  answer: походів
+  complete_sentence: Чайки використовували для морських походів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Турки боялися _____.
+  answer: козаків
+  complete_sentence: Турки боялися козаків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Братство базувалося на _____.
+  answer: рівності
+  complete_sentence: Братство базувалося на рівності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Демократія народилася з _____.
+  answer: необхідності
+  complete_sentence: Демократія народилася з необхідності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаком міг стати _____.
+  answer: будь-хто
+  complete_sentence: Козаком міг стати будь-хто__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про витоки козацтва
+  passage_template: 'У XV-XVI століттях на південних рубежах християнського світу
+    простягалося {Дике|Чорне|Біле|Дике} поле. Ці незаймані {степи|гори|ліси|степи}
+    не належали нікому. Сюди тікали селяни від {кріпацтва|війни|голоду|кріпацтва}.
+
+
+    Перші козаки були {уходниками|воїнами|купцями|уходниками} — виходили в степ на
+    промисли. Слово «козак» походить від {тюркського|грецького|латинського|тюркського}
+    «qazaq» — «вільна людина».
+
+
+    Козаки об''єднувалися в {ватаги|армії|загони|ватаги} для захисту від {татар|поляків|литовців|татар}.
+    {Шабля|Сокира|Булава|Шабля} була головною зброєю козака. {Кінь|Осел|Верблюд|Кінь}
+    став вірним товаришем у степу.
+
+
+    Козаки жили за власними {законами|наказами|правилами|законами}. Вони самі обирали
+    своїх {отаманів|царів|панів|отаманів}. Ця {демократія|монархія|диктатура|демократія}
+    народилася з необхідності виживання.
+
+
+    Козацькі {чайки|кораблі|галери|чайки} — легкі човни — наводили жах на турецькі
+    міста. {Турки|Поляки|Литовці|Турки} їх дуже боялися. Козаки визволяли {полонених|багатих|знатних|полонених}
+    з {ясиру|неволі|полону|ясиру}.
+
+    '
+  blanks:
+  - answer: Дике
+    options:
+    - Дике
+    - Чорне
+    - Біле
+  - answer: степи
+    options:
+    - степи
+    - гори
+    - ліси
+  - answer: кріпацтва
+    options:
+    - кріпацтва
+    - війни
+    - голоду
+  - answer: уходниками
+    options:
+    - уходниками
+    - воїнами
+    - купцями
+  - answer: тюркського
+    options:
+    - тюркського
+    - грецького
+    - латинського
+  - answer: ватаги
+    options:
+    - ватаги
+    - армії
+    - загони
+  - answer: татар
+    options:
+    - татар
+    - поляків
+    - литовців
+  - answer: Шабля
+    options:
+    - Шабля
+    - Сокира
+    - Булава
+  - answer: Кінь
+    options:
+    - Кінь
+    - Осел
+    - Верблюд
+  - answer: законами
+    options:
+    - законами
+    - наказами
+    - правилами
+  - answer: отаманів
+    options:
+    - отаманів
+    - царів
+    - панів
+  - answer: демократія
+    options:
+    - демократія
+    - монархія
+    - диктатура
+  - answer: чайки
+    options:
+    - чайки
+    - кораблі
+    - галери
+  - answer: Турки
+    options:
+    - Турки
+    - Поляки
+    - Литовці
+  - answer: полонених
+    options:
+    - полонених
+    - багатих
+    - знатних
+  - answer: ясиру
+    options:
+    - ясиру
+    - неволі
+    - полону
+  blank_count: 16
+  complete_passage: 'У XV-XVI століттях на південних рубежах християнського світу
+    простягалося Дике поле. Ці незаймані степи не належали нікому. Сюди тікали селяни
+    від кріпацтва.
+
+
+    Перші козаки були уходниками — виходили в степ на промисли. Слово «козак» походить
+    від тюркського «qazaq» — «вільна людина».
+
+
+    Козаки об''єднувалися в ватаги для захисту від татар. Шабля була головною зброєю
+    козака. Кінь став вірним товаришем у степу.
+
+
+    Козаки жили за власними законами. Вони самі обирали своїх отаманів. Ця демократія
+    народилася з необхідності виживання.
+
+
+    Козацькі чайки — легкі човни — наводили жах на турецькі міста. Турки їх дуже боялися.
+    Козаки визволяли полонених з ясиру.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козаки були вільними людьми в степу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Січ знаходилася на острові Хортиці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Шабля була головною зброєю козака.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козаки обирали своїх отаманів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козацькі чайки використовували для морських походів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Татари були головними ворогами козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Боплан написав книгу про козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козацтво виникло у XV-XVI століттях на степу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Уходники виходили в степ на промисли.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Дике поле було незаселеним степом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козаки визволяли полонених з ясиру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козацьке братство базувалося на рівності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Турки дуже боялися козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Зрада серед козаків каралася смертю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Кінь був бойовим товаришем козака.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козаків
+  jumbled_words: []
+  answer: Козацька демократія народилася в степу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Згідно з текстом, що означає тюркське слово «qazaq»?
+  options:
+  - '{''text'': ''Воїн'', ''correct'': False}'
+  - '{''text'': ''Вільна людина або шукач пригод'', ''correct'': True}'
+  - '{''text'': ''Селянин'', ''correct'': False}'
+  - '{''text'': ''Кочівник'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст характеризує Дике поле?
+  options:
+  - '{''text'': ''Густо заселені землі'', ''correct'': False}'
+  - '{''text'': ''Незаселені степи між християнським світом і татарськими володіннями'',
+    ''correct'': True}'
+  - '{''text'': ''Гірська місцевість'', ''correct'': False}'
+  - '{''text'': ''Прибережні території'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Згідно з текстом, хто такі уходники?
+  options:
+  - '{''text'': ''Військові командири'', ''correct'': False}'
+  - '{''text'': ''Люди, що виходили в степ на сезонні промисли'', ''correct'': True}'
+  - '{''text'': ''Татарські розвідники'', ''correct'': False}'
+  - '{''text'': ''Польські чиновники'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст описує походження слова «січ»?
+  options:
+  - '{''text'': ''Від назви річки'', ''correct'': False}'
+  - '{''text'': ''Від слова «сікти» — рубати ліс для укріплень'', ''correct'': True}'
+  - '{''text'': ''Від імені отамана'', ''correct'': False}'
+  - '{''text'': ''Від татарського слова'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Згідно з текстом, яка була головна зброя козака?
+  options:
+  - '{''text'': ''Лук'', ''correct'': False}'
+  - '{''text'': ''Шабля'', ''correct'': True}'
+  - '{''text'': ''Сокира'', ''correct'': False}'
+  - '{''text'': ''Молот'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст характеризує козацьку демократію?
+  options:
+  - '{''text'': ''Монархія з обмеженими правами'', ''correct'': False}'
+  - '{''text'': ''Виборність влади, рівність козаків'', ''correct'': True}'
+  - '{''text'': ''Влада багатих'', ''correct'': False}'
+  - '{''text'': ''Спадкова влада'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Що таке чайка згідно з текстом?
+  options:
+  - '{''text'': ''Птах'', ''correct'': False}'
+  - '{''text'': ''Легкий човен для морських походів'', ''correct'': True}'
+  - '{''text'': ''Назва фортеці'', ''correct'': False}'
+  - '{''text'': ''Вид зброї'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Хто такий Гійом де Боплан за текстом?
+  options:
+  - '{''text'': ''Польський король'', ''correct'': False}'
+  - '{''text'': ''Французький інженер і картограф'', ''correct'': True}'
+  - '{''text'': ''Козацький гетьман'', ''correct'': False}'
+  - '{''text'': ''Татарський хан'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Згідно з текстом, скільки років Боплан провів в Україні?
+  options:
+  - '{''text'': ''5 років'', ''correct'': False}'
+  - '{''text'': ''10 років'', ''correct'': False}'
+  - '{''text'': ''Понад 17 років'', ''correct'': True}'
+  - '{''text'': ''25 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст описує ставлення турків до козаків?
+  options:
+  - '{''text'': ''Дружнє'', ''correct'': False}'
+  - '{''text'': ''Байдуже'', ''correct'': False}'
+  - '{''text'': ''Вони їх дуже боялися'', ''correct'': True}'
+  - '{''text'': ''Поважне'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Що таке ясир згідно з текстом?
+  options:
+  - '{''text'': ''Вид зброї'', ''correct'': False}'
+  - '{''text'': ''Невільники для продажу'', ''correct'': True}'
+  - '{''text'': ''Козацький загін'', ''correct'': False}'
+  - '{''text'': ''Тип човна'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст характеризує козацьке ставлення до зрадників?
+  options:
+  - '{''text'': ''Прощали'', ''correct'': False}'
+  - '{''text'': ''Зрада каралася смертю'', ''correct'': True}'
+  - '{''text'': ''Виганяли'', ''correct'': False}'
+  - '{''text'': ''Штрафували'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Згідно з текстом, що таке реєстр козаків?
+  options:
+  - '{''text'': ''Список усіх козаків'', ''correct'': False}'
+  - '{''text'': ''Список козаків на державній службі'', ''correct'': True}'
+  - '{''text'': ''Перепис населення'', ''correct'': False}'
+  - '{''text'': ''Податковий документ'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Яку подію 2022 року згадує текст у контексті козацької спадщини?
+  options:
+  - '{''text'': ''Вибори президента'', ''correct'': False}'
+  - '{''text'': ''Оборону «Азовсталі» в Маріуполі'', ''correct'': True}'
+  - '{''text'': ''Економічну кризу'', ''correct'': False}'
+  - '{''text'': ''Культурний фестиваль'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Де розташована Хортиця за текстом?
+  options:
+  - '{''text'': ''На Дністрі'', ''correct'': False}'
+  - '{''text'': ''На Дніпрі'', ''correct'': True}'
+  - '{''text'': ''На Дону'', ''correct'': False}'
+  - '{''text'': ''На Бузі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про витоки козацтва
+  question: Як текст пояснює походження гасла «Слава Україні — Героям слава»?
+  options:
+  - '{''text'': ''Радянські часи'', ''correct'': False}'
+  - '{''text'': ''Козацькі часи'', ''correct'': True}'
+  - '{''text'': ''Княжа доба'', ''correct'': False}'
+  - '{''text'': ''Сучасність'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Боплан характеризує фізичну витривалість козаків?
+  options:
+  - '{''text'': ''Вони були слабкими і хворобливими'', ''correct'': False}'
+  - '{''text'': ''Загартовані працею, витримують холод, спеку, голод'', ''correct'':
+    True}'
+  - '{''text'': ''Вони потребували комфорту'', ''correct'': False}'
+  - '{''text'': ''Боплан не згадує про це'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що Боплан пише про козацький сон під час походів?
+  options:
+  - '{''text'': ''Сплять у наметах'', ''correct'': False}'
+  - '{''text'': ''Сплять просто неба, підклавши під голову сідло'', ''correct'': True}'
+  - '{''text'': ''Сплять у фортецях'', ''correct'': False}'
+  - '{''text'': ''Не сплять взагалі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку їжу козаків згадує Боплан?
+  options:
+  - '{''text'': ''Делікатеси'', ''correct'': False}'
+  - '{''text'': "Саламаху, рибу, м''ясо без хліба й солі", ''correct'': True}'
+  - '{''text'': ''Тільки хліб'', ''correct'': False}'
+  - '{''text'': ''Тільки овочі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Боплан оцінює козацьке володіння зброєю?
+  options:
+  - '{''text'': ''Погано'', ''correct'': False}'
+  - '{''text'': ''Шаблею й списом володіють майстерно'', ''correct'': True}'
+  - '{''text'': ''Посередньо'', ''correct'': False}'
+  - '{''text'': ''Не згадує'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яка довжина козацької чайки за Бопланом?
+  options:
+  - '{''text'': ''Двадцять стіп'', ''correct'': False}'
+  - '{''text'': ''Шістдесят стіп'', ''correct'': True}'
+  - '{''text'': ''Сто стіп'', ''correct'': False}'
+  - '{''text'': ''Десять стіп'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чим підвищували борти чайок?
+  options:
+  - '{''text'': ''Дошками'', ''correct'': False}'
+  - '{''text'': ''Снопами очерету'', ''correct'': True}'
+  - '{''text'': ''Шкірами'', ''correct'': False}'
+  - '{''text'': ''Металом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Скільки козаків вміщувала одна чайка?
+  options:
+  - '{''text'': ''10-20'', ''correct'': False}'
+  - '{''text'': ''50-70'', ''correct'': True}'
+  - '{''text'': ''100-150'', ''correct'': False}'
+  - '{''text'': ''200-300'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке озброєння мала чайка?
+  options:
+  - '{''text'': ''Великі гармати'', ''correct'': False}'
+  - '{''text'': ''Малу гармату'', ''correct'': True}'
+  - '{''text'': ''Лише весла'', ''correct'': False}'
+  - '{''text'': ''Без зброї'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як козаки ховалися вдень за Бопланом?
+  options:
+  - '{''text'': ''Пливли в морі'', ''correct'': False}'
+  - '{''text'': ''Ховалися в очеретах вночі, а вдень йшли на веслах'', ''correct'':
+    True}'
+  - '{''text'': ''Заходили в порти'', ''correct'': False}'
+  - '{''text'': ''Не ховалися'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке ставлення турків до козаків за Бопланом?
+  options:
+  - '{''text'': ''Дружнє'', ''correct'': False}'
+  - '{''text'': ''Турки їх дуже боялися'', ''correct'': True}'
+  - '{''text'': ''Байдуже'', ''correct'': False}'
+  - '{''text'': ''Поважне'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому опис Боплана вважається цінним джерелом?
+  options:
+  - '{''text'': ''Він був козаком'', ''correct'': False}'
+  - '{''text'': ''Він провів понад 17 років в Україні і бачив козаків особисто'',
+    ''correct'': True}'
+  - '{''text'': ''Він переписав з інших джерел'', ''correct'': False}'
+  - '{''text'': ''Він був турком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який регістр мови використовує Боплан?
+  options:
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Описовий, науковий'', ''correct'': True}'
+  - '{''text'': ''Поетичний'', ''correct'': False}'
+  - '{''text'': ''Релігійний'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що свідчить про козацьку хоробрість у тексті Боплана?
+  options:
+  - '{''text'': ''Їхнє багатство'', ''correct'': False}'
+  - '{''text'': ''Вони не бояться ніякої небезпеки, навіть смерті'', ''correct'':
+    True}'
+  - '{''text'': ''Їхня кількість'', ''correct'': False}'
+  - '{''text'': ''Їхня зброя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку мету мав Боплан, описуючи козаків?
+  options:
+  - '{''text'': ''Художня література'', ''correct'': False}'
+  - '{''text'': ''Інформувати європейців про невідомий край'', ''correct'': True}'
+  - '{''text'': ''Пропаганда'', ''correct'': False}'
+  - '{''text'': ''Розвага'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Боплан детально описує конструкцію чайок?
+  options:
+  - '{''text'': ''Він був корабелом'', ''correct'': False}'
+  - '{''text'': ''Як інженер він цікавився технічними деталями'', ''correct'': True}'
+  - '{''text'': ''Він хотів продати човни'', ''correct'': False}'
+  - '{''text'': ''Це було головним завданням'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що робить свідчення Боплана особливо цінним?
+  options:
+  - '{''text'': ''Він писав українською'', ''correct'': False}'
+  - '{''text'': ''Він був нейтральним спостерігачем, не козаком і не ворогом'', ''correct'':
+    True}'
+  - '{''text'': ''Він був багатим'', ''correct'': False}'
+  - '{''text'': ''Він жив довго'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, слово «козак» має тюркське походження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, Дике поле було густо заселене.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, козаком міг стати тільки шляхтич.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, козаки обирали своїх отаманів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, шабля була головною зброєю козака.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, чайка — це великий військовий корабель.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, Боплан був німецьким генералом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, ясир означає полонених для продажу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, козаки дружили з Кримським ханством.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, січ походить від слова «сікти».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, зрада серед козаків прощалася.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, Хортиця знаходиться на Дніпрі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, козацька демократія була спадковою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, побратими — це брати за духом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, турки не боялися козаків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про козацтво
+  statement: Згідно з текстом, захисників Маріуполя порівнюють з козаками.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

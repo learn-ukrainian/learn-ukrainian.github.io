@@ -1,0 +1,1431 @@
+module: 101-ideolhy-drahomanov-kulish
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/101-ideolhy-drahomanov-kulish.md
+generated: '2025-12-30T21:47:29.075996'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Куліш опублікував «Чорну раду» в 1857 році.
+  error: none
+  answer: none
+  sentence_corrected: Куліш опублікував «Чорну раду» в 1857 році.
+  options:
+  - році
+  - рік
+  - року
+  - роком
+  original_explanation: Речення правильне — місцевий відмінок після «в».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Драгоманов жив у Женева понад 20 років.
+  error: Женева
+  answer: Женеві
+  sentence_corrected: Драгоманов жив у Женеві понад 20 років.
+  options:
+  - Женева
+  - Женеві
+  - Женеву
+  - Женевою
+  original_explanation: Прийменник «у» з місцем вимагає місцевого відмінка — у Женеві.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кулішівка стала основою сучасний правопис.
+  error: сучасний правопис
+  answer: сучасного правопису
+  sentence_corrected: Кулішівка стала основою сучасного правопису.
+  options:
+  - сучасний правопис
+  - сучасного правопису
+  - сучасному правопису
+  - сучасним правописом
+  original_explanation: «Основою чого» вимагає родового відмінка — правопису.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Переклад Біблія надруковано у Відні.
+  error: Біблія
+  answer: Біблії
+  sentence_corrected: Переклад Біблії надруковано у Відні.
+  options:
+  - Біблія
+  - Біблії
+  - Біблію
+  - Біблією
+  original_explanation: «Переклад чого» вимагає родового відмінка — Біблії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Драгоманов вірив у федерація народів.
+  error: федерація
+  answer: федерацію
+  sentence_corrected: Драгоманов вірив у федерацію народів.
+  options:
+  - федерація
+  - федерацію
+  - федерації
+  - федерацією
+  original_explanation: «Вірити в що» вимагає знахідного відмінка — у федерацію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Куліш був членом братство.
+  error: братство
+  answer: братства
+  sentence_corrected: Куліш був членом братства.
+  options:
+  - братство
+  - братства
+  - братству
+  - братством
+  original_explanation: «Членом чого» вимагає родового відмінка — братства.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Журнал «Громада» видавався у Швейцарії.
+  error: none
+  answer: none
+  sentence_corrected: Журнал «Громада» видавався у Швейцарії.
+  options:
+  - Швейцарії
+  - Швейцарія
+  - Швейцарію
+  - Швейцарією
+  original_explanation: Речення правильне — місцевий відмінок після «у».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Франко називав Драгоманов своїм учителем.
+  error: Драгоманов
+  answer: Драгоманова
+  sentence_corrected: Франко називав Драгоманова своїм учителем.
+  options:
+  - Драгоманов
+  - Драгоманова
+  - Драгоманову
+  - Драгомановим
+  original_explanation: «Називати кого» вимагає знахідного відмінка — Драгоманова.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Роман описує події козацька доба.
+  error: козацька доба
+  answer: козацької доби
+  sentence_corrected: Роман описує події козацької доби.
+  options:
+  - козацька доба
+  - козацької доби
+  - козацькій добі
+  - козацькою добою
+  original_explanation: «Події чого» вимагає родового відмінка — доби.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Соціалізм Драгоманова базувався на ідея громади.
+  error: ідея
+  answer: ідеї
+  sentence_corrected: Соціалізм Драгоманова базувався на ідеї громади.
+  options:
+  - ідея
+  - ідеї
+  - ідею
+  - ідеєю
+  original_explanation: «На чому» вимагає місцевого відмінка — на ідеї.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Обидва працювали в умовах еміграція.
+  error: еміграція
+  answer: еміграції
+  sentence_corrected: Обидва працювали в умовах еміграції.
+  options:
+  - еміграція
+  - еміграції
+  - еміграцію
+  - еміграцією
+  original_explanation: «В умовах чого» вимагає родового відмінка — еміграції.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Публіцистика формувала громадська думка.
+  error: громадська думка
+  answer: громадську думку
+  sentence_corrected: Публіцистика формувала громадську думку.
+  options:
+  - громадська думка
+  - громадську думку
+  - громадській думці
+  - громадською думкою
+  original_explanation: «Формувати що» вимагає знахідного відмінка — думку.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Куліш народився на Чернігівщина.
+  error: Чернігівщина
+  answer: Чернігівщині
+  sentence_corrected: Куліш народився на Чернігівщині.
+  options:
+  - Чернігівщина
+  - Чернігівщині
+  - Чернігівщину
+  - Чернігівщиною
+  original_explanation: «На чому» з регіоном вимагає місцевого відмінка — на Чернігівщині.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Вплив обох мислитель на культуру величезний.
+  error: мислитель
+  answer: мислителів
+  sentence_corrected: Вплив обох мислителів на культуру величезний.
+  options:
+  - мислитель
+  - мислителів
+  - мислителям
+  - мислителями
+  original_explanation: «Вплив кого» вимагає родового множини — мислителів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Ідеї федералізм актуальні й сьогодні.
+  error: федералізм
+  answer: федералізму
+  sentence_corrected: Ідеї федералізму актуальні й сьогодні.
+  options:
+  - федералізм
+  - федералізму
+  - федералізмі
+  - федералізмом
+  original_explanation: «Ідеї чого» вимагає родового відмінка — федералізму.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Спадщина Куліша живе в сучасній українській мові.
+  error: none
+  answer: none
+  sentence_corrected: Спадщина Куліша живе в сучасній українській мові.
+  options:
+  - мові
+  - мова
+  - мову
+  - мовою
+  original_explanation: Речення правильне — місцевий відмінок після «в».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Пантелеймон _____ опублікував роман «Чорна рада» у 1857 році.
+  answer: Куліш
+  complete_sentence: Пантелеймон Куліш__ опублікував роман «Чорна рада» у 1857 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: «_____» — це народне козацьке віче, де голосували всі козаки.
+  answer: Чорна рада
+  complete_sentence: «Чорна рада__» — це народне козацьке віче, де голосували всі
+    козаки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Куліш завершив _____ Біблії українською мовою в 1880 році.
+  answer: переклад
+  complete_sentence: Куліш завершив переклад__ Біблії українською мовою в 1880 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ — це система українського правопису, розроблена Кулішем.
+  answer: Кулішівка
+  complete_sentence: Кулішівка__ — це система українського правопису, розроблена Кулішем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Михайло _____ видавав журнал «Громада» у Женеві.
+  answer: Драгоманов
+  complete_sentence: Михайло Драгоманов__ видавав журнал «Громада» у Женеві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ — це політична ідеологія соціальної рівності.
+  answer: Соціалізм
+  complete_sentence: Соціалізм__ — це політична ідеологія соціальної рівності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Драгоманов вірив у _____ — союз автономних народів.
+  answer: федерацію
+  complete_sentence: Драгоманов вірив у федерацію__ — союз автономних народів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: «_____» — культурно-освітні організації українців XIX століття.
+  answer: Громади
+  complete_sentence: «Громади__» — культурно-освітні організації українців XIX століття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Драгоманов жив в _____ у Швейцарії.
+  answer: еміграції
+  complete_sentence: Драгоманов жив в еміграції__ у Швейцарії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ Куліша і Драгоманова на українську культуру величезний.
+  answer: Вплив
+  complete_sentence: Вплив__ Куліша і Драгоманова на українську культуру величезний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ Куліша — жанр суспільно-політичних творів.
+  answer: Публіцистика
+  complete_sentence: Публіцистика__ Куліша — жанр суспільно-політичних творів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Куліш був членом Кирило-Мефодіївського _____.
+  answer: братства
+  complete_sentence: Куліш був членом Кирило-Мефодіївського братства__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Драгоманов критикував і імперію, і вузький _____.
+  answer: націоналізм
+  complete_sentence: Драгоманов критикував і імперію, і вузький націоналізм__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Переклад _____ українською мовою був заборонений в імперії.
+  answer: Біблії
+  complete_sentence: Переклад Біблії__ українською мовою був заборонений в імперії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Іван Франко називав Драгоманова своїм _____.
+  answer: учителем
+  complete_sentence: Іван Франко називав Драгоманова своїм учителем__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ — система правил написання слів.
+  answer: Правопис
+  complete_sentence: Правопис__ — система правил написання слів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Куліш опублікував «Чорну раду» в 1857 _____.
+  answer: році
+  complete_sentence: Куліш опублікував «Чорну раду» в 1857 році__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Драгоманов жив у _____ понад 20 років.
+  answer: Женеві
+  complete_sentence: Драгоманов жив у Женеві__ понад 20 років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кулішівка стала основою сучасного _____.
+  answer: правопису
+  complete_sentence: Кулішівка стала основою сучасного правопису__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Переклад _____ надруковано у Відні.
+  answer: Біблії
+  complete_sentence: Переклад Біблії__ надруковано у Відні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Драгоманов вірив у _____ народів.
+  answer: федерацію
+  complete_sentence: Драгоманов вірив у федерацію__ народів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Куліш був членом _____.
+  answer: братства
+  complete_sentence: Куліш був членом братства__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Франко називав _____ своїм учителем.
+  answer: Драгоманова
+  complete_sentence: Франко називав Драгоманова__ своїм учителем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Роман описує події козацької _____.
+  answer: доби
+  complete_sentence: Роман описує події козацької доби__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Соціалізм базувався на _____ громади.
+  answer: ідеї
+  complete_sentence: Соціалізм базувався на ідеї__ громади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Обидва працювали в умовах _____.
+  answer: еміграції
+  complete_sentence: Обидва працювали в умовах еміграції__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Публіцистика формувала громадську _____.
+  answer: думку
+  complete_sentence: Публіцистика формувала громадську думку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Куліш народився на _____.
+  answer: Чернігівщині
+  complete_sentence: Куліш народився на Чернігівщині__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Вплив _____ на культуру величезний.
+  answer: мислителів
+  complete_sentence: Вплив мислителів__ на культуру величезний.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Ідеї _____ актуальні й сьогодні.
+  answer: федералізму
+  complete_sentence: Ідеї федералізму__ актуальні й сьогодні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Спадщина Куліша живе в сучасній _____.
+  answer: мові
+  complete_sentence: Спадщина Куліша живе в сучасній мові__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Журнал контрабандою потрапляв до _____.
+  answer: імперії
+  complete_sentence: Журнал контрабандою потрапляв до імперії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про Куліша та Драгоманова
+  passage_template: 'Пантелеймон {Куліш|Драгоманов|Франко|Куліш} — автор першого українського
+    історичного роману «{Чорна рада|Біла рада|Козацька рада|Чорна рада}». Роман опублікований
+    у {1857|1876|1880|1857} році.
+
+
+    Найбільшим досягненням Куліша став {переклад|написання|друк|переклад} Біблії українською.
+    Він також створив {кулішівку|граматику|словник|кулішівку} — систему українського
+    {правопису|літератури|музики|правопису}.
+
+
+    Михайло {Драгоманов|Куліш|Шевченко|Драгоманов} обрав шлях політики. Він жив в
+    {еміграції|ув''язненні|армії|еміграції} у Женеві, де видавав журнал «{Громада|Рада|Основа|Громада}».
+
+
+    Драгоманов пропонував ідею {федерації|імперії|монархії|федерації} — союзу вільних
+    народів. Він також розвивав {соціалізм|капіталізм|анархізм|соціалізм}, але не
+    марксистський, а {громадівський|буржуазний|імперський|громадівський}.
+
+
+    Обидва мислителі працювали в умовах {русифікації|свободи|підтримки|русифікації}.
+    Емський указ {забороняв|дозволяв|підтримував|забороняв} кулішівку як «сепаратистський
+    правопис».
+
+
+    Іван {Франко|Шевченко|Леся|Франко} називав Драгоманова своїм учителем. {Спадщина|Забуття|Критика|Спадщина}
+    обох мислителів живе в сучасній Україні.
+
+    '
+  blanks:
+  - answer: Куліш
+    options:
+    - Куліш
+    - Драгоманов
+    - Франко
+  - answer: Чорна рада
+    options:
+    - Чорна рада
+    - Біла рада
+    - Козацька рада
+  - answer: '1857'
+    options:
+    - '1857'
+    - '1876'
+    - '1880'
+  - answer: переклад
+    options:
+    - переклад
+    - написання
+    - друк
+  - answer: кулішівку
+    options:
+    - кулішівку
+    - граматику
+    - словник
+  - answer: правопису
+    options:
+    - правопису
+    - літератури
+    - музики
+  - answer: Драгоманов
+    options:
+    - Драгоманов
+    - Куліш
+    - Шевченко
+  - answer: еміграції
+    options:
+    - еміграції
+    - ув'язненні
+    - армії
+  - answer: Громада
+    options:
+    - Громада
+    - Рада
+    - Основа
+  - answer: федерації
+    options:
+    - федерації
+    - імперії
+    - монархії
+  - answer: соціалізм
+    options:
+    - соціалізм
+    - капіталізм
+    - анархізм
+  - answer: громадівський
+    options:
+    - громадівський
+    - буржуазний
+    - імперський
+  - answer: русифікації
+    options:
+    - русифікації
+    - свободи
+    - підтримки
+  - answer: забороняв
+    options:
+    - забороняв
+    - дозволяв
+    - підтримував
+  - answer: Франко
+    options:
+    - Франко
+    - Шевченко
+    - Леся
+  - answer: Спадщина
+    options:
+    - Спадщина
+    - Забуття
+    - Критика
+  blank_count: 16
+  complete_passage: 'Пантелеймон Куліш — автор першого українського історичного роману
+    «Чорна рада». Роман опублікований у 1857 році.
+
+
+    Найбільшим досягненням Куліша став переклад Біблії українською. Він також створив
+    кулішівку — систему українського правопису.
+
+
+    Михайло Драгоманов обрав шлях політики. Він жив в еміграції у Женеві, де видавав
+    журнал «Громада».
+
+
+    Драгоманов пропонував ідею федерації — союзу вільних народів. Він також розвивав
+    соціалізм, але не марксистський, а громадівський.
+
+
+    Обидва мислителі працювали в умовах русифікації. Емський указ забороняв кулішівку
+    як «сепаратистський правопис».
+
+
+    Іван Франко називав Драгоманова своїм учителем. Спадщина обох мислителів живе
+    в сучасній Україні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Куліш опублікував «Чорну раду» в 1857 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Кулішівка — це система українського правопису.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Драгоманов видавав журнал «Громада» у Женеві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Переклад Біблії надруковано у Відні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Драгоманов вірив у федерацію народів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Куліш був членом Кирило-Мефодіївського братства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: «Чорна рада» описує козацьку добу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Франко називав Драгоманова своїм учителем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Драгоманов пропонував громадівський соціалізм.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Без перекладу мови нація неповноцінна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Їхня публіцистика формувала громадську думку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Драгоманов помер у Софії в 1895 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Імперія забороняла кулішівку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Кулішівка стала основою сучасного правопису.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Обидва працювали в умовах еміграції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про ідеологів
+  jumbled_words: []
+  answer: Чорна рада — це козацьке народне віче.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Згідно з текстом, коли Пантелеймон Куліш опублікував роман «Чорна рада»?
+  options:
+  - '{''text'': 1845, ''correct'': False}'
+  - '{''text'': 1857, ''correct'': True}'
+  - '{''text'': 1876, ''correct'': False}'
+  - '{''text'': 1880, ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Як текст характеризує головний внесок Куліша в українську культуру?
+  options:
+  - '{''text'': ''Політична філософія'', ''correct'': False}'
+  - '{''text'': ''Мова, література, правопис'', ''correct'': True}'
+  - '{''text'': ''Військова стратегія'', ''correct'': False}'
+  - '{''text'': ''Економічна теорія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Де, згідно з текстом, Михайло Драгоманов жив в еміграції?
+  options:
+  - '{''text'': ''У Відні'', ''correct'': False}'
+  - '{''text'': ''У Женеві'', ''correct'': True}'
+  - '{''text'': ''У Парижі'', ''correct'': False}'
+  - '{''text'': ''У Празі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Що, згідно з текстом, означає термін «кулішівка»?
+  options:
+  - '{''text'': ''Політична партія'', ''correct'': False}'
+  - '{''text'': ''Система українського правопису'', ''correct'': True}'
+  - '{''text'': ''Літературний жанр'', ''correct'': False}'
+  - '{''text'': ''Релігійна течія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Як текст описує політичну філософію Драгоманова?
+  options:
+  - '{''text'': ''Монархізм'', ''correct'': False}'
+  - '{''text'': ''Федералізм та громадівський соціалізм'', ''correct'': True}'
+  - '{''text'': ''Анархізм'', ''correct'': False}'
+  - '{''text'': ''Імперіалізм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Яку таємну організацію, згідно з текстом, Куліш був членом?
+  options:
+  - '{''text'': ''Київської громади'', ''correct'': False}'
+  - '{''text'': ''Кирило-Мефодіївського братства'', ''correct'': True}'
+  - '{''text'': ''Партії соціалістів'', ''correct'': False}'
+  - '{''text'': ''Наукового товариства'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Де, згідно з текстом, було надруковано переклад Біблії Куліша?
+  options:
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Відні'', ''correct'': True}'
+  - '{''text'': ''У Москві'', ''correct'': False}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Який журнал, згідно з текстом, видавав Драгоманов у Женеві?
+  options:
+  - '{''text'': ''«Кобзар»'', ''correct'': False}'
+  - '{''text'': ''«Громада»'', ''correct'': True}'
+  - '{''text'': ''«Рада»'', ''correct'': False}'
+  - '{''text'': ''«Основа»'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Хто, згідно з текстом, називав Драгоманова своїм учителем?
+  options:
+  - '{''text'': ''Тарас Шевченко'', ''correct'': False}'
+  - '{''text'': ''Іван Франко'', ''correct'': True}'
+  - '{''text'': ''Леся Українка'', ''correct'': False}'
+  - '{''text'': ''Микола Лисенко'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Що, згідно з текстом, описує роман «Чорна рада»?
+  options:
+  - '{''text'': ''Сучасне життя'', ''correct'': False}'
+  - '{''text'': ''Козацьку добу та народне віче 1663 року'', ''correct'': True}'
+  - '{''text'': ''Античну історію'', ''correct'': False}'
+  - '{''text'': ''Перегляд Біблії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Чому, згідно з текстом, переклад Біблії був важливим?
+  options:
+  - '{''text'': ''Для релігійних цілей'', ''correct'': False}'
+  - '{''text'': ''Бо мова без Біблії вважалася «неповноцінною»'', ''correct'': True}'
+  - '{''text'': ''Для економічних вигод'', ''correct'': False}'
+  - '{''text'': ''Для розваги'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Як текст характеризує ставлення Драгоманова до вузького націоналізму?
+  options:
+  - '{''text'': ''Повна підтримка'', ''correct'': False}'
+  - '{''text'': ''Критика — вузький націоналізм може призвести до гноблення'', ''correct'':
+    True}'
+  - '{''text'': ''Байдужість'', ''correct'': False}'
+  - '{''text'': ''Схвалення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Де, згідно з текстом, Драгоманов помер?
+  options:
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Софії, Болгарія'', ''correct'': True}'
+  - '{''text'': ''У Женеві'', ''correct'': False}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Яку ідею, згідно з текстом, Драгоманов протиставляв централізованим імперіям?
+  options:
+  - '{''text'': ''Абсолютну монархію'', ''correct'': False}'
+  - '{''text'': ''Вільну федерацію народів'', ''correct'': True}'
+  - '{''text'': ''Диктатуру'', ''correct'': False}'
+  - '{''text'': ''Колоніалізм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Як текст пов'язує спадщину Куліша із сучасністю?
+  options:
+  - '{''text'': ''Його твори забуті'', ''correct'': False}'
+  - '{''text'': ''Кулішівка стала основою сучасного правопису'', ''correct'': True}'
+  - '{''text'': ''Його ідеї застаріли'', ''correct'': False}'
+  - '{''text'': ''Він не мав впливу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Куліша та Драгоманова
+  question: Що, згідно з текстом, об'єднувало Куліша та Драгоманова?
+  options:
+  - '{''text'': ''Однакові політичні погляди'', ''correct'': False}'
+  - '{''text'': ''Віра в українську націю та робота в умовах репресій'', ''correct'':
+    True}'
+  - '{''text'': ''Спільне місце народження'', ''correct'': False}'
+  - '{''text'': ''Однакова професія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, показує цитата з «Чорної ради» про козаків?
+  options:
+  - '{''text'': ''Їхню пасивність'', ''correct'': False}'
+  - '{''text'': ''Демократичну традицію — козаки самі обирають владу'', ''correct'':
+    True}'
+  - '{''text'': ''Їхню покору імперії'', ''correct'': False}'
+  - '{''text'': ''Їхню байдужість до політики'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку головну ідею, згідно з текстом, висловлює Драгоманов у цитаті?
+  options:
+  - '{''text'': ''Тільки національні права важливі'', ''correct'': False}'
+  - '{''text'': "Національне питання нерозривно пов''язане з соціальним", ''correct'':
+    True}'
+  - '{''text'': ''Економіка важливіша за політику'', ''correct'': False}'
+  - '{''text'': ''Мова — єдине, що має значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст характеризує мову роману «Чорна рада»?
+  options:
+  - '{''text'': ''Примітивна і бідна'', ''correct'': False}'
+  - '{''text'': ''Багата, літературна українська'', ''correct'': True}'
+  - '{''text'': ''Суржик'', ''correct'': False}'
+  - '{''text'': ''Російська з українськими вставками'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому, згідно з текстом, Куліш обрав козацьку добу для роману?
+  options:
+  - '{''text'': ''Бо це було модно'', ''correct'': False}'
+  - '{''text'': ''Щоб показати традицію української державності'', ''correct'': True}'
+  - '{''text'': ''Бо не знав іншої історії'', ''correct'': False}'
+  - '{''text'': ''За замовленням'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Проти чого, згідно з цитатою Драгоманова, потрібно боротися?
+  options:
+  - '{''text'': ''Тільки проти Росії'', ''correct'': False}'
+  - '{''text'': ''Проти всіх форм деспотизму — політичного, соціального, національного'',
+    ''correct'': True}'
+  - '{''text'': ''Тільки проти соціальної нерівності'', ''correct'': False}'
+  - '{''text'': ''Проти Австрії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст пояснює значення перекладу Біблії для мови?
+  options:
+  - '{''text'': ''Тільки релігійне значення'', ''correct'': False}'
+  - '{''text'': ''Мова без Біблії вважалася «неповноцінною»'', ''correct'': True}'
+  - '{''text'': ''Економічне значення'', ''correct'': False}'
+  - '{''text'': ''Жодного значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, означала заборона кулішівки для імперії?
+  options:
+  - '{''text'': ''Економічну вигоду'', ''correct'': False}'
+  - '{''text'': ''Правопис — це політика: окремий правопис = окрема мова = окрема
+    нація'', ''correct'': True}'
+  - '{''text'': ''Культурну підтримку'', ''correct'': False}'
+  - '{''text'': ''Нічого особливого'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку альтернативу імперіям, згідно з текстом, пропонував Драгоманов?
+  options:
+  - '{''text'': ''Диктатуру'', ''correct'': False}'
+  - '{''text'': ''Вільну федерацію народів'', ''correct'': True}'
+  - '{''text'': ''Іншу імперію'', ''correct'': False}'
+  - '{''text'': ''Анархію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому, згідно з текстом, Драгоманов критикував вузький націоналізм?
+  options:
+  - '{''text'': ''Бо не любив українців'', ''correct'': False}'
+  - '{''text'': ''Бо він може призвести до нових форм гноблення'', ''correct'': True}'
+  - '{''text'': ''Бо підтримував імперію'', ''correct'': False}'
+  - '{''text'': ''Бо не розумів політики'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке українське коріння, згідно з текстом, мала ідея громадівського соціалізму?
+  options:
+  - '{''text'': ''Марксизм'', ''correct'': False}'
+  - '{''text'': ''Козацька рада, сільська громада, міське самоврядування'', ''correct'':
+    True}'
+  - '{''text'': ''Імперська традиція'', ''correct'': False}'
+  - '{''text'': ''Європейський лібералізм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст характеризує роль еміграції для обох мислителів?
+  options:
+  - '{''text'': ''Як поразку'', ''correct'': False}'
+  - '{''text'': ''Як платформу для вільної діяльності'', ''correct'': True}'
+  - '{''text'': "Як кінець кар''єри", ''correct'': False}'
+  - '{''text'': ''Як випадковість'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, відрізняло підходи Куліша та Драгоманова?
+  options:
+  - '{''text'': ''Однакові погляди'', ''correct'': False}'
+  - '{''text'': ''Куліш — культура і мова, Драгоманов — політика'', ''correct'': True}'
+  - '{''text'': ''Обидва займалися тільки політикою'', ''correct'': False}'
+  - '{''text'': ''Обидва займалися тільки літературою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому, згідно з текстом, обидва підходи були потрібні?
+  options:
+  - '{''text'': ''Один був правильний, інший — ні'', ''correct'': False}'
+  - '{''text'': ''Разом вони створили повноцінну інтелектуальну традицію'', ''correct'':
+    True}'
+  - '{''text'': ''Вони суперечили один одному'', ''correct'': False}'
+  - '{''text'': ''Жоден не мав значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке загальне послання тексту про роль інтелектуалів?
+  options:
+  - '{''text'': ''Інтелектуали не мають значення'', ''correct'': False}'
+  - '{''text'': ''Інтелектуальна праця — це теж форма боротьби'', ''correct'': True}'
+  - '{''text'': ''Тільки зброя важлива'', ''correct'': False}'
+  - '{''text'': ''Політика важливіша за культуру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст пов'язує спадщину Драгоманова з реформою децентралізації?
+  options:
+  - '{''text'': ''Ніяк'', ''correct'': False}'
+  - '{''text'': ''Його мрія про сильні громади почала реалізовуватися'', ''correct'':
+    True}'
+  - '{''text'': ''Реформа суперечить його ідеям'', ''correct'': False}'
+  - '{''text'': ''Він критикував децентралізацію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що, згідно з текстом, є головним висновком про Куліша та Драгоманова?
+  options:
+  - '{''text'': ''Вони були ворогами'', ''correct'': False}'
+  - '{''text'': ''Вони заклали фундамент української нації — словником і програмою'',
+    ''correct'': True}'
+  - '{''text'': ''Їхня робота була марною'', ''correct'': False}'
+  - '{''text'': ''Вони підтримували імперію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, «Чорна рада» — перший український історичний роман.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Куліш народився на Полтавщині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Драгоманов видавав журнал «Громада» в Женеві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, кулішівка — це політична партія.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, переклад Біблії Куліша надруковано у Відні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Драгоманов підтримував централізовані імперії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Куліш був членом Кирило-Мефодіївського братства.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Драгоманов помер у Києві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Іван Франко називав Драгоманова учителем.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, «Чорна рада» описує події XX століття.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Куліш та Драгоманов знали один одного особисто.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, соціалізм Драгоманова — це марксизм.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, журнал «Громада» контрабандою потрапляв до імперії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Емський указ забороняв кулішівку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Куліш працював над перекладом Біблії понад 20 років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Куліша та Драгоманова
+  statement: Згідно з текстом, Драгоманов підтримував вузький націоналізм.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

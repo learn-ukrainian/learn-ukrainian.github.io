@@ -1,7 +1,7 @@
 module: 32-conditionals-unreal-yakby
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/32-conditionals-unreal-yakby.md
-generated: '2025-12-29T00:22:00.922771'
+generated: '2025-12-30T19:49:28.150624'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 6
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 6
   quiz: 8
   true-false: 8
+total_items: 37
 item_count: 37
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилку
@@ -293,6 +295,7 @@ items:
     - ще
     - вже
     - теж
+  blank_count: 14
   complete_passage: 'Олена мріє про подорожі. Вона думає: «(1)___ я (2)___ мільйон
     гривень, я (3)___ поїхала до Японії на місяць. (4)___ могла вибирати будь-яку
     країну, (5)___ (6)___ жила в Канаді. (7)___ я (8)___ президентом, зробила (9)___
@@ -356,14 +359,10 @@ items:
   question: Яке з наведених речень є правильним прикладом нереальної умови з використанням
     сполучника «якби» в українській мові?
   options:
-  - text: Якби я мав час, я б допоміг тобі.
-    correct: true
-  - text: Якщо я матиму час, я допоможу тобі.
-    correct: false
-  - text: Якби я матиму час, я допоможу.
-    correct: false
-  - text: Якщо я мав час, я б допоміг.
-    correct: false
+  - '{''text'': ''Якби я мав час, я б допоміг тобі.'', ''correct'': True}'
+  - '{''text'': ''Якщо я матиму час, я допоможу тобі.'', ''correct'': False}'
+  - '{''text'': ''Якби я матиму час, я допоможу.'', ''correct'': False}'
+  - '{''text'': ''Якщо я мав час, я б допоміг.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -375,14 +374,10 @@ items:
   question: Яка саме частка обов'язково використовується в наслідку нереальної умови
     для позначення гіпотетичності в українській мові?
   options:
-  - text: не
-    correct: false
-  - text: ж
-    correct: false
-  - text: б / би
-    correct: true
-  - text: ні
-    correct: false
+  - '{''text'': ''не'', ''correct'': False}'
+  - '{''text'': ''ж'', ''correct'': False}'
+  - '{''text'': ''б / би'', ''correct'': True}'
+  - '{''text'': ''ні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -394,14 +389,10 @@ items:
   question: У яких випадках використовується варіант «би» замість «б» у нереальних
     умовних реченнях української мови?
   options:
-  - text: Завжди після дієслова.
-    correct: false
-  - text: Завжди після підмета.
-    correct: false
-  - text: Після приголосного звуку.
-    correct: true
-  - text: Тільки в минулому часі.
-    correct: false
+  - '{''text'': ''Завжди після дієслова.'', ''correct'': False}'
+  - '{''text'': ''Завжди після підмета.'', ''correct'': False}'
+  - '{''text'': ''Після приголосного звуку.'', ''correct'': True}'
+  - '{''text'': ''Тільки в минулому часі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -413,14 +404,10 @@ items:
   question: Яке з наведених речень правильно виражає жаль про минуле за допомогою
     нереальної умови?
   options:
-  - text: Якби я тоді знав, я б не зробив цієї помилки.
-    correct: true
-  - text: Якщо дізнаюся, скажу тобі правду.
-    correct: false
-  - text: Коли прийде, поговоримо з ним.
-    correct: false
-  - text: Я хочу, щоб ти прийшов завтра.
-    correct: false
+  - '{''text'': ''Якби я тоді знав, я б не зробив цієї помилки.'', ''correct'': True}'
+  - '{''text'': ''Якщо дізнаюся, скажу тобі правду.'', ''correct'': False}'
+  - '{''text'': ''Коли прийде, поговоримо з ним.'', ''correct'': False}'
+  - '{''text'': ''Я хочу, щоб ти прийшов завтра.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +419,12 @@ items:
   question: Яка є основна відмінність між сполучниками «якщо» і «якби» в умовних реченнях
     української мови?
   options:
-  - text: «Якщо» — для минулого, «якби» — для майбутнього.
-    correct: false
-  - text: «Якщо» — для реальних умов, «якби» — для нереальних.
-    correct: true
-  - text: «Якщо» — формальне, «якби» — розмовне.
-    correct: false
-  - text: Відмінності немає, вони взаємозамінні.
-    correct: false
+  - '{''text'': ''«Якщо» — для минулого, «якби» — для майбутнього.'', ''correct'':
+    False}'
+  - '{''text'': ''«Якщо» — для реальних умов, «якби» — для нереальних.'', ''correct'':
+    True}'
+  - '{''text'': ''«Якщо» — формальне, «якби» — розмовне.'', ''correct'': False}'
+  - '{''text'': ''Відмінності немає, вони взаємозамінні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +436,10 @@ items:
   question: Як правильно сформулювати нереальну умову про теперішній час, коли ситуація
     суперечить реальності?
   options:
-  - text: Якщо я маю гроші, я куплю будинок.
-    correct: false
-  - text: Якби я матиму гроші, я куплю будинок.
-    correct: false
-  - text: Якби я мав гроші, я б купив будинок.
-    correct: true
-  - text: Якби я маю гроші, я б купив будинок.
-    correct: false
+  - '{''text'': ''Якщо я маю гроші, я куплю будинок.'', ''correct'': False}'
+  - '{''text'': ''Якби я матиму гроші, я куплю будинок.'', ''correct'': False}'
+  - '{''text'': ''Якби я мав гроші, я б купив будинок.'', ''correct'': True}'
+  - '{''text'': ''Якби я маю гроші, я б купив будинок.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -470,14 +451,10 @@ items:
   question: Яке з наведених речень є граматично правильним у контексті нереальних
     умов з узгодженням роду?
   options:
-  - text: Якби вона знала правду, вона скажала б.
-    correct: false
-  - text: Якби вона знала правду, вона б сказала.
-    correct: true
-  - text: Якби вона знає правду, вона б сказала.
-    correct: false
-  - text: Якщо вона знала правду, вона б сказала.
-    correct: false
+  - '{''text'': ''Якби вона знала правду, вона скажала б.'', ''correct'': False}'
+  - '{''text'': ''Якби вона знала правду, вона б сказала.'', ''correct'': True}'
+  - '{''text'': ''Якби вона знає правду, вона б сказала.'', ''correct'': False}'
+  - '{''text'': ''Якщо вона знала правду, вона б сказала.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -489,14 +466,10 @@ items:
   question: У якому з наведених речень частка «б» стоїть у правильній позиції відповідно
     до правил?
   options:
-  - text: Я б поїхав до Львова, якби мав час.
-    correct: true
-  - text: Я поїхав би б до Львова, якби мав час.
-    correct: false
-  - text: Б я поїхав до Львова, якби мав часу.
-    correct: false
-  - text: Я поїхав би до би Львова, якби час.
-    correct: false
+  - '{''text'': ''Я б поїхав до Львова, якби мав час.'', ''correct'': True}'
+  - '{''text'': ''Я поїхав би б до Львова, якби мав час.'', ''correct'': False}'
+  - '{''text'': ''Б я поїхав до Львова, якби мав часу.'', ''correct'': False}'
+  - '{''text'': ''Я поїхав би до би Львова, якби час.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

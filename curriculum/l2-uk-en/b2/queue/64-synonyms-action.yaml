@@ -1,0 +1,732 @@
+module: 64-synonyms-action
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/64-synonyms-action.md
+generated: '2025-12-30T20:24:30.497748'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 10
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 51
+item_count: 51
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Художник виконує нову картину, використовуючи лише чорний папір.
+  error: виконує
+  answer: творить
+  sentence_corrected: Художник творить нову картину, використовуючи лише чорний папір.
+  options:
+  - творить
+  - руйнує
+  - хапає
+  - мовчить
+  original_explanation: Для мистецтва використовується дієслово 'творити'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Політик реалізує злочин проти держави у центрі міста.
+  error: реалізує
+  answer: вчиняє
+  sentence_corrected: Політик вчиняє злочин проти держави у центрі міста.
+  options:
+  - вчиняє
+  - будує
+  - втілює
+  - дарує
+  original_explanation: Щодо злочинів використовується слово 'вчинити'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Ми хапаємо реформи вже п'ять років поспіль, але без успіху.
+  error: хапаємо
+  answer: здійснюємо
+  sentence_corrected: Ми здійснюємо реформи вже п'ять років поспіль, але без успіху.
+  options:
+  - здійснюємо
+  - руйнуємо
+  - забуваємо
+  - базікаємо
+  original_explanation: Реформи здійснюють або проводять.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Дитина втілила яблуко зі столу і побігла у сад.
+  error: втілила
+  answer: вхопила
+  sentence_corrected: Дитина вхопила яблуко зі столу і побігла у сад.
+  options:
+  - вхопила
+  - здійснила
+  - реалізувала
+  - вчинила
+  original_explanation: Вхопити або схопити — про швидку фізичну дію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Директор виконав подарунок найкращому працівнику року.
+  error: виконав
+  answer: вручив
+  sentence_corrected: Директор вручив подарунок найкращому працівнику року.
+  options:
+  - вручив
+  - хапнув
+  - зруйнував
+  - забув
+  original_explanation: Подарунки або нагороди вручають урочисто.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Ми творимо план нашого обіду вже цілу годину.
+  error: творимо
+  answer: робимо
+  sentence_corrected: Ми робимо план нашого обіду вже цілу годину.
+  options:
+  - робимо
+  - вчиняємо
+  - здійснюємо
+  - хапаємо
+  original_explanation: Для простих побутових дій підходить нейтральне 'робимо'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Він вчинив чудову страву для всіх своїх гостей.
+  error: вчинив
+  answer: приготував
+  sentence_corrected: Він приготував чудову страву для всіх своїх гостей.
+  options:
+  - приготував
+  - зруйнував
+  - хапнув
+  - промовчав
+  original_explanation: Страву готують або роблять.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте вчинок
+  sentence_with_error: Здійсни мене за руку, коли будемо переходити дорогу.
+  error: Здійсни
+  answer: Візьми
+  sentence_corrected: Візьми мене за руку, коли будемо переходити дорогу.
+  options:
+  - Візьми
+  - Реалізуй
+  - Вчини
+  - Хапни
+  original_explanation: Тримати за руку — це фізична дія.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Ми маємо [___] масштабні реформи в усіх галузях.
+  answer: здійснювати
+  complete_sentence: Ми маємо [здійснювати] масштабні реформи в усіх галузях.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Просимо вас [___] це доручення до кінця тижня.
+  answer: виконати
+  complete_sentence: Просимо вас [виконати] це доручення до кінця тижня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Важливо [___] стратегію розвитку на наступні п'ять років.
+  answer: реалізувати
+  complete_sentence: Важливо [реалізувати] стратегію розвитку на наступні п'ять років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Ми плануємо [___] цю концепцію в нашому новому офісі.
+  answer: втілити
+  complete_sentence: Ми плануємо [втілити] цю концепцію в нашому новому офісі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Ви маєте [___] згідно з інструкцією з техніки безпеки.
+  answer: діяти
+  complete_sentence: Ви маєте [діяти] згідно з інструкцією з техніки безпеки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Нам вдалося [___] унікальний продукт для ринку.
+  answer: творити
+  complete_sentence: Нам вдалося [творити] унікальний продукт для ринку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Поліція зафіксувала факт того, як особа [___] правопорушення.
+  answer: вчинила
+  complete_sentence: Поліція зафіксувала факт того, як особа [вчинила] правопорушення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Я маю [___] остаточне рішення сьогодні ввечері.
+  answer: прийняти
+  complete_sentence: Я маю [прийняти] остаточне рішення сьогодні ввечері.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Вам потрібно [___] ці документи особисто в руки.
+  answer: передати
+  complete_sentence: Вам потрібно [передати] ці документи особисто в руки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Професійне дієслово
+  sentence_template: Будь ласка, [___] мені ручку зі столу.
+  answer: дайте
+  complete_sentence: Будь ласка, [дайте] мені ручку зі столу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Проєкт перетворення
+  passage_template: 'Все почалося з {ідеї|думки|мрії|ідеї}. Ми хотіли {створити|зруйнувати|забути|створити}
+    новий хаб у {Харкові|Києві|Львові|Харкові}. Спочатку нам треба було {зробити|чинити|хапати|зробити}
+    детальний план. Потім ми почали {діяти|спати|мовчати|діяти} згідно з графіком.
+    Кожен член команди {виконував|ігнорував|заважав|виконував} свою частину роботи.
+    Ми прагнули {реалізувати|сховати|продати|реалізувати} цей проєкт за рік. Потрібно
+    було {втілити|забути|змінити|втілити} складні технічні рішення. У процесі {творення|руйнування|застою|творення}
+    ми зіткнулися з труднощами. Але кожен наш {вчинок|злочин|сон|вчинок} був обдуманим.
+    Ми бачили перший {результат|кінець|крах|результат} вже за місяць. Позитивний {ефект|біль|сум|ефект}
+    від нашої праці помітили всі. Ми змогли {здійснити|провалити|втекти|здійснити}
+    свою мрію. Це було справжнє {перетворення|руйнування|забуття|перетворення} простору.
+    Кожен з нас {отримав|втратив|забув|отримав} цінний досвід. Наша {активність|лінь|паніка|активність}
+    принесла плоди. Вміння {координувати|заважати|мовчати|координувати} зусилля було
+    вирішальним. Ми продовжуємо {удосконалювати|руйнувати|старіти|удосконалювати}
+    нашу систему. Наслідком {дії|мовчання|сну|дії} став успіх.
+
+    '
+  blanks:
+  - answer: ідеї
+    options:
+    - ідеї
+    - думки
+    - мрії
+  - answer: створити
+    options:
+    - створити
+    - зруйнувати
+    - забути
+  - answer: Харкові
+    options:
+    - Харкові
+    - Києві
+    - Львові
+  - answer: зробити
+    options:
+    - зробити
+    - чинити
+    - хапати
+  - answer: діяти
+    options:
+    - діяти
+    - спати
+    - мовчати
+  - answer: виконував
+    options:
+    - виконував
+    - ігнорував
+    - заважав
+  - answer: реалізувати
+    options:
+    - реалізувати
+    - сховати
+    - продати
+  - answer: втілити
+    options:
+    - втілити
+    - забути
+    - змінити
+  - answer: творення
+    options:
+    - творення
+    - руйнування
+    - застою
+  - answer: вчинок
+    options:
+    - вчинок
+    - злочин
+    - сон
+  - answer: результат
+    options:
+    - результат
+    - кінець
+    - крах
+  - answer: ефект
+    options:
+    - ефект
+    - біль
+    - сум
+  - answer: здійснити
+    options:
+    - здійснити
+    - провалити
+    - втекти
+  - answer: перетворення
+    options:
+    - перетворення
+    - руйнування
+    - забуття
+  - answer: отримав
+    options:
+    - отримав
+    - втратив
+    - забув
+  - answer: активність
+    options:
+    - активність
+    - лінь
+    - паніка
+  - answer: координувати
+    options:
+    - координувати
+    - заважати
+    - мовчати
+  - answer: удосконалювати
+    options:
+    - удосконалювати
+    - руйнувати
+    - старіти
+  - answer: дії
+    options:
+    - дії
+    - мовчання
+    - сну
+  blank_count: 19
+  complete_passage: 'Все почалося з ідеї. Ми хотіли створити новий хаб у Харкові.
+    Спочатку нам треба було зробити детальний план. Потім ми почали діяти згідно з
+    графіком. Кожен член команди виконував свою частину роботи. Ми прагнули реалізувати
+    цей проєкт за рік. Потрібно було втілити складні технічні рішення. У процесі творення
+    ми зіткнулися з труднощами. Але кожен наш вчинок був обдуманим. Ми бачили перший
+    результат вже за місяць. Позитивний ефект від нашої праці помітили всі. Ми змогли
+    здійснити свою мрію. Це було справжнє перетворення простору. Кожен з нас отримав
+    цінний досвід. Наша активність принесла плоди. Вміння координувати зусилля було
+    вирішальним. Ми продовжуємо удосконалювати нашу систему. Наслідком дії став успіх.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Кожен громадянин має чинити згідно із законом та власною совістю захищаючи
+    інтереси своєї держави та майбутнє свого народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Сучасний фахівець має не лише виконувати свої обов'язки а й постійно вдосконалювати
+    професійні навички для досягнення максимального ефекту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Вміння втілювати сміливі ідеї у життя вимагає від людини великої наполегливості
+    та віри у власний успіх попри будь-які труднощі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Наш завод у Запоріжжі успішно реалізовує масштабний проєкт з модернізації
+    обладнання що дозволить значно підвищити якість продукції та прибуток.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Бути людиною дії — це значить не чекати кращих часів а самостійно створювати
+    нові можливості для себе та оточуючих.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Кожна ваша дія у цифровому просторі має певний наслідок тому важливо бути
+    відповідальними за кожен вчинок та кожне слово.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Він спритно вихопив телефон із рук шахрая і втік проявивши неймовірну сміливість
+    та миттєву реакцію у надзвичайно небезпечній ситуації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть дієве речення
+  jumbled_words: []
+  answer: Ми маємо навчитися діяти злагоджено та ефективно щоб успішно подолати всі
+    виклики які ставлять перед нами складні сучасні обставини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Команда розробників успішно завершила складну роботу над програмою. Вони...
+  options:
+  - '{''text'': ''реалізували проєкт'', ''correct'': True}'
+  - '{''text'': ''хапали проєкт'', ''correct'': False}'
+  - '{''text'': ''руйнували проєкт'', ''correct'': False}'
+  - '{''text'': ''шепотіли про проєкт'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Ви хочете підкреслити, що вчинок людини був моральним та чесним. Ви кажете...
+  options:
+  - '{''text'': ''він вчинив по-людськи'', ''correct'': True}'
+  - '{''text'': ''він хапнув по-людськи'', ''correct'': False}'
+  - '{''text'': ''він зламав по-людськи'', ''correct'': False}'
+  - '{''text'': ''він промовчав по-людськи''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Художник створює картину, якої раніше ніхто не бачив. Що він робить?
+  options:
+  - '{''text'': ''творить нову реальність'', ''correct'': True}'
+  - '{''text'': ''виконує інструкцію'', ''correct'': False}'
+  - '{''text'': ''хапає фарби'', ''correct'': False}'
+  - '{''text'': ''руйнує полотно''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Робітник на заводі чітко слідує всім пунктам технічного завдання. Він...
+  options:
+  - '{''text'': "виконує обов''язки", ''correct'': True}'
+  - '{''text'': ''творить дива'', ''correct'': False}'
+  - '{''text'': ''чинить опір'', ''correct'': False}'
+  - '{''text'': ''вихоплює інструменти''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Ви раптово забираєте свою річ у людини, яка хотіла її вкрасти. Ви її...
+  options:
+  - '{''text'': ''вихоплюєте'', ''correct'': True}'
+  - '{''text'': ''реалізовуєте'', ''correct'': False}'
+  - '{''text'': ''втілюєте'', ''correct'': False}'
+  - '{''text'': ''будуєте''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Уряд проводить масштабні зміни в системі освіти. Він...
+  options:
+  - '{''text'': ''здійснює реформи'', ''correct'': True}'
+  - '{''text'': ''хапає реформи'', ''correct'': False}'
+  - '{''text'': ''руйнує реформи'', ''correct'': False}'
+  - '{''text'': ''мріє про реформи''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Ви нарешті отримали диплом про вищу освіту. Що ви зробили?
+  options:
+  - '{''text'': ''отримали результат праці'', ''correct'': True}'
+  - '{''text'': ''вкрали результат праці'', ''correct'': False}'
+  - '{''text'': ''зруйнували результат праці'', ''correct'': False}'
+  - '{''text'': ''забули результат праці''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть точну дію
+  question: Інженер знайшов спосіб перетворити ідею на реальний механізм. Він її...
+  options:
+  - '{''text'': ''втілив у життя'', ''correct'': True}'
+  - '{''text'': ''хапнув у житті'', ''correct'': False}'
+  - '{''text'': ''забув у житті'', ''correct'': False}'
+  - '{''text'': ''проспав у житті''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Який ідеал праці показав Іван Франко у вірші 'Каменярі'?
+  options:
+  - '{''text'': ''невтомної та переможної праці'', ''correct'': True}'
+  - '{''text'': ''швидкого успіху'', ''correct'': False}'
+  - '{''text'': ''байдужості'', ''correct'': False}'
+  - '{''text'': ''грошей''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Що означає бути 'людиною дії' зараз?
+  options:
+  - '{''text'': ''втілювати зміни власноруч'', ''correct'': True}'
+  - '{''text'': ''говорити про плани'', ''correct'': False}'
+  - '{''text'': ''чекати на допомогу'', ''correct'': False}'
+  - '{''text'': ''мовчати''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Яка різниця між 'дією' та 'вчинком'?
+  options:
+  - '{''text'': ''вчинок має моральне забарвлення'', ''correct'': True}'
+  - '{''text'': ''це синоніми'', ''correct'': False}'
+  - '{''text'': ''дія — це сон'', ''correct'': False}'
+  - '{''text'': ''вчинок — це техніка''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Що означає слово 'відповідальність'?
+  options:
+  - '{''text'': ''здатність давати відповідь за вчинки'', ''correct'': True}'
+  - '{''text'': ''вміння бігати'', ''correct'': False}'
+  - '{''text'': ''право не робити'', ''correct'': False}'
+  - '{''text'': ''мовчання''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Як називається глибока зміна системи?
+  options:
+  - '{''text'': ''перетворення'', ''correct'': True}'
+  - '{''text'': ''рух'', ''correct'': False}'
+  - '{''text'': ''стагнація'', ''correct'': False}'
+  - '{''text'': ''застій''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Які міста згадані як індустріальні хаби?
+  options:
+  - '{''text'': ''Харків, Дніпро, Київ'', ''correct'': True}'
+  - '{''text'': ''малі села'', ''correct'': False}'
+  - '{''text'': ''інші країни'', ''correct'': False}'
+  - '{''text'': ''міста без світла''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Що є 'мотором речення'?
+  options:
+  - '{''text'': ''дієслово'', ''correct'': True}'
+  - '{''text'': ''іменник'', ''correct'': False}'
+  - '{''text'': ''крапка'', ''correct'': False}'
+  - '{''text'': ''пробіл''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Філософія чину
+  question: Яке слово описує досконалу роботу?
+  options:
+  - '{''text'': ''сумлінність'', ''correct'': True}'
+  - '{''text'': ''лінь'', ''correct'': False}'
+  - '{''text'': ''хитрість'', ''correct'': False}'
+  - '{''text'': ''паніка''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: Слово 'чинити' найчастіше вживається в моральному контексті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: '''Хапати'' — це дуже ввічливий спосіб щось взяти.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: Слово 'творити' доречно вживати при описі миття посуду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: '''Виконувати'' підкреслює точність дотримання правил.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: Дієслово 'реалізовувати' є синонімом до 'втілювати'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: '''Вчинок'' передбачає моральний вибір.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: Слово 'наслідок' позначає те, що було до початку дії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси чину
+  statement: '''Акція'' — це масштабна організована дія.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,15 +1,18 @@
 module: 14-aspect-integration-practice
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/14-aspect-integration-practice.md
-generated: '2025-12-29T00:21:59.431323'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.616749'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 8
+  cloze: 1
   unjumble: 6
   quiz: 8
   true-false: 8
-item_count: 44
+total_items: 45
+item_count: 45
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки виду в контексті
@@ -333,6 +336,120 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Оповідання про відпустку
+  passage_template: 'Минулого літа я {вирішив|вирішував|вирішую|вирішив} поїхати у
+    відпустку до Карпат. Я {планував|запланував|планую|планував} цю подорож кілька
+    місяців, {шукав|знайшов|шукаю|шукав} інформацію про маршрути, {читав|прочитав|читаю|читав}
+    відгуки туристів та {порівнював|порівняв|порівнюю|порівнював} ціни на житло. Нарешті
+    я {знайшов|знаходив|знаходжу|знайшов} ідеальну садибу та {забронював|бронював|бронюю|забронював}
+    номер на тиждень.
+
+
+    Коли я {приїхав|приїжджав|приїжджаю|приїхав} до садиби, господиня {зустріла|зустрічала|зустрічає|зустріла}
+    мене дуже привітно. Поки вона {показувала|показала|показує|показувала} мені кімнату
+    та {розповідала|розповіла|розповідає|розповідала} про пам''ятки, я {розглядав|розглянув|розглядаю|розглядав}
+    прекрасний вид на гори.
+
+
+    Наступного дня я {прокинувся|прокидався|прокидаюся|прокинувся} рано, {поснідав|снідав|снідаю|поснідав}
+    та {вирушив|вирушав|вирушаю|вирушив} у похід.
+
+    '
+  blanks:
+  - answer: вирішив
+    options:
+    - вирішив
+    - вирішував
+    - вирішую
+  - answer: планував
+    options:
+    - планував
+    - запланував
+    - планую
+  - answer: шукав
+    options:
+    - шукав
+    - знайшов
+    - шукаю
+  - answer: читав
+    options:
+    - читав
+    - прочитав
+    - читаю
+  - answer: порівнював
+    options:
+    - порівнював
+    - порівняв
+    - порівнюю
+  - answer: знайшов
+    options:
+    - знайшов
+    - знаходив
+    - знаходжу
+  - answer: забронював
+    options:
+    - забронював
+    - бронював
+    - бронюю
+  - answer: приїхав
+    options:
+    - приїхав
+    - приїжджав
+    - приїжджаю
+  - answer: зустріла
+    options:
+    - зустріла
+    - зустрічала
+    - зустрічає
+  - answer: показувала
+    options:
+    - показувала
+    - показала
+    - показує
+  - answer: розповідала
+    options:
+    - розповідала
+    - розповіла
+    - розповідає
+  - answer: розглядав
+    options:
+    - розглядав
+    - розглянув
+    - розглядаю
+  - answer: прокинувся
+    options:
+    - прокинувся
+    - прокидався
+    - прокидаюся
+  - answer: поснідав
+    options:
+    - поснідав
+    - снідав
+    - снідаю
+  - answer: вирушив
+    options:
+    - вирушив
+    - вирушав
+    - вирушаю
+  blank_count: 15
+  complete_passage: 'Минулого літа я вирішив поїхати у відпустку до Карпат. Я планував
+    цю подорож кілька місяців, шукав інформацію про маршрути, читав відгуки туристів
+    та порівнював ціни на житло. Нарешті я знайшов ідеальну садибу та забронював номер
+    на тиждень.
+
+
+    Коли я приїхав до садиби, господиня зустріла мене дуже привітно. Поки вона показувала
+    мені кімнату та розповідала про пам''ятки, я розглядав прекрасний вид на гори.
+
+
+    Наступного дня я прокинувся рано, поснідав та вирушив у похід.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення з темпоральними сполучниками
   jumbled_words: []
@@ -391,14 +508,10 @@ items:
   question: Учора я ______ домашнє завдання три години поспіль, але так і не закінчив
     його до кінця вечора.
   options:
-  - text: зробив (ДВ)
-    correct: false
-  - text: робив (НДВ)
-    correct: true
-  - text: зроблю (ДВ майбутнє)
-    correct: false
-  - text: буду робити (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''зробив (ДВ)'', ''correct'': False}'
+  - '{''text'': ''робив (НДВ)'', ''correct'': True}'
+  - '{''text'': ''зроблю (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''буду робити (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -410,14 +523,10 @@ items:
   question: Спочатку вона ______ інструкцію дуже уважно, а тоді почала складати меблі
     самостійно без жодних проблем.
   options:
-  - text: прочитала (ДВ)
-    correct: true
-  - text: читала (НДВ)
-    correct: false
-  - text: прочитає (ДВ майбутнє)
-    correct: false
-  - text: читатиме (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''прочитала (ДВ)'', ''correct'': True}'
+  - '{''text'': ''читала (НДВ)'', ''correct'': False}'
+  - '{''text'': ''прочитає (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''читатиме (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -429,14 +538,10 @@ items:
   question: Поки ми ______ у парку на свіжому повітрі того теплого дня, почався сильний
     дощ, і ми змокли.
   options:
-  - text: погуляли (ДВ)
-    correct: false
-  - text: гуляли (НДВ)
-    correct: true
-  - text: погуляємо (ДВ майбутнє)
-    correct: false
-  - text: будемо гуляти (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''погуляли (ДВ)'', ''correct'': False}'
+  - '{''text'': ''гуляли (НДВ)'', ''correct'': True}'
+  - '{''text'': ''погуляємо (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''будемо гуляти (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -448,14 +553,10 @@ items:
   question: Як тільки викладач ______ до аудиторії через головні двері, усі студенти
     відразу замовкли та взяли зошити.
   options:
-  - text: увійшов (ДВ)
-    correct: true
-  - text: входив (НДВ)
-    correct: false
-  - text: увійде (ДВ майбутнє)
-    correct: false
-  - text: входитиме (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''увійшов (ДВ)'', ''correct'': True}'
+  - '{''text'': ''входив (НДВ)'', ''correct'': False}'
+  - '{''text'': ''увійде (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''входитиме (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -467,14 +568,10 @@ items:
   question: Минулого місяця я кілька разів ______ у це затишне кафе, тому що там готують
     найсмачнішу каву.
   options:
-  - text: прийшов (ДВ)
-    correct: false
-  - text: приходив (НДВ)
-    correct: true
-  - text: прийду (ДВ майбутнє)
-    correct: false
-  - text: приходитиму (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''прийшов (ДВ)'', ''correct'': False}'
+  - '{''text'': ''приходив (НДВ)'', ''correct'': True}'
+  - '{''text'': ''прийду (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''приходитиму (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -486,14 +583,10 @@ items:
   question: Тим часом, коли діти ______ мультфільми у вітальні на великому телевізорі,
     батьки готували святкову вечерю.
   options:
-  - text: подивилися (ДВ)
-    correct: false
-  - text: дивилися (НДВ)
-    correct: true
-  - text: подивляться (ДВ майбутнє)
-    correct: false
-  - text: дивитимуться (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''подивилися (ДВ)'', ''correct'': False}'
+  - '{''text'': ''дивилися (НДВ)'', ''correct'': True}'
+  - '{''text'': ''подивляться (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''дивитимуться (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -505,14 +598,10 @@ items:
   question: Він ще не ______ важливий звіт для директора, хоча працював над ним увесь
     тиждень без перерви.
   options:
-  - text: закінчив (ДВ)
-    correct: true
-  - text: закінчував (НДВ)
-    correct: false
-  - text: закінчить (ДВ майбутнє)
-    correct: false
-  - text: закінчуватиме (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''закінчив (ДВ)'', ''correct'': True}'
+  - '{''text'': ''закінчував (НДВ)'', ''correct'': False}'
+  - '{''text'': ''закінчить (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''закінчуватиме (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -524,14 +613,10 @@ items:
   question: Наступного дня після важливої зустрічі я ______ всім учасникам електронні
     листи з матеріалами презентації.
   options:
-  - text: відправив (ДВ)
-    correct: true
-  - text: відправляв (НДВ)
-    correct: false
-  - text: відправлю (ДВ майбутнє)
-    correct: false
-  - text: відправлятиму (НДВ майбутнє)
-    correct: false
+  - '{''text'': ''відправив (ДВ)'', ''correct'': True}'
+  - '{''text'': ''відправляв (НДВ)'', ''correct'': False}'
+  - '{''text'': ''відправлю (ДВ майбутнє)'', ''correct'': False}'
+  - '{''text'': ''відправлятиму (НДВ майбутнє)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

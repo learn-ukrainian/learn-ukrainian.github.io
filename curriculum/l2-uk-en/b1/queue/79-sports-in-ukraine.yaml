@@ -1,15 +1,18 @@
 module: 79-sports-in-ukraine
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/79-sports-in-ukraine.md
-generated: '2025-12-29T00:22:04.522125'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.569047'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 12
   true-false: 12
-item_count: 52
+total_items: 53
+item_count: 53
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки про спорт
@@ -256,6 +259,136 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Український спорт
+  passage_template: 'Україна є однією з найуспішніших спортивних {націй|армій|компаній|націй}
+    Європи. Футбол — найпопулярніший вид {спорту|мистецтва|музики|спорту} в країні.
+    Мільйони {вболівальників|туристів|студентів|вболівальників} підтримують свої команди.
+
+
+    "{Динамо|Арсенал|Барселона|Динамо}" Київ — найтитулованіший український {клуб|стадіон|тренер|клуб}.
+    Він {шістнадцять|п''ять|десять|шістнадцять} разів вигравав чемпіонат України.
+
+
+    Брати {Кличко|Шевченко|Бубка|Кличко} домінували у світовому боксі. Обидва стали
+    чемпіонами {світу|Європи|міста|світу}.
+
+
+    Яна {Клочкова|Шевченко|Бубка|Клочкова} — найтитулованіша українська олімпійка.
+    Вона чотири рази ставала {чемпіонкою|тренеркою|суддею|чемпіонкою} з плавання.
+
+
+    Сергій Бубка встановив тридцять п''ять світових {рекордів|медалей|титулів|рекордів}
+    у стрибках з {жердиною|м''ячем|ракеткою|жердиною}.
+
+
+    Україна здобуває {медалі|гроші|друзів|медалі} на Олімпіадах у легкій {атлетиці|музиці|кухні|атлетиці},
+    боксі та {плаванні|кулінарії|садівництві|плаванні}.
+
+    '
+  blanks:
+  - answer: націй
+    options:
+    - націй
+    - армій
+    - компаній
+  - answer: спорту
+    options:
+    - спорту
+    - мистецтва
+    - музики
+  - answer: вболівальників
+    options:
+    - вболівальників
+    - туристів
+    - студентів
+  - answer: Динамо
+    options:
+    - Динамо
+    - Арсенал
+    - Барселона
+  - answer: клуб
+    options:
+    - клуб
+    - стадіон
+    - тренер
+  - answer: шістнадцять
+    options:
+    - шістнадцять
+    - п'ять
+    - десять
+  - answer: Кличко
+    options:
+    - Кличко
+    - Шевченко
+    - Бубка
+  - answer: світу
+    options:
+    - світу
+    - Європи
+    - міста
+  - answer: Клочкова
+    options:
+    - Клочкова
+    - Шевченко
+    - Бубка
+  - answer: чемпіонкою
+    options:
+    - чемпіонкою
+    - тренеркою
+    - суддею
+  - answer: рекордів
+    options:
+    - рекордів
+    - медалей
+    - титулів
+  - answer: жердиною
+    options:
+    - жердиною
+    - м'ячем
+    - ракеткою
+  - answer: медалі
+    options:
+    - медалі
+    - гроші
+    - друзів
+  - answer: атлетиці
+    options:
+    - атлетиці
+    - музиці
+    - кухні
+  - answer: плаванні
+    options:
+    - плаванні
+    - кулінарії
+    - садівництві
+  blank_count: 15
+  complete_passage: 'Україна є однією з найуспішніших спортивних націй Європи. Футбол
+    — найпопулярніший вид спорту в країні. Мільйони вболівальників підтримують свої
+    команди.
+
+
+    "Динамо" Київ — найтитулованіший український клуб. Він шістнадцять разів вигравав
+    чемпіонат України.
+
+
+    Брати Кличко домінували у світовому боксі. Обидва стали чемпіонами світу.
+
+
+    Яна Клочкова — найтитулованіша українська олімпійка. Вона чотири рази ставала
+    чемпіонкою з плавання.
+
+
+    Сергій Бубка встановив тридцять п''ять світових рекордів у стрибках з жердиною.
+
+
+    Україна здобуває медалі на Олімпіадах у легкій атлетиці, боксі та плаванні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення про спорт
   jumbled_words: []
@@ -325,14 +458,10 @@ items:
   question: Стаття повідомляє, що "Динамо" Київ є найтитулованішим українським клубом
     — скільки разів команда вигравала чемпіонат України за всю історію?
   options:
-  - text: десять разів
-    correct: false
-  - text: шістнадцять разів
-    correct: true
-  - text: двадцять разів
-    correct: false
-  - text: п'ять разів
-    correct: false
+  - '{''text'': ''десять разів'', ''correct'': False}'
+  - '{''text'': ''шістнадцять разів'', ''correct'': True}'
+  - '{''text'': ''двадцять разів'', ''correct'': False}'
+  - '{''text'': "п''ять разів", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -344,14 +473,10 @@ items:
   question: За даними тексту, хто є єдиним українським футболістом, який отримав престижну
     нагороду "Золотий м'яч" за найкращого гравця світу?
   options:
-  - text: Андрій Шевченко
-    correct: false
-  - text: Олег Блохін
-    correct: true
-  - text: Віталій Кличко
-    correct: false
-  - text: Сергій Бубка
-    correct: false
+  - '{''text'': ''Андрій Шевченко'', ''correct'': False}'
+  - '{''text'': ''Олег Блохін'', ''correct'': True}'
+  - '{''text'': ''Віталій Кличко'', ''correct'': False}'
+  - '{''text'': ''Сергій Бубка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -363,14 +488,10 @@ items:
   question: У тексті йдеться про те, що "Шахтар" Донецьк виграв важливий європейський
     трофей у 2009 році — який саме турнір виграла команда?
   options:
-  - text: Лігу чемпіонів
-    correct: false
-  - text: Кубок УЄФА
-    correct: true
-  - text: Суперкубок Європи
-    correct: false
-  - text: Лігу Європи
-    correct: false
+  - '{''text'': ''Лігу чемпіонів'', ''correct'': False}'
+  - '{''text'': ''Кубок УЄФА'', ''correct'': True}'
+  - '{''text'': ''Суперкубок Європи'', ''correct'': False}'
+  - '{''text'': ''Лігу Європи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -382,14 +503,10 @@ items:
   question: Згідно з текстом, Віталій Кличко провів сорок сім професійних боїв за
     свою кар'єру — скільки з них він виграв, демонструючи свою домінацію?
   options:
-  - text: сорок боїв
-    correct: false
-  - text: сорок два бої
-    correct: false
-  - text: сорок п'ять боїв
-    correct: true
-  - text: усі сорок сім
-    correct: false
+  - '{''text'': ''сорок боїв'', ''correct'': False}'
+  - '{''text'': ''сорок два бої'', ''correct'': False}'
+  - '{''text'': "сорок п''ять боїв", ''correct'': True}'
+  - '{''text'': ''усі сорок сім'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -401,14 +518,10 @@ items:
   question: У тексті повідомляється, що з 2014 року Віталій Кличко обіймає певну політичну
     посаду — яку саме позицію він зайняв після завершення спортивної кар'єри?
   options:
-  - text: президент України
-    correct: false
-  - text: мер Києва
-    correct: true
-  - text: міністр спорту
-    correct: false
-  - text: депутат парламенту
-    correct: false
+  - '{''text'': ''президент України'', ''correct'': False}'
+  - '{''text'': ''мер Києва'', ''correct'': True}'
+  - '{''text'': ''міністр спорту'', ''correct'': False}'
+  - '{''text'': ''депутат парламенту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -420,14 +533,10 @@ items:
   question: Текст стверджує, що Олександр Усик є унікальним боксером у історії — чим
     саме він став першим у боксерському світі?
   options:
-  - text: першим українським чемпіоном
-    correct: false
-  - text: абсолютним чемпіоном у двох вагових категоріях
-    correct: true
-  - text: наймолодшим чемпіоном світу
-    correct: false
-  - text: чемпіоном без поразок
-    correct: false
+  - '{''text'': ''першим українським чемпіоном'', ''correct'': False}'
+  - '{''text'': ''абсолютним чемпіоном у двох вагових категоріях'', ''correct'': True}'
+  - '{''text'': ''наймолодшим чемпіоном світу'', ''correct'': False}'
+  - '{''text'': ''чемпіоном без поразок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -439,14 +548,10 @@ items:
   question: Згідно з інформацією в тексті, Яна Клочкова є найтитулованішою українською
     олімпійкою — скільки олімпійських золотих медалей вона здобула у плаванні?
   options:
-  - text: дві медалі
-    correct: false
-  - text: три медалі
-    correct: false
-  - text: чотири медалі
-    correct: true
-  - text: п'ять медалей
-    correct: false
+  - '{''text'': ''дві медалі'', ''correct'': False}'
+  - '{''text'': ''три медалі'', ''correct'': False}'
+  - '{''text'': ''чотири медалі'', ''correct'': True}'
+  - '{''text'': "п''ять медалей", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -458,14 +563,10 @@ items:
   question: У тексті йдеться про видатного українського легкоатлета Сергія Бубку —
     скільки світових рекордів він встановив за свою кар'єру стрибуна з жердиною?
   options:
-  - text: двадцять рекордів
-    correct: false
-  - text: двадцять п'ять рекордів
-    correct: false
-  - text: тридцять рекордів
-    correct: false
-  - text: тридцять п'ять рекордів
-    correct: true
+  - '{''text'': ''двадцять рекордів'', ''correct'': False}'
+  - '{''text'': "двадцять п''ять рекордів", ''correct'': False}'
+  - '{''text'': ''тридцять рекордів'', ''correct'': False}'
+  - '{''text'': "тридцять п''ять рекордів", ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -478,14 +579,10 @@ items:
     з певного року — з якого року українські спортсмени виступають під національним
     прапором?
   options:
-  - text: з 1991 року
-    correct: false
-  - text: з 1992 року
-    correct: false
-  - text: з 1994 року
-    correct: true
-  - text: з 1996 року
-    correct: false
+  - '{''text'': ''з 1991 року'', ''correct'': False}'
+  - '{''text'': ''з 1992 року'', ''correct'': False}'
+  - '{''text'': ''з 1994 року'', ''correct'': True}'
+  - '{''text'': ''з 1996 року'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -497,14 +594,10 @@ items:
   question: У тексті згадується, що українська жіноча команда виграла олімпійську
     естафету у 2014 році — в якому виді спорту це сталося?
   options:
-  - text: у плаванні
-    correct: false
-  - text: у біатлоні
-    correct: true
-  - text: у легкій атлетиці
-    correct: false
-  - text: у лижних гонках
-    correct: false
+  - '{''text'': ''у плаванні'', ''correct'': False}'
+  - '{''text'': ''у біатлоні'', ''correct'': True}'
+  - '{''text'': ''у легкій атлетиці'', ''correct'': False}'
+  - '{''text'': ''у лижних гонках'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -516,14 +609,10 @@ items:
   question: Згідно з текстом, який український стадіон є найбільшим у країні та має
     місткість сімдесят тисяч глядачів?
   options:
-  - text: '"Донбас Арена"'
-    correct: false
-  - text: '"Арена Львів"'
-    correct: false
-  - text: НСК "Олімпійський"
-    correct: true
-  - text: '"Металіст"'
-    correct: false
+  - '{''text'': ''"Донбас Арена"'', ''correct'': False}'
+  - '{''text'': ''"Арена Львів"'', ''correct'': False}'
+  - '{''text'': ''НСК "Олімпійський"'', ''correct'': True}'
+  - '{''text'': ''"Металіст"'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -535,14 +624,10 @@ items:
   question: У тексті повідомляється, що Володимир Кличко утримував чемпіонські пояси
     рекордний час — скільки років він був чемпіоном світу у суперважкій вазі?
   options:
-  - text: п'ять років
-    correct: false
-  - text: вісім років
-    correct: false
-  - text: понад одинадцять років
-    correct: true
-  - text: п'ятнадцять років
-    correct: false
+  - '{''text'': "п''ять років", ''correct'': False}'
+  - '{''text'': ''вісім років'', ''correct'': False}'
+  - '{''text'': ''понад одинадцять років'', ''correct'': True}'
+  - '{''text'': "п''ятнадцять років", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

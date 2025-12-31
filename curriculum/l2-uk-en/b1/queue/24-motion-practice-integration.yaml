@@ -1,15 +1,18 @@
 module: 24-motion-practice-integration
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/24-motion-practice-integration.md
-generated: '2025-12-29T00:22:00.243762'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.910439'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 6
   fill-in: 9
+  cloze: 1
   unjumble: 6
   quiz: 8
   true-false: 8
-item_count: 37
+total_items: 38
+item_count: 38
+sample_percent: null
 items:
 - activity: error-correction
   title: Типові помилки
@@ -195,6 +198,95 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Лист із відпустки
+  passage_template: 'Привіт, мамо! Ми нарешті {дісталися|відсталися|присталися} до
+    готелю. Дорога була довгою. Ми {виїхали|заїхали|переїхали} з Києва ще вночі. Спочатку
+    все було добре, але потім ми {потрапили|втрапили|затрапили} в затор під Житомиром.
+    Ми стояли там годину! Тато {вийшов|зайшов|дійшов} з себе і хотів {поїхати|піти|побігти}
+    іншою дорогою, але навігатор не працював. Ми ледве {дотягли|протягли|витягли}
+    до заправки. Там ми {попили|випили|запили} кави і трохи {відпочили|почили|спочили}.
+    Потім ми {рушили|зрушили|порушили} далі.
+
+    Коли ми {під''їхали|від''їхали|заїхали} до Карпат, настрій відразу {пішов|вийшов|зайшов}
+    в гору. Ми вже {заселилися|виселилися|пересилилися} в номер і {розібрали|зібрали|перебрали}
+    речі. Вигляд з вікна — неймовірний! Завтра плануємо {піднятися|знятися|обійнятися}
+    на Говерлу. Обіймаю!
+
+    '
+  blanks:
+  - answer: присталися
+    options:
+    - дісталися
+    - відсталися
+  - answer: переїхали
+    options:
+    - виїхали
+    - заїхали
+  - answer: затрапили
+    options:
+    - потрапили
+    - втрапили
+  - answer: дійшов
+    options:
+    - вийшов
+    - зайшов
+  - answer: побігти
+    options:
+    - поїхати
+    - піти
+  - answer: витягли
+    options:
+    - дотягли
+    - протягли
+  - answer: запили
+    options:
+    - попили
+    - випили
+  - answer: спочили
+    options:
+    - відпочили
+    - почили
+  - answer: порушили
+    options:
+    - рушили
+    - зрушили
+  - answer: заїхали
+    options:
+    - під'їхали
+    - від'їхали
+  - answer: зайшов
+    options:
+    - пішов
+    - вийшов
+  - answer: пересилилися
+    options:
+    - заселилися
+    - виселилися
+  - answer: перебрали
+    options:
+    - розібрали
+    - зібрали
+  - answer: обійнятися
+    options:
+    - піднятися
+    - знятися
+  blank_count: 14
+  complete_passage: 'Привіт, мамо! Ми нарешті присталися до готелю. Дорога була довгою.
+    Ми переїхали з Києва ще вночі. Спочатку все було добре, але потім ми затрапили
+    в затор під Житомиром. Ми стояли там годину! Тато дійшов з себе і хотів побігти
+    іншою дорогою, але навігатор не працював. Ми ледве витягли до заправки. Там ми
+    запили кави і трохи спочили. Потім ми порушили далі.
+
+    Коли ми заїхали до Карпат, настрій відразу зайшов в гору. Ми вже пересилилися
+    в номер і перебрали речі. Вигляд з вікна — неймовірний! Завтра плануємо обійнятися
+    на Говерлу. Обіймаю!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть маршрут
   jumbled_words: []
@@ -250,14 +342,11 @@ items:
   question: Ви хочете сказати таксисту, щоб він оминув затори на дорозі. Яке дієслово
     з префіксом ви використаєте?
   options:
-  - text: Об'їхати (рух навколо перешкоди).
-    correct: true
-  - text: Заїхати (рух всередину на короткий час).
-    correct: false
-  - text: Переїхати (рух через перешкоду або зміна житла).
-    correct: false
-  - text: Доїхати (рух до кінцевої точки).
-    correct: false
+  - '{''text'': "Об''їхати (рух навколо перешкоди).", ''correct'': True}'
+  - '{''text'': ''Заїхати (рух всередину на короткий час).'', ''correct'': False}'
+  - '{''text'': ''Переїхати (рух через перешкоду або зміна житла).'', ''correct'':
+    False}'
+  - '{''text'': ''Доїхати (рух до кінцевої точки).'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -269,14 +358,10 @@ items:
   question: Ваша колега питає про результати складної наради. Ви хочете сказати, що
     переговори закінчилися нічим (dead end). Яку фразу ви оберете?
   options:
-  - text: Ми вийшли на фінішну пряму.
-    correct: false
-  - text: Переговори зайшли в глухий кут.
-    correct: true
-  - text: Ми обійшли всі гострі кути.
-    correct: false
-  - text: Справи пішли в гору.
-    correct: false
+  - '{''text'': ''Ми вийшли на фінішну пряму.'', ''correct'': False}'
+  - '{''text'': ''Переговори зайшли в глухий кут.'', ''correct'': True}'
+  - '{''text'': ''Ми обійшли всі гострі кути.'', ''correct'': False}'
+  - '{''text'': ''Справи пішли в гору.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -288,14 +373,10 @@ items:
   question: Ви стоїте біля театру і чекаєте друга. Він дзвонить і каже "Я вже близько".
     Яке дієслово описує його наближення до вас?
   options:
-  - text: Я під'їжджаю / підходжу (movement towards).
-    correct: true
-  - text: Я від'їжджаю / відходжу (movement away).
-    correct: false
-  - text: Я проїжджаю (passing by).
-    correct: false
-  - text: Я виїжджаю (starting the trip).
-    correct: false
+  - '{''text'': "Я під''їжджаю / підходжу (movement towards).", ''correct'': True}'
+  - '{''text'': "Я від''їжджаю / відходжу (movement away).", ''correct'': False}'
+  - '{''text'': ''Я проїжджаю (passing by).'', ''correct'': False}'
+  - '{''text'': ''Я виїжджаю (starting the trip).'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -307,14 +388,10 @@ items:
   question: Турист запитує дорогу. Вам треба сказати йому перетнути велику вулицю.
     Яку конструкцію ви використаєте?
   options:
-  - text: Ідіть по вулиці.
-    correct: false
-  - text: Перейдіть через вулицю.
-    correct: true
-  - text: Вийдіть з вулиці.
-    correct: false
-  - text: Зайдіть на вулицю.
-    correct: false
+  - '{''text'': ''Ідіть по вулиці.'', ''correct'': False}'
+  - '{''text'': ''Перейдіть через вулицю.'', ''correct'': True}'
+  - '{''text'': ''Вийдіть з вулиці.'', ''correct'': False}'
+  - '{''text'': ''Зайдіть на вулицю.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -326,14 +403,10 @@ items:
   question: Ви розповідаєте про свою кар'єру. Як сказати, що ви звільнилися з компанії
     за власним бажанням?
   options:
-  - text: Я зайшов з роботи.
-    correct: false
-  - text: Я пішов з роботи.
-    correct: true
-  - text: Я прийшов з роботи.
-    correct: false
-  - text: Я обійшов роботу.
-    correct: false
+  - '{''text'': ''Я зайшов з роботи.'', ''correct'': False}'
+  - '{''text'': ''Я пішов з роботи.'', ''correct'': True}'
+  - '{''text'': ''Я прийшов з роботи.'', ''correct'': False}'
+  - '{''text'': ''Я обійшов роботу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -345,14 +418,10 @@ items:
   question: Ви зустріли знайомого, якого не бачили 100 років. Він питає "Як життя?".
     Що ви відповісте нейтрально-позитивно?
   options:
-  - text: Справи йдуть потихеньку / добре.
-    correct: true
-  - text: Справи стоять на місці.
-    correct: false
-  - text: Справи пішли геть.
-    correct: false
-  - text: Справи біжать швидко.
-    correct: false
+  - '{''text'': ''Справи йдуть потихеньку / добре.'', ''correct'': True}'
+  - '{''text'': ''Справи стоять на місці.'', ''correct'': False}'
+  - '{''text'': ''Справи пішли геть.'', ''correct'': False}'
+  - '{''text'': ''Справи біжать швидко.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -364,14 +433,10 @@ items:
   question: Ви заблукали в незнайомому місті. Ви дзвоните друзям. Що ви скажете, щоб
     описати ситуацію, коли ви випадково потрапили не туди?
   options:
-  - text: Я приїхав у центр.
-    correct: false
-  - text: Я заїхав кудись не туди.
-    correct: true
-  - text: Я переїхав місто.
-    correct: false
-  - text: Я виїхав з міста.
-    correct: false
+  - '{''text'': ''Я приїхав у центр.'', ''correct'': False}'
+  - '{''text'': ''Я заїхав кудись не туди.'', ''correct'': True}'
+  - '{''text'': ''Я переїхав місто.'', ''correct'': False}'
+  - '{''text'': ''Я виїхав з міста.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -383,14 +448,10 @@ items:
   question: Ви описуєте свій ранок. "Я ___ з дому о 8:00". Який префікс потрібен для
     старту руху зсередини?
   options:
-  - text: Від- (відійшов).
-    correct: false
-  - text: Ви- (вийшов).
-    correct: true
-  - text: З- (зійшов).
-    correct: false
-  - text: Пі- (пішов).
-    correct: false
+  - '{''text'': ''Від- (відійшов).'', ''correct'': False}'
+  - '{''text'': ''Ви- (вийшов).'', ''correct'': True}'
+  - '{''text'': ''З- (зійшов).'', ''correct'': False}'
+  - '{''text'': ''Пі- (пішов).'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

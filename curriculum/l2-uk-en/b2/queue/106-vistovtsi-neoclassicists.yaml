@@ -1,0 +1,612 @@
+module: 106-vistovtsi-neoclassicists
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/106-vistovtsi-neoclassicists.md
+generated: '2025-12-30T22:26:22.218000'
+scope: cloze, fill-in, quiz, true-false, unjumble
+activity_counts:
+  fill-in: 16
+  cloze: 1
+  unjumble: 6
+  quiz: 16
+  true-false: 7
+total_items: 46
+item_count: 46
+sample_percent: null
+items:
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Політика [___] дала українській мові державний статус у 1920-х.
+  answer: українізації
+  complete_sentence: Політика [українізації] дала українській мові державний статус
+    у 1920-х.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Микола Хвильовий вважав, що Україна — це психологічна [___].
+  answer: Європа
+  complete_sentence: Микола Хвильовий вважав, що Україна — це психологічна [Європа].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Театр [___] Леся Курбаса був авангардним і новаторським.
+  answer: Березіль
+  complete_sentence: Театр [Березіль] Леся Курбаса був авангардним і новаторським.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Микола Зеров писав витончені [___], дотримуючись класичної форми.
+  answer: сонети
+  complete_sentence: Микола Зеров писав витончені [сонети], дотримуючись класичної
+    форми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Період культурного злету закінчився трагедією, тому його називають
+    [___] відродженням.
+  answer: розстріляним
+  complete_sentence: Період культурного злету закінчився трагедією, тому його називають
+    [розстріляним] відродженням.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Письменники об'єднувалися у групи, щоб подолати культурну [___].
+  answer: провінційність
+  complete_sentence: Письменники об'єднувалися у групи, щоб подолати культурну [провінційність].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Хвильовий закликав тікати від впливу [___].
+  answer: імперії
+  complete_sentence: Хвильовий закликав тікати від впливу [імперії].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Лексика 1920-х
+  sentence_template: Україна мала стати центром [___] ренесансу.
+  answer: азіатського
+  complete_sentence: Україна мала стати центром [азіатського] ренесансу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Микола [___] написав памфлет 'Апологети писанок'.
+  answer: Хвильовий
+  complete_sentence: Микола [Хвильовий] написав памфлет 'Апологети писанок'.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Лесь [___] реформував український театр.
+  answer: Курбас
+  complete_sentence: Лесь [Курбас] реформував український театр.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Микола [___] був лідером неокласиків.
+  answer: Зеров
+  complete_sentence: Микола [Зеров] був лідером неокласиків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Драматург Микола [___] написав п'єсу 'Мина Мазайло'.
+  answer: Куліш
+  complete_sentence: Драматург Микола [Куліш] написав п'єсу 'Мина Мазайло'.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Живописець Михайло [___] створив школу монументалізму.
+  answer: Бойчук
+  complete_sentence: Живописець Михайло [Бойчук] створив школу монументалізму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Поет Максим [___] входив до 'п'ятірного грона'.
+  answer: Рильський
+  complete_sentence: Поет Максим [Рильський] входив до 'п'ятірного грона'.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Михайло [___] писав гуморески, які читала вся країна.
+  answer: Вишня
+  complete_sentence: Михайло [Вишня] писав гуморески, які читала вся країна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Постаті в історії
+  sentence_template: Володимир [___] був автором вишуканої лірики 'Любіть Україну'.
+  answer: Сосюра
+  complete_sentence: Володимир [Сосюра] був автором вишуканої лірики 'Любіть Україну'.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Трагедія відродження
+  passage_template: 'Період 1920-х років в Україні називають {Розстріляним відродженням|Золотим
+    віком|Епохою застою}. Центром культурного життя став {Харків|Київ|Львів}. Письменники
+    жили в кооперативному будинку {Слово|Праця|Воля}. Лідером інтелектуальної дискусії
+    був {Микола Хвильовий|Микола Зеров|Лесь Курбас}. Він висунув гасло {Геть від Москви!|Геть
+    від Європи!|Геть від літератури!}. Хвильовий вірив у {Азіатський ренесанс|Російський
+    мір|Американську мрію}. Водночас група {неокласиків|футуристів|символістів} орієнтувалася
+    на античність. Їх очолював {Микола Зеров|Павло Тичина|Михайло Семенко}. Театральне
+    мистецтво модернізував {Лесь Курбас|Станіславський|Мейєрхольд} у своєму театрі
+    {Березіль|Гай|Нива}. Політика {українізації|русифікації|полонізації} дозволила
+    мові зазвучати всюди. Проте в 1930-х роках почалися {арешти|свята|подорожі}. Багато
+    митців було {розстріляно|нагороджено|забуто}. Самогубство {Миколи Хвильового|Миколи
+    Куліша|Миколи Зерова} стало символом кінця епохи. Ми маємо зберігати {пам''ять|тишу|гроші}
+    про це покоління. Це шлях до нашої {деколонізації|колонізації|стагнації}. Їхня
+    {спадщина|втома|поразка} живе в нас. Ми вшановуємо героїв {Сандармоху|Бабиного
+    Яру|Биківні}. Кожна доля була {трагічною|веселою|випадковою}. Поразка була {системною|випадковою|корисною}.
+
+    '
+  blanks:
+  - answer: Епохою застою
+    options:
+    - Розстріляним відродженням
+    - Золотим віком
+  - answer: Львів
+    options:
+    - Харків
+    - Київ
+  - answer: Воля
+    options:
+    - Слово
+    - Праця
+  - answer: Лесь Курбас
+    options:
+    - Микола Хвильовий
+    - Микола Зеров
+  - answer: Геть від літератури!
+    options:
+    - Геть від Москви!
+    - Геть від Європи!
+  - answer: Американську мрію
+    options:
+    - Азіатський ренесанс
+    - Російський мір
+  - answer: символістів
+    options:
+    - неокласиків
+    - футуристів
+  - answer: Михайло Семенко
+    options:
+    - Микола Зеров
+    - Павло Тичина
+  - answer: Мейєрхольд
+    options:
+    - Лесь Курбас
+    - Станіславський
+  - answer: Нива
+    options:
+    - Березіль
+    - Гай
+  - answer: полонізації
+    options:
+    - українізації
+    - русифікації
+  - answer: подорожі
+    options:
+    - арешти
+    - свята
+  - answer: забуто
+    options:
+    - розстріляно
+    - нагороджено
+  - answer: Миколи Зерова
+    options:
+    - Миколи Хвильового
+    - Миколи Куліша
+  - answer: гроші
+    options:
+    - пам'ять
+    - тишу
+  - answer: стагнації
+    options:
+    - деколонізації
+    - колонізації
+  - answer: поразка
+    options:
+    - спадщина
+    - втома
+  - answer: Биківні
+    options:
+    - Сандармоху
+    - Бабиного Яру
+  - answer: випадковою
+    options:
+    - трагічною
+    - веселою
+  - answer: корисною
+    options:
+    - системною
+    - випадковою
+  blank_count: 20
+  complete_passage: 'Період 1920-х років в Україні називають Епохою застою. Центром
+    культурного життя став Львів. Письменники жили в кооперативному будинку Воля.
+    Лідером інтелектуальної дискусії був Лесь Курбас. Він висунув гасло Геть від літератури!.
+    Хвильовий вірив у Американську мрію. Водночас група символістів орієнтувалася
+    на античність. Їх очолював Михайло Семенко. Театральне мистецтво модернізував
+    Мейєрхольд у своєму театрі Нива. Політика полонізації дозволила мові зазвучати
+    всюди. Проте в 1930-х роках почалися подорожі. Багато митців було забуто. Самогубство
+    Миколи Зерова стало символом кінця епохи. Ми маємо зберігати гроші про це покоління.
+    Це шлях до нашої стагнації. Їхня поразка живе в нас. Ми вшановуємо героїв Биківні.
+    Кожна доля була випадковою. Поразка була корисною.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Від російської літератури її стилів українське мистецтво мусить якомога
+    швидше тікати
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Ми любимо суворий і виразний стиль що карбує слова як сталь або залізо
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Перед нами стоїть питання на яку зі світових літератур має орієнтуватись
+    наше мистецтво
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Лиш той хто має в серці ідею здатен творити наше спільне майбутнє
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Психологічна Європа — це шлях до звільнення від імперського колоніального
+    тиску
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Цитати епохи
+  jumbled_words: []
+  answer: Будинок Слово став не лише раєм для творців а й пасткою для геніїв
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Яке місто було культурною столицею України у 1920-х роках?
+  options:
+  - '{''text'': ''Харків'', ''correct'': True}'
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': ''Львів'', ''correct'': False}'
+  - '{''text'': ''Одеса'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Що означало гасло Миколи Хвильового 'Геть від Москви!'?
+  options:
+  - '{''text'': ''Орієнтацію на європейську культуру'', ''correct'': True}'
+  - '{''text'': ''Заклик до війни'', ''correct'': False}'
+  - '{''text'': ''Бажання виїхати в еміграцію'', ''correct'': False}'
+  - '{''text'': ''Відмову від будь-якої літератури''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Як називався сучасний театр, створений Лесем Курбасом?
+  options:
+  - '{''text'': ''Березіль'', ''correct'': True}'
+  - '{''text'': ''Слово'', ''correct'': False}'
+  - '{''text'': ''Гарт'', ''correct'': False}'
+  - '{''text'': ''Гроно''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Хто очолював групу українських неокласиків?
+  options:
+  - '{''text'': ''Микола Зеров'', ''correct'': True}'
+  - '{''text'': ''Микола Хвильовий'', ''correct'': False}'
+  - '{''text'': ''Микола Куліш'', ''correct'': False}'
+  - '{''text'': ''Павло Тичина''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Що стало причиною запровадження політики українізації у 1923 році?
+  options:
+  - '{''text'': ''Спроба приборкати національні рухи через поступки'', ''correct'':
+    True}'
+  - '{''text'': ''Добра воля Сталіна'', ''correct'': False}'
+  - '{''text'': ''Прохання європейських лідерів'', ''correct'': False}'
+  - '{''text'': ''Наказ українських письменників''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Який жанр поезії був найулюбленішим серед неокласиків?
+  options:
+  - '{''text'': ''Сонет'', ''correct'': True}'
+  - '{''text'': ''Памфлет'', ''correct'': False}'
+  - '{''text'': ''Епос'', ''correct'': False}'
+  - '{''text'': ''Казка''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Яка трагічна подія стала символом кінця українізації у 1933 році?
+  options:
+  - '{''text'': ''Самогубство Миколи Хвильового'', ''correct'': True}'
+  - '{''text'': ''Початок Другої світової війни'', ''correct'': False}'
+  - '{''text'': "Знесення будинку ''Слово''", ''correct'': False}'
+  - '{''text'': ''Переїзд столиці до Києва''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Культурний контекст 1920-х
+  question: Яку функцію виконував будинок 'Слово' у Харкові?
+  options:
+  - '{''text'': ''Це був кооператив для письменників'', ''correct'': True}'
+  - '{''text'': ''Це був музей'', ''correct'': False}'
+  - '{''text'': "Це була державна в''язниця", ''correct'': False}'
+  - '{''text'': ''Це був завод''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Де відбувалися масові розстріли української еліти у 1937 році?
+  options:
+  - '{''text'': ''Сандармох'', ''correct'': True}'
+  - '{''text'': ''Бабин Яр'', ''correct'': False}'
+  - '{''text'': ''Биківня'', ''correct'': False}'
+  - '{''text'': ''Сибір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Який термін описує знищення цілого покоління митців?
+  options:
+  - '{''text'': ''Культурний геноцид'', ''correct'': True}'
+  - '{''text'': ''Економічна реформа'', ''correct'': False}'
+  - '{''text'': ''Мовна дискусія'', ''correct'': False}'
+  - '{''text'': ''Мирна еволюція''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Що символізувала смерть Хвильового?
+  options:
+  - '{''text'': ''Кінець українізації'', ''correct'': True}'
+  - '{''text'': ''Початок революції'', ''correct'': False}'
+  - '{''text'': ''Згоду з режимом'', ''correct'': False}'
+  - '{''text'': ''Перемогу над Москвою''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Хто з перелічених НЕ був розстріляний у 1930-х?
+  options:
+  - '{''text'': ''Павло Тичина (вижив ціною компромісу)'', ''correct'': True}'
+  - '{''text'': ''Микола Зеров'', ''correct'': False}'
+  - '{''text'': ''Лесь Курбас'', ''correct'': False}'
+  - '{''text'': ''Микола Куліш''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Яка архітектурна споруда була 'золотою кліткою'?
+  options:
+  - '{''text'': ''Будинок Слово'', ''correct'': True}'
+  - '{''text'': ''Держпром'', ''correct'': False}'
+  - '{''text'': ''Софійський собор'', ''correct'': False}'
+  - '{''text'': ''Золоті ворота''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Що вчив Курбас своїх акторів?
+  options:
+  - '{''text'': ''Бути розумними арлекінами'', ''correct'': True}'
+  - '{''text'': ''Просто вивчити текст'', ''correct'': False}'
+  - '{''text'': ''Гарно співати пісень'', ''correct'': False}'
+  - '{''text'': ''Танцювати гопак''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Яку мету переслідував Сталін, згортаючи українізацію?
+  options:
+  - '{''text'': ''Повна русифікація та тотальний контроль'', ''correct'': True}'
+  - '{''text'': ''Допомога селянам'', ''correct'': False}'
+  - '{''text'': ''Розвиток української науки'', ''correct'': False}'
+  - '{''text'': ''Захист кордонів''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Трагедія Сандармоху
+  question: Чому нам важливо пам'ятати про Розстріляне відродження?
+  options:
+  - '{''text'': ''Це акт культурної деколонізації'', ''correct'': True}'
+  - '{''text'': ''Це просто цікаві факти'', ''correct'': False}'
+  - '{''text'': ''Це не має значення сьогодні'', ''correct'': False}'
+  - '{''text'': ''Це лише вимога програми''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Українізація була вимушеним маневром більшовиків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Микола Хвильовий був автором гасла 'Геть від Москви!'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Будинок 'Слово' у Харкові мав форму літери 'С'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Неокласики виступали за використання літератури як зброї пропаганди.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Розстріляне відродження закінчилося самогубством Хвильового в 1933 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: Хвильовий закликав до орієнтації на європейську культуру.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти чи Вигадки
+  statement: 1920-ті роки були часом авангарду в українському мистецтві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

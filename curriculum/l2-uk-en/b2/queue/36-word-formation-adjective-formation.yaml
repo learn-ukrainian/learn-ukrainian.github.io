@@ -1,15 +1,18 @@
 module: 36-word-formation-adjective-formation
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/36-word-formation-adjective-formation.md
-generated: '2025-12-29T18:16:40.383892'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.390939'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у прикметниках
@@ -576,6 +579,139 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст правильними прикметниками
+  passage_template: '{Український|Україніанський|Українальний|Український} {національний|націяльний|націонний|національний}
+    музей представляє {різноманітну|різноманітьну|різновидну|різноманітну} колекцію
+    мистецтва. У {центральному|центряному|центровому|центральному} залі експонуються
+    роботи {самобутніх|самобутьніх|самобутових|самобутніх} художників.
+
+
+    {Міська|Містова|Місточна|Міська} влада підтримує {культурні|культуральні|культурові|культурні}
+    ініціативи. {Професійні|Професіяні|Професійські|Професійні} мистецтвознавці проводять
+    екскурсії для відвідувачів. {Німецькі|Німечинські|Німеччинські|Німецькі} туристи
+    часто відвідують виставки.
+
+
+    {Сільський|Селовий|Селяний|Сільський} побут представлений у {етнографічному|етнографічнму|етнографовому|етнографічному}
+    відділі. {Синьо-жовті|Синьожовті|Синьо жовті|Синьо-жовті} прапори прикрашають
+    вхід до музею. {Темноволоса|Темно-волоса|Темна-волоса|Темноволоса} екскурсоводка
+    розповідає про {своєрідну|своєрідьну|своєрідову|своєрідну} історію експонатів.
+
+
+    Музей має {комплексний|комплексовий|комплексальний|комплексний} підхід до збереження
+    спадщини. {Системний|Системовий|Системальний|Системний} каталог допомагає знайти
+    потрібну інформацію. {Допоміжні|Допомогові|Допоможні|Допоміжні} матеріали доступні
+    у книгарні.
+
+    '
+  blanks:
+  - answer: Український
+    options:
+    - Український
+    - Україніанський
+    - Українальний
+  - answer: національний
+    options:
+    - національний
+    - націяльний
+    - націонний
+  - answer: різноманітну
+    options:
+    - різноманітну
+    - різноманітьну
+    - різновидну
+  - answer: центральному
+    options:
+    - центральному
+    - центряному
+    - центровому
+  - answer: самобутніх
+    options:
+    - самобутніх
+    - самобутьніх
+    - самобутових
+  - answer: Міська
+    options:
+    - Міська
+    - Містова
+    - Місточна
+  - answer: культурні
+    options:
+    - культурні
+    - культуральні
+    - культурові
+  - answer: Професійні
+    options:
+    - Професійні
+    - Професіяні
+    - Професійські
+  - answer: Німецькі
+    options:
+    - Німецькі
+    - Німечинські
+    - Німеччинські
+  - answer: Сільський
+    options:
+    - Сільський
+    - Селовий
+    - Селяний
+  - answer: етнографічному
+    options:
+    - етнографічному
+    - етнографічнму
+    - етнографовому
+  - answer: Синьо-жовті
+    options:
+    - Синьо-жовті
+    - Синьожовті
+    - Синьо жовті
+  - answer: Темноволоса
+    options:
+    - Темноволоса
+    - Темно-волоса
+    - Темна-волоса
+  - answer: своєрідну
+    options:
+    - своєрідну
+    - своєрідьну
+    - своєрідову
+  - answer: комплексний
+    options:
+    - комплексний
+    - комплексовий
+    - комплексальний
+  - answer: Системний
+    options:
+    - Системний
+    - Системовий
+    - Системальний
+  - answer: Допоміжні
+    options:
+    - Допоміжні
+    - Допомогові
+    - Допоможні
+  blank_count: 17
+  complete_passage: 'Український національний музей представляє різноманітну колекцію
+    мистецтва. У центральному залі експонуються роботи самобутніх художників.
+
+
+    Міська влада підтримує культурні ініціативи. Професійні мистецтвознавці проводять
+    екскурсії для відвідувачів. Німецькі туристи часто відвідують виставки.
+
+
+    Сільський побут представлений у етнографічному відділі. Синьо-жовті прапори прикрашають
+    вхід до музею. Темноволоса екскурсоводка розповідає про своєрідну історію експонатів.
+
+
+    Музей має комплексний підхід до збереження спадщини. Системний каталог допомагає
+    знайти потрібну інформацію. Допоміжні матеріали доступні у книгарні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з прикметниками
   jumbled_words: []
@@ -709,14 +845,10 @@ items:
   question: Який суфікс використано для творення прикметника "український" від іменника
     "Україна"?
   options:
-  - text: -ний
-    correct: false
-  - text: -ський
-    correct: true
-  - text: -альний
-    correct: false
-  - text: -овий
-    correct: false
+  - '{''text'': ''-ний'', ''correct'': False}'
+  - '{''text'': ''-ський'', ''correct'': True}'
+  - '{''text'': ''-альний'', ''correct'': False}'
+  - '{''text'': ''-овий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -728,14 +860,10 @@ items:
   question: Яке чергування приголосних відбувається при творенні прикметника "німецький"
     від "Німеччина"?
   options:
-  - text: ч → ц
-    correct: true
-  - text: к → ц
-    correct: false
-  - text: г → з
-    correct: false
-  - text: Без чергування
-    correct: false
+  - '{''text'': ''ч → ц'', ''correct'': True}'
+  - '{''text'': ''к → ц'', ''correct'': False}'
+  - '{''text'': ''г → з'', ''correct'': False}'
+  - '{''text'': ''Без чергування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -746,14 +874,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який прикметник утворений від іменника "місто" за допомогою суфікса -ський?
   options:
-  - text: містовий
-    correct: false
-  - text: міський
-    correct: true
-  - text: місточний
-    correct: false
-  - text: містяний
-    correct: false
+  - '{''text'': ''містовий'', ''correct'': False}'
+  - '{''text'': ''міський'', ''correct'': True}'
+  - '{''text'': ''місточний'', ''correct'': False}'
+  - '{''text'': ''містяний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -765,14 +889,10 @@ items:
   question: Який суфікс використовується для творення прикметника "національний" від
     "нація"?
   options:
-  - text: -ський
-    correct: false
-  - text: -ний
-    correct: false
-  - text: -альний
-    correct: true
-  - text: -овий
-    correct: false
+  - '{''text'': ''-ський'', ''correct'': False}'
+  - '{''text'': ''-ний'', ''correct'': False}'
+  - '{''text'': ''-альний'', ''correct'': True}'
+  - '{''text'': ''-овий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -783,14 +903,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який тип складного прикметника "синьо-жовтий" — через дефіс чи разом?
   options:
-  - text: Через дефіс, бо позначає два кольори
-    correct: true
-  - text: Разом, бо це одне слово
-    correct: false
-  - text: Окремо, бо це два слова
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Через дефіс, бо позначає два кольори'', ''correct'': True}'
+  - '{''text'': ''Разом, бо це одне слово'', ''correct'': False}'
+  - '{''text'': ''Окремо, бо це два слова'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -801,14 +917,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Як пишеться складний прикметник "темноволосий" — разом чи через дефіс?
   options:
-  - text: Через дефіс (темно-волосий)
-    correct: false
-  - text: Разом (темноволосий)
-    correct: true
-  - text: Окремо (темно волосий)
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Через дефіс (темно-волосий)'', ''correct'': False}'
+  - '{''text'': ''Разом (темноволосий)'', ''correct'': True}'
+  - '{''text'': ''Окремо (темно волосий)'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -819,14 +931,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який прикметник означає "який має властивості системи"?
   options:
-  - text: систематичний
-    correct: false
-  - text: системний
-    correct: true
-  - text: системовий
-    correct: false
-  - text: системальний
-    correct: false
+  - '{''text'': ''систематичний'', ''correct'': False}'
+  - '{''text'': ''системний'', ''correct'': True}'
+  - '{''text'': ''системовий'', ''correct'': False}'
+  - '{''text'': ''системальний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -837,14 +945,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Чим відрізняється "музикальний" від "музичний"?
   options:
-  - text: Значенням
-    correct: false
-  - text: Регістром (стилем)
-    correct: true
-  - text: Частиною мови
-    correct: false
-  - text: Нічим не відрізняється
-    correct: false
+  - '{''text'': ''Значенням'', ''correct'': False}'
+  - '{''text'': ''Регістром (стилем)'', ''correct'': True}'
+  - '{''text'': ''Частиною мови'', ''correct'': False}'
+  - '{''text'': ''Нічим не відрізняється'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -856,14 +960,10 @@ items:
   question: Який суфікс використовується для творення прикметників від географічних
     назв на -к, -г, -х?
   options:
-  - text: -ський
-    correct: false
-  - text: -цький
-    correct: true
-  - text: -ний
-    correct: false
-  - text: -альний
-    correct: false
+  - '{''text'': ''-ський'', ''correct'': False}'
+  - '{''text'': ''-цький'', ''correct'': True}'
+  - '{''text'': ''-ний'', ''correct'': False}'
+  - '{''text'': ''-альний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -874,14 +974,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Як утворюється прикметник "сільський" від іменника "село"?
   options:
-  - text: село + -ський = сельський
-    correct: false
-  - text: село + -ський = сільський (з чергуванням е→і)
-    correct: true
-  - text: село + -ний = сільний
-    correct: false
-  - text: село + -овий = селовий
-    correct: false
+  - '{''text'': ''село + -ський = сельський'', ''correct'': False}'
+  - '{''text'': ''село + -ський = сільський (з чергуванням е→і)'', ''correct'': True}'
+  - '{''text'': ''село + -ний = сільний'', ''correct'': False}'
+  - '{''text'': ''село + -овий = селовий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -892,14 +988,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який складний прикметник означає "який має добре серце"?
   options:
-  - text: добросерцевий
-    correct: false
-  - text: добросердечний
-    correct: true
-  - text: добре-сердечний
-    correct: false
-  - text: добросердний
-    correct: false
+  - '{''text'': ''добросерцевий'', ''correct'': False}'
+  - '{''text'': ''добросердечний'', ''correct'': True}'
+  - '{''text'': ''добре-сердечний'', ''correct'': False}'
+  - '{''text'': ''добросердний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -910,14 +1002,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Як пишеться складний прикметник "науково-публіцистичний"?
   options:
-  - text: Разом (науковопубліцистичний)
-    correct: false
-  - text: Через дефіс (науково-публіцистичний)
-    correct: true
-  - text: Окремо (науково публіцистичний)
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Разом (науковопубліцистичний)'', ''correct'': False}'
+  - '{''text'': ''Через дефіс (науково-публіцистичний)'', ''correct'': True}'
+  - '{''text'': ''Окремо (науково публіцистичний)'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -928,14 +1016,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Що означає прикметник "самобутній"?
   options:
-  - text: Сам побутовий
-    correct: false
-  - text: Оригінальний, унікальний
-    correct: true
-  - text: Сам по собі існуючий
-    correct: false
-  - text: Побутовий
-    correct: false
+  - '{''text'': ''Сам побутовий'', ''correct'': False}'
+  - '{''text'': ''Оригінальний, унікальний'', ''correct'': True}'
+  - '{''text'': ''Сам по собі існуючий'', ''correct'': False}'
+  - '{''text'': ''Побутовий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -946,14 +1030,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який прикметник є антонімом до "первісний"?
   options:
-  - text: кінцевий
-    correct: false
-  - text: вторинний
-    correct: true
-  - text: останній
-    correct: false
-  - text: завершальний
-    correct: false
+  - '{''text'': ''кінцевий'', ''correct'': False}'
+  - '{''text'': ''вторинний'', ''correct'': True}'
+  - '{''text'': ''останній'', ''correct'': False}'
+  - '{''text'': ''завершальний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -964,14 +1044,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Як утворюється прикметник "професійний" від іменника "професія"?
   options:
-  - text: професія + -ний = професіяний
-    correct: false
-  - text: професія + -ний = професійний (з чергуванням)
-    correct: true
-  - text: професія + -альний = професіальний
-    correct: false
-  - text: професія + -ський = професійський
-    correct: false
+  - '{''text'': ''професія + -ний = професіяний'', ''correct'': False}'
+  - '{''text'': ''професія + -ний = професійний (з чергуванням)'', ''correct'': True}'
+  - '{''text'': ''професія + -альний = професіальний'', ''correct'': False}'
+  - '{''text'': ''професія + -ський = професійський'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -982,14 +1058,10 @@ items:
   title: Розпізнавання словотвірних моделей
   question: Який прикметник означає "такий, що охоплює всі аспекти"?
   options:
-  - text: системний
-    correct: false
-  - text: комплексний
-    correct: true
-  - text: складний
-    correct: false
-  - text: повний
-    correct: false
+  - '{''text'': ''системний'', ''correct'': False}'
+  - '{''text'': ''комплексний'', ''correct'': True}'
+  - '{''text'': ''складний'', ''correct'': False}'
+  - '{''text'': ''повний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1000,14 +1072,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який суфікс є найпродуктивнішим для творення прикметників від назв країн?
   options:
-  - text: -ний
-    correct: false
-  - text: -ський/-цький
-    correct: true
-  - text: -альний
-    correct: false
-  - text: -овий
-    correct: false
+  - '{''text'': ''-ний'', ''correct'': False}'
+  - '{''text'': ''-ський/-цький'', ''correct'': True}'
+  - '{''text'': ''-альний'', ''correct'': False}'
+  - '{''text'': ''-овий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1018,14 +1086,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: При творенні якого прикметника відбувається чергування к→ц?
   options:
-  - text: український
-    correct: false
-  - text: німецький
-    correct: false
-  - text: козацький
-    correct: true
-  - text: міський
-    correct: false
+  - '{''text'': ''український'', ''correct'': False}'
+  - '{''text'': ''німецький'', ''correct'': False}'
+  - '{''text'': ''козацький'', ''correct'': True}'
+  - '{''text'': ''міський'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1036,14 +1100,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який принцип визначає написання складного прикметника через дефіс?
   options:
-  - text: Два рівноправні поняття
-    correct: true
-  - text: Ознака + частина тіла
-    correct: false
-  - text: Якість характеру
-    correct: false
-  - text: Будь-які два слова
-    correct: false
+  - '{''text'': ''Два рівноправні поняття'', ''correct'': True}'
+  - '{''text'': ''Ознака + частина тіла'', ''correct'': False}'
+  - '{''text'': ''Якість характеру'', ''correct'': False}'
+  - '{''text'': ''Будь-які два слова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1054,14 +1114,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як пишеться прикметник "білолиций"?
   options:
-  - text: Через дефіс
-    correct: false
-  - text: Разом
-    correct: true
-  - text: Окремо
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Через дефіс'', ''correct'': False}'
+  - '{''text'': ''Разом'', ''correct'': True}'
+  - '{''text'': ''Окремо'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1072,14 +1128,12 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Чим відрізняються "комплексний" і "системний"?
   options:
-  - text: Однакові за значенням
-    correct: false
-  - text: '"Комплексний" — всебічний, "системний" — упорядкований'
-    correct: true
-  - text: '"Системний" — всебічний, "комплексний" — упорядкований'
-    correct: false
-  - text: Різняться лише стилем
-    correct: false
+  - '{''text'': ''Однакові за значенням'', ''correct'': False}'
+  - '{''text'': ''"Комплексний" — всебічний, "системний" — упорядкований'', ''correct'':
+    True}'
+  - '{''text'': ''"Системний" — всебічний, "комплексний" — упорядкований'', ''correct'':
+    False}'
+  - '{''text'': ''Різняться лише стилем'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1090,14 +1144,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прикметник є книжним варіантом?
   options:
-  - text: музичний
-    correct: false
-  - text: музикальний
-    correct: true
-  - text: музиковий
-    correct: false
-  - text: музикований
-    correct: false
+  - '{''text'': ''музичний'', ''correct'': False}'
+  - '{''text'': ''музикальний'', ''correct'': True}'
+  - '{''text'': ''музиковий'', ''correct'': False}'
+  - '{''text'': ''музикований'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1108,14 +1158,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Від якого слова утворений прикметник "самобутній"?
   options:
-  - text: сам + бути
-    correct: true
-  - text: сам + побут
-    correct: false
-  - text: само + бутній
-    correct: false
-  - text: самий + бути
-    correct: false
+  - '{''text'': ''сам + бути'', ''correct'': True}'
+  - '{''text'': ''сам + побут'', ''correct'': False}'
+  - '{''text'': ''само + бутній'', ''correct'': False}'
+  - '{''text'': ''самий + бути'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1126,14 +1172,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Яке чергування відбувається при творенні "сільський" від "село"?
   options:
-  - text: о→і
-    correct: false
-  - text: е→і
-    correct: true
-  - text: е→є
-    correct: false
-  - text: Без чергування
-    correct: false
+  - '{''text'': ''о→і'', ''correct'': False}'
+  - '{''text'': ''е→і'', ''correct'': True}'
+  - '{''text'': ''е→є'', ''correct'': False}'
+  - '{''text'': ''Без чергування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1144,14 +1186,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прикметник означає "початковий, первинний"?
   options:
-  - text: вторинний
-    correct: false
-  - text: первісний
-    correct: true
-  - text: основний
-    correct: false
-  - text: головний
-    correct: false
+  - '{''text'': ''вторинний'', ''correct'': False}'
+  - '{''text'': ''первісний'', ''correct'': True}'
+  - '{''text'': ''основний'', ''correct'': False}'
+  - '{''text'': ''головний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1162,14 +1200,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як пишеться складний прикметник "темно-зелений"?
   options:
-  - text: Разом
-    correct: false
-  - text: Через дефіс
-    correct: true
-  - text: Окремо
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Разом'', ''correct'': False}'
+  - '{''text'': ''Через дефіс'', ''correct'': True}'
+  - '{''text'': ''Окремо'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1180,14 +1214,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який суфікс використовується у прикметнику "професійний"?
   options:
-  - text: -ський
-    correct: false
-  - text: -альний
-    correct: false
-  - text: -ний
-    correct: true
-  - text: -овий
-    correct: false
+  - '{''text'': ''-ський'', ''correct'': False}'
+  - '{''text'': ''-альний'', ''correct'': False}'
+  - '{''text'': ''-ний'', ''correct'': True}'
+  - '{''text'': ''-овий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1198,14 +1228,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прикметник НЕ є складним?
   options:
-  - text: різноманітний
-    correct: false
-  - text: синьо-жовтий
-    correct: false
-  - text: національний
-    correct: true
-  - text: добросердечний
-    correct: false
+  - '{''text'': ''різноманітний'', ''correct'': False}'
+  - '{''text'': ''синьо-жовтий'', ''correct'': False}'
+  - '{''text'': ''національний'', ''correct'': True}'
+  - '{''text'': ''добросердечний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1216,14 +1242,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як правильно утворити прикметник від "Львів"?
   options:
-  - text: львовий
-    correct: false
-  - text: львівський
-    correct: true
-  - text: львівний
-    correct: false
-  - text: львівальний
-    correct: false
+  - '{''text'': ''львовий'', ''correct'': False}'
+  - '{''text'': ''львівський'', ''correct'': True}'
+  - '{''text'': ''львівний'', ''correct'': False}'
+  - '{''text'': ''львівальний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1234,14 +1256,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прикметник означає "особливий, відмінний від інших"?
   options:
-  - text: самобутній
-    correct: false
-  - text: своєрідний
-    correct: true
-  - text: різноманітний
-    correct: false
-  - text: комплексний
-    correct: false
+  - '{''text'': ''самобутній'', ''correct'': False}'
+  - '{''text'': ''своєрідний'', ''correct'': True}'
+  - '{''text'': ''різноманітний'', ''correct'': False}'
+  - '{''text'': ''комплексний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1252,14 +1270,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Як пишеться прикметник "історико-культурний"?
   options:
-  - text: Разом
-    correct: false
-  - text: Через дефіс
-    correct: true
-  - text: Окремо
-    correct: false
-  - text: Залежить від контексту
-    correct: false
+  - '{''text'': ''Разом'', ''correct'': False}'
+  - '{''text'': ''Через дефіс'', ''correct'': True}'
+  - '{''text'': ''Окремо'', ''correct'': False}'
+  - '{''text'': ''Залежить від контексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1270,14 +1284,10 @@ items:
   title: Комплексна перевірка знань зі словотворення
   question: Який прикметник є антонімом до "основний"?
   options:
-  - text: головний
-    correct: false
-  - text: допоміжний
-    correct: true
-  - text: центральний
-    correct: false
-  - text: системний
-    correct: false
+  - '{''text'': ''головний'', ''correct'': False}'
+  - '{''text'': ''допоміжний'', ''correct'': True}'
+  - '{''text'': ''центральний'', ''correct'': False}'
+  - '{''text'': ''системний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

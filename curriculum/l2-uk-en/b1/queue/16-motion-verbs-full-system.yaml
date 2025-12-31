@@ -1,15 +1,18 @@
 module: 16-motion-verbs-full-system
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/16-motion-verbs-full-system.md
-generated: '2025-12-29T00:21:59.594934'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.696371'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 7
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 14
   true-false: 14
-item_count: 57
+total_items: 58
+item_count: 58
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -263,6 +266,115 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Дієслова руху в контексті
+  passage_template: 'Минулого літа ми з родиною {їздили|їхали|їдемо|поїхали} до Карпат
+    на відпочинок. Ми {їхали|їздили|їдемо|поїхали} на машині цілий день і нарешті
+    {приїхали|приїздили|їхали|поїдемо} до готелю ввечері. Наступного ранку ми {пішли|ходили|йдемо|підемо}
+    на екскурсію в гори. Гід {вів|водив|веде|буде вести} нас крутою стежкою вгору.
+    По дорозі ми бачили, як місцеві чабани {ганяють|женуть|гнали|ганяли} овець на
+    полонини — вони {ганяють|женуть|гнали|ганяли} їх щодня влітку. Один чабан якраз
+    {гнав|ганяв|жене|буде гнати} велику отару в нашому напрямку.
+
+    Ми {йшли|ходили|іду|підемо} годину і зустріли туристів, які {лізли|лазили|лізуть|будуть
+    лізти} на високу скелю. Наш гід сказав, що вони часто {лазять|лізуть|лізли|будуть
+    лазити} тут і знають усі маршрути. Раптом ми побачили орла, який {летів|літав|летить|буде
+    летіти} над нами. Гід пояснив, що орли {літають|летять|літали|будуть літати} тут
+    цілий рік і {носять|несуть|носили|будуть носити} їжу своїм пташенятам у гніздо
+    на скелях. Один орел зараз {несе|носить|ніс|буде нести} здобич у пазурах — ймовірно,
+    для маленьких пташенят.'
+  blanks:
+  - answer: поїхали
+    options:
+    - їздили
+    - їхали
+    - їдемо
+  - answer: поїхали
+    options:
+    - їхали
+    - їздили
+    - їдемо
+  - answer: поїдемо
+    options:
+    - приїхали
+    - приїздили
+    - їхали
+  - answer: підемо
+    options:
+    - пішли
+    - ходили
+    - йдемо
+  - answer: буде вести
+    options:
+    - вів
+    - водив
+    - веде
+  - answer: ганяли
+    options:
+    - ганяють
+    - женуть
+    - гнали
+  - answer: ганяли
+    options:
+    - ганяють
+    - женуть
+    - гнали
+  - answer: буде гнати
+    options:
+    - гнав
+    - ганяв
+    - жене
+  - answer: підемо
+    options:
+    - йшли
+    - ходили
+    - іду
+  - answer: будуть лізти
+    options:
+    - лізли
+    - лазили
+    - лізуть
+  - answer: будуть лазити
+    options:
+    - лазять
+    - лізуть
+    - лізли
+  - answer: буде летіти
+    options:
+    - летів
+    - літав
+    - летить
+  - answer: будуть літати
+    options:
+    - літають
+    - летять
+    - літали
+  - answer: будуть носити
+    options:
+    - носять
+    - несуть
+    - носили
+  - answer: буде нести
+    options:
+    - несе
+    - носить
+    - ніс
+  blank_count: 15
+  complete_passage: 'Минулого літа ми з родиною поїхали до Карпат на відпочинок. Ми
+    поїхали на машині цілий день і нарешті поїдемо до готелю ввечері. Наступного ранку
+    ми підемо на екскурсію в гори. Гід буде вести нас крутою стежкою вгору. По дорозі
+    ми бачили, як місцеві чабани ганяли овець на полонини — вони ганяли їх щодня влітку.
+    Один чабан якраз буде гнати велику отару в нашому напрямку.
+
+    Ми підемо годину і зустріли туристів, які будуть лізти на високу скелю. Наш гід
+    сказав, що вони часто будуть лазити тут і знають усі маршрути. Раптом ми побачили
+    орла, який буде летіти над нами. Гід пояснив, що орли будуть літати тут цілий
+    рік і будуть носити їжу своїм пташенятам у гніздо на скелях. Один орел зараз буде
+    нести здобич у пазурах — ймовірно, для маленьких пташенят.'
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Розставте слова в правильному порядку
   jumbled_words: []
@@ -340,14 +452,10 @@ items:
   question: Яке з наведених нижче дієслів виражає конкретний рух у одному напрямку,
     що відбувається зараз або планується?
   options:
-  - text: іти
-    correct: true
-  - text: ходити
-    correct: false
-  - text: йшов
-    correct: false
-  - text: ходив
-    correct: false
+  - '{''text'': ''іти'', ''correct'': True}'
+  - '{''text'': ''ходити'', ''correct'': False}'
+  - '{''text'': ''йшов'', ''correct'': False}'
+  - '{''text'': ''ходив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -359,14 +467,10 @@ items:
   question: 'Яке дієслово правильно завершує речення: "Я **___** до університету щодня",
     враховуючи регулярність дії?'
   options:
-  - text: іду
-    correct: false
-  - text: ходжу
-    correct: true
-  - text: йшов
-    correct: false
-  - text: піду
-    correct: false
+  - '{''text'': ''іду'', ''correct'': False}'
+  - '{''text'': ''ходжу'', ''correct'': True}'
+  - '{''text'': ''йшов'', ''correct'': False}'
+  - '{''text'': ''піду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -378,14 +482,10 @@ items:
   question: Яке з цих дієслів описує рух транспортом у конкретному напрямку або в
     конкретний час?
   options:
-  - text: їхати
-    correct: true
-  - text: їздити
-    correct: false
-  - text: їхав
-    correct: false
-  - text: їздив
-    correct: false
+  - '{''text'': ''їхати'', ''correct'': True}'
+  - '{''text'': ''їздити'', ''correct'': False}'
+  - '{''text'': ''їхав'', ''correct'': False}'
+  - '{''text'': ''їздив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -397,14 +497,10 @@ items:
   question: 'Яке дієслово правильно доповнює речення: "Літак **___** до Парижа зараз",
     де підкреслюється конкретний напрямок польоту?'
   options:
-  - text: летить
-    correct: true
-  - text: літає
-    correct: false
-  - text: літав
-    correct: false
-  - text: буде літати
-    correct: false
+  - '{''text'': ''летить'', ''correct'': True}'
+  - '{''text'': ''літає'', ''correct'': False}'
+  - '{''text'': ''літав'', ''correct'': False}'
+  - '{''text'': ''буде літати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -416,14 +512,10 @@ items:
   question: Яке з наведених дієслів означає регулярне плавання або загальну здатність
     плавати, без акценту на конкретний напрямок?
   options:
-  - text: плисти
-    correct: false
-  - text: плавати
-    correct: true
-  - text: плив
-    correct: false
-  - text: буде плисти
-    correct: false
+  - '{''text'': ''плисти'', ''correct'': False}'
+  - '{''text'': ''плавати'', ''correct'': True}'
+  - '{''text'': ''плив'', ''correct'': False}'
+  - '{''text'': ''буде плисти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -435,14 +527,10 @@ items:
   question: Яке дієслово використовується для опису перенесення ноші пішки в конкретному
     напрямку зараз або в минулому?
   options:
-  - text: нести
-    correct: true
-  - text: носити
-    correct: false
-  - text: ніс
-    correct: false
-  - text: носив
-    correct: false
+  - '{''text'': ''нести'', ''correct'': True}'
+  - '{''text'': ''носити'', ''correct'': False}'
+  - '{''text'': ''ніс'', ''correct'': False}'
+  - '{''text'': ''носив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -454,14 +542,10 @@ items:
   question: 'Яке дієслово правильно завершує речення: "Він **___** товари на вантажівці
     щодня", враховуючи регулярність і транспорт?'
   options:
-  - text: везе
-    correct: false
-  - text: возить
-    correct: true
-  - text: віз
-    correct: false
-  - text: буде везти
-    correct: false
+  - '{''text'': ''везе'', ''correct'': False}'
+  - '{''text'': ''возить'', ''correct'': True}'
+  - '{''text'': ''віз'', ''correct'': False}'
+  - '{''text'': ''буде везти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -473,14 +557,10 @@ items:
   question: Яке з цих дієслів описує процес ведення когось або чогось у конкретному
     напрямку зараз або в минулому?
   options:
-  - text: вести
-    correct: true
-  - text: водити
-    correct: false
-  - text: вів
-    correct: false
-  - text: водив
-    correct: false
+  - '{''text'': ''вести'', ''correct'': True}'
+  - '{''text'': ''водити'', ''correct'': False}'
+  - '{''text'': ''вів'', ''correct'': False}'
+  - '{''text'': ''водив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -492,14 +572,10 @@ items:
   question: Яке дієслово використовується для опису регулярного підніматися або здатності
     лазити по деревах чи горах?
   options:
-  - text: лізти
-    correct: false
-  - text: лазити
-    correct: true
-  - text: ліз
-    correct: false
-  - text: буде лізти
-    correct: false
+  - '{''text'': ''лізти'', ''correct'': False}'
+  - '{''text'': ''лазити'', ''correct'': True}'
+  - '{''text'': ''ліз'', ''correct'': False}'
+  - '{''text'': ''буде лізти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -511,14 +587,10 @@ items:
   question: 'Яке дієслово правильно доповнює речення: "Черепаха **___** до води зараз",
     де підкреслюється конкретний рух зараз?'
   options:
-  - text: повзе
-    correct: true
-  - text: повзає
-    correct: false
-  - text: повз
-    correct: false
-  - text: буде повзати
-    correct: false
+  - '{''text'': ''повзе'', ''correct'': True}'
+  - '{''text'': ''повзає'', ''correct'': False}'
+  - '{''text'': ''повз'', ''correct'': False}'
+  - '{''text'': ''буде повзати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -530,14 +602,10 @@ items:
   question: Яке з наведених дієслів означає тягнути важкий предмет у конкретному напрямку
     в певний момент часу?
   options:
-  - text: тягти
-    correct: true
-  - text: тягати
-    correct: false
-  - text: тяг
-    correct: false
-  - text: буде тягати
-    correct: false
+  - '{''text'': ''тягти'', ''correct'': True}'
+  - '{''text'': ''тягати'', ''correct'': False}'
+  - '{''text'': ''тяг'', ''correct'': False}'
+  - '{''text'': ''буде тягати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -549,14 +617,10 @@ items:
   question: Яке дієслово використовується для опису регулярного переслідування або
     звички ганяти тварин чи м'яч?
   options:
-  - text: гнати
-    correct: false
-  - text: ганяти
-    correct: true
-  - text: гнав
-    correct: false
-  - text: буде гнати
-    correct: false
+  - '{''text'': ''гнати'', ''correct'': False}'
+  - '{''text'': ''ганяти'', ''correct'': True}'
+  - '{''text'': ''гнав'', ''correct'': False}'
+  - '{''text'': ''буде гнати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -568,14 +632,10 @@ items:
   question: 'Яке дієслово правильно завершує речення: "Вона зараз **___** дитину до
     школи", підкреслюючи конкретну дію в цей момент?'
   options:
-  - text: веде
-    correct: true
-  - text: водить
-    correct: false
-  - text: вела
-    correct: false
-  - text: буде водити
-    correct: false
+  - '{''text'': ''веде'', ''correct'': True}'
+  - '{''text'': ''водить'', ''correct'': False}'
+  - '{''text'': ''вела'', ''correct'': False}'
+  - '{''text'': ''буде водити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -587,14 +647,10 @@ items:
   question: Яке з цих дієслів описує регулярний біг або звичку бігати щодня чи кілька
     разів на тиждень?
   options:
-  - text: бігти
-    correct: false
-  - text: бігати
-    correct: true
-  - text: біг
-    correct: false
-  - text: буде бігти
-    correct: false
+  - '{''text'': ''бігти'', ''correct'': False}'
+  - '{''text'': ''бігати'', ''correct'': True}'
+  - '{''text'': ''біг'', ''correct'': False}'
+  - '{''text'': ''буде бігти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

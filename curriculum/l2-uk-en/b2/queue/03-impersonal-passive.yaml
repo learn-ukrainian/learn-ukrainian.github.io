@@ -1,15 +1,18 @@
 module: 03-impersonal-passive
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/03-impersonal-passive.md
-generated: '2025-12-29T21:25:18.667324'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.706178'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 32
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 128
+total_items: 129
+item_count: 129
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення відмінкових помилок
@@ -872,6 +875,142 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Офіційне повідомлення
+  passage_template: 'Сьогодні {проведено|провели|проводять|проведено} чергове засідання
+    кабінету міністрів. На засіданні {розглянуто|розглянули|розглядають|розглянуто}
+    питання економічного розвитку. {Заслухано|Заслухали|Заслухають|Заслухано} доповідь
+    міністра фінансів.
+
+
+    За результатами обговорення {прийнято|прийняли|приймають|прийнято} рішення про
+    збільшення фінансування. {Затверджено|Затвердили|Затверджують|Затверджено} програму
+    підтримки малого бізнесу. {Визначено|Визначили|Визначають|Визначено} пріоритетні
+    напрямки інвестицій.
+
+
+    Також {схвалено|схвалили|схвалюють|схвалено} проєкт нового закону про підприємництво.
+    {Направлено|Направили|Направляють|Направлено} його до парламенту на розгляд. {Встановлено|Встановили|Встановлюють|Встановлено}
+    термін голосування.
+
+
+    Крім того, {оголошено|оголосили|оголошують|оголошено} про початок нової реформи.
+    {Розпочато|Розпочали|Розпочинають|Розпочато} підготовку відповідних документів.
+    {Забезпечено|Забезпечили|Забезпечують|Забезпечено} фінансування першого етапу.
+
+
+    {Відхилено|Відхилили|Відхиляють|Відхилено} пропозицію про перенесення засідання.
+    {Продовжено|Продовжили|Продовжують|Продовжено} термін подання звітів. Засідання
+    {завершено|завершили|завершують|завершено} о 18:00. {Зафіксовано|Зафіксували|Фіксують|Зафіксовано}
+    усі прийняті рішення у протоколі.
+
+    '
+  blanks:
+  - answer: проведено
+    options:
+    - проведено
+    - провели
+    - проводять
+  - answer: розглянуто
+    options:
+    - розглянуто
+    - розглянули
+    - розглядають
+  - answer: Заслухано
+    options:
+    - Заслухано
+    - Заслухали
+    - Заслухають
+  - answer: прийнято
+    options:
+    - прийнято
+    - прийняли
+    - приймають
+  - answer: Затверджено
+    options:
+    - Затверджено
+    - Затвердили
+    - Затверджують
+  - answer: Визначено
+    options:
+    - Визначено
+    - Визначили
+    - Визначають
+  - answer: схвалено
+    options:
+    - схвалено
+    - схвалили
+    - схвалюють
+  - answer: Направлено
+    options:
+    - Направлено
+    - Направили
+    - Направляють
+  - answer: Встановлено
+    options:
+    - Встановлено
+    - Встановили
+    - Встановлюють
+  - answer: оголошено
+    options:
+    - оголошено
+    - оголосили
+    - оголошують
+  - answer: Розпочато
+    options:
+    - Розпочато
+    - Розпочали
+    - Розпочинають
+  - answer: Забезпечено
+    options:
+    - Забезпечено
+    - Забезпечили
+    - Забезпечують
+  - answer: Відхилено
+    options:
+    - Відхилено
+    - Відхилили
+    - Відхиляють
+  - answer: Продовжено
+    options:
+    - Продовжено
+    - Продовжили
+    - Продовжують
+  - answer: завершено
+    options:
+    - завершено
+    - завершили
+    - завершують
+  - answer: Зафіксовано
+    options:
+    - Зафіксовано
+    - Зафіксували
+    - Фіксують
+  blank_count: 16
+  complete_passage: 'Сьогодні проведено чергове засідання кабінету міністрів. На засіданні
+    розглянуто питання економічного розвитку. Заслухано доповідь міністра фінансів.
+
+
+    За результатами обговорення прийнято рішення про збільшення фінансування. Затверджено
+    програму підтримки малого бізнесу. Визначено пріоритетні напрямки інвестицій.
+
+
+    Також схвалено проєкт нового закону про підприємництво. Направлено його до парламенту
+    на розгляд. Встановлено термін голосування.
+
+
+    Крім того, оголошено про початок нової реформи. Розпочато підготовку відповідних
+    документів. Забезпечено фінансування першого етапу.
+
+
+    Відхилено пропозицію про перенесення засідання. Продовжено термін подання звітів.
+    Засідання завершено о 18:00. Зафіксовано усі прийняті рішення у протоколі.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Побудова речень з -но/-то
   jumbled_words: []
@@ -1005,14 +1144,10 @@ items:
   question: Яка форма дієслова типова для офіційно-ділового стилю української мови
     та вказує на завершену дію без вказівки на виконавця?
   options:
-  - text: форма -но/-то
-    correct: true
-  - text: форма -ся
-    correct: false
-  - text: активний стан
-    correct: false
-  - text: умовний спосіб
-    correct: false
+  - '{''text'': ''форма -но/-то'', ''correct'': True}'
+  - '{''text'': ''форма -ся'', ''correct'': False}'
+  - '{''text'': ''активний стан'', ''correct'': False}'
+  - '{''text'': ''умовний спосіб'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1024,14 +1159,10 @@ items:
   question: У реченні "Рішення прийнято" в якому відмінку стоїть слово "рішення" і
     чому це важливо для розуміння конструкції?
   options:
-  - text: знахідний відмінок
-    correct: true
-  - text: називний відмінок
-    correct: false
-  - text: родовий відмінок
-    correct: false
-  - text: орудний відмінок
-    correct: false
+  - '{''text'': ''знахідний відмінок'', ''correct'': True}'
+  - '{''text'': ''називний відмінок'', ''correct'': False}'
+  - '{''text'': ''родовий відмінок'', ''correct'': False}'
+  - '{''text'': ''орудний відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1043,14 +1174,10 @@ items:
   question: Яка головна відмінність конструкції "Книгу написано" від "Книга написана"
     з точки зору граматичної структури речення?
   options:
-  - text: відсутність узгодження у -но/-то
-    correct: true
-  - text: різний час дієслова
-    correct: false
-  - text: різний вид дієслова
-    correct: false
-  - text: наявність підмета
-    correct: false
+  - '{''text'': ''відсутність узгодження у -но/-то'', ''correct'': True}'
+  - '{''text'': ''різний час дієслова'', ''correct'': False}'
+  - '{''text'': ''різний вид дієслова'', ''correct'': False}'
+  - '{''text'': ''наявність підмета'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1062,14 +1189,10 @@ items:
   question: Чому форми -но/-то вважаються безособовими конструкціями і який ефект
     це створює в офіційних документах?
   options:
-  - text: вони не вказують на виконавця дії
-    correct: true
-  - text: вони не мають часу
-    correct: false
-  - text: вони не мають виду
-    correct: false
-  - text: вони не потребують об'єкта
-    correct: false
+  - '{''text'': ''вони не вказують на виконавця дії'', ''correct'': True}'
+  - '{''text'': ''вони не мають часу'', ''correct'': False}'
+  - '{''text'': ''вони не мають виду'', ''correct'': False}'
+  - '{''text'': "вони не потребують об''єкта", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1081,14 +1204,10 @@ items:
   question: Від якої форми дієслова утворюються конструкції -но/-то і який морфологічний
     процес при цьому відбувається?
   options:
-  - text: від пасивного дієприкметника
-    correct: true
-  - text: від інфінітива
-    correct: false
-  - text: від теперішнього часу
-    correct: false
-  - text: від майбутнього часу
-    correct: false
+  - '{''text'': ''від пасивного дієприкметника'', ''correct'': True}'
+  - '{''text'': ''від інфінітива'', ''correct'': False}'
+  - '{''text'': ''від теперішнього часу'', ''correct'': False}'
+  - '{''text'': ''від майбутнього часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1100,14 +1219,10 @@ items:
   question: Яка конструкція є правильною з точки зору норм української мови та офіційно-ділового
     стилю?
   options:
-  - text: Заяву подано.
-    correct: true
-  - text: Заява подано.
-    correct: false
-  - text: Заява подана.
-    correct: false
-  - text: Заяву подану.
-    correct: false
+  - '{''text'': ''Заяву подано.'', ''correct'': True}'
+  - '{''text'': ''Заява подано.'', ''correct'': False}'
+  - '{''text'': ''Заява подана.'', ''correct'': False}'
+  - '{''text'': ''Заяву подану.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1119,14 +1234,10 @@ items:
   question: В якому контексті використання форм -но/-то буде найбільш доречним та
     відповідатиме стилістичним нормам?
   options:
-  - text: в офіційних документах
-    correct: true
-  - text: у розмові з другом
-    correct: false
-  - text: у художній літературі
-    correct: false
-  - text: у приватному листуванні
-    correct: false
+  - '{''text'': ''в офіційних документах'', ''correct'': True}'
+  - '{''text'': ''у розмові з другом'', ''correct'': False}'
+  - '{''text'': ''у художній літературі'', ''correct'': False}'
+  - '{''text'': ''у приватному листуванні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1138,14 +1249,10 @@ items:
   question: Яка трансформація відбувається при переході від речення "Депутати прийняли
     закон" до "Закон прийнято"?
   options:
-  - text: активний стан → безособовий пасив
-    correct: true
-  - text: минулий час → теперішній час
-    correct: false
-  - text: доконаний вид → недоконаний вид
-    correct: false
-  - text: однина → множина
-    correct: false
+  - '{''text'': ''активний стан → безособовий пасив'', ''correct'': True}'
+  - '{''text'': ''минулий час → теперішній час'', ''correct'': False}'
+  - '{''text'': ''доконаний вид → недоконаний вид'', ''correct'': False}'
+  - '{''text'': ''однина → множина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1157,14 +1264,10 @@ items:
   question: Чому речення "Мені налито чаю" звучить неприродно в побутовому мовленні
     і яка альтернатива була б доречнішою?
   options:
-  - text: форми -но/-то не вживаються в розмовному стилі
-    correct: true
-  - text: неправильний відмінок
-    correct: false
-  - text: неправильний вид дієслова
-    correct: false
-  - text: неправильний час дієслова
-    correct: false
+  - '{''text'': ''форми -но/-то не вживаються в розмовному стилі'', ''correct'': True}'
+  - '{''text'': ''неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''неправильний вид дієслова'', ''correct'': False}'
+  - '{''text'': ''неправильний час дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1176,14 +1279,10 @@ items:
   question: Яка особливість форм -но/-то робить їх зручними для офіційних оголошень
     та повідомлень у засобах масової інформації?
   options:
-  - text: лаконічність та об'єктивність
-    correct: true
-  - text: емоційність
-    correct: false
-  - text: експресивність
-    correct: false
-  - text: розмовність
-    correct: false
+  - '{''text'': "лаконічність та об''єктивність", ''correct'': True}'
+  - '{''text'': ''емоційність'', ''correct'': False}'
+  - '{''text'': ''експресивність'', ''correct'': False}'
+  - '{''text'': ''розмовність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1195,14 +1294,10 @@ items:
   question: Як правильно утворити форму -но від дієприкметника "затверджений" і в
     якому реченні вона буде вжита правильно?
   options:
-  - text: затверджено
-    correct: true
-  - text: затвердженно
-    correct: false
-  - text: затверджувано
-    correct: false
-  - text: затверджуємо
-    correct: false
+  - '{''text'': ''затверджено'', ''correct'': True}'
+  - '{''text'': ''затвердженно'', ''correct'': False}'
+  - '{''text'': ''затверджувано'', ''correct'': False}'
+  - '{''text'': ''затверджуємо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1214,14 +1309,10 @@ items:
   question: Яке речення демонструє правильне вживання форми -то, утвореної від дієприкметника
     на -тий?
   options:
-  - text: Засідання відкрито.
-    correct: true
-  - text: Засідання відкритий.
-    correct: false
-  - text: Засідання відкривано.
-    correct: false
-  - text: Засідання відкрий.
-    correct: false
+  - '{''text'': ''Засідання відкрито.'', ''correct'': True}'
+  - '{''text'': ''Засідання відкритий.'', ''correct'': False}'
+  - '{''text'': ''Засідання відкривано.'', ''correct'': False}'
+  - '{''text'': ''Засідання відкрий.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1233,14 +1324,10 @@ items:
   question: Чому в офіційних документах агент дії зазвичай не вказується при використанні
     форм -но/-то?
   options:
-  - text: для створення ефекту об'єктивності
-    correct: true
-  - text: тому що агент невідомий
-    correct: false
-  - text: тому що агент неважливий
-    correct: false
-  - text: тому що це граматично неможливо
-    correct: false
+  - '{''text'': "для створення ефекту об''єктивності", ''correct'': True}'
+  - '{''text'': ''тому що агент невідомий'', ''correct'': False}'
+  - '{''text'': ''тому що агент неважливий'', ''correct'': False}'
+  - '{''text'': ''тому що це граматично неможливо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1252,14 +1339,10 @@ items:
   question: Яка стилістична різниця між реченнями "Рішення прийнято" та "Рішення прийняте
     комітетом"?
   options:
-  - text: перше — безособове, друге — з дієприкметником
-    correct: true
-  - text: різний час дієслова
-    correct: false
-  - text: різний вид дієслова
-    correct: false
-  - text: різний регістр
-    correct: false
+  - '{''text'': ''перше — безособове, друге — з дієприкметником'', ''correct'': True}'
+  - '{''text'': ''різний час дієслова'', ''correct'': False}'
+  - '{''text'': ''різний вид дієслова'', ''correct'': False}'
+  - '{''text'': ''різний регістр'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1271,14 +1354,10 @@ items:
   question: У яких типах текстів форми -но/-то зустрічаються найчастіше згідно з даними
     корпусу української мови?
   options:
-  - text: законодавчі акти та офіційні документи
-    correct: true
-  - text: художня література
-    correct: false
-  - text: усне мовлення
-    correct: false
-  - text: особисте листування
-    correct: false
+  - '{''text'': ''законодавчі акти та офіційні документи'', ''correct'': True}'
+  - '{''text'': ''художня література'', ''correct'': False}'
+  - '{''text'': ''усне мовлення'', ''correct'': False}'
+  - '{''text'': ''особисте листування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1290,14 +1369,10 @@ items:
   question: Яка форма пасиву більш типова для розмовного українського мовлення, коли
     ми хочемо сказати, що хтось щось зробив?
   options:
-  - text: 3-я особа множини
-    correct: true
-  - text: форма -но/-то
-    correct: false
-  - text: дієприкметник
-    correct: false
-  - text: зворотний пасив -ся
-    correct: false
+  - '{''text'': ''3-я особа множини'', ''correct'': True}'
+  - '{''text'': ''форма -но/-то'', ''correct'': False}'
+  - '{''text'': ''дієприкметник'', ''correct'': False}'
+  - '{''text'': ''зворотний пасив -ся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1309,14 +1384,10 @@ items:
   question: Який з чотирьох пасивних станів типовий для офіційно-ділових документів
     та оголошень?
   options:
-  - text: форма -но/-то
-    correct: true
-  - text: зворотний пасив -ся
-    correct: false
-  - text: 3-я особа множини
-    correct: false
-  - text: пасивний дієприкметник
-    correct: false
+  - '{''text'': ''форма -но/-то'', ''correct'': True}'
+  - '{''text'': ''зворотний пасив -ся'', ''correct'': False}'
+  - '{''text'': ''3-я особа множини'', ''correct'': False}'
+  - '{''text'': ''пасивний дієприкметник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1327,14 +1398,10 @@ items:
   title: Повторення (М01-М02)
   question: Яка форма пасиву типова для наукових текстів та опису процесів?
   options:
-  - text: зворотний пасив -ся
-    correct: true
-  - text: форма -но/-то
-    correct: false
-  - text: 3-я особа множини
-    correct: false
-  - text: активний стан
-    correct: false
+  - '{''text'': ''зворотний пасив -ся'', ''correct'': True}'
+  - '{''text'': ''форма -но/-то'', ''correct'': False}'
+  - '{''text'': ''3-я особа множини'', ''correct'': False}'
+  - '{''text'': ''активний стан'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1345,14 +1412,10 @@ items:
   title: Повторення (М01-М02)
   question: Від якої частини мови утворюються пасивні дієприкметники -ний/-тий?
   options:
-  - text: від дієслова
-    correct: true
-  - text: від іменника
-    correct: false
-  - text: від прикметника
-    correct: false
-  - text: від прислівника
-    correct: false
+  - '{''text'': ''від дієслова'', ''correct'': True}'
+  - '{''text'': ''від іменника'', ''correct'': False}'
+  - '{''text'': ''від прикметника'', ''correct'': False}'
+  - '{''text'': ''від прислівника'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1363,14 +1426,10 @@ items:
   title: Повторення (М01-М02)
   question: Яке закінчення мають пасивні дієприкметники чоловічого роду?
   options:
-  - text: -ний або -тий
-    correct: true
-  - text: -на або -та
-    correct: false
-  - text: -не або -те
-    correct: false
-  - text: -ні або -ті
-    correct: false
+  - '{''text'': ''-ний або -тий'', ''correct'': True}'
+  - '{''text'': ''-на або -та'', ''correct'': False}'
+  - '{''text'': ''-не або -те'', ''correct'': False}'
+  - '{''text'': ''-ні або -ті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1381,14 +1440,10 @@ items:
   title: Повторення (М01-М02)
   question: Чим відрізняється "Книга написана" від "Книгу написано" структурно?
   options:
-  - text: відмінком підмета/об'єкта
-    correct: true
-  - text: часом дієслова
-    correct: false
-  - text: видом дієслова
-    correct: false
-  - text: способом дієслова
-    correct: false
+  - '{''text'': "відмінком підмета/об''єкта", ''correct'': True}'
+  - '{''text'': ''часом дієслова'', ''correct'': False}'
+  - '{''text'': ''видом дієслова'', ''correct'': False}'
+  - '{''text'': ''способом дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1399,14 +1454,10 @@ items:
   title: Повторення (М01-М02)
   question: Яка форма пасиву найпоширеніша в усному розмовному мовленні?
   options:
-  - text: 3-я особа множини
-    correct: true
-  - text: форма -но/-то
-    correct: false
-  - text: пасивний дієприкметник
-    correct: false
-  - text: зворотний пасив -ся
-    correct: false
+  - '{''text'': ''3-я особа множини'', ''correct'': True}'
+  - '{''text'': ''форма -но/-то'', ''correct'': False}'
+  - '{''text'': ''пасивний дієприкметник'', ''correct'': False}'
+  - '{''text'': ''зворотний пасив -ся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1417,14 +1468,10 @@ items:
   title: Повторення (М01-М02)
   question: З яким відмінком узгоджується пасивний дієприкметник у функції присудка?
   options:
-  - text: з називним
-    correct: true
-  - text: зі знахідним
-    correct: false
-  - text: з родовим
-    correct: false
-  - text: з орудним
-    correct: false
+  - '{''text'': ''з називним'', ''correct'': True}'
+  - '{''text'': ''зі знахідним'', ''correct'': False}'
+  - '{''text'': ''з родовим'', ''correct'': False}'
+  - '{''text'': ''з орудним'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1436,14 +1483,10 @@ items:
   question: Яку функцію виконують пасивні дієприкметники в реченні типу "Написана
     книга цікава"?
   options:
-  - text: означення
-    correct: true
-  - text: присудок
-    correct: false
-  - text: підмет
-    correct: false
-  - text: додаток
-    correct: false
+  - '{''text'': ''означення'', ''correct'': True}'
+  - '{''text'': ''присудок'', ''correct'': False}'
+  - '{''text'': ''підмет'', ''correct'': False}'
+  - '{''text'': ''додаток'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1455,14 +1498,10 @@ items:
   question: Який стиль характеризується частим використанням пасивних конструкцій
     в українській мові?
   options:
-  - text: офіційно-діловий
-    correct: true
-  - text: розмовний
-    correct: false
-  - text: художній
-    correct: false
-  - text: публіцистичний
-    correct: false
+  - '{''text'': ''офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''розмовний'', ''correct'': False}'
+  - '{''text'': ''художній'', ''correct'': False}'
+  - '{''text'': ''публіцистичний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1473,14 +1512,10 @@ items:
   title: Повторення (М01-М02)
   question: Як виражається агент дії при пасивному дієприкметнику?
   options:
-  - text: орудним відмінком
-    correct: true
-  - text: знахідним відмінком
-    correct: false
-  - text: родовим відмінком
-    correct: false
-  - text: давальним відмінком
-    correct: false
+  - '{''text'': ''орудним відмінком'', ''correct'': True}'
+  - '{''text'': ''знахідним відмінком'', ''correct'': False}'
+  - '{''text'': ''родовим відмінком'', ''correct'': False}'
+  - '{''text'': ''давальним відмінком'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1491,14 +1526,10 @@ items:
   title: Повторення (М01-М02)
   question: Чотири форми українського пасиву відрізняються переважно за яким параметром?
   options:
-  - text: регістром вживання
-    correct: true
-  - text: часом дії
-    correct: false
-  - text: видом дієслова
-    correct: false
-  - text: родом іменника
-    correct: false
+  - '{''text'': ''регістром вживання'', ''correct'': True}'
+  - '{''text'': ''часом дії'', ''correct'': False}'
+  - '{''text'': ''видом дієслова'', ''correct'': False}'
+  - '{''text'': ''родом іменника'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1509,14 +1540,10 @@ items:
   title: Повторення (М01-М02)
   question: Яке закінчення мають пасивні дієприкметники жіночого роду?
   options:
-  - text: -на або -та
-    correct: true
-  - text: -ний або -тий
-    correct: false
-  - text: -не або -те
-    correct: false
-  - text: -ні або -ті
-    correct: false
+  - '{''text'': ''-на або -та'', ''correct'': True}'
+  - '{''text'': ''-ний або -тий'', ''correct'': False}'
+  - '{''text'': ''-не або -те'', ''correct'': False}'
+  - '{''text'': ''-ні або -ті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1528,14 +1555,10 @@ items:
   question: Чому англомовним учням важко обирати між формами пасиву в українській
     мові?
   options:
-  - text: в англійській мові немає такого розмаїття форм
-    correct: true
-  - text: українська граматика складніша
-    correct: false
-  - text: в англійській немає пасиву
-    correct: false
-  - text: різна система часів
-    correct: false
+  - '{''text'': ''в англійській мові немає такого розмаїття форм'', ''correct'': True}'
+  - '{''text'': ''українська граматика складніша'', ''correct'': False}'
+  - '{''text'': ''в англійській немає пасиву'', ''correct'': False}'
+  - '{''text'': ''різна система часів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1546,14 +1569,10 @@ items:
   title: Повторення (М01-М02)
   question: Яка форма пасиву підкреслює процес, а не результат дії?
   options:
-  - text: зворотний пасив -ся
-    correct: true
-  - text: форма -но/-то
-    correct: false
-  - text: пасивний дієприкметник
-    correct: false
-  - text: 3-я особа множини
-    correct: false
+  - '{''text'': ''зворотний пасив -ся'', ''correct'': True}'
+  - '{''text'': ''форма -но/-то'', ''correct'': False}'
+  - '{''text'': ''пасивний дієприкметник'', ''correct'': False}'
+  - '{''text'': ''3-я особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1564,14 +1583,10 @@ items:
   title: Повторення (М01-М02)
   question: Від дієслів якого виду утворюються пасивні дієприкметники минулого часу?
   options:
-  - text: доконаного виду
-    correct: true
-  - text: недоконаного виду
-    correct: false
-  - text: обох видів
-    correct: false
-  - text: тільки перехідних
-    correct: false
+  - '{''text'': ''доконаного виду'', ''correct'': True}'
+  - '{''text'': ''недоконаного виду'', ''correct'': False}'
+  - '{''text'': ''обох видів'', ''correct'': False}'
+  - '{''text'': ''тільки перехідних'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1583,14 +1598,10 @@ items:
   question: У якому типі тексту ви найімовірніше побачите речення "Будинок будується
     вже два роки"?
   options:
-  - text: науковий або інформаційний
-    correct: true
-  - text: офіційно-діловий
-    correct: false
-  - text: художній
-    correct: false
-  - text: розмовний
-    correct: false
+  - '{''text'': ''науковий або інформаційний'', ''correct'': True}'
+  - '{''text'': ''офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''художній'', ''correct'': False}'
+  - '{''text'': ''розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

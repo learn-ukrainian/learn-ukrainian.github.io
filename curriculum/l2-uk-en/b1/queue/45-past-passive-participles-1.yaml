@@ -1,7 +1,7 @@
 module: 45-past-passive-participles-1
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/45-past-passive-participles-1.md
-generated: '2025-12-29T00:22:02.079035'
+generated: '2025-12-30T19:49:28.531317'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 14
   translate: 8
   true-false: 14
+total_items: 67
 item_count: 67
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок у формах пасивних дієприкметників
@@ -304,117 +306,85 @@ items:
     мене велике враження. {Створена|Створений|Створене|Створені} автором атмосфера
     захоплює.
   blanks:
-  - id: 1
-    answer: побудований
+  - answer: побудовавший
     options:
     - побудований
     - побудований
     - будований
-    - побудовавший
-  - id: 2
-    answer: Відреставрована
+  - answer: Відреставровані
     options:
     - Відреставрована
     - Відреставрований
     - Відреставроване
-    - Відреставровані
-  - id: 3
-    answer: намальовані
+  - answer: намальована
     options:
     - намальовані
     - намальований
     - намальоване
-    - намальована
-  - id: 4
-    answer: Придбані
+  - answer: Придбане
     options:
     - Придбані
     - Придбаний
     - Придбана
-    - Придбане
-  - id: 5
-    answer: Написана
+  - answer: Написані
     options:
     - Написана
     - Написаний
     - Написане
-    - Написані
-  - id: 6
-    answer: опублікована
+  - answer: опубліковані
     options:
     - опублікована
     - опублікований
     - опубліковане
-    - опубліковані
-  - id: 7
-    answer: Отримані
+  - answer: Отримане
     options:
     - Отримані
     - Отриманий
     - Отримана
-    - Отримане
-  - id: 8
-    answer: Закриті
+  - answer: Закрите
     options:
     - Закриті
     - Закритий
     - Закрита
-    - Закрите
-  - id: 9
-    answer: Виконаний
+  - answer: Виконані
     options:
     - Виконаний
     - Виконана
     - Виконане
-    - Виконані
-  - id: 10
-    answer: Куплені
+  - answer: Куплене
     options:
     - Куплені
     - Куплений
     - Куплена
-    - Куплене
-  - id: 11
-    answer: Замовлена
+  - answer: Замовлені
     options:
     - Замовлена
     - Замовлений
     - Замовлене
-    - Замовлені
-  - id: 12
-    answer: приготовлена
+  - answer: приготовлені
     options:
     - приготовлена
     - приготовлений
     - приготовлене
-    - приготовлені
-  - id: 13
-    answer: Прочитаний
+  - answer: Прочитані
     options:
     - Прочитаний
     - Прочитана
     - Прочитане
-    - Прочитані
-  - id: 14
-    answer: Створена
+  - answer: Створені
     options:
     - Створена
     - Створений
     - Створене
-    - Створені
-  complete_passage: Цей будинок був {побудований|побудований|будований|побудовавший}
-    у минулому столітті. {Відреставрована|Відреставрований|Відреставроване|Відреставровані}
-    будівля зберегла свій історичний вигляд. У музеї виставлені картини, {намальовані|намальований|намальоване|намальована}
-    відомими художниками. {Придбані|Придбаний|Придбана|Придбане} музеєм експонати
-    вражають різноманітністю. {Написана|Написаний|Написане|Написані} мною стаття була
-    {опублікована|опублікований|опубліковане|опубліковані} в журналі. {Отримані|Отриманий|Отримана|Отримане}
-    рецензії були позитивними. {Закриті|Закритий|Закрита|Закрите} на ремонт приміщення
-    незабаром відкриються. {Виконаний|Виконана|Виконане|Виконані} капітальний ремонт
-    покращив умови. {Куплені|Куплений|Куплена|Куплене} квитки треба зберігати до кінця
-    подорожі. {Замовлена|Замовлений|Замовлене|Замовлені} страва буде {приготовлена|приготовлений|приготовлене|приготовлені}
-    за десять хвилин. {Прочитаний|Прочитана|Прочитане|Прочитані} роман справив на
-    мене велике враження. {Створена|Створений|Створене|Створені} автором атмосфера
-    захоплює.
+  blank_count: 14
+  complete_passage: Цей будинок був побудовавший у минулому столітті. Відреставровані
+    будівля зберегла свій історичний вигляд. У музеї виставлені картини, намальована
+    відомими художниками. Придбане музеєм експонати вражають різноманітністю. Написані
+    мною стаття була опубліковані в журналі. Отримане рецензії були позитивними. Закрите
+    на ремонт приміщення незабаром відкриються. Виконані капітальний ремонт покращив
+    умови. Куплене квитки треба зберігати до кінця подорожі. Замовлені страва буде
+    приготовлені за десять хвилин. Прочитані роман справив на мене велике враження.
+    Створені автором атмосфера захоплює.
   validate:
     passage_valid: null
     explanation: null
@@ -488,14 +458,10 @@ items:
   question: Від яких дієслів утворюються пасивні дієприкметники минулого часу в українській
     граматичній системі?
   options:
-  - text: Від дієслів доконаного виду
-    correct: true
-  - text: Від дієслів недоконаного виду
-    correct: false
-  - text: Від будь-яких дієслів
-    correct: false
-  - text: Тільки від перехідних дієслів НДВ
-    correct: false
+  - '{''text'': ''Від дієслів доконаного виду'', ''correct'': True}'
+  - '{''text'': ''Від дієслів недоконаного виду'', ''correct'': False}'
+  - '{''text'': ''Від будь-яких дієслів'', ''correct'': False}'
+  - '{''text'': ''Тільки від перехідних дієслів НДВ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -507,14 +473,10 @@ items:
   question: Який суфікс використовується для утворення дієприкметника від дієслова
     «написати» в українській мові?
   options:
-  - text: -ний (написаний)
-    correct: true
-  - text: -тий (написатий)
-    correct: false
-  - text: -лий (написалий)
-    correct: false
-  - text: -учий (написаючий)
-    correct: false
+  - '{''text'': ''-ний (написаний)'', ''correct'': True}'
+  - '{''text'': ''-тий (написатий)'', ''correct'': False}'
+  - '{''text'': ''-лий (написалий)'', ''correct'': False}'
+  - '{''text'': ''-учий (написаючий)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -526,14 +488,10 @@ items:
   question: Яке чергування приголосних відбувається при утворенні дієприкметника від
     дієслова «зробити» в українській мові?
   options:
-  - text: б -> бл (зроблений)
-    correct: true
-  - text: б -> б (зробений)
-    correct: false
-  - text: б -> в (зровений)
-    correct: false
-  - text: б -> м (зромений)
-    correct: false
+  - '{''text'': ''б -> бл (зроблений)'', ''correct'': True}'
+  - '{''text'': ''б -> б (зробений)'', ''correct'': False}'
+  - '{''text'': ''б -> в (зровений)'', ''correct'': False}'
+  - '{''text'': ''б -> м (зромений)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -545,14 +503,10 @@ items:
   question: Як правильно утворити пасивний дієприкметник від дієслова «взяти» у сучасній
     українській літературній мові?
   options:
-  - text: взятий
-    correct: true
-  - text: взяний
-    correct: false
-  - text: взяжений
-    correct: false
-  - text: взячений
-    correct: false
+  - '{''text'': ''взятий'', ''correct'': True}'
+  - '{''text'': ''взяний'', ''correct'': False}'
+  - '{''text'': ''взяжений'', ''correct'': False}'
+  - '{''text'': ''взячений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -564,14 +518,10 @@ items:
   question: Яку форму має пасивний дієприкметник «написаний» при узгодженні з іменником
     «книга» у називному відмінку?
   options:
-  - text: написана книга
-    correct: true
-  - text: написаний книга
-    correct: false
-  - text: написане книга
-    correct: false
-  - text: написані книга
-    correct: false
+  - '{''text'': ''написана книга'', ''correct'': True}'
+  - '{''text'': ''написаний книга'', ''correct'': False}'
+  - '{''text'': ''написане книга'', ''correct'': False}'
+  - '{''text'': ''написані книга'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -583,14 +533,10 @@ items:
   question: В якому відмінку стоїть слово «письменником» у реченні «Книга написана
     письменником»?
   options:
-  - text: В орудному
-    correct: true
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: У давальному
-    correct: false
+  - '{''text'': ''В орудному'', ''correct'': True}'
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''У давальному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -602,14 +548,13 @@ items:
   question: Яка головна відмінність між формами «написана книга» та «книгу написано»
     у системі української мови?
   options:
-  - text: «написана» — дієприкметник, «написано» — безособова форма
-    correct: true
-  - text: «написана» — минулий час, «написано» — теперішній
-    correct: false
-  - text: Немає різниці
-    correct: false
-  - text: «написана» — активна, «написано» — пасивна форма
-    correct: false
+  - '{''text'': ''«написана» — дієприкметник, «написано» — безособова форма'', ''correct'':
+    True}'
+  - '{''text'': ''«написана» — минулий час, «написано» — теперішній'', ''correct'':
+    False}'
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''«написана» — активна, «написано» — пасивна форма'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -621,14 +566,10 @@ items:
   question: Від якого дієслова утворений дієприкметник «куплений» у системі українського
     словотвору, і яке чергування відбулося?
   options:
-  - text: Від «купити», чергування п -> пл
-    correct: true
-  - text: Від «куплювати», без чергування
-    correct: false
-  - text: Від «купляти», чергування п -> пл
-    correct: false
-  - text: Від «купувати», без чергування
-    correct: false
+  - '{''text'': ''Від «купити», чергування п -> пл'', ''correct'': True}'
+  - '{''text'': ''Від «куплювати», без чергування'', ''correct'': False}'
+  - '{''text'': ''Від «купляти», чергування п -> пл'', ''correct'': False}'
+  - '{''text'': ''Від «купувати», без чергування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -640,14 +581,10 @@ items:
   question: Яка правильна форма множини дієприкметника «виконаний» при узгодженні
     з іменником «завдання»?
   options:
-  - text: виконані завдання
-    correct: true
-  - text: виконаний завдання
-    correct: false
-  - text: виконана завдання
-    correct: false
-  - text: виконане завдання
-    correct: false
+  - '{''text'': ''виконані завдання'', ''correct'': True}'
+  - '{''text'': ''виконаний завдання'', ''correct'': False}'
+  - '{''text'': ''виконана завдання'', ''correct'': False}'
+  - '{''text'': ''виконане завдання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -659,14 +596,10 @@ items:
   question: Чому не можна утворити пасивний дієприкметник минулого часу від дієслова
     «писати» в українській мові?
   options:
-  - text: Тому що «писати» — дієслово недоконаного виду
-    correct: true
-  - text: Тому що «писати» — неперехідне дієслово
-    correct: false
-  - text: Тому що «писати» — зворотне дієслово
-    correct: false
-  - text: Тому що «писати» не має основи минулого часу
-    correct: false
+  - '{''text'': ''Тому що «писати» — дієслово недоконаного виду'', ''correct'': True}'
+  - '{''text'': ''Тому що «писати» — неперехідне дієслово'', ''correct'': False}'
+  - '{''text'': ''Тому що «писати» — зворотне дієслово'', ''correct'': False}'
+  - '{''text'': ''Тому що «писати» не має основи минулого часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -678,14 +611,10 @@ items:
   question: Яке чергування приголосних відбувається при утворенні дієприкметника від
     дієслова «носити» в українській мові?
   options:
-  - text: с -> ш (ношений)
-    correct: true
-  - text: с -> с (носений)
-    correct: false
-  - text: с -> ж (ножений)
-    correct: false
-  - text: с -> з (нозений)
-    correct: false
+  - '{''text'': ''с -> ш (ношений)'', ''correct'': True}'
+  - '{''text'': ''с -> с (носений)'', ''correct'': False}'
+  - '{''text'': ''с -> ж (ножений)'', ''correct'': False}'
+  - '{''text'': ''с -> з (нозений)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -697,14 +626,10 @@ items:
   question: Як називається особа або предмет, що виконує дію в пасивних конструкціях
     з дієприкметниками?
   options:
-  - text: Агенс
-    correct: true
-  - text: Пацієнс
-    correct: false
-  - text: Суб'єкт
-    correct: false
-  - text: Об'єкт
-    correct: false
+  - '{''text'': ''Агенс'', ''correct'': True}'
+  - '{''text'': ''Пацієнс'', ''correct'': False}'
+  - '{''text'': "Суб''єкт", ''correct'': False}'
+  - '{''text'': "Об''єкт", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -716,14 +641,10 @@ items:
   question: Яка правильна форма дієприкметника від дієслова «відкрити» у сучасній
     українській літературній мові?
   options:
-  - text: відкритий
-    correct: true
-  - text: відкриний
-    correct: false
-  - text: відкрижений
-    correct: false
-  - text: відкричений
-    correct: false
+  - '{''text'': ''відкритий'', ''correct'': True}'
+  - '{''text'': ''відкриний'', ''correct'': False}'
+  - '{''text'': ''відкрижений'', ''correct'': False}'
+  - '{''text'': ''відкричений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -735,14 +656,10 @@ items:
   question: У якому реченні пасивний дієприкметник вжитий правильно відповідно до
     норм сучасної української мови?
   options:
-  - text: Прочитана книга лежить на столі.
-    correct: true
-  - text: Прочитаний книга лежить на столі.
-    correct: false
-  - text: Прочитане книга лежить на столі.
-    correct: false
-  - text: Прочитавши книга лежить на столі.
-    correct: false
+  - '{''text'': ''Прочитана книга лежить на столі.'', ''correct'': True}'
+  - '{''text'': ''Прочитаний книга лежить на столі.'', ''correct'': False}'
+  - '{''text'': ''Прочитане книга лежить на столі.'', ''correct'': False}'
+  - '{''text'': ''Прочитавши книга лежить на столі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -754,14 +671,10 @@ items:
   source_sentence: The written letter is on the table.
   answer: ''
   options:
-  - text: Написаний лист лежить на столі.
-    correct: true
-  - text: Написана лист лежить на столі.
-    correct: false
-  - text: Писаний лист лежить на столі.
-    correct: false
-  - text: Написанний лист лежить на столі.
-    correct: false
+  - '{''text'': ''Написаний лист лежить на столі.'', ''correct'': True}'
+  - '{''text'': ''Написана лист лежить на столі.'', ''correct'': False}'
+  - '{''text'': ''Писаний лист лежить на столі.'', ''correct'': False}'
+  - '{''text'': ''Написанний лист лежить на столі.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -772,14 +685,10 @@ items:
   source_sentence: The book written by Shevchenko is very popular.
   answer: ''
   options:
-  - text: Книга, написана Шевченком, дуже популярна.
-    correct: true
-  - text: Книга, написаний Шевченком, дуже популярна.
-    correct: false
-  - text: Книга, написавши Шевченком, дуже популярна.
-    correct: false
-  - text: Книга, писана Шевченком, дуже популярна.
-    correct: false
+  - '{''text'': ''Книга, написана Шевченком, дуже популярна.'', ''correct'': True}'
+  - '{''text'': ''Книга, написаний Шевченком, дуже популярна.'', ''correct'': False}'
+  - '{''text'': ''Книга, написавши Шевченком, дуже популярна.'', ''correct'': False}'
+  - '{''text'': ''Книга, писана Шевченком, дуже популярна.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -790,14 +699,10 @@ items:
   source_sentence: The completed project was successful.
   answer: ''
   options:
-  - text: Завершений проєкт був успішним.
-    correct: true
-  - text: Завершена проєкт був успішним.
-    correct: false
-  - text: Завершене проєкт був успішним.
-    correct: false
-  - text: Завершенний проєкт був успішним.
-    correct: false
+  - '{''text'': ''Завершений проєкт був успішним.'', ''correct'': True}'
+  - '{''text'': ''Завершена проєкт був успішним.'', ''correct'': False}'
+  - '{''text'': ''Завершене проєкт був успішним.'', ''correct'': False}'
+  - '{''text'': ''Завершенний проєкт був успішним.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -808,14 +713,10 @@ items:
   source_sentence: The purchased goods were delivered on time.
   answer: ''
   options:
-  - text: Куплені товари доставлено вчасно.
-    correct: true
-  - text: Куплений товари доставлено вчасно.
-    correct: false
-  - text: Купені товари доставлено вчасно.
-    correct: false
-  - text: Купленні товари доставлено вчасно.
-    correct: false
+  - '{''text'': ''Куплені товари доставлено вчасно.'', ''correct'': True}'
+  - '{''text'': ''Куплений товари доставлено вчасно.'', ''correct'': False}'
+  - '{''text'': ''Купені товари доставлено вчасно.'', ''correct'': False}'
+  - '{''text'': ''Купленні товари доставлено вчасно.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -826,14 +727,10 @@ items:
   source_sentence: The opened window let in fresh air.
   answer: ''
   options:
-  - text: Відкрите вікно пропускало свіже повітря.
-    correct: true
-  - text: Відкритий вікно пропускало свіже повітря.
-    correct: false
-  - text: Відкрита вікно пропускало свіже повітря.
-    correct: false
-  - text: Відкринене вікно пропускало свіже повітря.
-    correct: false
+  - '{''text'': ''Відкрите вікно пропускало свіже повітря.'', ''correct'': True}'
+  - '{''text'': ''Відкритий вікно пропускало свіже повітря.'', ''correct'': False}'
+  - '{''text'': ''Відкрита вікно пропускало свіже повітря.'', ''correct'': False}'
+  - '{''text'': ''Відкринене вікно пропускало свіже повітря.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -844,14 +741,10 @@ items:
   source_sentence: The built house impresses with its beauty.
   answer: ''
   options:
-  - text: Побудований будинок вражає своєю красою.
-    correct: true
-  - text: Побудована будинок вражає своєю красою.
-    correct: false
-  - text: Побудоване будинок вражає своєю красою.
-    correct: false
-  - text: Побудованний будинок вражає своєю красою.
-    correct: false
+  - '{''text'': ''Побудований будинок вражає своєю красою.'', ''correct'': True}'
+  - '{''text'': ''Побудована будинок вражає своєю красою.'', ''correct'': False}'
+  - '{''text'': ''Побудоване будинок вражає своєю красою.'', ''correct'': False}'
+  - '{''text'': ''Побудованний будинок вражає своєю красою.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -862,14 +755,10 @@ items:
   source_sentence: The received documents need to be signed.
   answer: ''
   options:
-  - text: Отримані документи потрібно підписати.
-    correct: true
-  - text: Отриманий документи потрібно підписати.
-    correct: false
-  - text: Отримана документи потрібно підписати.
-    correct: false
-  - text: Отриманні документи потрібно підписати.
-    correct: false
+  - '{''text'': ''Отримані документи потрібно підписати.'', ''correct'': True}'
+  - '{''text'': ''Отриманий документи потрібно підписати.'', ''correct'': False}'
+  - '{''text'': ''Отримана документи потрібно підписати.'', ''correct'': False}'
+  - '{''text'': ''Отриманні документи потрібно підписати.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -880,14 +769,10 @@ items:
   source_sentence: The closed doors protected from the cold.
   answer: ''
   options:
-  - text: Закриті двері захищали від холоду.
-    correct: true
-  - text: Закритий двері захищали від холоду.
-    correct: false
-  - text: Закрита двері захищали від холоду.
-    correct: false
-  - text: Закринуті двері захищали від холоду.
-    correct: false
+  - '{''text'': ''Закриті двері захищали від холоду.'', ''correct'': True}'
+  - '{''text'': ''Закритий двері захищали від холоду.'', ''correct'': False}'
+  - '{''text'': ''Закрита двері захищали від холоду.'', ''correct'': False}'
+  - '{''text'': ''Закринуті двері захищали від холоду.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

@@ -1,0 +1,502 @@
+- type: quiz
+  id: revolution-facts
+  title: Факти про Революцію
+  items:
+  - question: Хто очолив Центральну Раду?
+    options:
+    - text: Михайло Грушевський
+      correct: true
+    - text: Павло Скоропадський
+      correct: false
+    - text: Симон Петлюра
+      correct: false
+    - text: Володимир Ленін
+      correct: false
+  - question: Що таке Універсал?
+    options:
+    - text: Закон або указ Центральної Ради
+      correct: true
+    - text: Тип автомобіля
+      correct: false
+    - text: Військове звання
+      correct: false
+    - text: Назва міста
+      correct: false
+  - question: Коли була проголошена повна незалежність УНР?
+    options:
+    - text: 22 січня 1918 року
+      correct: true
+    - text: 24 серпня 1991 року
+      correct: false
+    - text: 1 листопада 1918 року
+      correct: false
+    - text: 28 червня 1996 року
+      correct: false
+  - question: Що сталося під Крутами?
+    options:
+    - text: Бій студентів проти більшовиків
+      correct: true
+    - text: Мирні переговори
+      correct: false
+    - text: Спортивні змагання
+      correct: false
+    - text: Концерт
+      correct: false
+  - question: Кого називали 'гетьманом' у 1918 році?
+    options:
+    - text: Павла Скоропадського
+      correct: true
+    - text: Богдана Хмельницького
+      correct: false
+    - text: Івана Мазепу
+      correct: false
+    - text: Михайла Грушевського
+      correct: false
+  - question: Що таке Акт Злуки?
+    options:
+    - text: Об'єднання УНР і ЗУНР
+      correct: true
+    - text: Розпад імперії
+      correct: false
+    - text: Мирний договір з Росією
+      correct: false
+    - text: Створення армії
+      correct: false
+  - question: Коли ми святкуємо День Соборності?
+    options:
+    - text: 22 січня
+      correct: true
+    - text: 24 серпня
+      correct: false
+    - text: 14 жовтня
+      correct: false
+    - text: 9 травня
+      correct: false
+  - question: Хто такі більшовики?
+    options:
+    - text: Російські комуністи (червоні)
+      correct: true
+    - text: Українські патріоти
+      correct: false
+    - text: Німецькі солдати
+      correct: false
+    - text: Польські шляхтичі
+      correct: false
+- type: match-up
+  id: universals-match
+  title: Чотири Універсали
+  pairs:
+  - term: I Універсал
+    definition: Проголошення автономії
+  - term: II Універсал
+    definition: Компроміс з Тимчасовим урядом
+  - term: III Універсал
+    definition: Створення УНР (автономної)
+  - term: IV Універсал
+    definition: Проголошення незалежності
+  - term: Акт Злуки
+    definition: Об'єднання Сходу і Заходу
+  - term: Берестейський мир
+    definition: Визнання УНР світом
+  - term: Крути
+    definition: Бій за Київ
+  - term: Трикутник смерті
+    definition: Оточення армії УНР
+- type: cloze
+  id: zluky-text
+  title: Акт Злуки
+  passage: '22 січня {1919} року на Софійській площі в {Києві} зібралися тисячі людей.
+
+    Було проголошено Акт {Злуки} (об''єднання) українських земель.
+
+    УНР і {ЗУНР} стали єдиною державою.
+
+    Це свято тепер називається Днем {Соборності}.
+
+    Люди вірили, що {Україна} буде вільною.
+
+    Але {війна} завадила цьому об''єднанню.
+
+    Галичина була окупована {Польщею}, а Схід — {більшовиками}.
+
+    Тільки в {1991} році Україна знову стала незалежною.
+
+    Михайло {Грушевський} мріяв про цей день.
+
+    Симон {Петлюра} боровся за цей день.
+
+    Студенти під {Крутами} загинули за цей день.
+
+    Ми пам''ятаємо наших {героїв}.
+
+    Тризуб став державним {гербом}.
+
+    Синьо-жовтий {прапор} замайорів над Києвом.
+
+    Гімном стала пісня "Ще не вмерла {Україна}".
+
+    Сьогодні ми будуємо нову {державу}.
+
+    '
+- type: match-up
+  id: chronology-1917
+  title: Хронологія подій
+  pairs:
+  - term: Березень 1917
+    definition: Створення Центральної Ради
+  - term: Червень 1917
+    definition: I Універсал
+  - term: Листопад 1917
+    definition: III Універсал (УНР)
+  - term: 22 січня 1918
+    definition: IV Універсал (Незалежність)
+  - term: 29 січня 1918
+    definition: Бій під Крутами
+  - term: Квітень 1918
+    definition: Гетьманат Скоропадського
+  - term: Листопад 1918
+    definition: Повстання Директорії
+  - term: 22 січня 1919
+    definition: Акт Злуки
+  - term: 1921 рік
+    definition: Окупація України більшовиками
+  - term: 1991 рік
+    definition: Відновлення незалежності
+- type: true-false
+  id: myths-unr
+  title: Правда чи міф?
+  items:
+  - question: Ленін створив Україну.
+    answer: false
+  - question: УНР була незалежною державою.
+    answer: true
+  - question: Грушевський був президентом УНР.
+    answer: true
+  - question: Бій під Крутами виграли більшовики.
+    answer: true
+  - question: Але студенти затримали ворога.
+    answer: true
+  - question: Скоропадський хотів знищити українську культуру.
+    answer: false
+  - question: Акт Злуки об'єднав Україну з Росією.
+    answer: false
+  - question: Жінки не брали участі в революції.
+    answer: false
+- type: group-sort
+  id: leaders-sort
+  title: Політики та вороги
+  groups:
+  - name: Українські діячі
+    items:
+    - Михайло Грушевський
+    - Симон Петлюра
+    - Павло Скоропадський
+    - Володимир Винниченко
+    - Євген Петрушевич
+    - Дмитро Вітовський
+    - Герої Крут
+    - Січові Стрільці
+    - Євген Коновалець
+    - Михайло Омелянович-Павленко
+  - name: Вороги незалежності
+    items:
+    - Володимир Ленін
+    - Лев Троцький
+    - Генерал Муравйов
+    - Генерал Денікін
+    - Більшовики
+    - Білогвардійці
+    - Російська імперія
+    - Червона армія
+    - Йосип Сталін
+    - Юзеф Пілсудський
+- type: select
+  id: synonyms
+  title: Синоніми та визначення
+  instruction: Оберіть правильний варіант.
+  items:
+  - question: 'Синонім до слова ''Держава'':'
+    options:
+    - text: Країна
+      correct: true
+    - text: Місто
+      correct: false
+    - text: Село
+      correct: false
+    - text: Вулиця
+      correct: false
+  - question: 'Синонім до слова ''Злука'':'
+    options:
+    - text: Об'єднання
+      correct: true
+    - text: Війна
+      correct: false
+    - text: Сварка
+      correct: false
+    - text: Розподіл
+      correct: false
+  - question: 'Синонім до слова ''Боротьба'':'
+    options:
+    - text: Битва
+      correct: true
+    - text: Сон
+      correct: false
+    - text: Обід
+      correct: false
+    - text: Гра
+      correct: false
+  - question: Що таке 'Автономія'?
+    options:
+    - text: Самоврядування
+      correct: true
+    - text: Повна залежність
+      correct: false
+    - text: Рабство
+      correct: false
+    - text: Диктатура
+      correct: false
+  - question: Що таке 'Суверенітет'?
+    options:
+    - text: Незалежність влади
+      correct: true
+    - text: Багатство
+      correct: false
+    - text: Велике військо
+      correct: false
+    - text: Красивий прапор
+      correct: false
+  - question: Що таке 'Дипломатія'?
+    options:
+    - text: Переговори
+      correct: true
+    - text: Війна
+      correct: false
+    - text: Торгівля
+      correct: false
+    - text: Спорт
+      correct: false
+- type: unjumble
+  id: anthem-lines
+  title: Гімн України
+  items:
+  - scrambled: Ще не вмерла України і слава, і воля,
+    answer: Ще не вмерла України і слава, і воля,
+  - scrambled: Ще нам, браття молодії, усміхнеться доля.
+    answer: Ще нам, браття молодії, усміхнеться доля.
+  - scrambled: Згинуть наші воріженьки, як роса на сонці.
+    answer: Згинуть наші воріженьки, як роса на сонці.
+  - scrambled: Запануєм і ми, браття, у своїй сторонці.
+    answer: Запануєм і ми, браття, у своїй сторонці.
+  - scrambled: Душу й тіло ми положим за нашу свободу,
+    answer: Душу й тіло ми положим за нашу свободу,
+  - scrambled: І покажем, що ми, браття, козацького роду.
+    answer: І покажем, що ми, браття, козацького роду.
+- type: mark-the-words
+  id: find-politics
+  title: Знайдіть політичні терміни
+  text: У *парламенті* (Раді) депутати прийняли важливий *закон*. Вони проголосили *незалежність* держави. *Уряд* почав реформи. *Президент* виступив з промовою. *Конституція* гарантує права громадян. *Вибори* були демократичними. *Опозиція* критикувала владу. Але *більшість* підтримала курс на *свободу*. Україна стала *республікою*.
+- type: dialogue-reorder
+  id: iv-universal
+  title: Проголошення Незалежності
+  lines:
+  - text: Панове депутати! Тихо!
+    order: 1
+    speaker: ''
+  - text: Слово має голова Центральної Ради.
+    order: 2
+    speaker: ''
+  - text: Дякую. Сьогодні історичний день.
+    order: 3
+    speaker: ''
+  - text: Ми довго йшли до цього моменту.
+    order: 4
+    speaker: ''
+  - text: Росія хоче знищити нас війною.
+    order: 5
+    speaker: ''
+  - text: Ми мусимо захищати нашу землю.
+    order: 6
+    speaker: ''
+  - text: Тому ми проголошуємо IV Універсал.
+    order: 7
+    speaker: ''
+  - text: Що в ньому сказано, пане Грушевський?
+    order: 8
+    speaker: ''
+  - text: Однині Україна стає незалежною державою!
+    order: 9
+    speaker: ''
+  - text: Слава Україні!
+    order: 10
+    speaker: ''
+  - text: Слава вільній республіці!
+    order: 11
+    speaker: ''
+  - text: Героям Слава!
+    order: 12
+    speaker: ''
+- type: cloze
+  id: grammar-passive
+  title: 'Граматика: Пасивний стан (Revision)'
+  passage: 'Закон був (прийняти) {прийнятий} парламентом.
+
+    Декларація була (оголосити) {оголошена} урядом.
+
+    Ворог був (зупинити) {зупинений} під Крутами.
+
+    Місто було (захопити) {захоплене} більшовиками.
+
+    Незалежність була (визнати) {визнана} світом.
+
+    Договір був (підписати) {підписаний} у Бересті.
+
+    Прапор був (підняти) {піднятий} над ратушею.
+
+    Книги були (написати) {написані} українською мовою.
+
+    Лист був (відправити) {відправлений} додому.
+
+    Свобода була (здобути) {здобута} кров''ю.
+
+    Університет був (відкрити) {відкритий} гетьманом.
+
+    Герої були (поховати) {поховані} в Києві.
+
+    Злука була (святкувати) {святкована} в січні.
+
+    Історія була (переписати) {переписана} ворогами.
+
+    Правда була (відкрити) {відкрита} людям.
+
+    Держава була (відновити) {відновлена} у 1991 році.
+
+    '
+- type: match-up
+  id: vocab-defs-2
+  title: 'Словник: Визначення'
+  pairs:
+  - term: Універсал
+    definition: Law of Central Rada
+  - term: Злука
+    definition: Unification
+  - term: Соборність
+    definition: Unity of lands
+  - term: Більшовики
+    definition: Communists (Reds)
+  - term: Гетьман
+    definition: Leader (Skoropadsky)
+  - term: Директорія
+    definition: Government after Hetman
+  - term: Тризуб
+    definition: Trident (Coat of arms)
+  - term: Окупація
+    definition: Occupation by enemy
+- type: quiz
+  id: final-test
+  title: Підсумок
+  items:
+  - question: Чим закінчилася Українська революція 1917-1921?
+    options:
+    - text: Поразкою і радянською окупацією
+      correct: true
+    - text: Повною перемогою
+      correct: false
+    - text: Приєднанням до Польщі
+      correct: false
+    - text: Створенням ЄС
+      correct: false
+  - question: Хто такий Симон Петлюра?
+    options:
+    - text: Головний отаман військ УНР
+      correct: true
+    - text: Відомий поет
+      correct: false
+    - text: Російський шпигун
+      correct: false
+    - text: Австрійський ерцгерцог
+      correct: false
+  - question: Що означає слово 'автономія'?
+    options:
+    - text: Самоврядування
+      correct: true
+    - text: Повна незалежність
+      correct: false
+    - text: Відсутність влади
+      correct: false
+    - text: Королівство
+      correct: false
+  - question: Чому бій під Крутами такий важливий?
+    options:
+    - text: Він затримав ворога і дав час уряду
+      correct: true
+    - text: Це була найбільша битва в історії
+      correct: false
+    - text: Там ніхто не загинув
+      correct: false
+    - text: Це вигадка письменників
+      correct: false
+  - question: Якого кольору був прапор УНР?
+    options:
+    - text: Синьо-жовтий
+      correct: true
+    - text: Червоний
+      correct: false
+    - text: Білий
+      correct: false
+    - text: Чорно-червоний
+      correct: false
+  - question: Хто підтримав Гетьмана Скоропадського?
+    options:
+    - text: Німеччина
+      correct: true
+    - text: Росія
+      correct: false
+    - text: США
+      correct: false
+    - text: Франція
+      correct: false
+  - question: Де поховані Герої Крут?
+    options:
+    - text: На Аскольдовій могилі в Києві
+      correct: true
+    - text: У Львові
+      correct: false
+    - text: В полі під Крутами
+      correct: false
+    - text: У Москві
+      correct: false
+  - question: Хто написав музику до гімну?
+    options:
+    - text: Михайло Вербицький
+      correct: true
+    - text: Тарас Шевченко
+      correct: false
+    - text: Павло Чубинський
+      correct: false
+    - text: Микола Лисенко
+      correct: false
+- type: writing
+  id: reflection-105
+  title: Рефлексія
+  question: Як ви думаєте, чому в 1919 році українцям не вдалося зберегти державу, а в 1991 році вдалося? Що змінилося?
+  min_words: 50
+- type: match-up
+  id: geography-match
+  title: Географія Революції
+  pairs:
+  - term: Київ
+    definition: Столиця УНР
+  - term: Львів
+    definition: Столиця ЗУНР
+  - term: Гуляйполе
+    definition: Столиця Махна
+  - term: Харків
+    definition: Столиця більшовиків
+  - term: Крути
+    definition: Місце подвигу студентів
+  - term: Холодний Яр
+    definition: Фортеця повстанців
+  - term: Базар
+    definition: Місце розстрілу героїв Зимового походу
+  - term: Фастів
+    definition: Місце підписання передвступного договору злуки

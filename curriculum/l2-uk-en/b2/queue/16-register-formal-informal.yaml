@@ -1,15 +1,18 @@
 module: 16-register-formal-informal
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/16-register-formal-informal.md
-generated: '2025-12-29T22:08:25.924672'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.373119'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у регістрі та звертаннях
@@ -576,6 +579,145 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть офіційний лист
+  passage_template: '{Шановний|Привіт|Слухай|Шановний} {пане|пан|панове|пане} директоре!
+
+
+    {Дозвольте|Слухай|Давай|Дозвольте} {звернутися|скинути|сказати|звернутися} до
+    {Вас|тебе|вас|Вас} із проханням. Наша компанія {проводить|робить|творить|проводить}
+    дослідження ринку праці в Україні.
+
+
+    Чи {могли|можеш|хочеш|могли} б Ви {надати|скинути|дати|надати} нам інформацію
+    про {Вашу|твою|вашу|Вашу} організацію? {Будемо|Буду|Були|Будемо} {вдячні|раді|ок|вдячні}
+    за Вашу допомогу.
+
+
+    {Заздалегідь|Типу|Ну|Заздалегідь} {дякуємо|дякую|дякс|дякуємо} за {співпрацю|допомогу|роботу|співпрацю}.
+
+
+    З {повагою|привітом|любов''ю|повагою},
+
+    Марія Петренко
+
+
+    {До|Бувай|Поки|До} побачення, до {зустрічі|побаченнячка|поки|зустрічі}!
+
+    '
+  blanks:
+  - answer: Шановний
+    options:
+    - Шановний
+    - Привіт
+    - Слухай
+  - answer: пане
+    options:
+    - пане
+    - пан
+    - панове
+  - answer: Дозвольте
+    options:
+    - Дозвольте
+    - Слухай
+    - Давай
+  - answer: звернутися
+    options:
+    - звернутися
+    - скинути
+    - сказати
+  - answer: Вас
+    options:
+    - Вас
+    - тебе
+    - вас
+  - answer: проводить
+    options:
+    - проводить
+    - робить
+    - творить
+  - answer: могли
+    options:
+    - могли
+    - можеш
+    - хочеш
+  - answer: надати
+    options:
+    - надати
+    - скинути
+    - дати
+  - answer: Вашу
+    options:
+    - Вашу
+    - твою
+    - вашу
+  - answer: Будемо
+    options:
+    - Будемо
+    - Буду
+    - Були
+  - answer: вдячні
+    options:
+    - вдячні
+    - раді
+    - ок
+  - answer: Заздалегідь
+    options:
+    - Заздалегідь
+    - Типу
+    - Ну
+  - answer: дякуємо
+    options:
+    - дякуємо
+    - дякую
+    - дякс
+  - answer: співпрацю
+    options:
+    - співпрацю
+    - допомогу
+    - роботу
+  - answer: повагою
+    options:
+    - повагою
+    - привітом
+    - любов'ю
+  - answer: До
+    options:
+    - До
+    - Бувай
+    - Поки
+  - answer: зустрічі
+    options:
+    - зустрічі
+    - побаченнячка
+    - поки
+  blank_count: 17
+  complete_passage: 'Шановний пане директоре!
+
+
+    Дозвольте звернутися до Вас із проханням. Наша компанія проводить дослідження
+    ринку праці в Україні.
+
+
+    Чи могли б Ви надати нам інформацію про Вашу організацію? Будемо вдячні за Вашу
+    допомогу.
+
+
+    Заздалегідь дякуємо за співпрацю.
+
+
+    З повагою,
+
+    Марія Петренко
+
+
+    До побачення, до зустрічі!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть формальні звертання та фрази
   jumbled_words: []
@@ -708,14 +850,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Коли слід писати «Ви» з великої літери?
   options:
-  - text: Завжди
-    correct: false
-  - text: При звертанні до групи людей
-    correct: false
-  - text: При ввічливому звертанні до однієї особи
-    correct: true
-  - text: Ніколи
-    correct: false
+  - '{''text'': ''Завжди'', ''correct'': False}'
+  - '{''text'': ''При звертанні до групи людей'', ''correct'': False}'
+  - '{''text'': ''При ввічливому звертанні до однієї особи'', ''correct'': True}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -726,14 +864,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке звертання доречне при першій зустрічі з незнайомим дорослим?
   options:
-  - text: Ти
-    correct: false
-  - text: Ви
-    correct: true
-  - text: Залежить від настрою
-    correct: false
-  - text: Можна будь-яке
-    correct: false
+  - '{''text'': ''Ти'', ''correct'': False}'
+  - '{''text'': ''Ви'', ''correct'': True}'
+  - '{''text'': ''Залежить від настрою'', ''correct'': False}'
+  - '{''text'': ''Можна будь-яке'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -744,14 +878,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Хто зазвичай ініціює перехід на «ти»?
   options:
-  - text: Молодший за віком
-    correct: false
-  - text: Старший за віком або вищий за статусом
-    correct: true
-  - text: Будь-хто
-    correct: false
-  - text: Тільки жінка
-    correct: false
+  - '{''text'': ''Молодший за віком'', ''correct'': False}'
+  - '{''text'': ''Старший за віком або вищий за статусом'', ''correct'': True}'
+  - '{''text'': ''Будь-хто'', ''correct'': False}'
+  - '{''text'': ''Тільки жінка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -762,14 +892,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яка форма звертання є найбільш формальною?
   options:
-  - text: Пан Коваленко
-    correct: false
-  - text: Іване Петровичу
-    correct: false
-  - text: Вельмишановний добродію
-    correct: true
-  - text: Шановний пане
-    correct: false
+  - '{''text'': ''Пан Коваленко'', ''correct'': False}'
+  - '{''text'': ''Іване Петровичу'', ''correct'': False}'
+  - '{''text'': ''Вельмишановний добродію'', ''correct'': True}'
+  - '{''text'': ''Шановний пане'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -780,14 +906,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: У якому відмінку стоїть слово «пане» у звертанні «Пане директоре»?
   options:
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: У кличному
-    correct: true
-  - text: У давальному
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''У кличному'', ''correct'': True}'
+  - '{''text'': ''У давальному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -798,14 +920,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке привітання є формальним?
   options:
-  - text: Привіт!
-    correct: false
-  - text: Добрий день!
-    correct: true
-  - text: Здоров!
-    correct: false
-  - text: Привіточки!
-    correct: false
+  - '{''text'': ''Привіт!'', ''correct'': False}'
+  - '{''text'': ''Добрий день!'', ''correct'': True}'
+  - '{''text'': ''Здоров!'', ''correct'': False}'
+  - '{''text'': ''Привіточки!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -816,14 +934,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Як правильно звернутися до начальника у робочому листі?
   options:
-  - text: Привіт, Петро!
-    correct: false
-  - text: Шановний пане Петренко!
-    correct: true
-  - text: Гей, Петро!
-    correct: false
-  - text: Слухай, Петро!
-    correct: false
+  - '{''text'': ''Привіт, Петро!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане Петренко!'', ''correct'': True}'
+  - '{''text'': ''Гей, Петро!'', ''correct'': False}'
+  - '{''text'': ''Слухай, Петро!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -834,14 +948,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке прощання є неформальним?
   options:
-  - text: До побачення
-    correct: false
-  - text: На все добре
-    correct: false
-  - text: Бувай
-    correct: true
-  - text: До зустрічі
-    correct: false
+  - '{''text'': ''До побачення'', ''correct'': False}'
+  - '{''text'': ''На все добре'', ''correct'': False}'
+  - '{''text'': ''Бувай'', ''correct'': True}'
+  - '{''text'': ''До зустрічі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +962,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке слово є формальним відповідником до «скинути» (надіслати)?
   options:
-  - text: Закинути
-    correct: false
-  - text: Надіслати
-    correct: true
-  - text: Перекинути
-    correct: false
-  - text: Відкинути
-    correct: false
+  - '{''text'': ''Закинути'', ''correct'': False}'
+  - '{''text'': ''Надіслати'', ''correct'': True}'
+  - '{''text'': ''Перекинути'', ''correct'': False}'
+  - '{''text'': ''Відкинути'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -870,14 +976,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: У якій ситуації доречно використовувати «ти»?
   options:
-  - text: На співбесіді
-    correct: false
-  - text: У листі до декана
-    correct: false
-  - text: У розмові з другом
-    correct: true
-  - text: На прийомі у лікаря
-    correct: false
+  - '{''text'': ''На співбесіді'', ''correct'': False}'
+  - '{''text'': ''У листі до декана'', ''correct'': False}'
+  - '{''text'': ''У розмові з другом'', ''correct'': True}'
+  - '{''text'': ''На прийомі у лікаря'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +990,11 @@ items:
   title: Основи системи звертань ти/Ви
   question: Як правильно написати у листі — «прошу вас» чи «прошу Вас»?
   options:
-  - text: Завжди «прошу вас»
-    correct: false
-  - text: Завжди «прошу Вас»
-    correct: false
-  - text: '"Прошу Вас" — до однієї особи, "прошу вас" — до групи'
-    correct: true
-  - text: Не має значення
-    correct: false
+  - '{''text'': ''Завжди «прошу вас»'', ''correct'': False}'
+  - '{''text'': ''Завжди «прошу Вас»'', ''correct'': False}'
+  - '{''text'': ''"Прошу Вас" — до однієї особи, "прошу вас" — до групи'', ''correct'':
+    True}'
+  - '{''text'': ''Не має значення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -906,14 +1005,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яка форма подяки є найбільш офіційною?
   options:
-  - text: Дякую
-    correct: false
-  - text: Дякс
-    correct: false
-  - text: Щиро вдячний/вдячна
-    correct: true
-  - text: Спасибі
-    correct: false
+  - '{''text'': ''Дякую'', ''correct'': False}'
+  - '{''text'': ''Дякс'', ''correct'': False}'
+  - '{''text'': ''Щиро вдячний/вдячна'', ''correct'': True}'
+  - '{''text'': ''Спасибі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +1019,11 @@ items:
   title: Основи системи звертань ти/Ви
   question: Що означає «перейти на ти»?
   options:
-  - text: Почати сваритися
-    correct: false
-  - text: Перейти від формального до неформального звертання
-    correct: true
-  - text: Закінчити розмову
-    correct: false
-  - text: Познайомитися
-    correct: false
+  - '{''text'': ''Почати сваритися'', ''correct'': False}'
+  - '{''text'': ''Перейти від формального до неформального звертання'', ''correct'':
+    True}'
+  - '{''text'': ''Закінчити розмову'', ''correct'': False}'
+  - '{''text'': ''Познайомитися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -942,14 +1034,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке звертання використовують до викладача?
   options:
-  - text: Тільки ім'я
-    correct: false
-  - text: Ім'я по батькові
-    correct: true
-  - text: Тільки прізвище
-    correct: false
-  - text: Прізвисько
-    correct: false
+  - '{''text'': "Тільки ім''я", ''correct'': False}'
+  - '{''text'': "Ім''я по батькові", ''correct'': True}'
+  - '{''text'': ''Тільки прізвище'', ''correct'': False}'
+  - '{''text'': ''Прізвисько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -960,14 +1048,11 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яка помилка у реченні «Шановний пане директоре! Привіт!»?
   options:
-  - text: Неправильний відмінок
-    correct: false
-  - text: Змішування формального і неформального регістрів
-    correct: true
-  - text: Орфографічна помилка
-    correct: false
-  - text: Помилки немає
-    correct: false
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''Змішування формального і неформального регістрів'', ''correct'':
+    True}'
+  - '{''text'': ''Орфографічна помилка'', ''correct'': False}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +1063,10 @@ items:
   title: Основи системи звертань ти/Ви
   question: Яке слово є формальним відповідником до «глянути»?
   options:
-  - text: Подивитися
-    correct: false
-  - text: Ознайомитися
-    correct: true
-  - text: Зиркнути
-    correct: false
-  - text: Поглянути
-    correct: false
+  - '{''text'': ''Подивитися'', ''correct'': False}'
+  - '{''text'': ''Ознайомитися'', ''correct'': True}'
+  - '{''text'': ''Зиркнути'', ''correct'': False}'
+  - '{''text'': ''Поглянути'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -996,14 +1077,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно закінчити офіційний лист?
   options:
-  - text: Бувай!
-    correct: false
-  - text: З повагою,
-    correct: true
-  - text: Па-па!
-    correct: false
-  - text: Поки!
-    correct: false
+  - '{''text'': ''Бувай!'', ''correct'': False}'
+  - '{''text'': ''З повагою,'', ''correct'': True}'
+  - '{''text'': ''Па-па!'', ''correct'': False}'
+  - '{''text'': ''Поки!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1014,14 +1091,10 @@ items:
   title: Комплексна перевірка знань
   question: У якій ситуації НЕ слід переходити на «ти»?
   options:
-  - text: Після пропозиції співрозмовника
-    correct: false
-  - text: З другом дитинства
-    correct: false
-  - text: При першій зустрічі з начальником
-    correct: true
-  - text: З родичем
-    correct: false
+  - '{''text'': ''Після пропозиції співрозмовника'', ''correct'': False}'
+  - '{''text'': ''З другом дитинства'', ''correct'': False}'
+  - '{''text'': ''При першій зустрічі з начальником'', ''correct'': True}'
+  - '{''text'': ''З родичем'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1032,14 +1105,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма звертання поєднує повагу та особистий контакт?
   options:
-  - text: Тільки прізвище
-    correct: false
-  - text: Ім'я по батькові
-    correct: true
-  - text: Тільки ім'я
-    correct: false
-  - text: Прізвисько
-    correct: false
+  - '{''text'': ''Тільки прізвище'', ''correct'': False}'
+  - '{''text'': "Ім''я по батькові", ''correct'': True}'
+  - '{''text'': "Тільки ім''я", ''correct'': False}'
+  - '{''text'': ''Прізвисько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1050,14 +1119,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно звернутися до жінки в офіційному листі?
   options:
-  - text: Шановний пані Петренко!
-    correct: false
-  - text: Шановна пані Петренко!
-    correct: true
-  - text: Шановне пані Петренко!
-    correct: false
-  - text: Шановні пані Петренко!
-    correct: false
+  - '{''text'': ''Шановний пані Петренко!'', ''correct'': False}'
+  - '{''text'': ''Шановна пані Петренко!'', ''correct'': True}'
+  - '{''text'': ''Шановне пані Петренко!'', ''correct'': False}'
+  - '{''text'': ''Шановні пані Петренко!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1068,14 +1133,10 @@ items:
   title: Комплексна перевірка знань
   question: Що означає вираз «перестрахуватися» у контексті вибору регістру?
   options:
-  - text: Використати «ти»
-    correct: false
-  - text: Використати «Ви»
-    correct: true
-  - text: Не відповідати
-    correct: false
-  - text: Перейти на інший регістр
-    correct: false
+  - '{''text'': ''Використати «ти»'', ''correct'': False}'
+  - '{''text'': ''Використати «Ви»'', ''correct'': True}'
+  - '{''text'': ''Не відповідати'', ''correct'': False}'
+  - '{''text'': ''Перейти на інший регістр'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1086,14 +1147,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово є розмовним відповідником до «необхідно»?
   options:
-  - text: Потрібно
-    correct: false
-  - text: Треба
-    correct: true
-  - text: Слід
-    correct: false
-  - text: Варто
-    correct: false
+  - '{''text'': ''Потрібно'', ''correct'': False}'
+  - '{''text'': ''Треба'', ''correct'': True}'
+  - '{''text'': ''Слід'', ''correct'': False}'
+  - '{''text'': ''Варто'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1104,14 +1161,10 @@ items:
   title: Комплексна перевірка знань
   question: Коли «ви» пишеться з малої літери?
   options:
-  - text: Завжди
-    correct: false
-  - text: При звертанні до групи людей
-    correct: true
-  - text: Ніколи
-    correct: false
-  - text: У неофіційних листах
-    correct: false
+  - '{''text'': ''Завжди'', ''correct'': False}'
+  - '{''text'': ''При звертанні до групи людей'', ''correct'': True}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
+  - '{''text'': ''У неофіційних листах'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1122,14 +1175,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка помилка у фразі «Скиньте, будь ласка, звіт»? (в офіційному листі)
   options:
-  - text: Помилки немає
-    correct: false
-  - text: «Скиньте» — розмовне слово
-    correct: true
-  - text: Немає «Ви»
-    correct: false
-  - text: Неправильний відмінок
-    correct: false
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
+  - '{''text'': ''«Скиньте» — розмовне слово'', ''correct'': True}'
+  - '{''text'': ''Немає «Ви»'', ''correct'': False}'
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1140,14 +1189,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке звертання найбільш доречне до незнайомого старшого чоловіка на вулиці?
   options:
-  - text: Гей, ти!
-    correct: false
-  - text: Пробачте, будь ласка
-    correct: true
-  - text: Слухай!
-    correct: false
-  - text: Привіт!
-    correct: false
+  - '{''text'': ''Гей, ти!'', ''correct'': False}'
+  - '{''text'': ''Пробачте, будь ласка'', ''correct'': True}'
+  - '{''text'': ''Слухай!'', ''correct'': False}'
+  - '{''text'': ''Привіт!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1158,14 +1203,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно запропонувати перехід на «ти»?
   options:
-  - text: Просто почати говорити на «ти»
-    correct: false
-  - text: Запитати «Може, перейдемо на ти?»
-    correct: true
-  - text: Написати в листі
-    correct: false
-  - text: Ніколи не пропонувати
-    correct: false
+  - '{''text'': ''Просто почати говорити на «ти»'', ''correct'': False}'
+  - '{''text'': ''Запитати «Може, перейдемо на ти?»'', ''correct'': True}'
+  - '{''text'': ''Написати в листі'', ''correct'': False}'
+  - '{''text'': ''Ніколи не пропонувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1176,14 +1217,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово НЕ є формальним?
   options:
-  - text: Надіслати
-    correct: false
-  - text: Ознайомитися
-    correct: false
-  - text: Глянути
-    correct: true
-  - text: Повідомити
-    correct: false
+  - '{''text'': ''Надіслати'', ''correct'': False}'
+  - '{''text'': ''Ознайомитися'', ''correct'': False}'
+  - '{''text'': ''Глянути'', ''correct'': True}'
+  - '{''text'': ''Повідомити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1194,14 +1231,10 @@ items:
   title: Комплексна перевірка знань
   question: У якому відмінку стоїть слово «директоре» у звертанні «Пане директоре!»?
   options:
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: У кличному
-    correct: true
-  - text: У давальному
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''У кличному'', ''correct'': True}'
+  - '{''text'': ''У давальному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1212,14 +1245,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка фраза є найбільш формальною для початку прохання?
   options:
-  - text: Слухай, мені треба...
-    correct: false
-  - text: Дозвольте звернутися до Вас із проханням.
-    correct: true
-  - text: Можеш допомогти?
-    correct: false
-  - text: Мені треба...
-    correct: false
+  - '{''text'': ''Слухай, мені треба...'', ''correct'': False}'
+  - '{''text'': ''Дозвольте звернутися до Вас із проханням.'', ''correct'': True}'
+  - '{''text'': ''Можеш допомогти?'', ''correct'': False}'
+  - '{''text'': ''Мені треба...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1230,14 +1259,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно написати подяку в офіційному листі?
   options:
-  - text: Дякую тобі!
-    correct: false
-  - text: Щиро вдячний/вдячна Вам за допомогу.
-    correct: true
-  - text: Дякс!
-    correct: false
-  - text: Спасибі!
-    correct: false
+  - '{''text'': ''Дякую тобі!'', ''correct'': False}'
+  - '{''text'': ''Щиро вдячний/вдячна Вам за допомогу.'', ''correct'': True}'
+  - '{''text'': ''Дякс!'', ''correct'': False}'
+  - '{''text'': ''Спасибі!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1248,14 +1273,10 @@ items:
   title: Комплексна перевірка знань
   question: Що характерно для неформального тону спілкування?
   options:
-  - text: Складні речення
-    correct: false
-  - text: Ввічливі конструкції
-    correct: false
-  - text: Скорочення та емоційні вигуки
-    correct: true
-  - text: Звертання з титулами
-    correct: false
+  - '{''text'': ''Складні речення'', ''correct'': False}'
+  - '{''text'': ''Ввічливі конструкції'', ''correct'': False}'
+  - '{''text'': ''Скорочення та емоційні вигуки'', ''correct'': True}'
+  - '{''text'': ''Звертання з титулами'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1266,14 +1287,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке завершення листа НЕ є формальним?
   options:
-  - text: З повагою
-    correct: false
-  - text: З найкращими побажаннями
-    correct: false
-  - text: Бувай
-    correct: true
-  - text: До зустрічі
-    correct: false
+  - '{''text'': ''З повагою'', ''correct'': False}'
+  - '{''text'': ''З найкращими побажаннями'', ''correct'': False}'
+  - '{''text'': ''Бувай'', ''correct'': True}'
+  - '{''text'': ''До зустрічі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

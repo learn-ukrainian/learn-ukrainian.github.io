@@ -1,0 +1,1439 @@
+module: 94-ivan-mazepa-iii-poltava
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/94-ivan-mazepa-iii-poltava.md
+generated: '2025-12-30T19:49:17.643177'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 33
+  true-false: 16
+total_items: 114
+item_count: 114
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа перейшов на бік Швеція у 1708 році.
+  error: Швеція
+  answer: Швеції
+  sentence_corrected: Мазепа перейшов на бік Швеції у 1708 році.
+  options:
+  - Швеція
+  - Швеції
+  - Швецію
+  - Швецією
+  original_explanation: Прийменник «на бік» вимагає родового відмінка — на бік кого/чого?
+    Швеції.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Батуринська різанина забрала тисячі життя.
+  error: життя
+  answer: життів
+  sentence_corrected: Батуринська різанина забрала тисячі життів.
+  options:
+  - життя
+  - життів
+  - життям
+  - життями
+  original_explanation: Після числівника «тисячі» потрібен родовий відмінок множини
+    — життів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Полтавська битва відбулася в 27 червень 1709 року.
+  error: червень
+  answer: червня
+  sentence_corrected: Полтавська битва відбулася в 27 червня 1709 року.
+  options:
+  - червень
+  - червня
+  - червні
+  - червнем
+  original_explanation: Дата вимагає родового відмінка — 27 червня.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Карл і Мазепа втекли до Османська імперія.
+  error: Османська імперія
+  answer: Османської імперії
+  sentence_corrected: Карл і Мазепа втекли до Османської імперії.
+  options:
+  - Османська імперія
+  - Османської імперії
+  - Османську імперію
+  - Османською імперією
+  original_explanation: Прийменник «до» вимагає родового відмінка — до Османської
+    імперії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конституція Орлика був ухвалена в 1710 році.
+  error: був
+  answer: була
+  sentence_corrected: Конституція Орлика була ухвалена в 1710 році.
+  options:
+  - був
+  - була
+  - було
+  - були
+  original_explanation: Іменник «Конституція» жіночого роду, тому дієслово теж жіночого
+    — була.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Московська церква проголосила Мазепу анафема.
+  error: анафема
+  answer: анафемою
+  sentence_corrected: Московська церква проголосила Мазепу анафемою.
+  options:
+  - анафема
+  - анафемою
+  - анафеми
+  - анафемі
+  original_explanation: 'Дієслово «проголосити» з додатком вимагає орудного відмінка:
+    проголосила ким/чим? анафемою.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Шведська армія страждала від мороз і голоду.
+  error: мороз
+  answer: морозів
+  sentence_corrected: Шведська армія страждала від морозів і голоду.
+  options:
+  - мороз
+  - морозів
+  - морозу
+  - морозом
+  original_explanation: Прийменник «від» вимагає родового відмінка множини — від морозів.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конституція обмежувала влада гетьмана.
+  error: влада
+  answer: владу
+  sentence_corrected: Конституція обмежувала владу гетьмана.
+  options:
+  - влада
+  - владу
+  - влади
+  - владою
+  original_explanation: Дієслово «обмежувати» вимагає знахідного відмінка — обмежувала
+    що? владу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Мазепа помер у Бендери в 1709 році.
+  error: Бендери
+  answer: Бендерах
+  sentence_corrected: Мазепа помер у Бендерах в 1709 році.
+  options:
+  - Бендери
+  - Бендерах
+  - Бендер
+  - Бендерами
+  original_explanation: Прийменник «у» з географічною назвою вимагає місцевого відмінка
+    — у Бендерах.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Шведи здалися у полон біля Переволочна.
+  error: Переволочна
+  answer: Переволочної
+  sentence_corrected: Шведи здалися у полон біля Переволочної.
+  options:
+  - Переволочна
+  - Переволочної
+  - Переволочну
+  - Переволочною
+  original_explanation: Прийменник «біля» вимагає родового відмінка — біля Переволочної.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Полтава змінила баланс сили у Європі.
+  error: сили
+  answer: сил
+  sentence_corrected: Полтава змінила баланс сил у Європі.
+  options:
+  - сили
+  - сил
+  - силу
+  - силам
+  original_explanation: «Баланс сил» — сталий вираз із родовим відмінком множини —
+    сил.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Меншиков командував військо під Батурином.
+  error: військо
+  answer: військами
+  sentence_corrected: Меншиков командував військами під Батурином.
+  options:
+  - військо
+  - військами
+  - війська
+  - військам
+  original_explanation: Дієслово «командувати» вимагає орудного відмінка — командував
+    чим? військами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Анафема була інструмент колоніального контролю.
+  error: інструмент
+  answer: інструментом
+  sentence_corrected: Анафема була інструментом колоніального контролю.
+  options:
+  - інструмент
+  - інструментом
+  - інструменту
+  - інструменті
+  original_explanation: 'Присудок з дієсловом «була» вимагає орудного відмінка: була
+    чим? інструментом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Московія стала імперія після Полтави.
+  error: імперія
+  answer: імперією
+  sentence_corrected: Московія стала імперією після Полтави.
+  options:
+  - імперія
+  - імперією
+  - імперії
+  - імперію
+  original_explanation: 'Дієслово «стати» вимагає орудного відмінка: стала чим? імперією.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конституція передбачала захист право козаків.
+  error: право
+  answer: прав
+  sentence_corrected: Конституція передбачала захист прав козаків.
+  options:
+  - право
+  - прав
+  - праву
+  - правом
+  original_explanation: «Захист» вимагає родового відмінка множини — захист прав.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Битва тривала лише кілька година.
+  error: година
+  answer: годин
+  sentence_corrected: Битва тривала лише кілька годин.
+  options:
+  - година
+  - годин
+  - години
+  - годинам
+  original_explanation: Після «кілька» потрібен родовий відмінок множини — кілька
+    годин.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа перейшов на бік _____ в 1708 році.
+  answer: Швеції
+  complete_sentence: Мазепа перейшов на бік Швеції__ в 1708 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Батуринська _____ забрала тисячі життів.
+  answer: різанина
+  complete_sentence: Батуринська різанина__ забрала тисячі життів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Полтавська _____ відбулася 27 червня 1709 року.
+  answer: битва
+  complete_sentence: Полтавська битва__ відбулася 27 червня 1709 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Карл XII і Мазепа втекли до _____ імперії.
+  answer: Османської
+  complete_sentence: Карл XII і Мазепа втекли до Османської__ імперії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Конституція _____ була ухвалена в 1710 році.
+  answer: Орлика
+  complete_sentence: Конституція Орлика__ була ухвалена в 1710 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Московська церква проголосила Мазепу _____.
+  answer: анафемою
+  complete_sentence: Московська церква проголосила Мазепу анафемою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ командував російськими військами під Батурином.
+  answer: Меншиков
+  complete_sentence: Меншиков__ командував російськими військами під Батурином.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Зима 1708-1709 була однією з _____ в історії Європи.
+  answer: найхолодніших
+  complete_sentence: Зима 1708-1709 була однією з найхолодніших__ в історії Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Шведська армія страждала від морозів і _____.
+  answer: голоду
+  complete_sentence: Шведська армія страждала від морозів і голоду__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Полтавська катастрофа змінила _____ сил у Європі.
+  answer: баланс
+  complete_sentence: Полтавська катастрофа змінила баланс__ сил у Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепа помер у _____ в 1709 році.
+  answer: Бендерах
+  complete_sentence: Мазепа помер у Бендерах__ в 1709 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Конституція обмежувала владу гетьмана _____ радою.
+  answer: Генеральною
+  complete_sentence: Конституція обмежувала владу гетьмана Генеральною__ радою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Після битви близько 12000 шведів здалися біля _____.
+  answer: Переволочної
+  complete_sentence: Після битви близько 12000 шведів здалися біля Переволочної__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Анафема на Мазепу була інструментом _____ контролю.
+  answer: колоніального
+  complete_sentence: Анафема на Мазепу була інструментом колоніального__ контролю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Велика _____ війна тривала з 1700 по 1721 рік.
+  answer: Північна
+  complete_sentence: Велика Північна__ війна тривала з 1700 по 1721 рік.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мазепі було близько _____ років, коли він перейшов до шведів.
+  answer: '70'
+  complete_sentence: Мазепі було близько 70__ років, коли він перейшов до шведів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа перейшов на бік _____.
+  answer: Швеції
+  complete_sentence: Мазепа перейшов на бік Швеції__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Батуринська різанина забрала тисячі _____.
+  answer: життів
+  complete_sentence: Батуринська різанина забрала тисячі життів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Битва відбулася 27 _____ 1709 року.
+  answer: червня
+  complete_sentence: Битва відбулася 27 червня__ 1709 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Вони втекли до Османської _____.
+  answer: імперії
+  complete_sentence: Вони втекли до Османської імперії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Конституція обмежувала _____ гетьмана.
+  answer: владу
+  complete_sentence: Конституція обмежувала владу__ гетьмана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Церква проголосила Мазепу _____.
+  answer: анафемою
+  complete_sentence: Церква проголосила Мазепу анафемою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Армія страждала від _____ і голоду.
+  answer: морозів
+  complete_sentence: Армія страждала від морозів__ і голоду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа помер у _____ в 1709 році.
+  answer: Бендерах
+  complete_sentence: Мазепа помер у Бендерах__ в 1709 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Шведи здалися біля _____.
+  answer: Переволочної
+  complete_sentence: Шведи здалися біля Переволочної__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Полтава змінила баланс _____.
+  answer: сил
+  complete_sentence: Полтава змінила баланс сил__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Меншиков командував _____ під Батурином.
+  answer: військами
+  complete_sentence: Меншиков командував військами__ під Батурином.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Московія стала _____ після Полтави.
+  answer: імперією
+  complete_sentence: Московія стала імперією__ після Полтави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Конституція передбачала захист _____ козаків.
+  answer: прав
+  complete_sentence: Конституція передбачала захист прав__ козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Битва тривала лише кілька _____.
+  answer: годин
+  complete_sentence: Битва тривала лише кілька годин__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Анафема була інструментом колоніального _____.
+  answer: контролю
+  complete_sentence: Анафема була інструментом колоніального контролю__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Шведська армія налічувала близько 25000 _____.
+  answer: вояків
+  complete_sentence: Шведська армія налічувала близько 25000 вояків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про Полтаву і вигнання
+  passage_template: 'У 1708 році Мазепа {перейшов|перейшла|перейшли|перейшов} на бік
+    {Швеції|Польщі|Москви|Швеції}. Це було ризиковане {рішення|рішенню|рішенням|рішення},
+    але гетьман бачив {загрозу|загрози|загрозою|загрозу} українській автономії.
+
+
+    Батуринська {різанина|різанину|різаниною|різанина} відбулася в {листопаді|листопада|листопадом|листопаді}
+    1708 року. Командувач {Меншиков|Меншикова|Меншикову|Меншиков} наказав знищити
+    місто. Загинули {тисячі|тисяч|тисячами|тисячі} людей — жінки, діти, старі.
+
+
+    Полтавська {битва|битву|битвою|битва} відбулася 27 {червня|червень|червні|червня}
+    1709 року. Шведська армія зазнала {поразки|поразку|поразкою|поразки}. Карл XII
+    і Мазепа втекли до {Бендер|Бендерах|Бендери|Бендер}.
+
+
+    Мазепа помер у {вигнанні|вигнання|вигнанням|вигнанні} в 1709 році. Але його {спадщина|спадщину|спадщиною|спадщина}
+    — Конституція {Орлика|Орликом|Орлику|Орлика} — пережила його. Цей документ став
+    першою {європейською|європейську|європейська|європейською} конституцією.
+
+    '
+  blanks:
+  - answer: перейшов
+    options:
+    - перейшов
+    - перейшла
+    - перейшли
+  - answer: Швеції
+    options:
+    - Швеції
+    - Польщі
+    - Москви
+  - answer: рішення
+    options:
+    - рішення
+    - рішенню
+    - рішенням
+  - answer: загрозу
+    options:
+    - загрозу
+    - загрози
+    - загрозою
+  - answer: різанина
+    options:
+    - різанина
+    - різанину
+    - різаниною
+  - answer: листопаді
+    options:
+    - листопаді
+    - листопада
+    - листопадом
+  - answer: Меншиков
+    options:
+    - Меншиков
+    - Меншикова
+    - Меншикову
+  - answer: тисячі
+    options:
+    - тисячі
+    - тисяч
+    - тисячами
+  - answer: битва
+    options:
+    - битва
+    - битву
+    - битвою
+  - answer: червня
+    options:
+    - червня
+    - червень
+    - червні
+  - answer: поразки
+    options:
+    - поразки
+    - поразку
+    - поразкою
+  - answer: Бендер
+    options:
+    - Бендер
+    - Бендерах
+    - Бендери
+  - answer: вигнанні
+    options:
+    - вигнанні
+    - вигнання
+    - вигнанням
+  - answer: спадщина
+    options:
+    - спадщина
+    - спадщину
+    - спадщиною
+  - answer: Орлика
+    options:
+    - Орлика
+    - Орликом
+    - Орлику
+  - answer: європейською
+    options:
+    - європейською
+    - європейську
+    - європейська
+  blank_count: 16
+  complete_passage: 'У 1708 році Мазепа перейшов на бік Швеції. Це було ризиковане
+    рішення, але гетьман бачив загрозу українській автономії.
+
+
+    Батуринська різанина відбулася в листопаді 1708 року. Командувач Меншиков наказав
+    знищити місто. Загинули тисячі людей — жінки, діти, старі.
+
+
+    Полтавська битва відбулася 27 червня 1709 року. Шведська армія зазнала поразки.
+    Карл XII і Мазепа втекли до Бендер.
+
+
+    Мазепа помер у вигнанні в 1709 році. Але його спадщина — Конституція Орлика —
+    пережила його. Цей документ став першою європейською конституцією.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Мазепа перейшов на бік Швеції у 1708 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Батуринська різанина забрала тисячі життів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Полтавська битва відбулася 27 червня 1709 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Карл і Мазепа втекли до Османської імперії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Конституція Орлика була ухвалена в 1710 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Московська церква проголосила Мазепу анафемою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Швеція втратила статус великої держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Шведська армія страждала від морозів і голоду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Конституція обмежувала владу гетьмана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Мазепа помер у Бендерах у 1709 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Шведи здалися у полон біля Переволочної.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Полтава змінила баланс сил у Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Конституція Орлика була першою європейською конституцією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Анафема була інструментом колоніального контролю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Меншиков командував військами під Батурином.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Полтаву і вигнання
+  jumbled_words: []
+  answer: Московія стала імперією після Полтави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, чому Мазепа вирішив перейти на бік Швеції?
+  options:
+  - '{''text'': ''Через особисту образу від Петра I'', ''correct'': False}'
+  - '{''text'': ''Бо війна руйнувала Україну, а Московія загрожувала автономії'',
+    ''correct'': True}'
+  - '{''text'': ''Через обіцянку шведського золота'', ''correct'': False}'
+  - '{''text'': ''Через релігійні переконання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, коли відбулася Батуринська різанина?
+  options:
+  - '{''text'': ''У 1709 році'', ''correct'': False}'
+  - '{''text'': ''У 1708 році'', ''correct'': True}'
+  - '{''text'': ''У 1710 році'', ''correct'': False}'
+  - '{''text'': ''У 1707 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує наслідки Батуринської різанини?
+  options:
+  - '{''text'': ''Підтримка Мазепи зросла'', ''correct'': False}'
+  - '{''text'': ''Страх паралізував потенційних союзників гетьмана'', ''correct'':
+    True}'
+  - '{''text'': ''Козаки масово приєдналися до шведів'', ''correct'': False}'
+  - '{''text'': ''Москва відступила'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, скільки козаків привів Мазепа до шведів?
+  options:
+  - '{''text'': ''30 000'', ''correct'': False}'
+  - '{''text'': ''3-5 тисяч'', ''correct'': True}'
+  - '{''text'': ''100 000'', ''correct'': False}'
+  - '{''text'': ''15 000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує зиму 1708-1709 років?
+  options:
+  - '{''text'': "Тепла і м''яка", ''correct'': False}'
+  - '{''text'': ''Одна з найхолодніших в історії Європи'', ''correct'': True}'
+  - '{''text'': ''Звичайна'', ''correct'': False}'
+  - '{''text'': ''Дощова'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, коли відбулася Полтавська битва?
+  options:
+  - '{''text'': ''27 червня 1708 року'', ''correct'': False}'
+  - '{''text'': ''27 червня 1709 року'', ''correct'': True}'
+  - '{''text'': ''8 липня 1708 року'', ''correct'': False}'
+  - '{''text'': ''2 листопада 1709 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує співвідношення сил перед Полтавською битвою?
+  options:
+  - '{''text'': ''Шведи мали перевагу'', ''correct'': False}'
+  - '{''text'': ''Росіяни мали значну перевагу — 40000 проти 25000'', ''correct'':
+    True}'
+  - '{''text'': ''Сили були рівними'', ''correct'': False}'
+  - '{''text'': ''Козаки мали перевагу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, куди втекли Карл XII і Мазепа після Полтави?
+  options:
+  - '{''text'': ''До Польщі'', ''correct'': False}'
+  - '{''text'': ''До Османської імперії (Бендери)'', ''correct'': True}'
+  - '{''text'': ''До Криму'', ''correct'': False}'
+  - '{''text'': ''До Швеції'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст характеризує Конституцію Пилипа Орлика?
+  options:
+  - '{''text'': ''Як звичайний документ'', ''correct'': False}'
+  - '{''text'': ''Як першу європейську конституцію в сучасному розумінні'', ''correct'':
+    True}'
+  - '{''text'': ''Як копію американської конституції'', ''correct'': False}'
+  - '{''text'': ''Як релігійний документ'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, коли помер Іван Мазепа?
+  options:
+  - '{''text'': ''У 1710 році'', ''correct'': False}'
+  - '{''text'': ''У 1709 році'', ''correct'': True}'
+  - '{''text'': ''У 1711 році'', ''correct'': False}'
+  - '{''text'': ''У 1708 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує анафему на Мазепу?
+  options:
+  - '{''text'': ''Як справедливе покарання'', ''correct'': False}'
+  - '{''text'': ''Як інструмент колоніального контролю'', ''correct'': True}'
+  - '{''text'': ''Як релігійний акт'', ''correct'': False}'
+  - '{''text'': ''Як тимчасовий захід'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, хто командував російськими військами під Батурином?
+  options:
+  - '{''text'': ''Петро I'', ''correct'': False}'
+  - '{''text'': ''Олександр Меншиков'', ''correct'': True}'
+  - '{''text'': ''Скоропадський'', ''correct'': False}'
+  - '{''text'': ''Голіцин'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує значення Полтавської битви для Європи?
+  options:
+  - '{''text'': ''Незначне'', ''correct'': False}'
+  - '{''text'': ''Змінила баланс сил — Швеція втратила статус великої держави'', ''correct'':
+    True}'
+  - '{''text'': ''Тимчасове'', ''correct'': False}'
+  - '{''text'': ''Тільки для України'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, що встановлювала Конституція Орлика?
+  options:
+  - '{''text'': ''Абсолютну владу гетьмана'', ''correct'': False}'
+  - '{''text'': ''Обмеження влади гетьмана Генеральною радою'', ''correct'': True}'
+  - '{''text'': ''Підпорядкування Москві'', ''correct'': False}'
+  - '{''text'': ''Приєднання до Швеції'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст описує долю решти шведської армії після Полтави?
+  options:
+  - '{''text'': ''Повернулася до Швеції'', ''correct'': False}'
+  - '{''text'': ''Близько 12000 вояків здалися в полон біля Переволочної'', ''correct'':
+    True}'
+  - '{''text'': ''Всі загинули'', ''correct'': False}'
+  - '{''text'': ''Приєдналися до козаків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Згідно з текстом, скільки жертв було в Батурині?
+  options:
+  - '{''text'': ''Близько 1000'', ''correct'': False}'
+  - '{''text'': ''Від 6000 до 20000 осіб'', ''correct'': True}'
+  - '{''text'': ''Близько 100'', ''correct'': False}'
+  - '{''text'': ''Жертв не було'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Полтаву і вигнання
+  question: Як текст пов'язує історію Мазепи з подіями 2022 року?
+  options:
+  - '{''text'': "Не пов''язує", ''correct'': False}'
+  - '{''text'': ''Порівнює знищення міст імперією тоді і зараз'', ''correct'': True}'
+  - '{''text'': ''Протиставляє'', ''correct'': False}'
+  - '{''text'': ''Критикує обидва періоди'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Мазепа описує свої мотиви в листі до Карла XII?
+  options:
+  - '{''text'': ''Особиста образа'', ''correct'': False}'
+  - '{''text'': ''Загроза від московського царя знищити козаків'', ''correct'': True}'
+  - '{''text'': ''Бажання багатства'', ''correct'': False}'
+  - '{''text'': ''Релігійні причини'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку мову використовує Меншиков у своєму рапорті?
+  options:
+  - '{''text'': ''Співчутливу'', ''correct'': False}'
+  - '{''text'': ''Офіційну і тріумфальну'', ''correct'': True}'
+  - '{''text'': ''Нейтральну'', ''correct'': False}'
+  - '{''text'': ''Критичну'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «усіх живих перебито» в рапорті Меншикова?
+  options:
+  - '{''text'': ''Тільки воїнів'', ''correct'': False}'
+  - '{''text'': ''Масове вбивство всього населення'', ''correct'': True}'
+  - '{''text'': ''Полонених'', ''correct'': False}'
+  - '{''text'': ''Старшину'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як преамбула Конституції Орлика характеризує козаків?
+  options:
+  - '{''text'': ''Як підданих царя'', ''correct'': False}'
+  - '{''text'': ''Як «народ вільний і незалежний»'', ''correct'': True}'
+  - '{''text'': ''Як союзників Москви'', ''correct'': False}'
+  - '{''text'': ''Як васалів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що Конституція Орлика каже про дії московських царів?
+  options:
+  - '{''text'': ''Вони допомагали'', ''correct'': False}'
+  - '{''text'': ''Вони «хитрістю і силою позбавили вольностей»'', ''correct'': True}'
+  - '{''text'': ''Вони були нейтральними'', ''correct'': False}'
+  - '{''text'': ''Вони захищали'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має фраза «вільна елекція» в Конституції Орлика?
+  options:
+  - '{''text'': ''Призначення Москвою'', ''correct'': False}'
+  - '{''text'': ''Демократичне обрання гетьмана'', ''correct'': True}'
+  - '{''text'': ''Спадкова влада'', ''correct'': False}'
+  - '{''text'': ''Військовий переворот'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як шведський офіцер описує смерть Мазепи?
+  options:
+  - '{''text'': ''Байдуже'', ''correct'': False}'
+  - '{''text'': ''З повагою до його турботи про націю'', ''correct'': True}'
+  - '{''text'': ''Критично'', ''correct'': False}'
+  - '{''text'': ''Глузливо'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння цих подій?
+  options:
+  - '{''text'': ''Вони розважають'', ''correct'': False}'
+  - '{''text'': ''Дають погляд учасників і сучасників'', ''correct'': True}'
+  - '{''text'': ''Вони короткі'', ''correct'': False}'
+  - '{''text'': ''Вони прості'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як рапорт Меншикова і Конституція Орлика протиставляються?
+  options:
+  - '{''text'': ''Вони однакові за тоном'', ''correct'': False}'
+  - '{''text'': ''Імперське насильство проти козацької свободи'', ''correct'': True}'
+  - '{''text'': ''Вони про різні події'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що Конституція посилається на «давні хроніки»?
+  options:
+  - '{''text'': ''Літературний прийом'', ''correct'': False}'
+  - '{''text'': ''Легітимізація козацької незалежності через історію'', ''correct'':
+    True}'
+  - '{''text'': ''Заповнення місця'', ''correct'': False}'
+  - '{''text'': ''Помилка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому лист Мазепи до Карла XII важливий як джерело?
+  options:
+  - '{''text'': ''Тільки для шведської історії'', ''correct'': False}'
+  - '{''text'': ''Показує мотиви гетьмана від першої особи'', ''correct'': True}'
+  - '{''text'': ''Не має значення'', ''correct'': False}'
+  - '{''text'': ''Тільки для дипломатії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «ніякого провіанту неприятелю не осталось» у рапорті?
+  options:
+  - '{''text'': ''Шведи перемогли'', ''correct'': False}'
+  - '{''text'': ''Стратегічна мета — позбавити шведів ресурсів'', ''correct'': True}'
+  - '{''text'': ''Козаки забрали'', ''correct'': False}'
+  - '{''text'': ''Голод'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє слово «тиранія» в Конституції Орлика?
+  options:
+  - '{''text'': ''Нейтральний опис'', ''correct'': False}'
+  - '{''text'': ''Засудження московського панування'', ''correct'': True}'
+  - '{''text'': ''Комплімент'', ''correct'': False}'
+  - '{''text'': ''Юридичний термін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому шведський офіцер пише, що Мазепа «не був воїном за фахом»?
+  options:
+  - '{''text'': ''Критика'', ''correct'': False}'
+  - '{''text'': ''Визнання, що він був політиком і дипломатом'', ''correct'': True}'
+  - '{''text'': ''Образа'', ''correct'': False}'
+  - '{''text'': ''Помилка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як джерела доповнюють картину подій 1708-1710 років?
+  options:
+  - '{''text'': ''Вони суперечать'', ''correct'': False}'
+  - '{''text'': ''Дають різні перспективи — ворожу, козацьку, нейтральну'', ''correct'':
+    True}'
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': "Не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що Конституція Орлика ухвалена у вигнанні?
+  options:
+  - '{''text'': ''Ніякого'', ''correct'': False}'
+  - '{''text'': ''Показує продовження боротьби навіть після поразки'', ''correct'':
+    True}'
+  - '{''text'': ''Робить її недійсною'', ''correct'': False}'
+  - '{''text'': ''Тільки символічне'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Мазепа перейшов на бік Швеції в 1708 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Батуринська різанина відбулася після Полтавської битви.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Карл XII був поранений під час Полтавської битви.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Конституція Орлика випередила американську на 70-80
+    років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Мазепа помер у Полтаві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, анафему на Мазепу проголошували щороку до 1917 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, російська армія під Полтавою налічувала 25000 вояків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Меншиков був сином придворного конюха.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, усе населення Батурина було вбито.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Полтавська битва тривала кілька днів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Пилип Орлик був обраний гетьманом у Бендерах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, могила Мазепи збереглася до наших днів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Мазепа привів до шведів 30 тисяч козаків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, зрадник показав росіянам таємний прохід у Батурин.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, Швеція стала великою державою після Полтави.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Полтаву і вигнання
+  statement: Згідно з текстом, останні слова Мазепи були «Все пропало».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

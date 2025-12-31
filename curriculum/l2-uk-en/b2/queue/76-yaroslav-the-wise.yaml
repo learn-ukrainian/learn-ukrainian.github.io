@@ -1,0 +1,1296 @@
+module: 76-yaroslav-the-wise
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/76-yaroslav-the-wise.md
+generated: '2025-12-30T19:49:16.718163'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 16
+  cloze: 1
+  unjumble: 16
+  quiz: 31
+  true-false: 16
+total_items: 96
+item_count: 96
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Ярослав правив у Києві протягом тридцять п'яти років.
+  error: тридцять
+  answer: тридцяти
+  sentence_corrected: Ярослав правив у Києві протягом тридцяти п'яти років.
+  options:
+  - тридцять
+  - тридцяти
+  - тридцятьох
+  - тридцятьма
+  original_explanation: 'Прийменник "протягом" вимагає родового відмінка: протягом
+    (чого?) тридцяти п''яти років.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Руська Правда була написана для управління українськими земля.
+  error: земля
+  answer: землями
+  sentence_corrected: Руська Правда була написана для управління українськими землями.
+  options:
+  - земля
+  - землями
+  - земель
+  - землях
+  original_explanation: 'Прийменник "для управління" вимагає орудного відмінка: управління
+    (чим?) землями.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Доньки Ярослава стали королевам Франції та Норвегії.
+  error: королевам
+  answer: королевами
+  sentence_corrected: Доньки Ярослава стали королевами Франції та Норвегії.
+  options:
+  - королевам
+  - королевами
+  - королев
+  - королеви
+  original_explanation: 'Дієслово "стати" вимагає орудного відмінка: стали (ким?)
+    королевами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Софійський собор було збудований візантійськими майстрами.
+  error: збудований
+  answer: збудовано
+  sentence_corrected: Софійський собор було збудовано візантійськими майстрами.
+  options:
+  - збудований
+  - збудовано
+  - збудована
+  - збудоване
+  original_explanation: 'Форма "було" + дієприкметник вимагає незмінної форми на -но:
+    було збудовано.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Анна привезла до Франції рукопис, на який королі складали присягу.
+  error: який
+  answer: якому
+  sentence_corrected: Анна привезла до Франції рукопис, на якому королі складали присягу.
+  options:
+  - який
+  - якому
+  - яким
+  - якого
+  original_explanation: 'Прийменник "на" з дієсловом "складати присягу" вимагає місцевого
+    відмінка: на (чому?) якому.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: За вбивство князівського слуги призначався штраф у вісімдесят
+    гривень.
+  error: вісімдесят
+  answer: вісімдесят
+  sentence_corrected: За вбивство князівського слуги призначався штраф у вісімдесят
+    гривень.
+  options:
+  - вісімдесят
+  - вісімдесяти
+  - вісімдесятьох
+  - вісімдесятьма
+  original_explanation: Числівник "вісімдесят" у знахідному відмінку після прийменника
+    "у" залишається незмінним (речення правильне).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Ярослав заснував школи, де навчалися діти бояр і духівництво.
+  error: духівництво
+  answer: духівництва
+  sentence_corrected: Ярослав заснував школи, де навчалися діти бояр і духівництва.
+  options:
+  - духівництво
+  - духівництва
+  - духівництвом
+  - духівництві
+  original_explanation: 'Після "бояр і" потрібен родовий відмінок для паралелізму:
+    діти (кого?) бояр і духівництва.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Монахи Києво-Печерський монастиря вели хроніки.
+  error: Києво-Печерський
+  answer: Києво-Печерського
+  sentence_corrected: Монахи Києво-Печерського монастиря вели хроніки.
+  options:
+  - Києво-Печерський
+  - Києво-Печерського
+  - Києво-Печерському
+  - Києво-Печерським
+  original_explanation: 'Іменник "монастиря" вимагає узгодженого прикметника в родовому
+    відмінку: Києво-Печерського монастиря.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Битва тривала від ранку до вечір.
+  error: вечір
+  answer: вечора
+  sentence_corrected: Битва тривала від ранку до вечора.
+  options:
+  - вечір
+  - вечора
+  - вечору
+  - вечором
+  original_explanation: 'Прийменник "до" вимагає родового відмінка: до (чого?) вечора.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Ярослав розробив амбітну матримоніальний стратегію.
+  error: матримоніальний
+  answer: матримоніальну
+  sentence_corrected: Ярослав розробив амбітну матримоніальну стратегію.
+  options:
+  - матримоніальний
+  - матримоніальну
+  - матримоніальної
+  - матримоніальною
+  original_explanation: 'Прикметник повинен узгоджуватися з іменником "стратегію"
+    (жін. рід, знах. відм.): матримоніальну стратегію.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Жодний європейський правитель не мав такий широких зв'язків.
+  error: такий
+  answer: таких
+  sentence_corrected: Жодний європейський правитель не мав таких широких зв'язків.
+  options:
+  - такий
+  - таких
+  - такими
+  - таку
+  original_explanation: 'Займенник повинен узгоджуватися з іменником "зв''язків" (множина,
+    родовий): таких зв''язків.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Спадщина Ярослава — це українська спадщини.
+  error: спадщини
+  answer: спадщина
+  sentence_corrected: Спадщина Ярослава — це українська спадщина.
+  options:
+  - спадщини
+  - спадщина
+  - спадщиною
+  - спадщині
+  original_explanation: 'Після "це" потрібен називний відмінок: це українська спадщина.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Графіті свідчать про рівень грамотність населення.
+  error: грамотність
+  answer: грамотності
+  sentence_corrected: Графіті свідчать про рівень грамотності населення.
+  options:
+  - грамотність
+  - грамотності
+  - грамотністю
+  - грамотним
+  original_explanation: 'Іменник "рівень" вимагає родового відмінка: рівень (чого?)
+    грамотності.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Московське князівство виникло через два століть після смерті
+    Ярослава.
+  error: століть
+  answer: століття
+  sentence_corrected: Московське князівство виникло через два століття після смерті
+    Ярослава.
+  options:
+  - століть
+  - століття
+  - століттями
+  - століттях
+  original_explanation: 'Числівник "два" вимагає родового однини: два (чого?) століття.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Катерина II наказала переписати історію на користь Московія.
+  error: Московія
+  answer: Московії
+  sentence_corrected: Катерина II наказала переписати історію на користь Московії.
+  options:
+  - Московія
+  - Московії
+  - Московією
+  - Московію
+  original_explanation: 'Прийменник "на користь" вимагає родового відмінка: на користь
+    (кого?) Московії.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Образ Ярослава присутній на банкноті два гривні.
+  error: два
+  answer: '2'
+  sentence_corrected: Образ Ярослава присутній на банкноті 2 гривні.
+  options:
+  - два
+  - двох
+  - двома
+  - дві
+  original_explanation: 'Числівник з іменником жіночого роду "гривні" повинен бути
+    "дві" або "2": банкнота 2 гривні.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Руська Правда встановлювала систему грошових штрафів — _____.
+  answer: вір
+  complete_sentence: Руська Правда встановлювала систему грошових штрафів — вір__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Ярослав заклав Софійський _____ після перемоги над печенігами.
+  answer: собор
+  complete_sentence: Ярослав заклав Софійський собор__ після перемоги над печенігами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: За вбивство вільної людини призначався штраф у 40 _____.
+  answer: гривень
+  complete_sentence: За вбивство вільної людини призначався штраф у 40 гривень__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Доньки Ярослава уклали династичні _____ з європейськими королями.
+  answer: шлюби
+  complete_sentence: Доньки Ярослава уклали династичні шлюби__ з європейськими королями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: На стінах Софійського собору збереглися давні _____.
+  answer: графіті
+  complete_sentence: На стінах Софійського собору збереглися давні графіті__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Ярослав особливо опікувався розвитком _____ і книжності.
+  answer: освіти
+  complete_sentence: Ярослав особливо опікувався розвитком освіти__ і книжності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Монахи вели хроніки, які лягли в основу _____.
+  answer: літопису
+  complete_sentence: Монахи вели хроніки, які лягли в основу літопису__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Росія намагається _____ спадщину Ярослава.
+  answer: привласнити
+  complete_sentence: Росія намагається привласнити__ спадщину Ярослава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Українська правова _____ продовжилася в Литовському Статуті.
+  answer: традиція
+  complete_sentence: Українська правова традиція__ продовжилася в Литовському Статуті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Собор прикрашають понад 260 квадратних метрів _____.
+  answer: мозаїк
+  complete_sentence: Собор прикрашають понад 260 квадратних метрів мозаїк__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Анна Ярославна вміла читати й _____ — рідкість для середньовічної
+    Європи.
+  answer: писати
+  complete_sentence: Анна Ярославна вміла читати й писати__ — рідкість для середньовічної
+    Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Ярослав розумів силу писаного _____.
+  answer: слова
+  complete_sentence: Ярослав розумів силу писаного слова__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Руська Правда захищала навіть _____ — рабів.
+  answer: холопів
+  complete_sentence: Руська Правда захищала навіть холопів__ — рабів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Це — визнання _____ української державницької традиції.
+  answer: тяглості
+  complete_sentence: Це — визнання тяглості__ української державницької традиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Найвідоміша _____ — "Богородиця Оранта" в апсиді собору.
+  answer: мозаїка
+  complete_sentence: Найвідоміша мозаїка__ — "Богородиця Оранта" в апсиді собору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Московське князівство розвивалося під монгольським _____.
+  answer: впливом
+  complete_sentence: Московське князівство розвивалося під монгольським впливом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'Ярослав {Мудрий|Великий|Хоробрий|Мудрий} перетворив Київську
+    Русь на найпотужнішу державу Європи. Він видав {Руську|Московську|Візантійську|Руську}
+    Правду — перший правовий {кодекс|храм|літопис|кодекс} східних слов''ян. За вбивство
+    вільної людини призначався {штраф|орден|титул|штраф} у 40 гривень.
+
+
+    Після перемоги над {печенігами|монголами|поляками|печенігами} Ярослав збудував
+    Софійський {собор|замок|палац|собор}. Цей храм прикрашають {мозаїки|картини|килими|мозаїки}
+    та фрески. На його стінах збереглися давні {графіті|книги|ікони|графіті}. Вони
+    свідчать про високу {грамотність|бідність|ворожість|грамотність} населення.
+
+
+    Доньки Ярослава стали європейськими {королевами|княгинями|монахинями|королевами}.
+    Анна вийшла заміж за французького {короля|герцога|графа|короля} Генріха I. Вона
+    вміла читати й {писати|малювати|співати|писати} — рідкість для того часу.
+
+
+    Спадщина Ярослава — це {українська|російська|польська|українська} спадщина. Московське
+    князівство виникло через два {століття|роки|місяці|століття} після його смерті.
+    Росія намагається {привласнити|забути|знищити|привласнити} цю історію. Правова
+    {традиція|культура|армія|традиція} продовжилася в Литовському Статуті.
+
+    '
+  blanks:
+  - answer: Мудрий
+    options:
+    - Мудрий
+    - Великий
+    - Хоробрий
+  - answer: Руську
+    options:
+    - Руську
+    - Московську
+    - Візантійську
+  - answer: кодекс
+    options:
+    - кодекс
+    - храм
+    - літопис
+  - answer: штраф
+    options:
+    - штраф
+    - орден
+    - титул
+  - answer: печенігами
+    options:
+    - печенігами
+    - монголами
+    - поляками
+  - answer: собор
+    options:
+    - собор
+    - замок
+    - палац
+  - answer: мозаїки
+    options:
+    - мозаїки
+    - картини
+    - килими
+  - answer: графіті
+    options:
+    - графіті
+    - книги
+    - ікони
+  - answer: грамотність
+    options:
+    - грамотність
+    - бідність
+    - ворожість
+  - answer: королевами
+    options:
+    - королевами
+    - княгинями
+    - монахинями
+  - answer: короля
+    options:
+    - короля
+    - герцога
+    - графа
+  - answer: писати
+    options:
+    - писати
+    - малювати
+    - співати
+  - answer: українська
+    options:
+    - українська
+    - російська
+    - польська
+  - answer: століття
+    options:
+    - століття
+    - роки
+    - місяці
+  - answer: привласнити
+    options:
+    - привласнити
+    - забути
+    - знищити
+  - answer: традиція
+    options:
+    - традиція
+    - культура
+    - армія
+  blank_count: 16
+  complete_passage: 'Ярослав Мудрий перетворив Київську Русь на найпотужнішу державу
+    Європи. Він видав Руську Правду — перший правовий кодекс східних слов''ян. За
+    вбивство вільної людини призначався штраф у 40 гривень.
+
+
+    Після перемоги над печенігами Ярослав збудував Софійський собор. Цей храм прикрашають
+    мозаїки та фрески. На його стінах збереглися давні графіті. Вони свідчать про
+    високу грамотність населення.
+
+
+    Доньки Ярослава стали європейськими королевами. Анна вийшла заміж за французького
+    короля Генріха I. Вона вміла читати й писати — рідкість для того часу.
+
+
+    Спадщина Ярослава — це українська спадщина. Московське князівство виникло через
+    два століття після його смерті. Росія намагається привласнити цю історію. Правова
+    традиція продовжилася в Литовському Статуті.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Руська Правда — перший правовий кодекс Русі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ярослав заснував школи для розвитку освіти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Його доньки стали європейськими королевами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ярослав збудував Софію після перемоги над печенігами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Анна привезла Реймське Євангеліє до Франції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Росія намагається привласнити спадщину Ярослава.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: За Ярослава почалося систематичне літописання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Софійський собор прикрашений мозаїками та фресками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ярослав зображений на банкноті 2 гривні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Правова традиція продовжилася у Литовському Статуті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Московське князівство виникло через два століття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ярослав створив першу бібліотеку при соборі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Анна вміла читати й писати — рідкість.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Книгам є польза, бо суть джерела мудрості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: За вбивство призначався штраф у сорок гривень.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ярослава називали тестем Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яке прізвисько мав Ярослав за життя?
+  options:
+  - '{''text'': ''Мудрий'', ''correct'': False}'
+  - '{''text'': ''Хромий'', ''correct'': True}'
+  - '{''text'': ''Великий'', ''correct'': False}'
+  - '{''text'': ''Добрий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті описано головний принцип права до Руської Правди?
+  options:
+  - '{''text'': ''Система штрафів'', ''correct'': False}'
+  - '{''text'': ''Кровна помста'', ''correct'': True}'
+  - '{''text'': "Ув''язнення", ''correct'': False}'
+  - '{''text'': ''Вигнання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Який штраф, згідно з текстом, призначався за вбивство вільної людини?
+  options:
+  - '{''text'': ''20 гривень'', ''correct'': False}'
+  - '{''text'': ''40 гривень'', ''correct'': True}'
+  - '{''text'': ''80 гривень'', ''correct'': False}'
+  - '{''text'': ''100 гривень'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, за текстом, Анна Ярославна привезла до Франції?
+  options:
+  - '{''text'': ''Руську Правду'', ''correct'': False}'
+  - '{''text'': ''Реймське Євангеліє'', ''correct'': True}'
+  - '{''text'': ''Софійську ікону'', ''correct'': False}'
+  - '{''text'': ''Київські хроніки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті характеризується Московське князівство щодо Ярослава?
+  options:
+  - '{''text'': ''Як пряме продовження його держави'', ''correct'': False}'
+  - '{''text'': ''Як виникле через два століття після його смерті'', ''correct'':
+    True}'
+  - '{''text'': ''Як союзник Києва'', ''correct'': False}'
+  - '{''text'': ''Як частина Русі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, згідно з текстом, збереглося на стінах Софійського собору?
+  options:
+  - '{''text'': ''Тільки мозаїки'', ''correct'': False}'
+  - '{''text'': ''Графіті — написи відвідувачів'', ''correct'': True}'
+  - '{''text'': ''Тільки фрески'', ''correct'': False}'
+  - '{''text'': ''Тільки ікони'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст описує Париж XI століття порівняно з Києвом?
+  options:
+  - '{''text'': ''Як більший і багатший'', ''correct'': False}'
+  - '{''text'': ''Як рівний Києву'', ''correct'': False}'
+  - '{''text'': ''Як менший за розмірами та культурою'', ''correct'': True}'
+  - '{''text'': ''Як столицю імперії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку функцію, за текстом, виконувала бібліотека при Софійському соборі?
+  options:
+  - '{''text'': ''Зберігала лише релігійні тексти'', ''correct'': False}'
+  - '{''text'': ''Зберігала релігійні тексти, хроніки, наукові трактати'', ''correct'':
+    True}'
+  - '{''text'': ''Була доступна лише князю'', ''correct'': False}'
+  - '{''text'': ''Містила тільки грецькі книги'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Коли, згідно з текстом, почалося систематичне літописання?
+  options:
+  - '{''text'': ''До правління Ярослава'', ''correct'': False}'
+  - '{''text'': ''За Ярослава'', ''correct'': True}'
+  - '{''text'': ''Після смерті Ярослава'', ''correct'': False}'
+  - '{''text'': ''У XIII столітті'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст пояснює появу назви "Росія"?
+  options:
+  - '{''text'': ''Це давня назва Русі'', ''correct'': False}'
+  - '{''text'': "Назва з''явилася в XVI столітті для Московського царства", ''correct'':
+    True}'
+  - '{''text'': ''Це грецька назва Києва'', ''correct'': False}'
+  - '{''text'': ''Це латинська назва Русі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що є на банкноті 2 гривні, згідно з текстом?
+  options:
+  - '{''text'': ''Софійський собор'', ''correct'': False}'
+  - '{''text'': ''Зображення Ярослава Мудрого'', ''correct'': True}'
+  - '{''text'': ''Руська Правда'', ''correct'': False}'
+  - '{''text'': ''Герб Києва'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яка доля бібліотеки Ярослава, за текстом?
+  options:
+  - '{''text'': ''Збереглася до наших днів'', ''correct'': False}'
+  - '{''text'': ''Невідома'', ''correct'': True}'
+  - '{''text'': ''Знищена монголами'', ''correct'': False}'
+  - '{''text'': ''Перевезена до Москви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як, згідно з текстом, правова традиція Руської Правди продовжилася?
+  options:
+  - '{''text'': ''У московському праві'', ''correct'': False}'
+  - '{''text'': ''У Литовському Статуті та козацькому праві'', ''correct'': True}'
+  - '{''text'': ''У візантійському праві'', ''correct'': False}'
+  - '{''text'': ''Не продовжилася'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що текст говорить про підпис Анни на французьких документах?
+  options:
+  - '{''text'': ''Вона підписувалася латиницею'', ''correct'': False}'
+  - '{''text'': ''Вона підписувалася кирилицею'', ''correct'': True}'
+  - '{''text'': ''Вона не вміла писати'', ''correct'': False}'
+  - '{''text'': ''Її підписи не збереглися'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Коли, згідно з текстом, ЮНЕСКО внесла Софійський собор до списку під загрозою?
+  options:
+  - '{''text'': ''У 2014 році'', ''correct'': False}'
+  - '{''text'': ''У 2022 році'', ''correct'': True}'
+  - '{''text'': ''У 2020 році'', ''correct'': False}'
+  - '{''text'': ''У 1991 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст описує Катерину II і українську історію?
+  options:
+  - '{''text'': ''Вона захищала українську історію'', ''correct'': False}'
+  - '{''text'': ''Вона наказала переписати історію на користь Московії'', ''correct'':
+    True}'
+  - '{''text'': ''Вона не цікавилася історією'', ''correct'': False}'
+  - '{''text'': ''Вона визнала українську спадщину'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яке твердження відповідає деколонізаційному підходу тексту?
+  options:
+  - '{''text'': ''Ярослав Мудрий — спільний предок українців і росіян.'', ''correct'':
+    False}'
+  - '{''text'': ''Ярослав правив у Києві, його спадщина — українська.'', ''correct'':
+    True}'
+  - '{''text'': "Російська і українська історії нерозривно пов''язані.", ''correct'':
+    False}'
+  - '{''text'': ''Москва продовжила традиції Києва.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст пояснює появу назви "Росія"?
+  options:
+  - '{''text'': ''Це давня назва Русі'', ''correct'': False}'
+  - '{''text'': ''Це грецький варіант слова "Русь", привласнений Московією в XVI столітті'',
+    ''correct'': True}'
+  - '{''text'': ''Це латинська назва'', ''correct'': False}'
+  - '{''text'': ''Назву дали візантійці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому, за текстом, російські претензії на спадщину Ярослава є необґрунтованими?
+  options:
+  - '{''text'': ''Тому що Росія існувала одночасно з Руссю'', ''correct'': False}'
+  - '{''text'': "Тому що Московія виникла через два століття і не мала культурного
+    зв''язку з епохою Ярослава", ''correct'': True}'
+  - '{''text'': ''Тому що Ярослав воював проти Москви'', ''correct'': False}'
+  - '{''text'': ''Тому що Московія була союзником Русі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує роль Катерини II в українській історії?
+  options:
+  - '{''text'': ''Вона захищала українську культуру'', ''correct'': False}'
+  - '{''text'': ''Вона наказала переписати історію на користь Московії'', ''correct'':
+    True}'
+  - '{''text'': ''Вона не цікавилася історією'', ''correct'': False}'
+  - '{''text'': ''Вона визнала українську спадщину'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку правову традицію, за текстом, успадкувала Україна від Ярослава?
+  options:
+  - '{''text'': ''Традицію кровної помсти'', ''correct'': False}'
+  - '{''text'': ''Руську Правду через Литовський Статут і козацьке право'', ''correct'':
+    True}'
+  - '{''text'': ''Візантійське право'', ''correct'': False}'
+  - '{''text'': ''Московське право'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що текст говорить про вплив Золотої Орди на Московію?
+  options:
+  - '{''text'': ''Московія боролася проти Орди'', ''correct'': False}'
+  - '{''text'': ''Московія запозичила авторитарну модель влади від Орди'', ''correct'':
+    True}'
+  - '{''text'': ''Орда не вплинула на Московію'', ''correct'': False}'
+  - '{''text'': ''Орда захищала традиції Русі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст пояснює сучасне значення Ярослава для України?
+  options:
+  - '{''text'': ''Він не має значення для сучасної України'', ''correct'': False}'
+  - '{''text'': ''Його образ присутній на грошах, в нагородах, назвах — як символ
+    державницької тяглості'', ''correct'': True}'
+  - '{''text'': ''Він важливий тільки для істориків'', ''correct'': False}'
+  - '{''text'': ''Його спадщину поділяють Україна і Росія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому текст називає російське привласнення української історії "колоніальною
+    фальсифікацією"?
+  options:
+  - '{''text'': ''Тому що це було давно'', ''correct'': False}'
+  - '{''text'': ''Тому що імперія систематично переписувала історію для обґрунтування
+    своїх претензій'', ''correct'': True}'
+  - '{''text'': ''Тому що історія невідома'', ''correct'': False}'
+  - '{''text'': ''Тому що українці не мають власної історії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку роль відіграє Софійський собор у деколонізаційному наративі тексту?
+  options:
+  - '{''text'': ''Як приклад візантійського впливу'', ''correct'': False}'
+  - '{''text'': ''Як фізичне свідчення української спадщини, що стоїть у Києві тисячу
+    років'', ''correct'': True}'
+  - '{''text'': "Як спільна пам''ятка України і Росії", ''correct'': False}'
+  - '{''text'': ''Як руїна минулого'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує статус Русі в Європі за Ярослава?
+  options:
+  - '{''text'': ''Як варварську державу на периферії'', ''correct'': False}'
+  - '{''text'': "Як рівноправного члена європейської сім''ї народів", ''correct'':
+    True}'
+  - '{''text'': ''Як васала Візантії'', ''correct'': False}'
+  - '{''text'': ''Як ізольовану країну'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому, за текстом, українська історіографія відрізняється від російської?
+  options:
+  - '{''text'': ''Вони мають спільні погляди'', ''correct'': False}'
+  - '{''text'': ''Українська базується на первинних джерелах і тяглості традицій на
+    українській землі'', ''correct'': True}'
+  - '{''text'': ''Українська історіографія новіша'', ''correct'': False}'
+  - '{''text'': ''Російська історіографія точніша'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що текст говорить про термін "давньоруський"?
+  options:
+  - '{''text'': ''Це нейтральний науковий термін'', ''correct'': False}'
+  - '{''text'': ''Це термін XVIII століття, який використовувався для привласнення
+    спадщини'', ''correct'': True}'
+  - '{''text'': ''Це український термін'', ''correct'': False}'
+  - '{''text'': ''Це візантійський термін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яка головна теза деколонізаційного розділу тексту?
+  options:
+  - '{''text'': ''Україна і Росія мають спільну історію'', ''correct'': False}'
+  - '{''text'': ''Спадщина Ярослава — українська, Московія її привласнила'', ''correct'':
+    True}'
+  - '{''text'': "Історія Русі належить усім слов''янам", ''correct'': False}'
+  - '{''text'': ''Ярослав не мав значення для історії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст пропонує реагувати на російські історичні претензії?
+  options:
+  - '{''text'': ''Ігнорувати їх'', ''correct'': False}'
+  - '{''text'': ''Визнати і спростувати за допомогою фактів'', ''correct'': True}'
+  - '{''text'': ''Погодитися з ними'', ''correct'': False}'
+  - '{''text'': ''Шукати компроміс'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому саме Ярослав Мудрий є символом у контексті деколонізації?
+  options:
+  - '{''text'': ''Тому що він воював з Московією'', ''correct'': False}'
+  - '{''text'': ''Тому що його епоха — вершина української державності, яку Росія
+    намагається привласнити'', ''correct'': True}'
+  - '{''text'': ''Тому що він невідомий у Росії'', ''correct'': False}'
+  - '{''text'': ''Тому що він засновник Києва'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, прізвисько "Мудрий" Ярослав отримав за життя.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті зазначено, що Руська Правда захищала навіть рабів (холопів).
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, Софійський собор — найбільший храм тогочасної Європи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст стверджує, що бібліотека Ярослава збереглася до наших днів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, Анна Ярославна була неписьменною.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що Київ XI століття перевершував Париж за рівнем культури.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, Московське князівство є прямим спадкоємцем держави Ярослава.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст повідомляє, що систематичне літописання почалося за Ярослава.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, штраф за вбивство вільної людини становив 80 гривень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті зазначено, що Ярослав був кульгавим від народження.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, на банкноті 2 гривні зображено Софійський собор.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст стверджує, що графіті на стінах Софії свідчать про грамотність
+    населення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, Велика хартія вольностей з'явилася раніше за Руську
+    Правду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що ЮНЕСКО внесла Софію до списку під загрозою у 2022
+    році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, правова традиція Руської Правди продовжилася в московському
+    праві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст повідомляє, що всі доньки Ярослава стали королевами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

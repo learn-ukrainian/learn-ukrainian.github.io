@@ -1,16 +1,19 @@
 module: 56-discourse-markers-basic
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/56-discourse-markers-basic.md
-generated: '2025-12-29T00:22:02.909536'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:28.861396'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 28
+  cloze: 2
   unjumble: 8
   quiz: 16
   translate: 8
   true-false: 14
-item_count: 82
+total_items: 84
+item_count: 84
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки з маркерами
@@ -406,6 +409,208 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Новинна стаття
+  passage_template: 'Українська економіка демонструє зростання. {Проте|Тому|Отже|Проте}
+    експерти попереджають про можливі ризики. {Зокрема|Тобто|Значить|Зокрема}, інфляція
+    залишається серйозною проблемою. {Крім того|Але|Хоча|Крім того}, курс гривні нестабільний.
+    Уряд розробив нову стратегію. {А саме|Наприклад|Проте|А саме}: зниження податків
+    для малого бізнесу та підтримка експорту. {Однак|Тобто|Справді|Однак} опозиція
+    критикує ці заходи. {Тому|Але|Хоча|Тому} дебати тривають. {Загалом|Проте|Тобто|Загалом},
+    ситуація залишається складною, {але|тому|отже|але} не безнадійною. {Насправді|Справді|Дійсно|Насправді},
+    є позитивні тенденції. {Наприклад|Тобто|А саме|Наприклад}, IT-сектор зростає.
+    {До того ж|Але|Хоча|До того ж}, туризм відновлюється. {Отже|Але|Хоча|Отже}, є
+    підстави для оптимізму. {Водночас|Але|Тому|Водночас} потрібна обережність. {Тим
+    не менше|Але|Тому|Тим не менше}, майбутнє виглядає обнадійливо.
+
+    '
+  blanks:
+  - answer: Проте
+    options:
+    - Проте
+    - Тому
+    - Отже
+  - answer: Зокрема
+    options:
+    - Зокрема
+    - Тобто
+    - Значить
+  - answer: Крім того
+    options:
+    - Крім того
+    - Але
+    - Хоча
+  - answer: А саме
+    options:
+    - А саме
+    - Наприклад
+    - Проте
+  - answer: Однак
+    options:
+    - Однак
+    - Тобто
+    - Справді
+  - answer: Тому
+    options:
+    - Тому
+    - Але
+    - Хоча
+  - answer: Загалом
+    options:
+    - Загалом
+    - Проте
+    - Тобто
+  - answer: але
+    options:
+    - але
+    - тому
+    - отже
+  - answer: Насправді
+    options:
+    - Насправді
+    - Справді
+    - Дійсно
+  - answer: Наприклад
+    options:
+    - Наприклад
+    - Тобто
+    - А саме
+  - answer: До того ж
+    options:
+    - До того ж
+    - Але
+    - Хоча
+  - answer: Отже
+    options:
+    - Отже
+    - Але
+    - Хоча
+  - answer: Водночас
+    options:
+    - Водночас
+    - Але
+    - Тому
+  - answer: Тим не менше
+    options:
+    - Тим не менше
+    - Але
+    - Тому
+  blank_count: 14
+  complete_passage: 'Українська економіка демонструє зростання. Проте експерти попереджають
+    про можливі ризики. Зокрема, інфляція залишається серйозною проблемою. Крім того,
+    курс гривні нестабільний. Уряд розробив нову стратегію. А саме: зниження податків
+    для малого бізнесу та підтримка експорту. Однак опозиція критикує ці заходи. Тому
+    дебати тривають. Загалом, ситуація залишається складною, але не безнадійною. Насправді,
+    є позитивні тенденції. Наприклад, IT-сектор зростає. До того ж, туризм відновлюється.
+    Отже, є підстави для оптимізму. Водночас потрібна обережність. Тим не менше, майбутнє
+    виглядає обнадійливо.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Академічний текст
+  passage_template: 'Мовна політика — складне питання. {Однак|Тому|Значить|Однак}
+    компроміс можливий. Існують різні підходи. {Наприклад|Тобто|А саме|Наприклад},
+    унітарний передбачає одну державну мову. {Проте|Тому|Отже|Проте} плюралістичний
+    допускає регіональні мови. {Таким чином|Але|Хоча|Таким чином}, бачимо два протилежні
+    погляди. {Справді|Тому|Отже|Справді}, питання не має легкого рішення. {Насправді|Але|Тому|Насправді},
+    обидва підходи мають свої переваги. {Зокрема|Але|Тому|Зокрема}, унітарний забезпечує
+    єдність. {Водночас|Але|Тому|Водночас} плюралістичний захищає права меншин. {Тобто|Але|Тому|Тобто},
+    кожен підхід має свою логіку. {Разом з тим|Але|Тому|Разом з тим}, потрібен баланс.
+    {Крім того|Але|Тому|Крім того}, важливий історичний контекст. {Отже|Але|Хоча|Отже},
+    потрібен детальний аналіз. {Принаймні|Але|Тому|Принаймні}, ми розуміємо складність.
+    {Загалом|Але|Тому|Загалом}, дискусія триватиме ще довго.
+
+    '
+  blanks:
+  - answer: Однак
+    options:
+    - Однак
+    - Тому
+    - Значить
+  - answer: Наприклад
+    options:
+    - Наприклад
+    - Тобто
+    - А саме
+  - answer: Проте
+    options:
+    - Проте
+    - Тому
+    - Отже
+  - answer: Таким чином
+    options:
+    - Таким чином
+    - Але
+    - Хоча
+  - answer: Справді
+    options:
+    - Справді
+    - Тому
+    - Отже
+  - answer: Насправді
+    options:
+    - Насправді
+    - Але
+    - Тому
+  - answer: Зокрема
+    options:
+    - Зокрема
+    - Але
+    - Тому
+  - answer: Водночас
+    options:
+    - Водночас
+    - Але
+    - Тому
+  - answer: Тобто
+    options:
+    - Тобто
+    - Але
+    - Тому
+  - answer: Разом з тим
+    options:
+    - Разом з тим
+    - Але
+    - Тому
+  - answer: Крім того
+    options:
+    - Крім того
+    - Але
+    - Тому
+  - answer: Отже
+    options:
+    - Отже
+    - Але
+    - Хоча
+  - answer: Принаймні
+    options:
+    - Принаймні
+    - Але
+    - Тому
+  - answer: Загалом
+    options:
+    - Загалом
+    - Але
+    - Тому
+  blank_count: 14
+  complete_passage: 'Мовна політика — складне питання. Однак компроміс можливий. Існують
+    різні підходи. Наприклад, унітарний передбачає одну державну мову. Проте плюралістичний
+    допускає регіональні мови. Таким чином, бачимо два протилежні погляди. Справді,
+    питання не має легкого рішення. Насправді, обидва підходи мають свої переваги.
+    Зокрема, унітарний забезпечує єдність. Водночас плюралістичний захищає права меншин.
+    Тобто, кожен підхід має свою логіку. Разом з тим, потрібен баланс. Крім того,
+    важливий історичний контекст. Отже, потрібен детальний аналіз. Принаймні, ми розуміємо
+    складність. Загалом, дискусія триватиме ще довго.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з маркерами
   jumbled_words: []
@@ -475,14 +680,10 @@ items:
   question: Він поліглот, _____ володіє багатьма мовами вільно, включаючи українську
     та англійську.
   options:
-  - text: тобто
-    correct: true
-  - text: а саме
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: зокрема
-    correct: false
+  - '{''text'': ''тобто'', ''correct'': True}'
+  - '{''text'': ''а саме'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''зокрема'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -493,14 +694,10 @@ items:
   title: Пояснення та уточнення
   question: У мене три хобі, _____ читання книг, плавання в басейні та фотографія.
   options:
-  - text: а саме
-    correct: true
-  - text: тобто
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: зокрема
-    correct: false
+  - '{''text'': ''а саме'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''зокрема'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -512,14 +709,10 @@ items:
   question: Багато європейських країн, _____ Польща та Німеччина, підтримали нове
     рішення Євросоюзу.
   options:
-  - text: наприклад
-    correct: true
-  - text: тобто
-    correct: false
-  - text: а саме
-    correct: false
-  - text: власне
-    correct: false
+  - '{''text'': ''наприклад'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''а саме'', ''correct'': False}'
+  - '{''text'': ''власне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -531,14 +724,10 @@ items:
   question: Він цікавиться мистецтвом, _____ українським живописом та іконописом Київської
     Русі.
   options:
-  - text: зокрема
-    correct: true
-  - text: тобто
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: власне
-    correct: false
+  - '{''text'': ''зокрема'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''власне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -549,14 +738,10 @@ items:
   title: Пояснення та уточнення
   question: _____, я хотів сказати дещо інше про цю важливу тему нашого обговорення.
   options:
-  - text: Власне
-    correct: true
-  - text: Тобто
-    correct: false
-  - text: А саме
-    correct: false
-  - text: Наприклад
-    correct: false
+  - '{''text'': ''Власне'', ''correct'': True}'
+  - '{''text'': ''Тобто'', ''correct'': False}'
+  - '{''text'': ''А саме'', ''correct'': False}'
+  - '{''text'': ''Наприклад'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -567,14 +752,10 @@ items:
   title: Пояснення та уточнення
   question: Лінгвіст — це вчений, _____ фахівець, який вивчає мови та їхню структуру.
   options:
-  - text: тобто
-    correct: true
-  - text: а саме
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: зокрема
-    correct: false
+  - '{''text'': ''тобто'', ''correct'': True}'
+  - '{''text'': ''а саме'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''зокрема'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -586,14 +767,10 @@ items:
   question: Потрібно вивчити три теми для успішного складання іспиту, _____ граматику,
     лексику та фонетику.
   options:
-  - text: а саме
-    correct: true
-  - text: тобто
-    correct: false
-  - text: наприклад
-    correct: false
-  - text: власне
-    correct: false
+  - '{''text'': ''а саме'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''наприклад'', ''correct'': False}'
+  - '{''text'': ''власне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -605,14 +782,10 @@ items:
   question: Українська культура багата і різноманітна, _____ народні пісні та танці
     відомі в усьому світі.
   options:
-  - text: зокрема
-    correct: true
-  - text: тобто
-    correct: false
-  - text: а саме
-    correct: false
-  - text: власне
-    correct: false
+  - '{''text'': ''зокрема'', ''correct'': True}'
+  - '{''text'': ''тобто'', ''correct'': False}'
+  - '{''text'': ''а саме'', ''correct'': False}'
+  - '{''text'': ''власне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -623,14 +796,10 @@ items:
   title: Узагальнення та підсилення
   question: _____, я люблю подорожувати різними країнами світу, це моя найбільша пристрасть.
   options:
-  - text: Взагалі
-    correct: true
-  - text: Загалом
-    correct: false
-  - text: Справді
-    correct: false
-  - text: Дійсно
-    correct: false
+  - '{''text'': ''Взагалі'', ''correct'': True}'
+  - '{''text'': ''Загалом'', ''correct'': False}'
+  - '{''text'': ''Справді'', ''correct'': False}'
+  - '{''text'': ''Дійсно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -641,14 +810,10 @@ items:
   title: Узагальнення та підсилення
   question: _____, проєкт був успішним, хоча виникли деякі технічні проблеми на початку.
   options:
-  - text: Загалом
-    correct: true
-  - text: Взагалі
-    correct: false
-  - text: Справді
-    correct: false
-  - text: Насправді
-    correct: false
+  - '{''text'': ''Загалом'', ''correct'': True}'
+  - '{''text'': ''Взагалі'', ''correct'': False}'
+  - '{''text'': ''Справді'', ''correct'': False}'
+  - '{''text'': ''Насправді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -659,14 +824,10 @@ items:
   title: Узагальнення та підсилення
   question: Це _____ хороша ідея для нашого стартапу, я повністю підтримую цю пропозицію!
   options:
-  - text: справді
-    correct: true
-  - text: загалом
-    correct: false
-  - text: взагалі
-    correct: false
-  - text: насправді
-    correct: false
+  - '{''text'': ''справді'', ''correct'': True}'
+  - '{''text'': ''загалом'', ''correct'': False}'
+  - '{''text'': ''взагалі'', ''correct'': False}'
+  - '{''text'': ''насправді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -677,14 +838,10 @@ items:
   title: Узагальнення та підсилення
   question: Ви _____ маєте рацію щодо цього важливого питання, я погоджуюся з вами.
   options:
-  - text: дійсно
-    correct: true
-  - text: справді
-    correct: false
-  - text: загалом
-    correct: false
-  - text: взагалі
-    correct: false
+  - '{''text'': ''дійсно'', ''correct'': True}'
+  - '{''text'': ''справді'', ''correct'': False}'
+  - '{''text'': ''загалом'', ''correct'': False}'
+  - '{''text'': ''взагалі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -696,14 +853,10 @@ items:
   question: Він здається суворим керівником, але _____ дуже добрий і турботливий до
     колег.
   options:
-  - text: насправді
-    correct: true
-  - text: справді
-    correct: false
-  - text: дійсно
-    correct: false
-  - text: загалом
-    correct: false
+  - '{''text'': ''насправді'', ''correct'': True}'
+  - '{''text'': ''справді'', ''correct'': False}'
+  - '{''text'': ''дійсно'', ''correct'': False}'
+  - '{''text'': ''загалом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -714,14 +867,10 @@ items:
   title: Узагальнення та підсилення
   question: Здавалося, що завдання легке, _____ воно виявилося надзвичайно складним.
   options:
-  - text: насправді
-    correct: true
-  - text: справді
-    correct: false
-  - text: дійсно
-    correct: false
-  - text: взагалі
-    correct: false
+  - '{''text'': ''насправді'', ''correct'': True}'
+  - '{''text'': ''справді'', ''correct'': False}'
+  - '{''text'': ''дійсно'', ''correct'': False}'
+  - '{''text'': ''взагалі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -732,14 +881,10 @@ items:
   title: Узагальнення та підсилення
   question: Ця книга _____ цікава, я не могла відірватися від читання всю ніч!
   options:
-  - text: справді
-    correct: true
-  - text: загалом
-    correct: false
-  - text: взагалі
-    correct: false
-  - text: насправді
-    correct: false
+  - '{''text'': ''справді'', ''correct'': True}'
+  - '{''text'': ''загалом'', ''correct'': False}'
+  - '{''text'': ''взагалі'', ''correct'': False}'
+  - '{''text'': ''насправді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -750,14 +895,10 @@ items:
   title: Узагальнення та підсилення
   question: _____, результати дослідження підтвердили нашу гіпотезу про мовні зміни.
   options:
-  - text: Дійсно
-    correct: true
-  - text: Справді
-    correct: false
-  - text: Загалом
-    correct: false
-  - text: Взагалі
-    correct: false
+  - '{''text'': ''Дійсно'', ''correct'': True}'
+  - '{''text'': ''Справді'', ''correct'': False}'
+  - '{''text'': ''Загалом'', ''correct'': False}'
+  - '{''text'': ''Взагалі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -769,14 +910,10 @@ items:
   source_sentence: However, I still went to Kyiv.
   answer: ''
   options:
-  - text: Проте я все ж поїхав до Києва.
-    correct: true
-  - text: Тому я все ж поїхав до Києва.
-    correct: false
-  - text: Отже я все ж поїхав до Києва.
-    correct: false
-  - text: Значить я все ж поїхав до Києва.
-    correct: false
+  - '{''text'': ''Проте я все ж поїхав до Києва.'', ''correct'': True}'
+  - '{''text'': ''Тому я все ж поїхав до Києва.'', ''correct'': False}'
+  - '{''text'': ''Отже я все ж поїхав до Києва.'', ''correct'': False}'
+  - '{''text'': ''Значить я все ж поїхав до Києва.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -787,14 +924,10 @@ items:
   source_sentence: So, what do we have?
   answer: ''
   options:
-  - text: Отже, що маємо?
-    correct: true
-  - text: Проте, що маємо?
-    correct: false
-  - text: Але, що маємо?
-    correct: false
-  - text: Тобто, що маємо?
-    correct: false
+  - '{''text'': ''Отже, що маємо?'', ''correct'': True}'
+  - '{''text'': ''Проте, що маємо?'', ''correct'': False}'
+  - '{''text'': ''Але, що маємо?'', ''correct'': False}'
+  - '{''text'': ''Тобто, що маємо?'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -805,14 +938,10 @@ items:
   source_sentence: That is, you're saying that...
   answer: ''
   options:
-  - text: Тобто ви кажете, що...
-    correct: true
-  - text: Наприклад ви кажете, що...
-    correct: false
-  - text: А саме ви кажете, що...
-    correct: false
-  - text: Зокрема ви кажете, що...
-    correct: false
+  - '{''text'': ''Тобто ви кажете, що...'', ''correct'': True}'
+  - '{''text'': ''Наприклад ви кажете, що...'', ''correct'': False}'
+  - '{''text'': ''А саме ви кажете, що...'', ''correct'': False}'
+  - '{''text'': ''Зокрема ви кажете, що...'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -823,14 +952,10 @@ items:
   source_sentence: For example, we could do this.
   answer: ''
   options:
-  - text: Наприклад, можна зробити так.
-    correct: true
-  - text: Тобто, можна зробити так.
-    correct: false
-  - text: А саме, можна зробити так.
-    correct: false
-  - text: Зокрема, можна зробити так.
-    correct: false
+  - '{''text'': ''Наприклад, можна зробити так.'', ''correct'': True}'
+  - '{''text'': ''Тобто, можна зробити так.'', ''correct'': False}'
+  - '{''text'': ''А саме, можна зробити так.'', ''correct'': False}'
+  - '{''text'': ''Зокрема, можна зробити так.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -841,14 +966,10 @@ items:
   source_sentence: Although it was late, we arrived on time.
   answer: ''
   options:
-  - text: Хоча було пізно, ми прибули вчасно.
-    correct: true
-  - text: Проте було пізно, ми прибули вчасно.
-    correct: false
-  - text: Але було пізно, ми прибули вчасно.
-    correct: false
-  - text: Тому було пізно, ми прибули вчасно.
-    correct: false
+  - '{''text'': ''Хоча було пізно, ми прибули вчасно.'', ''correct'': True}'
+  - '{''text'': ''Проте було пізно, ми прибули вчасно.'', ''correct'': False}'
+  - '{''text'': ''Але було пізно, ми прибули вчасно.'', ''correct'': False}'
+  - '{''text'': ''Тому було пізно, ми прибули вчасно.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -859,14 +980,10 @@ items:
   source_sentence: In general, I like traveling.
   answer: ''
   options:
-  - text: Взагалі, я люблю подорожувати.
-    correct: true
-  - text: Загалом, я люблю подорожувати.
-    correct: false
-  - text: Справді, я люблю подорожувати.
-    correct: false
-  - text: Дійсно, я люблю подорожувати.
-    correct: false
+  - '{''text'': ''Взагалі, я люблю подорожувати.'', ''correct'': True}'
+  - '{''text'': ''Загалом, я люблю подорожувати.'', ''correct'': False}'
+  - '{''text'': ''Справді, я люблю подорожувати.'', ''correct'': False}'
+  - '{''text'': ''Дійсно, я люблю подорожувати.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -877,14 +994,10 @@ items:
   source_sentence: Actually, he is very kind.
   answer: ''
   options:
-  - text: Насправді він дуже добрий.
-    correct: true
-  - text: Справді він дуже добрий.
-    correct: false
-  - text: Дійсно він дуже добрий.
-    correct: false
-  - text: Загалом він дуже добрий.
-    correct: false
+  - '{''text'': ''Насправді він дуже добрий.'', ''correct'': True}'
+  - '{''text'': ''Справді він дуже добрий.'', ''correct'': False}'
+  - '{''text'': ''Дійсно він дуже добрий.'', ''correct'': False}'
+  - '{''text'': ''Загалом він дуже добрий.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -895,14 +1008,10 @@ items:
   source_sentence: Therefore, we stayed home.
   answer: ''
   options:
-  - text: Тому ми залишилися вдома.
-    correct: true
-  - text: Проте ми залишилися вдома.
-    correct: false
-  - text: Але ми залишилися вдома.
-    correct: false
-  - text: Хоча ми залишилися вдома.
-    correct: false
+  - '{''text'': ''Тому ми залишилися вдома.'', ''correct'': True}'
+  - '{''text'': ''Проте ми залишилися вдома.'', ''correct'': False}'
+  - '{''text'': ''Але ми залишилися вдома.'', ''correct'': False}'
+  - '{''text'': ''Хоча ми залишилися вдома.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

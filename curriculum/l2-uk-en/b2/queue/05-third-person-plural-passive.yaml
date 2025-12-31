@@ -1,15 +1,18 @@
 module: 05-third-person-plural-passive
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/05-third-person-plural-passive.md
-generated: '2025-12-29T21:25:23.725546'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.807790'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 2
   unjumble: 32
   quiz: 24
   true-false: 16
-item_count: 120
+total_items: 122
+item_count: 122
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилку у вживанні відмінка або форми
@@ -584,6 +587,297 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст правильними формами
+  passage_template: 'Вчора Петро ходив на співбесіду. Спочатку {йому|його|ним|йому}
+    запитали про досвід роботи. Потім {його|йому|ним|його} попросили розповісти про
+    себе. {Йому|Його|Ним|Йому} показали офіс і познайомили з колективом.
+
+
+    Наприкінці {йому|його|ним|йому} сказали, що зателефонують через тиждень. Але вже
+    наступного дня {йому|його|ним|йому} подзвонили! {Його|Йому|Ним|Його} прийняли
+    на роботу! {Йому|Його|Ним|Йому} пообіцяли хорошу зарплату.
+
+
+    {Йому|Його|Ним|Йому} пояснили всі умови контракту. {Його|Йому|Ним|Його} запросили
+    на підписання документів. {Йому|Його|Ним|Йому} надіслали список необхідних паперів.
+    {Йому|Його|Ним|Йому} порадили приїхати о дев''ятій ранку.
+
+
+    Петро дуже радий! {Його|Йому|Ним|Його} обрали з-поміж двадцяти кандидатів. {Йому|Його|Ним|Йому}
+    дали шанс почати нову кар''єру. {Його|Йому|Ним|Його} призначили на посаду молодшого
+    аналітика. {Йому|Його|Ним|Йому} вручили службове посвідчення. Також {йому|його|ним|йому}
+    пообіцяли навчання за рахунок компанії.
+
+    '
+  blanks:
+  - answer: йому
+    options:
+    - йому
+    - його
+    - ним
+  - answer: його
+    options:
+    - його
+    - йому
+    - ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: йому
+    options:
+    - йому
+    - його
+    - ним
+  - answer: йому
+    options:
+    - йому
+    - його
+    - ним
+  - answer: Його
+    options:
+    - Його
+    - Йому
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: Його
+    options:
+    - Його
+    - Йому
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: Його
+    options:
+    - Його
+    - Йому
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: Його
+    options:
+    - Його
+    - Йому
+    - Ним
+  - answer: Йому
+    options:
+    - Йому
+    - Його
+    - Ним
+  - answer: йому
+    options:
+    - йому
+    - його
+    - ним
+  blank_count: 16
+  complete_passage: 'Вчора Петро ходив на співбесіду. Спочатку йому запитали про досвід
+    роботи. Потім його попросили розповісти про себе. Йому показали офіс і познайомили
+    з колективом.
+
+
+    Наприкінці йому сказали, що зателефонують через тиждень. Але вже наступного дня
+    йому подзвонили! Його прийняли на роботу! Йому пообіцяли хорошу зарплату.
+
+
+    Йому пояснили всі умови контракту. Його запросили на підписання документів. Йому
+    надіслали список необхідних паперів. Йому порадили приїхати о дев''ятій ранку.
+
+
+    Петро дуже радий! Його обрали з-поміж двадцяти кандидатів. Йому дали шанс почати
+    нову кар''єру. Його призначили на посаду молодшого аналітика. Йому вручили службове
+    посвідчення. Також йому пообіцяли навчання за рахунок компанії.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Оберіть відповідну форму для регістру
+  passage_template: '**Розмовна ситуація (у кав''ярні):**
+
+    — Уявляєш, {мені|мене|мною|мені} сказали, що кава подорожчала!
+
+    — Серйозно? А {тобі|тебе|тобою|тобі} пояснили чому?
+
+    — Ні, просто {мені|мене|мною|мені} повідомили про нові ціни.
+
+    — Ну, {нас|нам|нами|нас} попередили хоча б.
+
+
+    **Офіційна ситуація (оголошення):**
+
+    Шановні пасажири! Рейс {затримано|затримали|затримується|затримано}. Про новий
+    час вильоту буде {повідомлено|повідомили|повідомляється|повідомлено}. Пасажирів
+    {запрошено|запросили|запрошується|запрошено} до зали очікування.
+
+
+    **Наукова ситуація (стаття):**
+
+    Експеримент {проводиться|проводять|проведено|проводиться} в лабораторних умовах.
+    Дані {аналізуються|аналізують|проаналізовано|аналізуються} за допомогою комп''ютерної
+    програми. Результати {перевіряються|перевіряють|перевірено|перевіряються} незалежними
+    експертами.
+
+
+    **Знову розмовна (телефон):**
+
+    — Алло, {мені|мене|мною|мені} сьогодні вручили нагороду!
+
+    — Вітаю! А {тебе|тобі|тобою|тебе} запросили на церемонію?
+
+    — Так, {мене|мені|мною|мене} обрали найкращим працівником!
+
+    — Круто! А {тобі|тебе|тобою|тобі} щось пообіцяли?
+
+    — Так, {мені|мене|мною|мені} дали премію. І {мене|мені|мною|мене} призначили керівником
+    проєкту!
+
+    '
+  blanks:
+  - answer: мені
+    options:
+    - мені
+    - мене
+    - мною
+  - answer: тобі
+    options:
+    - тобі
+    - тебе
+    - тобою
+  - answer: мені
+    options:
+    - мені
+    - мене
+    - мною
+  - answer: нас
+    options:
+    - нас
+    - нам
+    - нами
+  - answer: затримано
+    options:
+    - затримано
+    - затримали
+    - затримується
+  - answer: повідомлено
+    options:
+    - повідомлено
+    - повідомили
+    - повідомляється
+  - answer: запрошено
+    options:
+    - запрошено
+    - запросили
+    - запрошується
+  - answer: проводиться
+    options:
+    - проводиться
+    - проводять
+    - проведено
+  - answer: аналізуються
+    options:
+    - аналізуються
+    - аналізують
+    - проаналізовано
+  - answer: перевіряються
+    options:
+    - перевіряються
+    - перевіряють
+    - перевірено
+  - answer: мені
+    options:
+    - мені
+    - мене
+    - мною
+  - answer: тебе
+    options:
+    - тебе
+    - тобі
+    - тобою
+  - answer: мене
+    options:
+    - мене
+    - мені
+    - мною
+  - answer: тобі
+    options:
+    - тобі
+    - тебе
+    - тобою
+  - answer: мені
+    options:
+    - мені
+    - мене
+    - мною
+  - answer: мене
+    options:
+    - мене
+    - мені
+    - мною
+  blank_count: 16
+  complete_passage: '**Розмовна ситуація (у кав''ярні):**
+
+    — Уявляєш, мені сказали, що кава подорожчала!
+
+    — Серйозно? А тобі пояснили чому?
+
+    — Ні, просто мені повідомили про нові ціни.
+
+    — Ну, нас попередили хоча б.
+
+
+    **Офіційна ситуація (оголошення):**
+
+    Шановні пасажири! Рейс затримано. Про новий час вильоту буде повідомлено. Пасажирів
+    запрошено до зали очікування.
+
+
+    **Наукова ситуація (стаття):**
+
+    Експеримент проводиться в лабораторних умовах. Дані аналізуються за допомогою
+    комп''ютерної програми. Результати перевіряються незалежними експертами.
+
+
+    **Знову розмовна (телефон):**
+
+    — Алло, мені сьогодні вручили нагороду!
+
+    — Вітаю! А тебе запросили на церемонію?
+
+    — Так, мене обрали найкращим працівником!
+
+    — Круто! А тобі щось пообіцяли?
+
+    — Так, мені дали премію. І мене призначили керівником проєкту!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення в правильному порядку
   jumbled_words: []
@@ -844,14 +1138,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: Яка з цих форм є офіційно-діловою пасивною конструкцією?
   options:
-  - text: Мені сказали.
-    correct: false
-  - text: Рішення прийнято.
-    correct: true
-  - text: Книга пишеться.
-    correct: false
-  - text: Вона написала листа.
-    correct: false
+  - '{''text'': ''Мені сказали.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято.'', ''correct'': True}'
+  - '{''text'': ''Книга пишеться.'', ''correct'': False}'
+  - '{''text'': ''Вона написала листа.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -862,14 +1152,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: Що означає речення «Закон застосовується до всіх громадян»?
   options:
-  - text: Хтось застосовує закон прямо зараз.
-    correct: false
-  - text: Закон буде застосовано в майбутньому.
-    correct: false
-  - text: Закон діє постійно для всіх.
-    correct: true
-  - text: Громадяни застосовують закон.
-    correct: false
+  - '{''text'': ''Хтось застосовує закон прямо зараз.'', ''correct'': False}'
+  - '{''text'': ''Закон буде застосовано в майбутньому.'', ''correct'': False}'
+  - '{''text'': ''Закон діє постійно для всіх.'', ''correct'': True}'
+  - '{''text'': ''Громадяни застосовують закон.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -880,14 +1166,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: 'Яка форма дієприкметника правильна: «написан__ листи»?'
   options:
-  - text: написаний
-    correct: false
-  - text: написана
-    correct: false
-  - text: написані
-    correct: true
-  - text: написане
-    correct: false
+  - '{''text'': ''написаний'', ''correct'': False}'
+  - '{''text'': ''написана'', ''correct'': False}'
+  - '{''text'': ''написані'', ''correct'': True}'
+  - '{''text'': ''написане'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -898,14 +1180,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: Яка конструкція є рефлексивним пасивом?
   options:
-  - text: Книгу написано.
-    correct: false
-  - text: Книга написана автором.
-    correct: false
-  - text: Книга пишеться легко.
-    correct: true
-  - text: Книгу написали.
-    correct: false
+  - '{''text'': ''Книгу написано.'', ''correct'': False}'
+  - '{''text'': ''Книга написана автором.'', ''correct'': False}'
+  - '{''text'': ''Книга пишеться легко.'', ''correct'': True}'
+  - '{''text'': ''Книгу написали.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -916,14 +1194,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: У якому реченні використано -но/-то конструкцію?
   options:
-  - text: Рішення прийняли вчора.
-    correct: false
-  - text: Рішення було прийняте.
-    correct: false
-  - text: Рішення прийнято одноголосно.
-    correct: true
-  - text: Рішення приймається.
-    correct: false
+  - '{''text'': ''Рішення прийняли вчора.'', ''correct'': False}'
+  - '{''text'': ''Рішення було прийняте.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято одноголосно.'', ''correct'': True}'
+  - '{''text'': ''Рішення приймається.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -934,14 +1208,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: Яке речення містить дієприкметник?
   options:
-  - text: Мені сказали правду.
-    correct: false
-  - text: Закон ухвалено.
-    correct: false
-  - text: Написаний текст чудовий.
-    correct: true
-  - text: Документ готується.
-    correct: false
+  - '{''text'': ''Мені сказали правду.'', ''correct'': False}'
+  - '{''text'': ''Закон ухвалено.'', ''correct'': False}'
+  - '{''text'': ''Написаний текст чудовий.'', ''correct'': True}'
+  - '{''text'': ''Документ готується.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -952,14 +1222,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: Яка форма пасиву найчастіше вживається в офіційних документах?
   options:
-  - text: 3-тя особа множини
-    correct: false
-  - text: -но/-то конструкція
-    correct: true
-  - text: Рефлексивний пасив
-    correct: false
-  - text: Активний стан
-    correct: false
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
+  - '{''text'': ''-но/-то конструкція'', ''correct'': True}'
+  - '{''text'': ''Рефлексивний пасив'', ''correct'': False}'
+  - '{''text'': ''Активний стан'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -970,14 +1236,10 @@ items:
   title: 'Повторення: Пасивний стан (М01-М04)'
   question: 'Яка форма правильна: «закрит__ вікно»?'
   options:
-  - text: закритий
-    correct: false
-  - text: закрита
-    correct: false
-  - text: закрите
-    correct: true
-  - text: закриті
-    correct: false
+  - '{''text'': ''закритий'', ''correct'': False}'
+  - '{''text'': ''закрита'', ''correct'': False}'
+  - '{''text'': ''закрите'', ''correct'': True}'
+  - '{''text'': ''закриті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -988,14 +1250,10 @@ items:
   title: Визначте регістр
   question: «Нам порадили звернутися до спеціаліста» — це який регістр?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Розмовний
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1006,14 +1264,10 @@ items:
   title: Визначте регістр
   question: «Наказ видано за підписом директора» — це який регістр?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Публіцистичний
-    correct: false
-  - text: Художній
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1024,14 +1278,10 @@ items:
   title: Визначте регістр
   question: «Експеримент проводиться в контрольованих умовах» — це який регістр?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: true
-  - text: Публіцистичний
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1042,14 +1292,10 @@ items:
   title: Визначте регістр
   question: «Мені подзвонили й сказали, що все гаразд» — це який стиль?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: true
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1060,14 +1306,10 @@ items:
   title: Визначте регістр
   question: Яке речення найприродніше для розмови з другом?
   options:
-  - text: Мені було повідомлено про затримку.
-    correct: false
-  - text: Мене повідомлено про затримку.
-    correct: false
-  - text: Мені повідомили про затримку.
-    correct: true
-  - text: Повідомляється про затримку.
-    correct: false
+  - '{''text'': ''Мені було повідомлено про затримку.'', ''correct'': False}'
+  - '{''text'': ''Мене повідомлено про затримку.'', ''correct'': False}'
+  - '{''text'': ''Мені повідомили про затримку.'', ''correct'': True}'
+  - '{''text'': ''Повідомляється про затримку.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1078,14 +1320,10 @@ items:
   title: Визначте регістр
   question: Яке речення підходить для офіційного документа?
   options:
-  - text: Йому сказали прийти о дев'ятій.
-    correct: false
-  - text: Його викликано на засідання о 9:00.
-    correct: true
-  - text: Йому кажуть прийти о дев'ятій.
-    correct: false
-  - text: Він мусить прийти о дев'ятій.
-    correct: false
+  - '{''text'': "Йому сказали прийти о дев''ятій.", ''correct'': False}'
+  - '{''text'': ''Його викликано на засідання о 9:00.'', ''correct'': True}'
+  - '{''text'': "Йому кажуть прийти о дев''ятій.", ''correct'': False}'
+  - '{''text'': "Він мусить прийти о дев''ятій.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1096,14 +1334,10 @@ items:
   title: Визначте регістр
   question: «Мене попередили заздалегідь» — хто виконавець дії?
   options:
-  - text: Конкретна особа
-    correct: false
-  - text: Група конкретних людей
-    correct: false
-  - text: Невизначений виконавець
-    correct: true
-  - text: Сам мовець
-    correct: false
+  - '{''text'': ''Конкретна особа'', ''correct'': False}'
+  - '{''text'': ''Група конкретних людей'', ''correct'': False}'
+  - '{''text'': ''Невизначений виконавець'', ''correct'': True}'
+  - '{''text'': ''Сам мовець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1114,14 +1348,10 @@ items:
   title: Визначте регістр
   question: Коли краще використати 3-ю особу множини замість -но/-то?
   options:
-  - text: У науковій статті
-    correct: false
-  - text: В офіційному листі
-    correct: false
-  - text: У розмові з колегою
-    correct: true
-  - text: У юридичному документі
-    correct: false
+  - '{''text'': ''У науковій статті'', ''correct'': False}'
+  - '{''text'': ''В офіційному листі'', ''correct'': False}'
+  - '{''text'': ''У розмові з колегою'', ''correct'': True}'
+  - '{''text'': ''У юридичному документі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1132,14 +1362,10 @@ items:
   title: Визначте регістр
   question: Яке речення звучить найбільш офіційно?
   options:
-  - text: Їм заборонили входити.
-    correct: false
-  - text: Вхід заборонено.
-    correct: true
-  - text: Вони не можуть входити.
-    correct: false
-  - text: Входити не можна.
-    correct: false
+  - '{''text'': ''Їм заборонили входити.'', ''correct'': False}'
+  - '{''text'': ''Вхід заборонено.'', ''correct'': True}'
+  - '{''text'': ''Вони не можуть входити.'', ''correct'': False}'
+  - '{''text'': ''Входити не можна.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1150,14 +1376,10 @@ items:
   title: Визначте регістр
   question: «Нас поселили в чудовому готелі» — яка це конструкція?
   options:
-  - text: Активний стан
-    correct: false
-  - text: Пасив з -но/-то
-    correct: false
-  - text: Пасив з 3-ю особою множини
-    correct: true
-  - text: Рефлексивний пасив
-    correct: false
+  - '{''text'': ''Активний стан'', ''correct'': False}'
+  - '{''text'': ''Пасив з -но/-то'', ''correct'': False}'
+  - '{''text'': ''Пасив з 3-ю особою множини'', ''correct'': True}'
+  - '{''text'': ''Рефлексивний пасив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1168,14 +1390,10 @@ items:
   title: Визначте регістр
   question: Яке речення НЕ є безособовим пасивом?
   options:
-  - text: Мені сказали правду.
-    correct: false
-  - text: Нас попередили вчасно.
-    correct: false
-  - text: Вони попередили нас вчасно.
-    correct: true
-  - text: Їй дозволили вийти.
-    correct: false
+  - '{''text'': ''Мені сказали правду.'', ''correct'': False}'
+  - '{''text'': ''Нас попередили вчасно.'', ''correct'': False}'
+  - '{''text'': ''Вони попередили нас вчасно.'', ''correct'': True}'
+  - '{''text'': ''Їй дозволили вийти.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1186,14 +1404,10 @@ items:
   title: Визначте регістр
   question: У якому випадку 3-тя особа множини НЕ підходить?
   options:
-  - text: Розмова по телефону
-    correct: false
-  - text: Офіційний протокол
-    correct: true
-  - text: Бесіда з сусідом
-    correct: false
-  - text: Переказ новини другу
-    correct: false
+  - '{''text'': ''Розмова по телефону'', ''correct'': False}'
+  - '{''text'': ''Офіційний протокол'', ''correct'': True}'
+  - '{''text'': ''Бесіда з сусідом'', ''correct'': False}'
+  - '{''text'': ''Переказ новини другу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1204,14 +1418,10 @@ items:
   title: Визначте регістр
   question: «Мене обрали старостою» — який відмінок у слові «мене»?
   options:
-  - text: Називний
-    correct: false
-  - text: Родовий
-    correct: false
-  - text: Давальний
-    correct: false
-  - text: Знахідний
-    correct: true
+  - '{''text'': ''Називний'', ''correct'': False}'
+  - '{''text'': ''Родовий'', ''correct'': False}'
+  - '{''text'': ''Давальний'', ''correct'': False}'
+  - '{''text'': ''Знахідний'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1222,14 +1432,10 @@ items:
   title: Визначте регістр
   question: «Мені показали дорогу» — який відмінок у слові «мені»?
   options:
-  - text: Називний
-    correct: false
-  - text: Родовий
-    correct: false
-  - text: Давальний
-    correct: true
-  - text: Знахідний
-    correct: false
+  - '{''text'': ''Називний'', ''correct'': False}'
+  - '{''text'': ''Родовий'', ''correct'': False}'
+  - '{''text'': ''Давальний'', ''correct'': True}'
+  - '{''text'': ''Знахідний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1240,14 +1446,10 @@ items:
   title: Визначте регістр
   question: Яке дієслово вимагає ЗНАХІДНОГО відмінка адресата?
   options:
-  - text: пояснити
-    correct: false
-  - text: порадити
-    correct: false
-  - text: запросити
-    correct: true
-  - text: сказати
-    correct: false
+  - '{''text'': ''пояснити'', ''correct'': False}'
+  - '{''text'': ''порадити'', ''correct'': False}'
+  - '{''text'': ''запросити'', ''correct'': True}'
+  - '{''text'': ''сказати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1258,14 +1460,10 @@ items:
   title: Визначте регістр
   question: Яке дієслово вимагає ДАВАЛЬНОГО відмінка адресата?
   options:
-  - text: звільнити
-    correct: false
-  - text: обрати
-    correct: false
-  - text: дозволити
-    correct: true
-  - text: прийняти
-    correct: false
+  - '{''text'': ''звільнити'', ''correct'': False}'
+  - '{''text'': ''обрати'', ''correct'': False}'
+  - '{''text'': ''дозволити'', ''correct'': True}'
+  - '{''text'': ''прийняти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

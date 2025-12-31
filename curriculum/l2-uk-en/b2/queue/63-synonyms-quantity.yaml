@@ -1,0 +1,731 @@
+module: 63-synonyms-quantity
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/63-synonyms-quantity.md
+generated: '2025-12-30T20:24:26.313282'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 10
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 51
+item_count: 51
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: У нього мізерні шанси на успіх, бо він має безліч прихильників.
+  error: мізерні
+  answer: величезні
+  sentence_corrected: У нього величезні шанси на успіх, бо він має безліч прихильників.
+  options:
+  - величезні
+  - невеликі
+  - жодні
+  - малі
+  original_explanation: Велика кількість прихильників дає великі шанси.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Ми маємо силу-силенну часу, тому треба бігти якомога швидше.
+  error: силу-силенну
+  answer: мало
+  sentence_corrected: Ми маємо мало часу, тому треба бігти якомога швидше.
+  options:
+  - мало
+  - багато
+  - вдосталь
+  - чимало
+  original_explanation: Поспішають зазвичай тоді, коли часу мало.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Купа діамантів лежала в крихітній коробці з-під сірників.
+  error: Купа
+  answer: Жменя
+  sentence_corrected: Жменя діамантів лежала в крихітній коробці з-під сірників.
+  options:
+  - Жменя
+  - Маса
+  - Тонна
+  - Обсяг
+  original_explanation: У маленькій коробці може бути лише жменя речей.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Він випив чимало води, тому досі відчуває нестерпну спрагу.
+  error: чимало
+  answer: недостатньо
+  sentence_corrected: Він випив недостатньо води, тому досі відчуває нестерпну спрагу.
+  options:
+  - недостатньо
+  - багато
+  - вдосталь
+  - масу
+  original_explanation: Спрага свідчить про недостатню кількість води.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Безліч студентів прийшли на лекцію, тому аудиторія була зовсім
+    порожньою.
+  error: Безліч
+  answer: Жоден
+  sentence_corrected: Жоден студентів прийшли на лекцію, тому аудиторія була зовсім
+    порожньою.
+  options:
+  - Жоден
+  - Декілька
+  - Багато
+  - Чимало
+  original_explanation: Порожня аудиторія — ознака відсутності людей.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: У нього чимало грошей, тому він не може дозволити собі навіть
+    хліба.
+  error: чимало
+  answer: мізер
+  sentence_corrected: У нього мізер грошей, тому він не може дозволити собі навіть
+    хліба.
+  options:
+  - мізер
+  - багато
+  - вдосталь
+  - маса
+  original_explanation: Бідність описується словом 'мізер'.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Ми зібрали трохи допомоги, якої вистачило на десять великих
+    міст.
+  error: трохи
+  answer: масу
+  sentence_corrected: Ми зібрали масу допомоги, якої вистачило на десять великих міст.
+  options:
+  - масу
+  - мізер
+  - кілька
+  - небагато
+  original_explanation: Для 10 міст потрібно дуже багато допомоги.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте кількість
+  sentence_with_error: Жодна людина не бачила цього фільму, тому в кінотеатрі був
+    аншлаг.
+  error: Жодна
+  answer: Кожна
+  sentence_corrected: Кожна людина не бачила цього фільму, тому в кінотеатрі був аншлаг.
+  options:
+  - Кожна
+  - Мало
+  - Ніяка
+  - Декілька
+  original_explanation: Аншлаг буває тоді, коли людей дуже багато.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Ми маємо збільшити [___] виробництва у наступному році.
+  answer: обсяг
+  complete_sentence: Ми маємо збільшити [обсяг] виробництва у наступному році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Загальна [___] звернень громадян зросла вдвічі.
+  answer: кількість
+  complete_sentence: Загальна [кількість] звернень громадян зросла вдвічі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Минулого місяця було зафіксовано рекордне [___] відвідувачів.
+  answer: число
+  complete_sentence: Минулого місяця було зафіксовано рекордне [число] відвідувачів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Він не знає [___] у своїх витратах, тому постійно в боргах.
+  answer: міри
+  complete_sentence: Він не знає [міри] у своїх витратах, тому постійно в боргах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: У бюджеті виник значний [___] коштів на ремонт доріг.
+  answer: дефіцит
+  complete_sentence: У бюджеті виник значний [дефіцит] коштів на ремонт доріг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Ми маємо [___] товарів на складі, щоб задовольнити попит.
+  answer: вдосталь
+  complete_sentence: Ми маємо [вдосталь] товарів на складі, щоб задовольнити попит.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Цей [___] відповідальності є надто великим для одного менеджера.
+  answer: обсяг
+  complete_sentence: Цей [обсяг] відповідальності є надто великим для одного менеджера.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Кожна [___] нашого товару проходить суворий контроль якості.
+  answer: одиниця
+  complete_sentence: Кожна [одиниця] нашого товару проходить суворий контроль якості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Завдяки реформам ми спостерігаємо [___] іноземних інвестицій.
+  answer: надлишок
+  complete_sentence: Завдяки реформам ми спостерігаємо [надлишок] іноземних інвестицій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Офіційна міра
+  sentence_template: Рівень забруднення повітря перевищує допустиму [___].
+  answer: норму
+  complete_sentence: Рівень забруднення повітря перевищує допустиму [норму].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Звіт з ярмарку
+  passage_template: 'Сьогодні на ярмарку була {сила-силенна|невелика кількість|мізерна
+    кількість|сила-силенна} народу. Ми побачили {безліч|кілька|жодну|безліч} цікавих
+    виробів майстрів. Перед очима лежала справжня {купа|одиниця|міра|купа} посуду.
+    Продавці пропонували {чимало|мало|небагато|чимало} знижок для покупців. {Кількість|Якість|Ціна|Кількість}
+    сувенірів просто вражала уяву. Ми придбали {кілька|мільйон|жодну|кілька} рушників
+    для дому. У гаманці залишилося зовсім {мало|багато|повно|мало} грошей. Але ми
+    відчували, що отримали {вдосталь|недостатньо|занадто|вдосталь} позитивних емоцій.
+    {Обсяг|Масштаб|Число|Обсяг} нашої подорожі був значним. Навіть {незначна|велика|грандіозна|незначна}
+    на перший погляд покупка мала значення. {Число|Купа|Маса|Число} відвідувачів зростало
+    щохвилини. {Занадто|Недостатньо|Трохи|Занадто} великий шум заважав розмовляти.
+    Але це був лише {дріб''язок|масштаб|обсяг|дріб''язок} порівняно з радістю. Ми
+    мали {достатньо|мізерно|мало|достатньо} часу на огляд усіх рядів. {Масштаб|Число|Одиниця|Масштаб}
+    події був грандіозним. Кожна {одиниця|купа|маса|одиниця} товару була унікальною.
+    Ми відчули справжню {масу|одиницю|міру|масу} задоволення від поїздки.
+
+    '
+  blanks:
+  - answer: сила-силенна
+    options:
+    - сила-силенна
+    - невелика кількість
+    - мізерна кількість
+  - answer: безліч
+    options:
+    - безліч
+    - кілька
+    - жодну
+  - answer: купа
+    options:
+    - купа
+    - одиниця
+    - міра
+  - answer: чимало
+    options:
+    - чимало
+    - мало
+    - небагато
+  - answer: Кількість
+    options:
+    - Кількість
+    - Якість
+    - Ціна
+  - answer: кілька
+    options:
+    - кілька
+    - мільйон
+    - жодну
+  - answer: мало
+    options:
+    - мало
+    - багато
+    - повно
+  - answer: вдосталь
+    options:
+    - вдосталь
+    - недостатньо
+    - занадто
+  - answer: Обсяг
+    options:
+    - Обсяг
+    - Масштаб
+    - Число
+  - answer: незначна
+    options:
+    - незначна
+    - велика
+    - грандіозна
+  - answer: Число
+    options:
+    - Число
+    - Купа
+    - Маса
+  - answer: Занадто
+    options:
+    - Занадто
+    - Недостатньо
+    - Трохи
+  - answer: дріб'язок
+    options:
+    - дріб'язок
+    - масштаб
+    - обсяг
+  - answer: достатньо
+    options:
+    - достатньо
+    - мізерно
+    - мало
+  - answer: Масштаб
+    options:
+    - Масштаб
+    - Число
+    - Одиниця
+  - answer: одиниця
+    options:
+    - одиниця
+    - купа
+    - маса
+  - answer: масу
+    options:
+    - масу
+    - одиницю
+    - міру
+  blank_count: 17
+  complete_passage: 'Сьогодні на ярмарку була сила-силенна народу. Ми побачили безліч
+    цікавих виробів майстрів. Перед очима лежала справжня купа посуду. Продавці пропонували
+    чимало знижок для покупців. Кількість сувенірів просто вражала уяву. Ми придбали
+    кілька рушників для дому. У гаманці залишилося зовсім мало грошей. Але ми відчували,
+    що отримали вдосталь позитивних емоцій. Обсяг нашої подорожі був значним. Навіть
+    незначна на перший погляд покупка мала значення. Число відвідувачів зростало щохвилини.
+    Занадто великий шум заважав розмовляти. Але це був лише дріб''язок порівняно з
+    радістю. Ми мали достатньо часу на огляд усіх рядів. Масштаб події був грандіозним.
+    Кожна одиниця товару була унікальною. Ми відчули справжню масу задоволення від
+    поїздки.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: На Сорочинському ярмарку на Полтавщині ми побачили справжню купу товарів
+    та силу-силенну людей з усієї України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Обсяг оперативної пам'яті сучасного комп'ютера має бути достатнім для швидкої
+    роботи всіх необхідних професійних програм та додатків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Навіть мізерний шанс на успіх у складній справі дає нам надію та сили рухатися
+    вперед до нашої великої мети.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Наразі Україна створює безліч нових унікальних можливостей для самореалізації
+    активної молоді в усіх сферах сучасного суспільного життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Значний обсяг експорту через Одеський порт свідчить про стрімкий розвиток
+    нашої національної економіки та про вихід на нові ринки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Нам довелося докласти чимало зусиль щоб завершити цей складний проєкт вчасно
+    та отримати бажаний результат для всієї нашої команди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Додайте будь ласка трохи молока в мою гарячу каву оскільки я люблю м'який
+    та ніжний смак цього напою вранці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть кількісне речення
+  jumbled_words: []
+  answer: Масштаб екологічної катастрофи в регіоні був колосальним і вимагав негайного
+    залучення всіх можливих ресурсів для її ліквідації та подолання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: На Сорочинському ярмарку зібралося стільки людей, що неможливо було пройти.
+    Їх було...
+  options:
+  - '{''text'': ''сила-силенна'', ''correct'': True}'
+  - '{''text'': ''небагато'', ''correct'': False}'
+  - '{''text'': ''мізерно'', ''correct'': False}'
+  - '{''text'': ''трохи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: Ваш шанс на успіх у цій справі майже нульовий. Який це шанс?
+  options:
+  - '{''text'': ''мізерний'', ''correct'': True}'
+  - '{''text'': ''чималий'', ''correct'': False}'
+  - '{''text'': ''достатній'', ''correct'': False}'
+  - '{''text'': ''великий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: Ви прочитали 5-7 сторінок нової книги. Скільки ви прочитали?
+  options:
+  - '{''text'': ''кілька сторінок'', ''correct'': True}'
+  - '{''text'': ''безліч сторінок'', ''correct'': False}'
+  - '{''text'': ''жодної сторінки'', ''correct'': False}'
+  - '{''text'': ''масу сторінок'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: У звіті наведено дані про загальний об'єм інвестицій в екологію. Це...
+  options:
+  - '{''text'': ''обсяг інвестицій'', ''correct'': True}'
+  - '{''text'': ''купа інвестицій'', ''correct'': False}'
+  - '{''text'': "дріб''язок інвестицій", ''correct'': False}'
+  - '{''text'': ''маса інвестицій'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: Ви хочете дуже ввічливо попросити додати молока в чай. Скільки ви просите?
+  options:
+  - '{''text'': ''трохи молока'', ''correct'': True}'
+  - '{''text'': ''безліч молока'', ''correct'': False}'
+  - '{''text'': ''мізер молока'', ''correct'': False}'
+  - '{''text'': ''чимало молока'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: У бібліотеці зібрано книги, які неможливо перерахувати за все життя. Їх
+    там...
+  options:
+  - '{''text'': ''безліч'', ''correct'': True}'
+  - '{''text'': ''кілька'', ''correct'': False}'
+  - '{''text'': ''небагато'', ''correct'': False}'
+  - '{''text'': ''трохи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: Ви маєте достатньо грошей для реалізації своєї мрії. Ви маєте їх...
+  options:
+  - '{''text'': ''вдосталь'', ''correct'': True}'
+  - '{''text'': ''мізерно'', ''correct'': False}'
+  - '{''text'': ''мало'', ''correct'': False}'
+  - '{''text'': ''жодної копійки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть масштаб
+  question: На столі лежала безладна кількість старих паперів. Там була...
+  options:
+  - '{''text'': ''купа паперів'', ''correct'': True}'
+  - '{''text'': ''одиниця паперів'', ''correct'': False}'
+  - '{''text'': ''мізер паперів'', ''correct'': False}'
+  - '{''text'': ''число паперів''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Як ми називаємо масштабні масиви інформації?
+  options:
+  - '{''text'': ''великі дані'', ''correct'': True}'
+  - '{''text'': ''мізерна пошта'', ''correct'': False}'
+  - '{''text'': ''купа листів'', ''correct'': False}'
+  - '{''text'': ''число слів''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Що означає вираз 'хоч греблю гати'?
+  options:
+  - '{''text'': ''надзвичайно багато'', ''correct'': True}'
+  - '{''text'': ''треба будувати'', ''correct'': False}'
+  - '{''text'': ''зовсім немає'', ''correct'': False}'
+  - '{''text'': ''дуже мало''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Який термін описує брак ресурсів?
+  options:
+  - '{''text'': ''дефіцит'', ''correct'': True}'
+  - '{''text'': ''надлишок'', ''correct'': False}'
+  - '{''text'': ''вдосталь'', ''correct'': False}'
+  - '{''text'': ''число''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Що навчила нас цінувати історія?
+  options:
+  - '{''text'': ''крихту хліба'', ''correct'': True}'
+  - '{''text'': ''тільки золото'', ''correct'': False}'
+  - '{''text'': ''нічого'', ''correct'': False}'
+  - '{''text'': ''швидкість''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Яке місто згадане як великий порт?
+  options:
+  - '{''text'': ''Одеса'', ''correct'': True}'
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': ''Львів'', ''correct'': False}'
+  - '{''text'': ''Полтава''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Що означає 'оптимальний підхід'?
+  options:
+  - '{''text'': ''найбільш раціональний'', ''correct'': True}'
+  - '{''text'': ''найбільший'', ''correct'': False}'
+  - '{''text'': ''найменший'', ''correct'': False}'
+  - '{''text'': ''випадковий''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Де асоціюється 'купа товарів'?
+  options:
+  - '{''text'': ''ярмарок'', ''correct'': True}'
+  - '{''text'': ''школа'', ''correct'': False}'
+  - '{''text'': ''театр'', ''correct'': False}'
+  - '{''text'': ''гора''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Кількість у житті
+  question: Яке значення має точність у кількості?
+  options:
+  - '{''text'': ''допомагає уникнути хаосу'', ''correct'': True}'
+  - '{''text'': ''це непотрібно'', ''correct'': False}'
+  - '{''text'': ''тільки для математиків'', ''correct'': False}'
+  - '{''text'': ''це заважає''}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: Слово 'чимало' означає більше, ніж 'багато'.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: '''Сила-силенна'' — це емоційне народне слово.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: Слово 'мізерний' має негативний відтінок.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: '''Обсяг'' — це термін для роботи або пам''яті.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: Слова 'кілька' та 'декілька' є синонімами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: Дієслово 'вистачить' вказує на межу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: '''Занадто'' використовується для опису ідеальної кількості.'
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Нюанси кількості
+  statement: Термін 'масштаб' стосується лише фізичного розміру.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

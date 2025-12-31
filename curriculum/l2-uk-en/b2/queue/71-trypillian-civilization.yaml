@@ -1,15 +1,18 @@
 module: 71-trypillian-civilization
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/71-trypillian-civilization.md
-generated: '2025-12-30T10:00:00.000000'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:16.453693'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в історичних реченнях
@@ -39,7 +42,25 @@ items:
   - невідому
   - невідоме
   - невідомі
-  original_explanation: Культура — жіночий рід у знахідному відмінку, потрібна форма "невідому".
+  original_explanation: Культура — жіночий рід у знахідному відмінку, потрібна форма
+    "невідому".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Трипільці будували поселення в басейнах Дністра.
+  error: none
+  answer: correct
+  sentence_corrected: Трипільці будували поселення в басейнах Дністра.
+  options:
+  - Дністра
+  - Дністру
+  - Дністром
+  - Дністрі
+  original_explanation: Речення граматично правильне — родовий відмінок від "Дністер".
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -57,6 +78,23 @@ items:
   - прикрашувалися
   - прикрашався
   original_explanation: Кераміка — жіночий рід, потрібна форма "прикрашалася".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Орнаменти зображували космос і родючість.
+  error: none
+  answer: correct
+  sentence_corrected: Орнаменти зображували космос і родючість.
+  options:
+  - родючість
+  - родючости
+  - родючістю
+  - родючості
+  original_explanation: Речення граматично правильне — знахідний відмінок.
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -91,6 +129,23 @@ items:
   - одна
   - один
   original_explanation: Потрібен орудний відмінок — "було одним з найбільших".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Трипільці вирощували пшеницю і ячмень.
+  error: none
+  answer: correct
+  sentence_corrected: Трипільці вирощували пшеницю і ячмень.
+  options:
+  - ячмень
+  - ячмінь
+  - ячменю
+  - ячменем
+  original_explanation: Речення граматично правильне, хоча також допустима форма "ячмінь".
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -158,7 +213,25 @@ items:
   - націю
   - нації
   - нацією
-  original_explanation: 'Після прийменника "про" потрібен знахідний відмінок: "про націю".'
+  original_explanation: 'Після прийменника "про" потрібен знахідний відмінок: "про
+    націю".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Археологія перебувала під контролем Російської імперії.
+  error: none
+  answer: correct
+  sentence_corrected: Археологія перебувала під контролем Російської імперії.
+  options:
+  - імперії
+  - імперією
+  - імперію
+  - імперії
+  original_explanation: Речення граматично правильне — родовий відмінок.
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -175,7 +248,25 @@ items:
   - села
   - селу
   - селом
-  original_explanation: 'Після прийменника "біля" потрібен родовий відмінок: "біля села".'
+  original_explanation: 'Після прийменника "біля" потрібен родовий відмінок: "біля
+    села".'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки в історичних реченнях
+  sentence_with_error: Трипільці мали складну систему вірувань.
+  error: none
+  answer: correct
+  sentence_corrected: Трипільці мали складну систему вірувань.
+  options:
+  - вірувань
+  - вірування
+  - віруванням
+  - віруваннях
+  original_explanation: Речення граматично правильне — родовий відмінок множини.
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
@@ -196,5 +287,1164 @@ items:
   validate:
     error_is_real_mistake: null
     corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипільська культура існувала приблизно з 5500 до 2750 року до
+    нашої _____.
+  answer: ери
+  complete_sentence: Трипільська культура існувала приблизно з 5500 до 2750 року до
+    нашої ери__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Вікентій Хвойка був _____ археологом, який працював у Києві.
+  answer: чеським
+  complete_sentence: Вікентій Хвойка був чеським__ археологом, який працював у Києві.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипільське поселення Тальянки мало площу понад 450 _____.
+  answer: гектарів
+  complete_sentence: Трипільське поселення Тальянки мало площу понад 450 гектарів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипільці вирощували пшеницю, ячмінь, просо та _____.
+  answer: горох
+  complete_sentence: Трипільці вирощували пшеницю, ячмінь, просо та горох__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Орнаменти на кераміці мали _____ значення.
+  answer: символічне
+  complete_sentence: Орнаменти на кераміці мали символічне__ значення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Хвойка зробив своє відкриття _____ року.
+  answer: '1893'
+  complete_sentence: Хвойка зробив своє відкриття 1893__ року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Центр Трипільської культури — _____ Україна.
+  answer: Правобережна
+  complete_sentence: Центр Трипільської культури — Правобережна__ Україна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипільська спіраль стала популярним символом української _____.
+  answer: ідентичності
+  complete_sentence: Трипільська спіраль стала популярним символом української ідентичності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипілля існувало задовго до формування сучасних _____.
+  answer: народів
+  complete_sentence: Трипілля існувало задовго до формування сучасних народів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Російська імперська історіографія _____ Трипілля або применшувала
+    його значення.
+  answer: ігнорувала
+  complete_sentence: Російська імперська історіографія ігнорувала__ Трипілля або применшувала
+    його значення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Михайло Відейко — провідний український _____ Трипілля.
+  answer: дослідник
+  complete_sentence: Михайло Відейко — провідний український дослідник__ Трипілля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипільські поселення мали чітку _____ структуру.
+  answer: планувальну
+  complete_sentence: Трипільські поселення мали чітку планувальну__ структуру.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Кераміка прикрашалася спіральним _____ чорного, червоного та
+    білого кольорів.
+  answer: орнаментом
+  complete_sentence: Кераміка прикрашалася спіральним орнаментом__ чорного, червоного
+    та білого кольорів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Статуетки _____ стали популярним символом.
+  answer: богині-матері
+  complete_sentence: Статуетки богині-матері__ стали популярним символом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Трипілля доводить глибоке історичне _____ українського народу.
+  answer: коріння
+  complete_sentence: Трипілля доводить глибоке історичне коріння__ українського народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історичний контекст
+  sentence_template: Відкриття Хвойки мало величезне _____ для науки.
+  answer: значення
+  complete_sentence: Відкриття Хвойки мало величезне значення__ для науки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Трипілля _____ колоніальні міфи про "молоду націю".
+  answer: спростовує
+  complete_sentence: Трипілля спростовує__ колоніальні міфи про "молоду націю".
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Російська імперська _____ ігнорувала Трипілля.
+  answer: історіографія
+  complete_sentence: Російська імперська історіографія__ ігнорувала Трипілля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Радянська наука приписувала досягнення "загальнослов'янській"
+    _____.
+  answer: спадщині
+  complete_sentence: Радянська наука приписувала досягнення "загальнослов'янській"
+    спадщині__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Це типовий приклад _____ чужої історії.
+  answer: привласнення
+  complete_sentence: Це типовий приклад привласнення__ чужої історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Глибоке коріння цивілізації доводить культурну _____.
+  answer: тяглість
+  complete_sentence: Глибоке коріння цивілізації доводить культурну тяглість__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Українська _____ — це усвідомлення своєї приналежності.
+  answer: ідентичність
+  complete_sentence: Українська ідентичність__ — це усвідомлення своєї приналежності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: _____ означає звільнення від колоніального впливу.
+  answer: Деколонізація
+  complete_sentence: Деколонізація__ означає звільнення від колоніального впливу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Історичний _____ — це спосіб представлення історії.
+  answer: наратив
+  complete_sentence: Історичний наратив__ — це спосіб представлення історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Трипілля є частиною українського культурного _____.
+  answer: коду
+  complete_sentence: Трипілля є частиною українського культурного коду__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Україна — _____ однієї з найдавніших культур Європи.
+  answer: спадкоємиця
+  complete_sentence: Україна — спадкоємиця__ однієї з найдавніших культур Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Міф про "молоду націю" — це колоніальний _____.
+  answer: стереотип
+  complete_sentence: Міф про "молоду націю" — це колоніальний стереотип__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Імперія не була _____ у дослідженні української історії.
+  answer: зацікавлена
+  complete_sentence: Імперія не була зацікавлена__ у дослідженні української історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Трипільська спіраль — символ української _____.
+  answer: ідентичності
+  complete_sentence: Трипільська спіраль — символ української ідентичності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Відкриття Хвойки мало величезне _____ для науки.
+  answer: значення
+  complete_sentence: Відкриття Хвойки мало величезне значення__ для науки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Безперервне існування цивілізації — це культурна _____.
+  answer: тяглість
+  complete_sentence: Безперервне існування цивілізації — це культурна тяглість__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Деколонізаційна лексика в контексті
+  sentence_template: Трипілля доводить самобутність української _____.
+  answer: історії
+  complete_sentence: Трипілля доводить самобутність української історії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть історичний текст
+  passage_template: 'Трипільська {цивілізація|культура|держава|цивілізація} — одна
+    з найдавніших в {Європі|Азії|Африці|Європі}. Вона існувала на території сучасної
+    {України|Росії|Польщі|України} з 5500 до 2750 року до нашої {ери|епохи|доби|ери}.
+
+
+    Трипільці будували величезні {поселення|міста|села|поселення}, деякі з яких були
+    найбільшими у {світі|регіоні|країні|світі} для свого часу. Вони створювали вишукану
+    {кераміку|скульптуру|архітектуру|кераміку} з унікальним {орнаментом|написом|малюнком|орнаментом}.
+
+
+    1893 року чеський {археолог|історик|письменник|археолог} Вікентій Хвойка зробив
+    {відкриття|дослідження|опис|відкриття}, що змінило наше розуміння європейської
+    {передісторії|історії|сучасності|передісторії}.
+
+
+    Сьогодні Трипілля — важлива частина української культурної {ідентичності|політики|економіки|ідентичності}.
+    Воно {спростовує|підтверджує|ігнорує|спростовує} колоніальні міфи про "молоду
+    націю без історії".
+
+
+    Трипільська {спадщина|проблема|криза|спадщина} — це частина українського культурного
+    {коду|закону|порядку|коду}. Символи Трипілля можна {побачити|почути|відчути|побачити}
+    всюди: від логотипів компаній до сувенірів.
+
+    '
+  blanks:
+  - answer: цивілізація
+    options:
+    - цивілізація
+    - культура
+    - держава
+  - answer: Європі
+    options:
+    - Європі
+    - Азії
+    - Африці
+  - answer: України
+    options:
+    - України
+    - Росії
+    - Польщі
+  - answer: ери
+    options:
+    - ери
+    - епохи
+    - доби
+  - answer: поселення
+    options:
+    - поселення
+    - міста
+    - села
+  - answer: світі
+    options:
+    - світі
+    - регіоні
+    - країні
+  - answer: кераміку
+    options:
+    - кераміку
+    - скульптуру
+    - архітектуру
+  - answer: орнаментом
+    options:
+    - орнаментом
+    - написом
+    - малюнком
+  - answer: археолог
+    options:
+    - археолог
+    - історик
+    - письменник
+  - answer: відкриття
+    options:
+    - відкриття
+    - дослідження
+    - опис
+  - answer: передісторії
+    options:
+    - передісторії
+    - історії
+    - сучасності
+  - answer: ідентичності
+    options:
+    - ідентичності
+    - політики
+    - економіки
+  - answer: спростовує
+    options:
+    - спростовує
+    - підтверджує
+    - ігнорує
+  - answer: спадщина
+    options:
+    - спадщина
+    - проблема
+    - криза
+  - answer: коду
+    options:
+    - коду
+    - закону
+    - порядку
+  - answer: побачити
+    options:
+    - побачити
+    - почути
+    - відчути
+  blank_count: 16
+  complete_passage: 'Трипільська цивілізація — одна з найдавніших в Європі. Вона існувала
+    на території сучасної України з 5500 до 2750 року до нашої ери.
+
+
+    Трипільці будували величезні поселення, деякі з яких були найбільшими у світі
+    для свого часу. Вони створювали вишукану кераміку з унікальним орнаментом.
+
+
+    1893 року чеський археолог Вікентій Хвойка зробив відкриття, що змінило наше розуміння
+    європейської передісторії.
+
+
+    Сьогодні Трипілля — важлива частина української культурної ідентичності. Воно
+    спростовує колоніальні міфи про "молоду націю без історії".
+
+
+    Трипільська спадщина — це частина українського культурного коду. Символи Трипілля
+    можна побачити всюди: від логотипів компаній до сувенірів.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипільська культура — одна з найдавніших цивілізацій Європи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипільці будували величезні поселення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Вікентій Хвойка зробив відкриття 1893 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Орнаменти мали символічне значення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Культуру назвали Трипільською за селом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипільці створювали унікальну кераміку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипільці були майстерними землеробами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Кераміка прикрашалася спіральним орнаментом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипілля — важлива частина української ідентичності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Відкриття змінило розуміння європейської передісторії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Центр Трипільської культури — Правобережна Україна.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипілля доводить глибоке коріння українського народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Трипільці створили перші протоміста в Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Статуетки богині-матері стали популярним символом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Культура існувала майже три тисячоліття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть історичні речення
+  jumbled_words: []
+  answer: Включити Трипілля до Списку спадщини ЮНЕСКО.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яка головна ознака Трипільської цивілізації вражала
+    найбільше?
+  options:
+  - '{''text'': ''Використання залізних знарядь'', ''correct'': False}'
+  - '{''text'': ''Величезні розміри поселень і унікальна кераміка'', ''correct'':
+    True}'
+  - '{''text'': ''Створення писемності'', ''correct'': False}'
+  - '{''text'': ''Будівництво пірамід'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор характеризує відкриття Хвойки?
+  options:
+  - '{''text'': ''Незначне регіональне відкриття'', ''correct'': False}'
+  - '{''text'': ''Відкриття, що змінило розуміння європейської передісторії'', ''correct'':
+    True}'
+  - '{''text'': ''Суперечливе відкриття без наукової цінності'', ''correct'': False}'
+  - '{''text'': ''Повторення попередніх досліджень'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, чому Трипілля важливе для деколонізації?
+  options:
+  - '{''text'': "Воно пов''язане з Російською імперією", ''correct'': False}'
+  - '{''text'': ''Воно спростовує міф про "молоду націю без історії"'', ''correct'':
+    True}'
+  - '{''text'': ''Воно підтверджує радянську історіографію'', ''correct'': False}'
+  - '{''text'': ''Воно не має значення для сучасності'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку територію охоплювала Трипільська культура за текстом?
+  options:
+  - '{''text'': ''Тільки Київщину'', ''correct'': False}'
+  - '{''text'': ''Від Карпат до Дніпра, від Полісся до Чорного моря'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки степові райони'', ''correct'': False}'
+  - '{''text'': ''Територію сучасної Росії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки років, згідно з текстом, існувала Трипільська цивілізація?
+  options:
+  - '{''text'': ''Близько 500 років'', ''correct'': False}'
+  - '{''text'': ''Близько 1000 років'', ''correct'': False}'
+  - '{''text'': ''Майже три тисячоліття'', ''correct'': True}'
+  - '{''text'': ''Понад 10 000 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор описує роль Вікентія Хвойки в історії Трипілля?
+  options:
+  - '{''text'': ''Він знищив артефакти'', ''correct'': False}'
+  - '{''text'': ''Він відкрив і назвав цю культуру'', ''correct'': True}'
+  - '{''text'': ''Він заперечував існування Трипілля'', ''correct'': False}'
+  - '{''text'': ''Він був місцевим селянином'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яке поселення було одним з найбільших у світі для свого
+    часу?
+  options:
+  - '{''text'': ''Київ'', ''correct'': False}'
+  - '{''text'': ''Тальянки'', ''correct'': True}'
+  - '{''text'': ''Трипілля'', ''correct'': False}'
+  - '{''text'': ''Львів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, згідно з текстом, символізували спіральні орнаменти на кераміці?
+  options:
+  - '{''text'': ''Військові перемоги'', ''correct'': False}'
+  - '{''text'': ''Космос, родючість, вічний кругообіг життя'', ''correct'': True}'
+  - '{''text'': ''Портрети вождів'', ''correct'': False}'
+  - '{''text'': ''Географічні карти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор характеризує ставлення Російської імперії до українських археологічних
+    досліджень?
+  options:
+  - '{''text'': ''Активна підтримка досліджень'', ''correct'': False}'
+  - '{''text'': ''Відсутність зацікавленості у доведенні самобутньої української історії'',
+    ''correct'': True}'
+  - '{''text'': ''Фінансування всіх експедицій'', ''correct'': False}'
+  - '{''text'': ''Нейтральне ставлення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, чим займалися трипільці?
+  options:
+  - '{''text'': ''Тільки полюванням'', ''correct'': False}'
+  - '{''text'': ''Землеробством, розведенням худоби, виготовленням кераміки'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки торгівлею'', ''correct'': False}'
+  - '{''text'': ''Тільки будівництвом пірамід'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті описано значення Трипілля для сучасної України?
+  options:
+  - '{''text'': ''Не має жодного значення'', ''correct'': False}'
+  - '{''text'': ''Це важлива частина української культурної ідентичності'', ''correct'':
+    True}'
+  - '{''text'': ''Цікаво тільки для археологів'', ''correct'': False}'
+  - '{''text'': ''Має значення тільки для туризму'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, згідно з текстом, Україна пропонує зробити з Трипіллям?
+  options:
+  - '{''text'': ''Забути про нього'', ''correct'': False}'
+  - '{''text'': ''Включити до Списку всесвітньої спадщини ЮНЕСКО'', ''correct'': True}'
+  - '{''text'': ''Передати іншій країні'', ''correct'': False}'
+  - '{''text'': ''Знищити артефакти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку позицію висловлює археолог Михайло Відейко в цитованому документі?
+  options:
+  - '{''text'': ''Трипільці були примітивними племенами'', ''correct'': False}'
+  - '{''text'': ''Трипільці створили перші в Європі протоміста'', ''correct'': True}'
+  - '{''text'': ''Трипілля не існувало'', ''correct'': False}'
+  - '{''text'': ''Трипілля було частиною Єгипту'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яку рису трипільських поселень підкреслює Відейко?
+  options:
+  - '{''text'': ''Хаотичне розташування будівель'', ''correct'': False}'
+  - '{''text'': ''Чітка планувальна структура з концентричними колами'', ''correct'':
+    True}'
+  - '{''text'': ''Відсутність оборонних споруд'', ''correct'': False}'
+  - '{''text'': ''Маленький розмір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор тексту ставиться до радянської інтерпретації Трипілля?
+  options:
+  - '{''text'': ''Повністю погоджується'', ''correct'': False}'
+  - '{''text'': ''Критикує її як приклад привласнення чужої історії'', ''correct'':
+    True}'
+  - '{''text'': "Вважає її об''єктивною", ''correct'': False}'
+  - '{''text'': ''Не згадує радянську інтерпретацію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, у якому році НБУ випустив пам'ятну монету "Трипільська
+    культура"?
+  options:
+  - '{''text'': 2015, ''correct'': False}'
+  - '{''text'': 2019, ''correct'': True}'
+  - '{''text'': 2022, ''correct'': False}'
+  - '{''text'': 1991, ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яка головна ідея деколонізаційного розділу тексту?
+  options:
+  - '{''text'': ''Підтвердження радянської інтерпретації'', ''correct'': False}'
+  - '{''text'': ''Спростування міфу про "молоду націю без історії"'', ''correct'':
+    True}'
+  - '{''text'': ''Критика археологічних досліджень'', ''correct'': False}'
+  - '{''text'': ''Схвалення імперської історіографії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому Трипілля важливе для сучасної України?
+  options:
+  - '{''text'': ''Тільки як туристична атракція'', ''correct'': False}'
+  - '{''text'': ''Як частина культурної ідентичності та доказ глибокого історичного
+    коріння'', ''correct'': True}'
+  - '{''text'': ''Як джерело економічного прибутку'', ''correct'': False}'
+  - '{''text'': ''Як політичний інструмент'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яку роль відіграє Трипілля у деколонізаційному дискурсі?
+  options:
+  - '{''text'': ''Підтверджує російські наративи'', ''correct'': False}'
+  - '{''text'': ''Не має жодного значення'', ''correct'': False}'
+  - '{''text'': ''Спростовує колоніальні міфи та доводить давність української культури'',
+    ''correct'': True}'
+  - '{''text'': ''Ускладнює міжнародні відносини'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому в тексті критикується радянська інтерпретація Трипілля?
+  options:
+  - '{''text'': ''Вона була надто детальною'', ''correct'': False}'
+  - '{''text'': ''Вона приписувала досягнення "загальнослов\''янській" спадщині'',
+    ''correct'': True}'
+  - '{''text'': ''Вона ігнорувала археологію'', ''correct'': False}'
+  - '{''text'': "Вона була надто об''єктивною", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що означає "культурна тяглість" у контексті Трипілля?
+  options:
+  - '{''text'': ''Криза культури'', ''correct'': False}'
+  - '{''text'': ''Безперервне існування цивілізації на українській землі'', ''correct'':
+    True}'
+  - '{''text'': ''Занепад традицій'', ''correct'': False}'
+  - '{''text'': ''Зміна культурних цінностей'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке значення має пам'ятна монета "Трипільська культура"?
+  options:
+  - '{''text'': ''Тільки нумізматичне'', ''correct'': False}'
+  - '{''text'': ''Символізує визнання Трипілля частиною української спадщини'', ''correct'':
+    True}'
+  - '{''text'': ''Економічне'', ''correct'': False}'
+  - '{''text'': ''Не має жодного значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому автор наголошує на відсутності прямого етнічного зв'язку з Трипіллям?
+  options:
+  - '{''text'': ''Щоб применшити значення Трипілля'', ''correct'': False}'
+  - '{''text'': ''Щоб підкреслити культурну, а не біологічну спадковість'', ''correct'':
+    True}'
+  - '{''text'': "Щоб заперечити зв''язок з Україною", ''correct'': False}'
+  - '{''text'': ''Щоб підтримати імперські наративи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що об'єднує цитати Хвойки та Відейка?
+  options:
+  - '{''text'': ''Критика Трипільської культури'', ''correct'': False}'
+  - '{''text'': ''Визнання високого рівня розвитку Трипілля'', ''correct'': True}'
+  - '{''text'': ''Заперечення значення відкриття'', ''correct'': False}'
+  - '{''text'': ''Сумнів у достовірності знахідок'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яку функцію виконують первинні джерела в тексті?
+  options:
+  - '{''text'': ''Прикрашають текст'', ''correct'': False}'
+  - '{''text'': ''Підтверджують тези автора автентичними свідченнями'', ''correct'':
+    True}'
+  - '{''text'': ''Заповнюють простір'', ''correct'': False}'
+  - '{''text'': ''Ускладнюють розуміння'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як текст характеризує відносини Трипілля та сучасної України?
+  options:
+  - '{''text'': "Відсутність зв''язку", ''correct'': False}'
+  - '{''text'': ''Тільки археологічний інтерес'', ''correct'': False}'
+  - '{''text'': ''Трипілля є частиною культурного коду та ідентичності'', ''correct'':
+    True}'
+  - '{''text'': ''Політичне протистояння'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому автор порівнює Трипілля з Єгиптом та Месопотамією?
+  options:
+  - '{''text'': ''Щоб показати відсталість Трипілля'', ''correct'': False}'
+  - '{''text'': ''Щоб підкреслити давність та розвиненість Трипільської культури'',
+    ''correct'': True}'
+  - '{''text'': ''Щоб довести вплив Єгипту'', ''correct'': False}'
+  - '{''text'': ''Щоб заперечити унікальність Трипілля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яку роль відіграє Вікентій Хвойка в історії українських досліджень?
+  options:
+  - '{''text'': ''Знищив артефакти'', ''correct'': False}'
+  - '{''text'': ''Відкрив і популяризував Трипільську культуру'', ''correct'': True}'
+  - '{''text'': ''Заперечив існування Трипілля'', ''correct'': False}'
+  - '{''text'': ''Працював на імперію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Що означає термін "протомісто" в контексті Трипілля?
+  options:
+  - '{''text'': ''Зруйноване місто'', ''correct'': False}'
+  - '{''text'': ''Поселення, що передує появі справжніх міст'', ''correct'': True}'
+  - '{''text'': ''Маленьке село'', ''correct'': False}'
+  - '{''text'': ''Фортеця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Чому автор підкреслює незацікавленість Російської імперії в українських
+    дослідженнях?
+  options:
+  - '{''text'': ''Щоб похвалити імперію'', ''correct'': False}'
+  - '{''text'': ''Щоб показати колоніальний контекст досліджень'', ''correct'': True}'
+  - '{''text'': ''Щоб виправдати імперію'', ''correct'': False}'
+  - '{''text'': ''Без особливої причини'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Яке головне послання тексту про Трипілля?
+  options:
+  - '{''text'': ''Трипілля не має значення'', ''correct'': False}'
+  - '{''text'': ''Україна має глибоке історичне коріння, і це частина її ідентичності'',
+    ''correct'': True}'
+  - '{''text'': ''Археологія — непотрібна наука'', ''correct'': False}'
+  - '{''text'': ''Минуле не впливає на сучасність'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Комплексна перевірка знань
+  question: Як текст пов'язує Трипілля з сучасними подіями?
+  options:
+  - '{''text'': "Не пов''язує взагалі", ''correct'': False}'
+  - '{''text'': ''Через використання символіки в сучасному дизайні та пропозицію до
+    ЮНЕСКО'', ''correct'': True}'
+  - '{''text'': ''Через політичні заяви'', ''correct'': False}'
+  - '{''text'': ''Через економічні показники'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільська культура існувала на території сучасної України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільці були кочівниками без постійних поселень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Вікентій Хвойка був українським археологом за походженням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільська культура названа за селом на Київщині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Поселення Тальянки було меншим за міста Месопотамії того часу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільці займалися землеробством і розводили худобу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільський орнамент не мав жодного символічного значення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Російська імперія активно підтримувала дослідження Трипілля.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільська культура існувала близько трьох тисячоліть.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Радянська наука об'єктивно вивчала Трипілля.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільці мали складну систему вірувань.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Михайло Відейко характеризує трипільські поселення як протоміста.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипілля не має жодного значення для сучасної України.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Україна пропонує включити Трипілля до Списку всесвітньої спадщини ЮНЕСКО.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільці існували одночасно з єгипетськими пірамідами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Трипілля
+  statement: Трипільська спіраль використовується в сучасному українському дизайні.
+  answer: ''
+  validate:
+    statement_valid: null
     explanation: null
     confidence: null

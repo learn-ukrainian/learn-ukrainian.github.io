@@ -1,15 +1,18 @@
 module: 65-relationships
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/65-relationships.md
-generated: '2025-12-29T00:22:03.515628'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.110880'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -269,6 +272,125 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Олена та Максим мають міцні {стосунки|відносини|стосунки|зв''язки}.
+    Їхнє {кохання|дружба|кохання|романтика} почалося ще в університеті. Спочатку була
+    просто {дружба|кохання|дружба|пара}, але поступово вони стали {парою|сім''єю|парою|партнерами}.
+
+
+    Через рік вони {уклали|мали|уклали|зробили} шлюб. Як у кожної {пари|сім''ї|пари|дружби},
+    у них бувають {суперечки|конфлікти|суперечки|зради}, але вони завжди швидко досягають
+    {примирення|розлучення|примирення|відстані}.
+
+
+    Секрет їхніх стосунків — взаємна {довіра|зрада|довіра|відстань} та {повага|суперечка|повага|конфлікт}.
+    Вони завжди надають одне одному {підтримку|зраду|підтримку|відстань} у складні
+    часи. Їхня {близькість|відстань|близькість|суперечка} росте з кожним роком.
+
+
+    Олена каже: "{Турбота|Зрада|Турбота|Конфлікт} про почуття партнера — це найважливіше
+    у стосунках. Без відкритого {спілкування|розлучення|спілкування|конфлікту} неможливо
+    побудувати щасливу {сім''ю|суперечку|сім''ю|відстань}."
+
+    '
+  blanks:
+  - answer: зв'язки
+    options:
+    - стосунки
+    - відносини
+    - стосунки
+  - answer: романтика
+    options:
+    - кохання
+    - дружба
+    - кохання
+  - answer: пара
+    options:
+    - дружба
+    - кохання
+    - дружба
+  - answer: партнерами
+    options:
+    - парою
+    - сім'єю
+    - парою
+  - answer: зробили
+    options:
+    - уклали
+    - мали
+    - уклали
+  - answer: дружби
+    options:
+    - пари
+    - сім'ї
+    - пари
+  - answer: зради
+    options:
+    - суперечки
+    - конфлікти
+    - суперечки
+  - answer: відстані
+    options:
+    - примирення
+    - розлучення
+    - примирення
+  - answer: відстань
+    options:
+    - довіра
+    - зрада
+    - довіра
+  - answer: конфлікт
+    options:
+    - повага
+    - суперечка
+    - повага
+  - answer: відстань
+    options:
+    - підтримку
+    - зраду
+    - підтримку
+  - answer: суперечка
+    options:
+    - близькість
+    - відстань
+    - близькість
+  - answer: Конфлікт
+    options:
+    - Турбота
+    - Зрада
+    - Турбота
+  - answer: конфлікту
+    options:
+    - спілкування
+    - розлучення
+    - спілкування
+  - answer: відстань
+    options:
+    - сім'ю
+    - суперечку
+    - сім'ю
+  blank_count: 15
+  complete_passage: 'Олена та Максим мають міцні зв''язки. Їхнє романтика почалося
+    ще в університеті. Спочатку була просто пара, але поступово вони стали партнерами.
+
+
+    Через рік вони зробили шлюб. Як у кожної дружби, у них бувають зради, але вони
+    завжди швидко досягають відстані.
+
+
+    Секрет їхніх стосунків — взаємна відстань та конфлікт. Вони завжди надають одне
+    одному відстань у складні часи. Їхня суперечка росте з кожним роком.
+
+
+    Олена каже: "Конфлікт про почуття партнера — це найважливіше у стосунках. Без
+    відкритого конфлікту неможливо побудувати щасливу відстань."
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -338,14 +460,10 @@ items:
   question: Яке слово означає особисті взаємини між людьми, такі як романтичні чи
     родинні зв'язки?
   options:
-  - text: відносини
-    correct: false
-  - text: стосунки
-    correct: true
-  - text: зв'язок
-    correct: false
-  - text: дружба
-    correct: false
+  - '{''text'': ''відносини'', ''correct'': False}'
+  - '{''text'': ''стосунки'', ''correct'': True}'
+  - '{''text'': "зв''язок", ''correct'': False}'
+  - '{''text'': ''дружба'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -357,14 +475,10 @@ items:
   question: Яке слово використовується для офіційних, формальних зв'язків між країнами
     чи компаніями?
   options:
-  - text: стосунки
-    correct: false
-  - text: дружба
-    correct: false
-  - text: відносини
-    correct: true
-  - text: близькість
-    correct: false
+  - '{''text'': ''стосунки'', ''correct'': False}'
+  - '{''text'': ''дружба'', ''correct'': False}'
+  - '{''text'': ''відносини'', ''correct'': True}'
+  - '{''text'': ''близькість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -376,14 +490,10 @@ items:
   question: Що означає слово "примирення" після конфлікту між людьми, які хочуть відновити
     стосунки?
   options:
-  - text: betrayal
-    correct: false
-  - text: divorce
-    correct: false
-  - text: reconciliation
-    correct: true
-  - text: argument
-    correct: false
+  - '{''text'': ''betrayal'', ''correct'': False}'
+  - '{''text'': ''divorce'', ''correct'': False}'
+  - '{''text'': ''reconciliation'', ''correct'': True}'
+  - '{''text'': ''argument'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -395,14 +505,11 @@ items:
   question: Яка різниця між словами "конфлікт" і "суперечка", коли йдеться про проблеми
     між людьми?
   options:
-  - text: Це повні синоніми
-    correct: false
-  - text: '"Конфлікт" — серйозніший, "суперечка" — коротший спір'
-    correct: true
-  - text: '"Суперечка" формальніше'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Конфлікт" — серйозніший, "суперечка" — коротший спір'', ''correct'':
+    True}'
+  - '{''text'': ''"Суперечка" формальніше'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -414,14 +521,10 @@ items:
   question: Яке дієслово найкраще поєднується зі словом "шлюб" для опису офіційного
     одруження?
   options:
-  - text: мати шлюб
-    correct: false
-  - text: робити шлюб
-    correct: false
-  - text: укласти шлюб
-    correct: true
-  - text: давати шлюб
-    correct: false
+  - '{''text'': ''мати шлюб'', ''correct'': False}'
+  - '{''text'': ''робити шлюб'', ''correct'': False}'
+  - '{''text'': ''укласти шлюб'', ''correct'': True}'
+  - '{''text'': ''давати шлюб'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +535,10 @@ items:
   title: Розуміння лексики стосунків
   question: Яке слово означає "faithfulness" або "fidelity" у контексті шлюбу та партнерства?
   options:
-  - text: довіра
-    correct: false
-  - text: відданість
-    correct: false
-  - text: вірність
-    correct: true
-  - text: турбота
-    correct: false
+  - '{''text'': ''довіра'', ''correct'': False}'
+  - '{''text'': ''відданість'', ''correct'': False}'
+  - '{''text'': ''вірність'', ''correct'': True}'
+  - '{''text'': ''турбота'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +550,10 @@ items:
   question: Що таке "зрада" у контексті романтичних стосунків, коли партнер порушує
     довіру?
   options:
-  - text: support
-    correct: false
-  - text: care
-    correct: false
-  - text: betrayal
-    correct: true
-  - text: respect
-    correct: false
+  - '{''text'': ''support'', ''correct'': False}'
+  - '{''text'': ''care'', ''correct'': False}'
+  - '{''text'': ''betrayal'', ''correct'': True}'
+  - '{''text'': ''respect'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -470,14 +565,10 @@ items:
   question: Яке слово найкраще описує емоційну теплоту та інтимність у стосунках між
     людьми?
   options:
-  - text: відстань
-    correct: false
-  - text: конфлікт
-    correct: false
-  - text: близькість
-    correct: true
-  - text: розлучення
-    correct: false
+  - '{''text'': ''відстань'', ''correct'': False}'
+  - '{''text'': ''конфлікт'', ''correct'': False}'
+  - '{''text'': ''близькість'', ''correct'': True}'
+  - '{''text'': ''розлучення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

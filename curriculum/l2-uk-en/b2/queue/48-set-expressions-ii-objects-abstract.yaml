@@ -1,15 +1,18 @@
 module: 48-set-expressions-ii-objects-abstract
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/48-set-expressions-ii-objects-abstract.md
-generated: '2025-12-30T00:45:27.276957'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:16.048928'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 26
   true-false: 16
-item_count: 106
+total_items: 107
+item_count: 107
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у фразеологізмах
@@ -576,6 +579,151 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Фразеологізми в тексті
+  passage_template: 'Тетяна знайшла нову роботу. Офіс гарний, колеги приємні, але
+    є одна {ложка|крапля|кістка|ложка} {дьогтю|меду|цукру|дьогтю} — зарплату затримують.
+
+
+    Головний {камінь|яблуко|кістка|камінь} {спотикання|розбрату|горлі|спотикання}
+    в роботі — бюрократія. Документи оформляють тижнями. Новий начальник — справжня
+    {кістка|ложка|камінь|кістка} в {горлі|морі|тину|горлі} для всіх.
+
+
+    На зборах виникло {яблуко|камінь|ложка|яблуко} {розбрату|спотикання|дьогтю|розбрату}:
+    хто відповідатиме за проєкт? Директор сказав, що його {двері|ворота|вікна|двері}
+    {відчинені|закриті|зачинені|відчинені} для пропозицій.
+
+
+    Місяць переговорів — і нарешті {лід|сніг|вода|лід} {скреслив|розтав|замерз|скреслив}!
+    Але наші зусилля — лише {крапля|ложка|кістка|крапля} в {морі|озері|річці|морі}.
+
+
+    Колега питає про справи: «{Ні|Так|Чи|Ні} {пуху|пера|хвоста|пуху} ні {пера|пуху|крила|пера}!»
+    — «До біса!» Скільки йому не кажи — як з {гуски|качки|курки|гуски} {вода|дощ|сніг|вода}.
+
+    '
+  blanks:
+  - answer: ложка
+    options:
+    - ложка
+    - крапля
+    - кістка
+  - answer: дьогтю
+    options:
+    - дьогтю
+    - меду
+    - цукру
+  - answer: камінь
+    options:
+    - камінь
+    - яблуко
+    - кістка
+  - answer: спотикання
+    options:
+    - спотикання
+    - розбрату
+    - горлі
+  - answer: кістка
+    options:
+    - кістка
+    - ложка
+    - камінь
+  - answer: горлі
+    options:
+    - горлі
+    - морі
+    - тину
+  - answer: яблуко
+    options:
+    - яблуко
+    - камінь
+    - ложка
+  - answer: розбрату
+    options:
+    - розбрату
+    - спотикання
+    - дьогтю
+  - answer: двері
+    options:
+    - двері
+    - ворота
+    - вікна
+  - answer: відчинені
+    options:
+    - відчинені
+    - закриті
+    - зачинені
+  - answer: лід
+    options:
+    - лід
+    - сніг
+    - вода
+  - answer: скреслив
+    options:
+    - скреслив
+    - розтав
+    - замерз
+  - answer: крапля
+    options:
+    - крапля
+    - ложка
+    - кістка
+  - answer: морі
+    options:
+    - морі
+    - озері
+    - річці
+  - answer: Ні
+    options:
+    - Ні
+    - Так
+    - Чи
+  - answer: пуху
+    options:
+    - пуху
+    - пера
+    - хвоста
+  - answer: пера
+    options:
+    - пера
+    - пуху
+    - крила
+  - answer: гуски
+    options:
+    - гуски
+    - качки
+    - курки
+  - answer: вода
+    options:
+    - вода
+    - дощ
+    - сніг
+  blank_count: 19
+  complete_passage: 'Тетяна знайшла нову роботу. Офіс гарний, колеги приємні, але
+    є одна ложка дьогтю — зарплату затримують.
+
+
+    Головний камінь спотикання в роботі — бюрократія. Документи оформляють тижнями.
+    Новий начальник — справжня кістка в горлі для всіх.
+
+
+    На зборах виникло яблуко розбрату: хто відповідатиме за проєкт? Директор сказав,
+    що його двері відчинені для пропозицій.
+
+
+    Місяць переговорів — і нарешті лід скреслив! Але наші зусилля — лише крапля в
+    морі.
+
+
+    Колега питає про справи: «Ні пуху ні пера!» — «До біса!» Скільки йому не кажи
+    — як з гуски вода.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Відновіть фразеологізми
   jumbled_words: []
@@ -708,14 +856,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Яке значення має вираз «ложка дьогтю» у контексті оцінки ситуації?
   options:
-  - text: Дуже погана ситуація без жодних позитивів.
-    correct: false
-  - text: Дрібний недолік у загалом хорошій ситуації.
-    correct: true
-  - text: Повна невдача в усьому.
-    correct: false
-  - text: Смачна страва з незвичним інгредієнтом.
-    correct: false
+  - '{''text'': ''Дуже погана ситуація без жодних позитивів.'', ''correct'': False}'
+  - '{''text'': ''Дрібний недолік у загалом хорошій ситуації.'', ''correct'': True}'
+  - '{''text'': ''Повна невдача в усьому.'', ''correct'': False}'
+  - '{''text'': ''Смачна страва з незвичним інгредієнтом.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -726,14 +870,11 @@ items:
   title: Значення фразеологізмів з предметами
   question: Коли найдоречніше використати вираз «камінь спотикання» в діловому контексті?
   options:
-  - text: Коли хтось упав на вулиці через камінь.
-    correct: false
-  - text: Коли є перешкода в досягненні мети або домовленості.
-    correct: true
-  - text: Коли будують дорогу з каменів.
-    correct: false
-  - text: Коли хтось колекціонує камені як хобі.
-    correct: false
+  - '{''text'': ''Коли хтось упав на вулиці через камінь.'', ''correct'': False}'
+  - '{''text'': ''Коли є перешкода в досягненні мети або домовленості.'', ''correct'':
+    True}'
+  - '{''text'': ''Коли будують дорогу з каменів.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось колекціонує камені як хобі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -744,14 +885,11 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що означає вираз «кістка в горлі» як характеристика когось?
   options:
-  - text: Людина, яка часто хворіє на горло.
-    correct: false
-  - text: Хтось або щось, що дуже дратує, постійно заважає.
-    correct: true
-  - text: Людина, яка любить їсти рибу.
-    correct: false
-  - text: Хтось, хто погано говорить.
-    correct: false
+  - '{''text'': ''Людина, яка часто хворіє на горло.'', ''correct'': False}'
+  - '{''text'': ''Хтось або щось, що дуже дратує, постійно заважає.'', ''correct'':
+    True}'
+  - '{''text'': ''Людина, яка любить їсти рибу.'', ''correct'': False}'
+  - '{''text'': ''Хтось, хто погано говорить.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -762,14 +900,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: У якій ситуації найкраще використати вираз «яблуко розбрату»?
   options:
-  - text: Коли хтось їсть яблуко на перерві.
-    correct: false
-  - text: Коли щось є причиною конфлікту між людьми.
-    correct: true
-  - text: Коли в саду багато яблук.
-    correct: false
-  - text: Коли хтось кидає яблука.
-    correct: false
+  - '{''text'': ''Коли хтось їсть яблуко на перерві.'', ''correct'': False}'
+  - '{''text'': ''Коли щось є причиною конфлікту між людьми.'', ''correct'': True}'
+  - '{''text'': ''Коли в саду багато яблук.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось кидає яблука.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -780,14 +914,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Який фразеологізм найкраще описує готовність прийняти пропозиції та вислухати?
   options:
-  - text: Дах поїхав.
-    correct: false
-  - text: Двері відчинені.
-    correct: true
-  - text: Кістка в горлі.
-    correct: false
-  - text: Від воріт поворот.
-    correct: false
+  - '{''text'': ''Дах поїхав.'', ''correct'': False}'
+  - '{''text'': ''Двері відчинені.'', ''correct'': True}'
+  - '{''text'': ''Кістка в горлі.'', ''correct'': False}'
+  - '{''text'': ''Від воріт поворот.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -798,14 +928,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що означає вираз «дах поїхав» про поведінку людини?
   options:
-  - text: Людина переїхала в новий будинок.
-    correct: false
-  - text: Людина поводиться нерозумно, збожеволіла.
-    correct: true
-  - text: Дах будинку потребує ремонту.
-    correct: false
-  - text: Людина працює на даху.
-    correct: false
+  - '{''text'': ''Людина переїхала в новий будинок.'', ''correct'': False}'
+  - '{''text'': ''Людина поводиться нерозумно, збожеволіла.'', ''correct'': True}'
+  - '{''text'': ''Дах будинку потребує ремонту.'', ''correct'': False}'
+  - '{''text'': ''Людина працює на даху.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -816,14 +942,11 @@ items:
   title: Значення фразеологізмів з предметами
   question: Коли вживають вираз «лід скреслив» у контексті справи?
   options:
-  - text: Коли замерзла вода в морозильнику.
-    correct: false
-  - text: Коли справа зрушила з мертвої точки, почався прогрес.
-    correct: true
-  - text: Коли почалася зима і замерзла річка.
-    correct: false
-  - text: Коли хтось ковзається на льоду.
-    correct: false
+  - '{''text'': ''Коли замерзла вода в морозильнику.'', ''correct'': False}'
+  - '{''text'': ''Коли справа зрушила з мертвої точки, почався прогрес.'', ''correct'':
+    True}'
+  - '{''text'': ''Коли почалася зима і замерзла річка.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось ковзається на льоду.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -834,14 +957,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Яке значення має вираз «крапля в морі» про кількість чогось?
   options:
-  - text: Дуже багато, як море.
-    correct: false
-  - text: Дуже мало, незначна частина.
-    correct: true
-  - text: Достатньо для потреб.
-    correct: false
-  - text: Солона вода.
-    correct: false
+  - '{''text'': ''Дуже багато, як море.'', ''correct'': False}'
+  - '{''text'': ''Дуже мало, незначна частина.'', ''correct'': True}'
+  - '{''text'': ''Достатньо для потреб.'', ''correct'': False}'
+  - '{''text'': ''Солона вода.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +971,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що означає традиційне побажання «ні пуху ні пера» перед важливою справою?
   options:
-  - text: Побажання не забруднитися пір''ям.
-    correct: false
-  - text: Побажання успіху (з мисливських традицій).
-    correct: true
-  - text: Побажання знайти птаха.
-    correct: false
-  - text: Побажання гарної погоди.
-    correct: false
+  - '{''text'': "Побажання не забруднитися пір''''ям.", ''correct'': False}'
+  - '{''text'': ''Побажання успіху (з мисливських традицій).'', ''correct'': True}'
+  - '{''text'': ''Побажання знайти птаха.'', ''correct'': False}'
+  - '{''text'': ''Побажання гарної погоди.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -870,14 +985,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Коли використовують вираз «як з гуски вода» про реакцію людини?
   options:
-  - text: Коли людина любить плавати, як гуска.
-    correct: false
-  - text: Коли людина байдужа до критики, зауважень.
-    correct: true
-  - text: Коли людина боїться води.
-    correct: false
-  - text: Коли хтось миється у ванні.
-    correct: false
+  - '{''text'': ''Коли людина любить плавати, як гуска.'', ''correct'': False}'
+  - '{''text'': ''Коли людина байдужа до критики, зауважень.'', ''correct'': True}'
+  - '{''text'': ''Коли людина боїться води.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось миється у ванні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +999,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що означає вираз «ні в тин ні в ворота» як оцінка пропозиції?
   options:
-  - text: Пропозиція дуже гарна.
-    correct: false
-  - text: Пропозиція — нісенітниця, не підходить.
-    correct: true
-  - text: Пропозиція про ремонт паркану.
-    correct: false
-  - text: Пропозиція про нові ворота.
-    correct: false
+  - '{''text'': ''Пропозиція дуже гарна.'', ''correct'': False}'
+  - '{''text'': ''Пропозиція — нісенітниця, не підходить.'', ''correct'': True}'
+  - '{''text'': ''Пропозиція про ремонт паркану.'', ''correct'': False}'
+  - '{''text'': ''Пропозиція про нові ворота.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -906,14 +1013,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: У якому контексті найдоречніше сказати «від воріт поворот»?
   options:
-  - text: Коли хтось розвертається біля воріт.
-    correct: false
-  - text: Коли отримали відмову, не прийняли.
-    correct: true
-  - text: Коли ворота зачинені через ремонт.
-    correct: false
-  - text: Коли хтось відкриває ворота.
-    correct: false
+  - '{''text'': ''Коли хтось розвертається біля воріт.'', ''correct'': False}'
+  - '{''text'': ''Коли отримали відмову, не прийняли.'', ''correct'': True}'
+  - '{''text'': ''Коли ворота зачинені через ремонт.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось відкриває ворота.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +1027,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що означає вираз «час від часу» про частоту дії?
   options:
-  - text: Постійно, щодня.
-    correct: false
-  - text: Іноді, періодично.
-    correct: true
-  - text: Ніколи.
-    correct: false
-  - text: Тільки вночі.
-    correct: false
+  - '{''text'': ''Постійно, щодня.'', ''correct'': False}'
+  - '{''text'': ''Іноді, періодично.'', ''correct'': True}'
+  - '{''text'': ''Ніколи.'', ''correct'': False}'
+  - '{''text'': ''Тільки вночі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -942,14 +1041,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Коли вживають вираз «рано чи пізно» про майбутню подію?
   options:
-  - text: Коли подія точно не станеться.
-    correct: false
-  - text: Коли подія неминуча, обов''язково станеться.
-    correct: true
-  - text: Коли подія запланована на ранок.
-    correct: false
-  - text: Коли подія залежить від погоди.
-    correct: false
+  - '{''text'': ''Коли подія точно не станеться.'', ''correct'': False}'
+  - '{''text'': "Коли подія неминуча, обов''''язково станеться.", ''correct'': True}'
+  - '{''text'': ''Коли подія запланована на ранок.'', ''correct'': False}'
+  - '{''text'': ''Коли подія залежить від погоди.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -960,14 +1055,10 @@ items:
   title: Значення фразеологізмів з предметами
   question: Що застерігає вираз «грати з вогнем» у контексті рішень?
   options:
-  - text: Не варто розводити вогонь у будинку.
-    correct: false
-  - text: Не варто ризикувати, це небезпечно.
-    correct: true
-  - text: Не варто грати у настільні ігри.
-    correct: false
-  - text: Не варто готувати на вогні.
-    correct: false
+  - '{''text'': ''Не варто розводити вогонь у будинку.'', ''correct'': False}'
+  - '{''text'': ''Не варто ризикувати, це небезпечно.'', ''correct'': True}'
+  - '{''text'': ''Не варто грати у настільні ігри.'', ''correct'': False}'
+  - '{''text'': ''Не варто готувати на вогні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +1069,11 @@ items:
   title: Значення фразеологізмів з предметами
   question: 'Який вираз найкраще завершить речення: «Так чи інакше, ми маємо...»?'
   options:
-  - text: '...почекати нових вказівок.'
-    correct: false
-  - text: '...завершити це завдання незалежно від обставин.'
-    correct: true
-  - text: '...відмінити всі плани.'
-    correct: false
-  - text: '...запитати дозволу.'
-    correct: false
+  - '{''text'': ''...почекати нових вказівок.'', ''correct'': False}'
+  - '{''text'': ''...завершити це завдання незалежно від обставин.'', ''correct'':
+    True}'
+  - '{''text'': ''...відмінити всі плани.'', ''correct'': False}'
+  - '{''text'': ''...запитати дозволу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -997,14 +1085,10 @@ items:
   question: Нова квартира має все, крім однієї проблеми — шумні сусіди. Який вираз
     описує ситуацію?
   options:
-  - text: Крапля в морі.
-    correct: false
-  - text: Ложка дьогтю.
-    correct: true
-  - text: Яблуко розбрату.
-    correct: false
-  - text: Кістка в горлі.
-    correct: false
+  - '{''text'': ''Крапля в морі.'', ''correct'': False}'
+  - '{''text'': ''Ложка дьогтю.'', ''correct'': True}'
+  - '{''text'': ''Яблуко розбрату.'', ''correct'': False}'
+  - '{''text'': ''Кістка в горлі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1016,14 +1100,10 @@ items:
   question: Переговори тривають місяць, але питання ціни не вирішене. Як описати цю
     проблему?
   options:
-  - text: Ложка дьогтю.
-    correct: false
-  - text: Камінь спотикання.
-    correct: true
-  - text: Крапля в морі.
-    correct: false
-  - text: Лід скреслив.
-    correct: false
+  - '{''text'': ''Ложка дьогтю.'', ''correct'': False}'
+  - '{''text'': ''Камінь спотикання.'', ''correct'': True}'
+  - '{''text'': ''Крапля в морі.'', ''correct'': False}'
+  - '{''text'': ''Лід скреслив.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1034,14 +1114,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Ваш друг завтра складає важливий іспит. Що побажати йому традиційно?
   options:
-  - text: Грати з вогнем!
-    correct: false
-  - text: Ні пуху ні пера!
-    correct: true
-  - text: Від воріт поворот!
-    correct: false
-  - text: Як з гуски вода!
-    correct: false
+  - '{''text'': ''Грати з вогнем!'', ''correct'': False}'
+  - '{''text'': ''Ні пуху ні пера!'', ''correct'': True}'
+  - '{''text'': ''Від воріт поворот!'', ''correct'': False}'
+  - '{''text'': ''Як з гуски вода!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1052,14 +1128,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Скільки колезі не кажуть про помилки — він не реагує. Як описати його?
   options:
-  - text: Йому все як з гуски вода.
-    correct: true
-  - text: У нього дах поїхав.
-    correct: false
-  - text: Він камінь спотикання.
-    correct: false
-  - text: Він крапля в морі.
-    correct: false
+  - '{''text'': ''Йому все як з гуски вода.'', ''correct'': True}'
+  - '{''text'': ''У нього дах поїхав.'', ''correct'': False}'
+  - '{''text'': ''Він камінь спотикання.'', ''correct'': False}'
+  - '{''text'': ''Він крапля в морі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1070,14 +1142,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Спадщина бабусі викликала сварку між родичами. Як описати ситуацію?
   options:
-  - text: Спадщина — ложка дьогтю.
-    correct: false
-  - text: Спадщина — яблуко розбрату.
-    correct: true
-  - text: Спадщина — крапля в морі.
-    correct: false
-  - text: Спадщина — камінь спотикання.
-    correct: false
+  - '{''text'': ''Спадщина — ложка дьогтю.'', ''correct'': False}'
+  - '{''text'': ''Спадщина — яблуко розбрату.'', ''correct'': True}'
+  - '{''text'': ''Спадщина — крапля в морі.'', ''correct'': False}'
+  - '{''text'': ''Спадщина — камінь спотикання.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1088,14 +1156,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Після місяця застою проєкт нарешті почав рухатися. Як описати це?
   options:
-  - text: Дах поїхав.
-    correct: false
-  - text: Лід скреслив.
-    correct: true
-  - text: Двері відчинені.
-    correct: false
-  - text: Крапля в морі.
-    correct: false
+  - '{''text'': ''Дах поїхав.'', ''correct'': False}'
+  - '{''text'': ''Лід скреслив.'', ''correct'': True}'
+  - '{''text'': ''Двері відчинені.'', ''correct'': False}'
+  - '{''text'': ''Крапля в морі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1106,14 +1170,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Колега пропонує абсурдну ідею, яку неможливо реалізувати. Як оцінити її?
   options:
-  - text: Ложка дьогтю!
-    correct: false
-  - text: Ні в тин ні в ворота!
-    correct: true
-  - text: Крапля в морі!
-    correct: false
-  - text: Рано чи пізно!
-    correct: false
+  - '{''text'': ''Ложка дьогтю!'', ''correct'': False}'
+  - '{''text'': ''Ні в тин ні в ворота!'', ''correct'': True}'
+  - '{''text'': ''Крапля в морі!'', ''correct'': False}'
+  - '{''text'': ''Рано чи пізно!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1124,14 +1184,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Подавали документи в університет, але не прийняли. Як описати результат?
   options:
-  - text: Отримали ложку дьогтю.
-    correct: false
-  - text: Отримали від воріт поворот.
-    correct: true
-  - text: Отримали яблуко розбрату.
-    correct: false
-  - text: Отримали камінь спотикання.
-    correct: false
+  - '{''text'': ''Отримали ложку дьогтю.'', ''correct'': False}'
+  - '{''text'': ''Отримали від воріт поворот.'', ''correct'': True}'
+  - '{''text'': ''Отримали яблуко розбрату.'', ''correct'': False}'
+  - '{''text'': ''Отримали камінь спотикання.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1143,14 +1199,10 @@ items:
   question: Друг хоче інвестувати всі заощадження в ризиковану справу. Як застерегти
     його?
   options:
-  - text: Це ложка дьогтю!
-    correct: false
-  - text: Це грати з вогнем!
-    correct: true
-  - text: Це крапля в морі!
-    correct: false
-  - text: Це яблуко розбрату!
-    correct: false
+  - '{''text'': ''Це ложка дьогтю!'', ''correct'': False}'
+  - '{''text'': ''Це грати з вогнем!'', ''correct'': True}'
+  - '{''text'': ''Це крапля в морі!'', ''correct'': False}'
+  - '{''text'': ''Це яблуко розбрату!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1161,14 +1213,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Правда рано чи пізно стане відомою. Як сказати це іншими словами?
   options:
-  - text: Правда — ложка дьогтю.
-    correct: false
-  - text: Правда вийде назовні неминуче.
-    correct: true
-  - text: Правда — крапля в морі.
-    correct: false
-  - text: Правда — камінь спотикання.
-    correct: false
+  - '{''text'': ''Правда — ложка дьогтю.'', ''correct'': False}'
+  - '{''text'': ''Правда вийде назовні неминуче.'', ''correct'': True}'
+  - '{''text'': ''Правда — крапля в морі.'', ''correct'': False}'
+  - '{''text'': ''Правда — камінь спотикання.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

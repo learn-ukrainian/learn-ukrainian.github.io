@@ -1,15 +1,18 @@
 module: 22-register-literary-ukrainian
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/22-register-literary-ukrainian.md
-generated: '2025-12-29T22:44:04.024707'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.674578'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Стилістичні помилки в літературному тексті
@@ -580,6 +583,141 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Характеристики літературного стилю
+  passage_template: 'Літературний стиль характеризується {образністю|термінологічністю|стандартністю|образністю}
+    та індивідуальністю. Головні засоби — {метафора|канцеляризм|термін|метафора},
+    порівняння, епітет. Метафора — це {приховане|явне|пряме|приховане} порівняння,
+    а порівняння використовує слова {як|і|але|як}, наче, мов.
+
+
+    Персоніфікація — це {оживлення|опис|аналіз|оживлення} неживого. Наприклад, "вітер
+    {шепотів|дмухнув|був|шепотів}" — це персоніфікація. Гіпербола — це {перебільшення|зменшення|точність|перебільшення}.
+    "Море сліз" — класичний приклад.
+
+
+    Інверсія — це незвичайний {порядок|вибір|аналіз|порядок} слів. "{Прийшла|Рання|Гарна|Прийшла}
+    весна рання" — приклад інверсії. Анафора — це {повтор|пропуск|заміна|повтор} слів
+    на початку речень.
+
+
+    Архаїчна лексика надає тексту піднесеності. "{Мовив|Сказав|Говорив|Мовив}" звучить
+    урочистіше, ніж "сказав". "{Зоря|Зірка|Точка|Зоря}" — поетичніше, ніж "зірка".
+    Ці слова створюють особливу {атмосферу|структуру|методологію|атмосферу}.
+
+
+    Літературні твори {відображають|описують|аналізують|відображають} світогляд автора.
+    Читач {переживає|бачить|чує|переживає} емоції разом із героями. {Художній|Науковий|Офіційний|Художній}
+    стиль — це мистецтво слова.
+
+    '
+  blanks:
+  - answer: образністю
+    options:
+    - образністю
+    - термінологічністю
+    - стандартністю
+  - answer: метафора
+    options:
+    - метафора
+    - канцеляризм
+    - термін
+  - answer: приховане
+    options:
+    - приховане
+    - явне
+    - пряме
+  - answer: як
+    options:
+    - як
+    - і
+    - але
+  - answer: оживлення
+    options:
+    - оживлення
+    - опис
+    - аналіз
+  - answer: шепотів
+    options:
+    - шепотів
+    - дмухнув
+    - був
+  - answer: перебільшення
+    options:
+    - перебільшення
+    - зменшення
+    - точність
+  - answer: порядок
+    options:
+    - порядок
+    - вибір
+    - аналіз
+  - answer: Прийшла
+    options:
+    - Прийшла
+    - Рання
+    - Гарна
+  - answer: повтор
+    options:
+    - повтор
+    - пропуск
+    - заміна
+  - answer: Мовив
+    options:
+    - Мовив
+    - Сказав
+    - Говорив
+  - answer: Зоря
+    options:
+    - Зоря
+    - Зірка
+    - Точка
+  - answer: атмосферу
+    options:
+    - атмосферу
+    - структуру
+    - методологію
+  - answer: відображають
+    options:
+    - відображають
+    - описують
+    - аналізують
+  - answer: переживає
+    options:
+    - переживає
+    - бачить
+    - чує
+  - answer: Художній
+    options:
+    - Художній
+    - Науковий
+    - Офіційний
+  blank_count: 16
+  complete_passage: 'Літературний стиль характеризується образністю та індивідуальністю.
+    Головні засоби — метафора, порівняння, епітет. Метафора — це приховане порівняння,
+    а порівняння використовує слова як, наче, мов.
+
+
+    Персоніфікація — це оживлення неживого. Наприклад, "вітер шепотів" — це персоніфікація.
+    Гіпербола — це перебільшення. "Море сліз" — класичний приклад.
+
+
+    Інверсія — це незвичайний порядок слів. "Прийшла весна рання" — приклад інверсії.
+    Анафора — це повтор слів на початку речень.
+
+
+    Архаїчна лексика надає тексту піднесеності. "Мовив" звучить урочистіше, ніж "сказав".
+    "Зоря" — поетичніше, ніж "зірка". Ці слова створюють особливу атмосферу.
+
+
+    Літературні твори відображають світогляд автора. Читач переживає емоції разом
+    із героями. Художній стиль — це мистецтво слова.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення з інверсією
   jumbled_words: []
@@ -712,14 +850,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб використано в реченні "Небо плакало дощем"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: false
-  - text: Персоніфікація
-    correct: true
-  - text: Гіпербола
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': True}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -731,14 +865,10 @@ items:
   question: Який образний засіб використано в реченні "Його слова, як ніж, вразили
     серце"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: true
-  - text: Епітет
-    correct: false
-  - text: Персоніфікація
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': True}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -749,14 +879,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб використано в реченні "Золоте сонце сідало за обрій"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: false
-  - text: Епітет
-    correct: true
-  - text: Гіпербола
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Епітет'', ''correct'': True}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -767,14 +893,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб використано в реченні "Я помру від щастя"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Гіпербола
-    correct: true
-  - text: Епітет
-    correct: false
-  - text: Персоніфікація
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': True}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -785,14 +907,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб використано в реченні "Життя — це дорога"?
   options:
-  - text: Метафора
-    correct: true
-  - text: Порівняння
-    correct: false
-  - text: Епітет
-    correct: false
-  - text: Персоніфікація
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': True}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -803,14 +921,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб використано в реченні "Вітер шепотів таємниці"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: false
-  - text: Персоніфікація
-    correct: true
-  - text: Гіпербола
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': True}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -821,14 +935,10 @@ items:
   title: Визначення образних засобів
   question: Яке слово є архаїчним у літературному стилі?
   options:
-  - text: сказав
-    correct: false
-  - text: мовив
-    correct: true
-  - text: говорив
-    correct: false
-  - text: промовляв
-    correct: false
+  - '{''text'': ''сказав'', ''correct'': False}'
+  - '{''text'': ''мовив'', ''correct'': True}'
+  - '{''text'': ''говорив'', ''correct'': False}'
+  - '{''text'': ''промовляв'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -839,14 +949,10 @@ items:
   title: Визначення образних засобів
   question: Що таке інверсія в літературному стилі?
   options:
-  - text: Повторення слів
-    correct: false
-  - text: Незвичайний порядок слів
-    correct: true
-  - text: Приховане порівняння
-    correct: false
-  - text: Перебільшення
-    correct: false
+  - '{''text'': ''Повторення слів'', ''correct'': False}'
+  - '{''text'': ''Незвичайний порядок слів'', ''correct'': True}'
+  - '{''text'': ''Приховане порівняння'', ''correct'': False}'
+  - '{''text'': ''Перебільшення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -857,14 +963,10 @@ items:
   title: Визначення образних засобів
   question: Яке речення містить інверсію?
   options:
-  - text: Весна прийшла рано.
-    correct: false
-  - text: Прийшла весна рання.
-    correct: true
-  - text: Рання весна нарешті прийшла.
-    correct: false
-  - text: Сьогодні прийшла весна.
-    correct: false
+  - '{''text'': ''Весна прийшла рано.'', ''correct'': False}'
+  - '{''text'': ''Прийшла весна рання.'', ''correct'': True}'
+  - '{''text'': ''Рання весна нарешті прийшла.'', ''correct'': False}'
+  - '{''text'': ''Сьогодні прийшла весна.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -875,14 +977,10 @@ items:
   title: Визначення образних засобів
   question: Що таке анафора?
   options:
-  - text: Повторення слів на початку речень
-    correct: true
-  - text: Пропуск слів
-    correct: false
-  - text: Питання без відповіді
-    correct: false
-  - text: Перебільшення
-    correct: false
+  - '{''text'': ''Повторення слів на початку речень'', ''correct'': True}'
+  - '{''text'': ''Пропуск слів'', ''correct'': False}'
+  - '{''text'': ''Питання без відповіді'', ''correct'': False}'
+  - '{''text'': ''Перебільшення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -893,14 +991,10 @@ items:
   title: Визначення образних засобів
   question: Який образний засіб у реченні "Море сліз пролила вона"?
   options:
-  - text: Метафора
-    correct: false
-  - text: Гіпербола
-    correct: true
-  - text: Персоніфікація
-    correct: false
-  - text: Епітет
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': True}'
+  - '{''text'': ''Персоніфікація'', ''correct'': False}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -911,14 +1005,10 @@ items:
   title: Визначення образних засобів
   question: Яке слово є піднесеним (книжним)?
   options:
-  - text: зірка
-    correct: false
-  - text: зоря
-    correct: true
-  - text: зірочка
-    correct: false
-  - text: зоряний
-    correct: false
+  - '{''text'': ''зірка'', ''correct'': False}'
+  - '{''text'': ''зоря'', ''correct'': True}'
+  - '{''text'': ''зірочка'', ''correct'': False}'
+  - '{''text'': ''зоряний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -929,14 +1019,10 @@ items:
   title: Визначення образних засобів
   question: Що таке невласне-пряма мова?
   options:
-  - text: Цитата зі слів автора
-    correct: false
-  - text: Переказ чужих слів
-    correct: false
-  - text: Думки персонажа без маркерів
-    correct: true
-  - text: Діалог персонажів
-    correct: false
+  - '{''text'': ''Цитата зі слів автора'', ''correct'': False}'
+  - '{''text'': ''Переказ чужих слів'', ''correct'': False}'
+  - '{''text'': ''Думки персонажа без маркерів'', ''correct'': True}'
+  - '{''text'': ''Діалог персонажів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -947,14 +1033,10 @@ items:
   title: Визначення образних засобів
   question: Яке слово є зменшувально-пестливим?
   options:
-  - text: сонце
-    correct: false
-  - text: сонечко
-    correct: true
-  - text: сонцепек
-    correct: false
-  - text: сонячний
-    correct: false
+  - '{''text'': ''сонце'', ''correct'': False}'
+  - '{''text'': ''сонечко'', ''correct'': True}'
+  - '{''text'': ''сонцепек'', ''correct'': False}'
+  - '{''text'': ''сонячний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -965,14 +1047,10 @@ items:
   title: Визначення образних засобів
   question: Яке слово є згрубілою формою?
   options:
-  - text: вітер
-    correct: false
-  - text: вітерець
-    correct: false
-  - text: вітрище
-    correct: true
-  - text: вітровий
-    correct: false
+  - '{''text'': ''вітер'', ''correct'': False}'
+  - '{''text'': ''вітерець'', ''correct'': False}'
+  - '{''text'': ''вітрище'', ''correct'': True}'
+  - '{''text'': ''вітровий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -983,14 +1061,10 @@ items:
   title: Визначення образних засобів
   question: Що характерно для літературного стилю?
   options:
-  - text: Стандартні формули та кліше
-    correct: false
-  - text: Образність та індивідуальність
-    correct: true
-  - text: Термінологічність та об'єктивність
-    correct: false
-  - text: Спонтанність та невимушеність
-    correct: false
+  - '{''text'': ''Стандартні формули та кліше'', ''correct'': False}'
+  - '{''text'': ''Образність та індивідуальність'', ''correct'': True}'
+  - '{''text'': "Термінологічність та об''єктивність", ''correct'': False}'
+  - '{''text'': ''Спонтанність та невимушеність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1001,14 +1075,10 @@ items:
   title: Аналіз літературних текстів
   question: У реченні "Місто — це скелет" який образний засіб?
   options:
-  - text: Порівняння
-    correct: false
-  - text: Метафора
-    correct: true
-  - text: Гіпербола
-    correct: false
-  - text: Персоніфікація
-    correct: false
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Метафора'', ''correct'': True}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1019,14 +1089,10 @@ items:
   title: Аналіз літературних текстів
   question: У реченні "Хмари, наче мішки з ватою" який образний засіб?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: true
-  - text: Епітет
-    correct: false
-  - text: Гіпербола
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': True}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1037,14 +1103,10 @@ items:
   title: Аналіз літературних текстів
   question: У реченні "Тиша, від якої болять вуха" який прийом?
   options:
-  - text: Метафора
-    correct: false
-  - text: Порівняння
-    correct: false
-  - text: Гіпербола
-    correct: true
-  - text: Інверсія
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': True}'
+  - '{''text'': ''Інверсія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1055,14 +1117,10 @@ items:
   title: Аналіз літературних текстів
   question: У реченні "Природа втратила сили" який образний засіб?
   options:
-  - text: Метафора
-    correct: false
-  - text: Персоніфікація
-    correct: true
-  - text: Порівняння
-    correct: false
-  - text: Епітет
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Персоніфікація'', ''correct'': True}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Епітет'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1073,14 +1131,10 @@ items:
   title: Аналіз літературних текстів
   question: 'У виразі "важкі хмари" слово "важкі" — це:'
   options:
-  - text: Метафора
-    correct: false
-  - text: Епітет
-    correct: true
-  - text: Порівняння
-    correct: false
-  - text: Гіпербола
-    correct: false
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Епітет'', ''correct'': True}'
+  - '{''text'': ''Порівняння'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1091,14 +1145,10 @@ items:
   title: Аналіз літературних текстів
   question: 'Речення "Сходила зоря вечірня" містить:'
   options:
-  - text: Інверсію
-    correct: true
-  - text: Анафору
-    correct: false
-  - text: Еліпсис
-    correct: false
-  - text: Метафору
-    correct: false
+  - '{''text'': ''Інверсію'', ''correct'': True}'
+  - '{''text'': ''Анафору'', ''correct'': False}'
+  - '{''text'': ''Еліпсис'', ''correct'': False}'
+  - '{''text'': ''Метафору'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1109,14 +1159,10 @@ items:
   title: Аналіз літературних текстів
   question: '"Сумно мені, сумно..." — це приклад:'
   options:
-  - text: Інверсії
-    correct: false
-  - text: Повтору (анафори)
-    correct: true
-  - text: Еліпсису
-    correct: false
-  - text: Метафори
-    correct: false
+  - '{''text'': ''Інверсії'', ''correct'': False}'
+  - '{''text'': ''Повтору (анафори)'', ''correct'': True}'
+  - '{''text'': ''Еліпсису'', ''correct'': False}'
+  - '{''text'': ''Метафори'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1127,14 +1173,10 @@ items:
   title: Аналіз літературних текстів
   question: '"І хто б міг подумати?" — це:'
   options:
-  - text: Пряме питання
-    correct: false
-  - text: Риторичне питання
-    correct: true
-  - text: Непряме питання
-    correct: false
-  - text: Метафора
-    correct: false
+  - '{''text'': ''Пряме питання'', ''correct'': False}'
+  - '{''text'': ''Риторичне питання'', ''correct'': True}'
+  - '{''text'': ''Непряме питання'', ''correct'': False}'
+  - '{''text'': ''Метафора'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1145,14 +1187,10 @@ items:
   title: Аналіз літературних текстів
   question: 'Слово "мовив" порівняно зі "сказав" є:'
   options:
-  - text: Нейтральним
-    correct: false
-  - text: Архаїчним/піднесеним
-    correct: true
-  - text: Розмовним
-    correct: false
-  - text: Офіційним
-    correct: false
+  - '{''text'': ''Нейтральним'', ''correct'': False}'
+  - '{''text'': ''Архаїчним/піднесеним'', ''correct'': True}'
+  - '{''text'': ''Розмовним'', ''correct'': False}'
+  - '{''text'': ''Офіційним'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1163,14 +1201,10 @@ items:
   title: Аналіз літературних текстів
   question: У реченні "Вітер б'є в обличчя мокрою ганчіркою" який прийом?
   options:
-  - text: Порівняння
-    correct: true
-  - text: Метафора
-    correct: false
-  - text: Гіпербола
-    correct: false
-  - text: Інверсія
-    correct: false
+  - '{''text'': ''Порівняння'', ''correct'': True}'
+  - '{''text'': ''Метафора'', ''correct'': False}'
+  - '{''text'': ''Гіпербола'', ''correct'': False}'
+  - '{''text'': ''Інверсія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1181,14 +1215,10 @@ items:
   title: Аналіз літературних текстів
   question: '"Місто, яке він знав, виглядає чужим" — це приклад:'
   options:
-  - text: Прямої мови
-    correct: false
-  - text: Непрямої мови
-    correct: false
-  - text: Невласне-прямої мови
-    correct: true
-  - text: Авторської мови
-    correct: false
+  - '{''text'': ''Прямої мови'', ''correct'': False}'
+  - '{''text'': ''Непрямої мови'', ''correct'': False}'
+  - '{''text'': ''Невласне-прямої мови'', ''correct'': True}'
+  - '{''text'': ''Авторської мови'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1199,14 +1229,10 @@ items:
   title: Аналіз літературних текстів
   question: '"Донечка" порівняно з "дочка" є:'
   options:
-  - text: Нейтральним
-    correct: false
-  - text: Зменшувально-пестливим
-    correct: true
-  - text: Згрубілим
-    correct: false
-  - text: Офіційним
-    correct: false
+  - '{''text'': ''Нейтральним'', ''correct'': False}'
+  - '{''text'': ''Зменшувально-пестливим'', ''correct'': True}'
+  - '{''text'': ''Згрубілим'', ''correct'': False}'
+  - '{''text'': ''Офіційним'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1217,14 +1243,10 @@ items:
   title: Аналіз літературних текстів
   question: '"Вітрище" порівняно з "вітер" виражає:'
   options:
-  - text: Ніжність
-    correct: false
-  - text: Силу, інтенсивність
-    correct: true
-  - text: Нейтральність
-    correct: false
-  - text: Офіційність
-    correct: false
+  - '{''text'': ''Ніжність'', ''correct'': False}'
+  - '{''text'': ''Силу, інтенсивність'', ''correct'': True}'
+  - '{''text'': ''Нейтральність'', ''correct'': False}'
+  - '{''text'': ''Офіційність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1235,14 +1257,10 @@ items:
   title: Аналіз літературних текстів
   question: 'Антоніми "будувати — руйнувати" використовуються для:'
   options:
-  - text: Опису одного процесу
-    correct: false
-  - text: Створення контрасту
-    correct: true
-  - text: Уточнення значення
-    correct: false
-  - text: Офіційного документа
-    correct: false
+  - '{''text'': ''Опису одного процесу'', ''correct'': False}'
+  - '{''text'': ''Створення контрасту'', ''correct'': True}'
+  - '{''text'': ''Уточнення значення'', ''correct'': False}'
+  - '{''text'': ''Офіційного документа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1253,14 +1271,10 @@ items:
   title: Аналіз літературних текстів
   question: 'У літературному стилі "старий, давній, древній, архаїчний" — це:'
   options:
-  - text: Антоніми
-    correct: false
-  - text: Синоніми з відтінками
-    correct: true
-  - text: Омоніми
-    correct: false
-  - text: Пароніми
-    correct: false
+  - '{''text'': ''Антоніми'', ''correct'': False}'
+  - '{''text'': ''Синоніми з відтінками'', ''correct'': True}'
+  - '{''text'': ''Омоніми'', ''correct'': False}'
+  - '{''text'': ''Пароніми'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1271,14 +1285,10 @@ items:
   title: Аналіз літературних текстів
   question: 'Головна мета літературного стилю:'
   options:
-  - text: Передача точної інформації
-    correct: false
-  - text: Естетичний вплив на читача
-    correct: true
-  - text: Регулювання відносин
-    correct: false
-  - text: Наукове пояснення
-    correct: false
+  - '{''text'': ''Передача точної інформації'', ''correct'': False}'
+  - '{''text'': ''Естетичний вплив на читача'', ''correct'': True}'
+  - '{''text'': ''Регулювання відносин'', ''correct'': False}'
+  - '{''text'': ''Наукове пояснення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

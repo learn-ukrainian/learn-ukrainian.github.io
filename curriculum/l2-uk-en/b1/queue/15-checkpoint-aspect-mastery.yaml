@@ -1,15 +1,18 @@
 module: 15-checkpoint-aspect-mastery
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/15-checkpoint-aspect-mastery.md
-generated: '2025-12-29T00:21:59.516447'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.657614'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 7
   fill-in: 22
+  cloze: 1
   unjumble: 10
   quiz: 42
   true-false: 28
-item_count: 109
+total_items: 110
+item_count: 110
+sample_percent: null
 items:
 - activity: error-correction
   title: Типові помилки з видом
@@ -329,6 +332,130 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Інтеграційний текст — Один день
+  passage_template: 'Минулого тижня у мене {була|мала|буде|була} важлива зустріч із
+    новим клієнтом. Увесь ранок я ретельно {готувався|підготувався|готуватимуся|готувався}
+    до неї, переглядаючи документи і готуючи презентацію.
+
+
+    О десятій я {вийшов|виходив|виходитиму|вийшов} з дому і поїхав на зустріч у центр
+    міста. По дорозі я {купив|купував|купуватиму|купив} каву в маленькій кав''ярні
+    біля офісу клієнта.
+
+
+    Зустріч {почалася|починалася|починатиметься|почалася} рівно о одинадцятій, як
+    ми домовлялися заздалегідь. Ми {розмовляли|поговорили|розмовлятимемо|розмовляли}
+    майже три години, обговорюючи всі деталі проєкту. Нарешті о другій годині ми {підписали|підписували|підпишемо|підписали}
+    угоду про співпрацю на наступний рік.
+
+
+    Після зустрічі я {сказав|говорив|говоритиму|сказав} колезі: "Чи ти вже написав
+    звіт для начальника?" Він відповів: "Ні, я ще не {написав|писав|напишу|написав}
+    його, бо чекав результатів зустрічі." Але обіцяв: "Я обов''язково {напишу|писатиму|буду
+    писати|напишу} звіт до кінця робочого дня."
+
+
+    Увечері я {повернувся|повертався|повернуся|повернувся} додому, відпочив і вирішив
+    приготувати вечерю. Я {приготував|готував|готуватиму|приготував} смачну вечерю
+    для всієї родини — паста з овочами. Цей насичений подіями день успішно {минув|минав|мине|минув},
+    і я був задоволений результатами.
+
+    '
+  blanks:
+  - answer: була
+    options:
+    - була
+    - мала
+    - буде
+  - answer: готувався
+    options:
+    - готувався
+    - підготувався
+    - готуватимуся
+  - answer: вийшов
+    options:
+    - вийшов
+    - виходив
+    - виходитиму
+  - answer: купив
+    options:
+    - купив
+    - купував
+    - купуватиму
+  - answer: почалася
+    options:
+    - почалася
+    - починалася
+    - починатиметься
+  - answer: розмовляли
+    options:
+    - розмовляли
+    - поговорили
+    - розмовлятимемо
+  - answer: підписали
+    options:
+    - підписали
+    - підписували
+    - підпишемо
+  - answer: сказав
+    options:
+    - сказав
+    - говорив
+    - говоритиму
+  - answer: написав
+    options:
+    - написав
+    - писав
+    - напишу
+  - answer: напишу
+    options:
+    - напишу
+    - писатиму
+    - буду писати
+  - answer: повернувся
+    options:
+    - повернувся
+    - повертався
+    - повернуся
+  - answer: приготував
+    options:
+    - приготував
+    - готував
+    - готуватиму
+  - answer: минув
+    options:
+    - минув
+    - минав
+    - мине
+  blank_count: 13
+  complete_passage: 'Минулого тижня у мене була важлива зустріч із новим клієнтом.
+    Увесь ранок я ретельно готувався до неї, переглядаючи документи і готуючи презентацію.
+
+
+    О десятій я вийшов з дому і поїхав на зустріч у центр міста. По дорозі я купив
+    каву в маленькій кав''ярні біля офісу клієнта.
+
+
+    Зустріч почалася рівно о одинадцятій, як ми домовлялися заздалегідь. Ми розмовляли
+    майже три години, обговорюючи всі деталі проєкту. Нарешті о другій годині ми підписали
+    угоду про співпрацю на наступний рік.
+
+
+    Після зустрічі я сказав колезі: "Чи ти вже написав звіт для начальника?" Він відповів:
+    "Ні, я ще не написав його, бо чекав результатів зустрічі." Але обіцяв: "Я обов''язково
+    напишу звіт до кінця робочого дня."
+
+
+    Увечері я повернувся додому, відпочив і вирішив приготувати вечерю. Я приготував
+    смачну вечерю для всієї родини — паста з овочами. Цей насичений подіями день успішно
+    минув, і я був задоволений результатами.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення з вибором виду
   jumbled_words: []
@@ -414,14 +541,10 @@ items:
   question: 'Коли ми говоримо про тривалу дію або регулярне повторення, ми використовуємо
     недоконаний вид, який показує:'
   options:
-  - text: процес або повторення
-    correct: true
-  - text: завершений результат
-    correct: false
-  - text: одноразову дію
-    correct: false
-  - text: конкретний момент
-    correct: false
+  - '{''text'': ''процес або повторення'', ''correct'': True}'
+  - '{''text'': ''завершений результат'', ''correct'': False}'
+  - '{''text'': ''одноразову дію'', ''correct'': False}'
+  - '{''text'': ''конкретний момент'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -433,14 +556,10 @@ items:
   question: 'Коли ми хочемо підкреслити завершення дії та досягнення результату, ми
     використовуємо доконаний вид, який показує:'
   options:
-  - text: тривалу дію
-    correct: false
-  - text: завершений результат
-    correct: true
-  - text: регулярну дію
-    correct: false
-  - text: загальне твердження
-    correct: false
+  - '{''text'': ''тривалу дію'', ''correct'': False}'
+  - '{''text'': ''завершений результат'', ''correct'': True}'
+  - '{''text'': ''регулярну дію'', ''correct'': False}'
+  - '{''text'': ''загальне твердження'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -452,14 +571,10 @@ items:
   question: 'Коли ви вибираєте між доконаним і недоконаним видом, яке запитання допоможе
     зробити правильний вибір:'
   options:
-  - text: Що важливо — процес чи результат?
-    correct: true
-  - text: Коли це сталося?
-    correct: false
-  - text: Де це сталося?
-    correct: false
-  - text: Хто це зробив?
-    correct: false
+  - '{''text'': ''Що важливо — процес чи результат?'', ''correct'': True}'
+  - '{''text'': ''Коли це сталося?'', ''correct'': False}'
+  - '{''text'': ''Де це сталося?'', ''correct'': False}'
+  - '{''text'': ''Хто це зробив?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -471,14 +586,10 @@ items:
   question: 'Коли українець каже "Я читав книгу вчора увечері", він має на увазі,
     що:'
   options:
-  - text: він був у процесі читання
-    correct: true
-  - text: він закінчив читати
-    correct: false
-  - text: він прочитав один раз
-    correct: false
-  - text: він прочитає завтра
-    correct: false
+  - '{''text'': ''він був у процесі читання'', ''correct'': True}'
+  - '{''text'': ''він закінчив читати'', ''correct'': False}'
+  - '{''text'': ''він прочитав один раз'', ''correct'': False}'
+  - '{''text'': ''він прочитає завтра'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -490,14 +601,10 @@ items:
   question: 'Коли українець каже "Я прочитав книгу вчора увечері", він має на увазі,
     що:'
   options:
-  - text: він був у процесі читання
-    correct: false
-  - text: він закінчив читати книгу до кінця
-    correct: true
-  - text: він читає зараз
-    correct: false
-  - text: він буде читати
-    correct: false
+  - '{''text'': ''він був у процесі читання'', ''correct'': False}'
+  - '{''text'': ''він закінчив читати книгу до кінця'', ''correct'': True}'
+  - '{''text'': ''він читає зараз'', ''correct'': False}'
+  - '{''text'': ''він буде читати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -509,14 +616,10 @@ items:
   question: 'Коли ми описуємо регулярні дії, які повторюються щодня, щотижня або щомісяця
     протягом тривалого часу, ми використовуємо:'
   options:
-  - text: недоконаний вид
-    correct: true
-  - text: доконаний вид
-    correct: false
-  - text: обидва види однаково
-    correct: false
-  - text: жодний вид
-    correct: false
+  - '{''text'': ''недоконаний вид'', ''correct'': True}'
+  - '{''text'': ''доконаний вид'', ''correct'': False}'
+  - '{''text'': ''обидва види однаково'', ''correct'': False}'
+  - '{''text'': ''жодний вид'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -528,14 +631,10 @@ items:
   question: 'Коли ми описуємо одноразову дію, яка сталася один раз і завершилася,
     ми використовуємо:'
   options:
-  - text: недоконаний вид
-    correct: false
-  - text: доконаний вид
-    correct: true
-  - text: обидва види однаково
-    correct: false
-  - text: жодний вид
-    correct: false
+  - '{''text'': ''недоконаний вид'', ''correct'': False}'
+  - '{''text'': ''доконаний вид'', ''correct'': True}'
+  - '{''text'': ''обидва види однаково'', ''correct'': False}'
+  - '{''text'': ''жодний вид'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -547,14 +646,10 @@ items:
   question: 'Марія кожного дня їде на роботу автобусом. Тому ми скажемо: "Вона завжди
     _____ на роботу автобусом."'
   options:
-  - text: їздила
-    correct: true
-  - text: поїхала
-    correct: false
-  - text: з'їздила
-    correct: false
-  - text: виїхала
-    correct: false
+  - '{''text'': ''їздила'', ''correct'': True}'
+  - '{''text'': ''поїхала'', ''correct'': False}'
+  - '{''text'': "з''їздила", ''correct'': False}'
+  - '{''text'': ''виїхала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -566,14 +661,10 @@ items:
   question: 'Петро взяв книгу і повністю її прочитав за один вечір. Тому ми скажемо:
     "Учора він _____ цю книгу."'
   options:
-  - text: читав
-    correct: false
-  - text: прочитав
-    correct: true
-  - text: читає
-    correct: false
-  - text: буде читати
-    correct: false
+  - '{''text'': ''читав'', ''correct'': False}'
+  - '{''text'': ''прочитав'', ''correct'': True}'
+  - '{''text'': ''читає'', ''correct'': False}'
+  - '{''text'': ''буде читати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -585,14 +676,10 @@ items:
   question: 'Вид дієслова — це граматична категорія, яка показує наш погляд на дію.
     Вона показує:'
   options:
-  - text: погляд на дію (процес vs результат)
-    correct: true
-  - text: час дії (минулий, теперішній, майбутній)
-    correct: false
-  - text: особу дієслова
-    correct: false
-  - text: число дієслова
-    correct: false
+  - '{''text'': ''погляд на дію (процес vs результат)'', ''correct'': True}'
+  - '{''text'': ''час дії (минулий, теперішній, майбутній)'', ''correct'': False}'
+  - '{''text'': ''особу дієслова'', ''correct'': False}'
+  - '{''text'': ''число дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -604,14 +691,10 @@ items:
   question: 'Олег працював над листом увесь день, з ранку до вечора. Тому ми скажемо:
     "Він весь день _____ лист."'
   options:
-  - text: писав
-    correct: true
-  - text: написав
-    correct: false
-  - text: напише
-    correct: false
-  - text: буде писати
-    correct: false
+  - '{''text'': ''писав'', ''correct'': True}'
+  - '{''text'': ''написав'', ''correct'': False}'
+  - '{''text'': ''напише'', ''correct'': False}'
+  - '{''text'': ''буде писати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -623,14 +706,10 @@ items:
   question: 'Марія нарешті закінчила працювати над листом і відправила його. Тому
     ми скажемо: "Вона нарешті _____ лист."'
   options:
-  - text: писала
-    correct: false
-  - text: написала
-    correct: true
-  - text: напише
-    correct: false
-  - text: буде писати
-    correct: false
+  - '{''text'': ''писала'', ''correct'': False}'
+  - '{''text'': ''написала'', ''correct'': True}'
+  - '{''text'': ''напише'', ''correct'': False}'
+  - '{''text'': ''буде писати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -642,14 +721,10 @@ items:
   question: 'Кожних вихідних ми дивимося цей фільм знову і знову. Тому ми скажемо:
     "Ми часто _____ цей фільм."'
   options:
-  - text: дивилися
-    correct: true
-  - text: подивилися
-    correct: false
-  - text: подивимося
-    correct: false
-  - text: будемо дивитися
-    correct: false
+  - '{''text'': ''дивилися'', ''correct'': True}'
+  - '{''text'': ''подивилися'', ''correct'': False}'
+  - '{''text'': ''подивимося'', ''correct'': False}'
+  - '{''text'': ''будемо дивитися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -661,14 +736,10 @@ items:
   question: 'Вчора ввечері я один раз подивився фільм від початку до кінця. Тому ми
     скажемо: "Вчора я _____ цей фільм."'
   options:
-  - text: дивився
-    correct: false
-  - text: подивився
-    correct: true
-  - text: буду дивитися
-    correct: false
-  - text: подивлюся
-    correct: false
+  - '{''text'': ''дивився'', ''correct'': False}'
+  - '{''text'': ''подивився'', ''correct'': True}'
+  - '{''text'': ''буду дивитися'', ''correct'': False}'
+  - '{''text'': ''подивлюся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -680,14 +751,10 @@ items:
   question: 'Коли ми використовуємо маркер часу "щодня", який показує регулярність
     дії, ми вимагаємо:'
   options:
-  - text: недоконаного виду
-    correct: true
-  - text: доконаного виду
-    correct: false
-  - text: будь-якого виду
-    correct: false
-  - text: майбутнього часу
-    correct: false
+  - '{''text'': ''недоконаного виду'', ''correct'': True}'
+  - '{''text'': ''доконаного виду'', ''correct'': False}'
+  - '{''text'': ''будь-якого виду'', ''correct'': False}'
+  - '{''text'': ''майбутнього часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -699,14 +766,10 @@ items:
   question: 'Коли ми використовуємо маркер часу "раптом", який показує несподіваність
     і одноразовість, ми вимагаємо:'
   options:
-  - text: недоконаного виду
-    correct: false
-  - text: доконаного виду
-    correct: true
-  - text: будь-якого виду
-    correct: false
-  - text: минулого часу
-    correct: false
+  - '{''text'': ''недоконаного виду'', ''correct'': False}'
+  - '{''text'': ''доконаного виду'', ''correct'': True}'
+  - '{''text'': ''будь-якого виду'', ''correct'': False}'
+  - '{''text'': ''минулого часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -718,14 +781,10 @@ items:
   question: 'Я сидів за комп''ютером і працював, коли раптом задзвонив телефон. Тому
     ми скажемо: "Я _____, коли ти зателефонував."'
   options:
-  - text: працював
-    correct: true
-  - text: попрацював
-    correct: false
-  - text: попрацюю
-    correct: false
-  - text: буду працювати
-    correct: false
+  - '{''text'': ''працював'', ''correct'': True}'
+  - '{''text'': ''попрацював'', ''correct'': False}'
+  - '{''text'': ''попрацюю'', ''correct'': False}'
+  - '{''text'': ''буду працювати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -737,14 +796,10 @@ items:
   question: 'Петро прийшов на зустріч рівно о третій годині, як було заплановано.
     Тому ми скажемо: "Він _____ о третій годині."'
   options:
-  - text: приходив
-    correct: false
-  - text: прийшов
-    correct: true
-  - text: приходитиме
-    correct: false
-  - text: буде приходити
-    correct: false
+  - '{''text'': ''приходив'', ''correct'': False}'
+  - '{''text'': ''прийшов'', ''correct'': True}'
+  - '{''text'': ''приходитиме'', ''correct'': False}'
+  - '{''text'': ''буде приходити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -756,14 +811,10 @@ items:
   question: 'Головна різниця між доконаним і недоконаним видом — це різниця між результатом
     і процесом:'
   options:
-  - text: доконаним і недоконаним видом
-    correct: true
-  - text: минулим і майбутнім часом
-    correct: false
-  - text: однією і множиною
-    correct: false
-  - text: першою і третьою особою
-    correct: false
+  - '{''text'': ''доконаним і недоконаним видом'', ''correct'': True}'
+  - '{''text'': ''минулим і майбутнім часом'', ''correct'': False}'
+  - '{''text'': ''однією і множиною'', ''correct'': False}'
+  - '{''text'': ''першою і третьою особою'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -774,14 +825,10 @@ items:
   title: Комплексний тест — Вид у минулому (M07-08)
   question: 'Коли ми кажемо "Вона готувала обід три години", ми маємо на увазі, що:'
   options:
-  - text: процес приготування тривав три години
-    correct: true
-  - text: вона закінчила готувати за три години
-    correct: false
-  - text: вона готуватиме три години
-    correct: false
-  - text: вона приготує три страви
-    correct: false
+  - '{''text'': ''процес приготування тривав три години'', ''correct'': True}'
+  - '{''text'': ''вона закінчила готувати за три години'', ''correct'': False}'
+  - '{''text'': ''вона готуватиме три години'', ''correct'': False}'
+  - '{''text'': ''вона приготує три страви'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -793,14 +840,10 @@ items:
   question: 'Іван щоранку приїжджає на роботу о восьмій годині — це його звичка. Тому
     ми скажемо: "Він щодня _____ на роботу о восьмій."'
   options:
-  - text: приходив
-    correct: true
-  - text: прийшов
-    correct: false
-  - text: прийде
-    correct: false
-  - text: приходитиме
-    correct: false
+  - '{''text'': ''приходив'', ''correct'': True}'
+  - '{''text'': ''прийшов'', ''correct'': False}'
+  - '{''text'': ''прийде'', ''correct'': False}'
+  - '{''text'': ''приходитиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -812,14 +855,10 @@ items:
   question: 'Ми сиділи в кімнаті, і раптом Оксана несподівано відчинила двері. Тому
     ми скажемо: "Учора вона раптом _____ двері."'
   options:
-  - text: відкривала
-    correct: false
-  - text: відкрила
-    correct: true
-  - text: відкриватиме
-    correct: false
-  - text: буде відкривати
-    correct: false
+  - '{''text'': ''відкривала'', ''correct'': False}'
+  - '{''text'': ''відкрила'', ''correct'': True}'
+  - '{''text'': ''відкриватиме'', ''correct'': False}'
+  - '{''text'': ''буде відкривати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -831,14 +870,10 @@ items:
   question: 'Завтра у мене буде багато роботи, і я буду зайнятий увесь день. Тому
     ми скажемо: "Завтра я _____ працювати."'
   options:
-  - text: буду
-    correct: true
-  - text: попрацюю
-    correct: false
-  - text: працюватиму
-    correct: false
-  - text: обидва A і C
-    correct: false
+  - '{''text'': ''буду'', ''correct'': True}'
+  - '{''text'': ''попрацюю'', ''correct'': False}'
+  - '{''text'': ''працюватиму'', ''correct'': False}'
+  - '{''text'': ''обидва A і C'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -850,14 +885,10 @@ items:
   question: 'Мені потрібно завершити звіт до п''ятої години сьогодні. Тому ми скажемо:
     "Я _____ цей звіт до п''ятої."'
   options:
-  - text: буду писати
-    correct: false
-  - text: напишу
-    correct: true
-  - text: писатиму
-    correct: false
-  - text: пишу
-    correct: false
+  - '{''text'': ''буду писати'', ''correct'': False}'
+  - '{''text'': ''напишу'', ''correct'': True}'
+  - '{''text'': ''писатиму'', ''correct'': False}'
+  - '{''text'': ''пишу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -869,14 +900,10 @@ items:
   question: 'Коли ми утворюємо майбутній час за допомогою суфіксів -тиму/-меш/-ме,
     це називається синтетична форма:'
   options:
-  - text: працюватиму
-    correct: true
-  - text: буду працювати
-    correct: false
-  - text: попрацюю
-    correct: false
-  - text: працював
-    correct: false
+  - '{''text'': ''працюватиму'', ''correct'': True}'
+  - '{''text'': ''буду працювати'', ''correct'': False}'
+  - '{''text'': ''попрацюю'', ''correct'': False}'
+  - '{''text'': ''працював'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +915,10 @@ items:
   question: 'Коли ми кажемо "Буду + інфінітив" (наприклад, "буду читати книгу"), це
     означає, що ми утворюємо:'
   options:
-  - text: складену форму недоконаного майбутнього часу
-    correct: true
-  - text: просту форму доконаного майбутнього часу
-    correct: false
-  - text: синтетичну форму майбутнього часу
-    correct: false
-  - text: минулий час
-    correct: false
+  - '{''text'': ''складену форму недоконаного майбутнього часу'', ''correct'': True}'
+  - '{''text'': ''просту форму доконаного майбутнього часу'', ''correct'': False}'
+  - '{''text'': ''синтетичну форму майбутнього часу'', ''correct'': False}'
+  - '{''text'': ''минулий час'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -907,14 +930,10 @@ items:
   question: 'Я хочу зателефонувати тобі ввечері один раз, щоб повідомити новини. Тому
     ми скажемо: "Я _____ тобі увечері."'
   options:
-  - text: буду телефонувати
-    correct: false
-  - text: зателефоную
-    correct: true
-  - text: телефонуватиму
-    correct: false
-  - text: телефонував
-    correct: false
+  - '{''text'': ''буду телефонувати'', ''correct'': False}'
+  - '{''text'': ''зателефоную'', ''correct'': True}'
+  - '{''text'': ''телефонуватиму'', ''correct'': False}'
+  - '{''text'': ''телефонував'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -926,14 +945,10 @@ items:
   question: 'Завтра я планую читати книгу протягом усього дня від ранку до вечора.
     Тому ми скажемо: "Весь день я _____ книгу."'
   options:
-  - text: читатиму
-    correct: true
-  - text: прочитаю
-    correct: false
-  - text: читатиме
-    correct: false
-  - text: прочитає
-    correct: false
+  - '{''text'': ''читатиму'', ''correct'': True}'
+  - '{''text'': ''прочитаю'', ''correct'': False}'
+  - '{''text'': ''читатиме'', ''correct'': False}'
+  - '{''text'': ''прочитає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -945,14 +960,11 @@ items:
   question: 'Коли ми використовуємо доконаний вид у майбутньому часі для опису запланованої
     дії, ми показуємо:'
   options:
-  - text: тривалий процес
-    correct: false
-  - text: результат, який буде досягнутий до певного моменту
-    correct: true
-  - text: регулярну повторювану дію
-    correct: false
-  - text: тривалу дію без завершення
-    correct: false
+  - '{''text'': ''тривалий процес'', ''correct'': False}'
+  - '{''text'': ''результат, який буде досягнутий до певного моменту'', ''correct'':
+    True}'
+  - '{''text'': ''регулярну повторювану дію'', ''correct'': False}'
+  - '{''text'': ''тривалу дію без завершення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -964,14 +976,10 @@ items:
   question: 'Оксана приїде до нас на вечерю рівно о шостій годині, як ми домовилися.
     Тому ми скажемо: "Вона _____ нас о шостій."'
   options:
-  - text: відвідуватиме
-    correct: false
-  - text: відвідає
-    correct: true
-  - text: буде відвідувати
-    correct: false
-  - text: відвідувала
-    correct: false
+  - '{''text'': ''відвідуватиме'', ''correct'': False}'
+  - '{''text'': ''відвідає'', ''correct'': True}'
+  - '{''text'': ''буде відвідувати'', ''correct'': False}'
+  - '{''text'': ''відвідувала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -983,14 +991,10 @@ items:
   question: 'Коли ми бачимо форму "читатиму" з суфіксом -тиму в кінці дієслова, це
     означає:'
   options:
-  - text: недоконаний вид у майбутньому часі
-    correct: true
-  - text: доконаний вид у майбутньому часі
-    correct: false
-  - text: недоконаний вид у минулому часі
-    correct: false
-  - text: доконаний вид у минулому часі
-    correct: false
+  - '{''text'': ''недоконаний вид у майбутньому часі'', ''correct'': True}'
+  - '{''text'': ''доконаний вид у майбутньому часі'', ''correct'': False}'
+  - '{''text'': ''недоконаний вид у минулому часі'', ''correct'': False}'
+  - '{''text'': ''доконаний вид у минулому часі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1002,14 +1006,10 @@ items:
   question: 'Мені потрібно дочекатися тебе перед входом до магазину, поки ти приїдеш.
     Тому ми скажемо: "Я _____, поки ти прийдеш."'
   options:
-  - text: почекаю
-    correct: true
-  - text: буду чекати
-    correct: false
-  - text: чекатиму
-    correct: false
-  - text: обидва B і C
-    correct: false
+  - '{''text'': ''почекаю'', ''correct'': True}'
+  - '{''text'': ''буду чекати'', ''correct'': False}'
+  - '{''text'': ''чекатиму'', ''correct'': False}'
+  - '{''text'': ''обидва B і C'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1021,14 +1021,10 @@ items:
   question: 'Я ніколи в житті не читав цю книгу і, можливо, ніколи не буду. Тому ми
     скажемо: "Я _____ цю книгу."'
   options:
-  - text: не читав
-    correct: true
-  - text: не прочитав
-    correct: false
-  - text: не прочитаю
-    correct: false
-  - text: не читатиму
-    correct: false
+  - '{''text'': ''не читав'', ''correct'': True}'
+  - '{''text'': ''не прочитав'', ''correct'': False}'
+  - '{''text'': ''не прочитаю'', ''correct'': False}'
+  - '{''text'': ''не читатиму'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1040,14 +1036,10 @@ items:
   question: 'Я ще не прочитав цю книгу, але планую прочитати її цього тижня. Тому
     ми скажемо: "Я _____ цю книгу."'
   options:
-  - text: не читав
-    correct: false
-  - text: ще не прочитав
-    correct: true
-  - text: ніколи не читав
-    correct: false
-  - text: не буду читати
-    correct: false
+  - '{''text'': ''не читав'', ''correct'': False}'
+  - '{''text'': ''ще не прочитав'', ''correct'': True}'
+  - '{''text'': ''ніколи не читав'', ''correct'': False}'
+  - '{''text'': ''не буду читати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1059,14 +1051,10 @@ items:
   question: 'Господар хоче ввічливо запросити гостя сісти в кімнаті. Тому він скаже:
     "_____ сюди, будь ласка!"'
   options:
-  - text: Сідай
-    correct: true
-  - text: Сядь
-    correct: false
-  - text: Сів
-    correct: false
-  - text: Сідатиму
-    correct: false
+  - '{''text'': ''Сідай'', ''correct'': True}'
+  - '{''text'': ''Сядь'', ''correct'': False}'
+  - '{''text'': ''Сів'', ''correct'': False}'
+  - '{''text'': ''Сідатиму'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1078,14 +1066,10 @@ items:
   question: 'Начальник дає співробітнику конкретне завдання перевірити важливий документ.
     Тому він скаже: "_____ цей документ до вечора!"'
   options:
-  - text: Перевіряй
-    correct: false
-  - text: Перевір
-    correct: true
-  - text: Перевіряв
-    correct: false
-  - text: Перевіриш
-    correct: false
+  - '{''text'': ''Перевіряй'', ''correct'': False}'
+  - '{''text'': ''Перевір'', ''correct'': True}'
+  - '{''text'': ''Перевіряв'', ''correct'': False}'
+  - '{''text'': ''Перевіриш'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1097,14 +1081,10 @@ items:
   question: 'Коли ми забороняємо комусь щось робити (наприклад, "Не чіпай це!"), ми
     використовуємо:'
   options:
-  - text: недоконаний вид
-    correct: true
-  - text: доконаний вид
-    correct: false
-  - text: майбутній час
-    correct: false
-  - text: минулий час
-    correct: false
+  - '{''text'': ''недоконаний вид'', ''correct'': True}'
+  - '{''text'': ''доконаний вид'', ''correct'': False}'
+  - '{''text'': ''майбутній час'', ''correct'': False}'
+  - '{''text'': ''минулий час'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1116,14 +1096,10 @@ items:
   question: 'Коли ми використовуємо конструкцію "ще не" перед дієсловом, ми показуємо
     незавершеність і вимагаємо:'
   options:
-  - text: недоконаного виду
-    correct: false
-  - text: доконаного виду
-    correct: true
-  - text: будь-якого виду
-    correct: false
-  - text: заперечної частки "ні"
-    correct: false
+  - '{''text'': ''недоконаного виду'', ''correct'': False}'
+  - '{''text'': ''доконаного виду'', ''correct'': True}'
+  - '{''text'': ''будь-якого виду'', ''correct'': False}'
+  - '{''text'': ''заперечної частки "ні"'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1135,14 +1111,10 @@ items:
   question: 'Вчитель просить учня сидіти тихо і не розмовляти під час уроку. Тому
     він скаже: "_____ мовчки, поки я пояснюю!"'
   options:
-  - text: Сиди
-    correct: true
-  - text: Посиди
-    correct: false
-  - text: Сів
-    correct: false
-  - text: Сідай
-    correct: false
+  - '{''text'': ''Сиди'', ''correct'': True}'
+  - '{''text'': ''Посиди'', ''correct'': False}'
+  - '{''text'': ''Сів'', ''correct'': False}'
+  - '{''text'': ''Сідай'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1154,14 +1126,10 @@ items:
   question: 'Я хочу попросити гостя сісти саме на цей конкретний стілець біля вікна.
     Тому я скажу: "_____ на стілець біля вікна!"'
   options:
-  - text: Сідай
-    correct: false
-  - text: Сядь
-    correct: true
-  - text: Сиди
-    correct: false
-  - text: Сидиш
-    correct: false
+  - '{''text'': ''Сідай'', ''correct'': False}'
+  - '{''text'': ''Сядь'', ''correct'': True}'
+  - '{''text'': ''Сиди'', ''correct'': False}'
+  - '{''text'': ''Сидиш'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1173,14 +1141,10 @@ items:
   question: 'Марія ніколи не розповідала мені про цю ситуацію взагалі. Тому ми скажемо:
     "Вона _____ мені про це."'
   options:
-  - text: не говорила
-    correct: true
-  - text: не сказала
-    correct: false
-  - text: не скаже
-    correct: false
-  - text: не говоритиме
-    correct: false
+  - '{''text'': ''не говорила'', ''correct'': True}'
+  - '{''text'': ''не сказала'', ''correct'': False}'
+  - '{''text'': ''не скаже'', ''correct'': False}'
+  - '{''text'': ''не говоритиме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1192,14 +1156,10 @@ items:
   question: 'Петро ще не закінчив писати статтю, але обіцяє закінчити до вечора. Тому
     ми скажемо: "Він _____ статтю."'
   options:
-  - text: не писав
-    correct: false
-  - text: ще не написав
-    correct: true
-  - text: ніколи не писав
-    correct: false
-  - text: не напише
-    correct: false
+  - '{''text'': ''не писав'', ''correct'': False}'
+  - '{''text'': ''ще не написав'', ''correct'': True}'
+  - '{''text'': ''ніколи не писав'', ''correct'': False}'
+  - '{''text'': ''не напише'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

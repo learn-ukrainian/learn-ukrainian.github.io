@@ -1,15 +1,18 @@
 module: 24-register-colloquial-style
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/24-register-colloquial-style.md
-generated: '2025-12-29T22:44:03.154171'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.780057'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки у вживанні розмовного стилю
@@ -580,6 +583,145 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Розмовний діалог
+  passage_template: '— {Привіт|Добридень|Вітаю|Привіт}! Як справи?
+
+    — {Норм|Нормально|Добре|Норм}, а в тебе?
+
+    — Теж {норм|нормально|добре|норм}. {Слухай|Послухай|Скажи|Слухай}, що робиш увечері?
+
+    — Ще не знаю. А що?
+
+    — Та {може|можливо|мабуть|може} кіно підемо? Там новий фільм, кажуть, {прикольний|цікавий|гарний|прикольний}.
+
+    — {Ого|Ой|Хм|Ого}, який?
+
+    — {Ну|Та|От|Ну}, {типу|начебто|ніби|типу}, той {новий|старий|цікавий|новий} український.
+
+    — А, знаю! {Класно|Добре|Гаразд|Класно}, {давай|добре|окей|давай}.
+
+    — {Круто|Супер|Чудово|Круто}! Я квитки візьму.
+
+    — {Дякс|Дякую|Спасибі|Дякс}! Скинь {адресу|адрес|місце|адресу}.
+
+    — {Окей|Добре|Гаразд|Окей}, {бувай|до побачення|на все добре|бувай}!
+
+    '
+  blanks:
+  - answer: Привіт
+    options:
+    - Привіт
+    - Добридень
+    - Вітаю
+  - answer: Норм
+    options:
+    - Норм
+    - Нормально
+    - Добре
+  - answer: норм
+    options:
+    - норм
+    - нормально
+    - добре
+  - answer: Слухай
+    options:
+    - Слухай
+    - Послухай
+    - Скажи
+  - answer: може
+    options:
+    - може
+    - можливо
+    - мабуть
+  - answer: прикольний
+    options:
+    - прикольний
+    - цікавий
+    - гарний
+  - answer: Ого
+    options:
+    - Ого
+    - Ой
+    - Хм
+  - answer: Ну
+    options:
+    - Ну
+    - Та
+    - От
+  - answer: типу
+    options:
+    - типу
+    - начебто
+    - ніби
+  - answer: новий
+    options:
+    - новий
+    - старий
+    - цікавий
+  - answer: Класно
+    options:
+    - Класно
+    - Добре
+    - Гаразд
+  - answer: давай
+    options:
+    - давай
+    - добре
+    - окей
+  - answer: Круто
+    options:
+    - Круто
+    - Супер
+    - Чудово
+  - answer: Дякс
+    options:
+    - Дякс
+    - Дякую
+    - Спасибі
+  - answer: адресу
+    options:
+    - адресу
+    - адрес
+    - місце
+  - answer: Окей
+    options:
+    - Окей
+    - Добре
+    - Гаразд
+  - answer: бувай
+    options:
+    - бувай
+    - до побачення
+    - на все добре
+  blank_count: 17
+  complete_passage: '— Привіт! Як справи?
+
+    — Норм, а в тебе?
+
+    — Теж норм. Слухай, що робиш увечері?
+
+    — Ще не знаю. А що?
+
+    — Та може кіно підемо? Там новий фільм, кажуть, прикольний.
+
+    — Ого, який?
+
+    — Ну, типу, той новий український.
+
+    — А, знаю! Класно, давай.
+
+    — Круто! Я квитки візьму.
+
+    — Дякс! Скинь адресу.
+
+    — Окей, бувай!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення з частками
   jumbled_words: []
@@ -712,14 +854,10 @@ items:
   title: Основи розмовного стилю
   question: Яка функція частки «ж/же» в українській мові?
   options:
-  - text: Вираження заперечення
-    correct: false
-  - text: Підсилення, емфаза
-    correct: true
-  - text: Вираження питання
-    correct: false
-  - text: Вираження часу
-    correct: false
+  - '{''text'': ''Вираження заперечення'', ''correct'': False}'
+  - '{''text'': ''Підсилення, емфаза'', ''correct'': True}'
+  - '{''text'': ''Вираження питання'', ''correct'': False}'
+  - '{''text'': ''Вираження часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -730,14 +868,10 @@ items:
   title: Основи розмовного стилю
   question: Яке слово є скороченою формою від «комп'ютер»?
   options:
-  - text: комп
-    correct: true
-  - text: компік
-    correct: false
-  - text: комплект
-    correct: false
-  - text: компас
-    correct: false
+  - '{''text'': ''комп'', ''correct'': True}'
+  - '{''text'': ''компік'', ''correct'': False}'
+  - '{''text'': ''комплект'', ''correct'': False}'
+  - '{''text'': ''компас'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -748,14 +882,10 @@ items:
   title: Основи розмовного стилю
   question: Яка функція частки «бо» у реченні «Не йди, бо впадеш»?
   options:
-  - text: Підсилення
-    correct: false
-  - text: Попередження про наслідки
-    correct: true
-  - text: Запитання
-    correct: false
-  - text: Згода
-    correct: false
+  - '{''text'': ''Підсилення'', ''correct'': False}'
+  - '{''text'': ''Попередження про наслідки'', ''correct'': True}'
+  - '{''text'': ''Запитання'', ''correct'': False}'
+  - '{''text'': ''Згода'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -766,14 +896,10 @@ items:
   title: Основи розмовного стилю
   question: Яке слово є наповнювачем (filler) у розмовній мові?
   options:
-  - text: книга
-    correct: false
-  - text: типу
-    correct: true
-  - text: працювати
-    correct: false
-  - text: гарний
-    correct: false
+  - '{''text'': ''книга'', ''correct'': False}'
+  - '{''text'': ''типу'', ''correct'': True}'
+  - '{''text'': ''працювати'', ''correct'': False}'
+  - '{''text'': ''гарний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -784,14 +910,10 @@ items:
   title: Основи розмовного стилю
   question: Що означає вигук «жесть» у розмовній мові?
   options:
-  - text: Щось хороше
-    correct: false
-  - text: Щось дуже погане або інтенсивне
-    correct: true
-  - text: Нудне
-    correct: false
-  - text: Звичайне
-    correct: false
+  - '{''text'': ''Щось хороше'', ''correct'': False}'
+  - '{''text'': ''Щось дуже погане або інтенсивне'', ''correct'': True}'
+  - '{''text'': ''Нудне'', ''correct'': False}'
+  - '{''text'': ''Звичайне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -802,14 +924,10 @@ items:
   title: Основи розмовного стилю
   question: У якому контексті доречно використовувати розмовний стиль?
   options:
-  - text: В офіційному листі до директора
-    correct: false
-  - text: У повідомленні другу
-    correct: true
-  - text: У науковій статті
-    correct: false
-  - text: У юридичному документі
-    correct: false
+  - '{''text'': ''В офіційному листі до директора'', ''correct'': False}'
+  - '{''text'': ''У повідомленні другу'', ''correct'': True}'
+  - '{''text'': ''У науковій статті'', ''correct'': False}'
+  - '{''text'': ''У юридичному документі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -820,14 +938,10 @@ items:
   title: Основи розмовного стилю
   question: Яке значення має частка «таки» у реченні «Я таки прийшов»?
   options:
-  - text: Заперечення
-    correct: false
-  - text: Все ж таки, всупереч очікуванням
-    correct: true
-  - text: Питання
-    correct: false
-  - text: Наказ
-    correct: false
+  - '{''text'': ''Заперечення'', ''correct'': False}'
+  - '{''text'': ''Все ж таки, всупереч очікуванням'', ''correct'': True}'
+  - '{''text'': ''Питання'', ''correct'': False}'
+  - '{''text'': ''Наказ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -838,14 +952,10 @@ items:
   title: Основи розмовного стилю
   question: Яке скорочення відповідає слову «інформація»?
   options:
-  - text: інф
-    correct: false
-  - text: інфа
-    correct: true
-  - text: інформ
-    correct: false
-  - text: інформашка
-    correct: false
+  - '{''text'': ''інф'', ''correct'': False}'
+  - '{''text'': ''інфа'', ''correct'': True}'
+  - '{''text'': ''інформ'', ''correct'': False}'
+  - '{''text'': ''інформашка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -856,14 +966,10 @@ items:
   title: Основи розмовного стилю
   question: Який вигук виражає позитивне здивування?
   options:
-  - text: капець
-    correct: false
-  - text: ого
-    correct: true
-  - text: жесть
-    correct: false
-  - text: фігня
-    correct: false
+  - '{''text'': ''капець'', ''correct'': False}'
+  - '{''text'': ''ого'', ''correct'': True}'
+  - '{''text'': ''жесть'', ''correct'': False}'
+  - '{''text'': ''фігня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -874,14 +980,10 @@ items:
   title: Основи розмовного стилю
   question: Яка помилка найчастіше трапляється при використанні розмовного стилю?
   options:
-  - text: Використання у формальному контексті
-    correct: true
-  - text: Використання з друзями
-    correct: false
-  - text: Використання в чаті
-    correct: false
-  - text: Використання у соцмережах
-    correct: false
+  - '{''text'': ''Використання у формальному контексті'', ''correct'': True}'
+  - '{''text'': ''Використання з друзями'', ''correct'': False}'
+  - '{''text'': ''Використання в чаті'', ''correct'': False}'
+  - '{''text'': ''Використання у соцмережах'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -892,14 +994,10 @@ items:
   title: Основи розмовного стилю
   question: Що означає розмовне слово «норм»?
   options:
-  - text: Ненормально
-    correct: false
-  - text: Нормально, добре
-    correct: true
-  - text: Норма права
-    correct: false
-  - text: Нормативний документ
-    correct: false
+  - '{''text'': ''Ненормально'', ''correct'': False}'
+  - '{''text'': ''Нормально, добре'', ''correct'': True}'
+  - '{''text'': ''Норма права'', ''correct'': False}'
+  - '{''text'': ''Нормативний документ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -910,14 +1008,10 @@ items:
   title: Основи розмовного стилю
   question: Яка частка додає відтінок наполягання у реченні «Скажи ж мені!»?
   options:
-  - text: бо
-    correct: false
-  - text: ж
-    correct: true
-  - text: таки
-    correct: false
-  - text: ну
-    correct: false
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''ж'', ''correct'': True}'
+  - '{''text'': ''таки'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -928,14 +1022,10 @@ items:
   title: Основи розмовного стилю
   question: Яке слово НЕ є наповнювачем?
   options:
-  - text: типу
-    correct: false
-  - text: ну
-    correct: false
-  - text: книга
-    correct: true
-  - text: коротше
-    correct: false
+  - '{''text'': ''типу'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': False}'
+  - '{''text'': ''книга'', ''correct'': True}'
+  - '{''text'': ''коротше'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -946,14 +1036,10 @@ items:
   title: Основи розмовного стилю
   question: Що означає «чувак» у розмовній мові?
   options:
-  - text: Дівчина
-    correct: false
-  - text: Хлопець, чоловік (неформально)
-    correct: true
-  - text: Старша людина
-    correct: false
-  - text: Дитина
-    correct: false
+  - '{''text'': ''Дівчина'', ''correct'': False}'
+  - '{''text'': ''Хлопець, чоловік (неформально)'', ''correct'': True}'
+  - '{''text'': ''Старша людина'', ''correct'': False}'
+  - '{''text'': ''Дитина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -964,14 +1050,10 @@ items:
   title: Основи розмовного стилю
   question: У якому реченні частка «бо» використана правильно?
   options:
-  - text: Бо я прийшов.
-    correct: false
-  - text: Поспішай, бо запізнишся.
-    correct: true
-  - text: Він бо знає.
-    correct: false
-  - text: Ми бо друзі.
-    correct: false
+  - '{''text'': ''Бо я прийшов.'', ''correct'': False}'
+  - '{''text'': ''Поспішай, бо запізнишся.'', ''correct'': True}'
+  - '{''text'': ''Він бо знає.'', ''correct'': False}'
+  - '{''text'': ''Ми бо друзі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -982,14 +1064,10 @@ items:
   title: Основи розмовного стилю
   question: Яке значення має вигук «капець»?
   options:
-  - text: Щось чудове
-    correct: false
-  - text: Катастрофа, біда
-    correct: true
-  - text: Нейтральна реакція
-    correct: false
-  - text: Запитання
-    correct: false
+  - '{''text'': ''Щось чудове'', ''correct'': False}'
+  - '{''text'': ''Катастрофа, біда'', ''correct'': True}'
+  - '{''text'': ''Нейтральна реакція'', ''correct'': False}'
+  - '{''text'': ''Запитання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1000,14 +1078,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Який вигук найкраще підходить для опису негативної ситуації?
   options:
-  - text: класно
-    correct: false
-  - text: жесть
-    correct: true
-  - text: круто
-    correct: false
-  - text: супер
-    correct: false
+  - '{''text'': ''класно'', ''correct'': False}'
+  - '{''text'': ''жесть'', ''correct'': True}'
+  - '{''text'': ''круто'', ''correct'': False}'
+  - '{''text'': ''супер'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1018,14 +1092,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке привітання доречне для повідомлення другу?
   options:
-  - text: Шановний друже!
-    correct: false
-  - text: Привіт!
-    correct: true
-  - text: Добридень!
-    correct: false
-  - text: Вельмишановний!
-    correct: false
+  - '{''text'': ''Шановний друже!'', ''correct'': False}'
+  - '{''text'': ''Привіт!'', ''correct'': True}'
+  - '{''text'': ''Добридень!'', ''correct'': False}'
+  - '{''text'': ''Вельмишановний!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1036,14 +1106,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яка частка підходить для речення «Скажи ___ мені правду»?
   options:
-  - text: бо
-    correct: false
-  - text: ж
-    correct: true
-  - text: таки
-    correct: false
-  - text: ну
-    correct: false
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''ж'', ''correct'': True}'
+  - '{''text'': ''таки'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1054,14 +1120,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Який наповнювач найчастіше вживається на початку речення?
   options:
-  - text: типу
-    correct: false
-  - text: ну
-    correct: true
-  - text: коротше
-    correct: false
-  - text: як би
-    correct: false
+  - '{''text'': ''типу'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': True}'
+  - '{''text'': ''коротше'', ''correct'': False}'
+  - '{''text'': ''як би'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1072,14 +1134,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке слово є розмовним скороченням від «університет»?
   options:
-  - text: уні
-    correct: false
-  - text: універ
-    correct: true
-  - text: унік
-    correct: false
-  - text: унів
-    correct: false
+  - '{''text'': ''уні'', ''correct'': False}'
+  - '{''text'': ''універ'', ''correct'': True}'
+  - '{''text'': ''унік'', ''correct'': False}'
+  - '{''text'': ''унів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1090,14 +1148,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Який вигук виражає позитивне здивування?
   options:
-  - text: капець
-    correct: false
-  - text: ого
-    correct: true
-  - text: жесть
-    correct: false
-  - text: фігня
-    correct: false
+  - '{''text'': ''капець'', ''correct'': False}'
+  - '{''text'': ''ого'', ''correct'': True}'
+  - '{''text'': ''жесть'', ''correct'': False}'
+  - '{''text'': ''фігня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1108,14 +1162,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яка частка виражає попередження у реченні «Не йди, ___ впадеш»?
   options:
-  - text: ж
-    correct: false
-  - text: бо
-    correct: true
-  - text: таки
-    correct: false
-  - text: ну
-    correct: false
+  - '{''text'': ''ж'', ''correct'': False}'
+  - '{''text'': ''бо'', ''correct'': True}'
+  - '{''text'': ''таки'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1126,14 +1176,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке прощання є найбільш неформальним?
   options:
-  - text: До побачення
-    correct: false
-  - text: Бувай
-    correct: true
-  - text: На все добре
-    correct: false
-  - text: До зустрічі
-    correct: false
+  - '{''text'': ''До побачення'', ''correct'': False}'
+  - '{''text'': ''Бувай'', ''correct'': True}'
+  - '{''text'': ''На все добре'', ''correct'': False}'
+  - '{''text'': ''До зустрічі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1144,14 +1190,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке слово означає «dude, guy» у розмовній мові?
   options:
-  - text: пан
-    correct: false
-  - text: чувак
-    correct: true
-  - text: добродій
-    correct: false
-  - text: колега
-    correct: false
+  - '{''text'': ''пан'', ''correct'': False}'
+  - '{''text'': ''чувак'', ''correct'': True}'
+  - '{''text'': ''добродій'', ''correct'': False}'
+  - '{''text'': ''колега'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1162,14 +1204,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яка частка означає «все ж таки, всупереч очікуванням»?
   options:
-  - text: ж
-    correct: false
-  - text: таки
-    correct: true
-  - text: бо
-    correct: false
-  - text: ну
-    correct: false
+  - '{''text'': ''ж'', ''correct'': False}'
+  - '{''text'': ''таки'', ''correct'': True}'
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''ну'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1180,14 +1218,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке скорочення означає «фотографія»?
   options:
-  - text: фото
-    correct: false
-  - text: фотка
-    correct: true
-  - text: фотик
-    correct: false
-  - text: фотос
-    correct: false
+  - '{''text'': ''фото'', ''correct'': False}'
+  - '{''text'': ''фотка'', ''correct'': True}'
+  - '{''text'': ''фотик'', ''correct'': False}'
+  - '{''text'': ''фотос'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1198,14 +1232,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке слово є наповнювачем?
   options:
-  - text: книга
-    correct: false
-  - text: типу
-    correct: true
-  - text: стіл
-    correct: false
-  - text: гарний
-    correct: false
+  - '{''text'': ''книга'', ''correct'': False}'
+  - '{''text'': ''типу'', ''correct'': True}'
+  - '{''text'': ''стіл'', ''correct'': False}'
+  - '{''text'': ''гарний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1216,14 +1246,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яка реакція доречна на хорошу новину?
   options:
-  - text: Жесть!
-    correct: false
-  - text: Класно!
-    correct: true
-  - text: Капець!
-    correct: false
-  - text: Фігня!
-    correct: false
+  - '{''text'': ''Жесть!'', ''correct'': False}'
+  - '{''text'': ''Класно!'', ''correct'': True}'
+  - '{''text'': ''Капець!'', ''correct'': False}'
+  - '{''text'': ''Фігня!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1234,14 +1260,10 @@ items:
   title: Контекстуальний вибір регістру
   question: У якому реченні частка вжита правильно?
   options:
-  - text: Бо я прийшов.
-    correct: false
-  - text: Я ж казав тобі!
-    correct: true
-  - text: Він таки бо знає.
-    correct: false
-  - text: Ну бо він прийшов.
-    correct: false
+  - '{''text'': ''Бо я прийшов.'', ''correct'': False}'
+  - '{''text'': ''Я ж казав тобі!'', ''correct'': True}'
+  - '{''text'': ''Він таки бо знає.'', ''correct'': False}'
+  - '{''text'': ''Ну бо він прийшов.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1252,14 +1274,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке слово означає «nonsense» у розмовній мові?
   options:
-  - text: класно
-    correct: false
-  - text: фігня
-    correct: true
-  - text: круто
-    correct: false
-  - text: супер
-    correct: false
+  - '{''text'': ''класно'', ''correct'': False}'
+  - '{''text'': ''фігня'', ''correct'': True}'
+  - '{''text'': ''круто'', ''correct'': False}'
+  - '{''text'': ''супер'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1270,14 +1288,10 @@ items:
   title: Контекстуальний вибір регістру
   question: Яке скорочення використовується для «документ»?
   options:
-  - text: доку
-    correct: false
-  - text: док
-    correct: true
-  - text: документ
-    correct: false
-  - text: дока
-    correct: false
+  - '{''text'': ''доку'', ''correct'': False}'
+  - '{''text'': ''док'', ''correct'': True}'
+  - '{''text'': ''документ'', ''correct'': False}'
+  - '{''text'': ''дока'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

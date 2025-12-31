@@ -1,15 +1,18 @@
 module: 84-b1-grammar-integration
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/84-b1-grammar-integration.md
-generated: '2025-12-29T00:22:04.927126'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.729735'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 14
+  cloze: 1
   unjumble: 10
   quiz: 42
   true-false: 14
-item_count: 94
+total_items: 95
+item_count: 95
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте граматичні помилки
@@ -379,6 +382,79 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'Минулого тижня я {вирішив|вирішував} {поїхати|їхати} до Одеси.
+    Спочатку я {купив|купував} квитки онлайн, а потім {виїхав|їхав} з Києва рано вранці.
+    {Їдучи|Поїхавши} потягом, я {читав|прочитав} книгу про історію міста. Потяг {прибув|прибував}
+    вчасно, і я {вийшов|виходив} на вокзал. {Хоча|Оскільки} погода була похмура, я
+    {вирішив|вирішував} {піти|ходити} на Потьомкінські сходи. {Перейшовши|Переходячи}
+    через площу, я {дійшов|доходив} до узбережжя. Я {ходив|пішов} по бульвару три
+    години і {зайшов|заходив} у кав''ярню, {де|куди} колись сиділи відомі письменники.
+
+    '
+  blanks:
+  - answer: вирішував
+    options:
+    - вирішив
+  - answer: їхати
+    options:
+    - поїхати
+  - answer: купував
+    options:
+    - купив
+  - answer: їхав
+    options:
+    - виїхав
+  - answer: Поїхавши
+    options:
+    - Їдучи
+  - answer: прочитав
+    options:
+    - читав
+  - answer: прибував
+    options:
+    - прибув
+  - answer: виходив
+    options:
+    - вийшов
+  - answer: Оскільки
+    options:
+    - Хоча
+  - answer: вирішував
+    options:
+    - вирішив
+  - answer: ходити
+    options:
+    - піти
+  - answer: Переходячи
+    options:
+    - Перейшовши
+  - answer: доходив
+    options:
+    - дійшов
+  - answer: пішов
+    options:
+    - ходив
+  - answer: заходив
+    options:
+    - зайшов
+  - answer: куди
+    options:
+    - де
+  blank_count: 16
+  complete_passage: 'Минулого тижня я вирішував їхати до Одеси. Спочатку я купував
+    квитки онлайн, а потім їхав з Києва рано вранці. Поїхавши потягом, я прочитав
+    книгу про історію міста. Потяг прибував вчасно, і я виходив на вокзал. Оскільки
+    погода була похмура, я вирішував ходити на Потьомкінські сходи. Переходячи через
+    площу, я доходив до узбережжя. Я пішов по бульвару три години і заходив у кав''ярню,
+    куди колись сиділи відомі письменники.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть складні речення
   jumbled_words: []
@@ -466,14 +542,10 @@ items:
   question: У реченні "Я читав книгу дві години, але не дочитав її до кінця" перша
     частина використовує НДВ, бо описує тривалий процес без акценту на результаті.
   options:
-  - text: процес без результату
-    correct: true
-  - text: завершену дію
-    correct: false
-  - text: одноразову подію
-    correct: false
-  - text: майбутню дію
-    correct: false
+  - '{''text'': ''процес без результату'', ''correct'': True}'
+  - '{''text'': ''завершену дію'', ''correct'': False}'
+  - '{''text'': ''одноразову подію'', ''correct'': False}'
+  - '{''text'': ''майбутню дію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -485,14 +557,10 @@ items:
   question: Яке дієслово правильно вжити в реченні "Він ___ листа і відправив його
     поштою" — написав чи писав?
   options:
-  - text: написав (ДВ)
-    correct: true
-  - text: писав (НДВ)
-    correct: false
-  - text: пише (теперішній час)
-    correct: false
-  - text: напише (майбутній час)
-    correct: false
+  - '{''text'': ''написав (ДВ)'', ''correct'': True}'
+  - '{''text'': ''писав (НДВ)'', ''correct'': False}'
+  - '{''text'': ''пише (теперішній час)'', ''correct'': False}'
+  - '{''text'': ''напише (майбутній час)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -504,14 +572,10 @@ items:
   question: У реченні "Студенти завжди вивчали нові слова перед іспитом" використовується
     НДВ, бо слово "завжди" вказує на регулярну звичку в минулому.
   options:
-  - text: регулярну звичку
-    correct: true
-  - text: одноразову дію
-    correct: false
-  - text: завершений результат
-    correct: false
-  - text: конкретний момент
-    correct: false
+  - '{''text'': ''регулярну звичку'', ''correct'': True}'
+  - '{''text'': ''одноразову дію'', ''correct'': False}'
+  - '{''text'': ''завершений результат'', ''correct'': False}'
+  - '{''text'': ''конкретний момент'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -523,14 +587,10 @@ items:
   question: Яке речення правильно передає одноразову завершену дію — "Він часто приходив
     у гості" чи "Він одного разу прийшов у гості"?
   options:
-  - text: Він одного разу прийшов у гості.
-    correct: true
-  - text: Він часто приходив у гості.
-    correct: false
-  - text: Обидва речення однакові.
-    correct: false
-  - text: Жодне не є правильним.
-    correct: false
+  - '{''text'': ''Він одного разу прийшов у гості.'', ''correct'': True}'
+  - '{''text'': ''Він часто приходив у гості.'', ''correct'': False}'
+  - '{''text'': ''Обидва речення однакові.'', ''correct'': False}'
+  - '{''text'': ''Жодне не є правильним.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -542,14 +602,10 @@ items:
   question: У реченні "Нарешті вона зробила домашнє завдання і пішла гуляти" маркер
     "нарешті" вказує на завершення дії з результатом.
   options:
-  - text: завершення з результатом
-    correct: true
-  - text: процес у часі
-    correct: false
-  - text: регулярну дію
-    correct: false
-  - text: незавершену дію
-    correct: false
+  - '{''text'': ''завершення з результатом'', ''correct'': True}'
+  - '{''text'': ''процес у часі'', ''correct'': False}'
+  - '{''text'': ''регулярну дію'', ''correct'': False}'
+  - '{''text'': ''незавершену дію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -561,14 +617,10 @@ items:
   question: Яке дієслово треба вжити в реченні "Ми ___ усі вправи за дві години" —
     робили чи зробили?
   options:
-  - text: зробили (ДВ)
-    correct: true
-  - text: робили (НДВ)
-    correct: false
-  - text: робимо (теперішній)
-    correct: false
-  - text: робитимемо (майбутній)
-    correct: false
+  - '{''text'': ''зробили (ДВ)'', ''correct'': True}'
+  - '{''text'': ''робили (НДВ)'', ''correct'': False}'
+  - '{''text'': ''робимо (теперішній)'', ''correct'': False}'
+  - '{''text'': ''робитимемо (майбутній)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -580,14 +632,10 @@ items:
   question: Яке значення має речення "Вона готувала вечерю весь вечір" — процес приготування
     чи завершений результат?
   options:
-  - text: процес без акценту на результаті
-    correct: true
-  - text: завершений результат
-    correct: false
-  - text: одноразова дія
-    correct: false
-  - text: майбутня дія
-    correct: false
+  - '{''text'': ''процес без акценту на результаті'', ''correct'': True}'
+  - '{''text'': ''завершений результат'', ''correct'': False}'
+  - '{''text'': ''одноразова дія'', ''correct'': False}'
+  - '{''text'': ''майбутня дія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -599,14 +647,10 @@ items:
   question: У контексті "Того дня він написав три листи і відправив усі поштою" усі
     дієслова мають бути доконаного виду, бо описують послідовність завершених дій.
   options:
-  - text: послідовність завершених дій
-    correct: true
-  - text: паралельні процеси
-    correct: false
-  - text: регулярні звички
-    correct: false
-  - text: незавершені дії
-    correct: false
+  - '{''text'': ''послідовність завершених дій'', ''correct'': True}'
+  - '{''text'': ''паралельні процеси'', ''correct'': False}'
+  - '{''text'': ''регулярні звички'', ''correct'': False}'
+  - '{''text'': ''незавершені дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -618,14 +662,10 @@ items:
   question: Яке речення описує звичку в минулому — "Кожної неділі він ходив у церкву"
     чи "Одного разу він пішов у церкву"?
   options:
-  - text: Кожної неділі він ходив у церкву.
-    correct: true
-  - text: Одного разу він пішов у церкву.
-    correct: false
-  - text: Обидва описують звичку.
-    correct: false
-  - text: Жодне не описує звичку.
-    correct: false
+  - '{''text'': ''Кожної неділі він ходив у церкву.'', ''correct'': True}'
+  - '{''text'': ''Одного разу він пішов у церкву.'', ''correct'': False}'
+  - '{''text'': ''Обидва описують звичку.'', ''correct'': False}'
+  - '{''text'': ''Жодне не описує звичку.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -637,14 +677,10 @@ items:
   question: У реченні "Я вчив українську мову п'ять років і нарешті вивчив її добре"
     перший дієслово має бути НДВ, бо описує тривалий процес протягом п'яти років.
   options:
-  - text: тривалий процес
-    correct: true
-  - text: завершений результат
-    correct: false
-  - text: одноразову дію
-    correct: false
-  - text: умовну дію
-    correct: false
+  - '{''text'': ''тривалий процес'', ''correct'': True}'
+  - '{''text'': ''завершений результат'', ''correct'': False}'
+  - '{''text'': ''одноразову дію'', ''correct'': False}'
+  - '{''text'': ''умовну дію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -656,14 +692,10 @@ items:
   question: Який темпоральний маркер найчастіше вказує на доконаний вид — "довго"
     чи "нарешті"?
   options:
-  - text: нарешті (завершення)
-    correct: true
-  - text: довго (тривалість)
-    correct: false
-  - text: обидва вказують на ДВ
-    correct: false
-  - text: обидва вказують на НДВ
-    correct: false
+  - '{''text'': ''нарешті (завершення)'', ''correct'': True}'
+  - '{''text'': ''довго (тривалість)'', ''correct'': False}'
+  - '{''text'': ''обидва вказують на ДВ'', ''correct'': False}'
+  - '{''text'': ''обидва вказують на НДВ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -675,14 +707,10 @@ items:
   question: У реченні "Раптом він побачив друга і підійшов до нього" маркер "раптом"
     та контекст одноразової події вимагають доконаного виду.
   options:
-  - text: одноразова несподівана подія
-    correct: true
-  - text: тривала регулярна дія
-    correct: false
-  - text: незавершений процес
-    correct: false
-  - text: майбутня подія
-    correct: false
+  - '{''text'': ''одноразова несподівана подія'', ''correct'': True}'
+  - '{''text'': ''тривала регулярна дія'', ''correct'': False}'
+  - '{''text'': ''незавершений процес'', ''correct'': False}'
+  - '{''text'': ''майбутня подія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -694,14 +722,10 @@ items:
   question: Яке речення граматично правильне — "Вчора я читав цікаву статтю" чи "Вчора
     я читав цікаву статтю дві години"?
   options:
-  - text: Обидва правильні, але з різними відтінками.
-    correct: true
-  - text: Тільки перше правильне.
-    correct: false
-  - text: Тільки друге правильне.
-    correct: false
-  - text: Обидва неправильні.
-    correct: false
+  - '{''text'': ''Обидва правильні, але з різними відтінками.'', ''correct'': True}'
+  - '{''text'': ''Тільки перше правильне.'', ''correct'': False}'
+  - '{''text'': ''Тільки друге правильне.'', ''correct'': False}'
+  - '{''text'': ''Обидва неправильні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -713,14 +737,10 @@ items:
   question: У реченні "Він завжди допомагав друзям, коли вони просили" дієслово "допомагав"
     має бути НДВ, бо описує регулярну дію в минулому.
   options:
-  - text: регулярну дію в минулому
-    correct: true
-  - text: одноразову допомогу
-    correct: false
-  - text: завершений результат
-    correct: false
-  - text: умовну дію
-    correct: false
+  - '{''text'': ''регулярну дію в минулому'', ''correct'': True}'
+  - '{''text'': ''одноразову допомогу'', ''correct'': False}'
+  - '{''text'': ''завершений результат'', ''correct'': False}'
+  - '{''text'': ''умовну дію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -732,14 +752,10 @@ items:
   question: У реченні "Він ходить до університету щодня" використовується різноспрямоване
     дієслово, бо описує регулярний рух туди і назад.
   options:
-  - text: регулярний рух (різноспрямований)
-    correct: true
-  - text: рух зараз (односпрямований)
-    correct: false
-  - text: минулий рух
-    correct: false
-  - text: майбутній рух
-    correct: false
+  - '{''text'': ''регулярний рух (різноспрямований)'', ''correct'': True}'
+  - '{''text'': ''рух зараз (односпрямований)'', ''correct'': False}'
+  - '{''text'': ''минулий рух'', ''correct'': False}'
+  - '{''text'': ''майбутній рух'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -751,14 +767,10 @@ items:
   question: Яке дієслово правильно вжити в реченні "Зараз вона ___ до Львова на автобусі"
     — їде чи їздить?
   options:
-  - text: їде (односпрямований)
-    correct: true
-  - text: їздить (різноспрямований)
-    correct: false
-  - text: поїхала (минулий час)
-    correct: false
-  - text: поїде (майбутній час)
-    correct: false
+  - '{''text'': ''їде (односпрямований)'', ''correct'': True}'
+  - '{''text'': ''їздить (різноспрямований)'', ''correct'': False}'
+  - '{''text'': ''поїхала (минулий час)'', ''correct'': False}'
+  - '{''text'': ''поїде (майбутній час)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -770,14 +782,10 @@ items:
   question: У реченні "Діти бігали у парку цілу годину" використовується різноспрямоване
     дієслово, бо описує рух у різних напрямках протягом години.
   options:
-  - text: рух у різних напрямках
-    correct: true
-  - text: рух в одному напрямку
-    correct: false
-  - text: одноразовий біг
-    correct: false
-  - text: конкретну мету
-    correct: false
+  - '{''text'': ''рух у різних напрямках'', ''correct'': True}'
+  - '{''text'': ''рух в одному напрямку'', ''correct'': False}'
+  - '{''text'': ''одноразовий біг'', ''correct'': False}'
+  - '{''text'': ''конкретну мету'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -789,14 +797,10 @@ items:
   question: Який префікс потрібен для значення "вийти з приміщення" — ви-, при-, чи
     за-?
   options:
-  - text: ви- (вийти)
-    correct: true
-  - text: при- (прийти)
-    correct: false
-  - text: за- (зайти)
-    correct: false
-  - text: під- (підійти)
-    correct: false
+  - '{''text'': ''ви- (вийти)'', ''correct'': True}'
+  - '{''text'': ''при- (прийти)'', ''correct'': False}'
+  - '{''text'': ''за- (зайти)'', ''correct'': False}'
+  - '{''text'': ''під- (підійти)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -808,14 +812,10 @@ items:
   question: У реченні "Він перейшов вулицю і зайшов у магазин" обидва дієслова мають
     префікси, що змінюють напрямок руху.
   options:
-  - text: пере- (через) + за- (всередину)
-    correct: true
-  - text: від- + при-
-    correct: false
-  - text: ви- + під-
-    correct: false
-  - text: об- + над-
-    correct: false
+  - '{''text'': ''пере- (через) + за- (всередину)'', ''correct'': True}'
+  - '{''text'': ''від- + при-'', ''correct'': False}'
+  - '{''text'': ''ви- + під-'', ''correct'': False}'
+  - '{''text'': ''об- + над-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -827,14 +827,10 @@ items:
   question: Яке речення описує регулярний рух — "Вона йде до школи" чи "Вона ходить
     до школи"?
   options:
-  - text: Вона ходить до школи.
-    correct: true
-  - text: Вона йде до школи.
-    correct: false
-  - text: Обидва описують регулярний рух.
-    correct: false
-  - text: Жодне не описує регулярний рух.
-    correct: false
+  - '{''text'': ''Вона ходить до школи.'', ''correct'': True}'
+  - '{''text'': ''Вона йде до школи.'', ''correct'': False}'
+  - '{''text'': ''Обидва описують регулярний рух.'', ''correct'': False}'
+  - '{''text'': ''Жодне не описує регулярний рух.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -846,14 +842,10 @@ items:
   question: У реченні "Птахи відлітають на південь кожної осені" використовується
     різноспрямоване дієслово з префіксом, бо описує регулярну міграцію.
   options:
-  - text: регулярна міграція
-    correct: true
-  - text: одноразовий політ
-    correct: false
-  - text: рух зараз
-    correct: false
-  - text: рух у минулому
-    correct: false
+  - '{''text'': ''регулярна міграція'', ''correct'': True}'
+  - '{''text'': ''одноразовий політ'', ''correct'': False}'
+  - '{''text'': ''рух зараз'', ''correct'': False}'
+  - '{''text'': ''рух у минулому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -864,14 +856,10 @@ items:
   title: Дієслова руху з префіксами
   question: Яке дієслово означає "підійти ближче до когось" — підійти чи відійти?
   options:
-  - text: підійти (наближення)
-    correct: true
-  - text: відійти (віддалення)
-    correct: false
-  - text: обійти (навколо)
-    correct: false
-  - text: перейти (через)
-    correct: false
+  - '{''text'': ''підійти (наближення)'', ''correct'': True}'
+  - '{''text'': ''відійти (віддалення)'', ''correct'': False}'
+  - '{''text'': ''обійти (навколо)'', ''correct'': False}'
+  - '{''text'': ''перейти (через)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -883,14 +871,10 @@ items:
   question: У реченні "Вони обійшли весь парк за дві години" префікс "об-" вказує
     на рух навколо певного простору.
   options:
-  - text: рух навколо (об-)
-    correct: true
-  - text: рух через (пере-)
-    correct: false
-  - text: рух з (ви-)
-    correct: false
-  - text: рух до (при-)
-    correct: false
+  - '{''text'': ''рух навколо (об-)'', ''correct'': True}'
+  - '{''text'': ''рух через (пере-)'', ''correct'': False}'
+  - '{''text'': ''рух з (ви-)'', ''correct'': False}'
+  - '{''text'': ''рух до (при-)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -901,14 +885,10 @@ items:
   title: Дієслова руху з префіксами
   question: Яке речення правильне — "Літак летить до Одеси" чи "Літак літає до Одеси"?
   options:
-  - text: Обидва правильні з різним значенням.
-    correct: true
-  - text: Тільки перше правильне.
-    correct: false
-  - text: Тільки друге правильне.
-    correct: false
-  - text: Обидва неправильні.
-    correct: false
+  - '{''text'': ''Обидва правильні з різним значенням.'', ''correct'': True}'
+  - '{''text'': ''Тільки перше правильне.'', ''correct'': False}'
+  - '{''text'': ''Тільки друге правильне.'', ''correct'': False}'
+  - '{''text'': ''Обидва неправильні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -920,14 +900,10 @@ items:
   question: У реченні "Човен пливе по Дніпру" використовується односпрямоване дієслово,
     бо описує конкретний рух у певному напрямку зараз.
   options:
-  - text: конкретний рух зараз
-    correct: true
-  - text: регулярний рух
-    correct: false
-  - text: рух туди і назад
-    correct: false
-  - text: минулий рух
-    correct: false
+  - '{''text'': ''конкретний рух зараз'', ''correct'': True}'
+  - '{''text'': ''регулярний рух'', ''correct'': False}'
+  - '{''text'': ''рух туди і назад'', ''correct'': False}'
+  - '{''text'': ''минулий рух'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -939,14 +915,10 @@ items:
   question: Який префікс додати до "йти", щоб отримати значення "увійти всередину"
     — ви-, за-, чи від-?
   options:
-  - text: за- (зайти)
-    correct: true
-  - text: ви- (вийти)
-    correct: false
-  - text: від- (відійти)
-    correct: false
-  - text: пере- (перейти)
-    correct: false
+  - '{''text'': ''за- (зайти)'', ''correct'': True}'
+  - '{''text'': ''ви- (вийти)'', ''correct'': False}'
+  - '{''text'': ''від- (відійти)'', ''correct'': False}'
+  - '{''text'': ''пере- (перейти)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -958,14 +930,10 @@ items:
   question: У реченні "Вона несе важку сумку додому" використовується односпрямоване
     дієслово, бо описує рух з вантажем у конкретному напрямку.
   options:
-  - text: рух з вантажем зараз
-    correct: true
-  - text: регулярне носіння
-    correct: false
-  - text: рух туди і назад
-    correct: false
-  - text: минулий рух
-    correct: false
+  - '{''text'': ''рух з вантажем зараз'', ''correct'': True}'
+  - '{''text'': ''регулярне носіння'', ''correct'': False}'
+  - '{''text'': ''рух туди і назад'', ''correct'': False}'
+  - '{''text'': ''минулий рух'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -977,14 +945,10 @@ items:
   question: Яка різниця між "везти" та "возити" — перше для руху зараз, а друге для
     регулярного руху?
   options:
-  - text: везти = зараз; возити = регулярно
-    correct: true
-  - text: везти = регулярно; возити = зараз
-    correct: false
-  - text: немає різниці
-    correct: false
-  - text: обидва для минулого часу
-    correct: false
+  - '{''text'': ''везти = зараз; возити = регулярно'', ''correct'': True}'
+  - '{''text'': ''везти = регулярно; возити = зараз'', ''correct'': False}'
+  - '{''text'': ''немає різниці'', ''correct'': False}'
+  - '{''text'': ''обидва для минулого часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -996,14 +960,10 @@ items:
   question: У реченні "Я знаю студента, який вивчає українську мову" сполучник "який"
     вводить підрядне означальне речення.
   options:
-  - text: підрядне означальне
-    correct: true
-  - text: підрядне мети
-    correct: false
-  - text: підрядне умови
-    correct: false
-  - text: підрядне причини
-    correct: false
+  - '{''text'': ''підрядне означальне'', ''correct'': True}'
+  - '{''text'': ''підрядне мети'', ''correct'': False}'
+  - '{''text'': ''підрядне умови'', ''correct'': False}'
+  - '{''text'': ''підрядне причини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1015,14 +975,10 @@ items:
   question: Який сполучник правильно вжити в реченні "Місто, ___ я народився, дуже
     красиве" — де чи куди?
   options:
-  - text: де (місце)
-    correct: true
-  - text: куди (напрямок)
-    correct: false
-  - text: звідки (походження)
-    correct: false
-  - text: коли (час)
-    correct: false
+  - '{''text'': ''де (місце)'', ''correct'': True}'
+  - '{''text'': ''куди (напрямок)'', ''correct'': False}'
+  - '{''text'': ''звідки (походження)'', ''correct'': False}'
+  - '{''text'': ''коли (час)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1034,14 +990,10 @@ items:
   question: У реченні "Він прийшов, щоб допомогти друзям" сполучник "щоб" вводить
     підрядне речення мети.
   options:
-  - text: підрядне мети
-    correct: true
-  - text: підрядне причини
-    correct: false
-  - text: підрядне умови
-    correct: false
-  - text: підрядне часу
-    correct: false
+  - '{''text'': ''підрядне мети'', ''correct'': True}'
+  - '{''text'': ''підрядне причини'', ''correct'': False}'
+  - '{''text'': ''підрядне умови'', ''correct'': False}'
+  - '{''text'': ''підрядне часу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1053,14 +1005,10 @@ items:
   question: Яка структура правильна для нереальної умови — "Якби я знав, сказав би"
     чи "Якщо я знаю, скажу"?
   options:
-  - text: Якби я знав, сказав би.
-    correct: true
-  - text: Якщо я знаю, скажу.
-    correct: false
-  - text: Обидві для нереальної умови.
-    correct: false
-  - text: Обидві неправильні.
-    correct: false
+  - '{''text'': ''Якби я знав, сказав би.'', ''correct'': True}'
+  - '{''text'': ''Якщо я знаю, скажу.'', ''correct'': False}'
+  - '{''text'': ''Обидві для нереальної умови.'', ''correct'': False}'
+  - '{''text'': ''Обидві неправильні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1072,14 +1020,10 @@ items:
   question: У реченні "Хоча погода погана, ми підемо на прогулянку" сполучник "хоча"
     вводить допустове підрядне речення.
   options:
-  - text: допустове (попри перешкоду)
-    correct: true
-  - text: умовне
-    correct: false
-  - text: причинове
-    correct: false
-  - text: означальне
-    correct: false
+  - '{''text'': ''допустове (попри перешкоду)'', ''correct'': True}'
+  - '{''text'': ''умовне'', ''correct'': False}'
+  - '{''text'': ''причинове'', ''correct'': False}'
+  - '{''text'': ''означальне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1091,14 +1035,10 @@ items:
   question: Який сполучник правильно вжити в реченні "Вона прийшла, ___ хотіла побачити
     тебе" — бо чи хоча?
   options:
-  - text: бо (причина)
-    correct: true
-  - text: хоча (допуст)
-    correct: false
-  - text: якщо (умова)
-    correct: false
-  - text: щоб (мета)
-    correct: false
+  - '{''text'': ''бо (причина)'', ''correct'': True}'
+  - '{''text'': ''хоча (допуст)'', ''correct'': False}'
+  - '{''text'': ''якщо (умова)'', ''correct'': False}'
+  - '{''text'': ''щоб (мета)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1110,14 +1050,10 @@ items:
   question: У реченні "Країна, куди ми їдемо, дуже красива" сполучник "куди" вводить
     підрядне означальне з напрямком руху.
   options:
-  - text: напрямок руху (куди?)
-    correct: true
-  - text: місце (де?)
-    correct: false
-  - text: походження (звідки?)
-    correct: false
-  - text: час (коли?)
-    correct: false
+  - '{''text'': ''напрямок руху (куди?)'', ''correct'': True}'
+  - '{''text'': ''місце (де?)'', ''correct'': False}'
+  - '{''text'': ''походження (звідки?)'', ''correct'': False}'
+  - '{''text'': ''час (коли?)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1129,14 +1065,10 @@ items:
   question: Яка структура правильна для реальної умови — "Якщо прийдеш, побачиш" чи
     "Якби прийшов, побачив би"?
   options:
-  - text: Якщо прийдеш, побачиш.
-    correct: true
-  - text: Якби прийшов, побачив би.
-    correct: false
-  - text: Обидві для реальної умови.
-    correct: false
-  - text: Обидві неправильні.
-    correct: false
+  - '{''text'': ''Якщо прийдеш, побачиш.'', ''correct'': True}'
+  - '{''text'': ''Якби прийшов, побачив би.'', ''correct'': False}'
+  - '{''text'': ''Обидві для реальної умови.'', ''correct'': False}'
+  - '{''text'': ''Обидві неправильні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1148,14 +1080,10 @@ items:
   question: У реченні "Оскільки було пізно, вони поїхали додому" сполучник "оскільки"
     вводить причинове підрядне речення.
   options:
-  - text: причинове (чому поїхали?)
-    correct: true
-  - text: допустове
-    correct: false
-  - text: умовне
-    correct: false
-  - text: означальне
-    correct: false
+  - '{''text'': ''причинове (чому поїхали?)'', ''correct'': True}'
+  - '{''text'': ''допустове'', ''correct'': False}'
+  - '{''text'': ''умовне'', ''correct'': False}'
+  - '{''text'': ''означальне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1167,14 +1095,10 @@ items:
   question: Який сполучник правильно вжити в реченні "День, ___ ми зустрілися, був
     сонячний" — коли чи де?
   options:
-  - text: коли (час)
-    correct: true
-  - text: де (місце)
-    correct: false
-  - text: куди (напрямок)
-    correct: false
-  - text: який (означення)
-    correct: false
+  - '{''text'': ''коли (час)'', ''correct'': True}'
+  - '{''text'': ''де (місце)'', ''correct'': False}'
+  - '{''text'': ''куди (напрямок)'', ''correct'': False}'
+  - '{''text'': ''який (означення)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1186,14 +1110,10 @@ items:
   question: У реченні "Батько працював, щоб діти могли вчитися" сполучник "щоб" +
     минулий час використовується, бо підмети різні.
   options:
-  - text: різні підмети (батько, діти)
-    correct: true
-  - text: однаковий підмет
-    correct: false
-  - text: реальна умова
-    correct: false
-  - text: допустове речення
-    correct: false
+  - '{''text'': ''різні підмети (батько, діти)'', ''correct'': True}'
+  - '{''text'': ''однаковий підмет'', ''correct'': False}'
+  - '{''text'': ''реальна умова'', ''correct'': False}'
+  - '{''text'': ''допустове речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1205,14 +1125,10 @@ items:
   question: У реченні "Незважаючи на дощ, ми пішли на прогулянку" конструкція "незважаючи
     на" виражає допустове значення.
   options:
-  - text: допустове (попри перешкоду)
-    correct: true
-  - text: причинове
-    correct: false
-  - text: умовне
-    correct: false
-  - text: часове
-    correct: false
+  - '{''text'': ''допустове (попри перешкоду)'', ''correct'': True}'
+  - '{''text'': ''причинове'', ''correct'': False}'
+  - '{''text'': ''умовне'', ''correct'': False}'
+  - '{''text'': ''часове'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1224,14 +1140,10 @@ items:
   question: Який сполучник правильно вжити в реченні "Село, ___ він приїхав, біля
     Полтави" — звідки чи куди?
   options:
-  - text: звідки (походження)
-    correct: true
-  - text: куди (напрямок)
-    correct: false
-  - text: де (місце)
-    correct: false
-  - text: коли (час)
-    correct: false
+  - '{''text'': ''звідки (походження)'', ''correct'': True}'
+  - '{''text'': ''куди (напрямок)'', ''correct'': False}'
+  - '{''text'': ''де (місце)'', ''correct'': False}'
+  - '{''text'': ''коли (час)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1243,14 +1155,10 @@ items:
   question: У реченні "Вона працювала, поки не закінчила проєкт" сполучник "поки не"
     вводить часове підрядне речення з кінцевою межею.
   options:
-  - text: часове з межею (до якого моменту)
-    correct: true
-  - text: умовне
-    correct: false
-  - text: допустове
-    correct: false
-  - text: причинове
-    correct: false
+  - '{''text'': ''часове з межею (до якого моменту)'', ''correct'': True}'
+  - '{''text'': ''умовне'', ''correct'': False}'
+  - '{''text'': ''допустове'', ''correct'': False}'
+  - '{''text'': ''причинове'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

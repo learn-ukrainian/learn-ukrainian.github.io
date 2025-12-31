@@ -1,15 +1,18 @@
 module: 20-motion-approaching-departing
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/20-motion-approaching-departing.md
-generated: '2025-12-29T00:21:59.866592'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.807825'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 14
+  cloze: 1
   unjumble: 8
   quiz: 14
   true-false: 14
-item_count: 64
+total_items: 65
+item_count: 65
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилки
@@ -381,6 +384,108 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Доповніть текст про поїздку
+  passage_template: Минулого тижня ми з друзями вирішили поїхати до Львова. Вранці
+    таксі {під'їхало|від'їхало|доїхало|приїхало} до нашого будинку точно о 7:00. Ми
+    сіли в машину, і таксі {від'їхало|під'їхало|доїхало|приїхало} від будинку до залізничного
+    вокзалу. За двадцять хвилин ми {дійшли|підійшли|відійшли|прийшли} до вокзалу.
+    Ми {підійшли|відійшли|дійшли|прийшли} до каси, щоб купити квитки на потяг. Після
+    цього ми {відійшли|підійшли|дійшли|прийшли} від каси і {підійшли|відійшли|дійшли|прийшли}
+    до платформи номер три. Потяг {від'їхав|під'їхав|доїхав|приїхав} о 8:30. Дорога
+    була довгою, але за шість годин ми нарешті {доїхали|підїхали|від'їхали|приїхали}
+    до Львова. На вокзалі у Львові нас зустрів друг на машині. Він {під'їхав|від'їхав|доїхав|приїхав}
+    до виходу з вокзалу, і ми {підійшли|відійшли|дійшли|прийшли} до його машини. Він
+    {довіз|підвіз|відвіз|привіз} нас до готелю в центрі міста. Ми {дійшли|підійшли|відійшли|прийшли}
+    до готелю за п'ятнадцять хвилин. Після реєстрації ми {віднесли|піднесли|донесли|принесли}
+    до рецепції свої валізи і {дійшли|підійшли|відійшли|прийшли} до свого номера на
+    третьому поверсі. Це була чудова подорож!
+  blanks:
+  - answer: приїхало
+    options:
+    - під'їхало
+    - від'їхало
+    - доїхало
+  - answer: приїхало
+    options:
+    - від'їхало
+    - під'їхало
+    - доїхало
+  - answer: прийшли
+    options:
+    - дійшли
+    - підійшли
+    - відійшли
+  - answer: прийшли
+    options:
+    - підійшли
+    - відійшли
+    - дійшли
+  - answer: прийшли
+    options:
+    - відійшли
+    - підійшли
+    - дійшли
+  - answer: прийшли
+    options:
+    - підійшли
+    - відійшли
+    - дійшли
+  - answer: приїхав
+    options:
+    - від'їхав
+    - під'їхав
+    - доїхав
+  - answer: приїхали
+    options:
+    - доїхали
+    - підїхали
+    - від'їхали
+  - answer: приїхав
+    options:
+    - під'їхав
+    - від'їхав
+    - доїхав
+  - answer: прийшли
+    options:
+    - підійшли
+    - відійшли
+    - дійшли
+  - answer: привіз
+    options:
+    - довіз
+    - підвіз
+    - відвіз
+  - answer: прийшли
+    options:
+    - дійшли
+    - підійшли
+    - відійшли
+  - answer: принесли
+    options:
+    - віднесли
+    - піднесли
+    - донесли
+  - answer: прийшли
+    options:
+    - дійшли
+    - підійшли
+    - відійшли
+  blank_count: 14
+  complete_passage: Минулого тижня ми з друзями вирішили поїхати до Львова. Вранці
+    таксі приїхало до нашого будинку точно о 7:00. Ми сіли в машину, і таксі приїхало
+    від будинку до залізничного вокзалу. За двадцять хвилин ми прийшли до вокзалу.
+    Ми прийшли до каси, щоб купити квитки на потяг. Після цього ми прийшли від каси
+    і прийшли до платформи номер три. Потяг приїхав о 8:30. Дорога була довгою, але
+    за шість годин ми нарешті приїхали до Львова. На вокзалі у Львові нас зустрів
+    друг на машині. Він приїхав до виходу з вокзалу, і ми прийшли до його машини.
+    Він привіз нас до готелю в центрі міста. Ми прийшли до готелю за п'ятнадцять хвилин.
+    Після реєстрації ми принесли до рецепції свої валізи і прийшли до свого номера
+    на третьому поверсі. Це була чудова подорож!
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення в правильному порядку
   jumbled_words: []
@@ -452,14 +557,10 @@ items:
   question: Яке з наведених нижче дієслів означає рух до об'єкта або наближення до
     нього пішки?
   options:
-  - text: підійти
-    correct: true
-  - text: відійти
-    correct: false
-  - text: дійти
-    correct: false
-  - text: прийти
-    correct: false
+  - '{''text'': ''підійти'', ''correct'': True}'
+  - '{''text'': ''відійти'', ''correct'': False}'
+  - '{''text'': ''дійти'', ''correct'': False}'
+  - '{''text'': ''прийти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -471,14 +572,10 @@ items:
   question: Якщо ви хочете сказати, що таксі відїхало від готелю і віддалилося, який
     префікс ви використаєте?
   options:
-  - text: під-
-    correct: false
-  - text: від-
-    correct: true
-  - text: до-
-    correct: false
-  - text: при-
-    correct: false
+  - '{''text'': ''під-'', ''correct'': False}'
+  - '{''text'': ''від-'', ''correct'': True}'
+  - '{''text'': ''до-'', ''correct'': False}'
+  - '{''text'': ''при-'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -490,14 +587,10 @@ items:
   question: Яке з наведених нижче речень правильно описує ситуацію, коли ви успішно
     дійшли до пункту призначення пішки?
   options:
-  - text: Я підійшов до школи після довгої прогулянки.
-    correct: false
-  - text: Я відійшов до школи після довгої прогулянки.
-    correct: false
-  - text: Я дійшов до школи після довгої прогулянки.
-    correct: true
-  - text: Я прийшов до школи після довгої прогулянки.
-    correct: false
+  - '{''text'': ''Я підійшов до школи після довгої прогулянки.'', ''correct'': False}'
+  - '{''text'': ''Я відійшов до школи після довгої прогулянки.'', ''correct'': False}'
+  - '{''text'': ''Я дійшов до школи після довгої прогулянки.'', ''correct'': True}'
+  - '{''text'': ''Я прийшов до школи після довгої прогулянки.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -509,14 +602,14 @@ items:
   question: Чому в дієсловах під'їхати і від'їхати потрібен апостроф після префіксів
     під- і від- перед голосною ї?
   options:
-  - text: Тому що це правило орфографії для всіх префіксів без виключень.
-    correct: false
-  - text: Тому що апостроф розділяє приголосний префікс і голосний звук ї після нього.
-    correct: true
-  - text: Тому що апостроф означає паузу в усному мовленні між складами.
-    correct: false
-  - text: Тому що без апострофа дієслово стає недоконаного виду.
-    correct: false
+  - '{''text'': ''Тому що це правило орфографії для всіх префіксів без виключень.'',
+    ''correct'': False}'
+  - '{''text'': ''Тому що апостроф розділяє приголосний префікс і голосний звук ї
+    після нього.'', ''correct'': True}'
+  - '{''text'': ''Тому що апостроф означає паузу в усному мовленні між складами.'',
+    ''correct'': False}'
+  - '{''text'': ''Тому що без апострофа дієслово стає недоконаного виду.'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -528,14 +621,10 @@ items:
   question: Яке з наведених нижче дієслів означає успішно донести предмет до пункту
     призначення, завершивши процес доставки?
   options:
-  - text: піднести
-    correct: false
-  - text: віднести
-    correct: false
-  - text: донести
-    correct: true
-  - text: принести
-    correct: false
+  - '{''text'': ''піднести'', ''correct'': False}'
+  - '{''text'': ''віднести'', ''correct'': False}'
+  - '{''text'': ''донести'', ''correct'': True}'
+  - '{''text'': ''принести'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -547,14 +636,10 @@ items:
   question: Якщо літак покинув термінал і віддалився від аеропорту, яке дієслово найточніше
     описує цей рух?
   options:
-  - text: підлетів
-    correct: false
-  - text: відлетів
-    correct: true
-  - text: долетів
-    correct: false
-  - text: прилетів
-    correct: false
+  - '{''text'': ''підлетів'', ''correct'': False}'
+  - '{''text'': ''відлетів'', ''correct'': True}'
+  - '{''text'': ''долетів'', ''correct'': False}'
+  - '{''text'': ''прилетів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -566,14 +651,10 @@ items:
   question: Яке з наведених нижче дієслів правильно описує ситуацію, коли автобус
     наблизився до зупинки і зупинився біля неї?
   options:
-  - text: під'їхав
-    correct: true
-  - text: від'їхав
-    correct: false
-  - text: доїхав
-    correct: false
-  - text: приїхав
-    correct: false
+  - '{''text'': "під''їхав", ''correct'': True}'
+  - '{''text'': "від''їхав", ''correct'': False}'
+  - '{''text'': ''доїхав'', ''correct'': False}'
+  - '{''text'': ''приїхав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -585,14 +666,14 @@ items:
   question: Яке з наведених нижче речень правильно використовує префікс до- для опису
     досягнення кінцевого пункту подорожі?
   options:
-  - text: Ми підійшли до Львова після п'яти годин в дорозі.
-    correct: false
-  - text: Ми відійшли до Львова після п'яти годин в дорозі.
-    correct: false
-  - text: Ми доїхали до Львова після п'яти годин в дорозі.
-    correct: true
-  - text: Ми приїхали до Львова після п'яти годин в дорозі.
-    correct: false
+  - '{''text'': "Ми підійшли до Львова після п''яти годин в дорозі.", ''correct'':
+    False}'
+  - '{''text'': "Ми відійшли до Львова після п''яти годин в дорозі.", ''correct'':
+    False}'
+  - '{''text'': "Ми доїхали до Львова після п''яти годин в дорозі.", ''correct'':
+    True}'
+  - '{''text'': "Ми приїхали до Львова після п''яти годин в дорозі.", ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -604,14 +685,10 @@ items:
   question: Якщо кур'єр приніс пакунок до дверей вашої квартири і поклав його перед
     дверима, яке дієслово найточніше описує цю дію?
   options:
-  - text: підніс
-    correct: true
-  - text: відніс
-    correct: false
-  - text: доніс
-    correct: false
-  - text: приніс
-    correct: false
+  - '{''text'': ''підніс'', ''correct'': True}'
+  - '{''text'': ''відніс'', ''correct'': False}'
+  - '{''text'': ''доніс'', ''correct'': False}'
+  - '{''text'': ''приніс'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -623,14 +700,10 @@ items:
   question: Яке з наведених нижче дієслів означає відійти пішки від певного місця
     на невелику відстань, віддалитися від нього?
   options:
-  - text: підійти
-    correct: false
-  - text: відійти
-    correct: true
-  - text: дійти
-    correct: false
-  - text: прийти
-    correct: false
+  - '{''text'': ''підійти'', ''correct'': False}'
+  - '{''text'': ''відійти'', ''correct'': True}'
+  - '{''text'': ''дійти'', ''correct'': False}'
+  - '{''text'': ''прийти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -642,14 +715,10 @@ items:
   question: Якщо ви кажете друзеві по телефону, що ви вже досягли вокзалу пішки і
     прибули туди, яке дієслово ви використаєте?
   options:
-  - text: підійшов
-    correct: false
-  - text: відійшов
-    correct: false
-  - text: дійшов
-    correct: true
-  - text: прийшов
-    correct: false
+  - '{''text'': ''підійшов'', ''correct'': False}'
+  - '{''text'': ''відійшов'', ''correct'': False}'
+  - '{''text'': ''дійшов'', ''correct'': True}'
+  - '{''text'': ''прийшов'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -661,14 +730,10 @@ items:
   question: Яке з наведених нижче дієслів правильно описує ситуацію, коли таксі привезло
     вас до аеропорту і ви прибули туда?
   options:
-  - text: підвезло
-    correct: false
-  - text: відвезло
-    correct: false
-  - text: довезло
-    correct: true
-  - text: привезло
-    correct: false
+  - '{''text'': ''підвезло'', ''correct'': False}'
+  - '{''text'': ''відвезло'', ''correct'': False}'
+  - '{''text'': ''довезло'', ''correct'': True}'
+  - '{''text'': ''привезло'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -680,14 +745,10 @@ items:
   question: Яке з наведених нижче речень містить помилку у використанні префікса наближення
     або віддалення?
   options:
-  - text: Він підійшов до столу і взяв книгу.
-    correct: false
-  - text: Я відійшов до школи і почав урок.
-    correct: true
-  - text: Вона відійшла від вікна на кілька кроків.
-    correct: false
-  - text: Ми дійшли до центру за годину.
-    correct: false
+  - '{''text'': ''Він підійшов до столу і взяв книгу.'', ''correct'': False}'
+  - '{''text'': ''Я відійшов до школи і почав урок.'', ''correct'': True}'
+  - '{''text'': ''Вона відійшла від вікна на кілька кроків.'', ''correct'': False}'
+  - '{''text'': ''Ми дійшли до центру за годину.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -699,14 +760,10 @@ items:
   question: Якщо птах летів до дерева і сів на його гілку, успішно завершивши політ,
     яке дієслово найточніше описує цей рух?
   options:
-  - text: підлетів
-    correct: false
-  - text: відлетів
-    correct: false
-  - text: долетів
-    correct: true
-  - text: прилетів
-    correct: false
+  - '{''text'': ''підлетів'', ''correct'': False}'
+  - '{''text'': ''відлетів'', ''correct'': False}'
+  - '{''text'': ''долетів'', ''correct'': True}'
+  - '{''text'': ''прилетів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

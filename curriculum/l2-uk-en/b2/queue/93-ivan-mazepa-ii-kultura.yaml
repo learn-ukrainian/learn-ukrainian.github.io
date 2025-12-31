@@ -1,0 +1,1422 @@
+module: 93-ivan-mazepa-ii-kultura
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/93-ivan-mazepa-ii-kultura.md
+generated: '2025-12-30T19:49:17.588106'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Мазепинське бароко — унікальний архітектурна стиль.
+  error: архітектурна
+  answer: архітектурний
+  sentence_corrected: Мазепинське бароко — унікальний архітектурний стиль.
+  options:
+  - архітектурна
+  - архітектурний
+  - архітектурне
+  - архітектурної
+  original_explanation: Іменник «стиль» чоловічого роду, тому прикметник теж чоловічого
+    — архітектурний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Гетьман профінансував будівництво понад двадцять церков.
+  error: двадцять
+  answer: двадцяти
+  sentence_corrected: Гетьман профінансував будівництво понад двадцяти церков.
+  options:
+  - двадцять
+  - двадцяти
+  - двадцятьох
+  - двадцятьма
+  original_explanation: Після «понад» числівник у родовому відмінку — понад двадцяти.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Спудеї вивчали латину в академія.
+  error: академія
+  answer: академії
+  sentence_corrected: Спудеї вивчали латину в академії.
+  options:
+  - академія
+  - академії
+  - академію
+  - академією
+  original_explanation: Прийменник «в» з місцезнаходженням вимагає місцевого відмінка
+    — в академії.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Церква Всіх Святих була збудована в 1698 рік.
+  error: рік
+  answer: році
+  sentence_corrected: Церква Всіх Святих була збудована в 1698 році.
+  options:
+  - рік
+  - році
+  - року
+  - роком
+  original_explanation: Прийменник «в» з датою вимагає місцевого відмінка — в році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Грушоподібні куполи — характерний ознака стилю.
+  error: характерний
+  answer: характерна
+  sentence_corrected: Грушоподібні куполи — характерна ознака стилю.
+  options:
+  - характерний
+  - характерна
+  - характерне
+  - характерні
+  original_explanation: Іменник «ознака» жіночого роду, тому прикметник теж жіночого
+    — характерна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Панегірик — урочиста похвальний промова.
+  error: похвальний
+  answer: похвальна
+  sentence_corrected: Панегірик — урочиста похвальна промова.
+  options:
+  - похвальний
+  - похвальна
+  - похвальне
+  - похвальні
+  original_explanation: Іменник «промова» жіночого роду, тому прикметник теж жіночого
+    — похвальна.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Культурна спадщина Мазепи пережив його на століття.
+  error: пережив
+  answer: пережила
+  sentence_corrected: Культурна спадщина Мазепи пережила його на століття.
+  options:
+  - пережив
+  - пережила
+  - пережило
+  - пережили
+  original_explanation: Іменник «спадщина» жіночого роду, тому дієслово теж жіночого
+    — пережила.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Мазепа був одним із найбільший меценатів.
+  error: найбільший
+  answer: найбільших
+  sentence_corrected: Мазепа був одним із найбільших меценатів.
+  options:
+  - найбільший
+  - найбільших
+  - найбільшому
+  - найбільшим
+  original_explanation: Після «із» потрібен родовий відмінок множини — із найбільших.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Петро I наказав знищити всі книга з панегіриками.
+  error: книга
+  answer: книги
+  sentence_corrected: Петро I наказав знищити всі книги з панегіриками.
+  options:
+  - книга
+  - книги
+  - книзі
+  - книгою
+  original_explanation: Після «всі» потрібна множина знахідного відмінка — всі книги.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Академія отримала статус вищий навчального закладу.
+  error: вищий
+  answer: вищого
+  sentence_corrected: Академія отримала статус вищого навчального закладу.
+  options:
+  - вищий
+  - вищого
+  - вищому
+  - вищим
+  original_explanation: Іменник «закладу» в родовому відмінку, прикметник теж — вищого.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Навчання в академії тривав до 12 років.
+  error: тривав
+  answer: тривало
+  sentence_corrected: Навчання в академії тривало до 12 років.
+  options:
+  - тривав
+  - тривало
+  - тривала
+  - тривали
+  original_explanation: Іменник «навчання» середнього роду, тому дієслово теж середнього
+    — тривало.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Мазепа підтримував константинопольську юрисдикція.
+  error: юрисдикція
+  answer: юрисдикцію
+  sentence_corrected: Мазепа підтримував константинопольську юрисдикцію.
+  options:
+  - юрисдикція
+  - юрисдикцію
+  - юрисдикції
+  - юрисдикцією
+  original_explanation: Дієслово «підтримувати» вимагає знахідного відмінка — юрисдикцію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Білі стіни контрастують із позолочений куполами.
+  error: позолочений
+  answer: позолоченими
+  sentence_corrected: Білі стіни контрастують із позолоченими куполами.
+  options:
+  - позолочений
+  - позолоченими
+  - позолочених
+  - позолоченому
+  original_explanation: Після «з/із» орудний відмінок множини — з позолоченими куполами.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Випускники академії формували інтелектуальну еліта.
+  error: еліта
+  answer: еліту
+  sentence_corrected: Випускники академії формували інтелектуальну еліту.
+  options:
+  - еліта
+  - еліту
+  - еліти
+  - елітою
+  original_explanation: Дієслово «формувати» вимагає знахідного відмінка — формували
+    еліту.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Друкарні випускали книги найвищий якості.
+  error: найвищий
+  answer: найвищої
+  sentence_corrected: Друкарні випускали книги найвищої якості.
+  options:
+  - найвищий
+  - найвищої
+  - найвищому
+  - найвищим
+  original_explanation: Іменник «якості» в родовому відмінку, прикметник теж — найвищої.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в реченнях про культуру
+  sentence_with_error: Батурин був гетьманською столиця.
+  error: столиця
+  answer: столицею
+  sentence_corrected: Батурин був гетьманською столицею.
+  options:
+  - столиця
+  - столицею
+  - столиці
+  - столицю
+  original_explanation: 'Присудок з дієсловом «був» — орудний відмінок: «був столицею».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Мазепа був одним із найбільших _____ української історії.
+  answer: меценатів
+  complete_sentence: Мазепа був одним із найбільших меценатів__ української історії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Мазепинське _____ — унікальний архітектурний стиль.
+  answer: бароко
+  complete_sentence: Мазепинське бароко__ — унікальний архітектурний стиль.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Грушоподібні _____ — характерна ознака українських церков.
+  answer: куполи
+  complete_sentence: Грушоподібні куполи__ — характерна ознака українських церков.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — студенти Києво-Могилянської академії.
+  answer: Спудеї
+  complete_sentence: Спудеї__ — студенти Києво-Могилянської академії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — урочиста похвальна промова на честь правителя.
+  answer: Панегірик
+  complete_sentence: Панегірик__ — урочиста похвальна промова на честь правителя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Церкви мазепинського бароко прикрашені багатим _____.
+  answer: декором
+  complete_sentence: Церкви мазепинського бароко прикрашені багатим декором__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Академія отримала статус вищого навчального _____ у 1694 році.
+  answer: закладу
+  complete_sentence: Академія отримала статус вищого навчального закладу__ у 1694
+    році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Білі стіни контрастують із _____ куполами.
+  answer: позолоченими
+  complete_sentence: Білі стіни контрастують із позолоченими__ куполами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Друкарні випускали книги з вишуканими _____.
+  answer: гравюрами
+  complete_sentence: Друкарні випускали книги з вишуканими гравюрами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Культурна _____ Мазепи пережила його на століття.
+  answer: спадщина
+  complete_sentence: Культурна спадщина__ Мазепи пережила його на століття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ академії звітував гетьману про кількість студентів.
+  answer: Ректор
+  complete_sentence: Ректор__ академії звітував гетьману про кількість студентів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Випускники академії вивчали _____, грецьку і латину.
+  answer: філософію
+  complete_sentence: Випускники академії вивчали філософію__, грецьку і латину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Мазепа фінансував будівництво _____ і монастирів.
+  answer: церков
+  complete_sentence: Мазепа фінансував будівництво церков__ і монастирів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Богоявленська церква належала до Братського _____.
+  answer: монастиря
+  complete_sentence: Богоявленська церква належала до Братського монастиря__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Культура була політикою іншими _____.
+  answer: засобами
+  complete_sentence: Культура була політикою іншими засобами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Після Полтави Росія намагалася знищити культурну _____ Мазепи.
+  answer: спадщину
+  complete_sentence: Після Полтави Росія намагалася знищити культурну спадщину__ Мазепи.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа був одним із найбільших _____.
+  answer: меценатів
+  complete_sentence: Мазепа був одним із найбільших меценатів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гетьман фінансував будівництво _____.
+  answer: церков
+  complete_sentence: Гетьман фінансував будівництво церков__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Грушоподібні куполи — характерна _____ стилю.
+  answer: ознака
+  complete_sentence: Грушоподібні куполи — характерна ознака__ стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Студентів академії називали _____.
+  answer: спудеями
+  complete_sentence: Студентів академії називали спудеями__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Панегірик — урочиста похвальна _____.
+  answer: промова
+  complete_sentence: Панегірик — урочиста похвальна промова__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Друкарні випускали книги найвищої _____.
+  answer: якості
+  complete_sentence: Друкарні випускали книги найвищої якості__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Академія отримала статус у 1694 _____.
+  answer: році
+  complete_sentence: Академія отримала статус у 1694 році__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Білі стіни контрастують із позолоченими _____.
+  answer: куполами
+  complete_sentence: Білі стіни контрастують із позолоченими куполами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Культурна спадщина пережила _____ на століття.
+  answer: його
+  complete_sentence: Культурна спадщина пережила його__ на століття.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Петро I наказав знищити всі _____.
+  answer: книги
+  complete_sentence: Петро I наказав знищити всі книги__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Випускники вивчали _____ і грецьку.
+  answer: латину
+  complete_sentence: Випускники вивчали латину__ і грецьку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Навчання в академії тривало до дванадцяти _____.
+  answer: років
+  complete_sentence: Навчання в академії тривало до дванадцяти років__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Росія намагалася знищити культурну _____.
+  answer: спадщину
+  complete_sentence: Росія намагалася знищити культурну спадщину__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Батурин був гетьманською _____.
+  answer: столицею
+  complete_sentence: Батурин був гетьманською столицею__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Церкви прикрашені багатим _____.
+  answer: декором
+  complete_sentence: Церкви прикрашені багатим декором__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Мазепа підтримував константинопольську _____.
+  answer: юрисдикцію
+  complete_sentence: Мазепа підтримував константинопольську юрисдикцію__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про культурну спадщину Мазепи
+  passage_template: 'Іван Мазепа був одним із найбільших {меценатів|ворогів|селян|меценатів}
+    української історії. Він профінансував будівництво понад двадцяти {церков|заводів|казарм|церков}
+    і монастирів. «Мазепинське {бароко|готика|рококо|бароко}» — унікальний архітектурний
+    {стиль|закон|договір|стиль} з характерними грушоподібними {куполами|вікнами|дверима|куполами}.
+
+
+    Києво-Могилянська {академія|армія|церква|академія} за правління Мазепи стала одним
+    із найпрестижніших {закладів|заводів|ринків|закладів} Східної Європи. Студентів
+    називали {спудеями|козаками|царями|спудеями}. Навчання тривало до дванадцяти {років|днів|годин|років}.
+
+
+    {Панегірик|Критика|Скарга|Панегірик} — урочиста похвальна промова — став важливим
+    жанром мазепинської доби. Друкарні випускали {книги|зброю|їжу|книги} найвищої
+    якості з вишуканими {гравюрами|фотографіями|плакатами|гравюрами}.
+
+
+    Після {Полтави|Москви|Києва|Полтави} Росія намагалася знищити культурну {спадщину|армію|зброю|спадщину}
+    Мазепи. Але храми мазепинського бароко {стоять|лежать|падають|стоять} досі. Ця
+    {спадщина|армія|зброя|спадщина} пережила століття.
+
+    '
+  blanks:
+  - answer: меценатів
+    options:
+    - меценатів
+    - ворогів
+    - селян
+  - answer: церков
+    options:
+    - церков
+    - заводів
+    - казарм
+  - answer: бароко
+    options:
+    - бароко
+    - готика
+    - рококо
+  - answer: стиль
+    options:
+    - стиль
+    - закон
+    - договір
+  - answer: куполами
+    options:
+    - куполами
+    - вікнами
+    - дверима
+  - answer: академія
+    options:
+    - академія
+    - армія
+    - церква
+  - answer: закладів
+    options:
+    - закладів
+    - заводів
+    - ринків
+  - answer: спудеями
+    options:
+    - спудеями
+    - козаками
+    - царями
+  - answer: років
+    options:
+    - років
+    - днів
+    - годин
+  - answer: Панегірик
+    options:
+    - Панегірик
+    - Критика
+    - Скарга
+  - answer: книги
+    options:
+    - книги
+    - зброю
+    - їжу
+  - answer: гравюрами
+    options:
+    - гравюрами
+    - фотографіями
+    - плакатами
+  - answer: Полтави
+    options:
+    - Полтави
+    - Москви
+    - Києва
+  - answer: спадщину
+    options:
+    - спадщину
+    - армію
+    - зброю
+  - answer: стоять
+    options:
+    - стоять
+    - лежать
+    - падають
+  - answer: спадщина
+    options:
+    - спадщина
+    - армія
+    - зброя
+  blank_count: 16
+  complete_passage: 'Іван Мазепа був одним із найбільших меценатів української історії.
+    Він профінансував будівництво понад двадцяти церков і монастирів. «Мазепинське
+    бароко» — унікальний архітектурний стиль з характерними грушоподібними куполами.
+
+
+    Києво-Могилянська академія за правління Мазепи стала одним із найпрестижніших
+    закладів Східної Європи. Студентів називали спудеями. Навчання тривало до дванадцяти
+    років.
+
+
+    Панегірик — урочиста похвальна промова — став важливим жанром мазепинської доби.
+    Друкарні випускали книги найвищої якості з вишуканими гравюрами.
+
+
+    Після Полтави Росія намагалася знищити культурну спадщину Мазепи. Але храми мазепинського
+    бароко стоять досі. Ця спадщина пережила століття.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Мазепинське бароко — унікальний архітектурний стиль.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Грушоподібні куполи — характерна ознака стилю.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Києво-Могилянська академія стала найпрестижнішою в Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Мазепа був одним із найбільших меценатів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Гетьман профінансував понад 20 церков.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Спудеї — це студенти академії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Панегірик — урочиста похвальна промова.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Росія намагалася знищити культурну спадщину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Навчання в академії тривало 12 років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Друкарні випускали книги найвищої якості.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Найвідомішим прикладом є церква Всіх Святих.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Культура була політикою іншими засобами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Випускники вивчали латину і грецьку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Петро наказав знищити книги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Мазепа підтримував константинопольську юрисдикцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про культуру Мазепи
+  jumbled_words: []
+  answer: Храми мазепинського бароко стоять досі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, скільки церков і монастирів профінансував Мазепа?
+  options:
+  - '{''text'': ''Близько 5'', ''correct'': False}'
+  - '{''text'': ''Понад 20'', ''correct'': True}'
+  - '{''text'': ''Близько 50'', ''correct'': False}'
+  - '{''text'': ''Менше 10'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, яка найхарактерніша ознака мазепинського бароко?
+  options:
+  - '{''text'': ''Цибулинні куполи'', ''correct'': False}'
+  - '{''text'': ''Грушоподібні куполи'', ''correct'': True}'
+  - '{''text'': ''Плоскі дахи'', ''correct'': False}'
+  - '{''text'': ''Готичні шпилі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст характеризує Києво-Могилянську академію за Мазепи?
+  options:
+  - '{''text'': ''Занепалий заклад'', ''correct'': False}'
+  - '{''text'': ''Один із найпрестижніших закладів Східної Європи'', ''correct'':
+    True}'
+  - '{''text'': ''Маленька провінційна школа'', ''correct'': False}'
+  - '{''text'': ''Виключно релігійний заклад'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, коли Києво-Могилянська колегія отримала статус академії?
+  options:
+  - '{''text'': ''У 1632 році'', ''correct'': False}'
+  - '{''text'': ''У 1694 році'', ''correct'': True}'
+  - '{''text'': ''У 1708 році'', ''correct'': False}'
+  - '{''text'': ''У 1700 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст описує панегірик?
+  options:
+  - '{''text'': ''Критичний твір'', ''correct'': False}'
+  - '{''text'': ''Урочиста похвальна промова'', ''correct'': True}'
+  - '{''text'': ''Науковий трактат'', ''correct'': False}'
+  - '{''text'': ''Народна пісня'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, скільки років тривало навчання в академії?
+  options:
+  - '{''text'': ''4 роки'', ''correct'': False}'
+  - '{''text'': ''До 12 років'', ''correct'': True}'
+  - '{''text'': ''2 роки'', ''correct'': False}'
+  - '{''text'': ''8 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст називає студентів Києво-Могилянської академії?
+  options:
+  - '{''text'': ''Учні'', ''correct'': False}'
+  - '{''text'': ''Спудеї'', ''correct'': True}'
+  - '{''text'': ''Семінаристи'', ''correct'': False}'
+  - '{''text'': ''Школярі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, скільки студентів навчалося в академії?
+  options:
+  - '{''text'': ''Близько 500'', ''correct'': False}'
+  - '{''text'': ''Близько 2000'', ''correct'': True}'
+  - '{''text'': ''Близько 100'', ''correct'': False}'
+  - '{''text'': ''Близько 5000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст пояснює мету культурної діяльності Мазепи?
+  options:
+  - '{''text'': ''Особисте збагачення'', ''correct'': False}'
+  - '{''text'': ''Культура як політика іншими засобами'', ''correct'': True}'
+  - '{''text'': ''Тільки релігійні мотиви'', ''correct'': False}'
+  - '{''text'': ''Наслідування Москви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, що сталося з Батурином після Полтави?
+  options:
+  - '{''text'': ''Став столицею'', ''correct'': False}'
+  - '{''text'': ''Російські війська спалили його'', ''correct'': True}'
+  - '{''text'': ''Процвітав далі'', ''correct'': False}'
+  - '{''text'': ''Став музеєм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст характеризує мазепинське бароко порівняно з московським стилем?
+  options:
+  - '{''text'': ''Як варіант московського стилю'', ''correct'': False}'
+  - '{''text'': ''Як оригінальний український стиль'', ''correct'': True}'
+  - '{''text'': ''Як копію італійського бароко'', ''correct'': False}'
+  - '{''text'': ''Як примітивне мистецтво'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, яка церква є найвідомішим прикладом мазепинського бароко?
+  options:
+  - '{''text'': ''Софійський собор'', ''correct'': False}'
+  - '{''text'': ''Церква Всіх Святих над Економічною брамою'', ''correct'': True}'
+  - '{''text'': ''Успенський собор'', ''correct'': False}'
+  - '{''text'': ''Михайлівський собор'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст описує долю книг із панегіриками Мазепі після Полтави?
+  options:
+  - '{''text'': ''Їх зберегли в музеях'', ''correct'': False}'
+  - '{''text'': ''Петро I наказав їх знищити'', ''correct'': True}'
+  - '{''text'': ''Їх перевидали'', ''correct'': False}'
+  - '{''text'': ''Їх передали до бібліотек'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, хто є автором «Думи», цитованої в модулі?
+  options:
+  - '{''text'': ''Феофан Прокопович'', ''correct'': False}'
+  - '{''text'': ''Іван Мазепа'', ''correct'': True}'
+  - '{''text'': ''Григорій Сковорода'', ''correct'': False}'
+  - '{''text'': ''Дмитро Туптало'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Як текст характеризує Мазепу в його «Думі»?
+  options:
+  - '{''text'': ''Тріумфальний будівничий'', ''correct'': False}'
+  - '{''text'': ''Самотня людина під тягарем влади'', ''correct'': True}'
+  - '{''text'': ''Веселий оптиміст'', ''correct'': False}'
+  - '{''text'': ''Агресивний полководець'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про культурну спадщину Мазепи
+  question: Згідно з текстом, яку юрисдикцію підтримував Мазепа для української церкви?
+  options:
+  - '{''text'': ''Московську'', ''correct'': False}'
+  - '{''text'': ''Константинопольську'', ''correct'': True}'
+  - '{''text'': ''Римську'', ''correct'': False}'
+  - '{''text'': ''Варшавську'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що засвідчує напис на фундаментній плиті церкви Всіх Святих?
+  options:
+  - '{''text'': ''Московське авторство будівлі'', ''correct'': False}'
+  - '{''text'': ''Особистий патронат Мазепи'', ''correct'': True}'
+  - '{''text'': ''Народне походження коштів'', ''correct'': False}'
+  - '{''text'': ''Польське фінансування'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як напис на плиті титулує Мазепу?
+  options:
+  - '{''text'': ''Царем'', ''correct'': False}'
+  - '{''text'': ''Гетьманом Військ Запорозьких обох сторін Дніпра'', ''correct'':
+    True}'
+  - '{''text'': ''Князем'', ''correct'': False}'
+  - '{''text'': ''Митрополитом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що повідомляє звіт ректора про кількість студентів?
+  options:
+  - '{''text'': ''Близько 500'', ''correct'': False}'
+  - '{''text'': ''Понад дві тисячі'', ''correct'': True}'
+  - '{''text'': ''Близько 100'', ''correct'': False}'
+  - '{''text'': "Понад п''ять тисяч", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку проблему згадує звіт ректора?
+  options:
+  - '{''text'': ''Нестачу викладачів'', ''correct'': False}'
+  - '{''text'': ''Потребу в нових будинках'', ''correct'': True}'
+  - '{''text'': ''Відсутність книг'', ''correct'': False}'
+  - '{''text'': ''Брак коштів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «коштом Вашої Ясновельможності» у звіті?
+  options:
+  - '{''text'': ''За кошти царя'', ''correct'': False}'
+  - '{''text'': ''За кошти гетьмана Мазепи'', ''correct'': True}'
+  - '{''text'': ''За народні кошти'', ''correct'': False}'
+  - '{''text'': ''За церковні кошти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Про яку тему говорить «Дума» Мазепи?
+  options:
+  - '{''text'': ''Про військові перемоги'', ''correct'': False}'
+  - '{''text'': ''Про самотність влади та невдячність світу'', ''correct'': True}'
+  - '{''text'': ''Про кохання'', ''correct'': False}'
+  - '{''text'': ''Про релігію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має рядок «Всі покой мають, а я не маю»?
+  options:
+  - '{''text'': ''Мазепа був багатий'', ''correct'': False}'
+  - '{''text'': ''Гетьман не має спокою через тягар влади'', ''correct'': True}'
+  - '{''text'': ''Мазепа був щасливий'', ''correct'': False}'
+  - '{''text'': ''Гетьман мав багато друзів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння культурної спадщини?
+  options:
+  - '{''text'': ''Вони короткі'', ''correct'': False}'
+  - '{''text'': ''Вони дають автентичний погляд епохи'', ''correct'': True}'
+  - '{''text'': ''Вони розважають'', ''correct'': False}'
+  - '{''text'': ''Вони прості'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Скільки книг придбано для бібліотеки за звітом ректора?
+  options:
+  - '{''text'': ''100 томів'', ''correct'': False}'
+  - '{''text'': ''500 томів'', ''correct'': True}'
+  - '{''text'': ''1000 томів'', ''correct'': False}'
+  - '{''text'': ''50 томів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку мову використовує напис на фундаментній плиті?
+  options:
+  - '{''text'': ''Латину'', ''correct'': False}'
+  - '{''text'': "Церковнослов''янську/українську", ''correct'': True}'
+  - '{''text'': ''Польську'', ''correct'': False}'
+  - '{''text'': ''Грецьку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Хто був автором звіту про стан академії?
+  options:
+  - '{''text'': ''Мазепа'', ''correct'': False}'
+  - '{''text'': ''Ректор Йоасаф Кроковський'', ''correct'': True}'
+  - '{''text'': ''Петро I'', ''correct'': False}'
+  - '{''text'': ''Митрополит'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має «у славу Пресвятої Тройці» в написі?
+  options:
+  - '{''text'': ''Політичний лозунг'', ''correct'': False}'
+  - '{''text'': ''Релігійна посвята будівлі'', ''correct'': True}'
+  - '{''text'': ''Особиста похвала'', ''correct'': False}'
+  - '{''text'': ''Юридичний термін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому «Дума» Мазепи відрізняється від панегіриків?
+  options:
+  - '{''text'': ''Вона коротша'', ''correct'': False}'
+  - '{''text'': ''Вона особиста і рефлексивна, не похвальна'', ''correct'': True}'
+  - '{''text'': ''Вона написана латиною'', ''correct'': False}'
+  - '{''text'': ''Вона про політику'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як первинні джерела спростовують російські міфи про Мазепу?
+  options:
+  - '{''text'': ''Ніяк'', ''correct'': False}'
+  - '{''text'': ''Вони засвідчують його реальні культурні досягнення'', ''correct'':
+    True}'
+  - '{''text'': ''Вони підтверджують російську версію'', ''correct'': False}'
+  - '{''text'': ''Вони не згадують Мазепу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має дата «1698» на фундаментній плиті?
+  options:
+  - '{''text'': ''Рік народження Мазепи'', ''correct'': False}'
+  - '{''text'': ''Рік завершення будівництва церкви'', ''correct'': True}'
+  - '{''text'': ''Рік смерті Мазепи'', ''correct'': False}'
+  - '{''text'': ''Рік Полтавської битви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Про що свідчить кількість студентів (2000+) в академії?
+  options:
+  - '{''text'': ''Про занепад освіти'', ''correct'': False}'
+  - '{''text'': ''Про високий престиж академії'', ''correct'': True}'
+  - '{''text'': ''Про примусове навчання'', ''correct'': False}'
+  - '{''text'': ''Про низьку якість освіти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, мазепинське бароко характеризується грушоподібними
+    куполами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Києво-Могилянська академія отримала статус академії
+    в 1632 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, навчання в академії тривало до 12 років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Мазепа профінансував понад 20 церков і монастирів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, мазепинське бароко є варіантом московського стилю.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, в академії навчалося близько 2000 студентів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Батурин зберігся до наших днів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, панегірик — це критичний твір про правителя.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Мазепа був автором поетичної «Думи».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, церква Всіх Святих була збудована в 1696-1698 роках.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Петро I наказав зберегти книги з панегіриками Мазепі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, випускники академії вивчали латину та грецьку.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Григорій Сковорода був випускником Києво-Могилянської
+    академії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, Мазепа підтримував московську юрисдикцію церкви.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, «спудеї» — це викладачі академії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про культурну діяльність Мазепи
+  statement: Згідно з текстом, сучасна Києво-Могилянська академія відроджена в 1992
+    році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

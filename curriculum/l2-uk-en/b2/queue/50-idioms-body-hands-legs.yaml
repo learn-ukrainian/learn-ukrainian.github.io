@@ -1,15 +1,18 @@
 module: 50-idioms-body-hands-legs
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/50-idioms-body-hands-legs.md
-generated: '2025-12-30T00:32:51.241480'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:16.140264'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 26
+  cloze: 1
   unjumble: 16
   quiz: 26
   true-false: 16
-item_count: 92
+total_items: 93
+item_count: 93
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у фразеологізмах
@@ -417,6 +420,153 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Фразеологізми в оповіданні
+  passage_template: 'Михайло завжди був {майстром|робітником|учнем|майстром} на всі
+    {руки|ноги|справи|руки} — він міг полагодити будь-що. Але останнім часом у нього
+    руки не {доходять|йдуть|бігають|доходять} до власних справ.
+
+
+    Його молодший брат Сергій постійно {плутається|ходить|стоїть|плутається} під ногами,
+    коли Михайло працює. «Ти мені {зв''язуєш|розв''язуєш|даєш|зв''язуєш} руки!» —
+    каже Михайло.
+
+
+    Минулого тижня Сергій вирішив сам полагодити телевізор і {сів|ліг|став|сів} у
+    {калюжу|воду|яму|калюжу} — зламав ще й пульт.
+
+
+    «Колись ти {станеш|сядеш|ляжеш|станеш} на {ноги|руки|коліна|ноги} і навчишся все
+    робити сам», — сказав батько.
+
+
+    Через рік Сергій справді став на ноги. Він відкрив власну {майстерню|школу|лікарню|майстерню}
+    і тепер сам допомагає іншим. Сусіди кажуть, що в нього {золоті|срібні|залізні|золоті}
+    руки.
+
+
+    Михайло пишається братом. «Головне, щоб ніхто не {підставив|поставив|дав|підставив}
+    тобі {ногу|руку|плече|ногу} в бізнесі», — каже він.
+
+
+    Сергій тепер дуже {легкий|важкий|повільний|легкий} на ногу — швидко реагує на
+    замовлення клієнтів. Він {тримає|ховає|кладе|тримає} руку на {пульсі|носі|плечі|пульсі}
+    і знає всі новини ринку.
+
+    '
+  blanks:
+  - answer: майстром
+    options:
+    - майстром
+    - робітником
+    - учнем
+  - answer: руки
+    options:
+    - руки
+    - ноги
+    - справи
+  - answer: доходять
+    options:
+    - доходять
+    - йдуть
+    - бігають
+  - answer: плутається
+    options:
+    - плутається
+    - ходить
+    - стоїть
+  - answer: зв'язуєш
+    options:
+    - зв'язуєш
+    - розв'язуєш
+    - даєш
+  - answer: сів
+    options:
+    - сів
+    - ліг
+    - став
+  - answer: калюжу
+    options:
+    - калюжу
+    - воду
+    - яму
+  - answer: станеш
+    options:
+    - станеш
+    - сядеш
+    - ляжеш
+  - answer: ноги
+    options:
+    - ноги
+    - руки
+    - коліна
+  - answer: майстерню
+    options:
+    - майстерню
+    - школу
+    - лікарню
+  - answer: золоті
+    options:
+    - золоті
+    - срібні
+    - залізні
+  - answer: підставив
+    options:
+    - підставив
+    - поставив
+    - дав
+  - answer: ногу
+    options:
+    - ногу
+    - руку
+    - плече
+  - answer: легкий
+    options:
+    - легкий
+    - важкий
+    - повільний
+  - answer: тримає
+    options:
+    - тримає
+    - ховає
+    - кладе
+  - answer: пульсі
+    options:
+    - пульсі
+    - носі
+    - плечі
+  blank_count: 16
+  complete_passage: 'Михайло завжди був майстром на всі руки — він міг полагодити
+    будь-що. Але останнім часом у нього руки не доходять до власних справ.
+
+
+    Його молодший брат Сергій постійно плутається під ногами, коли Михайло працює.
+    «Ти мені зв''язуєш руки!» — каже Михайло.
+
+
+    Минулого тижня Сергій вирішив сам полагодити телевізор і сів у калюжу — зламав
+    ще й пульт.
+
+
+    «Колись ти станеш на ноги і навчишся все робити сам», — сказав батько.
+
+
+    Через рік Сергій справді став на ноги. Він відкрив власну майстерню і тепер сам
+    допомагає іншим. Сусіди кажуть, що в нього золоті руки.
+
+
+    Михайло пишається братом. «Головне, щоб ніхто не підставив тобі ногу в бізнесі»,
+    — каже він.
+
+
+    Сергій тепер дуже легкий на ногу — швидко реагує на замовлення клієнтів. Він тримає
+    руку на пульсі і знає всі новини ринку.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Відновіть фразеологізми
   jumbled_words: []
@@ -549,14 +699,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Яке значення має фразеологізм «майстер на всі руки» у переносному сенсі?
   options:
-  - text: Людина з багатьма руками.
-    correct: false
-  - text: Універсальний фахівець, який вміє робити все.
-    correct: true
-  - text: Той, хто працює тільки руками.
-    correct: false
-  - text: Майстер з виготовлення рук для ляльок.
-    correct: false
+  - '{''text'': ''Людина з багатьма руками.'', ''correct'': False}'
+  - '{''text'': ''Універсальний фахівець, який вміє робити все.'', ''correct'': True}'
+  - '{''text'': ''Той, хто працює тільки руками.'', ''correct'': False}'
+  - '{''text'': ''Майстер з виготовлення рук для ляльок.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -567,14 +713,12 @@ items:
   title: Значення соматичних фразеологізмів
   question: Коли найдоречніше використати вираз «руки не доходять»?
   options:
-  - text: Коли людина має проблеми з руками.
-    correct: false
-  - text: Коли людина не може дотягнутися до чогось високого.
-    correct: false
-  - text: Коли немає часу або можливості зайнятися чимось.
-    correct: true
-  - text: Коли хтось працює дуже повільно.
-    correct: false
+  - '{''text'': ''Коли людина має проблеми з руками.'', ''correct'': False}'
+  - '{''text'': ''Коли людина не може дотягнутися до чогось високого.'', ''correct'':
+    False}'
+  - '{''text'': ''Коли немає часу або можливості зайнятися чимось.'', ''correct'':
+    True}'
+  - '{''text'': ''Коли хтось працює дуже повільно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -585,14 +729,11 @@ items:
   title: Значення соматичних фразеологізмів
   question: Що означає фразеологізм «зв'язати руки»?
   options:
-  - text: Фізично зв'язати руки мотузкою.
-    correct: false
-  - text: Позбавити можливості діяти; обмежити свободу дій.
-    correct: true
-  - text: Тримати руки разом під час молитви.
-    correct: false
-  - text: Навчити когось зав'язувати шнурки.
-    correct: false
+  - '{''text'': "Фізично зв''язати руки мотузкою.", ''correct'': False}'
+  - '{''text'': ''Позбавити можливості діяти; обмежити свободу дій.'', ''correct'':
+    True}'
+  - '{''text'': ''Тримати руки разом під час молитви.'', ''correct'': False}'
+  - '{''text'': "Навчити когось зав''язувати шнурки.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -603,14 +744,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: У якій ситуації найкраще використати фразеологізм «підставити ногу»?
   options:
-  - text: Коли хтось допомагає іншому встати.
-    correct: false
-  - text: Коли хтось підступно завадив іншій людині.
-    correct: true
-  - text: Коли людина підставляє ногу для масажу.
-    correct: false
-  - text: Коли спортсмен витягує ногу перед стартом.
-    correct: false
+  - '{''text'': ''Коли хтось допомагає іншому встати.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось підступно завадив іншій людині.'', ''correct'': True}'
+  - '{''text'': ''Коли людина підставляє ногу для масажу.'', ''correct'': False}'
+  - '{''text'': ''Коли спортсмен витягує ногу перед стартом.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -621,14 +758,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Який фразеологізм означає «заважати; бути на заваді»?
   options:
-  - text: Стати на ноги.
-    correct: false
-  - text: Легкий на ногу.
-    correct: false
-  - text: Плутатися під ногами.
-    correct: true
-  - text: Сісти в калюжу.
-    correct: false
+  - '{''text'': ''Стати на ноги.'', ''correct'': False}'
+  - '{''text'': ''Легкий на ногу.'', ''correct'': False}'
+  - '{''text'': ''Плутатися під ногами.'', ''correct'': True}'
+  - '{''text'': ''Сісти в калюжу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -639,14 +772,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Що означає фразеологізм «сісти в калюжу» у переносному значенні?
   options:
-  - text: Намочити одяг після дощу.
-    correct: false
-  - text: Знайти місце для відпочинку біля води.
-    correct: false
-  - text: Осоромитися; зазнати невдачі публічно.
-    correct: true
-  - text: Сісти на мокрий стілець.
-    correct: false
+  - '{''text'': ''Намочити одяг після дощу.'', ''correct'': False}'
+  - '{''text'': ''Знайти місце для відпочинку біля води.'', ''correct'': False}'
+  - '{''text'': ''Осоромитися; зазнати невдачі публічно.'', ''correct'': True}'
+  - '{''text'': ''Сісти на мокрий стілець.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -657,14 +786,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Коли використовують фразеологізм «стати на ноги»?
   options:
-  - text: Коли хтось встає зранку з ліжка.
-    correct: false
-  - text: Коли людина стає незалежною або одужує.
-    correct: true
-  - text: Коли спортсмен готується до бігу.
-    correct: false
-  - text: Коли хтось вперше вчиться ходити.
-    correct: false
+  - '{''text'': ''Коли хтось встає зранку з ліжка.'', ''correct'': False}'
+  - '{''text'': ''Коли людина стає незалежною або одужує.'', ''correct'': True}'
+  - '{''text'': ''Коли спортсмен готується до бігу.'', ''correct'': False}'
+  - '{''text'': ''Коли хтось вперше вчиться ходити.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -676,14 +801,10 @@ items:
   question: Який фразеологізм описує людину, яка швидко відгукується і готова йти
     куди завгодно?
   options:
-  - text: Майстер на всі руки.
-    correct: false
-  - text: Легкий на ногу.
-    correct: true
-  - text: Плутатися під ногами.
-    correct: false
-  - text: Руки не доходять.
-    correct: false
+  - '{''text'': ''Майстер на всі руки.'', ''correct'': False}'
+  - '{''text'': ''Легкий на ногу.'', ''correct'': True}'
+  - '{''text'': ''Плутатися під ногами.'', ''correct'': False}'
+  - '{''text'': ''Руки не доходять.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -694,14 +815,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Що означає антонім «розв'язати руки» до фразеологізму «зв'язати руки»?
   options:
-  - text: Зняти мотузку з рук.
-    correct: false
-  - text: Дати свободу дій; надати можливість діяти.
-    correct: true
-  - text: Витягнути руки з кишень.
-    correct: false
-  - text: Зробити масаж рук.
-    correct: false
+  - '{''text'': ''Зняти мотузку з рук.'', ''correct'': False}'
+  - '{''text'': ''Дати свободу дій; надати можливість діяти.'', ''correct'': True}'
+  - '{''text'': ''Витягнути руки з кишень.'', ''correct'': False}'
+  - '{''text'': ''Зробити масаж рук.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -713,14 +830,10 @@ items:
   question: Який фразеологізм найкраще підходить для опису негативного колеги, який
     заважає вашій роботі?
   options:
-  - text: Він легкий на ногу.
-    correct: false
-  - text: У нього руки не доходять.
-    correct: false
-  - text: Він постійно плутається під ногами.
-    correct: true
-  - text: Він майстер на всі руки.
-    correct: false
+  - '{''text'': ''Він легкий на ногу.'', ''correct'': False}'
+  - '{''text'': ''У нього руки не доходять.'', ''correct'': False}'
+  - '{''text'': ''Він постійно плутається під ногами.'', ''correct'': True}'
+  - '{''text'': ''Він майстер на всі руки.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -731,14 +844,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: У якому регістрі переважно вживається фразеологізм «сісти в калюжу»?
   options:
-  - text: Офіційно-діловий.
-    correct: false
-  - text: Науковий.
-    correct: false
-  - text: Розмовний.
-    correct: true
-  - text: Художній.
-    correct: false
+  - '{''text'': ''Офіційно-діловий.'', ''correct'': False}'
+  - '{''text'': ''Науковий.'', ''correct'': False}'
+  - '{''text'': ''Розмовний.'', ''correct'': True}'
+  - '{''text'': ''Художній.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -749,14 +858,11 @@ items:
   title: Значення соматичних фразеологізмів
   question: Яке значення має вираз «золоті руки» у порівнянні з «майстер на всі руки»?
   options:
-  - text: Вони мають однакове значення.
-    correct: false
-  - text: «Золоті руки» наголошує на якості роботи, а не на універсальності.
-    correct: true
-  - text: «Золоті руки» означає багатого майстра.
-    correct: false
-  - text: «Золоті руки» вживається тільки іронічно.
-    correct: false
+  - '{''text'': ''Вони мають однакове значення.'', ''correct'': False}'
+  - '{''text'': ''«Золоті руки» наголошує на якості роботи, а не на універсальності.'',
+    ''correct'': True}'
+  - '{''text'': ''«Золоті руки» означає багатого майстра.'', ''correct'': False}'
+  - '{''text'': ''«Золоті руки» вживається тільки іронічно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -767,14 +873,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Який англійський еквівалент найближчий до фразеологізму «сісти в калюжу»?
   options:
-  - text: To sit in water.
-    correct: false
-  - text: To put one's foot in one's mouth.
-    correct: true
-  - text: To fall in a puddle.
-    correct: false
-  - text: To sit down unexpectedly.
-    correct: false
+  - '{''text'': ''To sit in water.'', ''correct'': False}'
+  - '{''text'': "To put one''s foot in one''s mouth.", ''correct'': True}'
+  - '{''text'': ''To fall in a puddle.'', ''correct'': False}'
+  - '{''text'': ''To sit down unexpectedly.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -785,14 +887,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Яку помилку часто роблять при вживанні соматичних фразеологізмів?
   options:
-  - text: Використання у неформальній розмові.
-    correct: false
-  - text: Змішування двох різних фразеологізмів.
-    correct: true
-  - text: Вживання занадто часто.
-    correct: false
-  - text: Переклад на англійську мову.
-    correct: false
+  - '{''text'': ''Використання у неформальній розмові.'', ''correct'': False}'
+  - '{''text'': ''Змішування двох різних фразеологізмів.'', ''correct'': True}'
+  - '{''text'': ''Вживання занадто часто.'', ''correct'': False}'
+  - '{''text'': ''Переклад на англійську мову.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -803,14 +901,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Що символізують руки в українських фразеологізмах?
   options:
-  - text: Силу та агресію.
-    correct: false
-  - text: Діяльність, майстерність і здатність діяти.
-    correct: true
-  - text: Любов і ніжність.
-    correct: false
-  - text: Багатство і владу.
-    correct: false
+  - '{''text'': ''Силу та агресію.'', ''correct'': False}'
+  - '{''text'': ''Діяльність, майстерність і здатність діяти.'', ''correct'': True}'
+  - '{''text'': ''Любов і ніжність.'', ''correct'': False}'
+  - '{''text'': ''Багатство і владу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -821,14 +915,10 @@ items:
   title: Значення соматичних фразеологізмів
   question: Що символізують ноги в українських фразеологізмах?
   options:
-  - text: Силу та швидкість.
-    correct: false
-  - text: Рух, незалежність і життєвий шлях.
-    correct: true
-  - text: Танці та розваги.
-    correct: false
-  - text: Здоров'я та молодість.
-    correct: false
+  - '{''text'': ''Силу та швидкість.'', ''correct'': False}'
+  - '{''text'': ''Рух, незалежність і життєвий шлях.'', ''correct'': True}'
+  - '{''text'': ''Танці та розваги.'', ''correct'': False}'
+  - '{''text'': "Здоров''я та молодість.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -839,14 +929,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Ваш друг уміє все ремонтувати — від машини до комп'ютера. Як його описати?
   options:
-  - text: Він легкий на ногу.
-    correct: false
-  - text: Він майстер на всі руки.
-    correct: true
-  - text: Він стоїть на ногах.
-    correct: false
-  - text: У нього руки не доходять.
-    correct: false
+  - '{''text'': ''Він легкий на ногу.'', ''correct'': False}'
+  - '{''text'': ''Він майстер на всі руки.'', ''correct'': True}'
+  - '{''text'': ''Він стоїть на ногах.'', ''correct'': False}'
+  - '{''text'': ''У нього руки не доходять.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -858,14 +944,10 @@ items:
   question: Колега не дає вам нормально працювати, постійно заходить і питає. Що ви
     скажете?
   options:
-  - text: Ти підставляєш мені ногу!
-    correct: false
-  - text: Ти плутаєшся під ногами!
-    correct: true
-  - text: Ти зв'язуєш мені руки!
-    correct: false
-  - text: Ти сідаєш у калюжу!
-    correct: false
+  - '{''text'': ''Ти підставляєш мені ногу!'', ''correct'': False}'
+  - '{''text'': ''Ти плутаєшся під ногами!'', ''correct'': True}'
+  - '{''text'': "Ти зв''язуєш мені руки!", ''correct'': False}'
+  - '{''text'': ''Ти сідаєш у калюжу!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -876,14 +958,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Ви хочете допомогти другу, але маєте занадто багато роботи. Що сказати?
   options:
-  - text: У мене зв'язані руки.
-    correct: false
-  - text: Я легкий на ногу.
-    correct: false
-  - text: У мене руки не доходять.
-    correct: true
-  - text: Я сиджу в калюжі.
-    correct: false
+  - '{''text'': "У мене зв''язані руки.", ''correct'': False}'
+  - '{''text'': ''Я легкий на ногу.'', ''correct'': False}'
+  - '{''text'': ''У мене руки не доходять.'', ''correct'': True}'
+  - '{''text'': ''Я сиджу в калюжі.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -894,14 +972,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Ваш син закінчив університет, знайшов роботу і зняв квартиру. Що ви скажете?
   options:
-  - text: Він сів у калюжу.
-    correct: false
-  - text: Він став на ноги.
-    correct: true
-  - text: Він плутається під ногами.
-    correct: false
-  - text: Йому підставили ногу.
-    correct: false
+  - '{''text'': ''Він сів у калюжу.'', ''correct'': False}'
+  - '{''text'': ''Він став на ноги.'', ''correct'': True}'
+  - '{''text'': ''Він плутається під ногами.'', ''correct'': False}'
+  - '{''text'': ''Йому підставили ногу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -912,14 +986,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Конкурент поширив неправдиву інформацію про вашу компанію. Як це описати?
   options:
-  - text: Він зв'язав нам руки.
-    correct: false
-  - text: Він підставив нам ногу.
-    correct: true
-  - text: Він плутався під ногами.
-    correct: false
-  - text: Він легкий на ногу.
-    correct: false
+  - '{''text'': "Він зв''язав нам руки.", ''correct'': False}'
+  - '{''text'': ''Він підставив нам ногу.'', ''correct'': True}'
+  - '{''text'': ''Він плутався під ногами.'', ''correct'': False}'
+  - '{''text'': ''Він легкий на ногу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -930,14 +1000,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Політик не зміг відповісти на просте запитання і всі сміялися. Як це описати?
   options:
-  - text: Він підставив ногу.
-    correct: false
-  - text: Він сів у калюжу.
-    correct: true
-  - text: Він став на ноги.
-    correct: false
-  - text: У нього руки не доходять.
-    correct: false
+  - '{''text'': ''Він підставив ногу.'', ''correct'': False}'
+  - '{''text'': ''Він сів у калюжу.'', ''correct'': True}'
+  - '{''text'': ''Він став на ноги.'', ''correct'': False}'
+  - '{''text'': ''У нього руки не доходять.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -948,14 +1014,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Новий закон не дає підприємцям швидко приймати рішення. Як це описати?
   options:
-  - text: Закон підставив ногу.
-    correct: false
-  - text: Закон зв'язав руки.
-    correct: true
-  - text: Закон сів у калюжу.
-    correct: false
-  - text: Закон став на ноги.
-    correct: false
+  - '{''text'': ''Закон підставив ногу.'', ''correct'': False}'
+  - '{''text'': "Закон зв''язав руки.", ''correct'': True}'
+  - '{''text'': ''Закон сів у калюжу.'', ''correct'': False}'
+  - '{''text'': ''Закон став на ноги.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -967,14 +1029,10 @@ items:
   question: Ваша бабуся каже, що онук завжди швидко приходить, коли вона кличе. Який
     фразеологізм вона вживає?
   options:
-  - text: Він майстер на всі руки.
-    correct: false
-  - text: Він легкий на ногу.
-    correct: true
-  - text: Він стоїть на ногах.
-    correct: false
-  - text: У нього золоті руки.
-    correct: false
+  - '{''text'': ''Він майстер на всі руки.'', ''correct'': False}'
+  - '{''text'': ''Він легкий на ногу.'', ''correct'': True}'
+  - '{''text'': ''Він стоїть на ногах.'', ''correct'': False}'
+  - '{''text'': ''У нього золоті руки.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -986,14 +1044,10 @@ items:
   question: Батьки все життя працювали, щоб діти здобули освіту і стали незалежними.
     Який фразеологізм описує це?
   options:
-  - text: Вони підставили ногу.
-    correct: false
-  - text: Вони поставили на ноги.
-    correct: true
-  - text: Вони зв'язали руки.
-    correct: false
-  - text: Вони сіли в калюжу.
-    correct: false
+  - '{''text'': ''Вони підставили ногу.'', ''correct'': False}'
+  - '{''text'': ''Вони поставили на ноги.'', ''correct'': True}'
+  - '{''text'': "Вони зв''язали руки.", ''correct'': False}'
+  - '{''text'': ''Вони сіли в калюжу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1004,14 +1058,10 @@ items:
   title: Оберіть фразеологізм для ситуації
   question: Директор нарешті дозволив менеджерам самим приймати рішення. Як це описати?
   options:
-  - text: Він зв'язав руки.
-    correct: false
-  - text: Він розв'язав руки.
-    correct: true
-  - text: Він підставив ногу.
-    correct: false
-  - text: Він сів у калюжу.
-    correct: false
+  - '{''text'': "Він зв''язав руки.", ''correct'': False}'
+  - '{''text'': "Він розв''язав руки.", ''correct'': True}'
+  - '{''text'': ''Він підставив ногу.'', ''correct'': False}'
+  - '{''text'': ''Він сів у калюжу.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,15 +1,18 @@
 module: 67-travel-geography
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/67-travel-geography.md
-generated: '2025-12-29T00:22:03.642669'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.164304'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -256,6 +259,122 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Моя остання {подорож|поїздка|подорож|мандрівка} до Львова була
+    незабутньою. Спочатку я {забронював|замовив|забронював|купив} {готель|хостел|готель|квартиру}
+    через турагентство. О сьомій ранку я був в аеропорту: {посадковий|квитковий|посадковий|візовий}
+    талон у телефоні, {рюкзак|валіза|рюкзак|багаж} за плечима.
+
+
+    На {митниці|кордоні|митниці|контролі} все пройшло швидко — {паспорт|візу|паспорт|документ}
+    перевірили за хвилину. У Львові я взяв {екскурсію|подорож|екскурсію|поїздку} з
+    досвідченим {гідом|туристом|гідом|водієм}. Ми {оглянули|побачили|оглянули|знайшли}
+    головні пам''ятки: Ратушу та Оперний театр.
+
+
+    {Маршрут|Шлях|Маршрут|Напрямок} пролягав вузькими вуличками. За {картою|планом|картою|схемою}
+    ми знайшли дорогу до кожного музею. Львів розташований на {заході|сході|заході|півдні}
+    України. Ми {перетнули|пройшли|перетнули|минули} кордон і повернулися додому —
+    це справжня перлина {Галичини|Криму|Галичини|Одещини}!
+
+    '
+  blanks:
+  - answer: мандрівка
+    options:
+    - подорож
+    - поїздка
+    - подорож
+  - answer: купив
+    options:
+    - забронював
+    - замовив
+    - забронював
+  - answer: квартиру
+    options:
+    - готель
+    - хостел
+    - готель
+  - answer: візовий
+    options:
+    - посадковий
+    - квитковий
+    - посадковий
+  - answer: багаж
+    options:
+    - рюкзак
+    - валіза
+    - рюкзак
+  - answer: контролі
+    options:
+    - митниці
+    - кордоні
+    - митниці
+  - answer: документ
+    options:
+    - паспорт
+    - візу
+    - паспорт
+  - answer: поїздку
+    options:
+    - екскурсію
+    - подорож
+    - екскурсію
+  - answer: водієм
+    options:
+    - гідом
+    - туристом
+    - гідом
+  - answer: знайшли
+    options:
+    - оглянули
+    - побачили
+    - оглянули
+  - answer: Напрямок
+    options:
+    - Маршрут
+    - Шлях
+    - Маршрут
+  - answer: схемою
+    options:
+    - картою
+    - планом
+    - картою
+  - answer: півдні
+    options:
+    - заході
+    - сході
+    - заході
+  - answer: минули
+    options:
+    - перетнули
+    - пройшли
+    - перетнули
+  - answer: Одещини
+    options:
+    - Галичини
+    - Криму
+    - Галичини
+  blank_count: 15
+  complete_passage: 'Моя остання мандрівка до Львова була незабутньою. Спочатку я
+    купив квартиру через турагентство. О сьомій ранку я був в аеропорту: візовий талон
+    у телефоні, багаж за плечима.
+
+
+    На контролі все пройшло швидко — документ перевірили за хвилину. У Львові я взяв
+    поїздку з досвідченим водієм. Ми знайшли головні пам''ятки: Ратушу та Оперний
+    театр.
+
+
+    Напрямок пролягав вузькими вуличками. За схемою ми знайшли дорогу до кожного музею.
+    Львів розташований на півдні України. Ми минули кордон і повернулися додому —
+    це справжня перлина Одещини!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -325,14 +444,10 @@ items:
   question: Яке слово означає "journey" або "voyage" — загальний термін для будь-якої
     подорожі?
   options:
-  - text: поїздка
-    correct: false
-  - text: подорож
-    correct: true
-  - text: мандрівка
-    correct: false
-  - text: турист
-    correct: false
+  - '{''text'': ''поїздка'', ''correct'': False}'
+  - '{''text'': ''подорож'', ''correct'': True}'
+  - '{''text'': ''мандрівка'', ''correct'': False}'
+  - '{''text'': ''турист'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -344,14 +459,10 @@ items:
   question: Яке слово використовується для конкретної, часто короткої поїздки, наприклад
     ділової?
   options:
-  - text: подорож
-    correct: false
-  - text: мандрівка
-    correct: false
-  - text: поїздка
-    correct: true
-  - text: екскурсія
-    correct: false
+  - '{''text'': ''подорож'', ''correct'': False}'
+  - '{''text'': ''мандрівка'', ''correct'': False}'
+  - '{''text'': ''поїздка'', ''correct'': True}'
+  - '{''text'': ''екскурсія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -362,14 +473,10 @@ items:
   title: Розуміння лексики подорожей
   question: Що означає слово "митниця" у контексті аеропорту?
   options:
-  - text: passport control
-    correct: false
-  - text: customs
-    correct: true
-  - text: boarding gate
-    correct: false
-  - text: check-in desk
-    correct: false
+  - '{''text'': ''passport control'', ''correct'': False}'
+  - '{''text'': ''customs'', ''correct'': True}'
+  - '{''text'': ''boarding gate'', ''correct'': False}'
+  - '{''text'': ''check-in desk'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -380,14 +487,10 @@ items:
   title: Розуміння лексики подорожей
   question: Яка різниця між "бронювання" та "резервація"?
   options:
-  - text: Це повні синоніми
-    correct: true
-  - text: '"Бронювання" тільки для готелів'
-    correct: false
-  - text: '"Резервація" тільки для ресторанів'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': True}'
+  - '{''text'': ''"Бронювання" тільки для готелів'', ''correct'': False}'
+  - '{''text'': ''"Резервація" тільки для ресторанів'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -398,14 +501,10 @@ items:
   title: Розуміння лексики подорожей
   question: Яке дієслово найкраще поєднується зі словом "кордон"?
   options:
-  - text: пройти кордон
-    correct: false
-  - text: перетнути кордон
-    correct: true
-  - text: зробити кордон
-    correct: false
-  - text: мати кордон
-    correct: false
+  - '{''text'': ''пройти кордон'', ''correct'': False}'
+  - '{''text'': ''перетнути кордон'', ''correct'': True}'
+  - '{''text'': ''зробити кордон'', ''correct'': False}'
+  - '{''text'': ''мати кордон'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -416,14 +515,10 @@ items:
   title: Розуміння лексики подорожей
   question: Яке слово означає "boarding pass" українською?
   options:
-  - text: авіаквиток
-    correct: false
-  - text: посадковий талон
-    correct: true
-  - text: паспорт
-    correct: false
-  - text: бронювання
-    correct: false
+  - '{''text'': ''авіаквиток'', ''correct'': False}'
+  - '{''text'': ''посадковий талон'', ''correct'': True}'
+  - '{''text'': ''паспорт'', ''correct'': False}'
+  - '{''text'': ''бронювання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -434,14 +529,10 @@ items:
   title: Розуміння лексики подорожей
   question: Що означає слово "пам''ятка" у контексті туризму?
   options:
-  - text: memory
-    correct: false
-  - text: landmark, sight
-    correct: true
-  - text: souvenir
-    correct: false
-  - text: monument only
-    correct: false
+  - '{''text'': ''memory'', ''correct'': False}'
+  - '{''text'': ''landmark, sight'', ''correct'': True}'
+  - '{''text'': ''souvenir'', ''correct'': False}'
+  - '{''text'': ''monument only'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -452,14 +543,10 @@ items:
   title: Розуміння лексики подорожей
   question: Яке слово найбільш поетичне для опису подорожі з пригодами?
   options:
-  - text: поїздка
-    correct: false
-  - text: подорож
-    correct: false
-  - text: мандрівка
-    correct: true
-  - text: екскурсія
-    correct: false
+  - '{''text'': ''поїздка'', ''correct'': False}'
+  - '{''text'': ''подорож'', ''correct'': False}'
+  - '{''text'': ''мандрівка'', ''correct'': True}'
+  - '{''text'': ''екскурсія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

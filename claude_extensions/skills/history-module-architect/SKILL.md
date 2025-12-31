@@ -25,7 +25,7 @@ Create or review history (B2) and biography (C1) modules using the appropriate t
 | Level | Template | Modules |
 |-------|----------|---------|
 | B2 History | `docs/l2-uk-en/templates/b2-history-module-template.md` | M71-131 (excl. synthesis) |
-| B2 Synthesis | `docs/l2-uk-en/templates/b2-synthesis-module-template.md` | M83, M107, M119, M125, M131 |
+| B2 Synthesis | `docs/l2-uk-en/templates/b2-history-synthesis-module-template.md` | M83, M108, M119, M125, M131 |
 | C1 Biography | `docs/l2-uk-en/templates/c1-biography-module-template.md` | M36-100 |
 
 **CRITICAL:** Read the template BEFORE creating a module.
@@ -89,7 +89,19 @@ Every historical/biographical module must include:
 | B2.3d | M120-125 | Independence Era (1991-2013) |
 | B2.3e | M126-131 | Revolution & War (2014-present) |
 
-**Synthesis Modules:** M83, M107, M119, M125, M131 — cross-era analysis
+**Synthesis Modules:** M83, M108, M119, M125, M131 — cross-era thematic analysis (NOT quiz-style checkpoints)
+
+### Synthesis Module Structure (Different from Regular History)
+
+| Section | Purpose |
+|---------|---------|
+| **Узагальнення епохи** | 500+ word synthesis connecting all modules in era |
+| **Хронологія** | Timeline reconstruction activity (12+ events) |
+| **Словник епохи** | Era vocabulary REVIEW (not new vocab) |
+| **Есе-аналіз** | 250-400 word analytical essay with model answer |
+| **Зв'язок із сьогоденням** | Connection to modern Ukraine |
+
+See `b2-history-synthesis-module-template.md` for full structure and example essay prompts
 
 ---
 

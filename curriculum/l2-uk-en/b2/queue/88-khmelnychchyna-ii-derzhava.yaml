@@ -1,0 +1,1433 @@
+module: 88-khmelnychchyna-ii-derzhava
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/88-khmelnychchyna-ii-derzhava.md
+generated: '2025-12-30T19:49:17.328181'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Гетьман очолював козацької держави.
+  error: держави
+  answer: державу
+  sentence_corrected: Гетьман очолював козацької державу.
+  options:
+  - держави
+  - державу
+  - державі
+  - державою
+  original_explanation: Дієслово "очолювати" вимагає знахідного відмінка — очолювати
+    що? державу.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Територія поділялась на полка.
+  error: полка
+  answer: полки
+  sentence_corrected: Територія поділялась на полки.
+  options:
+  - полка
+  - полки
+  - полків
+  - полкам
+  original_explanation: Знахідний відмінок множини для іменника "полк" — полки.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Булава була символом гетьманської влада.
+  error: влада
+  answer: влади
+  sentence_corrected: Булава була символом гетьманської влади.
+  options:
+  - влада
+  - влади
+  - владу
+  - владою
+  original_explanation: Родовий відмінок потрібен після слова "символом" — символом
+    чого? влади.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Зборівський договір підписано в 1649 рік.
+  error: рік
+  answer: році
+  sentence_corrected: Зборівський договір підписано в 1649 році.
+  options:
+  - рік
+  - році
+  - року
+  - роком
+  original_explanation: Прийменник "в" із питанням "коли?" вимагає місцевого відмінка
+    — в 1649 році.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Реєстр становив 40 000 козак.
+  error: козак
+  answer: козаків
+  sentence_corrected: Реєстр становив 40 000 козаків.
+  options:
+  - козак
+  - козаків
+  - козакам
+  - козаками
+  original_explanation: Числівник вимагає родового відмінка множини — 40 000 козаків.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Полковник керував територія.
+  error: територія
+  answer: територією
+  sentence_corrected: Полковник керував територією.
+  options:
+  - територія
+  - території
+  - територію
+  - територією
+  original_explanation: Дієслово "керувати" вимагає орудного відмінка — керувати чим?
+    територією.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Козаки отримали автономія.
+  error: автономія
+  answer: автономію
+  sentence_corrected: Козаки отримали автономію.
+  options:
+  - автономія
+  - автономії
+  - автономію
+  - автономією
+  original_explanation: Дієслово "отримати" вимагає знахідного відмінка — отримали
+    що? автономію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Хмельницький шукав союзників.
+  error: союзників
+  answer: союзників
+  sentence_corrected: Хмельницький шукав союзників.
+  options:
+  - союзників
+  - союзники
+  - союзникам
+  - союзниками
+  original_explanation: Речення правильне — знахідний відмінок після "шукати" (істоти).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Кримський хан був головним союзника.
+  error: союзника
+  answer: союзником
+  sentence_corrected: Кримський хан був головним союзником.
+  options:
+  - союзника
+  - союзником
+  - союзнику
+  - союзники
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — був ким? союзником.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Генеральна старшина керував державою.
+  error: керував
+  answer: керувала
+  sentence_corrected: Генеральна старшина керувала державою.
+  options:
+  - керував
+  - керувала
+  - керували
+  - керувало
+  original_explanation: Іменник "старшина" — жіночого роду, тому "керувала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Договір був компроміс між сторонами.
+  error: компроміс
+  answer: компромісом
+  sentence_corrected: Договір був компромісом між сторонами.
+  options:
+  - компроміс
+  - компромісом
+  - компромісу
+  - компромісі
+  original_explanation: Дієслово "бути" вимагає орудного відмінка — був чим? компромісом.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Козацька держава мали власну армію.
+  error: мали
+  answer: мала
+  sentence_corrected: Козацька держава мала власну армію.
+  options:
+  - мали
+  - мала
+  - мав
+  - мало
+  original_explanation: Іменник "держава" — жіночого роду однини, тому "мала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Сотник здійснював судочинство в своєї сотні.
+  error: своєї
+  answer: своїй
+  sentence_corrected: Сотник здійснював судочинство в своїй сотні.
+  options:
+  - своєї
+  - своїй
+  - свою
+  - своєю
+  original_explanation: Прийменник "в" з питанням "де?" вимагає місцевого відмінка
+    — в своїй сотні.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Універсал — офіційний указ гетьман.
+  error: гетьман
+  answer: гетьмана
+  sentence_corrected: Універсал — офіційний указ гетьмана.
+  options:
+  - гетьман
+  - гетьмана
+  - гетьману
+  - гетьманом
+  original_explanation: Родовий відмінок потрібен — указ кого? гетьмана.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Військо Запорозьке отримав три воєводства.
+  error: отримав
+  answer: отримало
+  sentence_corrected: Військо Запорозьке отримало три воєводства.
+  options:
+  - отримав
+  - отримала
+  - отримало
+  - отримали
+  original_explanation: Слово "військо" — середнього роду, тому "отримало".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в державних реченнях
+  sentence_with_error: Клейноди передавались від гетьмана до гетьман.
+  error: гетьман
+  answer: гетьмана
+  sentence_corrected: Клейноди передавались від гетьманаа до гетьмана.
+  options:
+  - гетьман
+  - гетьмана
+  - гетьману
+  - гетьманом
+  original_explanation: Прийменник "до" вимагає родового відмінка — до кого? до гетьмана.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Офіційна назва козацької держави була «_____ Запорозьке».
+  answer: Військо
+  complete_sentence: Офіційна назва козацької держави була «Військо__ Запорозьке».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: На чолі держави стояв виборний _____.
+  answer: гетьман
+  complete_sentence: На чолі держави стояв виборний гетьман__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Територія Війська Запорозького поділялась на _____.
+  answer: полки
+  complete_sentence: Територія Війська Запорозького поділялась на полки__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: _____ — це список козаків із правом на особливі привілеї.
+  answer: Реєстр
+  complete_sentence: Реєстр__ — це список козаків із правом на особливі привілеї.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Зборівський _____ був підписаний 1649 року.
+  answer: договір
+  complete_sentence: Зборівський договір__ був підписаний 1649 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: За договором Військо Запорозьке отримало _____ трьох воєводств.
+  answer: територію
+  complete_sentence: За договором Військо Запорозьке отримало територію__ трьох воєводств.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Реєстр за Зборівським договором становив 40 000 _____.
+  answer: козаків
+  complete_sentence: Реєстр за Зборівським договором становив 40 000 козаків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Булава була символом гетьманської _____.
+  answer: влади
+  complete_sentence: Булава була символом гетьманської влади__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Хмельницький шукав міжнародного _____ та захисту.
+  answer: визнання
+  complete_sentence: Хмельницький шукав міжнародного визнання__ та захисту.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Зборівський договір був _____ між козаками та Польщею.
+  answer: компромісом
+  complete_sentence: Зборівський договір був компромісом__ між козаками та Польщею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Полковник керував полком — адміністративною та військовою _____.
+  answer: одиницею
+  complete_sentence: Полковник керував полком — адміністративною та військовою одиницею__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Козацька _____ мала власне управління та армію.
+  answer: держава
+  complete_sentence: Козацька держава__ мала власне управління та армію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Кримський хан був головним _____ Хмельницького.
+  answer: союзником
+  complete_sentence: Кримський хан був головним союзником__ Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: _____ — це самоврядування території під зовнішнім захистом.
+  answer: Автономія
+  complete_sentence: Автономія__ — це самоврядування території під зовнішнім захистом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Генеральна _____ — це уряд козацької держави.
+  answer: старшина
+  complete_sentence: Генеральна старшина__ — це уряд козацької держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Державна лексика в контексті
+  sentence_template: Клейноди передавались від гетьмана до _____.
+  answer: гетьмана
+  complete_sentence: Клейноди передавались від гетьмана до гетьмана__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гетьман очолював козацьку _____.
+  answer: державу
+  complete_sentence: Гетьман очолював козацьку державу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Територія поділялась на _____.
+  answer: полки
+  complete_sentence: Територія поділялась на полки__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Булава символізувала гетьманську _____.
+  answer: владу
+  complete_sentence: Булава символізувала гетьманську владу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Договір підписано 1649 _____.
+  answer: року
+  complete_sentence: Договір підписано 1649 року__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Реєстр становив 40 000 _____.
+  answer: козаків
+  complete_sentence: Реєстр становив 40 000 козаків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Полковник керував _____.
+  answer: полком
+  complete_sentence: Полковник керував полком__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки отримали _____.
+  answer: автономію
+  complete_sentence: Козаки отримали автономію__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Хмельницький шукав _____.
+  answer: союзників
+  complete_sentence: Хмельницький шукав союзників__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кримський хан був _____.
+  answer: союзником
+  complete_sentence: Кримський хан був союзником__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Договір був _____.
+  answer: компромісом
+  complete_sentence: Договір був компромісом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Сотник керував _____.
+  answer: територією
+  complete_sentence: Сотник керував територією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Універсал — указ _____.
+  answer: гетьмана
+  complete_sentence: Універсал — указ гетьмана__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Клейноди передавались від гетьмана до _____.
+  answer: гетьмана
+  complete_sentence: Клейноди передавались від гетьмана до гетьмана__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки залишались _____ короля.
+  answer: підданими
+  complete_sentence: Козаки залишались підданими__ короля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Старшина керувала _____.
+  answer: державою
+  complete_sentence: Старшина керувала державою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Сотня була підрозділом _____.
+  answer: полку
+  complete_sentence: Сотня була підрозділом полку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про державотворення
+  passage_template: 'Богдан Хмельницький створив {державу|армію|церкву|державу} —
+    Військо {Запорозьке|Козацьке|Українське|Запорозьке}. На чолі стояв виборний {гетьман|цар|король|гетьман}
+    із Генеральною {старшиною|армією|церквою|старшиною}.
+
+
+    Територія поділялась на {полки|губернії|провінції|полки} та {сотні|тисячі|села|сотні}.
+    {Полковник|Сотник|Отаман|Полковник} керував полком і мав військову та цивільну
+    владу. {Реєстр|Статут|Закон|Реєстр} визначав, хто має козацькі {привілеї|обов''язки|податки|привілеї}.
+
+
+    {Зборівський|Переяславський|Гадяцький|Зборівський} договір підписано в {1649|1648|1654|1649}
+    році. Реєстр становив {40 000|20 000|60 000|40 000} козаків. Козаки отримали {автономію|незалежність|гроші|автономію}
+    на території трьох {воєводств|полків|держав|воєводств}.
+
+
+    Хмельницький шукав міжнародного {визнання|конфлікту|поразки|визнання}. Кримський
+    {хан|цар|король|хан} був головним {союзником|ворогом|суддею|союзником}. Договір
+    був {компромісом|перемогою|поразкою|компромісом} — козаки формально залишались
+    {підданими|королями|царями|підданими} польського короля.
+
+    '
+  blanks:
+  - answer: державу
+    options:
+    - державу
+    - армію
+    - церкву
+  - answer: Запорозьке
+    options:
+    - Запорозьке
+    - Козацьке
+    - Українське
+  - answer: гетьман
+    options:
+    - гетьман
+    - цар
+    - король
+  - answer: старшиною
+    options:
+    - старшиною
+    - армією
+    - церквою
+  - answer: полки
+    options:
+    - полки
+    - губернії
+    - провінції
+  - answer: сотні
+    options:
+    - сотні
+    - тисячі
+    - села
+  - answer: Полковник
+    options:
+    - Полковник
+    - Сотник
+    - Отаман
+  - answer: Реєстр
+    options:
+    - Реєстр
+    - Статут
+    - Закон
+  - answer: привілеї
+    options:
+    - привілеї
+    - обов'язки
+    - податки
+  - answer: Зборівський
+    options:
+    - Зборівський
+    - Переяславський
+    - Гадяцький
+  - answer: '1649'
+    options:
+    - '1649'
+    - '1648'
+    - '1654'
+  - answer: 40 000
+    options:
+    - 40 000
+    - 20 000
+    - 60 000
+  - answer: автономію
+    options:
+    - автономію
+    - незалежність
+    - гроші
+  - answer: воєводств
+    options:
+    - воєводств
+    - полків
+    - держав
+  - answer: визнання
+    options:
+    - визнання
+    - конфлікту
+    - поразки
+  - answer: хан
+    options:
+    - хан
+    - цар
+    - король
+  - answer: союзником
+    options:
+    - союзником
+    - ворогом
+    - суддею
+  - answer: компромісом
+    options:
+    - компромісом
+    - перемогою
+    - поразкою
+  - answer: підданими
+    options:
+    - підданими
+    - королями
+    - царями
+  blank_count: 19
+  complete_passage: 'Богдан Хмельницький створив державу — Військо Запорозьке. На
+    чолі стояв виборний гетьман із Генеральною старшиною.
+
+
+    Територія поділялась на полки та сотні. Полковник керував полком і мав військову
+    та цивільну владу. Реєстр визначав, хто має козацькі привілеї.
+
+
+    Зборівський договір підписано в 1649 році. Реєстр становив 40 000 козаків. Козаки
+    отримали автономію на території трьох воєводств.
+
+
+    Хмельницький шукав міжнародного визнання. Кримський хан був головним союзником.
+    Договір був компромісом — козаки формально залишались підданими польського короля.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Виборний гетьман очолював козацької держави.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Територія поділялась на полки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Реєстр — список козаків із привілеями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Зборівський договір підписано 1649 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Булава була символом гетьманської влади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Полковник мав військову і цивільну владу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Хмельницький шукав міжнародного визнання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Зборівський договір був компромісом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Військо Запорозьке отримало автономію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Кримський хан був головним союзником.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Генеральна старшина була урядом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Козаки отримали територію три воєводства.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Реєстр становив 40 000 козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Військо Запорозьке мало близько 16 полків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Сотник керував своєю територією.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про державу
+  jumbled_words: []
+  answer: Козацька держава мала власну армію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Згідно з текстом, яка була офіційна назва козацької держави?
+  options:
+  - '{''text'': ''Гетьманщина'', ''correct'': False}'
+  - '{''text'': ''Військо Запорозьке'', ''correct'': True}'
+  - '{''text'': ''Україна'', ''correct'': False}'
+  - '{''text'': ''Козацька республіка'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Як текст характеризує структуру влади в козацькій державі?
+  options:
+  - '{''text'': ''Спадкова монархія'', ''correct'': False}'
+  - '{''text'': ''Виборний гетьман із Генеральною старшиною'', ''correct'': True}'
+  - '{''text'': ''Демократична республіка'', ''correct'': False}'
+  - '{''text'': ''Анархія без влади'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Згідно з текстом, що таке полк у козацькій державі?
+  options:
+  - '{''text'': ''Тільки військова одиниця'', ''correct'': False}'
+  - '{''text'': ''Адміністративна та військова одиниця'', ''correct'': True}'
+  - '{''text'': ''Церковна парафія'', ''correct'': False}'
+  - '{''text'': ''Торговельна гільдія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Коли був підписаний Зборівський договір за текстом?
+  options:
+  - '{''text'': ''1648 року'', ''correct'': False}'
+  - '{''text'': ''1649 року'', ''correct'': True}'
+  - '{''text'': ''1654 року'', ''correct'': False}'
+  - '{''text'': ''1660 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Скільки козаків становив реєстр за Зборівським договором?
+  options:
+  - '{''text'': ''20 000'', ''correct'': False}'
+  - '{''text'': ''40 000'', ''correct'': True}'
+  - '{''text'': ''60 000'', ''correct'': False}'
+  - '{''text'': ''100 000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Які три воєводства отримало Військо Запорозьке за договором?
+  options:
+  - '{''text'': ''Київське, Волинське, Подільське'', ''correct'': False}'
+  - '{''text'': ''Київське, Брацлавське, Чернігівське'', ''correct'': True}'
+  - '{''text'': ''Львівське, Київське, Полтавське'', ''correct'': False}'
+  - '{''text'': ''Чернігівське, Полтавське, Харківське'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Як текст характеризує роль булави?
+  options:
+  - '{''text'': ''Зброя для битви'', ''correct'': False}'
+  - '{''text'': ''Символ гетьманської влади'', ''correct'': True}'
+  - '{''text'': ''Музичний інструмент'', ''correct'': False}'
+  - '{''text'': ''Релігійний предмет'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Хто був головним союзником Хмельницького за текстом?
+  options:
+  - '{''text'': ''Московський цар'', ''correct'': False}'
+  - '{''text'': ''Кримський хан'', ''correct'': True}'
+  - '{''text'': ''Шведський король'', ''correct'': False}'
+  - '{''text'': ''Турецький султан'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Згідно з текстом, що таке реєстр?
+  options:
+  - '{''text'': ''Список податків'', ''correct'': False}'
+  - '{''text'': ''Список козаків із правом на привілеї'', ''correct'': True}'
+  - '{''text'': ''Перепис населення'', ''correct'': False}'
+  - '{''text'': ''Військовий статут'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Чому Зборівський договір був компромісом за текстом?
+  options:
+  - '{''text'': ''Козаки отримали все, що хотіли'', ''correct'': False}'
+  - '{''text'': ''Козаки залишались підданими короля, а селяни — поза реєстром'',
+    ''correct'': True}'
+  - '{''text'': ''Поляки програли війну'', ''correct'': False}'
+  - '{''text'': ''Татари не погодились'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Як текст характеризує пошуки міжнародного союзника?
+  options:
+  - '{''text'': ''Хмельницький не шукав союзників'', ''correct'': False}'
+  - '{''text'': ''Хмельницький шукав захисника, зберігаючи автономію'', ''correct'':
+    True}'
+  - '{''text'': ''Хмельницький хотів стати підданим Москви'', ''correct'': False}'
+  - '{''text'': ''Хмельницький планував союз із Польщею'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Що таке клейноди за текстом?
+  options:
+  - '{''text'': ''Козацькі закони'', ''correct'': False}'
+  - '{''text'': ''Знаки гетьманської влади'', ''correct'': True}'
+  - '{''text'': ''Військові звання'', ''correct'': False}'
+  - '{''text'': ''Дипломатичні документи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Як текст описує генерального писаря?
+  options:
+  - '{''text'': ''Керівник армії'', ''correct'': False}'
+  - '{''text'': ''Керівник канцелярії та листування з іноземними державами'', ''correct'':
+    True}'
+  - '{''text'': ''Головний суддя'', ''correct'': False}'
+  - '{''text'': ''Міністр фінансів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Чому текст порівнює Зборівський договір із Мінськими угодами?
+  options:
+  - '{''text'': ''Обидва принесли мир'', ''correct'': False}'
+  - '{''text'': ''Обидва були компромісами, що не задовольнили сторони'', ''correct'':
+    True}'
+  - '{''text'': ''Обидва були перемогою України'', ''correct'': False}'
+  - '{''text'': ''Обидва підписані в серпні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Скільки полків мало Військо Запорозьке за часів Хмельницького?
+  options:
+  - '{''text'': ''8 полків'', ''correct'': False}'
+  - '{''text'': ''Близько 16 полків'', ''correct'': True}'
+  - '{''text'': ''32 полки'', ''correct'': False}'
+  - '{''text'': ''50 полків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про будівництво держави
+  question: Як текст характеризує роль сотника?
+  options:
+  - '{''text'': ''Командир 100 воїнів'', ''correct'': False}'
+  - '{''text'': ''Керівник території з кількома селами'', ''correct'': True}'
+  - '{''text'': ''Фінансовий інспектор'', ''correct'': False}'
+  - '{''text'': ''Церковний староста'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як універсал обґрунтовує легітимність влади гетьмана?
+  options:
+  - '{''text'': ''Спадковим правом'', ''correct'': False}'
+  - '{''text'': ''Божою милістю та волею війська'', ''correct'': True}'
+  - '{''text'': ''Призначенням від короля'', ''correct'': False}'
+  - '{''text'': ''Військовою силою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Кому адресовані накази в універсалі?
+  options:
+  - '{''text'': ''Тільки генеральній старшині'', ''correct'': False}'
+  - '{''text'': ''Полковникам, сотникам і всьому поспольству'', ''correct'': True}'
+  - '{''text'': ''Тільки козакам реєстру'', ''correct'': False}'
+  - '{''text'': ''Іноземним державам'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку структуру влади відображає універсал?
+  options:
+  - '{''text'': ''Централізовану монархію'', ''correct'': False}'
+  - '{''text'': ''Ієрархію від гетьмана до поспольства'', ''correct'': True}'
+  - '{''text'': ''Повну демократію'', ''correct'': False}'
+  - '{''text'': ''Анархію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як іноземний дипломат характеризує владу гетьмана?
+  options:
+  - '{''text'': ''Слабка, номінальна'', ''correct'': False}'
+  - '{''text'': ''Велика влада, включно з дипломатією'', ''correct'': True}'
+  - '{''text'': ''Тільки військова'', ''correct'': False}'
+  - '{''text'': ''Церковна'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Які державні інституції виділяє іноземний спостерігач?
+  options:
+  - '{''text'': ''Тільки армію'', ''correct'': False}'
+  - '{''text'': ''Старшину з різними функціями: військовими, судовими, фінансовими'',
+    ''correct'': True}'
+  - '{''text'': ''Тільки церкву'', ''correct'': False}'
+  - '{''text'': ''Тільки суд'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Зборівський договір визначає кількість реєстру?
+  options:
+  - '{''text'': ''Двадцять тисяч'', ''correct'': False}'
+  - '{''text'': ''Сорок тисяч'', ''correct'': True}'
+  - '{''text'': ''Шістдесят тисяч'', ''correct'': False}'
+  - '{''text'': ''Сто тисяч'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Які території визначено для козаків у Зборівському договорі?
+  options:
+  - '{''text'': ''Вся Річ Посполита'', ''correct'': False}'
+  - '{''text'': ''Воєводства Київське, Брацлавське, Чернігівське'', ''correct'': True}'
+  - '{''text'': ''Тільки Запорозька Січ'', ''correct'': False}'
+  - '{''text'': ''Московське царство'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке обмеження накладає договір на єзуїтів?
+  options:
+  - '{''text'': ''Мусять сплачувати податки'', ''correct'': False}'
+  - '{''text'': ''Їм бути не належить у тих воєводствах'', ''correct'': True}'
+  - '{''text'': ''Мають служити в армії'', ''correct'': False}'
+  - '{''text'': ''Ніяких обмежень'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як договір визначає процедуру обрання гетьмана?
+  options:
+  - '{''text'': ''Призначення королем'', ''correct'': False}'
+  - '{''text'': ''Козаки обирають, потім подають королю'', ''correct'': True}'
+  - '{''text'': ''Спадкова передача'', ''correct'': False}'
+  - '{''text'': ''Жеребкування'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має фраза «на волостях королівських»?
+  options:
+  - '{''text'': ''Повна незалежність'', ''correct'': False}'
+  - '{''text'': ''Формальна підлеглість королю'', ''correct'': True}'
+  - '{''text'': ''Васальна залежність від Криму'', ''correct'': False}'
+  - '{''text'': ''Підданство Москви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому важливі іноземні свідчення про козацьку державу?
+  options:
+  - '{''text'': ''Вони кращі за українські'', ''correct'': False}'
+  - '{''text'': ''Вони дають незалежний погляд ззовні'', ''correct'': True}'
+  - '{''text'': ''Вони написані латиною'', ''correct'': False}'
+  - '{''text'': ''Вони офіційні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як універсали свідчать про формування державної традиції?
+  options:
+  - '{''text'': ''Вони скопійовані з Польщі'', ''correct'': False}'
+  - '{''text'': ''Вони показують власну формулу легітимності влади'', ''correct'':
+    True}'
+  - '{''text'': ''Вони написані російською'', ''correct'': False}'
+  - '{''text'': ''Вони не мають значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «милістю Божою» в універсалі?
+  options:
+  - '{''text'': ''Церковне благословення'', ''correct'': False}'
+  - '{''text'': ''Традиційна формула легітимності правителя'', ''correct'': True}'
+  - '{''text'': ''Релігійний обряд'', ''correct'': False}'
+  - '{''text'': ''Просто привітання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє Зборівський договір в історії?
+  options:
+  - '{''text'': ''Ніякої'', ''correct'': False}'
+  - '{''text'': ''Перше міжнародне визнання козацької держави'', ''correct'': True}'
+  - '{''text'': ''Кінець козацької держави'', ''correct'': False}'
+  - '{''text'': ''Союз з Москвою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст договору характеризує статус козацької території?
+  options:
+  - '{''text'': ''Повністю незалежна'', ''correct'': False}'
+  - '{''text'': ''Автономія під формальною владою короля'', ''correct'': True}'
+  - '{''text'': ''Провінція Польщі'', ''correct'': False}'
+  - '{''text'': ''Частина Московії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому договір забороняв «жидам» перебувати на козацькій території?
+  options:
+  - '{''text'': ''Релігійні причини'', ''correct'': False}'
+  - '{''text'': ''Євреї асоціювались із польським пануванням та орендою'', ''correct'':
+    True}'
+  - '{''text'': ''Економічна конкуренція'', ''correct'': False}'
+  - '{''text'': ''Випадкове включення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, офіційна назва козацької держави була «Гетьманщина».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, гетьмана обирали, а не призначали спадково.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, полк був тільки військовою одиницею.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, Зборівський договір підписано 1649 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, реєстр за Зборівським договором — 100 000 козаків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, булава символізувала гетьманську владу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, Зборівський договір був повною перемогою козаків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, кримський хан був головним союзником Хмельницького.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, сотник командував рівно 100 воїнами.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, Хмельницький шукав союзника, зберігаючи автономію.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, генеральний писар відповідав за фінанси.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, Військо Запорозьке мало близько 16 полків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, Зборівський договір проіснував багато років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, клейноди — це знаки гетьманської влади.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, козацька держава не мала адміністративної системи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Гетьманщину
+  statement: Згідно з текстом, універсал — це офіційний указ гетьмана.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

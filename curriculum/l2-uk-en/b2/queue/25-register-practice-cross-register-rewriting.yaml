@@ -1,7 +1,7 @@
 module: 25-register-practice-cross-register-rewriting
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/25-register-practice-cross-register-rewriting.md
-generated: '2025-12-29T22:46:41.318708'
+generated: '2025-12-30T19:49:14.832797'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 16
   quiz: 32
   true-false: 16
+total_items: 113
 item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки при трансформації
@@ -620,102 +622,87 @@ items:
 
     '
   blanks:
-  - options:
+  - answer: Через
+    options:
     - Відповідно
     - Згідно
     - На підставі
-    - Через
-    answer: Відповідно
-  - options:
+  - answer: говоримо
+    options:
     - повідомляємо
     - інформуємо
     - кажемо
-    - говоримо
-    answer: повідомляємо
-  - options:
+  - answer: пройшло
+    options:
     - відбулось
     - сталось
     - було
-    - пройшло
-    answer: відбулось
-  - options:
+  - answer: завітали
+    options:
     - були присутні
     - прийшли
     - з'явились
-    - завітали
-    answer: були присутні
-  - options:
+  - answer: Оплату
+    options:
     - Фінансування
     - Гроші
     - Кошти
-    - Оплату
-    answer: Фінансування
-  - options:
+  - answer: Читання
+    options:
     - Аналіз
     - Огляд
     - Перегляд
-    - Читання
-    answer: Аналіз
-  - options:
+  - answer: Прихід
+    options:
     - Присутність
     - Участь
     - Візит
-    - Прихід
-    answer: Присутність
-  - options:
+  - answer: свідчить
+    options:
     - вказує
     - каже
     - говорить
-    - свідчить
-    answer: вказує
-  - options:
+  - answer: розкрились
+    options:
     - розчинились
     - відчинились
     - відкрились
-    - розкрились
-    answer: розчинились
-  - options:
+  - answer: освітило
+    options:
     - залило
     - наповнило
     - озарило
-    - освітило
-    answer: залило
-  - options:
+  - answer: дивились
+    options:
     - завмирали
     - стояли
     - чекали
-    - дивились
-    answer: завмирали
-  - options:
+  - answer: моментом
+    options:
     - початком
     - стартом
     - відкриттям
-    - моментом
-    answer: початком
-  - options:
+  - answer: дивився
+    options:
     - чув
     - знаєш
     - бачив
-    - дивився
-    answer: чув
-  - options:
+  - answer: керівник
+    options:
     - Президент
     - начальник
     - голова
-    - керівник
-    answer: Президент
-  - options:
+  - answer: Ок
+    options:
     - Круто
     - Добре
     - Нормально
-    - Ок
-    answer: Круто
-  - options:
+  - answer: типу
+    options:
     - загалом
     - взагалі
     - коротше
-    - типу
-    answer: загалом
+  blank_count: 16
   complete_passage: 'Прочитайте вихідний текст і заповніть трансформований варіант.
 
 
@@ -723,26 +710,21 @@ items:
     був Президент."
 
 
-    ОФІЦІЙНО-ДІЛОВИЙ ВАРІАНТ: "{Відповідно|Згідно|На підставі|Через} до розпорядження
-    № 45, {повідомляємо|інформуємо|кажемо|говоримо} про урочисте відкриття музею,
-    яке {відбулось|сталось|було|пройшло} 15 травня 2024 року. На церемонії {були присутні|прийшли|з''явились|завітали}
-    представники вищого керівництва держави. {Фінансування|Гроші|Кошти|Оплату} здійснено
-    за рахунок державного бюджету.
+    ОФІЦІЙНО-ДІЛОВИЙ ВАРІАНТ: "Через до розпорядження № 45, говоримо про урочисте
+    відкриття музею, яке пройшло 15 травня 2024 року. На церемонії завітали представники
+    вищого керівництва держави. Оплату здійснено за рахунок державного бюджету.
 
 
-    НАУКОВИЙ ВАРІАНТ: {Аналіз|Огляд|Перегляд|Читання} подій свідчить про відкриття
-    нового музею в столиці. {Присутність|Участь|Візит|Прихід} Президента на церемонії
-    {вказує|каже|говорить|свідчить} на символічну значущість об''єкта.
+    НАУКОВИЙ ВАРІАНТ: Читання подій свідчить про відкриття нового музею в столиці.
+    Прихід Президента на церемонії свідчить на символічну значущість об''єкта.
 
 
-    ХУДОЖНІЙ ВАРІАНТ: Двері {розчинились|відчинились|відкрились|розкрились}, і світло
-    {залило|наповнило|озарило|освітило} простір. У натовпі {завмирали|стояли|чекали|дивились}
-    ті, для кого цей день став {початком|стартом|відкриттям|моментом} нової ери.
+    ХУДОЖНІЙ ВАРІАНТ: Двері розкрились, і світло освітило простір. У натовпі дивились
+    ті, для кого цей день став моментом нової ери.
 
 
-    РОЗМОВНИЙ ВАРІАНТ: Ти {чув|знаєш|бачив|дивився}? Учора музей відкрили! І {Президент|начальник|голова|керівник}
-    був, уявляєш? {Круто|Добре|Нормально|Ок}, правда? Ну, {загалом|взагалі|коротше|типу}
-    — справжнє свято!
+    РОЗМОВНИЙ ВАРІАНТ: Ти дивився? Учора музей відкрили! І керівник був, уявляєш?
+    Ок, правда? Ну, типу — справжнє свято!
 
     '
   validate:
@@ -881,14 +863,11 @@ items:
   title: Принципи стильової трансформації
   question: Що змінюється при трансформації тексту з одного стилю в інший?
   options:
-  - text: Тільки окремі слова
-    correct: false
-  - text: Лексика, синтаксис, морфологія, композиція, тональність
-    correct: true
-  - text: Тільки порядок слів
-    correct: false
-  - text: Тільки знаки пунктуації
-    correct: false
+  - '{''text'': ''Тільки окремі слова'', ''correct'': False}'
+  - '{''text'': ''Лексика, синтаксис, морфологія, композиція, тональність'', ''correct'':
+    True}'
+  - '{''text'': ''Тільки порядок слів'', ''correct'': False}'
+  - '{''text'': ''Тільки знаки пунктуації'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -899,14 +878,10 @@ items:
   title: Принципи стильової трансформації
   question: Який перший крок алгоритму трансформації тексту?
   options:
-  - text: Замінити всі слова синонімами
-    correct: false
-  - text: Виділити ядро інформації (факти)
-    correct: true
-  - text: Змінити порядок речень
-    correct: false
-  - text: Додати емоційні оцінки
-    correct: false
+  - '{''text'': ''Замінити всі слова синонімами'', ''correct'': False}'
+  - '{''text'': ''Виділити ядро інформації (факти)'', ''correct'': True}'
+  - '{''text'': ''Змінити порядок речень'', ''correct'': False}'
+  - '{''text'': ''Додати емоційні оцінки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -917,14 +892,10 @@ items:
   title: Принципи стильової трансформації
   question: Що залишається незмінним при стильовій трансформації?
   options:
-  - text: Форма тексту
-    correct: false
-  - text: Зміст тексту
-    correct: true
-  - text: Довжина речень
-    correct: false
-  - text: Емоційне забарвлення
-    correct: false
+  - '{''text'': ''Форма тексту'', ''correct'': False}'
+  - '{''text'': ''Зміст тексту'', ''correct'': True}'
+  - '{''text'': ''Довжина речень'', ''correct'': False}'
+  - '{''text'': ''Емоційне забарвлення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -935,14 +906,11 @@ items:
   title: Принципи стильової трансформації
   question: Як подати суму "500 мільйонів гривень" у публіцистичному стилі?
   options:
-  - text: 500 000 000 (п'ятсот мільйонів) гривень 00 копійок
-    correct: false
-  - text: Півмільярда
-    correct: true
-  - text: 500 млн грн
-    correct: false
-  - text: Значна сума коштів
-    correct: false
+  - '{''text'': "500 000 000 (п''ятсот мільйонів) гривень 00 копійок", ''correct'':
+    False}'
+  - '{''text'': ''Півмільярда'', ''correct'': True}'
+  - '{''text'': ''500 млн грн'', ''correct'': False}'
+  - '{''text'': ''Значна сума коштів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -953,14 +921,10 @@ items:
   title: Принципи стильової трансформації
   question: Яка конструкція характерна для офіційно-ділового стилю?
   options:
-  - text: Уявіть собі!
-    correct: false
-  - text: На підставі вищезазначеного
-    correct: true
-  - text: Це просто неймовірно
-    correct: false
-  - text: Ну, коротше
-    correct: false
+  - '{''text'': ''Уявіть собі!'', ''correct'': False}'
+  - '{''text'': ''На підставі вищезазначеного'', ''correct'': True}'
+  - '{''text'': ''Це просто неймовірно'', ''correct'': False}'
+  - '{''text'': ''Ну, коротше'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -971,14 +935,10 @@ items:
   title: Принципи стильової трансформації
   question: Що потрібно додати при трансформації в науковий стиль?
   options:
-  - text: Емоційні оцінки
-    correct: false
-  - text: Терміни та безособові конструкції
-    correct: true
-  - text: Риторичні питання
-    correct: false
-  - text: Діалоги
-    correct: false
+  - '{''text'': ''Емоційні оцінки'', ''correct'': False}'
+  - '{''text'': ''Терміни та безособові конструкції'', ''correct'': True}'
+  - '{''text'': ''Риторичні питання'', ''correct'': False}'
+  - '{''text'': ''Діалоги'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -989,14 +949,10 @@ items:
   title: Принципи стильової трансформації
   question: Як трансформувати "Президент заявив" для розмовного стилю?
   options:
-  - text: Президентом заявлено
-    correct: false
-  - text: Глава держави оголосив
-    correct: false
-  - text: Президент сказав
-    correct: true
-  - text: Було заявлено Президентом
-    correct: false
+  - '{''text'': ''Президентом заявлено'', ''correct'': False}'
+  - '{''text'': ''Глава держави оголосив'', ''correct'': False}'
+  - '{''text'': ''Президент сказав'', ''correct'': True}'
+  - '{''text'': ''Було заявлено Президентом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1007,14 +963,10 @@ items:
   title: Принципи стильової трансформації
   question: Що характерне для художнього стилю при описі події?
   options:
-  - text: Точні дати та цифри
-    correct: false
-  - text: Метафори та персоніфікація
-    correct: true
-  - text: Посилання на документи
-    correct: false
-  - text: Безособові речення
-    correct: false
+  - '{''text'': ''Точні дати та цифри'', ''correct'': False}'
+  - '{''text'': ''Метафори та персоніфікація'', ''correct'': True}'
+  - '{''text'': ''Посилання на документи'', ''correct'': False}'
+  - '{''text'': ''Безособові речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1025,14 +977,11 @@ items:
   title: Принципи стильової трансформації
   question: Яку помилку найчастіше роблять при стильовій трансформації?
   options:
-  - text: Змінюють факти
-    correct: false
-  - text: Механічно замінюють слова без урахування контексту
-    correct: true
-  - text: Скорочують текст
-    correct: false
-  - text: Додають нову інформацію
-    correct: false
+  - '{''text'': ''Змінюють факти'', ''correct'': False}'
+  - '{''text'': ''Механічно замінюють слова без урахування контексту'', ''correct'':
+    True}'
+  - '{''text'': ''Скорочують текст'', ''correct'': False}'
+  - '{''text'': ''Додають нову інформацію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1043,14 +992,11 @@ items:
   title: Принципи стильової трансформації
   question: Для кого призначений офіційно-діловий стиль?
   options:
-  - text: Для широкої аудиторії
-    correct: false
-  - text: Для юридичних осіб та громадян (як суб'єктів права)
-    correct: true
-  - text: Для друзів і родичів
-    correct: false
-  - text: Для студентів
-    correct: false
+  - '{''text'': ''Для широкої аудиторії'', ''correct'': False}'
+  - '{''text'': "Для юридичних осіб та громадян (як суб''єктів права)", ''correct'':
+    True}'
+  - '{''text'': ''Для друзів і родичів'', ''correct'': False}'
+  - '{''text'': ''Для студентів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1061,14 +1007,10 @@ items:
   title: Принципи стильової трансформації
   question: Що потрібно прибрати при трансформації з публіцистичного в науковий стиль?
   options:
-  - text: Факти і цифри
-    correct: false
-  - text: Оцінну лексику та риторичні питання
-    correct: true
-  - text: Терміни
-    correct: false
-  - text: Посилання на джерела
-    correct: false
+  - '{''text'': ''Факти і цифри'', ''correct'': False}'
+  - '{''text'': ''Оцінну лексику та риторичні питання'', ''correct'': True}'
+  - '{''text'': ''Терміни'', ''correct'': False}'
+  - '{''text'': ''Посилання на джерела'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1079,14 +1021,10 @@ items:
   title: Принципи стильової трансформації
   question: Як подати дату в офіційно-діловому стилі?
   options:
-  - text: Вчора
-    correct: false
-  - text: 15 травня 2024 року
-    correct: true
-  - text: Нещодавно
-    correct: false
-  - text: У той день
-    correct: false
+  - '{''text'': ''Вчора'', ''correct'': False}'
+  - '{''text'': ''15 травня 2024 року'', ''correct'': True}'
+  - '{''text'': ''Нещодавно'', ''correct'': False}'
+  - '{''text'': ''У той день'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1097,14 +1035,10 @@ items:
   title: Принципи стильової трансформації
   question: Що характерно для розмовного стилю?
   options:
-  - text: Складні речення з підрядними
-    correct: false
-  - text: Неповні речення та частки
-    correct: true
-  - text: Пасивні конструкції
-    correct: false
-  - text: Терміни
-    correct: false
+  - '{''text'': ''Складні речення з підрядними'', ''correct'': False}'
+  - '{''text'': ''Неповні речення та частки'', ''correct'': True}'
+  - '{''text'': ''Пасивні конструкції'', ''correct'': False}'
+  - '{''text'': ''Терміни'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1115,14 +1049,10 @@ items:
   title: Принципи стильової трансформації
   question: Як трансформувати "відбулось відкриття" для художнього стилю?
   options:
-  - text: Відкриття відбулось
-    correct: false
-  - text: Зафіксовано факт відкриття
-    correct: false
-  - text: Народився новий простір
-    correct: true
-  - text: Відкрили
-    correct: false
+  - '{''text'': ''Відкриття відбулось'', ''correct'': False}'
+  - '{''text'': ''Зафіксовано факт відкриття'', ''correct'': False}'
+  - '{''text'': ''Народився новий простір'', ''correct'': True}'
+  - '{''text'': ''Відкрили'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1133,14 +1063,10 @@ items:
   title: Принципи стильової трансформації
   question: Що важливо уявити перед написанням тексту в певному стилі?
   options:
-  - text: Кількість слів
-    correct: false
-  - text: Адресата тексту
-    correct: true
-  - text: Дату публікації
-    correct: false
-  - text: Автора оригіналу
-    correct: false
+  - '{''text'': ''Кількість слів'', ''correct'': False}'
+  - '{''text'': ''Адресата тексту'', ''correct'': True}'
+  - '{''text'': ''Дату публікації'', ''correct'': False}'
+  - '{''text'': ''Автора оригіналу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1151,14 +1077,10 @@ items:
   title: Принципи стильової трансформації
   question: Яка основна вимога публіцистичного стилю?
   options:
-  - text: Юридична коректність
-    correct: false
-  - text: Актуальність та доступність
-    correct: true
-  - text: Термінологічність
-    correct: false
-  - text: Образність
-    correct: false
+  - '{''text'': ''Юридична коректність'', ''correct'': False}'
+  - '{''text'': ''Актуальність та доступність'', ''correct'': True}'
+  - '{''text'': ''Термінологічність'', ''correct'': False}'
+  - '{''text'': ''Образність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1170,14 +1092,10 @@ items:
   question: Який стиль використовує формулу "500 000 000 (п'ятсот мільйонів) гривень
     00 копійок"?
   options:
-  - text: Публіцистичний
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Науковий
-    correct: false
-  - text: Художній
-    correct: false
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1188,14 +1106,10 @@ items:
   title: Інтеграційний тест
   question: Яке формулювання найбільш характерне для наукового стилю?
   options:
-  - text: Це просто неймовірно!
-    correct: false
-  - text: Аналіз даних свідчить про кореляцію.
-    correct: true
-  - text: Ну, коротше, так воно і є.
-    correct: false
-  - text: Сонце торкнулось обрію.
-    correct: false
+  - '{''text'': ''Це просто неймовірно!'', ''correct'': False}'
+  - '{''text'': ''Аналіз даних свідчить про кореляцію.'', ''correct'': True}'
+  - '{''text'': ''Ну, коротше, так воно і є.'', ''correct'': False}'
+  - '{''text'': ''Сонце торкнулось обрію.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1207,14 +1121,10 @@ items:
   question: При трансформації з розмовного в офіційно-діловий стиль що потрібно змінити
     в першу чергу?
   options:
-  - text: Додати метафори
-    correct: false
-  - text: Замінити розмовні слова канцеляризмами
-    correct: true
-  - text: Скоротити речення
-    correct: false
-  - text: Додати вигуки
-    correct: false
+  - '{''text'': ''Додати метафори'', ''correct'': False}'
+  - '{''text'': ''Замінити розмовні слова канцеляризмами'', ''correct'': True}'
+  - '{''text'': ''Скоротити речення'', ''correct'': False}'
+  - '{''text'': ''Додати вигуки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1225,14 +1135,10 @@ items:
   title: Інтеграційний тест
   question: Яке слово НЕ є стильовим маркером офіційно-ділового стилю?
   options:
-  - text: Відповідно до
-    correct: false
-  - text: На підставі
-    correct: false
-  - text: Офігенно
-    correct: true
-  - text: Постановляю
-    correct: false
+  - '{''text'': ''Відповідно до'', ''correct'': False}'
+  - '{''text'': ''На підставі'', ''correct'': False}'
+  - '{''text'': ''Офігенно'', ''correct'': True}'
+  - '{''text'': ''Постановляю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1243,14 +1149,10 @@ items:
   title: Інтеграційний тест
   question: Який стиль найчастіше використовує риторичні питання?
   options:
-  - text: Офіційно-діловий
-    correct: false
-  - text: Науковий
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Розмовний
-    correct: false
+  - '{''text'': ''Офіційно-діловий'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1261,14 +1163,10 @@ items:
   title: Інтеграційний тест
   question: Що потрібно прибрати при трансформації художнього тексту в науковий?
   options:
-  - text: Факти
-    correct: false
-  - text: Метафори та персоніфікацію
-    correct: true
-  - text: Терміни
-    correct: false
-  - text: Логічні зв'язки
-    correct: false
+  - '{''text'': ''Факти'', ''correct'': False}'
+  - '{''text'': ''Метафори та персоніфікацію'', ''correct'': True}'
+  - '{''text'': ''Терміни'', ''correct'': False}'
+  - '{''text'': "Логічні зв''язки", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1279,14 +1177,10 @@ items:
   title: Інтеграційний тест
   question: Як правильно трансформувати "Президент сказав" для публіцистичного стилю?
   options:
-  - text: Президентом сказано
-    correct: false
-  - text: Президент заявив
-    correct: true
-  - text: Глава держави мовив
-    correct: false
-  - text: Він промовив
-    correct: false
+  - '{''text'': ''Президентом сказано'', ''correct'': False}'
+  - '{''text'': ''Президент заявив'', ''correct'': True}'
+  - '{''text'': ''Глава держави мовив'', ''correct'': False}'
+  - '{''text'': ''Він промовив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1297,14 +1191,10 @@ items:
   title: Інтеграційний тест
   question: Яка конструкція типова для розмовного стилю?
   options:
-  - text: Відповідно до рішення
-    correct: false
-  - text: Аналіз свідчить
-    correct: false
-  - text: Ну, коротше
-    correct: true
-  - text: Сонце торкнулось
-    correct: false
+  - '{''text'': ''Відповідно до рішення'', ''correct'': False}'
+  - '{''text'': ''Аналіз свідчить'', ''correct'': False}'
+  - '{''text'': ''Ну, коротше'', ''correct'': True}'
+  - '{''text'': ''Сонце торкнулось'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1315,14 +1205,10 @@ items:
   title: Інтеграційний тест
   question: При трансформації в художній стиль що потрібно додати?
   options:
-  - text: Канцеляризми
-    correct: false
-  - text: Терміни
-    correct: false
-  - text: Образні засоби (метафори, епітети)
-    correct: true
-  - text: Статистичні дані
-    correct: false
+  - '{''text'': ''Канцеляризми'', ''correct'': False}'
+  - '{''text'': ''Терміни'', ''correct'': False}'
+  - '{''text'': ''Образні засоби (метафори, епітети)'', ''correct'': True}'
+  - '{''text'': ''Статистичні дані'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1333,14 +1219,10 @@ items:
   title: Інтеграційний тест
   question: Що залишається незмінним при будь-якій стильовій трансформації?
   options:
-  - text: Форма подання
-    correct: false
-  - text: Лексика
-    correct: false
-  - text: Фактичний зміст
-    correct: true
-  - text: Синтаксис
-    correct: false
+  - '{''text'': ''Форма подання'', ''correct'': False}'
+  - '{''text'': ''Лексика'', ''correct'': False}'
+  - '{''text'': ''Фактичний зміст'', ''correct'': True}'
+  - '{''text'': ''Синтаксис'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1351,14 +1233,10 @@ items:
   title: Інтеграційний тест
   question: Який стиль вимагає точних дат у форматі "15 травня 2024 року"?
   options:
-  - text: Художній
-    correct: false
-  - text: Розмовний
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Публіцистичний
-    correct: false
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1369,14 +1247,10 @@ items:
   title: Інтеграційний тест
   question: Як трансформувати "Усі погодились" в офіційно-діловий стиль?
   options:
-  - text: Усі сказали так
-    correct: false
-  - text: Рішення прийнято одноголосно
-    correct: true
-  - text: Усім сподобалось
-    correct: false
-  - text: Народ погодився
-    correct: false
+  - '{''text'': ''Усі сказали так'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято одноголосно'', ''correct'': True}'
+  - '{''text'': ''Усім сподобалось'', ''correct'': False}'
+  - '{''text'': ''Народ погодився'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1387,14 +1261,10 @@ items:
   title: Інтеграційний тест
   question: Яке формулювання НЕ підходить для наукового стилю?
   options:
-  - text: Дані підтверджують гіпотезу
-    correct: false
-  - text: Методологія базується на
-    correct: false
-  - text: На мою думку, це чудово
-    correct: true
-  - text: Результати свідчать
-    correct: false
+  - '{''text'': ''Дані підтверджують гіпотезу'', ''correct'': False}'
+  - '{''text'': ''Методологія базується на'', ''correct'': False}'
+  - '{''text'': ''На мою думку, це чудово'', ''correct'': True}'
+  - '{''text'': ''Результати свідчать'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1405,14 +1275,11 @@ items:
   title: Інтеграційний тест
   question: При трансформації новини в науковий стиль що потрібно змінити?
   options:
-  - text: Додати вигуки
-    correct: false
-  - text: Замінити оцінну лексику нейтральною термінологією
-    correct: true
-  - text: Скоротити текст
-    correct: false
-  - text: Додати діалоги
-    correct: false
+  - '{''text'': ''Додати вигуки'', ''correct'': False}'
+  - '{''text'': ''Замінити оцінну лексику нейтральною термінологією'', ''correct'':
+    True}'
+  - '{''text'': ''Скоротити текст'', ''correct'': False}'
+  - '{''text'': ''Додати діалоги'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1423,14 +1290,10 @@ items:
   title: Інтеграційний тест
   question: Яка головна помилка при механічній заміні слів?
   options:
-  - text: Текст стає коротшим
-    correct: false
-  - text: Втрачається контекст і стильова цілісність
-    correct: true
-  - text: Текст стає довшим
-    correct: false
-  - text: З'являються помилки
-    correct: false
+  - '{''text'': ''Текст стає коротшим'', ''correct'': False}'
+  - '{''text'': ''Втрачається контекст і стильова цілісність'', ''correct'': True}'
+  - '{''text'': ''Текст стає довшим'', ''correct'': False}'
+  - '{''text'': "З''являються помилки", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1441,14 +1304,10 @@ items:
   title: Інтеграційний тест
   question: Для кого найважливіше уявляти адресата тексту?
   options:
-  - text: Тільки для автора офіційних документів
-    correct: false
-  - text: Для автора будь-якого тексту
-    correct: true
-  - text: Тільки для журналіста
-    correct: false
-  - text: Тільки для письменника
-    correct: false
+  - '{''text'': ''Тільки для автора офіційних документів'', ''correct'': False}'
+  - '{''text'': ''Для автора будь-якого тексту'', ''correct'': True}'
+  - '{''text'': ''Тільки для журналіста'', ''correct'': False}'
+  - '{''text'': ''Тільки для письменника'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

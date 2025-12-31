@@ -1,0 +1,1417 @@
+module: 90-ruina-i-vyhovsky
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/90-ruina-i-vyhovsky.md
+generated: '2025-12-30T19:49:17.432629'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Виговський шукав автономія для України.
+  error: автономія
+  answer: автономію
+  sentence_corrected: Виговський шукав автономію для України.
+  options:
+  - автономія
+  - автономію
+  - автономії
+  - автономією
+  original_explanation: Дієслово «шукати» вимагає родового відмінка — шукав автономії.
+    Але з прийменником «шукав що?» — автономію.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Гадяцька угода передбачала створення триєдиної федерація.
+  error: федерація
+  answer: федерації
+  sentence_corrected: Гадяцька угода передбачала створення триєдиної федерації.
+  options:
+  - федерація
+  - федерації
+  - федерацію
+  - федерацією
+  original_explanation: Слово «створення» вимагає родового відмінка — створення федерації.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конотопська битва стала тріумфом козацький зброї.
+  error: козацький
+  answer: козацької
+  sentence_corrected: Конотопська битва стала тріумфом козацької зброї.
+  options:
+  - козацький
+  - козацької
+  - козацькій
+  - козацьку
+  original_explanation: Іменник «зброї» жіночого роду в родовому відмінку, тому «козацької».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Москва активно підбурювала невдоволені козаки.
+  error: козаки
+  answer: козаків
+  sentence_corrected: Москва активно підбурювала невдоволені козаків.
+  options:
+  - козаки
+  - козаків
+  - козакам
+  - козаками
+  original_explanation: Дієслово «підбурювати» вимагає знахідного відмінка — підбурювала
+    козаків (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Україна розпалася на дві частина.
+  error: частина
+  answer: частини
+  sentence_corrected: Україна розпалася на дві частини.
+  options:
+  - частина
+  - частини
+  - частин
+  - частинами
+  original_explanation: Числівник «дві» вимагає родового відмінка однини — дві частини.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Андрусівське перемир'я закріпило поділ Україні.
+  error: Україні
+  answer: України
+  sentence_corrected: Андрусівське перемир'я закріпило поділ України.
+  options:
+  - Україні
+  - України
+  - Україну
+  - Україною
+  original_explanation: Слово «поділ» вимагає родового відмінка — поділ України (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Виговський застосував тактику удаваного відступ.
+  error: відступ
+  answer: відступу
+  sentence_corrected: Виговський застосував тактику удаваного відступу.
+  options:
+  - відступ
+  - відступу
+  - відступом
+  - відступі
+  original_explanation: Слово «тактику» вимагає родового відмінка — тактику відступу
+    (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Чорна рада обрала Брюховецький гетьманом.
+  error: Брюховецький
+  answer: Брюховецького
+  sentence_corrected: Чорна рада обрала Брюховецького гетьманом.
+  options:
+  - Брюховецький
+  - Брюховецького
+  - Брюховецькому
+  - Брюховецьким
+  original_explanation: Дієслово «обрати» вимагає знахідного відмінка — обрала Брюховецького
+    (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Імперії поділили Україну без її згода.
+  error: згода
+  answer: згоди
+  sentence_corrected: Імперії поділили Україну без її згоди.
+  options:
+  - згода
+  - згоди
+  - згоду
+  - згодою
+  original_explanation: Прийменник «без» вимагає родового відмінка — без згоди.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Руїна знищила здобутки Визвольний війни.
+  error: Визвольний
+  answer: Визвольної
+  sentence_corrected: Руїна знищила здобутки Визвольної війни.
+  options:
+  - Визвольний
+  - Визвольної
+  - Визвольну
+  - Визвольною
+  original_explanation: Іменник «війни» жіночого роду в родовому відмінку, тому «Визвольної».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Московські втрати були катастрофічний.
+  error: катастрофічний
+  answer: катастрофічними
+  sentence_corrected: Московські втрати були катастрофічними.
+  options:
+  - катастрофічний
+  - катастрофічними
+  - катастрофічні
+  - катастрофічних
+  original_explanation: 'Присудок з дієсловом «були» — орудний відмінок множини: «були
+    катастрофічними».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Виговський здобув освіту в Києво-Могилянський колегії.
+  error: Києво-Могилянський
+  answer: Києво-Могилянській
+  sentence_corrected: Виговський здобув освіту в Києво-Могилянській колегії.
+  options:
+  - Києво-Могилянський
+  - Києво-Могилянській
+  - Києво-Могилянську
+  - Києво-Могилянською
+  original_explanation: Прийменник «в» з місцевим відмінком — в колегії (якій?) Києво-Могилянській.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Гадяцька угода була революційним документ.
+  error: документ
+  answer: документом
+  sentence_corrected: Гадяцька угода була революційним документом.
+  options:
+  - документ
+  - документом
+  - документу
+  - документі
+  original_explanation: 'Присудок з дієсловом «була» — орудний відмінок: «була документом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Москва поводилася як завойовник, а не союзники.
+  error: союзники
+  answer: союзник
+  sentence_corrected: Москва поводилася як завойовник, а не союзник.
+  options:
+  - союзники
+  - союзник
+  - союзника
+  - союзником
+  original_explanation: 'Порівняння в однині: «як завойовник, а не союзник».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Роз'єднаність ведуть до поразки.
+  error: ведуть
+  answer: веде
+  sentence_corrected: Роз'єднаність веде до поразки.
+  options:
+  - ведуть
+  - веде
+  - вело
+  - вели
+  original_explanation: Іменник «роз'єднаність» — однина жіночого роду, тому «веде».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Період Руїни — одна з найтрагічніший сторінок історії.
+  error: найтрагічніший
+  answer: найтрагічніших
+  sentence_corrected: Період Руїни — одна з найтрагічніших сторінок історії.
+  options:
+  - найтрагічніший
+  - найтрагічніших
+  - найтрагічнішою
+  - найтрагічнішу
+  original_explanation: «Одна з» вимагає родового відмінка множини — найтрагічніших
+    сторінок.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Період _____ почався після смерті Хмельницького.
+  answer: Руїни
+  complete_sentence: Період Руїни__ почався після смерті Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Іван Виговський був _____ при Богдані Хмельницькому.
+  answer: генеральним писарем
+  complete_sentence: Іван Виговський був генеральним писарем__ при Богдані Хмельницькому.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Гадяцька угода передбачала створення _____ федерації.
+  answer: триєдиної
+  complete_sentence: Гадяцька угода передбачала створення триєдиної__ федерації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Виговський застосував тактику удаваного _____.
+  answer: відступу
+  complete_sentence: Виговський застосував тактику удаваного відступу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Чорна рада обрала гетьманом _____.
+  answer: Брюховецького
+  complete_sentence: Чорна рада обрала гетьманом Брюховецького__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Андрусівське _____ закріпило поділ України.
+  answer: перемир'я
+  complete_sentence: Андрусівське перемир'я__ закріпило поділ України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Україна розпалася на Лівобережжя і _____.
+  answer: Правобережжя
+  complete_sentence: Україна розпалася на Лівобережжя і Правобережжя__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Конотопська битва стала тріумфом козацької _____.
+  answer: зброї
+  complete_sentence: Конотопська битва стала тріумфом козацької зброї__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Москва активно _____ невдоволених козаків.
+  answer: підбурювала
+  complete_sentence: Москва активно підбурювала__ невдоволених козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Гадяцька угода пропонувала Україні _____ із Польщею.
+  answer: рівноправний союз
+  complete_sentence: Гадяцька угода пропонувала Україні рівноправний союз__ із Польщею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Московські воєводи поводилися як _____.
+  answer: завойовники
+  complete_sentence: Московські воєводи поводилися як завойовники__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Виговський шукав _____ для України.
+  answer: автономію
+  complete_sentence: Виговський шукав автономію__ для України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Кримський хан надав допомогу під _____.
+  answer: Конотопом
+  complete_sentence: Кримський хан надав допомогу під Конотопом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Булава була символом гетьманської _____.
+  answer: влади
+  complete_sentence: Булава була символом гетьманської влади__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Руїна знищила _____ Визвольної війни.
+  answer: здобутки
+  complete_sentence: Руїна знищила здобутки__ Визвольної війни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Дві імперії поділили Україну без _____ її народу.
+  answer: згоди
+  complete_sentence: Дві імперії поділили Україну без згоди__ її народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Руїна почалася після смерті _____.
+  answer: Хмельницького
+  complete_sentence: Руїна почалася після смерті Хмельницького__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Виговський шукав _____ для України.
+  answer: автономію
+  complete_sentence: Виговський шукав автономію__ для України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гадяцька угода передбачала створення _____.
+  answer: федерації
+  complete_sentence: Гадяцька угода передбачала створення федерації__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Виговський застосував тактику удаваного _____.
+  answer: відступу
+  complete_sentence: Виговський застосував тактику удаваного відступу__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Чорна рада обрала _____ гетьманом.
+  answer: Брюховецького
+  complete_sentence: Чорна рада обрала Брюховецького__ гетьманом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Перемир'я закріпило поділ _____.
+  answer: України
+  complete_sentence: Перемир'я закріпило поділ України__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Імперії поділили Україну без її _____.
+  answer: згоди
+  complete_sentence: Імперії поділили Україну без її згоди__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Руїна знищила здобутки Визвольної _____.
+  answer: війни
+  complete_sentence: Руїна знищила здобутки Визвольної війни__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Московські втрати були _____.
+  answer: катастрофічними
+  complete_sentence: Московські втрати були катастрофічними__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Виговський здобув освіту в Києво-Могилянській _____.
+  answer: колегії
+  complete_sentence: Виговський здобув освіту в Києво-Могилянській колегії__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Угода передбачала створення Руського _____.
+  answer: князівства
+  complete_sentence: Угода передбачала створення Руського князівства__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Конотопська битва стала козацьким _____.
+  answer: тріумфом
+  complete_sentence: Конотопська битва стала козацьким тріумфом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Москва підбурювала невдоволених _____.
+  answer: козаків
+  complete_sentence: Москва підбурювала невдоволених козаків__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Роз'єднаність веде до _____.
+  answer: поразки
+  complete_sentence: Роз'єднаність веде до поразки__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гадяцька угода пропонувала рівноправний _____.
+  answer: союз
+  complete_sentence: Гадяцька угода пропонувала рівноправний союз__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Період Руїни тривав до 1687 _____.
+  answer: року
+  complete_sentence: Період Руїни тривав до 1687 року__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про Виговського і Руїну
+  passage_template: 'Після смерті Богдана {Хмельницького|Мазепи|Виговського|Хмельницького}
+    в 1657 році почався період {Руїни|миру|процвітання|Руїни}. Гетьманом став Іван
+    {Виговський|Брюховецький|Мазепа|Виговський}, який був генеральним {писарем|полковником|отаманом|писарем}.
+
+
+    Виговський шукав альтернативу московському {протекторату|союзу|братерству|протекторату}.
+    У 1658 році він уклав Гадяцьку {угоду|війну|битву|угоду} з Польщею. Угода передбачала
+    створення {триєдиної|двоєдиної|єдиної|триєдиної} федерації.
+
+
+    У 1659 році під {Конотопом|Києвом|Львовом|Конотопом} Виговський здобув блискучу
+    {перемогу|поразку|нічию|перемогу}. Він застосував тактику удаваного {відступу|наступу|оборони|відступу}.
+    Московські втрати були {катастрофічними|незначними|помірними|катастрофічними}.
+
+
+    Але внутрішня {опозиція|підтримка|єдність|опозиція} та московські інтриги змусили
+    Виговського відмовитися від влади. Чорна {рада|армія|битва|рада} 1663 року обрала
+    гетьманом {Брюховецького|Виговського|Мазепу|Брюховецького}. Андрусівське {перемир''я|союз|договір|перемир''я}
+    1667 року закріпило поділ України на {Лівобережжя|Північ|Південь|Лівобережжя}
+    і Правобережжя.
+
+    '
+  blanks:
+  - answer: Хмельницького
+    options:
+    - Хмельницького
+    - Мазепи
+    - Виговського
+  - answer: Руїни
+    options:
+    - Руїни
+    - миру
+    - процвітання
+  - answer: Виговський
+    options:
+    - Виговський
+    - Брюховецький
+    - Мазепа
+  - answer: писарем
+    options:
+    - писарем
+    - полковником
+    - отаманом
+  - answer: протекторату
+    options:
+    - протекторату
+    - союзу
+    - братерству
+  - answer: угоду
+    options:
+    - угоду
+    - війну
+    - битву
+  - answer: триєдиної
+    options:
+    - триєдиної
+    - двоєдиної
+    - єдиної
+  - answer: Конотопом
+    options:
+    - Конотопом
+    - Києвом
+    - Львовом
+  - answer: перемогу
+    options:
+    - перемогу
+    - поразку
+    - нічию
+  - answer: відступу
+    options:
+    - відступу
+    - наступу
+    - оборони
+  - answer: катастрофічними
+    options:
+    - катастрофічними
+    - незначними
+    - помірними
+  - answer: опозиція
+    options:
+    - опозиція
+    - підтримка
+    - єдність
+  - answer: рада
+    options:
+    - рада
+    - армія
+    - битва
+  - answer: Брюховецького
+    options:
+    - Брюховецького
+    - Виговського
+    - Мазепу
+  - answer: перемир'я
+    options:
+    - перемир'я
+    - союз
+    - договір
+  - answer: Лівобережжя
+    options:
+    - Лівобережжя
+    - Північ
+    - Південь
+  blank_count: 16
+  complete_passage: 'Після смерті Богдана Хмельницького в 1657 році почався період
+    Руїни. Гетьманом став Іван Виговський, який був генеральним писарем.
+
+
+    Виговський шукав альтернативу московському протекторату. У 1658 році він уклав
+    Гадяцьку угоду з Польщею. Угода передбачала створення триєдиної федерації.
+
+
+    У 1659 році під Конотопом Виговський здобув блискучу перемогу. Він застосував
+    тактику удаваного відступу. Московські втрати були катастрофічними.
+
+
+    Але внутрішня опозиція та московські інтриги змусили Виговського відмовитися від
+    влади. Чорна рада 1663 року обрала гетьманом Брюховецького. Андрусівське перемир''я
+    1667 року закріпило поділ України на Лівобережжя і Правобережжя.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Руїна почалася після смерті Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Виговський був генеральним писарем.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Гадяцька угода передбачала триєдину федерацію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Конотопська битва стала козацьким тріумфом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Москва активно підбурювала невдоволених.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Чорна рада обрала Брюховецького гетьманом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Україна розпалася на дві частини.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Андрусівське перемир'я закріпило поділ України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Виговський застосував тактику удаваного відступу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Втручання сусідніх імперій розпалювало ворожнечу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Руїна знищила здобутки Визвольної війни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Московські втрати були катастрофічними.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Виговський шукав автономію для України.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Гадяцька угода пропонувала рівноправний союз.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Роз'єднаність веде до поразки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про Руїну
+  jumbled_words: []
+  answer: Імперії поділили Україну без її згоди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, коли почався період Руїни?
+  options:
+  - '{''text'': ''Після Переяславської угоди 1654 року'', ''correct'': False}'
+  - '{''text'': ''Після смерті Богдана Хмельницького 1657 року'', ''correct'': True}'
+  - '{''text'': ''Після Конотопської битви 1659 року'', ''correct'': False}'
+  - '{''text'': "Після Андрусівського перемир''я 1667 року", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, ким був Іван Виговський до обрання гетьманом?
+  options:
+  - '{''text'': ''Полковником'', ''correct'': False}'
+  - '{''text'': ''Генеральним писарем'', ''correct'': True}'
+  - '{''text'': ''Запорозьким отаманом'', ''correct'': False}'
+  - '{''text'': ''Київським митрополитом'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст характеризує Гадяцьку угоду?
+  options:
+  - '{''text'': ''Як капітуляцію перед Польщею'', ''correct'': False}'
+  - '{''text'': ''Як революційний документ про рівноправний союз'', ''correct'': True}'
+  - '{''text'': ''Як військовий договір'', ''correct'': False}'
+  - '{''text'': ''Як торговельну угоду'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, що передбачала Гадяцька угода?
+  options:
+  - '{''text'': ''Підкорення України Польщі'', ''correct'': False}'
+  - '{''text'': ''Створення триєдиної федерації'', ''correct'': True}'
+  - '{''text'': ''Союз із Москвою'', ''correct'': False}'
+  - '{''text'': ''Повну незалежність України'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст описує Конотопську битву?
+  options:
+  - '{''text'': ''Як незначну сутичку'', ''correct'': False}'
+  - '{''text'': ''Як одну з найбільших битв XVII століття'', ''correct'': True}'
+  - '{''text'': ''Як поразку козаків'', ''correct'': False}'
+  - '{''text'': ''Як нічийний результат'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, яку тактику застосував Виговський під Конотопом?
+  options:
+  - '{''text'': ''Лобову атаку'', ''correct'': False}'
+  - '{''text'': ''Удаваний відступ'', ''correct'': True}'
+  - '{''text'': ''Облогу'', ''correct'': False}'
+  - '{''text'': ''Оборону фортеці'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст характеризує московські втрати під Конотопом?
+  options:
+  - '{''text'': ''Незначні'', ''correct'': False}'
+  - '{''text'': ''Катастрофічні — 30-50 тисяч загиблих'', ''correct'': True}'
+  - '{''text'': ''Помірні'', ''correct'': False}'
+  - '{''text'': ''Невідомі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, чому Виговський втратив владу?
+  options:
+  - '{''text'': ''Через військову поразку'', ''correct'': False}'
+  - '{''text'': ''Через внутрішню опозицію та московські інтриги'', ''correct'': True}'
+  - '{''text'': ''Через хворобу'', ''correct'': False}'
+  - '{''text'': ''Через смерть'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст описує Чорну раду 1663 року?
+  options:
+  - '{''text'': ''Як демократичні вибори'', ''correct'': False}'
+  - '{''text'': ''Як охлократію під впливом московських агентів'', ''correct'': True}'
+  - '{''text'': "Як законний козацький з''їзд", ''correct'': False}'
+  - '{''text'': ''Як мирні переговори'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, що закріпило Андрусівське перемир'я?
+  options:
+  - '{''text'': ''Єдність України'', ''correct'': False}'
+  - '{''text'': ''Поділ України по Дніпру'', ''correct'': True}'
+  - '{''text'': ''Незалежність України'', ''correct'': False}'
+  - '{''text'': ''Союз із Швецією'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст характеризує Переяславську угоду 1654 року?
+  options:
+  - '{''text'': ''Як братерський союз'', ''correct'': False}'
+  - '{''text'': ''Як тимчасовий військовий договір, що став пасткою'', ''correct'':
+    True}'
+  - '{''text'': ''Як добровільне приєднання'', ''correct'': False}'
+  - '{''text'': ''Як рівноправне партнерство'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, хто такий Іван Брюховецький?
+  options:
+  - '{''text'': ''Сподвижник Виговського'', ''correct'': False}'
+  - '{''text'': ''Ставленик Москви, гетьман Лівобережжя'', ''correct'': True}'
+  - '{''text'': ''Польський воєначальник'', ''correct'': False}'
+  - '{''text'': ''Кримський хан'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст пояснює актуальність уроків Руїни?
+  options:
+  - '{''text'': ''Тільки історичний інтерес'', ''correct'': False}'
+  - '{''text'': "Роз''єднаність веде до поразки", ''correct'': True}'
+  - '{''text'': ''Не мають значення'', ''correct'': False}'
+  - '{''text'': ''Тільки для істориків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, хто ввів термін «Руїна»?
+  options:
+  - '{''text'': ''Богдан Хмельницький'', ''correct'': False}'
+  - '{''text'': ''Самійло Величко'', ''correct'': True}'
+  - '{''text'': ''Іван Виговський'', ''correct'': False}'
+  - '{''text'': ''Сучасні історики'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Як текст пов'язує Гадяцьку угоду із сучасністю?
+  options:
+  - '{''text'': "Ніяк не пов''язує", ''correct'': False}'
+  - '{''text'': ''Символ «європейської альтернативи», як кандидатство в ЄС'', ''correct'':
+    True}'
+  - '{''text'': ''Застарілий приклад'', ''correct'': False}'
+  - '{''text'': ''Негативний приклад'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про період Руїни
+  question: Згідно з текстом, скільки реєстрових козаків передбачала Гадяцька угода?
+  options:
+  - '{''text'': ''6 000'', ''correct'': False}'
+  - '{''text'': ''30 000'', ''correct'': True}'
+  - '{''text'': ''100 000'', ''correct'': False}'
+  - '{''text'': ''50 000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Альбрехт Радзивілл характеризує Виговського в джерелі?
+  options:
+  - '{''text'': ''Як неосвіченого козака'', ''correct'': False}'
+  - '{''text'': ''Як освічену і хитру людину'', ''correct'': True}'
+  - '{''text'': ''Як слабкого політика'', ''correct'': False}'
+  - '{''text'': ''Як зрадника'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «він не хоче бути васалом Москви» у джерелі Радзивілла?
+  options:
+  - '{''text'': ''Виговський любив Москву'', ''correct'': False}'
+  - '{''text'': ''Виговський шукав незалежності від московського контролю'', ''correct'':
+    True}'
+  - '{''text'': ''Виговський був московським агентом'', ''correct'': False}'
+  - '{''text'': ''Виговський хотів війни з Москвою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст Гадяцької угоди описує статус України?
+  options:
+  - '{''text'': ''Як підкореної території'', ''correct'': False}'
+  - '{''text'': ''Як рівноправного партнера'', ''correct'': True}'
+  - '{''text'': ''Як колонії'', ''correct'': False}'
+  - '{''text'': ''Як васала'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «жодної переваги не мала» в тексті угоди?
+  options:
+  - '{''text'': ''Україна слабша'', ''correct'': False}'
+  - '{''text'': ''Рівноправність усіх частин федерації'', ''correct'': True}'
+  - '{''text'': ''Польща сильніша'', ''correct'': False}'
+  - '{''text'': ''Литва найсильніша'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Радзивілл як литовець цікавився Виговським?
+  options:
+  - '{''text'': ''Вони були друзями'', ''correct'': False}'
+  - '{''text'': ''Доля України впливала на Литву'', ''correct'': True}'
+  - '{''text'': ''Він не цікавився'', ''correct'': False}'
+  - '{''text'': ''Виговський був литовцем'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що Радзивілл визнає хитрість Виговського?
+  options:
+  - '{''text'': ''Засудження'', ''correct'': False}'
+  - '{''text'': ''Визнання дипломатичних здібностей'', ''correct'': True}'
+  - '{''text'': ''Образа'', ''correct'': False}'
+  - '{''text'': ''Ігнорування'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст Гадяцької угоди формулює принцип об'єднання?
+  options:
+  - '{''text'': ''Тимчасовий союз'', ''correct'': False}'
+  - '{''text'': "Вічне з''єднання", ''correct'': True}'
+  - '{''text'': ''Військова угода'', ''correct'': False}'
+  - '{''text'': ''Торговельний договір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння Руїни?
+  options:
+  - '{''text'': ''Вони розважають'', ''correct'': False}'
+  - '{''text'': ''Вони дають свідчення сучасників'', ''correct'': True}'
+  - '{''text'': ''Вони короткі'', ''correct'': False}'
+  - '{''text'': ''Вони прості'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє цитата з Радзивілла в тексті?
+  options:
+  - '{''text'': ''Прикраса'', ''correct'': False}'
+  - '{''text'': ''Показує, як сучасники оцінювали Виговського'', ''correct'': True}'
+  - '{''text'': ''Заповнення місця'', ''correct'': False}'
+  - '{''text'': ''Розвага'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає слово «княжество» в тексті угоди?
+  options:
+  - '{''text'': ''Провінція'', ''correct'': False}'
+  - '{''text'': ''Держава з власним правлінням'', ''correct'': True}'
+  - '{''text'': ''Колонія'', ''correct'': False}'
+  - '{''text'': ''Військовий округ'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як текст угоди визначає територію Руського князівства?
+  options:
+  - '{''text'': ''Всю Україну'', ''correct'': False}'
+  - '{''text'': ''Київське, Брацлавське, Чернігівське воєводства'', ''correct'': True}'
+  - '{''text'': ''Тільки Київ'', ''correct'': False}'
+  - '{''text'': ''Запорожжя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому литовський канцлер вів щоденник?
+  options:
+  - '{''text'': ''Для розваги'', ''correct'': False}'
+  - '{''text'': ''Для фіксації важливих політичних подій'', ''correct'': True}'
+  - '{''text'': ''Для публікації'', ''correct'': False}'
+  - '{''text'': ''За наказом короля'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має фраза «цар поглине Україну» в джерелі?
+  options:
+  - '{''text'': ''Географічний опис'', ''correct'': False}'
+  - '{''text'': ''Застереження про імперські амбіції Москви'', ''correct'': True}'
+  - '{''text'': ''Похвала царю'', ''correct'': False}'
+  - '{''text'': ''Нейтральне спостереження'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як два джерела доповнюють одне одного?
+  options:
+  - '{''text'': ''Вони суперечать'', ''correct'': False}'
+  - '{''text'': ''Радзивілл дає оцінку, угода — юридичні норми'', ''correct'': True}'
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Гадяцька угода важлива як історичне джерело?
+  options:
+  - '{''text'': ''Тільки як юридичний документ'', ''correct'': False}'
+  - '{''text'': ''Показує альтернативний шлях розвитку України'', ''correct'': True}'
+  - '{''text'': ''Не має значення'', ''correct'': False}'
+  - '{''text'': ''Тільки для юристів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який стиль мови використовує текст угоди?
+  options:
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Офіційний канцелярський'', ''correct'': True}'
+  - '{''text'': ''Поетичний'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Руїна тривала з 1657 до 1687 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Виговський був неосвіченим козаком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Гадяцька угода передбачала підкорення України Польщі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Конотопська битва відбулася в 1659 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, московське військо під Конотопом було меншим за козацьке.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Виговський програв Конотопську битву.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Чорна рада відбулася в Ніжині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Брюховецький був ставлеником Москви.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Андрусівське перемир'я об'єднало Україну.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Київ відійшов до Польщі за Андрусівським перемир'ям.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, термін «Руїна» ввів Самійло Величко.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Юрію Хмельницькому було 30 років після смерті батька.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Виговський шукав союзу тільки з Польщею.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, День Конотопської битви відзначається в Україні.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, Гадяцька угода була повністю ратифікована польським
+    сеймом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про період Руїни
+  statement: Згідно з текстом, роз'єднаність веде до поразки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

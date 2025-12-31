@@ -1,15 +1,18 @@
 module: 30-b21-checkpoint
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/30-b21-checkpoint.md
-generated: '2025-12-29T22:44:07.615241'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.094439'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 22
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 58
   true-false: 12
-item_count: 140
+total_items: 141
+item_count: 141
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок у пасивних конструкціях
@@ -685,6 +688,117 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Інтеграційний текст про реформу
+  passage_template: '{Законопроєкт|Вирок|Позов|Законопроєкт} про реформу {судової|юридичної|правової|судової}
+    системи {було ухвалено|ухвалили|ухвалюється|було ухвалено} Верховною Радою після
+    тривалих дебатів. Документ {розроблявся|розроблено|розробляє|розроблявся} робочою
+    групою протягом {двох|три|чотири|двох} років. {По-перше|Однак|Натомість|По-перше},
+    реформа передбачає створення нових {антикорупційних|корупційних|звичайних|антикорупційних}
+    судів; {по-друге|крім того|однак|по-друге}, вона посилює {незалежність|залежність|підпорядкованість|незалежність}
+    суддів. {Прийнявши|Приймаючи|Прийняти|Прийнявши} цей закон, Україна зробила важливий
+    крок до {європейських|російських|американських|європейських} стандартів. {Однак|По-перше|Крім
+    того|Однак} опозиція критикує деякі положення. Як {повідомили|повідомлено|повідомляється|повідомили}
+    у міністерстві, підготовку до {імплементації|інфляції|інвестицій|імплементації}
+    вже {розпочато|розпочали|розпочинається|розпочато}. Всі {зацікавлені|незацікавлені|байдужі|зацікавлені}
+    сторони будуть поінформовані.
+
+    '
+  blanks:
+  - answer: Законопроєкт
+    options:
+    - Законопроєкт
+    - Вирок
+    - Позов
+  - answer: судової
+    options:
+    - судової
+    - юридичної
+    - правової
+  - answer: було ухвалено
+    options:
+    - було ухвалено
+    - ухвалили
+    - ухвалюється
+  - answer: розроблявся
+    options:
+    - розроблявся
+    - розроблено
+    - розробляє
+  - answer: двох
+    options:
+    - двох
+    - три
+    - чотири
+  - answer: По-перше
+    options:
+    - По-перше
+    - Однак
+    - Натомість
+  - answer: антикорупційних
+    options:
+    - антикорупційних
+    - корупційних
+    - звичайних
+  - answer: по-друге
+    options:
+    - по-друге
+    - крім того
+    - однак
+  - answer: незалежність
+    options:
+    - незалежність
+    - залежність
+    - підпорядкованість
+  - answer: Прийнявши
+    options:
+    - Прийнявши
+    - Приймаючи
+    - Прийняти
+  - answer: європейських
+    options:
+    - європейських
+    - російських
+    - американських
+  - answer: Однак
+    options:
+    - Однак
+    - По-перше
+    - Крім того
+  - answer: повідомили
+    options:
+    - повідомили
+    - повідомлено
+    - повідомляється
+  - answer: імплементації
+    options:
+    - імплементації
+    - інфляції
+    - інвестицій
+  - answer: розпочато
+    options:
+    - розпочато
+    - розпочали
+    - розпочинається
+  - answer: зацікавлені
+    options:
+    - зацікавлені
+    - незацікавлені
+    - байдужі
+  blank_count: 16
+  complete_passage: 'Законопроєкт про реформу судової системи було ухвалено Верховною
+    Радою після тривалих дебатів. Документ розроблявся робочою групою протягом двох
+    років. По-перше, реформа передбачає створення нових антикорупційних судів; по-друге,
+    вона посилює незалежність суддів. Прийнявши цей закон, Україна зробила важливий
+    крок до європейських стандартів. Однак опозиція критикує деякі положення. Як повідомили
+    у міністерстві, підготовку до імплементації вже розпочато. Всі зацікавлені сторони
+    будуть поінформовані.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Побудова складних речень
   jumbled_words: []
@@ -817,14 +931,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву у реченні "Законопроєкт ухвалено Верховною Радою"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: true
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -835,14 +945,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву у реченні "Дослідження проводиться протягом року"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -853,14 +959,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву у реченні "Мені сказали про зміни в розкладі"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -871,14 +973,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву у реченні "Договір підписаний обома сторонами"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: true
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -889,14 +987,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Для якого регістру найтиповіша форма -но/-то?
   options:
-  - text: Розмовного
-    correct: false
-  - text: Офіційно-ділового
-    correct: true
-  - text: Художнього
-    correct: false
-  - text: Наукового
-    correct: false
+  - '{''text'': ''Розмовного'', ''correct'': False}'
+  - '{''text'': ''Офіційно-ділового'', ''correct'': True}'
+  - '{''text'': ''Художнього'', ''correct'': False}'
+  - '{''text'': ''Наукового'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -907,14 +1001,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: У якому відмінку стоїть об'єкт у конструкції з -но/-то?
   options:
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: У знахідному
-    correct: true
-  - text: В орудному
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''У знахідному'', ''correct'': True}'
+  - '{''text'': ''В орудному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -925,14 +1015,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву підкреслює процес, а не результат?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -943,14 +1029,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Як виражається агент у дієприкметниковій конструкції?
   options:
-  - text: У називному відмінку
-    correct: false
-  - text: У родовому відмінку
-    correct: false
-  - text: В орудному відмінку
-    correct: true
-  - text: У знахідному відмінку
-    correct: false
+  - '{''text'': ''У називному відмінку'', ''correct'': False}'
+  - '{''text'': ''У родовому відмінку'', ''correct'': False}'
+  - '{''text'': ''В орудному відмінку'', ''correct'': True}'
+  - '{''text'': ''У знахідному відмінку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -961,14 +1043,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яке речення є правильним у офіційному документі?
   options:
-  - text: Рішення прийняли вчора.
-    correct: false
-  - text: Рішення прийнято вчора.
-    correct: true
-  - text: Рішення було прийняте вчора.
-    correct: false
-  - text: Рішення приймалось вчора.
-    correct: false
+  - '{''text'': ''Рішення прийняли вчора.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято вчора.'', ''correct'': True}'
+  - '{''text'': ''Рішення було прийняте вчора.'', ''correct'': False}'
+  - '{''text'': ''Рішення приймалось вчора.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -979,14 +1057,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву найприродніша в повсякденній розмові?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -997,14 +1071,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яке речення містить помилку?
   options:
-  - text: Книга написана автором.
-    correct: false
-  - text: Книгу написано.
-    correct: false
-  - text: Книга написано.
-    correct: true
-  - text: Книгу написали.
-    correct: false
+  - '{''text'': ''Книга написана автором.'', ''correct'': False}'
+  - '{''text'': ''Книгу написано.'', ''correct'': False}'
+  - '{''text'': ''Книга написано.'', ''correct'': True}'
+  - '{''text'': ''Книгу написали.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1015,14 +1085,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву типова для наукових текстів?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1033,14 +1099,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма пасиву узгоджується з підметом?
   options:
-  - text: Тільки дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Дієприкметникова та зворотна
-    correct: true
-  - text: Тільки безособова (-но/-то)
-    correct: false
-  - text: Всі форми
-    correct: false
+  - '{''text'': ''Тільки дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Дієприкметникова та зворотна'', ''correct'': True}'
+  - '{''text'': ''Тільки безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Всі форми'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1051,14 +1113,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: У реченні "Експеримент було проведено успішно" яка форма пасиву?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: true
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1069,14 +1127,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яке речення демонструє правильне вживання агента в -ся конструкції?
   options:
-  - text: Дані аналізуються комп'ютером.
-    correct: true
-  - text: Дані аналізуються від комп'ютера.
-    correct: false
-  - text: Дані аналізуються комп'ютер.
-    correct: false
-  - text: Дані аналізуються з комп'ютером.
-    correct: false
+  - '{''text'': "Дані аналізуються комп''ютером.", ''correct'': True}'
+  - '{''text'': "Дані аналізуються від комп''ютера.", ''correct'': False}'
+  - '{''text'': "Дані аналізуються комп''ютер.", ''correct'': False}'
+  - '{''text'': "Дані аналізуються з комп''ютером.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1087,14 +1141,10 @@ items:
   title: 'Пасивний стан: розпізнавання форм'
   question: Яка форма буде найдоречнішою для художнього опису?
   options:
-  - text: Картину намальовано.
-    correct: false
-  - text: Картина намальована художником.
-    correct: true
-  - text: Картину намалювали.
-    correct: false
-  - text: Картина малюється.
-    correct: false
+  - '{''text'': ''Картину намальовано.'', ''correct'': False}'
+  - '{''text'': ''Картина намальована художником.'', ''correct'': True}'
+  - '{''text'': ''Картину намалювали.'', ''correct'': False}'
+  - '{''text'': ''Картина малюється.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1105,14 +1155,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Як замінити "читаючий студент" на підрядне речення?
   options:
-  - text: студент, який читав
-    correct: false
-  - text: студент, який читає
-    correct: true
-  - text: студент, який прочитав
-    correct: false
-  - text: студент, якого читають
-    correct: false
+  - '{''text'': ''студент, який читав'', ''correct'': False}'
+  - '{''text'': ''студент, який читає'', ''correct'': True}'
+  - '{''text'': ''студент, який прочитав'', ''correct'': False}'
+  - '{''text'': ''студент, якого читають'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1123,14 +1169,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Яке слово є лексикалізованим активним дієприкметником?
   options:
-  - text: читаючий
-    correct: false
-  - text: колишній
-    correct: true
-  - text: написаний
-    correct: false
-  - text: зроблено
-    correct: false
+  - '{''text'': ''читаючий'', ''correct'': False}'
+  - '{''text'': ''колишній'', ''correct'': True}'
+  - '{''text'': ''написаний'', ''correct'': False}'
+  - '{''text'': ''зроблено'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1141,14 +1183,11 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Чому активні дієприкметники на -учий/-ючий вважаються архаїчними?
   options:
-  - text: Вони граматично неправильні.
-    correct: false
-  - text: Сучасна мова надає перевагу підрядним реченням.
-    correct: true
-  - text: Вони вживаються тільки в діалектах.
-    correct: false
-  - text: Вони є русизмами.
-    correct: false
+  - '{''text'': ''Вони граматично неправильні.'', ''correct'': False}'
+  - '{''text'': ''Сучасна мова надає перевагу підрядним реченням.'', ''correct'':
+    True}'
+  - '{''text'': ''Вони вживаються тільки в діалектах.'', ''correct'': False}'
+  - '{''text'': ''Вони є русизмами.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1159,14 +1198,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Як трансформувати "вищезгаданий документ"?
   options:
-  - text: документ, що згадується вище
-    correct: true
-  - text: документ, який згадував
-    correct: false
-  - text: документ, що згадано
-    correct: false
-  - text: документ вище згаданий
-    correct: false
+  - '{''text'': ''документ, що згадується вище'', ''correct'': True}'
+  - '{''text'': ''документ, який згадував'', ''correct'': False}'
+  - '{''text'': ''документ, що згадано'', ''correct'': False}'
+  - '{''text'': ''документ вище згаданий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1177,14 +1212,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Який дієприкметник є формою минулого часу на -лий?
   options:
-  - text: читаючий
-    correct: false
-  - text: минулий
-    correct: true
-  - text: написаний
-    correct: false
-  - text: зроблений
-    correct: false
+  - '{''text'': ''читаючий'', ''correct'': False}'
+  - '{''text'': ''минулий'', ''correct'': True}'
+  - '{''text'': ''написаний'', ''correct'': False}'
+  - '{''text'': ''зроблений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1195,14 +1226,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Як замінити "новообраний президент"?
   options:
-  - text: президент, який обрали
-    correct: false
-  - text: президент, якого щойно обрали
-    correct: true
-  - text: президент, який обирає
-    correct: false
-  - text: президент, що обраний
-    correct: false
+  - '{''text'': ''президент, який обрали'', ''correct'': False}'
+  - '{''text'': ''президент, якого щойно обрали'', ''correct'': True}'
+  - '{''text'': ''президент, який обирає'', ''correct'': False}'
+  - '{''text'': ''президент, що обраний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1213,14 +1240,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: У якому стилі найчастіше зустрічаються активні дієприкметники?
   options:
-  - text: Розмовному
-    correct: false
-  - text: Офіційно-діловому та художньому
-    correct: true
-  - text: Тільки в діалектах
-    correct: false
-  - text: Науковому
-    correct: false
+  - '{''text'': ''Розмовному'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловому та художньому'', ''correct'': True}'
+  - '{''text'': ''Тільки в діалектах'', ''correct'': False}'
+  - '{''text'': ''Науковому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1231,14 +1254,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Як трансформувати "зростаюча інфляція"?
   options:
-  - text: інфляція, яка зростала
-    correct: false
-  - text: інфляція, що зростає
-    correct: true
-  - text: інфляція, яку зростають
-    correct: false
-  - text: інфляція зростаюча
-    correct: false
+  - '{''text'': ''інфляція, яка зростала'', ''correct'': False}'
+  - '{''text'': ''інфляція, що зростає'', ''correct'': True}'
+  - '{''text'': ''інфляція, яку зростають'', ''correct'': False}'
+  - '{''text'': ''інфляція зростаюча'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1249,14 +1268,10 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Яке речення містить помилку у вживанні дієприкметника?
   options:
-  - text: Людина, знаюча правду, мовчить.
-    correct: false
-  - text: Людина, яка знає правду, мовчить.
-    correct: false
-  - text: Знаюча правду людина мовчить.
-    correct: false
-  - text: Всі речення граматично правильні.
-    correct: true
+  - '{''text'': ''Людина, знаюча правду, мовчить.'', ''correct'': False}'
+  - '{''text'': ''Людина, яка знає правду, мовчить.'', ''correct'': False}'
+  - '{''text'': ''Знаюча правду людина мовчить.'', ''correct'': False}'
+  - '{''text'': ''Всі речення граматично правильні.'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1267,14 +1282,11 @@ items:
   title: 'Активні дієприкметники: розпізнавання та трансформація'
   question: Що таке лексикалізація дієприкметника?
   options:
-  - text: Втрата дієслівного значення і перехід у прикметник.
-    correct: true
-  - text: Утворення нового дієслова.
-    correct: false
-  - text: Зміна наголосу.
-    correct: false
-  - text: Зміна відмінкової форми.
-    correct: false
+  - '{''text'': ''Втрата дієслівного значення і перехід у прикметник.'', ''correct'':
+    True}'
+  - '{''text'': ''Утворення нового дієслова.'', ''correct'': False}'
+  - '{''text'': ''Зміна наголосу.'', ''correct'': False}'
+  - '{''text'': ''Зміна відмінкової форми.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1285,14 +1297,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Як утворюється дієприслівник теперішнього часу від "читати"?
   options:
-  - text: читаючи
-    correct: true
-  - text: прочитавши
-    correct: false
-  - text: читавши
-    correct: false
-  - text: читано
-    correct: false
+  - '{''text'': ''читаючи'', ''correct'': True}'
+  - '{''text'': ''прочитавши'', ''correct'': False}'
+  - '{''text'': ''читавши'', ''correct'': False}'
+  - '{''text'': ''читано'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1303,14 +1311,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Як утворюється дієприслівник минулого часу від "прочитати"?
   options:
-  - text: прочитаючи
-    correct: false
-  - text: прочитавши
-    correct: true
-  - text: прочитано
-    correct: false
-  - text: прочитуючи
-    correct: false
+  - '{''text'': ''прочитаючи'', ''correct'': False}'
+  - '{''text'': ''прочитавши'', ''correct'': True}'
+  - '{''text'': ''прочитано'', ''correct'': False}'
+  - '{''text'': ''прочитуючи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1321,14 +1325,12 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Яка умова вживання дієприслівника?
   options:
-  - text: Суб'єкт дієприслівника та головного дієслова — той самий.
-    correct: true
-  - text: Суб'єкти можуть бути різними.
-    correct: false
-  - text: Дієприслівник не має суб'єкта.
-    correct: false
-  - text: Суб'єкт дієприслівника завжди в орудному відмінку.
-    correct: false
+  - '{''text'': "Суб''єкт дієприслівника та головного дієслова — той самий.", ''correct'':
+    True}'
+  - '{''text'': "Суб''єкти можуть бути різними.", ''correct'': False}'
+  - '{''text'': "Дієприслівник не має суб''єкта.", ''correct'': False}'
+  - '{''text'': "Суб''єкт дієприслівника завжди в орудному відмінку.", ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -1339,14 +1341,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Яке речення правильне?
   options:
-  - text: Читаючи книгу, мені стало цікаво.
-    correct: false
-  - text: Читаючи книгу, я зацікавився темою.
-    correct: true
-  - text: Читаючи книгу, тема стала цікавою.
-    correct: false
-  - text: Читаючи книгу, книга виявилася цікавою.
-    correct: false
+  - '{''text'': ''Читаючи книгу, мені стало цікаво.'', ''correct'': False}'
+  - '{''text'': ''Читаючи книгу, я зацікавився темою.'', ''correct'': True}'
+  - '{''text'': ''Читаючи книгу, тема стала цікавою.'', ''correct'': False}'
+  - '{''text'': ''Читаючи книгу, книга виявилася цікавою.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1357,14 +1355,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Який дієприслівник виражає попередню дію?
   options:
-  - text: працюючи
-    correct: false
-  - text: закінчивши
-    correct: true
-  - text: думаючи
-    correct: false
-  - text: знаючи
-    correct: false
+  - '{''text'': ''працюючи'', ''correct'': False}'
+  - '{''text'': ''закінчивши'', ''correct'': True}'
+  - '{''text'': ''думаючи'', ''correct'': False}'
+  - '{''text'': ''знаючи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1375,14 +1369,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Який дієприслівник виражає супровідну дію?
   options:
-  - text: прийшовши
-    correct: false
-  - text: сказавши
-    correct: false
-  - text: слухаючи
-    correct: true
-  - text: написавши
-    correct: false
+  - '{''text'': ''прийшовши'', ''correct'': False}'
+  - '{''text'': ''сказавши'', ''correct'': False}'
+  - '{''text'': ''слухаючи'', ''correct'': True}'
+  - '{''text'': ''написавши'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1393,14 +1383,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Як правильно утворити дієприслівник від "прийти"?
   options:
-  - text: прийтивши
-    correct: false
-  - text: прийшовши
-    correct: true
-  - text: приходячи
-    correct: false
-  - text: прийдучи
-    correct: false
+  - '{''text'': ''прийтивши'', ''correct'': False}'
+  - '{''text'': ''прийшовши'', ''correct'': True}'
+  - '{''text'': ''приходячи'', ''correct'': False}'
+  - '{''text'': ''прийдучи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1411,14 +1397,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Яке речення містить помилку у вживанні дієприслівника?
   options:
-  - text: Працюючи над проєктом, вона зробила відкриття.
-    correct: false
-  - text: Завершивши роботу, команда святкувала.
-    correct: false
-  - text: Сидячи в кріслі, книга впала на підлогу.
-    correct: true
-  - text: Не знаючи правди, він помилився.
-    correct: false
+  - '{''text'': ''Працюючи над проєктом, вона зробила відкриття.'', ''correct'': False}'
+  - '{''text'': ''Завершивши роботу, команда святкувала.'', ''correct'': False}'
+  - '{''text'': ''Сидячи в кріслі, книга впала на підлогу.'', ''correct'': True}'
+  - '{''text'': ''Не знаючи правди, він помилився.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1429,14 +1411,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: Як об'єднати "Він закінчив роботу. Він пішов додому."?
   options:
-  - text: Він закінчивши роботу, пішов додому.
-    correct: false
-  - text: Закінчивши роботу, він пішов додому.
-    correct: true
-  - text: Він закінчуючи роботу, пішов додому.
-    correct: false
-  - text: Закінчуючи роботу, він пішов додому.
-    correct: false
+  - '{''text'': ''Він закінчивши роботу, пішов додому.'', ''correct'': False}'
+  - '{''text'': ''Закінчивши роботу, він пішов додому.'', ''correct'': True}'
+  - '{''text'': ''Він закінчуючи роботу, пішов додому.'', ''correct'': False}'
+  - '{''text'': ''Закінчуючи роботу, він пішов додому.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1447,14 +1425,10 @@ items:
   title: 'Дієприслівники: утворення та вживання'
   question: У якому стилі найчастіше вживаються дієприслівники?
   options:
-  - text: Розмовному
-    correct: false
-  - text: Книжних (науковому, офіційному, художньому)
-    correct: true
-  - text: Тільки в поезії
-    correct: false
-  - text: У всіх однаково
-    correct: false
+  - '{''text'': ''Розмовному'', ''correct'': False}'
+  - '{''text'': ''Книжних (науковому, офіційному, художньому)'', ''correct'': True}'
+  - '{''text'': ''Тільки в поезії'', ''correct'': False}'
+  - '{''text'': ''У всіх однаково'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1465,14 +1439,10 @@ items:
   title: Вставні слова та конектори
   question: Яку функцію виконує "по-перше" у тексті?
   options:
-  - text: Виражає контраст
-    correct: false
-  - text: Організовує послідовність аргументів
-    correct: true
-  - text: Підсумовує сказане
-    correct: false
-  - text: Виражає причину
-    correct: false
+  - '{''text'': ''Виражає контраст'', ''correct'': False}'
+  - '{''text'': ''Організовує послідовність аргументів'', ''correct'': True}'
+  - '{''text'': ''Підсумовує сказане'', ''correct'': False}'
+  - '{''text'': ''Виражає причину'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1483,14 +1453,10 @@ items:
   title: Вставні слова та конектори
   question: Який конектор виражає контраст?
   options:
-  - text: крім того
-    correct: false
-  - text: однак
-    correct: true
-  - text: по-друге
-    correct: false
-  - text: таким чином
-    correct: false
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''однак'', ''correct'': True}'
+  - '{''text'': ''по-друге'', ''correct'': False}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1501,14 +1467,10 @@ items:
   title: Вставні слова та конектори
   question: Який конектор використовується для підсумку?
   options:
-  - text: по-перше
-    correct: false
-  - text: крім того
-    correct: false
-  - text: отже
-    correct: true
-  - text: з іншого боку
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': True}'
+  - '{''text'': ''з іншого боку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1519,14 +1481,10 @@ items:
   title: Вставні слова та конектори
   question: Яку функцію виконує "крім того"?
   options:
-  - text: Виражає контраст
-    correct: false
-  - text: Додає аргумент
-    correct: true
-  - text: Підсумовує
-    correct: false
-  - text: Організовує послідовність
-    correct: false
+  - '{''text'': ''Виражає контраст'', ''correct'': False}'
+  - '{''text'': ''Додає аргумент'', ''correct'': True}'
+  - '{''text'': ''Підсумовує'', ''correct'': False}'
+  - '{''text'': ''Організовує послідовність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1537,14 +1495,10 @@ items:
   title: Вставні слова та конектори
   question: Який конектор найкраще підходить для виразу альтернативи?
   options:
-  - text: по-перше
-    correct: false
-  - text: крім того
-    correct: false
-  - text: натомість
-    correct: true
-  - text: безперечно
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''натомість'', ''correct'': True}'
+  - '{''text'': ''безперечно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1555,14 +1509,10 @@ items:
   title: Вставні слова та конектори
   question: Яке вставне слово виражає впевненість?
   options:
-  - text: можливо
-    correct: false
-  - text: безперечно
-    correct: true
-  - text: на жаль
-    correct: false
-  - text: напевно
-    correct: false
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''безперечно'', ''correct'': True}'
+  - '{''text'': ''на жаль'', ''correct'': False}'
+  - '{''text'': ''напевно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1573,14 +1523,10 @@ items:
   title: Вставні слова та конектори
   question: Яку функцію виконує "таким чином"?
   options:
-  - text: Додає аргумент
-    correct: false
-  - text: Виражає контраст
-    correct: false
-  - text: Підсумовує або робить висновок
-    correct: true
-  - text: Організовує послідовність
-    correct: false
+  - '{''text'': ''Додає аргумент'', ''correct'': False}'
+  - '{''text'': ''Виражає контраст'', ''correct'': False}'
+  - '{''text'': ''Підсумовує або робить висновок'', ''correct'': True}'
+  - '{''text'': ''Організовує послідовність'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1591,14 +1537,10 @@ items:
   title: Вставні слова та конектори
   question: Який конектор використовується для додавання?
   options:
-  - text: однак
-    correct: false
-  - text: до того ж
-    correct: true
-  - text: натомість
-    correct: false
-  - text: нарешті
-    correct: false
+  - '{''text'': ''однак'', ''correct'': False}'
+  - '{''text'': ''до того ж'', ''correct'': True}'
+  - '{''text'': ''натомість'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1609,14 +1551,10 @@ items:
   title: Вставні слова та конектори
   question: Яке вставне слово виражає суб'єктивну думку автора?
   options:
-  - text: отже
-    correct: false
-  - text: по-перше
-    correct: false
-  - text: на мою думку
-    correct: true
-  - text: таким чином
-    correct: false
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''на мою думку'', ''correct'': True}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1627,14 +1565,10 @@ items:
   title: Вставні слова та конектори
   question: Який конектор завершує послідовність аргументів?
   options:
-  - text: по-перше
-    correct: false
-  - text: крім того
-    correct: false
-  - text: насамкінець
-    correct: true
-  - text: однак
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''насамкінець'', ''correct'': True}'
+  - '{''text'': ''однак'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1645,14 +1579,11 @@ items:
   title: Комплексний тест B2.1
   question: Яка головна відмінність між -но/-то та -ний/-тий?
   options:
-  - text: -но/-то узгоджується, -ний/-тий — ні
-    correct: false
-  - text: -но/-то не узгоджується, -ний/-тий узгоджується
-    correct: true
-  - text: Вони ідентичні за значенням
-    correct: false
-  - text: -но/-то вживається тільки в минулому часі
-    correct: false
+  - '{''text'': ''-но/-то узгоджується, -ний/-тий — ні'', ''correct'': False}'
+  - '{''text'': ''-но/-то не узгоджується, -ний/-тий узгоджується'', ''correct'':
+    True}'
+  - '{''text'': ''Вони ідентичні за значенням'', ''correct'': False}'
+  - '{''text'': ''-но/-то вживається тільки в минулому часі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1663,14 +1594,10 @@ items:
   title: Комплексний тест B2.1
   question: Яка послідовність вставних слів організовує аргументи?
   options:
-  - text: однак — натомість — крім того
-    correct: false
-  - text: по-перше — по-друге — насамкінець
-    correct: true
-  - text: безперечно — очевидно — можливо
-    correct: false
-  - text: отже — таким чином — загалом
-    correct: false
+  - '{''text'': ''однак — натомість — крім того'', ''correct'': False}'
+  - '{''text'': ''по-перше — по-друге — насамкінець'', ''correct'': True}'
+  - '{''text'': ''безперечно — очевидно — можливо'', ''correct'': False}'
+  - '{''text'': ''отже — таким чином — загалом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1681,14 +1608,11 @@ items:
   title: Комплексний тест B2.1
   question: Коли дієприслівник вживається неправильно?
   options:
-  - text: Коли виражає супровідну дію
-    correct: false
-  - text: Коли суб'єкт дієприслівника та головного дієслова різний
-    correct: true
-  - text: Коли стоїть на початку речення
-    correct: false
-  - text: Коли виражає попередню дію
-    correct: false
+  - '{''text'': ''Коли виражає супровідну дію'', ''correct'': False}'
+  - '{''text'': "Коли суб''єкт дієприслівника та головного дієслова різний", ''correct'':
+    True}'
+  - '{''text'': ''Коли стоїть на початку речення'', ''correct'': False}'
+  - '{''text'': ''Коли виражає попередню дію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1699,14 +1623,10 @@ items:
   title: Комплексний тест B2.1
   question: Який регістр типовий для новинних матеріалів?
   options:
-  - text: Художній
-    correct: false
-  - text: Публіцистичний
-    correct: true
-  - text: Розмовний
-    correct: false
-  - text: Науковий
-    correct: false
+  - '{''text'': ''Художній'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': True}'
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Науковий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1717,14 +1637,10 @@ items:
   title: Комплексний тест B2.1
   question: Як правильно виразити агента у -ся конструкції?
   options:
-  - text: Від + родовий відмінок
-    correct: false
-  - text: З + орудний відмінок
-    correct: false
-  - text: Орудний відмінок без прийменника
-    correct: true
-  - text: До + родовий відмінок
-    correct: false
+  - '{''text'': ''Від + родовий відмінок'', ''correct'': False}'
+  - '{''text'': ''З + орудний відмінок'', ''correct'': False}'
+  - '{''text'': ''Орудний відмінок без прийменника'', ''correct'': True}'
+  - '{''text'': ''До + родовий відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1735,14 +1651,10 @@ items:
   title: Комплексний тест B2.1
   question: Яке слово належить до економічної сфери?
   options:
-  - text: вирок
-    correct: false
-  - text: депутат
-    correct: false
-  - text: інфляція
-    correct: true
-  - text: прокурор
-    correct: false
+  - '{''text'': ''вирок'', ''correct'': False}'
+  - '{''text'': ''депутат'', ''correct'': False}'
+  - '{''text'': ''інфляція'', ''correct'': True}'
+  - '{''text'': ''прокурор'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1753,14 +1665,10 @@ items:
   title: Комплексний тест B2.1
   question: Яка функція інверсії у реченні "Цю книгу він прочитав"?
   options:
-  - text: Виправлення граматичної помилки
-    correct: false
-  - text: Логічний наголос на об'єкті
-    correct: true
-  - text: Скорочення речення
-    correct: false
-  - text: Перехід у питальну форму
-    correct: false
+  - '{''text'': ''Виправлення граматичної помилки'', ''correct'': False}'
+  - '{''text'': "Логічний наголос на об''єкті", ''correct'': True}'
+  - '{''text'': ''Скорочення речення'', ''correct'': False}'
+  - '{''text'': ''Перехід у питальну форму'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1771,14 +1679,10 @@ items:
   title: Комплексний тест B2.1
   question: Який конектор найкраще завершує текст?
   options:
-  - text: по-перше
-    correct: false
-  - text: крім того
-    correct: false
-  - text: загалом
-    correct: true
-  - text: однак
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''загалом'', ''correct'': True}'
+  - '{''text'': ''однак'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1789,14 +1693,10 @@ items:
   title: Комплексний тест B2.1
   question: Яка особливість "колишнього" як лексикалізованого дієприкметника?
   options:
-  - text: Він вживається тільки в однині
-    correct: false
-  - text: Він втратив дієслівне значення
-    correct: true
-  - text: Він не відмінюється
-    correct: false
-  - text: Він вживається тільки з істотами
-    correct: false
+  - '{''text'': ''Він вживається тільки в однині'', ''correct'': False}'
+  - '{''text'': ''Він втратив дієслівне значення'', ''correct'': True}'
+  - '{''text'': ''Він не відмінюється'', ''correct'': False}'
+  - '{''text'': ''Він вживається тільки з істотами'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1807,15 +1707,11 @@ items:
   title: Комплексний тест B2.1
   question: Яке речення демонструє правильне вживання всіх елементів B2.1?
   options:
-  - text: Закон прийнято. Він важливий.
-    correct: false
-  - text: По-перше, законопроєкт було ухвалено; крім того, опозицією підтримано ключові
-      положення.
-    correct: true
-  - text: Мені сказали, що закон прийняли депутати.
-    correct: false
-  - text: Закон є важливий для громадян.
-    correct: false
+  - '{''text'': ''Закон прийнято. Він важливий.'', ''correct'': False}'
+  - '{''text'': ''По-перше, законопроєкт було ухвалено; крім того, опозицією підтримано
+    ключові положення.'', ''correct'': True}'
+  - '{''text'': ''Мені сказали, що закон прийняли депутати.'', ''correct'': False}'
+  - '{''text'': ''Закон є важливий для громадян.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1826,14 +1722,11 @@ items:
   title: Комплексний тест B2.1
   question: Яка головна мета B2.1?
   options:
-  - text: Вивчити всі українські слова
-    correct: false
-  - text: Опанувати пасив, дієприкметники, синтаксис та регістри
-    correct: true
-  - text: Навчитися читати художню літературу
-    correct: false
-  - text: Вивчити історію України
-    correct: false
+  - '{''text'': ''Вивчити всі українські слова'', ''correct'': False}'
+  - '{''text'': ''Опанувати пасив, дієприкметники, синтаксис та регістри'', ''correct'':
+    True}'
+  - '{''text'': ''Навчитися читати художню літературу'', ''correct'': False}'
+  - '{''text'': ''Вивчити історію України'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1844,14 +1737,10 @@ items:
   title: Комплексний тест B2.1
   question: Що відбувається у B2.2?
   options:
-  - text: Продовження граматики B2.1
-    correct: false
-  - text: Фразеологія та синонімія
-    correct: true
-  - text: Історія України
-    correct: false
-  - text: Підготовка до C1
-    correct: false
+  - '{''text'': ''Продовження граматики B2.1'', ''correct'': False}'
+  - '{''text'': ''Фразеологія та синонімія'', ''correct'': True}'
+  - '{''text'': ''Історія України'', ''correct'': False}'
+  - '{''text'': ''Підготовка до C1'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

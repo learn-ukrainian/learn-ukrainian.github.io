@@ -1,15 +1,18 @@
 module: 42-aspect-nuances-imperative-infinitive
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/42-aspect-nuances-imperative-infinitive.md
-generated: '2025-12-30T00:04:47.111319'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.755665'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 32
   fill-in: 48
+  cloze: 2
   unjumble: 32
   quiz: 16
   true-false: 16
-item_count: 144
+total_items: 146
+item_count: 146
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у виборі виду
@@ -1008,6 +1011,276 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: 'Заповніть текст: інструкція для гостей'
+  passage_template: 'Ласкаво просимо до нашого готелю! {Проходьте|Пройдіть|Проходити|Проходьте}
+    до рецепції. {Сідайте|Сядьте|Сідати|Сідайте}, будь ласка, і {зачекайте|чекайте|почекати|зачекайте}
+    кілька хвилин. Не {хвилюйтеся|схвилюйтеся|хвилюватися|хвилюйтеся}, ми швидко вас
+    зареєструємо. {Беріть|Візьміть|Брати|Беріть} журнали на столику.
+
+
+    Правила готелю: не {курити|покурити|куріть|курити} в номерах. {Дозволено|Заборонено|Треба|Дозволено}
+    курити тільки на балконі. Не {залишайте|залиште|залишати|залишайте} цінні речі
+    в номері. Також {заборонено|дозволено|варто|заборонено} приводити тварин. {Необхідно|Дозволено|Заборонено|Необхідно}
+    зберігати тишу після 22:00.
+
+
+    Якщо вам щось потрібно, {телефонуйте|зателефонуйте|телефонувати|телефонуйте} на
+    рецепцію. Не {соромтеся|засоромтеся|соромитися|соромтеся} питати! І не {забувайте|забудьте|забувати|забувайте}
+    про сніданок — він з 7:00 до 10:00. {Варто|Заборонено|Неможливо|Варто} спробувати
+    наші круасани!
+
+
+    {Дивіться|Подивіться|Дивитися|Дивіться} розклад екскурсій на стенді. {Записуйтеся|Запишіться|Записуватися|Записуйтеся}
+    заздалегідь!
+
+
+    {Приємного|Приємний|Приємне|Приємного} відпочинку!
+
+    '
+  blanks:
+  - answer: Проходьте
+    options:
+    - Проходьте
+    - Пройдіть
+    - Проходити
+  - answer: Сідайте
+    options:
+    - Сідайте
+    - Сядьте
+    - Сідати
+  - answer: зачекайте
+    options:
+    - зачекайте
+    - чекайте
+    - почекати
+  - answer: хвилюйтеся
+    options:
+    - хвилюйтеся
+    - схвилюйтеся
+    - хвилюватися
+  - answer: Беріть
+    options:
+    - Беріть
+    - Візьміть
+    - Брати
+  - answer: курити
+    options:
+    - курити
+    - покурити
+    - куріть
+  - answer: Дозволено
+    options:
+    - Дозволено
+    - Заборонено
+    - Треба
+  - answer: залишайте
+    options:
+    - залишайте
+    - залиште
+    - залишати
+  - answer: заборонено
+    options:
+    - заборонено
+    - дозволено
+    - варто
+  - answer: Необхідно
+    options:
+    - Необхідно
+    - Дозволено
+    - Заборонено
+  - answer: телефонуйте
+    options:
+    - телефонуйте
+    - зателефонуйте
+    - телефонувати
+  - answer: соромтеся
+    options:
+    - соромтеся
+    - засоромтеся
+    - соромитися
+  - answer: забувайте
+    options:
+    - забувайте
+    - забудьте
+    - забувати
+  - answer: Варто
+    options:
+    - Варто
+    - Заборонено
+    - Неможливо
+  - answer: Дивіться
+    options:
+    - Дивіться
+    - Подивіться
+    - Дивитися
+  - answer: Записуйтеся
+    options:
+    - Записуйтеся
+    - Запишіться
+    - Записуватися
+  - answer: Приємного
+    options:
+    - Приємного
+    - Приємний
+    - Приємне
+  blank_count: 17
+  complete_passage: 'Ласкаво просимо до нашого готелю! Проходьте до рецепції. Сідайте,
+    будь ласка, і зачекайте кілька хвилин. Не хвилюйтеся, ми швидко вас зареєструємо.
+    Беріть журнали на столику.
+
+
+    Правила готелю: не курити в номерах. Дозволено курити тільки на балконі. Не залишайте
+    цінні речі в номері. Також заборонено приводити тварин. Необхідно зберігати тишу
+    після 22:00.
+
+
+    Якщо вам щось потрібно, телефонуйте на рецепцію. Не соромтеся питати! І не забувайте
+    про сніданок — він з 7:00 до 10:00. Варто спробувати наші круасани!
+
+
+    Дивіться розклад екскурсій на стенді. Записуйтеся заздалегідь!
+
+
+    Приємного відпочинку!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: 'Заповніть текст: правила безпеки'
+  passage_template: 'Увага! Правила безпеки на будівельному майданчику.
+
+
+    {Заборонено|Дозволено|Треба|Заборонено} входити без каски. {Не|Не|Ні|Не} {чіпайте|зачепіть|чіпати|чіпайте}
+    електричне обладнання! Обережно, {не|не|ні|не} {впадіть|падайте|впасти|впадіть}
+    — тут багато перешкод. {Тримайтеся|Тримайтесь|Тримати|Тримайтеся} за поручні!
+
+
+    {Необхідно|Дозволено|Заборонено|Необхідно} мати захисний одяг. {Не|Не|Ні|Не} {забувайте|забудьте|забувати|забувайте}
+    про рукавички! {Варто|Заборонено|Неможливо|Варто} перевіряти обладнання перед
+    роботою.
+
+
+    Якщо бачите небезпеку, {скажіть|говоріть|сказати|скажіть} керівнику! {Не|Не|Ні|Не}
+    {мовчіть|промовчіть|мовчати|мовчіть}! {Доречно|Заборонено|Неможливо|Доречно} повідомити
+    письмово.
+
+
+    {Дотримуйтеся|Дотримайтеся|Дотримуватися|Дотримуйтеся} правил — і все буде добре!
+    {Не|Не|Ні|Не} {порушуйте|порушите|порушувати|порушуйте} техніку безпеки!
+
+    '
+  blanks:
+  - answer: Заборонено
+    options:
+    - Заборонено
+    - Дозволено
+    - Треба
+  - answer: Не
+    options:
+    - Не
+    - Не
+    - Ні
+  - answer: чіпайте
+    options:
+    - чіпайте
+    - зачепіть
+    - чіпати
+  - answer: не
+    options:
+    - не
+    - не
+    - ні
+  - answer: впадіть
+    options:
+    - впадіть
+    - падайте
+    - впасти
+  - answer: Тримайтеся
+    options:
+    - Тримайтеся
+    - Тримайтесь
+    - Тримати
+  - answer: Необхідно
+    options:
+    - Необхідно
+    - Дозволено
+    - Заборонено
+  - answer: Не
+    options:
+    - Не
+    - Не
+    - Ні
+  - answer: забувайте
+    options:
+    - забувайте
+    - забудьте
+    - забувати
+  - answer: Варто
+    options:
+    - Варто
+    - Заборонено
+    - Неможливо
+  - answer: скажіть
+    options:
+    - скажіть
+    - говоріть
+    - сказати
+  - answer: Не
+    options:
+    - Не
+    - Не
+    - Ні
+  - answer: мовчіть
+    options:
+    - мовчіть
+    - промовчіть
+    - мовчати
+  - answer: Доречно
+    options:
+    - Доречно
+    - Заборонено
+    - Неможливо
+  - answer: Дотримуйтеся
+    options:
+    - Дотримуйтеся
+    - Дотримайтеся
+    - Дотримуватися
+  - answer: Не
+    options:
+    - Не
+    - Не
+    - Ні
+  - answer: порушуйте
+    options:
+    - порушуйте
+    - порушите
+    - порушувати
+  blank_count: 17
+  complete_passage: 'Увага! Правила безпеки на будівельному майданчику.
+
+
+    Заборонено входити без каски. Не чіпайте електричне обладнання! Обережно, не впадіть
+    — тут багато перешкод. Тримайтеся за поручні!
+
+
+    Необхідно мати захисний одяг. Не забувайте про рукавички! Варто перевіряти обладнання
+    перед роботою.
+
+
+    Якщо бачите небезпеку, скажіть керівнику! Не мовчіть! Доречно повідомити письмово.
+
+
+    Дотримуйтеся правил — і все буде добре! Не порушуйте техніку безпеки!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з наказовим способом
   jumbled_words: []
@@ -1268,14 +1541,10 @@ items:
   title: Виберіть правильний варіант
   question: Яку форму використати для ввічливого запрошення гостей сісти?
   options:
-  - text: Сідайте!
-    correct: true
-  - text: Сядьте!
-    correct: false
-  - text: Сісти!
-    correct: false
-  - text: Посидіть!
-    correct: false
+  - '{''text'': ''Сідайте!'', ''correct'': True}'
+  - '{''text'': ''Сядьте!'', ''correct'': False}'
+  - '{''text'': ''Сісти!'', ''correct'': False}'
+  - '{''text'': ''Посидіть!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1286,14 +1555,10 @@ items:
   title: Виберіть правильний варіант
   question: Яке значення має конструкція "не можна курити"?
   options:
-  - text: Заборонено правилами
-    correct: true
-  - text: Фізично неможливо
-    correct: false
-  - text: Не варто
-    correct: false
-  - text: Небажано
-    correct: false
+  - '{''text'': ''Заборонено правилами'', ''correct'': True}'
+  - '{''text'': ''Фізично неможливо'', ''correct'': False}'
+  - '{''text'': ''Не варто'', ''correct'': False}'
+  - '{''text'': ''Небажано'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1304,14 +1569,10 @@ items:
   title: Виберіть правильний варіант
   question: Яке значення має конструкція "не можна вийти"?
   options:
-  - text: Фізично неможливо
-    correct: true
-  - text: Заборонено правилами
-    correct: false
-  - text: Не варто
-    correct: false
-  - text: Небажано
-    correct: false
+  - '{''text'': ''Фізично неможливо'', ''correct'': True}'
+  - '{''text'': ''Заборонено правилами'', ''correct'': False}'
+  - '{''text'': ''Не варто'', ''correct'': False}'
+  - '{''text'': ''Небажано'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1322,14 +1583,10 @@ items:
   title: Виберіть правильний варіант
   question: Який вид переважає у заборонах?
   options:
-  - text: Недоконаний
-    correct: true
-  - text: Доконаний
-    correct: false
-  - text: Обидва однаково
-    correct: false
-  - text: Залежить від регістру
-    correct: false
+  - '{''text'': ''Недоконаний'', ''correct'': True}'
+  - '{''text'': ''Доконаний'', ''correct'': False}'
+  - '{''text'': ''Обидва однаково'', ''correct'': False}'
+  - '{''text'': ''Залежить від регістру'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1340,14 +1597,10 @@ items:
   title: Виберіть правильний варіант
   question: Коли у забороні використовується доконаний вид?
   options:
-  - text: При попередженні про конкретну небезпеку
-    correct: true
-  - text: При загальному правилі
-    correct: false
-  - text: При ввічливому проханні
-    correct: false
-  - text: Ніколи
-    correct: false
+  - '{''text'': ''При попередженні про конкретну небезпеку'', ''correct'': True}'
+  - '{''text'': ''При загальному правилі'', ''correct'': False}'
+  - '{''text'': ''При ввічливому проханні'', ''correct'': False}'
+  - '{''text'': ''Ніколи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1358,14 +1611,10 @@ items:
   title: Виберіть правильний варіант
   question: Як сказати "Don't forget" для загального правила?
   options:
-  - text: Не забувай!
-    correct: true
-  - text: Не забудь!
-    correct: false
-  - text: Не забувати!
-    correct: false
-  - text: Не забути!
-    correct: false
+  - '{''text'': ''Не забувай!'', ''correct'': True}'
+  - '{''text'': ''Не забудь!'', ''correct'': False}'
+  - '{''text'': ''Не забувати!'', ''correct'': False}'
+  - '{''text'': ''Не забути!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1376,14 +1625,10 @@ items:
   title: Виберіть правильний варіант
   question: Як сказати "Don't forget" для конкретного нагадування?
   options:
-  - text: Не забудь!
-    correct: true
-  - text: Не забувай!
-    correct: false
-  - text: Не забувати!
-    correct: false
-  - text: Не забути!
-    correct: false
+  - '{''text'': ''Не забудь!'', ''correct'': True}'
+  - '{''text'': ''Не забувай!'', ''correct'': False}'
+  - '{''text'': ''Не забувати!'', ''correct'': False}'
+  - '{''text'': ''Не забути!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1394,14 +1639,10 @@ items:
   title: Виберіть правильний варіант
   question: Яка форма більш ввічлива при прийомі гостей?
   options:
-  - text: Беріть печиво!
-    correct: true
-  - text: Візьміть печиво!
-    correct: false
-  - text: Взяти печиво!
-    correct: false
-  - text: Брати печиво!
-    correct: false
+  - '{''text'': ''Беріть печиво!'', ''correct'': True}'
+  - '{''text'': ''Візьміть печиво!'', ''correct'': False}'
+  - '{''text'': ''Взяти печиво!'', ''correct'': False}'
+  - '{''text'': ''Брати печиво!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1412,14 +1653,10 @@ items:
   title: Виберіть правильний варіант
   question: Що означає "треба робити вправи"?
   options:
-  - text: Регулярно, постійно
-    correct: true
-  - text: Один раз
-    correct: false
-  - text: Заборонено
-    correct: false
-  - text: Неможливо
-    correct: false
+  - '{''text'': ''Регулярно, постійно'', ''correct'': True}'
+  - '{''text'': ''Один раз'', ''correct'': False}'
+  - '{''text'': ''Заборонено'', ''correct'': False}'
+  - '{''text'': ''Неможливо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1430,14 +1667,10 @@ items:
   title: Виберіть правильний варіант
   question: Що означає "треба зробити вправу"?
   options:
-  - text: Конкретну, один раз
-    correct: true
-  - text: Регулярно
-    correct: false
-  - text: Заборонено
-    correct: false
-  - text: Неможливо
-    correct: false
+  - '{''text'': ''Конкретну, один раз'', ''correct'': True}'
+  - '{''text'': ''Регулярно'', ''correct'': False}'
+  - '{''text'': ''Заборонено'', ''correct'': False}'
+  - '{''text'': ''Неможливо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1448,14 +1681,10 @@ items:
   title: Виберіть правильний варіант
   question: Яку форму використати для термінового наказу "Run!"?
   options:
-  - text: Біжи!
-    correct: true
-  - text: Бігай!
-    correct: false
-  - text: Бігти!
-    correct: false
-  - text: Побігай!
-    correct: false
+  - '{''text'': ''Біжи!'', ''correct'': True}'
+  - '{''text'': ''Бігай!'', ''correct'': False}'
+  - '{''text'': ''Бігти!'', ''correct'': False}'
+  - '{''text'': ''Побігай!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1466,14 +1695,10 @@ items:
   title: Виберіть правильний варіант
   question: 'Яка форма правильна: "Не _____ голосно в бібліотеці!"'
   options:
-  - text: розмовляйте
-    correct: true
-  - text: поговоріть
-    correct: false
-  - text: розмовляти
-    correct: false
-  - text: поговорити
-    correct: false
+  - '{''text'': ''розмовляйте'', ''correct'': True}'
+  - '{''text'': ''поговоріть'', ''correct'': False}'
+  - '{''text'': ''розмовляти'', ''correct'': False}'
+  - '{''text'': ''поговорити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1484,14 +1709,10 @@ items:
   title: Виберіть правильний варіант
   question: Що означає "заборонено курити"?
   options:
-  - text: Не дозволяється правилами
-    correct: true
-  - text: Фізично неможливо
-    correct: false
-  - text: Не варто
-    correct: false
-  - text: Небезпечно
-    correct: false
+  - '{''text'': ''Не дозволяється правилами'', ''correct'': True}'
+  - '{''text'': ''Фізично неможливо'', ''correct'': False}'
+  - '{''text'': ''Не варто'', ''correct'': False}'
+  - '{''text'': ''Небезпечно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1502,14 +1723,10 @@ items:
   title: Виберіть правильний варіант
   question: Яку форму використати для попередження "Watch out, don't fall!"?
   options:
-  - text: Не впади!
-    correct: true
-  - text: Не падай!
-    correct: false
-  - text: Не падати!
-    correct: false
-  - text: Не впасти!
-    correct: false
+  - '{''text'': ''Не впади!'', ''correct'': True}'
+  - '{''text'': ''Не падай!'', ''correct'': False}'
+  - '{''text'': ''Не падати!'', ''correct'': False}'
+  - '{''text'': ''Не впасти!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1520,14 +1737,10 @@ items:
   title: Виберіть правильний варіант
   question: Як правильно запросити гостей пройти до кімнати?
   options:
-  - text: Проходьте до кімнати!
-    correct: true
-  - text: Пройдіть до кімнати!
-    correct: false
-  - text: Пройти до кімнати!
-    correct: false
-  - text: Проходити до кімнати!
-    correct: false
+  - '{''text'': ''Проходьте до кімнати!'', ''correct'': True}'
+  - '{''text'': ''Пройдіть до кімнати!'', ''correct'': False}'
+  - '{''text'': ''Пройти до кімнати!'', ''correct'': False}'
+  - '{''text'': ''Проходити до кімнати!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1538,14 +1751,10 @@ items:
   title: Виберіть правильний варіант
   question: Що означає "варто читати класику"?
   options:
-  - text: Загалом, регулярно
-    correct: true
-  - text: Одну конкретну книгу
-    correct: false
-  - text: Заборонено
-    correct: false
-  - text: Обов'язково
-    correct: false
+  - '{''text'': ''Загалом, регулярно'', ''correct'': True}'
+  - '{''text'': ''Одну конкретну книгу'', ''correct'': False}'
+  - '{''text'': ''Заборонено'', ''correct'': False}'
+  - '{''text'': "Обов''язково", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,0 +1,1235 @@
+module: 102-franko-lesia-hrinchenko
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/102-franko-lesia-hrinchenko.md
+generated: '2025-12-30T21:48:47.283830'
+scope: error-correction, fill-in, quiz, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 16
+  unjumble: 16
+  quiz: 48
+total_items: 96
+item_count: 96
+sample_percent: null
+items:
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Франко був номінована на Нобелівську премію.
+  error: номінована
+  answer: номінований
+  sentence_corrected: Франко був номінований на Нобелівську премію.
+  options:
+  - номінована
+  - номінований
+  - номіновано
+  - номінування
+  original_explanation: 'Франко — чоловік, тому прикметник має чоловічий рід: «номінований».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Леся написала драму, присвячений українській культурі.
+  error: присвячений
+  answer: присвячену
+  sentence_corrected: Леся написала драму, присвячену українській культурі.
+  options:
+  - присвячений
+  - присвячену
+  - присвяченим
+  - присвячене
+  original_explanation: 'Драма — жіночий рід, знахідний відмінок: «присвячену».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Словник Грінченка містили понад 68 тисяч слів.
+  error: містили
+  answer: містив
+  sentence_corrected: Словник Грінченка містив понад 68 тисяч слів.
+  options:
+  - містили
+  - містив
+  - містить
+  - містила
+  original_explanation: 'Словник — однина, чоловічий рід, минулий час: «містив».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Мавка є символом краси, що не вмирають.
+  error: вмирають
+  answer: вмирає
+  sentence_corrected: Мавка є символом краси, що не вмирає.
+  options:
+  - вмирають
+  - вмирає
+  - вмирав
+  - вмирала
+  original_explanation: 'Краса — однина: «що не вмирає».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Франко закликав до щоденного праці.
+  error: щоденного
+  answer: щоденної
+  sentence_corrected: Франко закликав до щоденної праці.
+  options:
+  - щоденного
+  - щоденної
+  - щоденним
+  - щоденну
+  original_explanation: 'Праця — жіночий рід, родовий відмінок: «щоденної праці».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Леся Українка читала Данте в оригіналом.
+  error: оригіналом
+  answer: оригіналі
+  sentence_corrected: Леся Українка читала Данте в оригіналі.
+  options:
+  - оригіналом
+  - оригіналі
+  - оригінал
+  - оригіналу
+  original_explanation: 'Прийменник «в» вимагає місцевого відмінка: «в оригіналі».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Грінченко листувався із сотнею кореспондентів.
+  error: сотнею
+  answer: сотнями
+  sentence_corrected: Грінченко листувався із сотнями кореспондентів.
+  options:
+  - сотнею
+  - сотнями
+  - сотні
+  - сотню
+  original_explanation: У тексті сказано «з сотнями» (множина), а не «з сотнею».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Франко досліджувала літературу і фольклор.
+  error: досліджувала
+  answer: досліджував
+  sentence_corrected: Франко досліджував літературу і фольклор.
+  options:
+  - досліджувала
+  - досліджував
+  - досліджувало
+  - досліджували
+  original_explanation: 'Франко — чоловік: «досліджував».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Драма «Лісова пісня» був написана в 1911 році.
+  error: був
+  answer: була
+  sentence_corrected: Драма «Лісова пісня» була написана в 1911 році.
+  options:
+  - був
+  - була
+  - було
+  - були
+  original_explanation: 'Драма — жіночий рід: «була написана».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Чотири томи словника стали фундаментам української лексикографії.
+  error: фундаментам
+  answer: фундаментом
+  sentence_corrected: Чотири томи словника стали фундаментом української лексикографії.
+  options:
+  - фундаментам
+  - фундаментом
+  - фундаменту
+  - фундамент
+  original_explanation: 'Орудний відмінок однини: «фундаментом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Леся критикувала російську культурна експансія.
+  error: культурна
+  answer: культурну
+  sentence_corrected: Леся критикувала російську культурну експансія.
+  options:
+  - культурна
+  - культурну
+  - культурної
+  - культурним
+  original_explanation: 'Знахідний відмінок: «культурну експансію».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Франко був європейським інтелектуалом світової рівня.
+  error: рівня
+  answer: рівню
+  sentence_corrected: Франко був європейським інтелектуалом світової рівню.
+  options:
+  - рівня
+  - рівню
+  - рівень
+  - рівнем
+  original_explanation: 'Родовий відмінок з прийменником: «світового рівню» (або «рівня»
+    — обидва варіанти можливі, але в контексті «рівню» природніше).'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Грінченко вважав освіту фундамент нації.
+  error: фундамент
+  answer: фундаментом
+  sentence_corrected: Грінченко вважав освіту фундаментом нації.
+  options:
+  - фундамент
+  - фундаментом
+  - фундаменту
+  - фундаменті
+  original_explanation: 'Орудний відмінок після «вважав»: «фундаментом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Модернізм був літературно-мистецький напрям XX століття.
+  error: напрям
+  answer: напрямом
+  sentence_corrected: Модернізм був літературно-мистецький напрямом XX століття.
+  options:
+  - напрям
+  - напрямом
+  - напряму
+  - напрямі
+  original_explanation: 'Орудний відмінок після «був»: «напрямом».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Спадщина титанів залишиться живим для наступних поколінь.
+  error: живим
+  answer: живою
+  sentence_corrected: Спадщина титанів залишиться живою для наступних поколінь.
+  options:
+  - живим
+  - живою
+  - живої
+  - живе
+  original_explanation: 'Спадщина — жіночий рід: «залишиться живою».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Виправте помилки
+  sentence_with_error: Леся перетворилася у символ незламність.
+  error: незламність
+  answer: незламності
+  sentence_corrected: Леся перетворилася у символ незламності.
+  options:
+  - незламність
+  - незламності
+  - незламністю
+  - незламним
+  original_explanation: 'Родовий відмінок після «символ»: «символ незламності».'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Іван Франко був справжнім [___] української культури.
+  answer: каменярем
+  complete_sentence: Іван Франко був справжнім [каменярем] української культури.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Леся Українка створила образ [___] у «Лісовій пісні».
+  answer: Мавки
+  complete_sentence: Леся Українка створила образ [Мавки] у «Лісовій пісні».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Грінченко [___] українську мову у своєму словнику.
+  answer: систематизував
+  complete_sentence: Грінченко [систематизував] українську мову у своєму словнику.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: «Каменярі» стали [___] української інтелігенції.
+  answer: маніфестом
+  complete_sentence: «Каменярі» стали [маніфестом] української інтелігенції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Мавка є символом [___], що перемагає смерть.
+  answer: краси
+  complete_sentence: Мавка є символом [краси], що перемагає смерть.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Словник Грінченка містить чотири [___].
+  answer: томи
+  complete_sentence: Словник Грінченка містить чотири [томи].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Франко закликав до щоденної культурної [___].
+  answer: праці
+  complete_sentence: Франко закликав до щоденної культурної [праці].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: '[___] Лесі Українки не зламала її духу.'
+  answer: Хвороба
+  complete_sentence: '[Хвороба] Лесі Українки не зламала її духу.'
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Грінченко вважав освіту рідною мовою [___] нації.
+  answer: фундаментом
+  complete_sentence: Грінченко вважав освіту рідною мовою [фундаментом] нації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Леся Українка писала [___] драми задовго до моди на цей жанр.
+  answer: модерністські
+  complete_sentence: Леся Українка писала [модерністські] драми задовго до моди на
+    цей жанр.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Франко досліджував літературу, [___], історію.
+  answer: фольклор
+  complete_sentence: Франко досліджував літературу, [фольклор], історію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: «Лісова пісня» — це драма-[___].
+  answer: феєрія
+  complete_sentence: «Лісова пісня» — це драма-[феєрія].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Грінченко листувався з [___] кореспондентів.
+  answer: сотнями
+  complete_sentence: Грінченко листувався з [сотнями] кореспондентів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Франко був [___] на Нобелівську премію.
+  answer: номінований
+  complete_sentence: Франко був [номінований] на Нобелівську премію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Спадщина титанів — не музейний експонат, а жива [___].
+  answer: сила
+  complete_sentence: Спадщина титанів — не музейний експонат, а жива [сила].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Львів став неофіційною [___] українського інтелектуального життя.
+  answer: столицею
+  complete_sentence: Львів став неофіційною [столицею] українського інтелектуального
+    життя.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Лупайте сю скалу!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Я буду вічно жити!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Я в серці маю те, що не вмирає.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Ні! Я жива!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Нехай ні жар, ні холод вам не спинить рук!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Там, за скалою — воля!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Там, за скалою — щастя!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Я є русин.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: І русином хочу вмерти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Інтелігент повинен служити народу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Освіта рідною мовою — фундамент нації.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Дух сильніший за імперію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Важлива щоденна праця в культурі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Вони були частиною європейського модернізму.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Понад шістдесят вісім тисяч слів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Відновіть цитати
+  jumbled_words: []
+  answer: Понад п'ять тисяч творів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, де народився Іван Франко?
+  options:
+  - '{''text'': ''У селі Нагуєвичі на Львівщині'', ''correct'': True}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Дрогобичі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, ким був батько Франка?
+  options:
+  - '{''text'': ''Сільським ковалем'', ''correct'': True}'
+  - '{''text'': ''Священиком'', ''correct'': False}'
+  - '{''text'': ''Учителем'', ''correct'': False}'
+  - '{''text'': ''Поміщиком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, скільки разів австрійська влада арештовувала Франка?
+  options:
+  - '{''text'': ''Тричі'', ''correct'': True}'
+  - '{''text'': ''Один раз'', ''correct'': False}'
+  - '{''text'': "П''ять разів", ''correct'': False}'
+  - '{''text'': ''Жодного разу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, скільки мов знав Франко?
+  options:
+  - '{''text'': ''14 мов'', ''correct'': True}'
+  - '{''text'': ''5 мов'', ''correct'': False}'
+  - '{''text'': ''3 мови'', ''correct'': False}'
+  - '{''text'': ''20 мов'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, на яку премію був номінований Франко?
+  options:
+  - '{''text'': ''На Нобелівську премію'', ''correct'': True}'
+  - '{''text'': ''На Пулітцерівську премію'', ''correct'': False}'
+  - '{''text'': ''На Шевченківську премію'', ''correct'': False}'
+  - '{''text'': ''На Гонкурівську премію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, скільки творів написав Франко?
+  options:
+  - '{''text'': ''Понад 5000'', ''correct'': True}'
+  - '{''text'': ''Близько 500'', ''correct'': False}'
+  - '{''text'': ''Приблизно 100'', ''correct'': False}'
+  - '{''text'': ''Більше 10000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, коли помер Іван Франко?
+  options:
+  - '{''text'': ''28 травня 1916 року'', ''correct'': True}'
+  - '{''text'': ''27 серпня 1856 року'', ''correct'': False}'
+  - '{''text'': ''1 серпня 1913 року'', ''correct'': False}'
+  - '{''text'': ''6 травня 1910 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Як у тексті описано похорон Франка?
+  options:
+  - '{''text'': ''Масова демонстрація національного духу'', ''correct'': True}'
+  - '{''text'': ''Тиха церемонія для родини'', ''correct'': False}'
+  - '{''text'': ''Державний похорон з військовими почестями'', ''correct'': False}'
+  - '{''text'': ''Похорон за кордоном'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, яке товариство очолив Грушевський у Львові?
+  options:
+  - '{''text'': ''Наукове товариство імені Шевченка'', ''correct'': True}'
+  - '{''text'': ''Просвіта'', ''correct'': False}'
+  - '{''text'': ''Кирило-Мефодіївське братство'', ''correct'': False}'
+  - '{''text'': ''Українська бесіда'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Згідно з текстом, який роман Франка порівнюється з «Жерміналь» Золя?
+  options:
+  - '{''text'': ''«Борислав сміється»'', ''correct'': True}'
+  - '{''text'': ''«Каменярі»'', ''correct'': False}'
+  - '{''text'': ''«Захар Беркут»'', ''correct'': False}'
+  - '{''text'': ''«Перехресні стежки»'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Як автор тексту характеризує Галичину кінця XIX століття?
+  options:
+  - '{''text'': ''Унікальне місце з більшими свободами для українців'', ''correct'':
+    True}'
+  - '{''text'': ''Найгірше місце для українців'', ''correct'': False}'
+  - '{''text'': ''Цілком русифікована територія'', ''correct'': False}'
+  - '{''text'': ''Провінція без культурного життя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Що, згідно з текстом, символізує «скала» у поемі «Каменярі»?
+  options:
+  - '{''text'': ''Перешкоди на шляху до свободи'', ''correct'': True}'
+  - '{''text'': ''Карпатські гори'', ''correct'': False}'
+  - '{''text'': ''Стіни тюрми'', ''correct'': False}'
+  - '{''text'': ''Імперський трон'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: До чого, згідно з текстом, закликав Франко у «Каменярях»?
+  options:
+  - '{''text'': ''До щоденної праці в освіті та культурі'', ''correct'': True}'
+  - '{''text'': ''До збройного повстання'', ''correct'': False}'
+  - '{''text'': ''До еміграції'', ''correct'': False}'
+  - '{''text'': ''До підкорення імперії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Яку ідеологію, згідно з текстом, сповідував молодий Франко?
+  options:
+  - '{''text'': ''Соціалістичні ідеї'', ''correct'': True}'
+  - '{''text'': ''Монархізм'', ''correct'': False}'
+  - '{''text'': ''Анархізм'', ''correct'': False}'
+  - '{''text'': ''Консерватизм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Що, згідно з текстом, стало причиною смерті Франка?
+  options:
+  - '{''text'': ''Хвороба, погіршена злиднями'', ''correct'': True}'
+  - '{''text'': "Арешт і ув''язнення", ''correct'': False}'
+  - '{''text'': ''Нещасний випадок'', ''correct'': False}'
+  - '{''text'': ''Війна'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Івана Франка
+  question: Як текст характеризує Франка як науковця?
+  options:
+  - '{''text'': ''Досліджував літературу, фольклор, історію'', ''correct'': True}'
+  - '{''text'': ''Займався тільки політикою'', ''correct'': False}'
+  - '{''text'': ''Був виключно поетом'', ''correct'': False}'
+  - '{''text'': ''Ніколи не займався наукою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, яке справжнє ім'я Лесі Українки?
+  options:
+  - '{''text'': ''Лариса Косач'', ''correct'': True}'
+  - '{''text'': ''Олена Пчілка'', ''correct'': False}'
+  - '{''text'': ''Марія Вілінська'', ''correct'': False}'
+  - '{''text'': ''Ольга Кобилянська'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, ким була мати Лесі Українки?
+  options:
+  - '{''text'': ''Письменницею та громадською діячкою'', ''correct'': True}'
+  - '{''text'': ''Селянкою'', ''correct'': False}'
+  - '{''text'': ''Вчителькою'', ''correct'': False}'
+  - '{''text'': ''Лікаркою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, на яку хворобу захворіла Леся у 9 років?
+  options:
+  - '{''text'': ''Туберкульоз кісток'', ''correct'': True}'
+  - '{''text'': ''Пневмонію'', ''correct'': False}'
+  - '{''text'': ''Тиф'', ''correct'': False}'
+  - '{''text'': ''Холеру'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, де Леся написала «Лісову пісню»?
+  options:
+  - '{''text'': ''У Єгипті'', ''correct'': True}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Грузії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, хто такий Михайло Драгоманов для Лесі?
+  options:
+  - '{''text'': ''Дядько'', ''correct'': True}'
+  - '{''text'': ''Батько'', ''correct'': False}'
+  - '{''text'': ''Чоловік'', ''correct'': False}'
+  - '{''text'': ''Брат'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, коли була написана «Лісова пісня»?
+  options:
+  - '{''text'': ''У 1911 році'', ''correct'': True}'
+  - '{''text'': ''У 1871 році'', ''correct'': False}'
+  - '{''text'': ''У 1897 році'', ''correct'': False}'
+  - '{''text'': ''У 1913 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Як текст описує образ Мавки?
+  options:
+  - '{''text'': ''Символ чистоти, природи, духовності'', ''correct'': True}'
+  - '{''text'': ''Символ смерті'', ''correct'': False}'
+  - '{''text'': ''Символ багатства'', ''correct'': False}'
+  - '{''text'': ''Символ помсти'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, скільки років прожила Леся Українка?
+  options:
+  - '{''text'': ''42 роки'', ''correct'': True}'
+  - '{''text'': ''47 років'', ''correct'': False}'
+  - '{''text'': ''36 років'', ''correct'': False}'
+  - '{''text'': ''65 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Які античні сюжети, згідно з текстом, використовувала Леся?
+  options:
+  - '{''text'': ''У драмах «Кассандра», «Оргія»'', ''correct'': True}'
+  - '{''text'': ''Тільки в поезії'', ''correct'': False}'
+  - '{''text'': ''Ніколи не зверталася до античності'', ''correct'': False}'
+  - '{''text'': ''Тільки в прозі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Згідно з текстом, де померла Леся Українка?
+  options:
+  - '{''text'': ''У Сурамі (Грузія)'', ''correct'': True}'
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Єгипті'', ''correct'': False}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Як текст характеризує стиль Лесі Українки?
+  options:
+  - '{''text'': ''Модернізм'', ''correct'': True}'
+  - '{''text'': ''Реалізм'', ''correct'': False}'
+  - '{''text'': ''Класицизм'', ''correct'': False}'
+  - '{''text'': ''Романтизм'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Що, згідно з текстом, критикувала Леся Українка?
+  options:
+  - '{''text'': ''Російську культурну експансію'', ''correct'': True}'
+  - '{''text'': ''Австрійську владу'', ''correct'': False}'
+  - '{''text'': ''Польську шляхту'', ''correct'': False}'
+  - '{''text'': ''Українську інтелігенцію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Яких авторів, згідно з текстом, читала Леся в оригіналі?
+  options:
+  - '{''text'': ''Данте, Байрона, Гейне'', ''correct'': True}'
+  - '{''text'': ''Толстого, Достоєвського'', ''correct'': False}'
+  - '{''text'': ''Тільки українських авторів'', ''correct'': False}'
+  - '{''text'': ''Французьких класиків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Як текст описує дух Лесі порівняно з її тілом?
+  options:
+  - '{''text'': ''Титанічний дух при слабкому тілі'', ''correct'': True}'
+  - '{''text'': ''Слабкий дух і тіло'', ''correct'': False}'
+  - '{''text'': ''Міцне тіло і слабкий дух'', ''correct'': False}'
+  - '{''text'': ''Обидва були міцними'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Що символізує перетворення Мавки на вербу?
+  options:
+  - '{''text'': ''Безсмертя мистецтва'', ''correct'': True}'
+  - '{''text'': ''Кінець життя'', ''correct'': False}'
+  - '{''text'': ''Поразку'', ''correct'': False}'
+  - '{''text'': ''Забуття'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Лесі Українки
+  question: Як називає текст патріотизм Лесі Українки?
+  options:
+  - '{''text'': ''Національним, а не соціальним'', ''correct'': True}'
+  - '{''text'': ''Соціальним'', ''correct'': False}'
+  - '{''text'': ''Пролетарським'', ''correct'': False}'
+  - '{''text'': ''Імперським'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, де народився Борис Грінченко?
+  options:
+  - '{''text'': ''На Харківщині'', ''correct'': True}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''На Полтавщині'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, скільки слів містить словник Грінченка?
+  options:
+  - '{''text'': ''Понад 68 000'', ''correct'': True}'
+  - '{''text'': ''Близько 10 000'', ''correct'': False}'
+  - '{''text'': ''Приблизно 100 000'', ''correct'': False}'
+  - '{''text'': ''Менше 50 000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, скільки томів має словник Грінченка?
+  options:
+  - '{''text'': ''4 томи'', ''correct'': True}'
+  - '{''text'': ''2 томи'', ''correct'': False}'
+  - '{''text'': ''6 томів'', ''correct'': False}'
+  - '{''text'': ''10 томів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Коли, згідно з текстом, був опублікований словник Грінченка?
+  options:
+  - '{''text'': ''У 1907–1909 роках'', ''correct'': True}'
+  - '{''text'': ''У 1876 році'', ''correct'': False}'
+  - '{''text'': ''У 1920 році'', ''correct'': False}'
+  - '{''text'': ''У 1850 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, скільки підручників написав Грінченко?
+  options:
+  - '{''text'': ''Понад 100'', ''correct'': True}'
+  - '{''text'': ''Близько 20'', ''correct'': False}'
+  - '{''text'': ''Менше 10'', ''correct'': False}'
+  - '{''text'': ''Більше 500'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: З ким, згідно з текстом, полемізував Грінченко?
+  options:
+  - '{''text'': ''З Михайлом Драгомановим'', ''correct'': True}'
+  - '{''text'': ''З Іваном Франком'', ''correct'': False}'
+  - '{''text'': ''З Тарасом Шевченком'', ''correct'': False}'
+  - '{''text'': ''З Лесею Українкою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Яких авторів, згідно з текстом, перекладав Грінченко?
+  options:
+  - '{''text'': ''Шекспіра, Байрона, Гете'', ''correct'': True}'
+  - '{''text'': ''Тільки польських авторів'', ''correct'': False}'
+  - '{''text'': ''Російських класиків'', ''correct'': False}'
+  - '{''text'': ''Французьких романтиків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, де помер Грінченко?
+  options:
+  - '{''text'': ''В Оспедалетті (Італія)'', ''correct'': True}'
+  - '{''text'': ''У Києві'', ''correct'': False}'
+  - '{''text'': ''У Харкові'', ''correct'': False}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Згідно з текстом, скільки років прожив Грінченко?
+  options:
+  - '{''text'': ''46 років'', ''correct'': True}'
+  - '{''text'': ''42 роки'', ''correct'': False}'
+  - '{''text'': ''60 років'', ''correct'': False}'
+  - '{''text'': ''55 років'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Яку позицію, згідно з текстом, відстоював Грінченко?
+  options:
+  - '{''text'': ''Інтелігент повинен служити народу'', ''correct'': True}'
+  - '{''text'': ''Народ повинен служити інтелігенції'', ''correct'': False}'
+  - '{''text'': ''Треба емігрувати з України'', ''correct'': False}'
+  - '{''text'': ''Культура не важлива'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Як збирав матеріал Грінченко, згідно з текстом?
+  options:
+  - '{''text'': ''Листувався з сотнями кореспондентів'', ''correct'': True}'
+  - '{''text'': ''Тільки з книг'', ''correct'': False}'
+  - '{''text'': ''Тільки в одному регіоні'', ''correct'': False}'
+  - '{''text'': ''Не збирав сам, мав помічників'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Від чого, згідно з текстом, помер Грінченко?
+  options:
+  - '{''text'': ''Від туберкульозу'', ''correct'': True}'
+  - '{''text'': ''Від старості'', ''correct'': False}'
+  - '{''text'': ''Від нещасного випадку'', ''correct'': False}'
+  - '{''text'': ''На війні'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Як текст характеризує твори Грінченка?
+  options:
+  - '{''text'': ''Реалістичні твори про село'', ''correct'': True}'
+  - '{''text'': ''Романтичні поеми'', ''correct'': False}'
+  - '{''text'': ''Модерністські драми'', ''correct'': False}'
+  - '{''text'': ''Фантастичні оповідання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Яку роль словника Грінченка підкреслює текст?
+  options:
+  - '{''text'': ''Основа для всіх наступних лексикографічних праць'', ''correct'':
+    True}'
+  - '{''text'': ''Застарілий і непотрібний'', ''correct'': False}'
+  - '{''text'': ''Тільки історичний документ'', ''correct'': False}'
+  - '{''text'': ''Праця без наукової цінності'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Що, згідно з текстом, вважав Грінченко фундаментом нації?
+  options:
+  - '{''text'': ''Освіту рідною мовою'', ''correct'': True}'
+  - '{''text'': ''Військову силу'', ''correct'': False}'
+  - '{''text'': ''Економіку'', ''correct'': False}'
+  - '{''text'': ''Політику'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Життя Бориса Грінченка
+  question: Ким був Грінченко за професією, згідно з текстом?
+  options:
+  - '{''text'': ''Учителем, письменником, етнографом'', ''correct'': True}'
+  - '{''text'': ''Тільки політиком'', ''correct'': False}'
+  - '{''text'': ''Військовим'', ''correct'': False}'
+  - '{''text'': ''Священиком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null

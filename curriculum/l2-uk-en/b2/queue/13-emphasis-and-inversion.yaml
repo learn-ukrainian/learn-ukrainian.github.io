@@ -1,15 +1,18 @@
 module: 13-emphasis-and-inversion
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/13-emphasis-and-inversion.md
-generated: '2025-12-29T22:08:23.453854'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.215671'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки порядку слів та відмінків
@@ -609,6 +612,132 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст про емфазу та інверсію
+  passage_template: 'Порядок слів в українській мові є {гнучким|фіксованим|випадковим|гнучким},
+    що дозволяє створювати різні смислові {акценти|помилки|речення|акценти}. Базовий
+    порядок слів — {SVO|VSO|OVS|SVO}, де підмет передує присудку. Коли мовець хоче
+    {виділити|приховати|забути|виділити} певний елемент, він використовує {інверсію|субституцію|редуплікацію|інверсію}.
+
+
+    Тема речення містить {відому|нову|секретну|відому} інформацію і зазвичай стоїть
+    на {початку|кінці|середині|початку}. Рема несе {нову|стару|відому|нову} інформацію
+    і розміщується в {кінці|початку|середині|кінці} речення. Цей поділ називається
+    {актуальним|граматичним|морфологічним|актуальним} членуванням.
+
+
+    В офіційно-діловому стилі інверсія {недоречна|обов''язкова|бажана|недоречна},
+    тоді як у {художній|науковій|діловій|художній} літературі вона активно використовується.
+    Заголовки газет часто застосовують {емфазу|нейтральність|еліпсис|емфазу} для привернення
+    уваги читачів. При зміні порядку слів {відмінки|дієслова|прикметники|відмінки}
+    залишаються незмінними. Інверсія типу V-S створює {драматичний|нейтральний|звичайний|драматичний}
+    ефект при введенні нових подій. Фронтування додатка підкреслює {об''єкт|суб''єкт|дію|об''єкт}
+    дії у реченні.
+
+    '
+  blanks:
+  - answer: гнучким
+    options:
+    - гнучким
+    - фіксованим
+    - випадковим
+  - answer: акценти
+    options:
+    - акценти
+    - помилки
+    - речення
+  - answer: SVO
+    options:
+    - SVO
+    - VSO
+    - OVS
+  - answer: виділити
+    options:
+    - виділити
+    - приховати
+    - забути
+  - answer: інверсію
+    options:
+    - інверсію
+    - субституцію
+    - редуплікацію
+  - answer: відому
+    options:
+    - відому
+    - нову
+    - секретну
+  - answer: початку
+    options:
+    - початку
+    - кінці
+    - середині
+  - answer: нову
+    options:
+    - нову
+    - стару
+    - відому
+  - answer: кінці
+    options:
+    - кінці
+    - початку
+    - середині
+  - answer: актуальним
+    options:
+    - актуальним
+    - граматичним
+    - морфологічним
+  - answer: недоречна
+    options:
+    - недоречна
+    - обов'язкова
+    - бажана
+  - answer: художній
+    options:
+    - художній
+    - науковій
+    - діловій
+  - answer: емфазу
+    options:
+    - емфазу
+    - нейтральність
+    - еліпсис
+  - answer: відмінки
+    options:
+    - відмінки
+    - дієслова
+    - прикметники
+  - answer: драматичний
+    options:
+    - драматичний
+    - нейтральний
+    - звичайний
+  - answer: об'єкт
+    options:
+    - об'єкт
+    - суб'єкт
+    - дію
+  blank_count: 16
+  complete_passage: 'Порядок слів в українській мові є гнучким, що дозволяє створювати
+    різні смислові акценти. Базовий порядок слів — SVO, де підмет передує присудку.
+    Коли мовець хоче виділити певний елемент, він використовує інверсію.
+
+
+    Тема речення містить відому інформацію і зазвичай стоїть на початку. Рема несе
+    нову інформацію і розміщується в кінці речення. Цей поділ називається актуальним
+    членуванням.
+
+
+    В офіційно-діловому стилі інверсія недоречна, тоді як у художній літературі вона
+    активно використовується. Заголовки газет часто застосовують емфазу для привернення
+    уваги читачів. При зміні порядку слів відмінки залишаються незмінними. Інверсія
+    типу V-S створює драматичний ефект при введенні нових подій. Фронтування додатка
+    підкреслює об''єкт дії у реченні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть емфатичні речення
   jumbled_words: []
@@ -741,14 +870,11 @@ items:
   title: Теоретичні основи порядку слів
   question: Що таке тема в структурі речення з погляду актуального членування?
   options:
-  - text: Нова інформація, яку повідомляє мовець
-    correct: false
-  - text: Відома інформація, від якої починається повідомлення
-    correct: true
-  - text: Головний член речення
-    correct: false
-  - text: Граматичний підмет речення
-    correct: false
+  - '{''text'': ''Нова інформація, яку повідомляє мовець'', ''correct'': False}'
+  - '{''text'': ''Відома інформація, від якої починається повідомлення'', ''correct'':
+    True}'
+  - '{''text'': ''Головний член речення'', ''correct'': False}'
+  - '{''text'': ''Граматичний підмет речення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -759,14 +885,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Де зазвичай розміщується рема в українському реченні?
   options:
-  - text: На початку речення
-    correct: false
-  - text: У середині речення
-    correct: false
-  - text: В кінці речення
-    correct: true
-  - text: Позиція не має значення
-    correct: false
+  - '{''text'': ''На початку речення'', ''correct'': False}'
+  - '{''text'': ''У середині речення'', ''correct'': False}'
+  - '{''text'': ''В кінці речення'', ''correct'': True}'
+  - '{''text'': ''Позиція не має значення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -777,14 +899,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Яка основна функція інверсії в українській мові?
   options:
-  - text: Виправлення граматичних помилок
-    correct: false
-  - text: Стилістичне виділення та емфаза
-    correct: true
-  - text: Спрощення структури речення
-    correct: false
-  - text: Збереження рими в поезії
-    correct: false
+  - '{''text'': ''Виправлення граматичних помилок'', ''correct'': False}'
+  - '{''text'': ''Стилістичне виділення та емфаза'', ''correct'': True}'
+  - '{''text'': ''Спрощення структури речення'', ''correct'': False}'
+  - '{''text'': ''Збереження рими в поезії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -795,14 +913,10 @@ items:
   title: Теоретичні основи порядку слів
   question: У якому регістрі інверсія найменш доречна?
   options:
-  - text: У художньому стилі
-    correct: false
-  - text: У публіцистичному стилі
-    correct: false
-  - text: В офіційно-діловому стилі
-    correct: true
-  - text: У розмовному стилі
-    correct: false
+  - '{''text'': ''У художньому стилі'', ''correct'': False}'
+  - '{''text'': ''У публіцистичному стилі'', ''correct'': False}'
+  - '{''text'': ''В офіційно-діловому стилі'', ''correct'': True}'
+  - '{''text'': ''У розмовному стилі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -813,14 +927,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Що відбувається з відмінками при зміні порядку слів?
   options:
-  - text: Вони змінюються відповідно до позиції
-    correct: false
-  - text: Вони залишаються незмінними
-    correct: true
-  - text: Вони завжди стають називним відмінком
-    correct: false
-  - text: Вони визначаються інтонацією
-    correct: false
+  - '{''text'': ''Вони змінюються відповідно до позиції'', ''correct'': False}'
+  - '{''text'': ''Вони залишаються незмінними'', ''correct'': True}'
+  - '{''text'': ''Вони завжди стають називним відмінком'', ''correct'': False}'
+  - '{''text'': ''Вони визначаються інтонацією'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -831,14 +941,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Яке речення є прикладом повної інверсії (V-S)?
   options:
-  - text: Книгу я прочитав.
-    correct: false
-  - text: Учора ми поїхали.
-    correct: false
-  - text: Настала весна.
-    correct: true
-  - text: Цей фільм усі бачили.
-    correct: false
+  - '{''text'': ''Книгу я прочитав.'', ''correct'': False}'
+  - '{''text'': ''Учора ми поїхали.'', ''correct'': False}'
+  - '{''text'': ''Настала весна.'', ''correct'': True}'
+  - '{''text'': ''Цей фільм усі бачили.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -849,14 +955,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Що підкреслюється при фронтуванні додатка?
   options:
-  - text: Дія, виражена присудком
-    correct: false
-  - text: Об'єкт дії
-    correct: true
-  - text: Суб'єкт дії
-    correct: false
-  - text: Час дії
-    correct: false
+  - '{''text'': ''Дія, виражена присудком'', ''correct'': False}'
+  - '{''text'': "Об''єкт дії", ''correct'': True}'
+  - '{''text'': "Суб''єкт дії", ''correct'': False}'
+  - '{''text'': ''Час дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -867,14 +969,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Який базовий порядок слів в українській мові вважається нейтральним?
   options:
-  - text: VSO (присудок — підмет — додаток)
-    correct: false
-  - text: SOV (підмет — додаток — присудок)
-    correct: false
-  - text: SVO (підмет — присудок — додаток)
-    correct: true
-  - text: OVS (додаток — присудок — підмет)
-    correct: false
+  - '{''text'': ''VSO (присудок — підмет — додаток)'', ''correct'': False}'
+  - '{''text'': ''SOV (підмет — додаток — присудок)'', ''correct'': False}'
+  - '{''text'': ''SVO (підмет — присудок — додаток)'', ''correct'': True}'
+  - '{''text'': ''OVS (додаток — присудок — підмет)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -885,14 +983,12 @@ items:
   title: Теоретичні основи порядку слів
   question: Яка характеристика тема-рема структури є правильною?
   options:
-  - text: Тема завжди збігається з підметом
-    correct: false
-  - text: Рема — це завжди присудок
-    correct: false
-  - text: Тема і рема визначаються комунікативним контекстом
-    correct: true
-  - text: У кожному реченні тема передує ремі в будь-якому випадку
-    correct: false
+  - '{''text'': ''Тема завжди збігається з підметом'', ''correct'': False}'
+  - '{''text'': ''Рема — це завжди присудок'', ''correct'': False}'
+  - '{''text'': ''Тема і рема визначаються комунікативним контекстом'', ''correct'':
+    True}'
+  - '{''text'': ''У кожному реченні тема передує ремі в будь-якому випадку'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -903,14 +999,11 @@ items:
   title: Теоретичні основи порядку слів
   question: Для чого використовується фронтування обставини?
   options:
-  - text: Для виправлення граматичних помилок
-    correct: false
-  - text: Для встановлення контексту або підкреслення обставин
-    correct: true
-  - text: Для скорочення речення
-    correct: false
-  - text: Для уникнення повторів
-    correct: false
+  - '{''text'': ''Для виправлення граматичних помилок'', ''correct'': False}'
+  - '{''text'': ''Для встановлення контексту або підкреслення обставин'', ''correct'':
+    True}'
+  - '{''text'': ''Для скорочення речення'', ''correct'': False}'
+  - '{''text'': ''Для уникнення повторів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -921,14 +1014,11 @@ items:
   title: Теоретичні основи порядку слів
   question: Що таке маркований порядок слів?
   options:
-  - text: Порядок слів з граматичними помилками
-    correct: false
-  - text: Порядок слів у запитаннях
-    correct: false
-  - text: Незвичний порядок слів, що виділяє певний елемент
-    correct: true
-  - text: Порядок слів у складних реченнях
-    correct: false
+  - '{''text'': ''Порядок слів з граматичними помилками'', ''correct'': False}'
+  - '{''text'': ''Порядок слів у запитаннях'', ''correct'': False}'
+  - '{''text'': ''Незвичний порядок слів, що виділяє певний елемент'', ''correct'':
+    True}'
+  - '{''text'': ''Порядок слів у складних реченнях'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -939,14 +1029,10 @@ items:
   title: Теоретичні основи порядку слів
   question: У якому типі тексту найчастіше зустрічаються інверсії?
   options:
-  - text: У наукових статтях
-    correct: false
-  - text: В офіційних документах
-    correct: false
-  - text: У художній літературі та публіцистиці
-    correct: true
-  - text: У технічних інструкціях
-    correct: false
+  - '{''text'': ''У наукових статтях'', ''correct'': False}'
+  - '{''text'': ''В офіційних документах'', ''correct'': False}'
+  - '{''text'': ''У художній літературі та публіцистиці'', ''correct'': True}'
+  - '{''text'': ''У технічних інструкціях'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -957,14 +1043,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Яке речення демонструє фронтування додатка?
   options:
-  - text: Весна прийшла рано.
-    correct: false
-  - text: Учора ми зустрілися.
-    correct: false
-  - text: Цю книгу я вже читав.
-    correct: true
-  - text: Працює він добре.
-    correct: false
+  - '{''text'': ''Весна прийшла рано.'', ''correct'': False}'
+  - '{''text'': ''Учора ми зустрілися.'', ''correct'': False}'
+  - '{''text'': ''Цю книгу я вже читав.'', ''correct'': True}'
+  - '{''text'': ''Працює він добре.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -975,14 +1057,11 @@ items:
   title: Теоретичні основи порядку слів
   question: Що характерно для емфатичного порядку слів?
   options:
-  - text: Підмет завжди на першому місці
-    correct: false
-  - text: Виділення важливого елемента через зміну позиції
-    correct: true
-  - text: Обов'язкова наявність всіх членів речення
-    correct: false
-  - text: Використання лише в усному мовленні
-    correct: false
+  - '{''text'': ''Підмет завжди на першому місці'', ''correct'': False}'
+  - '{''text'': ''Виділення важливого елемента через зміну позиції'', ''correct'':
+    True}'
+  - '{''text'': "Обов''язкова наявність всіх членів речення", ''correct'': False}'
+  - '{''text'': ''Використання лише в усному мовленні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -993,14 +1072,10 @@ items:
   title: Теоретичні основи порядку слів
   question: Яка функція речення «Пролунав постріл»?
   options:
-  - text: Опис повторюваної дії
-    correct: false
-  - text: Драматичне введення нової події
-    correct: true
-  - text: Запитання про минулу подію
-    correct: false
-  - text: Заперечення факту
-    correct: false
+  - '{''text'': ''Опис повторюваної дії'', ''correct'': False}'
+  - '{''text'': ''Драматичне введення нової події'', ''correct'': True}'
+  - '{''text'': ''Запитання про минулу подію'', ''correct'': False}'
+  - '{''text'': ''Заперечення факту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1011,14 +1086,11 @@ items:
   title: Теоретичні основи порядку слів
   question: Коли інверсія вважається невмотивованою?
   options:
-  - text: Коли вона використовується в художньому тексті
-    correct: false
-  - text: Коли вона не виправдана комунікативним контекстом
-    correct: true
-  - text: Коли речення занадто довге
-    correct: false
-  - text: Коли в реченні є обставина
-    correct: false
+  - '{''text'': ''Коли вона використовується в художньому тексті'', ''correct'': False}'
+  - '{''text'': ''Коли вона не виправдана комунікативним контекстом'', ''correct'':
+    True}'
+  - '{''text'': ''Коли речення занадто довге'', ''correct'': False}'
+  - '{''text'': ''Коли в реченні є обставина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1102,10 @@ items:
   question: У реченні «Цю перемогу український кінематограф чекав десятиліттями» що
     винесено на початок для емфази?
   options:
-  - text: Підмет
-    correct: false
-  - text: Присудок
-    correct: false
-  - text: Додаток
-    correct: true
-  - text: Обставину
-    correct: false
+  - '{''text'': ''Підмет'', ''correct'': False}'
+  - '{''text'': ''Присудок'', ''correct'': False}'
+  - '{''text'': ''Додаток'', ''correct'': True}'
+  - '{''text'': ''Обставину'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1048,14 +1116,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: Яку функцію виконує інверсія в реченні «Настала весна»?
   options:
-  - text: Виправлення помилки
-    correct: false
-  - text: Драматичне введення події
-    correct: true
-  - text: Спрощення структури
-    correct: false
-  - text: Уникнення повтору
-    correct: false
+  - '{''text'': ''Виправлення помилки'', ''correct'': False}'
+  - '{''text'': ''Драматичне введення події'', ''correct'': True}'
+  - '{''text'': ''Спрощення структури'', ''correct'': False}'
+  - '{''text'': ''Уникнення повтору'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1067,14 +1131,11 @@ items:
   question: Чому в офіційному документі краще писати «Закон набуває чинності» замість
     «Набуває чинності закон»?
   options:
-  - text: Друге речення граматично неправильне
-    correct: false
-  - text: Офіційно-діловий стиль вимагає нейтрального порядку
-    correct: true
-  - text: Інверсія заборонена в українській мові
-    correct: false
-  - text: Немає різниці між цими варіантами
-    correct: false
+  - '{''text'': ''Друге речення граматично неправильне'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий стиль вимагає нейтрального порядку'', ''correct'':
+    True}'
+  - '{''text'': ''Інверсія заборонена в українській мові'', ''correct'': False}'
+  - '{''text'': ''Немає різниці між цими варіантами'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1085,14 +1146,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: У реченні «Саме цей момент став вирішальним» яка роль слова «саме»?
   options:
-  - text: Сполучник
-    correct: false
-  - text: Підсилювальна частка для емфази
-    correct: true
-  - text: Прислівник часу
-    correct: false
-  - text: Прийменник
-    correct: false
+  - '{''text'': ''Сполучник'', ''correct'': False}'
+  - '{''text'': ''Підсилювальна частка для емфази'', ''correct'': True}'
+  - '{''text'': ''Прислівник часу'', ''correct'': False}'
+  - '{''text'': ''Прийменник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1103,14 +1160,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: Що є темою в реченні «Книгу я вже прочитав» (відповідь на «Що з книгою?»)?
   options:
-  - text: я
-    correct: false
-  - text: прочитав
-    correct: false
-  - text: книгу
-    correct: true
-  - text: вже
-    correct: false
+  - '{''text'': ''я'', ''correct'': False}'
+  - '{''text'': ''прочитав'', ''correct'': False}'
+  - '{''text'': ''книгу'', ''correct'': True}'
+  - '{''text'': ''вже'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1121,14 +1174,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: Що є ремою в тому самому реченні «Книгу я вже прочитав»?
   options:
-  - text: книгу
-    correct: false
-  - text: я вже прочитав
-    correct: true
-  - text: я
-    correct: false
-  - text: вже
-    correct: false
+  - '{''text'': ''книгу'', ''correct'': False}'
+  - '{''text'': ''я вже прочитав'', ''correct'': True}'
+  - '{''text'': ''я'', ''correct'': False}'
+  - '{''text'': ''вже'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1139,14 +1188,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: Яке речення найкраще підходить для заголовка газетної статті?
   options:
-  - text: Українська команда здобула перемогу.
-    correct: false
-  - text: Небаченою була перемога української команди.
-    correct: true
-  - text: Команда з України перемогла.
-    correct: false
-  - text: Перемога була здобута командою.
-    correct: false
+  - '{''text'': ''Українська команда здобула перемогу.'', ''correct'': False}'
+  - '{''text'': ''Небаченою була перемога української команди.'', ''correct'': True}'
+  - '{''text'': ''Команда з України перемогла.'', ''correct'': False}'
+  - '{''text'': ''Перемога була здобута командою.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1157,14 +1202,11 @@ items:
   title: Аналіз порядку слів у тексті
   question: Чому речення «Його книга я читав» є помилковим?
   options:
-  - text: Неправильний порядок слів
-    correct: false
-  - text: Неправильний відмінок (потрібен знахідний «книгу»)
-    correct: true
-  - text: Відсутній сполучник
-    correct: false
-  - text: Неправильна форма дієслова
-    correct: false
+  - '{''text'': ''Неправильний порядок слів'', ''correct'': False}'
+  - '{''text'': ''Неправильний відмінок (потрібен знахідний «книгу»)'', ''correct'':
+    True}'
+  - '{''text'': ''Відсутній сполучник'', ''correct'': False}'
+  - '{''text'': ''Неправильна форма дієслова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1175,14 +1217,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: У реченні «Тричі вона перечитувала роман» що підкреслюється?
   options:
-  - text: Суб'єкт дії
-    correct: false
-  - text: Об'єкт дії
-    correct: false
-  - text: Частота дії
-    correct: true
-  - text: Час дії
-    correct: false
+  - '{''text'': "Суб''єкт дії", ''correct'': False}'
+  - '{''text'': "Об''єкт дії", ''correct'': False}'
+  - '{''text'': ''Частота дії'', ''correct'': True}'
+  - '{''text'': ''Час дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1193,14 +1231,11 @@ items:
   title: Аналіз порядку слів у тексті
   question: Яка характеристика публіцистичного стилю щодо порядку слів?
   options:
-  - text: Тільки нейтральний порядок
-    correct: false
-  - text: Часте використання інверсії для привернення уваги
-    correct: true
-  - text: Заборона будь-яких відхилень від SVO
-    correct: false
-  - text: Обов'язкова постпозиція підмета
-    correct: false
+  - '{''text'': ''Тільки нейтральний порядок'', ''correct'': False}'
+  - '{''text'': ''Часте використання інверсії для привернення уваги'', ''correct'':
+    True}'
+  - '{''text'': ''Заборона будь-яких відхилень від SVO'', ''correct'': False}'
+  - '{''text'': "Обов''язкова постпозиція підмета", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1211,14 +1246,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: У реченні «Реве та стогне Дніпр широкий» (Шевченко) який тип інверсії?
   options:
-  - text: Фронтування додатка
-    correct: false
-  - text: Фронтування обставини
-    correct: false
-  - text: Повна інверсія V-S
-    correct: true
-  - text: Відсутність інверсії
-    correct: false
+  - '{''text'': ''Фронтування додатка'', ''correct'': False}'
+  - '{''text'': ''Фронтування обставини'', ''correct'': False}'
+  - '{''text'': ''Повна інверсія V-S'', ''correct'': True}'
+  - '{''text'': ''Відсутність інверсії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1229,14 +1260,11 @@ items:
   title: Аналіз порядку слів у тексті
   question: Яке твердження про тема-рема структуру є правильним?
   options:
-  - text: Тема і підмет — це синоніми
-    correct: false
-  - text: Рема завжди є присудком
-    correct: false
-  - text: Тема і рема визначаються контекстом спілкування
-    correct: true
-  - text: У кожному реченні тема обов'язково присутня
-    correct: false
+  - '{''text'': ''Тема і підмет — це синоніми'', ''correct'': False}'
+  - '{''text'': ''Рема завжди є присудком'', ''correct'': False}'
+  - '{''text'': ''Тема і рема визначаються контекстом спілкування'', ''correct'':
+    True}'
+  - '{''text'': "У кожному реченні тема обов''язково присутня", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1247,14 +1275,12 @@ items:
   title: Аналіз порядку слів у тексті
   question: Чому інверсія в науковому стилі використовується рідко?
   options:
-  - text: Науковий стиль вимагає об'єктивності та нейтральності
-    correct: true
-  - text: Інверсія є граматичною помилкою
-    correct: false
-  - text: Науковці не знають правил інверсії
-    correct: false
-  - text: Науковий стиль не передбачає синтаксичних структур
-    correct: false
+  - '{''text'': "Науковий стиль вимагає об''єктивності та нейтральності", ''correct'':
+    True}'
+  - '{''text'': ''Інверсія є граматичною помилкою'', ''correct'': False}'
+  - '{''text'': ''Науковці не знають правил інверсії'', ''correct'': False}'
+  - '{''text'': ''Науковий стиль не передбачає синтаксичних структур'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -1265,14 +1291,11 @@ items:
   title: Аналіз порядку слів у тексті
   question: Яке речення демонструє немотивовану інверсію?
   options:
-  - text: Настала весна. (початок оповідання)
-    correct: false
-  - text: Книгу читає студент. (без контексту)
-    correct: true
-  - text: Цю книгу я вже читав. (відповідь на «Що з книгою?»)
-    correct: false
-  - text: У цьому місті народився Шевченко. (екскурсія)
-    correct: false
+  - '{''text'': ''Настала весна. (початок оповідання)'', ''correct'': False}'
+  - '{''text'': ''Книгу читає студент. (без контексту)'', ''correct'': True}'
+  - '{''text'': ''Цю книгу я вже читав. (відповідь на «Що з книгою?»)'', ''correct'':
+    False}'
+  - '{''text'': ''У цьому місті народився Шевченко. (екскурсія)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1283,14 +1306,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: Що відбувається з логічним наголосом при інверсії?
   options:
-  - text: Він зникає
-    correct: false
-  - text: Він переміщується на виділений елемент
-    correct: true
-  - text: Він залишається на присудку
-    correct: false
-  - text: Він падає на перше слово
-    correct: false
+  - '{''text'': ''Він зникає'', ''correct'': False}'
+  - '{''text'': ''Він переміщується на виділений елемент'', ''correct'': True}'
+  - '{''text'': ''Він залишається на присудку'', ''correct'': False}'
+  - '{''text'': ''Він падає на перше слово'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1301,14 +1320,10 @@ items:
   title: Аналіз порядку слів у тексті
   question: У реченні «Важко було повірити в перемогу» що підкреслюється?
   options:
-  - text: Перемога
-    correct: false
-  - text: Складність віри
-    correct: true
-  - text: Минулий час
-    correct: false
-  - text: Суб'єкт дії
-    correct: false
+  - '{''text'': ''Перемога'', ''correct'': False}'
+  - '{''text'': ''Складність віри'', ''correct'': True}'
+  - '{''text'': ''Минулий час'', ''correct'': False}'
+  - '{''text'': "Суб''єкт дії", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

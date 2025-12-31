@@ -1,15 +1,18 @@
 module: 14-stylistic-connectors
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/14-stylistic-connectors.md
-generated: '2025-12-29T22:08:25.836957'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.269212'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у вживанні сполучників
@@ -594,6 +597,144 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст сполучниками
+  passage_template: 'Україна продовжує розвивати технологічний сектор, {хоча|зате|тому|хоча}
+    економічні умови залишаються складними. {Проте|Тому|Оскільки|Проте} саме ці труднощі
+    стимулюють інноваційне мислення. Багато компаній переїхали за кордон, {однак|тому|причому|однак}
+    більшість зберегла зв''язки з Україною. {До того ж|Зате|Тому|До того ж} з''явилися
+    нові можливості для співпраці.
+
+
+    {Крім того|Зате|Натомість|Крім того}, з''явилися нові можливості для віддаленої
+    роботи. Український IT-сектор демонструє стійкість, {причому|однак|хоча|причому}
+    це стосується не лише великих компаній, а й стартапів. {Тому|Зате|Втім|Тому} експерти
+    прогнозують подальше зростання галузі.
+
+
+    {Натомість|Причому|Отже|Натомість} у традиційних галузях ситуація складніша. {Втім|Тому|Оскільки|Втім},
+    це створює стимул для цифрової трансформації. {Зате|Однак|Хоча|Зате} українські
+    фахівці здобувають унікальний досвід. {Відтак|Зате|Причому|Відтак} їхня кваліфікація
+    високо цінується на міжнародному ринку. {Тим більше що|Хоча|Зате|Тим більше що}
+    попит на українських спеціалістів зростає.
+
+
+    {Незважаючи на те що|Зате|Тому що|Незважаючи на те що} війна створює безпрецедентні
+    виклики, український бізнес адаптується. {Попри те що|Через те що|Завдяки тому
+    що|Попри те що} багато підприємств зазнали збитків, вони знаходять нові ринки.
+    {Оскільки|Зате|Хоча|Оскільки} міжнародна підтримка зростає, нові можливості відкриваються.
+    {Отже|Зате|Хоча|Отже}, перспективи залишаються оптимістичними.
+
+    '
+  blanks:
+  - answer: хоча
+    options:
+    - хоча
+    - зате
+    - тому
+  - answer: Проте
+    options:
+    - Проте
+    - Тому
+    - Оскільки
+  - answer: однак
+    options:
+    - однак
+    - тому
+    - причому
+  - answer: До того ж
+    options:
+    - До того ж
+    - Зате
+    - Тому
+  - answer: Крім того
+    options:
+    - Крім того
+    - Зате
+    - Натомість
+  - answer: причому
+    options:
+    - причому
+    - однак
+    - хоча
+  - answer: Тому
+    options:
+    - Тому
+    - Зате
+    - Втім
+  - answer: Натомість
+    options:
+    - Натомість
+    - Причому
+    - Отже
+  - answer: Втім
+    options:
+    - Втім
+    - Тому
+    - Оскільки
+  - answer: Зате
+    options:
+    - Зате
+    - Однак
+    - Хоча
+  - answer: Відтак
+    options:
+    - Відтак
+    - Зате
+    - Причому
+  - answer: Тим більше що
+    options:
+    - Тим більше що
+    - Хоча
+    - Зате
+  - answer: Незважаючи на те що
+    options:
+    - Незважаючи на те що
+    - Зате
+    - Тому що
+  - answer: Попри те що
+    options:
+    - Попри те що
+    - Через те що
+    - Завдяки тому що
+  - answer: Оскільки
+    options:
+    - Оскільки
+    - Зате
+    - Хоча
+  - answer: Отже
+    options:
+    - Отже
+    - Зате
+    - Хоча
+  blank_count: 16
+  complete_passage: 'Україна продовжує розвивати технологічний сектор, хоча економічні
+    умови залишаються складними. Проте саме ці труднощі стимулюють інноваційне мислення.
+    Багато компаній переїхали за кордон, однак більшість зберегла зв''язки з Україною.
+    До того ж з''явилися нові можливості для співпраці.
+
+
+    Крім того, з''явилися нові можливості для віддаленої роботи. Український IT-сектор
+    демонструє стійкість, причому це стосується не лише великих компаній, а й стартапів.
+    Тому експерти прогнозують подальше зростання галузі.
+
+
+    Натомість у традиційних галузях ситуація складніша. Втім, це створює стимул для
+    цифрової трансформації. Зате українські фахівці здобувають унікальний досвід.
+    Відтак їхня кваліфікація високо цінується на міжнародному ринку. Тим більше що
+    попит на українських спеціалістів зростає.
+
+
+    Незважаючи на те що війна створює безпрецедентні виклики, український бізнес адаптується.
+    Попри те що багато підприємств зазнали збитків, вони знаходять нові ринки. Оскільки
+    міжнародна підтримка зростає, нові можливості відкриваються. Отже, перспективи
+    залишаються оптимістичними.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення зі сполучниками
   jumbled_words: []
@@ -726,14 +867,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник найкраще підходить для офіційно-ділового стилю?
   options:
-  - text: зате
-    correct: false
-  - text: однак
-    correct: true
-  - text: тим паче
-    correct: false
-  - text: хоч
-    correct: false
+  - '{''text'': ''зате'', ''correct'': False}'
+  - '{''text'': ''однак'', ''correct'': True}'
+  - '{''text'': ''тим паче'', ''correct'': False}'
+  - '{''text'': ''хоч'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -744,14 +881,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Що виражає сполучник «втім»?
   options:
-  - text: Пряму причину
-    correct: false
-  - text: М'яке протиставлення або обмеження
-    correct: true
-  - text: Логічний наслідок
-    correct: false
-  - text: Категоричну допустовість
-    correct: false
+  - '{''text'': ''Пряму причину'', ''correct'': False}'
+  - '{''text'': "М''яке протиставлення або обмеження", ''correct'': True}'
+  - '{''text'': ''Логічний наслідок'', ''correct'': False}'
+  - '{''text'': ''Категоричну допустовість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -762,14 +895,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник є розмовним варіантом компенсації?
   options:
-  - text: проте
-    correct: false
-  - text: однак
-    correct: false
-  - text: зате
-    correct: true
-  - text: натомість
-    correct: false
+  - '{''text'': ''проте'', ''correct'': False}'
+  - '{''text'': ''однак'', ''correct'': False}'
+  - '{''text'': ''зате'', ''correct'': True}'
+  - '{''text'': ''натомість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -780,14 +909,11 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Чим відрізняється «завдяки тому що» від «через те що»?
   options:
-  - text: Нічим, це синоніми
-    correct: false
-  - text: '"Завдяки" — позитивна причина, "через" — негативна або нейтральна'
-    correct: true
-  - text: '"Завдяки" — офіційне, "через" — розмовне'
-    correct: false
-  - text: '"Завдяки" — наслідок, "через" — причина'
-    correct: false
+  - '{''text'': ''Нічим, це синоніми'', ''correct'': False}'
+  - '{''text'': ''"Завдяки" — позитивна причина, "через" — негативна або нейтральна'',
+    ''correct'': True}'
+  - '{''text'': ''"Завдяки" — офіційне, "через" — розмовне'', ''correct'': False}'
+  - '{''text'': ''"Завдяки" — наслідок, "через" — причина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -798,14 +924,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Яка помилка в реченні «Хоча він працював, але не встиг»?
   options:
-  - text: Неправильний час дієслова
-    correct: false
-  - text: Плеоназм — «але» зайве після «хоча»
-    correct: true
-  - text: Неправильний порядок слів
-    correct: false
-  - text: Помилки немає
-    correct: false
+  - '{''text'': ''Неправильний час дієслова'', ''correct'': False}'
+  - '{''text'': ''Плеоназм — «але» зайве після «хоча»'', ''correct'': True}'
+  - '{''text'': ''Неправильний порядок слів'', ''correct'': False}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -816,14 +938,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник виражає логічний висновок у науковому тексті?
   options:
-  - text: тому
-    correct: false
-  - text: отже
-    correct: true
-  - text: зате
-    correct: false
-  - text: хоч
-    correct: false
+  - '{''text'': ''тому'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': True}'
+  - '{''text'': ''зате'', ''correct'': False}'
+  - '{''text'': ''хоч'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -834,14 +952,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Що означає сполучник «натомість»?
   options:
-  - text: Протиставлення
-    correct: false
-  - text: Заміну або альтернативу
-    correct: true
-  - text: Причину
-    correct: false
-  - text: Наслідок
-    correct: false
+  - '{''text'': ''Протиставлення'', ''correct'': False}'
+  - '{''text'': ''Заміну або альтернативу'', ''correct'': True}'
+  - '{''text'': ''Причину'', ''correct'': False}'
+  - '{''text'': ''Наслідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +966,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник має зневажливий відтінок?
   options:
-  - text: хоча
-    correct: false
-  - text: незважаючи на те що
-    correct: false
-  - text: дарма що
-    correct: true
-  - text: попри те що
-    correct: false
+  - '{''text'': ''хоча'', ''correct'': False}'
+  - '{''text'': ''незважаючи на те що'', ''correct'': False}'
+  - '{''text'': ''дарма що'', ''correct'': True}'
+  - '{''text'': ''попри те що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -870,14 +980,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: У якому регістрі найдоречніший сполучник «тим паче»?
   options:
-  - text: Офіційно-діловому
-    correct: false
-  - text: Науковому
-    correct: false
-  - text: Розмовному
-    correct: true
-  - text: Офіційному
-    correct: false
+  - '{''text'': ''Офіційно-діловому'', ''correct'': False}'
+  - '{''text'': ''Науковому'', ''correct'': False}'
+  - '{''text'': ''Розмовному'', ''correct'': True}'
+  - '{''text'': ''Офіційному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +994,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Яка функція сполучника «причому»?
   options:
-  - text: Вираження протиставлення
-    correct: false
-  - text: Уточнення або додавання несподіваної деталі
-    correct: true
-  - text: Вираження причини
-    correct: false
-  - text: Вираження наслідку
-    correct: false
+  - '{''text'': ''Вираження протиставлення'', ''correct'': False}'
+  - '{''text'': ''Уточнення або додавання несподіваної деталі'', ''correct'': True}'
+  - '{''text'': ''Вираження причини'', ''correct'': False}'
+  - '{''text'': ''Вираження наслідку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -906,14 +1008,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник є архаїчним варіантом «оскільки»?
   options:
-  - text: через те що
-    correct: false
-  - text: позаяк
-    correct: true
-  - text: тому що
-    correct: false
-  - text: завдяки тому що
-    correct: false
+  - '{''text'': ''через те що'', ''correct'': False}'
+  - '{''text'': ''позаяк'', ''correct'': True}'
+  - '{''text'': ''тому що'', ''correct'': False}'
+  - '{''text'': ''завдяки тому що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +1022,11 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Чим відрізняється «відтак» від «тому»?
   options:
-  - text: '"Відтак" — книжний, формальний; "тому" — нейтральний, розмовний'
-    correct: true
-  - text: Нічим, це повні синоніми
-    correct: false
-  - text: '"Відтак" — причина, "тому" — наслідок'
-    correct: false
-  - text: '"Відтак" — допустовий, "тому" — протиставний'
-    correct: false
+  - '{''text'': ''"Відтак" — книжний, формальний; "тому" — нейтральний, розмовний'',
+    ''correct'': True}'
+  - '{''text'': ''Нічим, це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Відтак" — причина, "тому" — наслідок'', ''correct'': False}'
+  - '{''text'': ''"Відтак" — допустовий, "тому" — протиставний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -942,14 +1037,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник найкраще підходить для журналістського тексту?
   options:
-  - text: зате
-    correct: false
-  - text: хоч
-    correct: false
-  - text: втім
-    correct: true
-  - text: тим паче
-    correct: false
+  - '{''text'': ''зате'', ''correct'': False}'
+  - '{''text'': ''хоч'', ''correct'': False}'
+  - '{''text'': ''втім'', ''correct'': True}'
+  - '{''text'': ''тим паче'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -960,14 +1051,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Яке твердження про «навпаки» є правильним?
   options:
-  - text: Виражає м'яке обмеження
-    correct: false
-  - text: Виражає протилежність, контраст
-    correct: true
-  - text: Виражає додаткову інформацію
-    correct: false
-  - text: Виражає причину
-    correct: false
+  - '{''text'': "Виражає м''яке обмеження", ''correct'': False}'
+  - '{''text'': ''Виражає протилежність, контраст'', ''correct'': True}'
+  - '{''text'': ''Виражає додаткову інформацію'', ''correct'': False}'
+  - '{''text'': ''Виражає причину'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +1065,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Яка конструкція є суржиком (змішанням мов)?
   options:
-  - text: Незважаючи на те що
-    correct: false
-  - text: Несмотря на те що
-    correct: true
-  - text: Попри те що
-    correct: false
-  - text: Хоча
-    correct: false
+  - '{''text'': ''Незважаючи на те що'', ''correct'': False}'
+  - '{''text'': ''Несмотря на те що'', ''correct'': True}'
+  - '{''text'': ''Попри те що'', ''correct'': False}'
+  - '{''text'': ''Хоча'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -996,14 +1079,10 @@ items:
   title: Теоретичні основи стилістичних сполучників
   question: Який сполучник найкраще виражає підсилення аргументу?
   options:
-  - text: крім того
-    correct: false
-  - text: тим більше
-    correct: true
-  - text: причому
-    correct: false
-  - text: до того ж
-    correct: false
+  - '{''text'': ''крім того'', ''correct'': False}'
+  - '{''text'': ''тим більше'', ''correct'': True}'
+  - '{''text'': ''причому'', ''correct'': False}'
+  - '{''text'': ''до того ж'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1015,14 +1094,10 @@ items:
   question: У реченні «Компанія працює ефективно, проте є резерви для покращення»
     сполучник «проте» виражає...
   options:
-  - text: причину
-    correct: false
-  - text: нейтральне протиставлення
-    correct: true
-  - text: компенсацію
-    correct: false
-  - text: наслідок
-    correct: false
+  - '{''text'': ''причину'', ''correct'': False}'
+  - '{''text'': ''нейтральне протиставлення'', ''correct'': True}'
+  - '{''text'': ''компенсацію'', ''correct'': False}'
+  - '{''text'': ''наслідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1033,14 +1108,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Чому в офіційному документі краще писати «однак» замість «зате»?
   options:
-  - text: '"Зате" граматично неправильний'
-    correct: false
-  - text: '"Однак" — книжний, "зате" — розмовний'
-    correct: true
-  - text: Немає різниці
-    correct: false
-  - text: '"Однак" коротший'
-    correct: false
+  - '{''text'': ''"Зате" граматично неправильний'', ''correct'': False}'
+  - '{''text'': ''"Однак" — книжний, "зате" — розмовний'', ''correct'': True}'
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''"Однак" коротший'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1051,14 +1122,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: У реченні «Він погодився, причому без вагань» сполучник «причому»...
   options:
-  - text: протиставляє дві частини
-    correct: false
-  - text: уточнює несподівану деталь
-    correct: true
-  - text: вказує на причину
-    correct: false
-  - text: виражає допустовість
-    correct: false
+  - '{''text'': ''протиставляє дві частини'', ''correct'': False}'
+  - '{''text'': ''уточнює несподівану деталь'', ''correct'': True}'
+  - '{''text'': ''вказує на причину'', ''correct'': False}'
+  - '{''text'': ''виражає допустовість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1069,14 +1136,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Яка помилка в реченні «Завдяки хворобі він відпочив»?
   options:
-  - text: Неправильний відмінок
-    correct: false
-  - text: '"Завдяки" вживається лише з позитивними причинами'
-    correct: true
-  - text: Потрібен інший час дієслова
-    correct: false
-  - text: Помилки немає
-    correct: false
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''"Завдяки" вживається лише з позитивними причинами'', ''correct'':
+    True}'
+  - '{''text'': ''Потрібен інший час дієслова'', ''correct'': False}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1087,14 +1151,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: У тексті «Плани амбітні, втім реалістичні» сполучник «втім» виражає...
   options:
-  - text: різке протиставлення
-    correct: false
-  - text: м'яке обмеження попереднього твердження
-    correct: true
-  - text: причину
-    correct: false
-  - text: наслідок
-    correct: false
+  - '{''text'': ''різке протиставлення'', ''correct'': False}'
+  - '{''text'': "м''яке обмеження попереднього твердження", ''correct'': True}'
+  - '{''text'': ''причину'', ''correct'': False}'
+  - '{''text'': ''наслідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1105,14 +1165,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Чому «отже» краще за «тому» в науковому висновку?
   options:
-  - text: '"Отже" коротший'
-    correct: false
-  - text: '"Отже" — книжний, виражає логічний висновок'
-    correct: true
-  - text: '"Тому" граматично неправильний'
-    correct: false
-  - text: Немає різниці
-    correct: false
+  - '{''text'': ''"Отже" коротший'', ''correct'': False}'
+  - '{''text'': ''"Отже" — книжний, виражає логічний висновок'', ''correct'': True}'
+  - '{''text'': ''"Тому" граматично неправильний'', ''correct'': False}'
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1123,14 +1179,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: У реченні «Попри критику, він не здався» сполучник «попри» виражає...
   options:
-  - text: причину
-    correct: false
-  - text: допустовість з емоційним наголосом на перешкоді
-    correct: true
-  - text: наслідок
-    correct: false
-  - text: компенсацію
-    correct: false
+  - '{''text'': ''причину'', ''correct'': False}'
+  - '{''text'': ''допустовість з емоційним наголосом на перешкоді'', ''correct'':
+    True}'
+  - '{''text'': ''наслідок'', ''correct'': False}'
+  - '{''text'': ''компенсацію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1142,14 +1195,10 @@ items:
   question: Яку функцію виконує «тим більше що» в реченні «Треба діяти, тим більше
     що час обмежений»?
   options:
-  - text: Протиставлення
-    correct: false
-  - text: Підсилення попереднього аргументу
-    correct: true
-  - text: Причина
-    correct: false
-  - text: Альтернатива
-    correct: false
+  - '{''text'': ''Протиставлення'', ''correct'': False}'
+  - '{''text'': ''Підсилення попереднього аргументу'', ''correct'': True}'
+  - '{''text'': ''Причина'', ''correct'': False}'
+  - '{''text'': ''Альтернатива'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1161,14 +1210,10 @@ items:
   question: У реченні «Він не поїхав, натомість залишився вдома» сполучник «натомість»
     виражає...
   options:
-  - text: протиставлення
-    correct: false
-  - text: альтернативу, заміну однієї дії іншою
-    correct: true
-  - text: причину
-    correct: false
-  - text: допустовість
-    correct: false
+  - '{''text'': ''протиставлення'', ''correct'': False}'
+  - '{''text'': ''альтернативу, заміну однієї дії іншою'', ''correct'': True}'
+  - '{''text'': ''причину'', ''correct'': False}'
+  - '{''text'': ''допустовість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1179,14 +1224,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Чому неправильно писати «Хоча він працював, але не встиг»?
   options:
-  - text: Неправильний час дієслова
-    correct: false
-  - text: Плеоназм — «але» зайве після допустового «хоча»
-    correct: true
-  - text: Неправильний порядок слів
-    correct: false
-  - text: Речення занадто довге
-    correct: false
+  - '{''text'': ''Неправильний час дієслова'', ''correct'': False}'
+  - '{''text'': ''Плеоназм — «але» зайве після допустового «хоча»'', ''correct'':
+    True}'
+  - '{''text'': ''Неправильний порядок слів'', ''correct'': False}'
+  - '{''text'': ''Речення занадто довге'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1198,14 +1240,10 @@ items:
   question: У реченні «Дарма що він намагався, нічого не вийшло» сполучник «дарма
     що»...
   options:
-  - text: виражає нейтральну допустовість
-    correct: false
-  - text: має зневажливий відтінок, вказує на марність
-    correct: true
-  - text: виражає причину
-    correct: false
-  - text: підсилює аргумент
-    correct: false
+  - '{''text'': ''виражає нейтральну допустовість'', ''correct'': False}'
+  - '{''text'': ''має зневажливий відтінок, вказує на марність'', ''correct'': True}'
+  - '{''text'': ''виражає причину'', ''correct'': False}'
+  - '{''text'': ''підсилює аргумент'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1216,14 +1254,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Який сполучник найкраще підходить для журналістського переходу до контраргументу?
   options:
-  - text: зате
-    correct: false
-  - text: втім
-    correct: true
-  - text: тим паче
-    correct: false
-  - text: хоч
-    correct: false
+  - '{''text'': ''зате'', ''correct'': False}'
+  - '{''text'': ''втім'', ''correct'': True}'
+  - '{''text'': ''тим паче'', ''correct'': False}'
+  - '{''text'': ''хоч'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1234,14 +1268,10 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: У реченні «Відтак угоду підписано» сполучник «відтак» виражає...
   options:
-  - text: протиставлення
-    correct: false
-  - text: формальний результат, наслідок
-    correct: true
-  - text: причину
-    correct: false
-  - text: допустовість
-    correct: false
+  - '{''text'': ''протиставлення'', ''correct'': False}'
+  - '{''text'': ''формальний результат, наслідок'', ''correct'': True}'
+  - '{''text'': ''причину'', ''correct'': False}'
+  - '{''text'': ''допустовість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1252,14 +1282,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Чому «незважаючи на те що» доречніший за «хоч» в офіційному листі?
   options:
-  - text: '"Хоч" граматично неправильний'
-    correct: false
-  - text: '"Незважаючи на те що" — формальний, "хоч" — розмовний'
-    correct: true
-  - text: Немає різниці
-    correct: false
-  - text: '"Незважаючи на те що" коротший'
-    correct: false
+  - '{''text'': ''"Хоч" граматично неправильний'', ''correct'': False}'
+  - '{''text'': ''"Незважаючи на те що" — формальний, "хоч" — розмовний'', ''correct'':
+    True}'
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''"Незважаючи на те що" коротший'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1270,14 +1297,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: У реченні «Я не втомився, навпаки почуваюся бадьорим» сполучник «навпаки»...
   options:
-  - text: виражає м'яке обмеження
-    correct: false
-  - text: виражає протилежність до попереднього твердження
-    correct: true
-  - text: додає інформацію
-    correct: false
-  - text: вказує на причину
-    correct: false
+  - '{''text'': "виражає м''яке обмеження", ''correct'': False}'
+  - '{''text'': ''виражає протилежність до попереднього твердження'', ''correct'':
+    True}'
+  - '{''text'': ''додає інформацію'', ''correct'': False}'
+  - '{''text'': ''вказує на причину'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1288,14 +1312,11 @@ items:
   title: Аналіз вживання сполучників у тексті
   question: Яке твердження про «позаяк» є правильним?
   options:
-  - text: Це сучасний нейтральний сполучник
-    correct: false
-  - text: Це архаїчний сполучник, що надає урочистого або іронічного забарвлення
-    correct: true
-  - text: Це розмовний варіант «тому що»
-    correct: false
-  - text: Це калька з російської
-    correct: false
+  - '{''text'': ''Це сучасний нейтральний сполучник'', ''correct'': False}'
+  - '{''text'': ''Це архаїчний сполучник, що надає урочистого або іронічного забарвлення'',
+    ''correct'': True}'
+  - '{''text'': ''Це розмовний варіант «тому що»'', ''correct'': False}'
+  - '{''text'': ''Це калька з російської'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

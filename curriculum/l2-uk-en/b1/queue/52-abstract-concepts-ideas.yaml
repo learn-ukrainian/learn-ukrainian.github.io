@@ -1,15 +1,18 @@
 module: 52-abstract-concepts-ideas
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/52-abstract-concepts-ideas.md
-generated: '2025-12-29T00:22:02.608143'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:28.731791'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 8
   true-false: 12
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в колокаціях
@@ -257,6 +260,122 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Розвиток технологій ставить перед людством серйозні {виклики|проблеми|виклики|рішення}.
+    Експерти висувають різні {теорії|ідеї|теорії|думки} про майбутнє. Деякі вчені
+    мають оптимістичні {ідеї|думки|ідеї|концепції} щодо прогресу. На їхню {думку|ідею|думку|теорію},
+    технології допоможуть {вирішити|зробити|вирішити|мати} глобальні проблеми.
+
+
+    Однак інші наводять {аргументи|думки|аргументи|ідеї} на користь обережності. Вони
+    кажуть, що рішення можуть мати непередбачувані {наслідки|результати|наслідки|висновки}.
+    Урядам потрібні нові {стратегії|ідеї|стратегії|думки} регулювання.
+
+
+    Яке {рішення|вихід|рішення|метод} буде найкращим? {Питання|Проблема|Питання|Виклик}
+    залишається відкритим. Одне зрозуміло: потрібен системний {підхід|метод|підхід|спосіб}
+    та міжнародна співпраця. Без цього ми не зможемо знайти {вихід|рішення|вихід|метод}
+    із ситуації.
+
+
+    На {висновок|думку|висновок|кінець}, можна сказати: майбутнє залежить від наших
+    {рішень|думок|рішень|ідей} сьогодні.
+
+    '
+  blanks:
+  - answer: рішення
+    options:
+    - виклики
+    - проблеми
+    - виклики
+  - answer: думки
+    options:
+    - теорії
+    - ідеї
+    - теорії
+  - answer: концепції
+    options:
+    - ідеї
+    - думки
+    - ідеї
+  - answer: теорію
+    options:
+    - думку
+    - ідею
+    - думку
+  - answer: мати
+    options:
+    - вирішити
+    - зробити
+    - вирішити
+  - answer: ідеї
+    options:
+    - аргументи
+    - думки
+    - аргументи
+  - answer: висновки
+    options:
+    - наслідки
+    - результати
+    - наслідки
+  - answer: думки
+    options:
+    - стратегії
+    - ідеї
+    - стратегії
+  - answer: метод
+    options:
+    - рішення
+    - вихід
+    - рішення
+  - answer: Виклик
+    options:
+    - Питання
+    - Проблема
+    - Питання
+  - answer: спосіб
+    options:
+    - підхід
+    - метод
+    - підхід
+  - answer: метод
+    options:
+    - вихід
+    - рішення
+    - вихід
+  - answer: кінець
+    options:
+    - висновок
+    - думку
+    - висновок
+  - answer: ідей
+    options:
+    - рішень
+    - думок
+    - рішень
+  blank_count: 14
+  complete_passage: 'Розвиток технологій ставить перед людством серйозні рішення.
+    Експерти висувають різні думки про майбутнє. Деякі вчені мають оптимістичні концепції
+    щодо прогресу. На їхню теорію, технології допоможуть мати глобальні проблеми.
+
+
+    Однак інші наводять ідеї на користь обережності. Вони кажуть, що рішення можуть
+    мати непередбачувані висновки. Урядам потрібні нові думки регулювання.
+
+
+    Яке метод буде найкращим? Виклик залишається відкритим. Одне зрозуміло: потрібен
+    системний спосіб та міжнародна співпраця. Без цього ми не зможемо знайти метод
+    із ситуації.
+
+
+    На кінець, можна сказати: майбутнє залежить від наших ідей сьогодні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -325,14 +444,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яке слово означає "opinion" або "personal view" українською?
   options:
-  - text: ідея
-    correct: false
-  - text: думка
-    correct: true
-  - text: концепція
-    correct: false
-  - text: теорія
-    correct: false
+  - '{''text'': ''ідея'', ''correct'': False}'
+  - '{''text'': ''думка'', ''correct'': True}'
+  - '{''text'': ''концепція'', ''correct'': False}'
+  - '{''text'': ''теорія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -343,14 +458,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яке слово використовується для наукового припущення, яке потрібно перевірити?
   options:
-  - text: твердження
-    correct: false
-  - text: висновок
-    correct: false
-  - text: гіпотеза
-    correct: true
-  - text: аргумент
-    correct: false
+  - '{''text'': ''твердження'', ''correct'': False}'
+  - '{''text'': ''висновок'', ''correct'': False}'
+  - '{''text'': ''гіпотеза'', ''correct'': True}'
+  - '{''text'': ''аргумент'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -361,14 +472,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Що означає слово "виклик" у контексті "глобальні виклики"?
   options:
-  - text: invitation
-    correct: false
-  - text: challenge
-    correct: true
-  - text: call
-    correct: false
-  - text: request
-    correct: false
+  - '{''text'': ''invitation'', ''correct'': False}'
+  - '{''text'': ''challenge'', ''correct'': True}'
+  - '{''text'': ''call'', ''correct'': False}'
+  - '{''text'': ''request'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -379,14 +486,11 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яка різниця між "рішення" та "розв'язання"?
   options:
-  - text: Це повні синоніми
-    correct: false
-  - text: '"Рішення" — вибір, "розв''язання" — процес подолання проблеми'
-    correct: true
-  - text: '"Розв''язання" формальніше'
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Це повні синоніми'', ''correct'': False}'
+  - '{''text'': ''"Рішення" — вибір, "розв\''язання" — процес подолання проблеми'',
+    ''correct'': True}'
+  - '{''text'': ''"Розв\''язання" формальніше'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -397,14 +501,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яке дієслово найкраще поєднується зі словом "гіпотезу"?
   options:
-  - text: мати гіпотезу
-    correct: false
-  - text: робити гіпотезу
-    correct: false
-  - text: висунути гіпотезу
-    correct: true
-  - text: давати гіпотезу
-    correct: false
+  - '{''text'': ''мати гіпотезу'', ''correct'': False}'
+  - '{''text'': ''робити гіпотезу'', ''correct'': False}'
+  - '{''text'': ''висунути гіпотезу'', ''correct'': True}'
+  - '{''text'': ''давати гіпотезу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -415,14 +515,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яке слово означає "way out" у значенні "шлях із складної ситуації"?
   options:
-  - text: спосіб
-    correct: false
-  - text: метод
-    correct: false
-  - text: вихід
-    correct: true
-  - text: підхід
-    correct: false
+  - '{''text'': ''спосіб'', ''correct'': False}'
+  - '{''text'': ''метод'', ''correct'': False}'
+  - '{''text'': ''вихід'', ''correct'': True}'
+  - '{''text'': ''підхід'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -433,14 +529,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Що таке "наслідок"?
   options:
-  - text: result
-    correct: false
-  - text: consequence
-    correct: true
-  - text: answer
-    correct: false
-  - text: conclusion
-    correct: false
+  - '{''text'': ''result'', ''correct'': False}'
+  - '{''text'': ''consequence'', ''correct'': True}'
+  - '{''text'': ''answer'', ''correct'': False}'
+  - '{''text'': ''conclusion'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +543,10 @@ items:
   title: Розуміння абстрактних концепцій
   question: Яке слово найбільш формальне для вираження "idea"?
   options:
-  - text: ідея
-    correct: false
-  - text: думка
-    correct: false
-  - text: концепція
-    correct: true
-  - text: план
-    correct: false
+  - '{''text'': ''ідея'', ''correct'': False}'
+  - '{''text'': ''думка'', ''correct'': False}'
+  - '{''text'': ''концепція'', ''correct'': True}'
+  - '{''text'': ''план'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

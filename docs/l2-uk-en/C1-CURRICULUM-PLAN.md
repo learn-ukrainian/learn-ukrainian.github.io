@@ -2134,6 +2134,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 #### Module 152: Класична музика I — Витоки (1745-1863)
 **Focus:** 🎵 **NEW** Baroque and early Romantic — before national awakening
+**Note:** See **Modules 52, 53, 54** for biographies.
 
 **Content Areas:**
 - Максим Березовський (1745-1777): "Демофонт" — first Ukrainian opera composer, tragic genius
@@ -2152,6 +2153,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 #### Module 153: Класична музика II — Національна школа (1863-1921)
 **Focus:** 🎵 **NEW** Лисенко and the national awakening in music
+**Note:** See **Modules 58, 78** for biographies.
 
 **Content Areas:**
 - **Микола Лисенко** (1842-1912): "Тарас Бульба", "Наталка Полтавка", "Різдвяна ніч" — founded Ukrainian national school
@@ -2228,6 +2230,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 #### Module 157: Образотворче мистецтво I — Від ікони до авангарду
 **Focus:** 🎨 **NEW** Ukrainian visual arts history through avant-garde
+**Note:** See **Modules 80, 82, 88** for biographies.
 
 **Content Areas:**
 - Icons: Київська школа, Боровиковський — sacred art tradition
@@ -2265,6 +2268,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 #### Module 159: Балет і танець
 **Focus:** 🩰 **NEW** Ukrainian contribution to world ballet
+**Note:** See **Module 99** for Lifar biography.
 
 **Content Areas:**
 - **Серж Лифар** (1904-1986): Kyiv-born, Paris Opera director (1929-1958), transformed 20th century ballet
@@ -2284,6 +2288,7 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 #### Module 160: Театральне мистецтво I — Від витоків до Курбаса
 **Focus:** 🎭 **NEW** Ukrainian theater history
+**Note:** See **Module 89** for Kurbas biography.
 
 **Content Areas:**
 - Origins: Вертеп, шкільна драма — folk and religious roots
@@ -2468,19 +2473,19 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 |---|-------|------|-------|
 | 168 | Історія української літератури | Literature | Periods and movements |
 | 169 | Котляревський: Енеїда | Literature | Burlesque, national revival |
-| 170 | Шевченко: Життя | Literature | Biography, context |
+| 170 | Шевченко: Щоденник та листи | Literature | Personal prose (bio: M55) |
 | 171 | Шевченко: Поезія | Literature | Major poems analysis |
 | 172 | Шевченко: Спадщина | Literature | Legacy, influence |
-| 173 | Франко: Життя і поезія | Literature | Каменярі, lyrics |
+| 173 | Франко: Громадянська та філософська лірика | Literature | Major poetic cycles (bio: M63) |
 | 174 | Франко: Проза | Literature | Захар Беркут excerpts |
-| 175 | Леся Українка: Поезія | Literature | Contra Spem Spero |
+| 175 | Леся Українка: Лірична поезія | Literature | Lyric poetry (bio: M75) |
 | 176 | Леся Українка: Драма | Literature | Лісова пісня |
 | 177 | Вовчок та Мирний | Literature | Social realism |
 | 178 | Коцюбинський | Literature | Тіні забутих предків |
 | 179 | Літературознавча термінологія | Vocabulary | Plot, theme, motif |
 | 180 | Аналіз поезії | Skills | Meter, rhyme, imagery |
 | 181 | C1.6 Review | Review | 19th century literature |
-| 182 | C1.6 Checkpoint | Review | Assessment |
+| 182 | C1.6 Checkpoint | Review | Comprehensive C1 assessment |
 
 ### Module Content Specifications C1.6
 
@@ -2527,18 +2532,19 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 170: Шевченко: Життя
-**Focus:** Taras Shevchenko's biography and historical context
+#### Module 170: Шевченко: Щоденник та листи
+**Focus:** Reading Shevchenko's personal prose and correspondence
+**Note:** For biography, see **Module 55**.
 
 **Content Areas:**
-- Кріпацтво: birth into serfdom, early hardship
-- Визволення: redemption through art
-- Петербург: artistic training, Кирило-Мефодіївське братство
-- Заслання: 10-year exile to Kazakhstan
-- Повернення та смерть: final years, legacy
+- Щоденник (Journal): intimate thoughts during exile
+- Letters to fraternity members: Костомаров, Куліш
+- Vernacular vs. Imperial Russian in correspondence
+- The "Artist" (Художник) novella excerpts
+- Social commentary in private writings
 
 **Vocabulary (24 words):**
-Шевченко, кріпак, кріпацтво, панщина, визволення, викуп, художник, поет, братство, арешт, заслання, солдат, каторга, повернення, смерть, могила, Канів, пам'ятник, національний, пророк, геній, мученик, символ, свобода
+щоденник, запис, лист, кореспонденція, адресат, епістолярний, сповідь, роздуми, мемуари, автобіографія, щирість, відвертість, нотатка, замальовка, буденність, самотність, туга, підтримка, дружба, порада, прохання, звістка, натхнення, розпач
 
 **Signature Activity Concepts:**
 1. Fill-in: Biography timeline with key dates
@@ -2587,18 +2593,19 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 173: Франко: Життя і поезія
-**Focus:** Ivan Franko's life and lyric poetry
+#### Module 173: Франко: Громадянська та філософська лірика
+**Focus:** Ivan Franko's major poetic cycles
+**Note:** For biography, see **Module 63**.
 
 **Content Areas:**
-- Біографія: Галичина, education, political activism
-- Каменярі: labor and struggle imagery
-- Ліричні поезії: love, nature, philosophy
-- Мойсей: national prophet theme
-- Multilingual legacy: Ukrainian, Polish, German
+- Каменярі: revolutionary spirit and labor imagery
+- Зів'яле листя: tragic love and lyrical drama
+- Мойсей: philosophical poem analysis
+- Вічний революціонер: anthem of progress
+- Scientific realism in poetry
 
 **Vocabulary (24 words):**
-Франко, Галичина, політика, соціалізм, активіст, в'язниця, університет, професор, каменяр, праця, боротьба, поступ, ліричний, любов, природа, філософія, Мойсей, пророк, народ, нація, воля, свобода, каторга, ідеал
+каменяр, скеля, граніт, ланцюг, молот, голос, дух, наука, думка, поступ, майбутнє, революціонер, вічний, порив, зів'ялий, листя, жмуток, драма, скорбота, відчай, надія, бурхливий, філософський, заповіт
 
 **Signature Activity Concepts:**
 1. Cloze: Famous Franko poems
@@ -2627,18 +2634,19 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 
 ---
 
-#### Module 175: Леся Українка: Поезія
+#### Module 175: Леся Українка: Лірична поезія
 **Focus:** Lesya Ukrainka's lyric and philosophical poetry
+**Note:** For biography, see **Module 75**.
 
 **Content Areas:**
-- Біографія: illness, determination, European travels
-- Contra Spem Spero: hope against despair
-- Лісова пісня: nature imagery, Ukrainian mythology
-- Philosophical themes: will, freedom, struggle
-- Feminist perspective in 19th century context
+- Contra Spem Spero: stoicism and willpower
+- Nature lyrics: connection with Polissia and Volyn
+- Patriotic cycles: "Seven Strings", "Slave Songs"
+- Philosophical themes: artist's role, freedom vs. necessity
+- Feminist perspective in lyrical works
 
 **Vocabulary (24 words):**
-Леся Українка, Лариса Косач, хвороба, воля, надія, відчай, боротьба, мрія, ідеал, природа, ліс, вода, казка, міф, символ, метафора, філософія, свобода, жінка, сила, краса, трагедія, любов, вічність
+надія, відчай, сльоза, сміх, лихо, дума, пісня, струна, голос, зірка, промінь, темрява, світло, шлях, тернистий, вільний, раб, кайдани, самсонівська сила, стоїцизм, незламність, кремінь, іскра, полум'я
 
 **Signature Activity Concepts:**
 1. Cloze: Contra Spem Spero and other famous poems
@@ -2774,9 +2782,9 @@ The C1 curriculum represents the path to **mastery**. Focus shifts from "learnin
 **Required Skill Groups:**
 1. Literary History (M168) - Ukrainian literary periods and movements
 2. Early Classics (M169) - Kotlyarevsky, Eneida
-3. Shevchenko (M170-172) - life, poetry, legacy
-4. Franko (M173-174) - poetry and prose
-5. Lesia Ukrainka (M175-176) - poetry and drama
+3. Shevchenko (M170-172) - diary/letters, poetry, legacy (bio: M55)
+4. Franko (M173-174) - major poetic cycles, prose (bio: M63)
+5. Lesia Ukrainka (M175-176) - lyric poetry, drama (bio: M75)
 6. Other Classics (M177-178) - Vovchok, Myrny, Kotsyubynsky
 7. Literary Terminology (M179) - literary analysis vocabulary
 8. Practice Integration (M180-181) - poetry analysis, review
@@ -2981,7 +2989,7 @@ Before generating any C1 module:
 
 6. **Sociolinguistic awareness** (dialects, Surzhyk, language policy) is essential C1 content.
 
-7. **Capstone project** (modules 178-182) requires substantial research paper and oral defense.
+7. **Final Assessment** (Module 182) serves as the comprehensive C1 checkpoint.
 
 ---
 

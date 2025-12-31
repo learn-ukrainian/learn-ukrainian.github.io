@@ -1,0 +1,1308 @@
+module: 77-kultura-kyivskoi-rusi
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/77-kultura-kyivskoi-rusi.md
+generated: '2025-12-30T19:49:16.768040'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 16
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 97
+item_count: 97
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: На стінах собору збереглися понад сім тисячі графіті.
+  error: тисячі
+  answer: тисяч
+  sentence_corrected: На стінах собору збереглися понад сім тисяч графіті.
+  options:
+  - тисячі
+  - тисяч
+  - тисячами
+  - тисячу
+  original_explanation: 'Після числівника "сім" потрібен родовий відмінок множини:
+    сім (чого?) тисяч.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Візантійські майстри використовували понад сто сімдесят відтінки
+    кольорів.
+  error: відтінки
+  answer: відтінків
+  sentence_corrected: Візантійські майстри використовували понад сто сімдесят відтінків
+    кольорів.
+  options:
+  - відтінки
+  - відтінків
+  - відтінками
+  - відтінку
+  original_explanation: 'Після числівника "сто сімдесят" потрібен родовий відмінок
+    множини: відтінків.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Берестяні грамоти знайшли під час археологічний розкопок.
+  error: археологічний
+  answer: археологічних
+  sentence_corrected: Берестяні грамоти знайшли під час археологічних розкопок.
+  options:
+  - археологічний
+  - археологічних
+  - археологічному
+  - археологічними
+  original_explanation: 'Прикметник повинен узгоджуватися з іменником "розкопок" (родовий
+    множини): археологічних розкопок.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кирилиця створена для всі слов'яни.
+  error: слов'яни
+  answer: слов'ян
+  sentence_corrected: Кирилиця створена для всі слов'ян.
+  options:
+  - слов'яни
+  - слов'ян
+  - слов'янами
+  - слов'янам
+  original_explanation: 'Прийменник "для" вимагає родового відмінка: для (кого?) всіх
+    слов''ян.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Смальту укладали під різний кутами для відбиття світла.
+  error: різний
+  answer: різними
+  sentence_corrected: Смальту укладали під різними кутами для відбиття світла.
+  options:
+  - різний
+  - різними
+  - різних
+  - різному
+  original_explanation: 'Прикметник повинен узгоджуватися з іменником "кутами" (орудний
+    множини): різними кутами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Книгописання було престижним ремесло.
+  error: ремесло
+  answer: ремеслом
+  sentence_corrected: Книгописання було престижним ремеслом.
+  options:
+  - ремесло
+  - ремеслом
+  - ремесла
+  - ремеслі
+  original_explanation: 'Після "було" з прикметником "престижним" потрібен орудний
+    відмінок: було престижним ремеслом.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Фрески зображують не лише релігійний сюжети.
+  error: релігійний
+  answer: релігійні
+  sentence_corrected: Фрески зображують не лише релігійні сюжети.
+  options:
+  - релігійний
+  - релігійні
+  - релігійних
+  - релігійними
+  original_explanation: 'Прикметник повинен узгоджуватися з іменником "сюжети" (знахідний
+    множини): релігійні сюжети.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Москва на той час навіть не існував.
+  error: існував
+  answer: існувала
+  sentence_corrected: Москва на той час навіть не існувала.
+  options:
+  - існував
+  - існувала
+  - існувало
+  - існували
+  original_explanation: 'Дієслово повинно узгоджуватися з підметом "Москва" (жіночий
+    рід): Москва існувала.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Грамота написана хлопчиком приблизний шести років.
+  error: приблизний
+  answer: приблизно
+  sentence_corrected: Грамота написана хлопчиком приблизно шести років.
+  options:
+  - приблизний
+  - приблизно
+  - приблизного
+  - приблизним
+  original_explanation: 'Потрібен прислівник, а не прикметник: хлопчиком приблизно
+    шести років.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Культурна традиція продовжилася через Галицько-Волинський князівство.
+  error: Галицько-Волинський
+  answer: Галицько-Волинське
+  sentence_corrected: Культурна традиція продовжилася через Галицько-Волинське князівство.
+  options:
+  - Галицько-Волинський
+  - Галицько-Волинське
+  - Галицько-Волинського
+  - Галицько-Волинському
+  original_explanation: 'Прикметник повинен узгоджуватися з "князівство" (середній
+    рід): Галицько-Волинське князівство.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Рівень грамотності був одним із найвищий в Європі.
+  error: найвищий
+  answer: найвищих
+  sentence_corrected: Рівень грамотності був одним із найвищих в Європі.
+  options:
+  - найвищий
+  - найвищих
+  - найвищим
+  - найвищому
+  original_explanation: 'Після "одним із" потрібен родовий відмінок множини: одним
+    із найвищих.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Монахи копіювали та перекладали книга.
+  error: книга
+  answer: книги
+  sentence_corrected: Монахи копіювали та перекладали книги.
+  options:
+  - книга
+  - книги
+  - книгу
+  - книгами
+  original_explanation: 'Перекладали (що?) книги — знахідний відмінок множини: перекладали
+    книги.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Собор справляв враження розмірам та оздобленням.
+  error: розмірам
+  answer: розмірами
+  sentence_corrected: Собор справляв враження розмірами та оздобленням.
+  options:
+  - розмірам
+  - розмірами
+  - розмірів
+  - розміри
+  original_explanation: 'Потрібен орудний відмінок: справляв враження (чим?) розмірами.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Створення рукопису — це не лише інтелектуальний праця.
+  error: інтелектуальний
+  answer: інтелектуальна
+  sentence_corrected: Створення рукопису — це не лише інтелектуальна праця.
+  options:
+  - інтелектуальний
+  - інтелектуальна
+  - інтелектуальної
+  - інтелектуальну
+  original_explanation: 'Прикметник повинен узгоджуватися з "праця" (жіночий рід):
+    інтелектуальна праця.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Культура творилася в Київ та інших містах.
+  error: Київ
+  answer: Києві
+  sentence_corrected: Культура творилася в Києві та інших містах.
+  options:
+  - Київ
+  - Києві
+  - Києва
+  - Київом
+  original_explanation: 'Прийменник "в" з місцевим відмінком: творилася в (де?) Києві.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: ЮНЕСКО внесла собор до списку всесвітньої спадщини, що перебувають
+    під загрозою.
+  error: перебувають
+  answer: перебуває
+  sentence_corrected: ЮНЕСКО внесла собор до списку всесвітньої спадщини, що перебуває
+    під загрозою.
+  options:
+  - перебувають
+  - перебуває
+  - перебували
+  - перебувала
+  original_explanation: 'Дієслово повинно узгоджуватися з "спадщини" (однина): спадщини,
+    що перебуває.'
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: На стінах Софійського собору збереглися давні _____ — написи
+    відвідувачів.
+  answer: графіті
+  complete_sentence: На стінах Софійського собору збереглися давні графіті__ — написи
+    відвідувачів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Берестяні _____ — це написи на корі берези.
+  answer: грамоти
+  complete_sentence: Берестяні грамоти__ — це написи на корі берези.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Слов'янська _____ створена на основі грецького письма.
+  answer: абетка
+  complete_sentence: Слов'янська абетка__ створена на основі грецького письма.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — це зображення з кольорових шматочків смальти.
+  answer: Мозаїка
+  complete_sentence: Мозаїка__ — це зображення з кольорових шматочків смальти.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Софійський собор мав 13 _____, що символізували Христа та апостолів.
+  answer: куполів
+  complete_sentence: Софійський собор мав 13 куполів__, що символізували Христа та
+    апостолів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: При соборі створили _____ — майстерню для копіювання книг.
+  answer: скрипторій
+  complete_sentence: При соборі створили скрипторій__ — майстерню для копіювання книг.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — це розпис фарбами по вологій штукатурці.
+  answer: Фреска
+  complete_sentence: Фреска__ — це розпис фарбами по вологій штукатурці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Автор літопису називається _____.
+  answer: літописець
+  complete_sentence: Автор літопису називається літописець__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Руські майстри опанували техніку _____ — прикрашання дрібними
+    кульками.
+  answer: зерні
+  complete_sentence: Руські майстри опанували техніку зерні__ — прикрашання дрібними
+    кульками.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Книга коштувала як ціле _____.
+  answer: село
+  complete_sentence: Книга коштувала як ціле село__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — це кольорове скло для мозаїки.
+  answer: Смальта
+  complete_sentence: Смальта__ — це кольорове скло для мозаїки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Культурна _____ Русі продовжилася в Україні.
+  answer: традиція
+  complete_sentence: Культурна традиція__ Русі продовжилася в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Ілюстрація в рукописі називається _____.
+  answer: мініатюра
+  complete_sentence: Ілюстрація в рукописі називається мініатюра__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: _____ — це шкіра для письма.
+  answer: Пергамент
+  complete_sentence: Пергамент__ — це шкіра для письма.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Богородиця Оранта збереглася в _____ собору.
+  answer: апсиді
+  complete_sentence: Богородиця Оранта збереглася в апсиді__ собору.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Культурна лексика в контексті
+  sentence_template: Росія намагається _____ українську культурну спадщину.
+  answer: привласнити
+  complete_sentence: Росія намагається привласнити__ українську культурну спадщину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'Культура Київської {Русі|Москви|Польщі|Русі} — це унікальне явище
+    {європейської|азійської|африканської|європейської} цивілізації. На стінах Софійського
+    {собору|замку|палацу|собору} збереглися понад 7000 {графіті|картин|ікон|графіті}
+    — написів, залишених відвідувачами.
+
+
+    Слов''янську {абетку|мову|культуру|абетку} — кирилицю — створили брати Кирило
+    та Мефодій. Берестяні {грамоти|книги|літописи|грамоти} — це написи на корі {берези|дуба|сосни|берези}.
+    Вони свідчать про високу {грамотність|бідність|відсталість|грамотність} населення.
+
+
+    Софійський собор прикрашають {мозаїки|картини|килими|мозаїки} та фрески. Для мозаїк
+    використовували {смальту|папір|тканину|смальту} — кольорове скло. Візантійські
+    {майстри|воїни|купці|майстри} застосовували понад 170 {відтінків|кольорів|фарб|відтінків}
+    кольорів.
+
+
+    При соборі створили {скрипторій|музей|театр|скрипторій} — майстерню для копіювання
+    книг. Книга коштувала як ціле {село|місто|поле|село}. {Москва|Київ|Львів|Москва}
+    тоді ще не існувала. Ця культурна {спадщина|криза|революція|спадщина} є безперечно
+    українською.
+
+    '
+  blanks:
+  - answer: Русі
+    options:
+    - Русі
+    - Москви
+    - Польщі
+  - answer: європейської
+    options:
+    - європейської
+    - азійської
+    - африканської
+  - answer: собору
+    options:
+    - собору
+    - замку
+    - палацу
+  - answer: графіті
+    options:
+    - графіті
+    - картин
+    - ікон
+  - answer: абетку
+    options:
+    - абетку
+    - мову
+    - культуру
+  - answer: грамоти
+    options:
+    - грамоти
+    - книги
+    - літописи
+  - answer: берези
+    options:
+    - берези
+    - дуба
+    - сосни
+  - answer: грамотність
+    options:
+    - грамотність
+    - бідність
+    - відсталість
+  - answer: мозаїки
+    options:
+    - мозаїки
+    - картини
+    - килими
+  - answer: смальту
+    options:
+    - смальту
+    - папір
+    - тканину
+  - answer: майстри
+    options:
+    - майстри
+    - воїни
+    - купці
+  - answer: відтінків
+    options:
+    - відтінків
+    - кольорів
+    - фарб
+  - answer: скрипторій
+    options:
+    - скрипторій
+    - музей
+    - театр
+  - answer: село
+    options:
+    - село
+    - місто
+    - поле
+  - answer: Москва
+    options:
+    - Москва
+    - Київ
+    - Львів
+  - answer: спадщина
+    options:
+    - спадщина
+    - криза
+    - революція
+  blank_count: 16
+  complete_passage: 'Культура Київської Русі — це унікальне явище європейської цивілізації.
+    На стінах Софійського собору збереглися понад 7000 графіті — написів, залишених
+    відвідувачами.
+
+
+    Слов''янську абетку — кирилицю — створили брати Кирило та Мефодій. Берестяні грамоти
+    — це написи на корі берези. Вони свідчать про високу грамотність населення.
+
+
+    Софійський собор прикрашають мозаїки та фрески. Для мозаїк використовували смальту
+    — кольорове скло. Візантійські майстри застосовували понад 170 відтінків кольорів.
+
+
+    При соборі створили скрипторій — майстерню для копіювання книг. Книга коштувала
+    як ціле село. Москва тоді ще не існувала. Ця культурна спадщина є безперечно українською.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Рівень грамотності в Київській Русі був високий.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Кирилицю створено для всіх слов'ян.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: На стінах собору збереглися графіті.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Візантійські майстри створювали мозаїки.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Берестяні грамоти — це приватне листування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Книга коштувала як ціле село.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Ця культурна спадщина є українською.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Собор мав тринадцять куполів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: При соборі створили скрипторій.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Фрески зображують світські сюжети.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Руські майстри володіли ювелірною справою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: За Ярослава почалося систематичне літописання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Богородицю Оранту називають Нерушимою Стіною.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Жінки в Русі вміли писати.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Культурна традиція продовжилася в Україні.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Москва тоді ще не існувала.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки графіті, згідно з текстом, виявлено на стінах Софійського собору?
+  options:
+  - '{''text'': ''Близько 1000'', ''correct'': False}'
+  - '{''text'': ''Понад 7000'', ''correct'': True}'
+  - '{''text'': ''Близько 3000'', ''correct'': False}'
+  - '{''text'': ''Понад 10000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як у тексті описано берестяні грамоти?
+  options:
+  - '{''text'': ''Офіційні державні документи'', ''correct'': False}'
+  - '{''text'': ''Приватне листування — торговельні записи, любовні листи, домашні
+    завдання'', ''correct'': True}'
+  - '{''text'': ''Релігійні тексти'', ''correct'': False}'
+  - '{''text'': ''Княжі укази'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, згідно з текстом, свідчить про грамотність жінок у Київській Русі?
+  options:
+  - '{''text'': ''Берестяні грамоти'', ''correct'': False}'
+  - '{''text'': ''Графіті "Кирилова писала" на стіні Софії'', ''correct'': True}'
+  - '{''text'': ''Літописи'', ''correct'': False}'
+  - '{''text'': ''Мозаїки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки куполів, за текстом, мав Софійський собор спочатку?
+  options:
+  - '{''text'': 5, ''correct'': False}'
+  - '{''text'': 9, ''correct'': False}'
+  - '{''text'': 13, ''correct'': True}'
+  - '{''text'': 17, ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст характеризує рівень грамотності в Київській Русі порівняно з
+    Західною Європою?
+  options:
+  - '{''text'': ''Нижчий'', ''correct'': False}'
+  - '{''text'': ''Однаковий'', ''correct'': False}'
+  - '{''text'': ''Один із найвищих у тогочасній Європі'', ''correct'': True}'
+  - '{''text'': ''Невідомий'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, згідно з текстом, є "Грамота од Онфіма"?
+  options:
+  - '{''text'': ''Офіційний документ князя'', ''correct'': False}'
+  - '{''text'': ''Берестяна грамота, написана хлопчиком 6-7 років'', ''correct'':
+    True}'
+  - '{''text'': ''Релігійний текст'', ''correct'': False}'
+  - '{''text'': ''Торговельний договір'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки шматочків смальти, за текстом, використали для мозаїк Софії?
+  options:
+  - '{''text'': ''Близько 1 мільйона'', ''correct'': False}'
+  - '{''text'': ''Близько 5 мільйонів'', ''correct'': False}'
+  - '{''text'': ''Близько 10 мільйонів'', ''correct'': True}'
+  - '{''text'': ''Близько 20 мільйонів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку техніку, згідно з текстом, використовували для мозаїк?
+  options:
+  - '{''text'': ''Укладання шматочків паралельно'', ''correct'': False}'
+  - '{''text'': ''Укладання шматочків під різними кутами для відбиття світла'', ''correct'':
+    True}'
+  - '{''text'': ''Випалювання фарб'', ''correct'': False}'
+  - '{''text'': ''Вирізання з каменю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, за текстом, є унікальною особливістю фресок Софії?
+  options:
+  - '{''text'': ''Тільки релігійні сюжети'', ''correct'': False}'
+  - '{''text'': ''Світські сюжети — полювання, цирк, музиканти'', ''correct'': True}'
+  - '{''text'': ''Тільки портрети князів'', ''correct'': False}'
+  - '{''text'': ''Абстрактні візерунки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст описує вартість книги в Київській Русі?
+  options:
+  - '{''text'': ''Дешева'', ''correct'': False}'
+  - '{''text'': ''Як ціле село'', ''correct'': True}'
+  - '{''text'': ''Як корова'', ''correct'': False}'
+  - '{''text'': ''Безкоштовна'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Коли, згідно з текстом, було засновано Москву?
+  options:
+  - '{''text'': ''988 року'', ''correct'': False}'
+  - '{''text'': ''1054 року'', ''correct'': False}'
+  - '{''text'': ''1147 року'', ''correct'': True}'
+  - '{''text'': ''1240 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що, за текстом, є найдавнішою датованою книгою Русі?
+  options:
+  - '{''text'': ''Ізборник Святослава'', ''correct'': False}'
+  - '{''text'': ''Остромирове Євангеліє'', ''correct'': True}'
+  - '{''text'': ''Повість временних літ'', ''correct'': False}'
+  - '{''text'': ''Слово про Закон і Благодать'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Які техніки ювелірної справи, згідно з текстом, опанували руські майстри?
+  options:
+  - '{''text'': ''Тільки литво'', ''correct'': False}'
+  - '{''text'': ''Зернь, скань, перегородчаста емаль'', ''correct'': True}'
+  - '{''text'': ''Тільки карбування'', ''correct'': False}'
+  - '{''text'': ''Тільки гравірування'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки відтінків кольорів, за текстом, використовували для мозаїк?
+  options:
+  - '{''text'': ''Понад 50'', ''correct'': False}'
+  - '{''text'': ''Понад 100'', ''correct'': False}'
+  - '{''text'': ''Понад 170'', ''correct'': True}'
+  - '{''text'': ''Понад 200'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яка мозаїка, згідно з текстом, має назву "Нерушима Стіна"?
+  options:
+  - '{''text'': ''Христос Пантократор'', ''correct'': False}'
+  - '{''text'': ''Богородиця Оранта'', ''correct'': True}'
+  - '{''text'': ''Євхаристія'', ''correct'': False}'
+  - '{''text'': ''Архангели'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як текст пояснює різницю між мозаїкою та фрескою?
+  options:
+  - '{''text'': ''Мозаїка дешевша'', ''correct'': False}'
+  - '{''text'': ''Фреска — розпис фарбами по вологій штукатурці, дешевший і швидший'',
+    ''correct'': True}'
+  - '{''text'': ''Мозаїка і фреска — одне й те саме'', ''correct'': False}'
+  - '{''text'': ''Фреска — з каменю'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яке твердження відповідає деколонізаційному підходу тексту?
+  options:
+  - '{''text'': ''Культура Київської Русі — спільна для України та Росії.'', ''correct'':
+    False}'
+  - '{''text'': ''Культура творилася в Києві, це українська спадщина.'', ''correct'':
+    True}'
+  - '{''text'': ''Московія продовжила традиції Києва.'', ''correct'': False}'
+  - '{''text'': ''Росія має рівні права на цю спадщину.'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому, за текстом, Москва не може претендувати на культуру XI століття?
+  options:
+  - '{''text'': ''Тому що Москва була союзником Києва'', ''correct'': False}'
+  - '{''text'': ''Тому що Москва на той час ще не існувала (заснована 1147 року)'',
+    ''correct'': True}'
+  - '{''text'': ''Тому що Москва мала власну культуру'', ''correct'': False}'
+  - '{''text'': ''Тому що Київ воював з Москвою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує термін "давньоруська культура"?
+  options:
+  - '{''text'': ''Як нейтральний науковий термін'', ''correct'': False}'
+  - '{''text'': ''Як інструмент російського привласнення української спадщини'', ''correct'':
+    True}'
+  - '{''text'': ''Як український термін'', ''correct'': False}'
+  - '{''text'': ''Як візантійський термін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку тяглість, за текстом, має українська культурна традиція?
+  options:
+  - '{''text'': ''Від Московії до сучасності'', ''correct'': False}'
+  - '{''text'': ''Від Русі через Галицько-Волинське князівство, Литву, козацтво'',
+    ''correct'': True}'
+  - '{''text'': ''Від Візантії до сучасності'', ''correct'': False}'
+  - '{''text'': ''Тільки з XIX століття'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що, згідно з текстом, робить Росія з українською культурною спадщиною?
+  options:
+  - '{''text'': ''Захищає її'', ''correct'': False}'
+  - '{''text'': ''Намагається привласнити, а що не може — знищує'', ''correct'': True}'
+  - '{''text'': "Вивчає об''єктивно", ''correct'': False}'
+  - '{''text'': ''Визнає українською'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст пояснює різницю між культурними традиціями Києва та Москви?
+  options:
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': ''Київ розвивав візантійську традицію, Москва — під впливом Золотої
+    Орди'', ''correct'': True}'
+  - '{''text'': ''Москва продовжила київську традицію'', ''correct'': False}'
+  - '{''text'': ''Київ запозичив у Москви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому, за текстом, кирилицю не можна називати "російською абеткою"?
+  options:
+  - '{''text'': ''Тому що її створили росіяни'', ''correct'': False}'
+  - '{''text'': "Тому що її створили для всіх слов''ян, вона прийшла з Болгарії",
+    ''correct'': True}'
+  - '{''text'': ''Тому що її створили українці'', ''correct'': False}'
+  - '{''text'': ''Тому що її створили візантійці для росіян'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яке значення має Софійський собор для деколонізаційного наративу?
+  options:
+  - '{''text'': "Це спільна пам''ятка", ''correct'': False}'
+  - '{''text'': ''Фізичне свідчення української культури, що стоїть у Києві тисячу
+    років'', ''correct'': True}'
+  - '{''text'': "Це візантійська пам''ятка", ''correct'': False}'
+  - '{''text'': "Це російська пам''ятка", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує внесення Софії до списку ЮНЕСКО під загрозою?
+  options:
+  - '{''text'': ''Як формальність'', ''correct'': False}'
+  - '{''text'': ''Як наслідок російської агресії проти України'', ''correct'': True}'
+  - '{''text'': ''Як помилку ЮНЕСКО'', ''correct'': False}'
+  - '{''text'': ''Як ініціативу Росії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що, за текстом, свідчить про українську, а не російську приналежність
+    культури Русі?
+  options:
+  - '{''text'': ''Московські джерела'', ''correct'': False}'
+  - '{''text'': "Усі пам''ятки — собори, літописи, мозаїки — знаходяться на українській
+    землі", ''correct'': True}'
+  - '{''text'': ''Візантійські хроніки'', ''correct'': False}'
+  - '{''text'': ''Польські документи'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яку позицію текст займає щодо терміна "древнерусский"?
+  options:
+  - '{''text'': ''Нейтральну'', ''correct'': False}'
+  - '{''text'': ''Критичну — це інструмент привласнення'', ''correct'': True}'
+  - '{''text'': ''Схвальну'', ''correct'': False}'
+  - '{''text'': ''Байдужу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує війну 2022 року в контексті культурної спадщини?
+  options:
+  - '{''text'': "Як не пов''язану з культурою", ''correct'': False}'
+  - '{''text'': ''Як знищення Росією того, що не може привласнити'', ''correct'':
+    True}'
+  - '{''text'': ''Як захист культури'', ''correct'': False}'
+  - '{''text'': ''Як внутрішній конфлікт'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Яка головна теза деколонізаційного розділу тексту?
+  options:
+  - '{''text'': ''Україна і Росія мають спільну культуру'', ''correct'': False}'
+  - '{''text'': ''Культура Русі творилася в Україні і є українською спадщиною'', ''correct'':
+    True}'
+  - '{''text'': "Культура належить усім слов''янам", ''correct'': False}'
+  - '{''text'': ''Культура Русі не має значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Що текст говорить про Києво-Печерську лавру в контексті тяглості?
+  options:
+  - '{''text'': ''Вона не має значення'', ''correct'': False}'
+  - '{''text'': ''Вона залишалася центром книжності протягом усієї історії'', ''correct'':
+    True}'
+  - '{''text'': ''Вона була перенесена до Москви'', ''correct'': False}'
+  - '{''text'': ''Вона належить Росії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Чому, за текстом, важливо говорити про культуру Русі як українську?
+  options:
+  - '{''text'': ''Для політичних цілей'', ''correct'': False}'
+  - '{''text'': ''Тому що це історична правда, підтверджена фактами'', ''correct'':
+    True}'
+  - '{''text'': ''Тому що Росія просить про це'', ''correct'': False}'
+  - '{''text'': ''Це не важливо'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний аналіз
+  question: Як текст характеризує спроби Росії привласнити культуру Русі?
+  options:
+  - '{''text'': ''Як законні'', ''correct'': False}'
+  - '{''text'': ''Як колоніальне привласнення та фальсифікацію'', ''correct'': True}'
+  - '{''text'': ''Як наукову дискусію'', ''correct'': False}'
+  - '{''text'': ''Як непорозуміння'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, на стінах Софії знайдено понад 7000 графіті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що берестяні грамоти — це офіційні державні документи.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, кирилиця була створена для перекладу Біблії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст стверджує, що грамотність жінок у Русі була звичайним явищем.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, Москва існувала в XI столітті.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що книга в Русі коштувала як ціле село.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, фрески Софії зображують тільки релігійні сюжети.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст повідомляє, що для мозаїк використовували понад 170 відтінків кольорів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, Остромирове Євангеліє — найдавніша датована книга Русі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що Софійський собор мав спочатку 9 куполів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, грамоту Онфіма написав дорослий писар.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст стверджує, що рівень грамотності в Русі був одним із найвищих у
+    Європі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Згідно з текстом, скрипторій — це майстерня для копіювання книг.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: У тексті сказано, що мозаїки створювали тільки руські майстри.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За текстом, культурна спадщина Русі є спільною для України та Росії.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Текст повідомляє, що ЮНЕСКО внесла Софію до списку під загрозою у 2022
+    році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

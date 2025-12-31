@@ -1,15 +1,18 @@
 module: 07-active-participles-present
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/07-active-participles-present.md
-generated: '2025-12-29T21:25:52.109884'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.912779'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -573,6 +576,153 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'Сонце сідало за обрій. {Падаюче|Падавше|Падало|Падаюче} листя
+    вкривало стежки парку. Біля озера стояла жінка, {дивлячись|дивлячийся|дивитися|дивлячись}
+    на воду. {Плинуча|Плинувша|Плинуть|Плинуча} ріка несла останні квіти літа.
+
+
+    Повз неї проходили люди — {поспішаючі|поспішали|поспішавші|поспішаючі} додому
+    після роботи. Один чоловік ніс {палаючий|палавший|палати|палаючий} ліхтар, хоча
+    ще було світло.
+
+
+    {Наростаючий|Наростав|Наростаючого|Наростаючий} вітер приніс прохолоду з річки.
+    {Зникаючий|Зникавший|Зникати|Зникаючий} день залишав по собі теплі спогади.
+
+
+    Жінка стояла нерухомо, {слухаючи|слухаючий|слухала|слухаючи} звуки природи. {Живуча|Живша|Жила|Живуча}
+    ріка продовжувала свій шлях, байдужа до {змінюючогося|змінившогося|змінюватися|змінюючогося}
+    світу навколо.
+
+
+    {Існуючі|Існували|Існувавші|Існуючі} традиції вечірніх прогулянок збереглися в
+    цьому місті. {Спадаюча|Спала|Спадавша|Спадаюча} темрява поступово огортала парк,
+    перетворюючи його на казковий ліс.
+
+
+    {Біжучі|Бігали|Біжавші|Біжучі} діти ще грали на майданчику, а їхні {сміючися|сміялися|сміявшись|сміючися}
+    голоси лунали серед дерев.
+
+
+    На лавці сидів {читаючий|читав|читавший|читаючий} чоловік, занурений у книгу.
+    Поруч {лежачий|лежав|лежавший|лежачий} пес дрімав, не звертаючи уваги на перехожих.
+
+    '
+  blanks:
+  - answer: Падаюче
+    options:
+    - Падаюче
+    - Падавше
+    - Падало
+  - answer: дивлячись
+    options:
+    - дивлячись
+    - дивлячийся
+    - дивитися
+  - answer: Плинуча
+    options:
+    - Плинуча
+    - Плинувша
+    - Плинуть
+  - answer: поспішаючі
+    options:
+    - поспішаючі
+    - поспішали
+    - поспішавші
+  - answer: палаючий
+    options:
+    - палаючий
+    - палавший
+    - палати
+  - answer: Наростаючий
+    options:
+    - Наростаючий
+    - Наростав
+    - Наростаючого
+  - answer: Зникаючий
+    options:
+    - Зникаючий
+    - Зникавший
+    - Зникати
+  - answer: слухаючи
+    options:
+    - слухаючи
+    - слухаючий
+    - слухала
+  - answer: Живуча
+    options:
+    - Живуча
+    - Живша
+    - Жила
+  - answer: змінюючогося
+    options:
+    - змінюючогося
+    - змінившогося
+    - змінюватися
+  - answer: Існуючі
+    options:
+    - Існуючі
+    - Існували
+    - Існувавші
+  - answer: Спадаюча
+    options:
+    - Спадаюча
+    - Спала
+    - Спадавша
+  - answer: Біжучі
+    options:
+    - Біжучі
+    - Бігали
+    - Біжавші
+  - answer: сміючися
+    options:
+    - сміючися
+    - сміялися
+    - сміявшись
+  - answer: читаючий
+    options:
+    - читаючий
+    - читав
+    - читавший
+  - answer: лежачий
+    options:
+    - лежачий
+    - лежав
+    - лежавший
+  blank_count: 16
+  complete_passage: 'Сонце сідало за обрій. Падаюче листя вкривало стежки парку. Біля
+    озера стояла жінка, дивлячись на воду. Плинуча ріка несла останні квіти літа.
+
+
+    Повз неї проходили люди — поспішаючі додому після роботи. Один чоловік ніс палаючий
+    ліхтар, хоча ще було світло.
+
+
+    Наростаючий вітер приніс прохолоду з річки. Зникаючий день залишав по собі теплі
+    спогади.
+
+
+    Жінка стояла нерухомо, слухаючи звуки природи. Живуча ріка продовжувала свій шлях,
+    байдужа до змінюючогося світу навколо.
+
+
+    Існуючі традиції вечірніх прогулянок збереглися в цьому місті. Спадаюча темрява
+    поступово огортала парк, перетворюючи його на казковий ліс.
+
+
+    Біжучі діти ще грали на майданчику, а їхні сміючися голоси лунали серед дерев.
+
+
+    На лавці сидів читаючий чоловік, занурений у книгу. Поруч лежачий пес дрімав,
+    не звертаючи уваги на перехожих.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -705,14 +855,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Яке слово є активним дієприкметником теперішнього часу?
   options:
-  - text: написаний
-    correct: false
-  - text: читаючий
-    correct: true
-  - text: прочитавши
-    correct: false
-  - text: читати
-    correct: false
+  - '{''text'': ''написаний'', ''correct'': False}'
+  - '{''text'': ''читаючий'', ''correct'': True}'
+  - '{''text'': ''прочитавши'', ''correct'': False}'
+  - '{''text'': ''читати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -723,14 +869,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Від якого дієслова утворено дієприкметник «працюючий»?
   options:
-  - text: праця
-    correct: false
-  - text: працювати
-    correct: true
-  - text: працівник
-    correct: false
-  - text: опрацювати
-    correct: false
+  - '{''text'': ''праця'', ''correct'': False}'
+  - '{''text'': ''працювати'', ''correct'': True}'
+  - '{''text'': ''працівник'', ''correct'': False}'
+  - '{''text'': ''опрацювати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -741,14 +883,10 @@ items:
   title: Розпізнайте дієприкметники
   question: У якому регістрі найчастіше вживають активні дієприкметники?
   options:
-  - text: розмовний
-    correct: false
-  - text: художній
-    correct: true
-  - text: інтернет-спілкування
-    correct: false
-  - text: телефонна розмова
-    correct: false
+  - '{''text'': ''розмовний'', ''correct'': False}'
+  - '{''text'': ''художній'', ''correct'': True}'
+  - '{''text'': ''інтернет-спілкування'', ''correct'': False}'
+  - '{''text'': ''телефонна розмова'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -759,14 +897,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Як правильно перефразувати «читаюча дівчина» для розмовного мовлення?
   options:
-  - text: дівчина читає
-    correct: false
-  - text: дівчина, яка читає
-    correct: true
-  - text: дівчина читаюча
-    correct: false
-  - text: читаюча є дівчина
-    correct: false
+  - '{''text'': ''дівчина читає'', ''correct'': False}'
+  - '{''text'': ''дівчина, яка читає'', ''correct'': True}'
+  - '{''text'': ''дівчина читаюча'', ''correct'': False}'
+  - '{''text'': ''читаюча є дівчина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -777,14 +911,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Який суфікс правильний після шиплячих приголосних?
   options:
-  - text: -ючий
-    correct: false
-  - text: -учий
-    correct: true
-  - text: -ачий
-    correct: false
-  - text: -ящий
-    correct: false
+  - '{''text'': ''-ючий'', ''correct'': False}'
+  - '{''text'': ''-учий'', ''correct'': True}'
+  - '{''text'': ''-ачий'', ''correct'': False}'
+  - '{''text'': ''-ящий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -795,14 +925,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Чи можна утворити активний дієприкметник від дієслова «написати»?
   options:
-  - text: так, написаючий
-    correct: false
-  - text: так, написуючий
-    correct: false
-  - text: ні, бо це доконаний вид
-    correct: true
-  - text: так, написавший
-    correct: false
+  - '{''text'': ''так, написаючий'', ''correct'': False}'
+  - '{''text'': ''так, написуючий'', ''correct'': False}'
+  - '{''text'': ''ні, бо це доконаний вид'', ''correct'': True}'
+  - '{''text'': ''так, написавший'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -813,14 +939,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Яке слово є дієприслівником, а НЕ дієприкметником?
   options:
-  - text: читаючий
-    correct: false
-  - text: читаючи
-    correct: true
-  - text: читаюча
-    correct: false
-  - text: читаючого
-    correct: false
+  - '{''text'': ''читаючий'', ''correct'': False}'
+  - '{''text'': ''читаючи'', ''correct'': True}'
+  - '{''text'': ''читаюча'', ''correct'': False}'
+  - '{''text'': ''читаючого'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -831,14 +953,10 @@ items:
   title: Розпізнайте дієприкметники
   question: У якому реченні дієприкметник вжито правильно стилістично?
   options:
-  - text: Слухай, бачиш того біжучого хлопця?
-    correct: false
-  - text: Наростаючий шум заповнював зал.
-    correct: true
-  - text: Передай працюючому колезі цю записку.
-    correct: false
-  - text: Подивись на їдучий автобус!
-    correct: false
+  - '{''text'': ''Слухай, бачиш того біжучого хлопця?'', ''correct'': False}'
+  - '{''text'': ''Наростаючий шум заповнював зал.'', ''correct'': True}'
+  - '{''text'': ''Передай працюючому колезі цю записку.'', ''correct'': False}'
+  - '{''text'': ''Подивись на їдучий автобус!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -849,14 +967,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Яка форма родового відмінка від «читаючий» (чоловічий рід)?
   options:
-  - text: читаючому
-    correct: false
-  - text: читаючого
-    correct: true
-  - text: читаючим
-    correct: false
-  - text: читаючому
-    correct: false
+  - '{''text'': ''читаючому'', ''correct'': False}'
+  - '{''text'': ''читаючого'', ''correct'': True}'
+  - '{''text'': ''читаючим'', ''correct'': False}'
+  - '{''text'': ''читаючому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -867,14 +981,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Яке слово є усталеним дієприкметником, що вживається і в розмові?
   options:
-  - text: працюючий
-    correct: false
-  - text: летючий
-    correct: true
-  - text: біжучий
-    correct: false
-  - text: пишучий
-    correct: false
+  - '{''text'': ''працюючий'', ''correct'': False}'
+  - '{''text'': ''летючий'', ''correct'': True}'
+  - '{''text'': ''біжучий'', ''correct'': False}'
+  - '{''text'': ''пишучий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -885,14 +995,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Як утворити дієприкметник від дієслова «слухати»?
   options:
-  - text: слухавший
-    correct: false
-  - text: слухаючий
-    correct: true
-  - text: слуханий
-    correct: false
-  - text: слухаємий
-    correct: false
+  - '{''text'': ''слухавший'', ''correct'': False}'
+  - '{''text'': ''слухаючий'', ''correct'': True}'
+  - '{''text'': ''слуханий'', ''correct'': False}'
+  - '{''text'': ''слухаємий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -903,14 +1009,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Чому українська мова рідше використовує дієприкметники, ніж російська?
   options:
-  - text: бо українська простіша
-    correct: false
-  - text: бо підрядні речення природніші для української
-    correct: true
-  - text: бо дієприкметників немає в українській
-    correct: false
-  - text: бо це заборонено граматикою
-    correct: false
+  - '{''text'': ''бо українська простіша'', ''correct'': False}'
+  - '{''text'': ''бо підрядні речення природніші для української'', ''correct'': True}'
+  - '{''text'': ''бо дієприкметників немає в українській'', ''correct'': False}'
+  - '{''text'': ''бо це заборонено граматикою'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -921,14 +1023,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Яка форма жіночого роду від «працюючий»?
   options:
-  - text: працююча
-    correct: false
-  - text: працюючая
-    correct: false
-  - text: працюючі
-    correct: false
-  - text: працююча
-    correct: true
+  - '{''text'': ''працююча'', ''correct'': False}'
+  - '{''text'': ''працюючая'', ''correct'': False}'
+  - '{''text'': ''працюючі'', ''correct'': False}'
+  - '{''text'': ''працююча'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -939,14 +1037,10 @@ items:
   title: Розпізнайте дієприкметники
   question: У якому контексті доречно вжити «зростаючий»?
   options:
-  - text: SMS другу
-    correct: false
-  - text: новинний заголовок
-    correct: true
-  - text: розмова з дитиною
-    correct: false
-  - text: замовлення в кафе
-    correct: false
+  - '{''text'': ''SMS другу'', ''correct'': False}'
+  - '{''text'': ''новинний заголовок'', ''correct'': True}'
+  - '{''text'': ''розмова з дитиною'', ''correct'': False}'
+  - '{''text'': ''замовлення в кафе'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -957,14 +1051,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Який дієприкметник утворюється від зворотного дієслова «дивитися»?
   options:
-  - text: дивлячий
-    correct: false
-  - text: дивлячийся
-    correct: true
-  - text: дивлячись
-    correct: false
-  - text: дивучийся
-    correct: false
+  - '{''text'': ''дивлячий'', ''correct'': False}'
+  - '{''text'': ''дивлячийся'', ''correct'': True}'
+  - '{''text'': ''дивлячись'', ''correct'': False}'
+  - '{''text'': ''дивучийся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -975,14 +1065,10 @@ items:
   title: Розпізнайте дієприкметники
   question: Який приклад демонструє правильне вживання в науковому стилі?
   options:
-  - text: Той біжучий хлопець — мій брат.
-    correct: false
-  - text: Існуючі теорії пояснюють феномен.
-    correct: true
-  - text: Дай тому працюючому каву.
-    correct: false
-  - text: Летюча миша страшна.
-    correct: false
+  - '{''text'': ''Той біжучий хлопець — мій брат.'', ''correct'': False}'
+  - '{''text'': ''Існуючі теорії пояснюють феномен.'', ''correct'': True}'
+  - '{''text'': ''Дай тому працюючому каву.'', ''correct'': False}'
+  - '{''text'': ''Летюча миша страшна.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -993,14 +1079,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Як правильно перефразувати «читаюча студентка» в підрядне речення?
   options:
-  - text: студентка, яка читає
-    correct: true
-  - text: студентка, що читала
-    correct: false
-  - text: студентка читає
-    correct: false
-  - text: студентка, читаючи
-    correct: false
+  - '{''text'': ''студентка, яка читає'', ''correct'': True}'
+  - '{''text'': ''студентка, що читала'', ''correct'': False}'
+  - '{''text'': ''студентка читає'', ''correct'': False}'
+  - '{''text'': ''студентка, читаючи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1011,14 +1093,10 @@ items:
   title: Оберіть правильну трансформацію
   question: «Наростаючий шум» = ?
   options:
-  - text: шум, який наростає
-    correct: true
-  - text: шум наростав
-    correct: false
-  - text: шум, що наростав
-    correct: false
-  - text: шуму наростаючого
-    correct: false
+  - '{''text'': ''шум, який наростає'', ''correct'': True}'
+  - '{''text'': ''шум наростав'', ''correct'': False}'
+  - '{''text'': ''шум, що наростав'', ''correct'': False}'
+  - '{''text'': ''шуму наростаючого'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1029,14 +1107,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Яке підрядне речення відповідає «зникаючий вид»?
   options:
-  - text: вид, який зникає
-    correct: true
-  - text: вид, який зник
-    correct: false
-  - text: вид зникаючий
-    correct: false
-  - text: зникаючого виду
-    correct: false
+  - '{''text'': ''вид, який зникає'', ''correct'': True}'
+  - '{''text'': ''вид, який зник'', ''correct'': False}'
+  - '{''text'': ''вид зникаючий'', ''correct'': False}'
+  - '{''text'': ''зникаючого виду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1047,14 +1121,10 @@ items:
   title: Оберіть правильну трансформацію
   question: '«Працюючий чоловік» трансформується в:'
   options:
-  - text: чоловік, який працює
-    correct: true
-  - text: чоловік працюючий
-    correct: false
-  - text: чоловік, що працював
-    correct: false
-  - text: чоловіка, який працює
-    correct: false
+  - '{''text'': ''чоловік, який працює'', ''correct'': True}'
+  - '{''text'': ''чоловік працюючий'', ''correct'': False}'
+  - '{''text'': ''чоловік, що працював'', ''correct'': False}'
+  - '{''text'': ''чоловіка, який працює'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1065,14 +1135,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Як перефразувати «падаюче листя»?
   options:
-  - text: листя, яке падає
-    correct: true
-  - text: листя падаюче
-    correct: false
-  - text: листя, що впало
-    correct: false
-  - text: падало листя
-    correct: false
+  - '{''text'': ''листя, яке падає'', ''correct'': True}'
+  - '{''text'': ''листя падаюче'', ''correct'': False}'
+  - '{''text'': ''листя, що впало'', ''correct'': False}'
+  - '{''text'': ''падало листя'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1083,14 +1149,10 @@ items:
   title: Оберіть правильну трансформацію
   question: «Існуючі правила» = ?
   options:
-  - text: правила, які існують
-    correct: true
-  - text: правила існуючі
-    correct: false
-  - text: правила, що існували
-    correct: false
-  - text: існуючих правил
-    correct: false
+  - '{''text'': ''правила, які існують'', ''correct'': True}'
+  - '{''text'': ''правила існуючі'', ''correct'': False}'
+  - '{''text'': ''правила, що існували'', ''correct'': False}'
+  - '{''text'': ''існуючих правил'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1101,14 +1163,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Яке речення правильно передає «летючий птах»?
   options:
-  - text: птах, який летить
-    correct: true
-  - text: птах летючий
-    correct: false
-  - text: птах, що летів
-    correct: false
-  - text: птаха летючого
-    correct: false
+  - '{''text'': ''птах, який летить'', ''correct'': True}'
+  - '{''text'': ''птах летючий'', ''correct'': False}'
+  - '{''text'': ''птах, що летів'', ''correct'': False}'
+  - '{''text'': ''птаха летючого'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1119,14 +1177,10 @@ items:
   title: Оберіть правильну трансформацію
   question: '«Змінюючийся клімат» трансформується в:'
   options:
-  - text: клімат, який змінюється
-    correct: true
-  - text: клімат змінюється
-    correct: false
-  - text: клімат, що змінився
-    correct: false
-  - text: змінюючогося клімату
-    correct: false
+  - '{''text'': ''клімат, який змінюється'', ''correct'': True}'
+  - '{''text'': ''клімат змінюється'', ''correct'': False}'
+  - '{''text'': ''клімат, що змінився'', ''correct'': False}'
+  - '{''text'': ''змінюючогося клімату'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1137,14 +1191,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Як перефразувати «слухаюча аудиторія»?
   options:
-  - text: аудиторія, яка слухає
-    correct: true
-  - text: аудиторія слухаюча
-    correct: false
-  - text: аудиторія, що слухала
-    correct: false
-  - text: слухаючої аудиторії
-    correct: false
+  - '{''text'': ''аудиторія, яка слухає'', ''correct'': True}'
+  - '{''text'': ''аудиторія слухаюча'', ''correct'': False}'
+  - '{''text'': ''аудиторія, що слухала'', ''correct'': False}'
+  - '{''text'': ''слухаючої аудиторії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1155,14 +1205,10 @@ items:
   title: Оберіть правильну трансформацію
   question: «Біжучий хлопець» = ?
   options:
-  - text: хлопець, який біжить
-    correct: true
-  - text: хлопець біжучий
-    correct: false
-  - text: хлопець, що бігав
-    correct: false
-  - text: біжучого хлопця
-    correct: false
+  - '{''text'': ''хлопець, який біжить'', ''correct'': True}'
+  - '{''text'': ''хлопець біжучий'', ''correct'': False}'
+  - '{''text'': ''хлопець, що бігав'', ''correct'': False}'
+  - '{''text'': ''біжучого хлопця'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1173,14 +1219,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Яке підрядне речення відповідає «плинуча ріка»?
   options:
-  - text: ріка, яка пливе
-    correct: true
-  - text: ріка плинуча
-    correct: false
-  - text: ріка, що плила
-    correct: false
-  - text: плинучої ріки
-    correct: false
+  - '{''text'': ''ріка, яка пливе'', ''correct'': True}'
+  - '{''text'': ''ріка плинуча'', ''correct'': False}'
+  - '{''text'': ''ріка, що плила'', ''correct'': False}'
+  - '{''text'': ''плинучої ріки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1191,14 +1233,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Як правильно перефразувати «зростаючі ціни»?
   options:
-  - text: ціни, які зростають
-    correct: true
-  - text: ціни зростаючі
-    correct: false
-  - text: ціни, що зросли
-    correct: false
-  - text: зростаючих цін
-    correct: false
+  - '{''text'': ''ціни, які зростають'', ''correct'': True}'
+  - '{''text'': ''ціни зростаючі'', ''correct'': False}'
+  - '{''text'': ''ціни, що зросли'', ''correct'': False}'
+  - '{''text'': ''зростаючих цін'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1209,14 +1247,10 @@ items:
   title: Оберіть правильну трансформацію
   question: '«Діючий закон» трансформується в:'
   options:
-  - text: закон, який діє
-    correct: true
-  - text: закон діючий
-    correct: false
-  - text: закон, що діяв
-    correct: false
-  - text: діючого закону
-    correct: false
+  - '{''text'': ''закон, який діє'', ''correct'': True}'
+  - '{''text'': ''закон діючий'', ''correct'': False}'
+  - '{''text'': ''закон, що діяв'', ''correct'': False}'
+  - '{''text'': ''діючого закону'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1227,14 +1261,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Яке речення правильно передає «палаючий вогонь»?
   options:
-  - text: вогонь, який палає
-    correct: true
-  - text: вогонь палаючий
-    correct: false
-  - text: вогонь, що палав
-    correct: false
-  - text: палаючого вогню
-    correct: false
+  - '{''text'': ''вогонь, який палає'', ''correct'': True}'
+  - '{''text'': ''вогонь палаючий'', ''correct'': False}'
+  - '{''text'': ''вогонь, що палав'', ''correct'': False}'
+  - '{''text'': ''палаючого вогню'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1245,14 +1275,10 @@ items:
   title: Оберіть правильну трансформацію
   question: Як перефразувати «спадаючий рівень»?
   options:
-  - text: рівень, який спадає
-    correct: true
-  - text: рівень спадаючий
-    correct: false
-  - text: рівень, що спав
-    correct: false
-  - text: спадаючого рівня
-    correct: false
+  - '{''text'': ''рівень, який спадає'', ''correct'': True}'
+  - '{''text'': ''рівень спадаючий'', ''correct'': False}'
+  - '{''text'': ''рівень, що спав'', ''correct'': False}'
+  - '{''text'': ''спадаючого рівня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1263,14 +1289,10 @@ items:
   title: Оберіть правильну трансформацію
   question: «Живуча традиція» = ?
   options:
-  - text: традиція, яка живе
-    correct: true
-  - text: традиція живуча
-    correct: false
-  - text: традиція, що жила
-    correct: false
-  - text: живучої традиції
-    correct: false
+  - '{''text'': ''традиція, яка живе'', ''correct'': True}'
+  - '{''text'': ''традиція живуча'', ''correct'': False}'
+  - '{''text'': ''традиція, що жила'', ''correct'': False}'
+  - '{''text'': ''живучої традиції'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

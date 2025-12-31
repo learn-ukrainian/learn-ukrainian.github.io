@@ -1,0 +1,1422 @@
+module: 87-khmelnychchyna-i-povstannia
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/87-khmelnychchyna-i-povstannia.md
+generated: '2025-12-30T19:49:17.276751'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки здобули перемога під Жовтими Водами.
+  error: перемога
+  answer: перемогу
+  sentence_corrected: Козаки здобули перемогу під Жовтими Водами.
+  options:
+  - перемога
+  - перемогу
+  - перемоги
+  - перемогою
+  original_explanation: Дієслово "здобути" вимагає знахідного відмінка — здобули перемогу
+    (що?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Хмельницький очолив повстання проти польський панування.
+  error: польський
+  answer: польського
+  sentence_corrected: Хмельницький очолив повстання проти польського панування.
+  options:
+  - польський
+  - польського
+  - польському
+  - польським
+  original_explanation: Прийменник "проти" вимагає родового відмінка — проти польського
+    панування.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Польські гетьмани потрапили в полону.
+  error: полону
+  answer: полон
+  sentence_corrected: Польські гетьмани потрапили в полон.
+  options:
+  - полону
+  - полон
+  - полоні
+  - полоном
+  original_explanation: Вираз "потрапити в полон" вимагає знахідного відмінка — в
+    полон.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки уклали союз із татари.
+  error: татари
+  answer: татарами
+  sentence_corrected: Козаки уклали союз із татарами.
+  options:
+  - татари
+  - татарами
+  - татарів
+  - татарам
+  original_explanation: Прийменник "з/із" вимагає орудного відмінка — з татарами (з
+    ким?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Армія зібралася під Пилявці.
+  error: Пилявці
+  answer: Пилявцями
+  sentence_corrected: Армія зібралася під Пилявцями.
+  options:
+  - Пилявці
+  - Пилявцями
+  - Пилявців
+  - Пилявцям
+  original_explanation: Прийменник "під" у значенні місця вимагає орудного відмінка
+    — під Пилявцями.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Чаплинський напав на маєтку Хмельницького.
+  error: маєтку
+  answer: маєток
+  sentence_corrected: Чаплинський напав на маєток Хмельницького.
+  options:
+  - маєтку
+  - маєток
+  - маєтком
+  - маєтках
+  original_explanation: Дієслово "напасти на" вимагає знахідного відмінка — на маєток.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Хмельницький втік на Запорозький Січ.
+  error: Запорозький
+  answer: Запорозьку
+  sentence_corrected: Хмельницький втік на Запорозьку Січ.
+  options:
+  - Запорозький
+  - Запорозьку
+  - Запорозькій
+  - Запорозькою
+  original_explanation: Іменник "Січ" жіночого роду, тому прикметник "Запорозьку"
+    (знахідний відмінок).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Шляхта тікали від козаків у паніці.
+  error: тікали
+  answer: тікала
+  sentence_corrected: Шляхта тікала від козаків у паніці.
+  options:
+  - тікали
+  - тікала
+  - тікав
+  - тікало
+  original_explanation: Іменник "шляхта" — збірний іменник жіночого роду однини, тому
+    "тікала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки здобули велики трофеї.
+  error: велики
+  answer: великі
+  sentence_corrected: Козаки здобули великі трофеї.
+  options:
+  - велики
+  - великі
+  - великих
+  - великими
+  original_explanation: Прикметник у знахідному відмінку множини — великі трофеї.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Повстання набувало характеру національної революція.
+  error: революція
+  answer: революції
+  sentence_corrected: Повстання набувало характеру національної революції.
+  options:
+  - революція
+  - революції
+  - революцію
+  - революцією
+  original_explanation: Слово "характер" вимагає родового відмінка — характеру революції.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Хмельницький діяв як державні діяч.
+  error: державні
+  answer: державний
+  sentence_corrected: Хмельницький діяв як державний діяч.
+  options:
+  - державні
+  - державний
+  - державного
+  - державним
+  original_explanation: Прикметник має узгоджуватися з "діяч" — державний діяч (чоловічий
+    рід однини).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кримський хан надав козаків допомогу.
+  error: козаків
+  answer: козакам
+  sentence_corrected: Кримський хан надав козакам допомогу.
+  options:
+  - козаків
+  - козакам
+  - козаки
+  - козаками
+  original_explanation: Дієслово "надати" вимагає давального відмінка — надав козакам
+    (кому?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Після Корсуня Україна повставав.
+  error: повставав
+  answer: повстала
+  sentence_corrected: Після Корсуня Україна повстала.
+  options:
+  - повставав
+  - повстала
+  - повставала
+  - повстали
+  original_explanation: Іменник "Україна" — жіночого роду, тому дієслово "повстала".
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Січовики обрали Хмельницький гетьманом.
+  error: Хмельницький
+  answer: Хмельницького
+  sentence_corrected: Січовики обрали Хмельницького гетьманом.
+  options:
+  - Хмельницький
+  - Хмельницького
+  - Хмельницькому
+  - Хмельницьким
+  original_explanation: Дієслово "обрати" вимагає знахідного відмінка — обрали Хмельницького
+    (кого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Перемоги заклали фундамент української державність.
+  error: державність
+  answer: державності
+  sentence_corrected: Перемоги заклали фундамент української державності.
+  options:
+  - державність
+  - державності
+  - державністю
+  - державником
+  original_explanation: Слово "фундамент" вимагає родового відмінка — фундамент державності.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Три воєначальники не могли домовитись, хто головні.
+  error: головні
+  answer: головний
+  sentence_corrected: Три воєначальники не могли домовитись, хто головний.
+  options:
+  - головні
+  - головний
+  - головного
+  - головним
+  original_explanation: Займенник "хто" вимагає однини — хто головний.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: 1648 рік став роком великих _____ козацького війська.
+  answer: перемог
+  complete_sentence: 1648 рік став роком великих перемог__ козацького війська.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Богдан Хмельницький очолив _____ проти польського панування.
+  answer: повстання
+  complete_sentence: Богдан Хмельницький очолив повстання__ проти польського панування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козаки уклали союз із кримським _____.
+  answer: ханом
+  complete_sentence: Козаки уклали союз із кримським ханом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Під Жовтими Водами польський авангард потрапив у _____.
+  answer: засідку
+  complete_sentence: Під Жовтими Водами польський авангард потрапив у засідку__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Обидва коронні гетьмани потрапили в _____.
+  answer: полон
+  complete_sentence: Обидва коронні гетьмани потрапили в полон__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Хмельницький шукав _____ в польських судах.
+  answer: справедливості
+  complete_sentence: Хмельницький шукав справедливості__ в польських судах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Козаки захопили величезні _____ після Пилявців.
+  answer: трофеї
+  complete_sentence: Козаки захопили величезні трофеї__ після Пилявців.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Шляхта _____ від козаків у паніці.
+  answer: тікала
+  complete_sentence: Шляхта тікала__ від козаків у паніці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Реєстрові козаки _____ на бік Хмельницького.
+  answer: перейшли
+  complete_sentence: Реєстрові козаки перейшли__ на бік Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Після Корсуня вся Україна _____.
+  answer: повстала
+  complete_sentence: Після Корсуня вся Україна повстала__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Польська _____ не захищала козаків.
+  answer: правова система
+  complete_sentence: Польська правова система__ не захищала козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Хмельницький діяв як _____ діяч.
+  answer: державний
+  complete_sentence: Хмельницький діяв як державний__ діяч.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Татари надали козакам досвідчену _____.
+  answer: кінноту
+  complete_sentence: Татари надали козакам досвідчену кінноту__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Після 1638 року настала «золота _____».
+  answer: тиша
+  complete_sentence: Після 1638 року настала «золота тиша__».
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Повстання набувало характеру національної _____.
+  answer: революції
+  complete_sentence: Повстання набувало характеру національної революції__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Хмельницький став лідером _____.
+  answer: нації
+  complete_sentence: Хмельницький став лідером нації__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки здобули _____ під Жовтими Водами.
+  answer: перемогу
+  complete_sentence: Козаки здобули перемогу__ під Жовтими Водами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Хмельницький очолив повстання проти _____.
+  answer: Польщі
+  complete_sentence: Хмельницький очолив повстання проти Польщі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Обидва гетьмани потрапили в _____.
+  answer: полон
+  complete_sentence: Обидва гетьмани потрапили в полон__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки уклали союз із _____.
+  answer: татарами
+  complete_sentence: Козаки уклали союз із татарами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Армія зібралася під _____.
+  answer: Пилявцями
+  complete_sentence: Армія зібралася під Пилявцями__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Хмельницький втік на Запорозьку _____.
+  answer: Січ
+  complete_sentence: Хмельницький втік на Запорозьку Січ__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Січовики обрали _____ гетьманом.
+  answer: Хмельницького
+  complete_sentence: Січовики обрали Хмельницького__ гетьманом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Перемоги заклали фундамент _____.
+  answer: державності
+  complete_sentence: Перемоги заклали фундамент державності__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кримський хан надав _____ допомогу.
+  answer: козакам
+  complete_sentence: Кримський хан надав козакам__ допомогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Особиста кривда стала _____ повстання.
+  answer: причиною
+  complete_sentence: Особиста кривда стала причиною__ повстання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Повстання набуло національного _____.
+  answer: характеру
+  complete_sentence: Повстання набуло національного характеру__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Шляхта тікала від _____ у паніці.
+  answer: козаків
+  complete_sentence: Шляхта тікала від козаків__ у паніці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Чаплинський напав на _____ Хмельницького.
+  answer: маєток
+  complete_sentence: Чаплинський напав на маєток__ Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки захопили величезні _____.
+  answer: трофеї
+  complete_sentence: Козаки захопили величезні трофеї__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Реєстрові козаки перейшли на бік _____.
+  answer: Хмельницького
+  complete_sentence: Реєстрові козаки перейшли на бік Хмельницького__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Після _____ вся Україна повстала.
+  answer: Корсуня
+  complete_sentence: Після Корсуня__ вся Україна повстала.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про битви 1648 року
+  passage_template: 'Богдан {Хмельницький|Мазепа|Сагайдачний|Хмельницький} очолив
+    {повстання|військо|армію|повстання} проти Речі Посполитої в 1648 році. Він уклав
+    {союз|мир|війну|союз} із кримським ханом Іслам-Ґіреєм III.
+
+
+    Перша {битва|перемога|поразка|битва} відбулася під Жовтими Водами в {травні|червні|липні|травні}
+    1648 року. Реєстрові козаки {перейшли|напали|втекли|перейшли} на бік Хмельницького.
+    Це була повна {перемога|поразка|нічия|перемога} козацького війська.
+
+
+    Під {Корсунем|Пилявцями|Київом|Корсунем} польська армія потрапила в {засідку|оточення|полон|засідку}.
+    Обидва коронні {гетьмани|полковники|генерали|гетьмани} потрапили в полон. Їх віддали
+    {татарам|козакам|полякам|татарам} як трофей.
+
+
+    Найбільша польська армія — близько {80000|50000|20000|80000} вояків — зібралася
+    під Пилявцями. Але командування було {некомпетентним|досвідченим|сильним|некомпетентним}.
+    Шляхта кинулася {тікати|наступати|оборонятися|тікати}. Козаки здобули величезні
+    {трофеї|території|міста|трофеї}. Повстання стало {національною|козацькою|селянською|національною}
+    революцією.
+
+    '
+  blanks:
+  - answer: Хмельницький
+    options:
+    - Хмельницький
+    - Мазепа
+    - Сагайдачний
+  - answer: повстання
+    options:
+    - повстання
+    - військо
+    - армію
+  - answer: союз
+    options:
+    - союз
+    - мир
+    - війну
+  - answer: битва
+    options:
+    - битва
+    - перемога
+    - поразка
+  - answer: травні
+    options:
+    - травні
+    - червні
+    - липні
+  - answer: перейшли
+    options:
+    - перейшли
+    - напали
+    - втекли
+  - answer: перемога
+    options:
+    - перемога
+    - поразка
+    - нічия
+  - answer: Корсунем
+    options:
+    - Корсунем
+    - Пилявцями
+    - Київом
+  - answer: засідку
+    options:
+    - засідку
+    - оточення
+    - полон
+  - answer: гетьмани
+    options:
+    - гетьмани
+    - полковники
+    - генерали
+  - answer: татарам
+    options:
+    - татарам
+    - козакам
+    - полякам
+  - answer: '80000'
+    options:
+    - '80000'
+    - '50000'
+    - '20000'
+  - answer: некомпетентним
+    options:
+    - некомпетентним
+    - досвідченим
+    - сильним
+  - answer: тікати
+    options:
+    - тікати
+    - наступати
+    - оборонятися
+  - answer: трофеї
+    options:
+    - трофеї
+    - території
+    - міста
+  - answer: національною
+    options:
+    - національною
+    - козацькою
+    - селянською
+  blank_count: 16
+  complete_passage: 'Богдан Хмельницький очолив повстання проти Речі Посполитої в
+    1648 році. Він уклав союз із кримським ханом Іслам-Ґіреєм III.
+
+
+    Перша битва відбулася під Жовтими Водами в травні 1648 року. Реєстрові козаки
+    перейшли на бік Хмельницького. Це була повна перемога козацького війська.
+
+
+    Під Корсунем польська армія потрапила в засідку. Обидва коронні гетьмани потрапили
+    в полон. Їх віддали татарам як трофей.
+
+
+    Найбільша польська армія — близько 80000 вояків — зібралася під Пилявцями. Але
+    командування було некомпетентним. Шляхта кинулася тікати. Козаки здобули величезні
+    трофеї. Повстання стало національною революцією.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Хмельницький очолив повстання проти Польщі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Козаки здобули перемогу під Жовтими Водами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Польські гетьмани потрапили в полон.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Найбільша польська армія зібралася під Пилявцями.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Хмельницький уклав союз із татарами.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Реєстрові козаки перейшли на бік Хмельницького.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Чаплинський напав на маєток Суботів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Хмельницький втік на Запорозьку Січ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Шляхта тікала від козаків у паніці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Після Корсуня вся Україна повстала.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Козацький рух перетворився на національну революцію.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Козаки здобули великі трофеї.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Перемоги заклали фундамент української державності.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Особиста кривда стала причиною повстання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Кримський хан надав козакам допомогу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про повстання
+  jumbled_words: []
+  answer: Січовики обрали Хмельницького гетьманом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, що стало безпосередньою причиною повстання Хмельницького?
+  options:
+  - '{''text'': ''Релігійні переслідування'', ''correct'': False}'
+  - '{''text'': ''Особиста кривда — напад Чаплинського на Суботів'', ''correct'':
+    True}'
+  - '{''text'': ''Заклик короля до повстання'', ''correct'': False}'
+  - '{''text'': ''Татарські набіги'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, куди втік Хмельницький після арешту?
+  options:
+  - '{''text'': ''До Польщі'', ''correct'': False}'
+  - '{''text'': ''На Запорозьку Січ'', ''correct'': True}'
+  - '{''text'': ''До Криму'', ''correct'': False}'
+  - '{''text'': ''До Москви'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст характеризує союз Хмельницького з татарами?
+  options:
+  - '{''text'': ''Як зраду християнства'', ''correct'': False}'
+  - '{''text'': ''Як прагматичний політичний крок'', ''correct'': True}'
+  - '{''text'': ''Як помилку'', ''correct'': False}'
+  - '{''text'': ''Як релігійний союз'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, яка битва відбулася першою в 1648 році?
+  options:
+  - '{''text'': ''Корсунська'', ''correct'': False}'
+  - '{''text'': ''Пилявецька'', ''correct'': False}'
+  - '{''text'': ''Під Жовтими Водами'', ''correct'': True}'
+  - '{''text'': ''Берестецька'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Що сталося з реєстровими козаками під Жовтими Водами за текстом?
+  options:
+  - '{''text'': ''Вони загинули'', ''correct'': False}'
+  - '{''text'': ''Вони перейшли на бік Хмельницького'', ''correct'': True}'
+  - '{''text'': ''Вони втекли'', ''correct'': False}'
+  - '{''text'': ''Вони здалися полякам'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, що сталося з коронними гетьманами під Корсунем?
+  options:
+  - '{''text'': ''Вони загинули в бою'', ''correct'': False}'
+  - '{''text'': ''Вони потрапили в полон до татар'', ''correct'': True}'
+  - '{''text'': ''Вони втекли до Варшави'', ''correct'': False}'
+  - '{''text'': ''Вони перейшли на бік козаків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст описує польське військо під Пилявцями?
+  options:
+  - '{''text'': ''Як добре організоване'', ''correct'': False}'
+  - '{''text'': ''Як найбільше в історії України'', ''correct'': True}'
+  - '{''text'': ''Як невелике'', ''correct'': False}'
+  - '{''text'': ''Як погано озброєне'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, чому поляки програли під Пилявцями?
+  options:
+  - '{''text'': ''Через чисельну перевагу козаків'', ''correct'': False}'
+  - '{''text'': ''Через некомпетентне командування'', ''correct'': True}'
+  - '{''text'': ''Через зраду'', ''correct'': False}'
+  - '{''text'': ''Через хвороби'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст характеризує освіту Хмельницького?
+  options:
+  - '{''text'': ''Неосвічений козак'', ''correct'': False}'
+  - '{''text'': ''Освіта в єзуїтській колегії, знання мов'', ''correct'': True}'
+  - '{''text'': ''Православна семінарія'', ''correct'': False}'
+  - '{''text'': ''Самоук'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, яке значення мали перемоги 1648 року?
+  options:
+  - '{''text'': ''Тільки військове'', ''correct'': False}'
+  - '{''text'': ''Заклали фундамент української державності'', ''correct'': True}'
+  - '{''text'': ''Лише тактичне'', ''correct'': False}'
+  - '{''text'': ''Ніякого'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст описує реакцію України на Корсунську перемогу?
+  options:
+  - '{''text'': ''Байдужість'', ''correct'': False}'
+  - '{''text'': ''Масове повстання селян і міщан'', ''correct'': True}'
+  - '{''text'': ''Страх'', ''correct'': False}'
+  - '{''text'': ''Підтримка Польщі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, хто такий Тугай-бей?
+  options:
+  - '{''text'': ''Козацький полковник'', ''correct'': False}'
+  - '{''text'': ''Перекопський мурза, союзник Хмельницького'', ''correct'': True}'
+  - '{''text'': ''Польський воєначальник'', ''correct'': False}'
+  - '{''text'': ''Кримський хан'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст характеризує «золоту тишу» до 1648 року?
+  options:
+  - '{''text'': ''Період миру та процвітання'', ''correct'': False}'
+  - '{''text'': ''Період жорстоких репресій'', ''correct'': True}'
+  - '{''text'': ''Період козацької автономії'', ''correct'': False}'
+  - '{''text'': ''Період польсько-козацької дружби'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, скільки козаків було в реєстрі після 1638 року?
+  options:
+  - '{''text'': ''20 000'', ''correct'': False}'
+  - '{''text'': ''6 000'', ''correct'': True}'
+  - '{''text'': ''40 000'', ''correct'': False}'
+  - '{''text'': ''10 000'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Як текст пояснює сучасне значення Хмельниччини?
+  options:
+  - '{''text'': ''Історична цікавинка'', ''correct'': False}'
+  - '{''text'': ''Символ боротьби за свободу, натхнення для захисників'', ''correct'':
+    True}'
+  - '{''text'': ''Застарілий приклад'', ''correct'': False}'
+  - '{''text'': ''Негативний приклад'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про повстання Хмельницького
+  question: Згідно з текстом, де зображений Хмельницький сьогодні?
+  options:
+  - '{''text'': ''На банкноті 100 гривень'', ''correct'': False}'
+  - '{''text'': ''На банкноті 5 гривень'', ''correct'': True}'
+  - '{''text'': ''На банкноті 1 гривня'', ''correct'': False}'
+  - '{''text'': ''На банкноті 20 гривень'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як польський хроніст Ґрондський пояснює причину повстання?
+  options:
+  - '{''text'': ''Козаки хотіли влади'', ''correct'': False}'
+  - '{''text'': ''Не сила, але кривда підняла козаків'', ''correct'': True}'
+  - '{''text'': ''Татари підбурили козаків'', ''correct'': False}'
+  - '{''text'': ''Король наказав повстати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «коли закони не діють для всіх однаково» у джерелі?
+  options:
+  - '{''text'': ''Закони були справедливі'', ''correct'': False}'
+  - '{''text'': ''Козаки не мали правового захисту'', ''correct'': True}'
+  - '{''text'': ''Польща не мала законів'', ''correct'': False}'
+  - '{''text'': ''Козаки порушували закони'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як літопис Самовидця описує результат Корсунської битви?
+  options:
+  - '{''text'': ''Нічийний результат'', ''correct'': False}'
+  - '{''text'': ''Наголову розбито, обох гетьманів узято'', ''correct'': True}'
+  - '{''text'': ''Козаки програли'', ''correct'': False}'
+  - '{''text'': ''Поляки перемогли'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає фраза «і вся Україна козацтвом стала» у літописі?
+  options:
+  - '{''text'': ''Усі стали козаками юридично'', ''correct'': False}'
+  - '{''text'': ''Масове повстання по всій Україні'', ''correct'': True}'
+  - '{''text'': ''Козаки захопили всю землю'', ''correct'': False}'
+  - '{''text'': ''Козацтво зникло'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як літопис описує стан шляхти після Корсуня?
+  options:
+  - '{''text'': ''Переможці'', ''correct'': False}'
+  - '{''text'': ''Голі і босі прибігали'', ''correct'': True}'
+  - '{''text'': ''Багаті і задоволені'', ''correct'': False}'
+  - '{''text'': ''Організовано відступили'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку позицію займає Ґрондський щодо повстання?
+  options:
+  - '{''text'': ''Засуджує козаків'', ''correct'': False}'
+  - '{''text'': "Пояснює причини об''єктивно", ''correct'': True}'
+  - '{''text'': ''Прославляє Польщу'', ''correct'': False}'
+  - '{''text'': ''Ігнорує події'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має вираз «велика плач в Польщі» у літописі?
+  options:
+  - '{''text'': ''Польща радіє'', ''correct'': False}'
+  - '{''text'': ''Катастрофа для Польщі'', ''correct'': True}'
+  - '{''text'': ''Польща святкує'', ''correct'': False}'
+  - '{''text'': ''Звичайна подія'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому первинні джерела важливі для розуміння Хмельниччини?
+  options:
+  - '{''text'': ''Вони розважають читача'', ''correct'': False}'
+  - '{''text'': ''Вони дають свідчення сучасників подій'', ''correct'': True}'
+  - '{''text'': ''Вони написані сучасною мовою'', ''correct'': False}'
+  - '{''text'': ''Вони коротші за підручники'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має те, що навіть польський хроніст визнає кривду козаків?
+  options:
+  - '{''text'': ''Ніякого'', ''correct'': False}'
+  - '{''text'': "Підтверджує об''єктивність причин повстання", ''correct'': True}'
+  - '{''text'': ''Показує слабкість Польщі'', ''correct'': False}'
+  - '{''text'': ''Демонструє симпатію до козаків'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який стиль мови використовує літопис Самовидця?
+  options:
+  - '{''text'': ''Сучасна літературна мова'', ''correct'': False}'
+  - '{''text'': ''Староукраїнська книжна мова'', ''correct'': True}'
+  - '{''text'': ''Розмовна мова'', ''correct'': False}'
+  - '{''text'': ''Польська мова'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль відіграє фраза «люди беруться за зброю» у джерелі Ґрондського?
+  options:
+  - '{''text'': ''Засуджує насильство'', ''correct'': False}'
+  - '{''text'': ''Пояснює логіку повстання'', ''correct'': True}'
+  - '{''text'': ''Закликає до миру'', ''correct'': False}'
+  - '{''text'': ''Описує повсякдення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає вираз «обох гетьманів узято» в літописі?
+  options:
+  - '{''text'': ''Гетьмани втекли'', ''correct'': False}'
+  - '{''text'': ''Гетьманів захопили в полон'', ''correct'': True}'
+  - '{''text'': ''Гетьмани здалися добровільно'', ''correct'': False}'
+  - '{''text'': ''Гетьманів убито'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку функцію виконує фраза «на Крим оддано» в літописі?
+  options:
+  - '{''text'': ''Географічна довідка'', ''correct'': False}'
+  - '{''text'': ''Вказує на долю полонених гетьманів'', ''correct'': True}'
+  - '{''text'': ''Опис торгівлі'', ''correct'': False}'
+  - '{''text'': ''Релігійний коментар'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Ґрондський як поляк визнає причини повстання?
+  options:
+  - '{''text'': ''Він був зрадником'', ''correct'': False}'
+  - '{''text'': "Як історик він прагнув об''єктивності", ''correct'': True}'
+  - '{''text'': ''Він ненавидів Польщу'', ''correct'': False}'
+  - '{''text'': ''Його змусили'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має слово «шляхти» у фразі «шляхти многії побито»?
+  options:
+  - '{''text'': ''Селяни'', ''correct'': False}'
+  - '{''text'': ''Польське дворянство'', ''correct'': True}'
+  - '{''text'': ''Козаки'', ''correct'': False}'
+  - '{''text'': ''Священики'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як два джерела доповнюють одне одного?
+  options:
+  - '{''text'': ''Вони суперечать'', ''correct'': False}'
+  - '{''text'': ''Польське пояснює причини, українське — наслідки'', ''correct'':
+    True}'
+  - '{''text'': ''Вони ідентичні'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Хмельницький був неосвіченим козаком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, битва під Жовтими Водами відбулася в травні 1648 року.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Хмельницький уклав союз із московським царем.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, реєстрові козаки перейшли на бік Хмельницького.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, під Корсунем польські гетьмани загинули в бою.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, польське військо під Пилявцями налічувало близько 80
+    000 вояків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, козаки програли битву під Пилявцями.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, союз із татарами був прагматичним політичним кроком.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Чаплинський напав на маєток Хмельницького.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, після 1638 року козацький реєстр збільшили.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Хмельницький народився в Чигирині.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, після Пилявців шлях на Варшаву був закритий.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Хмельницький зображений на банкноті 5 гривень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, повстання Хмельницького було першим козацьким повстанням.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, Тугай-бей був кримським ханом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про повстання 1648 року
+  statement: Згідно з текстом, митрополит Сильвестр Косів благословив Хмельницького
+    в Києві.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

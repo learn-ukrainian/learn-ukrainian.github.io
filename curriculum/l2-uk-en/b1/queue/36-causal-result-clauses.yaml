@@ -1,16 +1,19 @@
 module: 36-causal-result-clauses
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/36-causal-result-clauses.md
-generated: '2025-12-29T00:22:01.171447'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:28.244363'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 6
   fill-in: 14
+  cloze: 1
   unjumble: 6
   quiz: 8
   translate: 6
   true-false: 12
-item_count: 52
+total_items: 53
+item_count: 53
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилку
@@ -245,6 +248,128 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Минулого тижня Олег не прийшов на важливу зустріч. {Оскільки|Тому|Отже|Адже}
+    він захворів напередодні, то не зміг бути присутнім. Його колеги хвилювались,
+    {бо|тому|отже|внаслідок} ніхто не знав причину відсутності. Врешті-решт керівник
+    зателефонував Олегу. Коли той пояснив ситуацію, всі заспокоїлись.
+
+
+    {Завдяки тому що|Через те що|Тому|Отже} Олег ретельно підготував матеріали заздалегідь,
+    колеги змогли провести зустріч без нього. {Оскільки|Тому|Отже|Адже} усі документи
+    були готові, {тому|бо|оскільки|адже} не виникло жодних проблем.
+
+
+    {Через|Завдяки|Для|Від} хвороби Олег пропустив тиждень роботи. {Таким чином|Тому
+    що|Бо|Оскільки} йому довелось надолужувати пропущене. Але {завдяки|через|внаслідок|для}
+    тому що колеги допомогли, він швидко все наздогнав. {Саме тому|Тому що|Бо|Оскільки}
+    Олег тепер цінує командну роботу.
+
+
+    {Отже|Тому що|Бо|Оскільки} ця ситуація показала важливість підготовки. {Оскільки|Тому|Отже|Адже}
+    Олег завжди готує документи заздалегідь, {тому|бо|оскільки|адже} робота не зупиняється
+    навіть за його відсутності. {Отже|Тому що|Бо|Оскільки} це золоте правило для кожного
+    професіонала. {Адже|Тому|Оскільки|Бо} воно гарантує стабільність роботи команди.
+
+    '
+  blanks:
+  - answer: Адже
+    options:
+    - Оскільки
+    - Тому
+    - Отже
+  - answer: внаслідок
+    options:
+    - бо
+    - тому
+    - отже
+  - answer: Отже
+    options:
+    - Завдяки тому що
+    - Через те що
+    - Тому
+  - answer: Адже
+    options:
+    - Оскільки
+    - Тому
+    - Отже
+  - answer: адже
+    options:
+    - тому
+    - бо
+    - оскільки
+  - answer: Від
+    options:
+    - Через
+    - Завдяки
+    - Для
+  - answer: Оскільки
+    options:
+    - Таким чином
+    - Тому що
+    - Бо
+  - answer: для
+    options:
+    - завдяки
+    - через
+    - внаслідок
+  - answer: Оскільки
+    options:
+    - Саме тому
+    - Тому що
+    - Бо
+  - answer: Оскільки
+    options:
+    - Отже
+    - Тому що
+    - Бо
+  - answer: Адже
+    options:
+    - Оскільки
+    - Тому
+    - Отже
+  - answer: адже
+    options:
+    - тому
+    - бо
+    - оскільки
+  - answer: Оскільки
+    options:
+    - Отже
+    - Тому що
+    - Бо
+  - answer: Бо
+    options:
+    - Адже
+    - Тому
+    - Оскільки
+  blank_count: 14
+  complete_passage: 'Минулого тижня Олег не прийшов на важливу зустріч. Адже він захворів
+    напередодні, то не зміг бути присутнім. Його колеги хвилювались, внаслідок ніхто
+    не знав причину відсутності. Врешті-решт керівник зателефонував Олегу. Коли той
+    пояснив ситуацію, всі заспокоїлись.
+
+
+    Отже Олег ретельно підготував матеріали заздалегідь, колеги змогли провести зустріч
+    без нього. Адже усі документи були готові, адже не виникло жодних проблем.
+
+
+    Від хвороби Олег пропустив тиждень роботи. Оскільки йому довелось надолужувати
+    пропущене. Але для тому що колеги допомогли, він швидко все наздогнав. Оскільки
+    Олег тепер цінує командну роботу.
+
+
+    Оскільки ця ситуація показала важливість підготовки. Адже Олег завжди готує документи
+    заздалегідь, адже робота не зупиняється навіть за його відсутності. Оскільки це
+    золоте правило для кожного професіонала. Бо воно гарантує стабільність роботи
+    команди.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з розсипаних слів
   jumbled_words: []
@@ -299,14 +424,10 @@ items:
   question: Який сполучник використовується для вираження причини події в розмовному
     стилі української мови?
   options:
-  - text: бо
-    correct: true
-  - text: тому
-    correct: false
-  - text: отже
-    correct: false
-  - text: таким чином
-    correct: false
+  - '{''text'': ''бо'', ''correct'': True}'
+  - '{''text'': ''тому'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -318,14 +439,11 @@ items:
   question: Яке з наведених речень правильно виражає позитивну причину з використанням
     сполучника «завдяки»?
   options:
-  - text: Завдяки тому що він допоміг, ми закінчили вчасно.
-    correct: true
-  - text: Завдяки тому що він захворів, не прийшов.
-    correct: false
-  - text: Завдяки тому що було пізно, ми поїхали.
-    correct: false
-  - text: Завдяки тому що дощ пішов, пікнік зірвався.
-    correct: false
+  - '{''text'': ''Завдяки тому що він допоміг, ми закінчили вчасно.'', ''correct'':
+    True}'
+  - '{''text'': ''Завдяки тому що він захворів, не прийшов.'', ''correct'': False}'
+  - '{''text'': ''Завдяки тому що було пізно, ми поїхали.'', ''correct'': False}'
+  - '{''text'': ''Завдяки тому що дощ пішов, пікнік зірвався.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -337,14 +455,10 @@ items:
   question: Який сполучник найчастіше використовується для вираження наслідку події
     в нейтральному стилі української мови?
   options:
-  - text: оскільки
-    correct: false
-  - text: через те що
-    correct: false
-  - text: тому
-    correct: true
-  - text: позаяк
-    correct: false
+  - '{''text'': ''оскільки'', ''correct'': False}'
+  - '{''text'': ''через те що'', ''correct'': False}'
+  - '{''text'': ''тому'', ''correct'': True}'
+  - '{''text'': ''позаяк'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -356,14 +470,10 @@ items:
   question: Яке з наведених речень є прикладом причинового речення з книжним сполучником
     української мови?
   options:
-  - text: Він не прийшов, бо захворів.
-    correct: false
-  - text: Оскільки він знав правду, він мовчав про це.
-    correct: true
-  - text: Захворів, тому не прийшов.
-    correct: false
-  - text: Ось чому я не прийшов сьогодні.
-    correct: false
+  - '{''text'': ''Він не прийшов, бо захворів.'', ''correct'': False}'
+  - '{''text'': ''Оскільки він знав правду, він мовчав про це.'', ''correct'': True}'
+  - '{''text'': ''Захворів, тому не прийшов.'', ''correct'': False}'
+  - '{''text'': ''Ось чому я не прийшов сьогодні.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -375,14 +485,10 @@ items:
   question: Як правильно трансформувати причинове речення «Він не прийшов, тому що
     захворів» у наслідкове речення?
   options:
-  - text: Він не прийшов, тому що захворів.
-    correct: false
-  - text: Він захворів, тому не прийшов.
-    correct: true
-  - text: Він бо захворів, тому не прийшов.
-    correct: false
-  - text: Він отже захворів, тому не прийшов.
-    correct: false
+  - '{''text'': ''Він не прийшов, тому що захворів.'', ''correct'': False}'
+  - '{''text'': ''Він захворів, тому не прийшов.'', ''correct'': True}'
+  - '{''text'': ''Він бо захворів, тому не прийшов.'', ''correct'': False}'
+  - '{''text'': ''Він отже захворів, тому не прийшов.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -394,14 +500,10 @@ items:
   question: Який сполучник використовується в офіційних документах для вираження причинно-наслідкового
     зв'язку?
   options:
-  - text: бо
-    correct: false
-  - text: адже
-    correct: false
-  - text: через це
-    correct: false
-  - text: у зв'язку з тим що
-    correct: true
+  - '{''text'': ''бо'', ''correct'': False}'
+  - '{''text'': ''адже'', ''correct'': False}'
+  - '{''text'': ''через це'', ''correct'': False}'
+  - '{''text'': "у зв''язку з тим що", ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -413,14 +515,12 @@ items:
   question: Яка основна граматична відмінність між причиновим і наслідковим реченням
     у логічній структурі української мови?
   options:
-  - text: Причина відповідає на «що?», наслідок на «як?».
-    correct: false
-  - text: Причина відповідає на «чому?», наслідок на «і що з того?».
-    correct: true
-  - text: Немає відмінності, вони взаємозамінні.
-    correct: false
-  - text: Причина завжди позитивна, наслідок негативний.
-    correct: false
+  - '{''text'': ''Причина відповідає на «що?», наслідок на «як?».'', ''correct'':
+    False}'
+  - '{''text'': ''Причина відповідає на «чому?», наслідок на «і що з того?».'', ''correct'':
+    True}'
+  - '{''text'': ''Немає відмінності, вони взаємозамінні.'', ''correct'': False}'
+  - '{''text'': ''Причина завжди позитивна, наслідок негативний.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +532,10 @@ items:
   question: Яке з наведених речень містить помилку у використанні причинових або наслідкових
     сполучників?
   options:
-  - text: Він не прийшов, бо захворів.
-    correct: false
-  - text: Оскільки йшов дощ, ми залишились вдома.
-    correct: false
-  - text: Завдяки тому що він захворів, не прийшов.
-    correct: true
-  - text: Він захворів, тому не прийшов.
-    correct: false
+  - '{''text'': ''Він не прийшов, бо захворів.'', ''correct'': False}'
+  - '{''text'': ''Оскільки йшов дощ, ми залишились вдома.'', ''correct'': False}'
+  - '{''text'': ''Завдяки тому що він захворів, не прийшов.'', ''correct'': True}'
+  - '{''text'': ''Він захворів, тому не прийшов.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -451,14 +547,11 @@ items:
   source_sentence: He didn't come because he was sick with a bad cold.
   answer: ''
   options:
-  - text: Він не прийшов, тому що захворів на сильну застуду.
-    correct: true
-  - text: Він не прийшов, тому захворів.
-    correct: false
-  - text: Він захворів не прийшов тому що.
-    correct: false
-  - text: Він тому що не прийшов, захворів.
-    correct: false
+  - '{''text'': ''Він не прийшов, тому що захворів на сильну застуду.'', ''correct'':
+    True}'
+  - '{''text'': ''Він не прийшов, тому захворів.'', ''correct'': False}'
+  - '{''text'': ''Він захворів не прийшов тому що.'', ''correct'': False}'
+  - '{''text'': ''Він тому що не прийшов, захворів.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -469,14 +562,12 @@ items:
   source_sentence: Thanks to the fact that she helped, we finished on time.
   answer: ''
   options:
-  - text: Завдяки тому що вона допомогла, ми закінчили вчасно.
-    correct: true
-  - text: Через те що вона допомогла, ми закінчили вчасно.
-    correct: false
-  - text: Тому що вона допомогла, ми закінчили вчасно.
-    correct: false
-  - text: Оскільки вона допомогла, ми закінчили вчасно.
-    correct: false
+  - '{''text'': ''Завдяки тому що вона допомогла, ми закінчили вчасно.'', ''correct'':
+    True}'
+  - '{''text'': ''Через те що вона допомогла, ми закінчили вчасно.'', ''correct'':
+    False}'
+  - '{''text'': ''Тому що вона допомогла, ми закінчили вчасно.'', ''correct'': False}'
+  - '{''text'': ''Оскільки вона допомогла, ми закінчили вчасно.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -487,14 +578,11 @@ items:
   source_sentence: Since it was late, we decided to leave immediately.
   answer: ''
   options:
-  - text: Оскільки було пізно, ми вирішили негайно поїхати.
-    correct: true
-  - text: Тому було пізно, ми вирішили поїхати.
-    correct: false
-  - text: Бо було пізно, тому ми поїхали.
-    correct: false
-  - text: Адже було пізно, отже ми поїхали.
-    correct: false
+  - '{''text'': ''Оскільки було пізно, ми вирішили негайно поїхати.'', ''correct'':
+    True}'
+  - '{''text'': ''Тому було пізно, ми вирішили поїхати.'', ''correct'': False}'
+  - '{''text'': ''Бо було пізно, тому ми поїхали.'', ''correct'': False}'
+  - '{''text'': ''Адже було пізно, отже ми поїхали.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -505,14 +593,13 @@ items:
   source_sentence: He failed the exam, so he has to retake it next month.
   answer: ''
   options:
-  - text: Він провалив іспит, тому йому треба перескладати наступного місяця.
-    correct: true
-  - text: Він провалив іспит, тому що йому треба перескласти.
-    correct: false
-  - text: Він провалив іспит, бо йому треба перескласти.
-    correct: false
-  - text: Він провалив іспит, оскільки йому треба перескласти.
-    correct: false
+  - '{''text'': ''Він провалив іспит, тому йому треба перескладати наступного місяця.'',
+    ''correct'': True}'
+  - '{''text'': ''Він провалив іспит, тому що йому треба перескласти.'', ''correct'':
+    False}'
+  - '{''text'': ''Він провалив іспит, бо йому треба перескласти.'', ''correct'': False}'
+  - '{''text'': ''Він провалив іспит, оскільки йому треба перескласти.'', ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -523,14 +610,11 @@ items:
   source_sentence: Due to bad weather, all flights were cancelled yesterday.
   answer: ''
   options:
-  - text: Через погану погоду всі рейси були скасовані вчора.
-    correct: true
-  - text: Завдяки поганій погоді всі рейси скасовані.
-    correct: false
-  - text: Тому що погода погана, рейси скасували.
-    correct: false
-  - text: Погана погода тому рейси скасовані.
-    correct: false
+  - '{''text'': ''Через погану погоду всі рейси були скасовані вчора.'', ''correct'':
+    True}'
+  - '{''text'': ''Завдяки поганій погоді всі рейси скасовані.'', ''correct'': False}'
+  - '{''text'': ''Тому що погода погана, рейси скасували.'', ''correct'': False}'
+  - '{''text'': ''Погана погода тому рейси скасовані.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -541,14 +625,11 @@ items:
   source_sentence: Therefore, the decision was made unanimously by the committee.
   answer: ''
   options:
-  - text: Таким чином, рішення було прийнято одноголосно комітетом.
-    correct: true
-  - text: Тому що рішення було прийнято комітетом.
-    correct: false
-  - text: Бо рішення прийняли одноголосно комітетом.
-    correct: false
-  - text: Оскільки рішення прийняли комітетом.
-    correct: false
+  - '{''text'': ''Таким чином, рішення було прийнято одноголосно комітетом.'', ''correct'':
+    True}'
+  - '{''text'': ''Тому що рішення було прийнято комітетом.'', ''correct'': False}'
+  - '{''text'': ''Бо рішення прийняли одноголосно комітетом.'', ''correct'': False}'
+  - '{''text'': ''Оскільки рішення прийняли комітетом.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

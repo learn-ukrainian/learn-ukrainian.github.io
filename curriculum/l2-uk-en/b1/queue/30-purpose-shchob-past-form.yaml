@@ -1,7 +1,7 @@
 module: 30-purpose-shchob-past-form
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/30-purpose-shchob-past-form.md
-generated: '2025-12-29T00:22:00.769812'
+generated: '2025-12-30T19:49:28.105439'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 8
   quiz: 12
   true-false: 12
+total_items: 53
 item_count: 53
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть і виправте помилку
@@ -365,6 +367,7 @@ items:
     - їдять
     - їстимуть
     answer: їли
+  blank_count: 14
   complete_passage: 'Мій начальник дуже вимогливий. Він завжди хоче, щоб ми [___:1]
     на роботу вчасно. Він вимагає, щоб кожен працівник [___:2] свої завдання до кінця
     робочого дня. Вчора він наказав, щоб секретарка [___:3] усі документи до важливої
@@ -460,14 +463,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли батьки хочуть, щоб
     діти прибрали кімнату?
   options:
-  - text: прибрали
-    correct: true
-  - text: прибрати
-    correct: false
-  - text: прибирають
-    correct: false
-  - text: приберуть
-    correct: false
+  - '{''text'': ''прибрали'', ''correct'': True}'
+  - '{''text'': ''прибрати'', ''correct'': False}'
+  - '{''text'': ''прибирають'', ''correct'': False}'
+  - '{''text'': ''приберуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -479,14 +478,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли лікар рекомендує,
     щоб пацієнт відпочив тиждень?
   options:
-  - text: відпочив
-    correct: true
-  - text: відпочити
-    correct: false
-  - text: відпочиває
-    correct: false
-  - text: відпочине
-    correct: false
+  - '{''text'': ''відпочив'', ''correct'': True}'
+  - '{''text'': ''відпочити'', ''correct'': False}'
+  - '{''text'': ''відпочиває'', ''correct'': False}'
+  - '{''text'': ''відпочине'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -498,14 +493,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли начальник наказав,
     щоб усі прийшли на нараду?
   options:
-  - text: прийшли
-    correct: true
-  - text: прийти
-    correct: false
-  - text: приходять
-    correct: false
-  - text: прийдуть
-    correct: false
+  - '{''text'': ''прийшли'', ''correct'': True}'
+  - '{''text'': ''прийти'', ''correct'': False}'
+  - '{''text'': ''приходять'', ''correct'': False}'
+  - '{''text'': ''прийдуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -517,14 +508,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли вона попросила, щоб
     він зателефонував ввечері?
   options:
-  - text: зателефонував
-    correct: true
-  - text: зателефонувати
-    correct: false
-  - text: телефонує
-    correct: false
-  - text: зателефонує
-    correct: false
+  - '{''text'': ''зателефонував'', ''correct'': True}'
+  - '{''text'': ''зателефонувати'', ''correct'': False}'
+  - '{''text'': ''телефонує'', ''correct'': False}'
+  - '{''text'': ''зателефонує'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -536,14 +523,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли ми хочемо, щоб гості
     залишилися на вечерю?
   options:
-  - text: залишилися
-    correct: true
-  - text: залишитися
-    correct: false
-  - text: залишаються
-    correct: false
-  - text: залишаться
-    correct: false
+  - '{''text'': ''залишилися'', ''correct'': True}'
+  - '{''text'': ''залишитися'', ''correct'': False}'
+  - '{''text'': ''залишаються'', ''correct'': False}'
+  - '{''text'': ''залишаться'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -555,14 +538,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли директор вимагає,
     щоб студенти здали роботи вчасно?
   options:
-  - text: здали
-    correct: true
-  - text: здати
-    correct: false
-  - text: здають
-    correct: false
-  - text: здадуть
-    correct: false
+  - '{''text'': ''здали'', ''correct'': True}'
+  - '{''text'': ''здати'', ''correct'': False}'
+  - '{''text'': ''здають'', ''correct'': False}'
+  - '{''text'': ''здадуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -574,14 +553,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли батько хоче, щоб
     син допоміг йому в саду?
   options:
-  - text: допоміг
-    correct: true
-  - text: допомогти
-    correct: false
-  - text: допомагає
-    correct: false
-  - text: допоможе
-    correct: false
+  - '{''text'': ''допоміг'', ''correct'': True}'
+  - '{''text'': ''допомогти'', ''correct'': False}'
+  - '{''text'': ''допомагає'', ''correct'': False}'
+  - '{''text'': ''допоможе'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -593,14 +568,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли закон вимагає, щоб
     громадяни платили податки?
   options:
-  - text: платили
-    correct: true
-  - text: платити
-    correct: false
-  - text: платять
-    correct: false
-  - text: заплатять
-    correct: false
+  - '{''text'': ''платили'', ''correct'': True}'
+  - '{''text'': ''платити'', ''correct'': False}'
+  - '{''text'': ''платять'', ''correct'': False}'
+  - '{''text'': ''заплатять'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -612,14 +583,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли вчитель просить,
     щоб учні слухали уважно?
   options:
-  - text: слухали
-    correct: true
-  - text: слухати
-    correct: false
-  - text: слухають
-    correct: false
-  - text: послухають
-    correct: false
+  - '{''text'': ''слухали'', ''correct'': True}'
+  - '{''text'': ''слухати'', ''correct'': False}'
+  - '{''text'': ''слухають'', ''correct'': False}'
+  - '{''text'': ''послухають'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -631,14 +598,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли мама бажає, щоб дочка
     була щасливою?
   options:
-  - text: була
-    correct: true
-  - text: бути
-    correct: false
-  - text: є
-    correct: false
-  - text: буде
-    correct: false
+  - '{''text'': ''була'', ''correct'': True}'
+  - '{''text'': ''бути'', ''correct'': False}'
+  - '{''text'': ''є'', ''correct'': False}'
+  - '{''text'': ''буде'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -650,14 +613,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли він наполягає, щоб
     вона взяла парасольку?
   options:
-  - text: взяла
-    correct: true
-  - text: взяти
-    correct: false
-  - text: бере
-    correct: false
-  - text: візьме
-    correct: false
+  - '{''text'': ''взяла'', ''correct'': True}'
+  - '{''text'': ''взяти'', ''correct'': False}'
+  - '{''text'': ''бере'', ''correct'': False}'
+  - '{''text'': ''візьме'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -669,14 +628,10 @@ items:
   question: Яку форму дієслова потрібно вставити в речення, коли експерти рекомендують,
     щоб люди пили воду?
   options:
-  - text: пили
-    correct: true
-  - text: пити
-    correct: false
-  - text: п'ють
-    correct: false
-  - text: питимуть
-    correct: false
+  - '{''text'': ''пили'', ''correct'': True}'
+  - '{''text'': ''пити'', ''correct'': False}'
+  - '{''text'': "п''ють", ''correct'': False}'
+  - '{''text'': ''питимуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,7 +1,7 @@
 module: 26-politics-government-vocabulary
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/26-politics-government-vocabulary.md
-generated: '2025-12-29T22:47:23.566757'
+generated: '2025-12-30T19:49:14.885675'
 scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
@@ -10,7 +10,9 @@ activity_counts:
   unjumble: 16
   quiz: 32
   true-false: 16
+total_items: 113
 item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Помилки в політичних текстах
@@ -600,122 +602,102 @@ items:
 
     '
   blanks:
-  - options:
+  - answer: Головна
+    options:
     - Верховна
     - Державна
     - Національна
-    - Головна
-    answer: Верховна
-  - options:
+  - answer: ігнорувала
+    options:
     - ухвалила
     - відхилила
     - відклала
-    - ігнорувала
-    answer: ухвалила
-  - options:
+  - answer: рішення
+    options:
     - законопроект
     - указ
     - постанову
-    - рішення
-    answer: законопроект
-  - options:
+  - answer: підтримали
+    options:
     - проголосували
     - виступили
     - критикували
-    - підтримали
-    answer: проголосували
-  - options:
+  - answer: послів
+    options:
     - депутатів
     - міністрів
     - суддів
-    - послів
-    answer: депутатів
-  - options:
+  - answer: Президент
+    options:
     - Опозиція
     - Коаліція
     - Уряд
-    - Президент
-    answer: Опозиція
-  - options:
+  - answer: старої
+    options:
     - опозиційної
     - правлячої
     - нової
-    - старої
-    answer: опозиційної
-  - options:
+  - answer: Міністр
+    options:
     - Президент
     - Прем'єр-міністр
     - Спікер
-    - Міністр
-    answer: Президент
-  - options:
+  - answer: видати
+    options:
     - підписати
     - ухвалити
     - прийняти
-    - видати
-    answer: підписати
-  - options:
+  - answer: заборону
+    options:
     - вето
     - санкції
     - обмеження
-    - заборону
-    answer: вето
-  - options:
+  - answer: половиною
+    options:
     - двома третинами
     - простою більшістю
     - одноголосно
-    - половиною
-    answer: двома третинами
-  - options:
+  - answer: провалом
+    options:
     - перемогою
     - поразкою
     - компромісом
-    - провалом
-    answer: перемогою
-  - options:
+  - answer: президента
+    options:
     - коаліції
     - опозиції
     - уряду
-    - президента
-    answer: коаліції
-  - options:
+  - answer: договір
+    options:
     - законопроект
     - указ
     - вирок
-    - договір
-    answer: законопроект
-  - options:
+  - answer: суд
+    options:
     - уряд
     - опозиція
     - президент
-    - суд
-    answer: уряд
-  - options:
+  - answer: Монархія
+    options:
     - Демократія
     - Диктатура
     - Анархія
-    - Монархія
-    answer: Демократія
-  complete_passage: 'Учора {Верховна|Державна|Національна|Головна} Рада {ухвалила|відхилила|відклала|ігнорувала}
-    важливий {законопроект|указ|постанову|рішення} про реформу системи охорони здоров''я.
-    За рішення {проголосували|виступили|критикували|підтримали} 267 {депутатів|міністрів|суддів|послів}.
+  blank_count: 16
+  complete_passage: 'Учора Головна Рада ігнорувала важливий рішення про реформу системи
+    охорони здоров''я. За рішення підтримали 267 послів.
 
 
-    {Опозиція|Коаліція|Уряд|Президент} критикувала окремі положення документа. Лідер
-    {опозиційної|правлячої|нової|старої} фракції заявив, що закон не вирішує головних
-    проблем.
+    Президент критикувала окремі положення документа. Лідер старої фракції заявив,
+    що закон не вирішує головних проблем.
 
 
-    {Президент|Прем''єр-міністр|Спікер|Міністр} має 15 днів, щоб {підписати|ухвалити|прийняти|видати}
-    закон або накласти {вето|санкції|обмеження|заборону}. Якщо вето буде накладено,
-    парламент може його подолати {двома третинами|простою більшістю|одноголосно|половиною}
-    голосів.
+    Міністр має 15 днів, щоб видати закон або накласти заборону. Якщо вето буде накладено,
+    парламент може його подолати половиною голосів.
 
 
-    Експерти називають голосування "{перемогою|поразкою|компромісом|провалом} {коаліції|опозиції|уряду|президента}".
-    Це вже третій важливий {законопроект|указ|вирок|договір}, який {уряд|опозиція|президент|суд}
-    провів через парламент цього місяця. {Демократія|Диктатура|Анархія|Монархія} потребує
-    активної участі громадян.
+    Експерти називають голосування "провалом президента". Це вже третій важливий договір,
+    який суд провів через парламент цього місяця. Монархія потребує активної участі
+    громадян.
 
     '
   validate:
@@ -854,14 +836,10 @@ items:
   title: Політична система України
   question: Яка форма правління в Україні?
   options:
-  - text: Президентська республіка
-    correct: false
-  - text: Парламентсько-президентська республіка
-    correct: true
-  - text: Парламентська республіка
-    correct: false
-  - text: Конституційна монархія
-    correct: false
+  - '{''text'': ''Президентська республіка'', ''correct'': False}'
+  - '{''text'': ''Парламентсько-президентська республіка'', ''correct'': True}'
+  - '{''text'': ''Парламентська республіка'', ''correct'': False}'
+  - '{''text'': ''Конституційна монархія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -872,14 +850,10 @@ items:
   title: Політична система України
   question: Як називається парламент України?
   options:
-  - text: Державна Дума
-    correct: false
-  - text: Національні Збори
-    correct: false
-  - text: Верховна Рада
-    correct: true
-  - text: Сейм
-    correct: false
+  - '{''text'': ''Державна Дума'', ''correct'': False}'
+  - '{''text'': ''Національні Збори'', ''correct'': False}'
+  - '{''text'': ''Верховна Рада'', ''correct'': True}'
+  - '{''text'': ''Сейм'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -890,14 +864,10 @@ items:
   title: Політична система України
   question: Скільки депутатів входить до Верховної Ради?
   options:
-  - text: 300
-    correct: false
-  - text: 400
-    correct: false
-  - text: 450
-    correct: true
-  - text: 500
-    correct: false
+  - '{''text'': 300, ''correct'': False}'
+  - '{''text'': 400, ''correct'': False}'
+  - '{''text'': 450, ''correct'': True}'
+  - '{''text'': 500, ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -908,14 +878,10 @@ items:
   title: Політична система України
   question: Хто очолює Кабінет Міністрів України?
   options:
-  - text: Президент
-    correct: false
-  - text: Прем'єр-міністр
-    correct: true
-  - text: Спікер парламенту
-    correct: false
-  - text: Генеральний прокурор
-    correct: false
+  - '{''text'': ''Президент'', ''correct'': False}'
+  - '{''text'': "Прем''єр-міністр", ''correct'': True}'
+  - '{''text'': ''Спікер парламенту'', ''correct'': False}'
+  - '{''text'': ''Генеральний прокурор'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -926,14 +892,10 @@ items:
   title: Політична система України
   question: Що таке коаліція в парламенті?
   options:
-  - text: Партія більшості
-    correct: false
-  - text: Об'єднання фракцій з більшістю голосів
-    correct: true
-  - text: Опозиційні партії
-    correct: false
-  - text: Парламентський комітет
-    correct: false
+  - '{''text'': ''Партія більшості'', ''correct'': False}'
+  - '{''text'': "Об''єднання фракцій з більшістю голосів", ''correct'': True}'
+  - '{''text'': ''Опозиційні партії'', ''correct'': False}'
+  - '{''text'': ''Парламентський комітет'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -944,14 +906,10 @@ items:
   title: Політична система України
   question: Що таке опозиція?
   options:
-  - text: Правляча партія
-    correct: false
-  - text: Фракції, які не входять до коаліції
-    correct: true
-  - text: Уряд
-    correct: false
-  - text: Президентська партія
-    correct: false
+  - '{''text'': ''Правляча партія'', ''correct'': False}'
+  - '{''text'': ''Фракції, які не входять до коаліції'', ''correct'': True}'
+  - '{''text'': ''Уряд'', ''correct'': False}'
+  - '{''text'': ''Президентська партія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -962,14 +920,10 @@ items:
   title: Політична система України
   question: Який документ є основним законом України?
   options:
-  - text: Указ Президента
-    correct: false
-  - text: Постанова уряду
-    correct: false
-  - text: Конституція
-    correct: true
-  - text: Закон про вибори
-    correct: false
+  - '{''text'': ''Указ Президента'', ''correct'': False}'
+  - '{''text'': ''Постанова уряду'', ''correct'': False}'
+  - '{''text'': ''Конституція'', ''correct'': True}'
+  - '{''text'': ''Закон про вибори'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -980,14 +934,10 @@ items:
   title: Політична система України
   question: Що таке вето?
   options:
-  - text: Право Президента відхилити закон
-    correct: true
-  - text: Голосування в парламенті
-    correct: false
-  - text: Постанова уряду
-    correct: false
-  - text: Рішення суду
-    correct: false
+  - '{''text'': ''Право Президента відхилити закон'', ''correct'': True}'
+  - '{''text'': ''Голосування в парламенті'', ''correct'': False}'
+  - '{''text'': ''Постанова уряду'', ''correct'': False}'
+  - '{''text'': ''Рішення суду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -998,14 +948,10 @@ items:
   title: Політична система України
   question: Як парламент може подолати вето Президента?
   options:
-  - text: Простою більшістю голосів
-    correct: false
-  - text: Двома третинами голосів
-    correct: true
-  - text: Одноголосно
-    correct: false
-  - text: Рішенням уряду
-    correct: false
+  - '{''text'': ''Простою більшістю голосів'', ''correct'': False}'
+  - '{''text'': ''Двома третинами голосів'', ''correct'': True}'
+  - '{''text'': ''Одноголосно'', ''correct'': False}'
+  - '{''text'': ''Рішенням уряду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1016,14 +962,10 @@ items:
   title: Політична система України
   question: Що таке референдум?
   options:
-  - text: Вибори Президента
-    correct: false
-  - text: Парламентські вибори
-    correct: false
-  - text: Всенародне голосування з важливих питань
-    correct: true
-  - text: Засідання уряду
-    correct: false
+  - '{''text'': ''Вибори Президента'', ''correct'': False}'
+  - '{''text'': ''Парламентські вибори'', ''correct'': False}'
+  - '{''text'': ''Всенародне голосування з важливих питань'', ''correct'': True}'
+  - '{''text'': ''Засідання уряду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1034,14 +976,10 @@ items:
   title: Політична система України
   question: Хто призначає Прем'єр-міністра України?
   options:
-  - text: Президент одноосібно
-    correct: false
-  - text: Верховна Рада за поданням Президента
-    correct: true
-  - text: Кабінет Міністрів
-    correct: false
-  - text: Конституційний Суд
-    correct: false
+  - '{''text'': ''Президент одноосібно'', ''correct'': False}'
+  - '{''text'': ''Верховна Рада за поданням Президента'', ''correct'': True}'
+  - '{''text'': ''Кабінет Міністрів'', ''correct'': False}'
+  - '{''text'': ''Конституційний Суд'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1052,14 +990,10 @@ items:
   title: Політична система України
   question: Що таке фракція в парламенті?
   options:
-  - text: Парламентський комітет
-    correct: false
-  - text: Група депутатів однієї партії
-    correct: true
-  - text: Коаліція партій
-    correct: false
-  - text: Опозиційний блок
-    correct: false
+  - '{''text'': ''Парламентський комітет'', ''correct'': False}'
+  - '{''text'': ''Група депутатів однієї партії'', ''correct'': True}'
+  - '{''text'': ''Коаліція партій'', ''correct'': False}'
+  - '{''text'': ''Опозиційний блок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1070,14 +1004,10 @@ items:
   title: Політична система України
   question: Який термін повноважень Президента України?
   options:
-  - text: 4 роки
-    correct: false
-  - text: 5 років
-    correct: true
-  - text: 6 років
-    correct: false
-  - text: 7 років
-    correct: false
+  - '{''text'': ''4 роки'', ''correct'': False}'
+  - '{''text'': ''5 років'', ''correct'': True}'
+  - '{''text'': ''6 років'', ''correct'': False}'
+  - '{''text'': ''7 років'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1088,14 +1018,10 @@ items:
   title: Політична система України
   question: Що таке указ Президента?
   options:
-  - text: Закон, ухвалений парламентом
-    correct: false
-  - text: Нормативний акт Президента
-    correct: true
-  - text: Рішення уряду
-    correct: false
-  - text: Судовий вирок
-    correct: false
+  - '{''text'': ''Закон, ухвалений парламентом'', ''correct'': False}'
+  - '{''text'': ''Нормативний акт Президента'', ''correct'': True}'
+  - '{''text'': ''Рішення уряду'', ''correct'': False}'
+  - '{''text'': ''Судовий вирок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1106,14 +1032,10 @@ items:
   title: Політична система України
   question: Хто представляє Україну на міжнародній арені?
   options:
-  - text: Прем'єр-міністр
-    correct: false
-  - text: Спікер парламенту
-    correct: false
-  - text: Президент
-    correct: true
-  - text: Міністр закордонних справ
-    correct: false
+  - '{''text'': "Прем''єр-міністр", ''correct'': False}'
+  - '{''text'': ''Спікер парламенту'', ''correct'': False}'
+  - '{''text'': ''Президент'', ''correct'': True}'
+  - '{''text'': ''Міністр закордонних справ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1124,14 +1046,10 @@ items:
   title: Політична система України
   question: Що таке постанова уряду?
   options:
-  - text: Закон парламенту
-    correct: false
-  - text: Указ Президента
-    correct: false
-  - text: Нормативний акт Кабінету Міністрів
-    correct: true
-  - text: Рішення суду
-    correct: false
+  - '{''text'': ''Закон парламенту'', ''correct'': False}'
+  - '{''text'': ''Указ Президента'', ''correct'': False}'
+  - '{''text'': ''Нормативний акт Кабінету Міністрів'', ''correct'': True}'
+  - '{''text'': ''Рішення суду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1142,14 +1060,10 @@ items:
   title: Інтеграційний тест
   question: Хто є гарантом Конституції України?
   options:
-  - text: Прем'єр-міністр
-    correct: false
-  - text: Спікер парламенту
-    correct: false
-  - text: Президент
-    correct: true
-  - text: Голова Конституційного Суду
-    correct: false
+  - '{''text'': "Прем''єр-міністр", ''correct'': False}'
+  - '{''text'': ''Спікер парламенту'', ''correct'': False}'
+  - '{''text'': ''Президент'', ''correct'': True}'
+  - '{''text'': ''Голова Конституційного Суду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1160,14 +1074,10 @@ items:
   title: Інтеграційний тест
   question: Який орган ухвалює закони в Україні?
   options:
-  - text: Кабінет Міністрів
-    correct: false
-  - text: Верховна Рада
-    correct: true
-  - text: Президент
-    correct: false
-  - text: Верховний Суд
-    correct: false
+  - '{''text'': ''Кабінет Міністрів'', ''correct'': False}'
+  - '{''text'': ''Верховна Рада'', ''correct'': True}'
+  - '{''text'': ''Президент'', ''correct'': False}'
+  - '{''text'': ''Верховний Суд'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1178,14 +1088,10 @@ items:
   title: Інтеграційний тест
   question: Що таке постанова уряду?
   options:
-  - text: Закон парламенту
-    correct: false
-  - text: Указ Президента
-    correct: false
-  - text: Нормативний акт Кабінету Міністрів
-    correct: true
-  - text: Рішення суду
-    correct: false
+  - '{''text'': ''Закон парламенту'', ''correct'': False}'
+  - '{''text'': ''Указ Президента'', ''correct'': False}'
+  - '{''text'': ''Нормативний акт Кабінету Міністрів'', ''correct'': True}'
+  - '{''text'': ''Рішення суду'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1196,14 +1102,10 @@ items:
   title: Інтеграційний тест
   question: Скільки голосів потрібно для подолання президентського вето?
   options:
-  - text: Проста більшість (226)
-    correct: false
-  - text: Дві третини (300)
-    correct: true
-  - text: Три чверті (338)
-    correct: false
-  - text: Одноголосно (450)
-    correct: false
+  - '{''text'': ''Проста більшість (226)'', ''correct'': False}'
+  - '{''text'': ''Дві третини (300)'', ''correct'': True}'
+  - '{''text'': ''Три чверті (338)'', ''correct'': False}'
+  - '{''text'': ''Одноголосно (450)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1214,14 +1116,10 @@ items:
   title: Інтеграційний тест
   question: Що означає слово "демократія"?
   options:
-  - text: Влада президента
-    correct: false
-  - text: Влада народу
-    correct: true
-  - text: Влада партії
-    correct: false
-  - text: Влада армії
-    correct: false
+  - '{''text'': ''Влада президента'', ''correct'': False}'
+  - '{''text'': ''Влада народу'', ''correct'': True}'
+  - '{''text'': ''Влада партії'', ''correct'': False}'
+  - '{''text'': ''Влада армії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1232,14 +1130,10 @@ items:
   title: Інтеграційний тест
   question: Хто представляє Україну в інших державах?
   options:
-  - text: Депутати
-    correct: false
-  - text: Посли
-    correct: true
-  - text: Прокурори
-    correct: false
-  - text: Судді
-    correct: false
+  - '{''text'': ''Депутати'', ''correct'': False}'
+  - '{''text'': ''Посли'', ''correct'': True}'
+  - '{''text'': ''Прокурори'', ''correct'': False}'
+  - '{''text'': ''Судді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1250,14 +1144,10 @@ items:
   title: Інтеграційний тест
   question: Що таке санкції?
   options:
-  - text: Нагороди
-    correct: false
-  - text: Обмежувальні заходи
-    correct: true
-  - text: Кредити
-    correct: false
-  - text: Угоди
-    correct: false
+  - '{''text'': ''Нагороди'', ''correct'': False}'
+  - '{''text'': ''Обмежувальні заходи'', ''correct'': True}'
+  - '{''text'': ''Кредити'', ''correct'': False}'
+  - '{''text'': ''Угоди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1268,14 +1158,10 @@ items:
   title: Інтеграційний тест
   question: Яка основна функція опозиції?
   options:
-  - text: Формувати уряд
-    correct: false
-  - text: Контролювати владу та пропонувати альтернативи
-    correct: true
-  - text: Призначати міністрів
-    correct: false
-  - text: Видавати укази
-    correct: false
+  - '{''text'': ''Формувати уряд'', ''correct'': False}'
+  - '{''text'': ''Контролювати владу та пропонувати альтернативи'', ''correct'': True}'
+  - '{''text'': ''Призначати міністрів'', ''correct'': False}'
+  - '{''text'': ''Видавати укази'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1286,14 +1172,10 @@ items:
   title: Інтеграційний тест
   question: Який регістр характерний для офіційних документів?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Публіцистичний
-    correct: false
-  - text: Офіційно-діловий
-    correct: true
-  - text: Художній
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Публіцистичний'', ''correct'': False}'
+  - '{''text'': ''Офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''Художній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1304,14 +1186,10 @@ items:
   title: Інтеграційний тест
   question: Що характерно для публіцистичного стилю в політичних новинах?
   options:
-  - text: Канцеляризми
-    correct: false
-  - text: Оцінна лексика та риторичні питання
-    correct: true
-  - text: Терміни без пояснень
-    correct: false
-  - text: Юридичні формули
-    correct: false
+  - '{''text'': ''Канцеляризми'', ''correct'': False}'
+  - '{''text'': ''Оцінна лексика та риторичні питання'', ''correct'': True}'
+  - '{''text'': ''Терміни без пояснень'', ''correct'': False}'
+  - '{''text'': ''Юридичні формули'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1322,14 +1200,10 @@ items:
   title: Інтеграційний тест
   question: Що таке коаліція?
   options:
-  - text: Опозиційні партії
-    correct: false
-  - text: Об'єднання фракцій з більшістю голосів
-    correct: true
-  - text: Парламентський комітет
-    correct: false
-  - text: Судовий орган
-    correct: false
+  - '{''text'': ''Опозиційні партії'', ''correct'': False}'
+  - '{''text'': "Об''єднання фракцій з більшістю голосів", ''correct'': True}'
+  - '{''text'': ''Парламентський комітет'', ''correct'': False}'
+  - '{''text'': ''Судовий орган'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1340,14 +1214,10 @@ items:
   title: Інтеграційний тест
   question: Хто очолює Кабінет Міністрів?
   options:
-  - text: Президент
-    correct: false
-  - text: Спікер
-    correct: false
-  - text: Прем'єр-міністр
-    correct: true
-  - text: Міністр оборони
-    correct: false
+  - '{''text'': ''Президент'', ''correct'': False}'
+  - '{''text'': ''Спікер'', ''correct'': False}'
+  - '{''text'': "Прем''єр-міністр", ''correct'': True}'
+  - '{''text'': ''Міністр оборони'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1358,14 +1228,10 @@ items:
   title: Інтеграційний тест
   question: Що таке референдум?
   options:
-  - text: Вибори президента
-    correct: false
-  - text: Всенародне голосування
-    correct: true
-  - text: Засідання уряду
-    correct: false
-  - text: Судовий процес
-    correct: false
+  - '{''text'': ''Вибори президента'', ''correct'': False}'
+  - '{''text'': ''Всенародне голосування'', ''correct'': True}'
+  - '{''text'': ''Засідання уряду'', ''correct'': False}'
+  - '{''text'': ''Судовий процес'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1376,14 +1242,10 @@ items:
   title: Інтеграційний тест
   question: Яке право гарантує свободу вираження думок?
   options:
-  - text: Право на життя
-    correct: false
-  - text: Право на освіту
-    correct: false
-  - text: Свобода слова
-    correct: true
-  - text: Право на працю
-    correct: false
+  - '{''text'': ''Право на життя'', ''correct'': False}'
+  - '{''text'': ''Право на освіту'', ''correct'': False}'
+  - '{''text'': ''Свобода слова'', ''correct'': True}'
+  - '{''text'': ''Право на працю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1394,14 +1256,10 @@ items:
   title: Інтеграційний тест
   question: Що означає "корупція"?
   options:
-  - text: Законна діяльність
-    correct: false
-  - text: Зловживання владою для особистої вигоди
-    correct: true
-  - text: Політична реформа
-    correct: false
-  - text: Дипломатична угода
-    correct: false
+  - '{''text'': ''Законна діяльність'', ''correct'': False}'
+  - '{''text'': ''Зловживання владою для особистої вигоди'', ''correct'': True}'
+  - '{''text'': ''Політична реформа'', ''correct'': False}'
+  - '{''text'': ''Дипломатична угода'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1412,14 +1270,10 @@ items:
   title: Інтеграційний тест
   question: Скільки депутатів у Верховній Раді?
   options:
-  - text: 300
-    correct: false
-  - text: 400
-    correct: false
-  - text: 450
-    correct: true
-  - text: 500
-    correct: false
+  - '{''text'': 300, ''correct'': False}'
+  - '{''text'': 400, ''correct'': False}'
+  - '{''text'': 450, ''correct'': True}'
+  - '{''text'': 500, ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

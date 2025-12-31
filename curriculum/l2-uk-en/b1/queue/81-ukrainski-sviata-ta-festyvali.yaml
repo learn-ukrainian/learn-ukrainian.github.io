@@ -1,16 +1,19 @@
 module: 81-ukrainski-sviata-ta-festyvali
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/81-ukrainski-sviata-ta-festyvali.md
-generated: '2025-12-29T00:22:04.665193'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:29.625294'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 8
   quiz: 10
   translate: 8
   true-false: 12
-item_count: 58
+total_items: 59
+item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -259,6 +262,137 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Релігійні свята України
+  passage_template: 'Різдво Христове — одне з {blank|найважливіших|найважливіші|найважливе|важливих}
+    свят в Україні. Традиційно його {blank|святкували|святкувати|святкуємо|святкують}
+    7 січня, але з 2023 року офіційною {blank|датою|дата|дати|датою} стало 25 грудня.
+
+
+    Святвечір починається з появи першої {blank|зірки|зірка|зірку|зіркою} на небі.
+    Родина {blank|збирається|збиратися|збираються|збирати} за святковим столом, де
+    подають {blank|дванадцять|дванадцяти|дванадцяті|дванадцятьма} страв. Обов''язковою
+    стравою є {blank|кутя|кутю|куті|кутею} — пшенична каша з медом.
+
+
+    Після вечері діти {blank|йдуть|іде|ходити|йти} колядувати. Вони співають {blank|колядки|колядку|колядок|колядками}
+    та щедрівки, вітаючи {blank|сусідів|сусіди|сусідам|сусідові} зі святом.
+
+
+    {blank|Великдень|Великодень|Великодня|Великодні} — це свято воскресіння Христа.
+    Українці готують {blank|паски|паска|паску|пасок} та крашанки. Крашанки — це яйця,
+    пофарбовані у {blank|яскраві|яскравий|яскраве|яскрава} кольори. На Великдень родини
+    {blank|вітаються|вітатися|вітаємо|вітання} словами: «Христос воскрес!»
+
+    '
+  blanks:
+  - answer: важливих
+    options:
+    - blank
+    - найважливіших
+    - найважливіші
+    - найважливе
+  - answer: святкують
+    options:
+    - blank
+    - святкували
+    - святкувати
+    - святкуємо
+  - answer: датою
+    options:
+    - blank
+    - датою
+    - дата
+    - дати
+  - answer: зіркою
+    options:
+    - blank
+    - зірки
+    - зірка
+    - зірку
+  - answer: збирати
+    options:
+    - blank
+    - збирається
+    - збиратися
+    - збираються
+  - answer: дванадцятьма
+    options:
+    - blank
+    - дванадцять
+    - дванадцяти
+    - дванадцяті
+  - answer: кутею
+    options:
+    - blank
+    - кутя
+    - кутю
+    - куті
+  - answer: йти
+    options:
+    - blank
+    - йдуть
+    - іде
+    - ходити
+  - answer: колядками
+    options:
+    - blank
+    - колядки
+    - колядку
+    - колядок
+  - answer: сусідові
+    options:
+    - blank
+    - сусідів
+    - сусіди
+    - сусідам
+  - answer: Великодні
+    options:
+    - blank
+    - Великдень
+    - Великодень
+    - Великодня
+  - answer: пасок
+    options:
+    - blank
+    - паски
+    - паска
+    - паску
+  - answer: яскрава
+    options:
+    - blank
+    - яскраві
+    - яскравий
+    - яскраве
+  - answer: вітання
+    options:
+    - blank
+    - вітаються
+    - вітатися
+    - вітаємо
+  blank_count: 14
+  complete_passage: 'Різдво Христове — одне з важливих свят в Україні. Традиційно
+    його святкують 7 січня, але з 2023 року офіційною датою стало 25 грудня.
+
+
+    Святвечір починається з появи першої зіркою на небі. Родина збирати за святковим
+    столом, де подають дванадцятьма страв. Обов''язковою стравою є кутею — пшенична
+    каша з медом.
+
+
+    Після вечері діти йти колядувати. Вони співають колядками та щедрівки, вітаючи
+    сусідові зі святом.
+
+
+    Великодні — це свято воскресіння Христа. Українці готують пасок та крашанки. Крашанки
+    — це яйця, пофарбовані у яскрава кольори. На Великдень родини вітання словами:
+    «Христос воскрес!»
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про свята
   jumbled_words: []
@@ -329,14 +463,10 @@ items:
     але з 2023 року офіційною датою стало інше число. Коли тепер офіційно святкують
     Різдво?
   options:
-  - text: 6 січня
-    correct: false
-  - text: 25 грудня
-    correct: true
-  - text: 1 січня
-    correct: false
-  - text: 31 грудня
-    correct: false
+  - '{''text'': ''6 січня'', ''correct'': False}'
+  - '{''text'': ''25 грудня'', ''correct'': True}'
+  - '{''text'': ''1 січня'', ''correct'': False}'
+  - '{''text'': ''31 грудня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -348,14 +478,10 @@ items:
   question: Святвечір в Україні починається з особливого моменту, пов'язаного з небом.
     Після якої події українські родини сідають за святковий стіл?
   options:
-  - text: Після заходу сонця
-    correct: false
-  - text: Після появи першої зірки
-    correct: true
-  - text: Після опівночі
-    correct: false
-  - text: Після дзвонів церкви
-    correct: false
+  - '{''text'': ''Після заходу сонця'', ''correct'': False}'
+  - '{''text'': ''Після появи першої зірки'', ''correct'': True}'
+  - '{''text'': ''Після опівночі'', ''correct'': False}'
+  - '{''text'': ''Після дзвонів церкви'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -367,14 +493,10 @@ items:
   question: На Святвечір українці готують особливу страву з пшениці, меду та маку.
     Ця страва є обов'язковою на святковому столі. Як вона називається?
   options:
-  - text: Вареники
-    correct: false
-  - text: Борщ
-    correct: false
-  - text: Кутя
-    correct: true
-  - text: Узвар
-    correct: false
+  - '{''text'': ''Вареники'', ''correct'': False}'
+  - '{''text'': ''Борщ'', ''correct'': False}'
+  - '{''text'': ''Кутя'', ''correct'': True}'
+  - '{''text'': ''Узвар'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -386,14 +508,10 @@ items:
   question: Українці мають традицію готувати на Святвечір певну кількість страв. Скільки
     страв традиційно подають на різдвяний стіл?
   options:
-  - text: Шість страв
-    correct: false
-  - text: Дев'ять страв
-    correct: false
-  - text: Дванадцять страв
-    correct: true
-  - text: П'ятнадцять страв
-    correct: false
+  - '{''text'': ''Шість страв'', ''correct'': False}'
+  - '{''text'': "Дев''ять страв", ''correct'': False}'
+  - '{''text'': ''Дванадцять страв'', ''correct'': True}'
+  - '{''text'': "П''ятнадцять страв", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -405,14 +523,10 @@ items:
   question: На Великдень українці вітаються особливими словами, які символізують радість
     від свята. Як українці традиційно вітаються на Великдень?
   options:
-  - text: «З Новим роком!» — «Зі святом!»
-    correct: false
-  - text: «Христос Воскрес!» — «Воістину Воскрес!»
-    correct: true
-  - text: «Вітаю!» — «Дякую!»
-    correct: false
-  - text: «З Різдвом!» — «Ще й вам!»
-    correct: false
+  - '{''text'': ''«З Новим роком!» — «Зі святом!»'', ''correct'': False}'
+  - '{''text'': ''«Христос Воскрес!» — «Воістину Воскрес!»'', ''correct'': True}'
+  - '{''text'': ''«Вітаю!» — «Дякую!»'', ''correct'': False}'
+  - '{''text'': ''«З Різдвом!» — «Ще й вам!»'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -424,14 +538,10 @@ items:
   question: Писанки та крашанки — важливі символи Великодня. Орнаменти на писанках
     мають символічне значення. Що символізує спіраль на писанці?
   options:
-  - text: Удачу та гроші
-    correct: false
-  - text: Вічність
-    correct: true
-  - text: Здоров'я
-    correct: false
-  - text: Любов
-    correct: false
+  - '{''text'': ''Удачу та гроші'', ''correct'': False}'
+  - '{''text'': ''Вічність'', ''correct'': True}'
+  - '{''text'': "Здоров''я", ''correct'': False}'
+  - '{''text'': ''Любов'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -443,14 +553,10 @@ items:
   question: Свято Івана Купала — одне з найдавніших народних свят в Україні. Коли
     його відзначають і з якими стихіями воно пов'язане?
   options:
-  - text: У березні, пов'язане з повітрям та землею
-    correct: false
-  - text: У липні, пов'язане з вогнем та водою
-    correct: true
-  - text: У вересні, пов'язане з землею та зерном
-    correct: false
-  - text: У грудні, пов'язане зі снігом та льодом
-    correct: false
+  - '{''text'': "У березні, пов''язане з повітрям та землею", ''correct'': False}'
+  - '{''text'': "У липні, пов''язане з вогнем та водою", ''correct'': True}'
+  - '{''text'': "У вересні, пов''язане з землею та зерном", ''correct'': False}'
+  - '{''text'': "У грудні, пов''язане зі снігом та льодом", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -462,14 +568,10 @@ items:
   question: На свято Івана Купала молодь виконує особливий ритуал, пов'язаний з вогнем.
     Що традиційно роблять молоді люди цієї ночі?
   options:
-  - text: Запалюють свічки в церкві
-    correct: false
-  - text: Стрибають через багаття
-    correct: true
-  - text: Розводять вогнище на горі
-    correct: false
-  - text: Несуть смолоскипи через село
-    correct: false
+  - '{''text'': ''Запалюють свічки в церкві'', ''correct'': False}'
+  - '{''text'': ''Стрибають через багаття'', ''correct'': True}'
+  - '{''text'': ''Розводять вогнище на горі'', ''correct'': False}'
+  - '{''text'': ''Несуть смолоскипи через село'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -481,14 +583,10 @@ items:
   question: День Незалежності України — головне державне свято. Якого числа Верховна
     Рада ухвалила Акт проголошення незалежності України?
   options:
-  - text: 1 грудня 1991 року
-    correct: false
-  - text: 24 серпня 1991 року
-    correct: true
-  - text: 22 січня 1919 року
-    correct: false
-  - text: 28 червня 1996 року
-    correct: false
+  - '{''text'': ''1 грудня 1991 року'', ''correct'': False}'
+  - '{''text'': ''24 серпня 1991 року'', ''correct'': True}'
+  - '{''text'': ''22 січня 1919 року'', ''correct'': False}'
+  - '{''text'': ''28 червня 1996 року'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -500,14 +598,10 @@ items:
   question: Atlas Weekend — один з найбільших музичних фестивалів у Східній Європі.
     Скільки приблизно відвідувачів щороку збирає цей фестиваль?
   options:
-  - text: Понад 10 000
-    correct: false
-  - text: Понад 50 000
-    correct: false
-  - text: Понад 100 000
-    correct: true
-  - text: Понад 500 000
-    correct: false
+  - '{''text'': ''Понад 10 000'', ''correct'': False}'
+  - '{''text'': ''Понад 50 000'', ''correct'': False}'
+  - '{''text'': ''Понад 100 000'', ''correct'': True}'
+  - '{''text'': ''Понад 500 000'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -519,14 +613,10 @@ items:
   source_sentence: Happy holiday to you! (using the formal form)
   answer: ''
   options:
-  - text: Вітаю вас із святом!
-    correct: true
-  - text: Вітаю тебе зі святом!
-    correct: false
-  - text: Бажаю вам свята!
-    correct: false
-  - text: З святом вам!
-    correct: false
+  - '{''text'': ''Вітаю вас із святом!'', ''correct'': True}'
+  - '{''text'': ''Вітаю тебе зі святом!'', ''correct'': False}'
+  - '{''text'': ''Бажаю вам свята!'', ''correct'': False}'
+  - '{''text'': ''З святом вам!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -537,14 +627,10 @@ items:
   source_sentence: I wish you health and happiness!
   answer: ''
   options:
-  - text: Я хочу здоров'я та щастя!
-    correct: false
-  - text: Бажаю вам здоров'я та щастя!
-    correct: true
-  - text: Вам здоров'я та щастя!
-    correct: false
-  - text: Здоров'я та щастя вам бажати!
-    correct: false
+  - '{''text'': "Я хочу здоров''я та щастя!", ''correct'': False}'
+  - '{''text'': "Бажаю вам здоров''я та щастя!", ''correct'': True}'
+  - '{''text'': "Вам здоров''я та щастя!", ''correct'': False}'
+  - '{''text'': "Здоров''я та щастя вам бажати!", ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -555,14 +641,10 @@ items:
   source_sentence: Christ is Risen!
   answer: ''
   options:
-  - text: Христос Воскрес!
-    correct: true
-  - text: Христос воскресе!
-    correct: false
-  - text: Христос встав!
-    correct: false
-  - text: Христос живий!
-    correct: false
+  - '{''text'': ''Христос Воскрес!'', ''correct'': True}'
+  - '{''text'': ''Христос воскресе!'', ''correct'': False}'
+  - '{''text'': ''Христос встав!'', ''correct'': False}'
+  - '{''text'': ''Христос живий!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -573,14 +655,10 @@ items:
   source_sentence: Truly He is Risen!
   answer: ''
   options:
-  - text: Справді Воскрес!
-    correct: false
-  - text: Воістину Воскрес!
-    correct: true
-  - text: Так, Він Воскрес!
-    correct: false
-  - text: Правда Воскрес!
-    correct: false
+  - '{''text'': ''Справді Воскрес!'', ''correct'': False}'
+  - '{''text'': ''Воістину Воскрес!'', ''correct'': True}'
+  - '{''text'': ''Так, Він Воскрес!'', ''correct'': False}'
+  - '{''text'': ''Правда Воскрес!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -591,14 +669,10 @@ items:
   source_sentence: During holidays we usually gather at the table.
   answer: ''
   options:
-  - text: На святах ми зазвичай збираємося за столом.
-    correct: true
-  - text: У святах ми звичайно сідаємо до столу.
-    correct: false
-  - text: Під час свят ми часто за столом.
-    correct: false
-  - text: На свята ми збираємо стіл.
-    correct: false
+  - '{''text'': ''На святах ми зазвичай збираємося за столом.'', ''correct'': True}'
+  - '{''text'': ''У святах ми звичайно сідаємо до столу.'', ''correct'': False}'
+  - '{''text'': ''Під час свят ми часто за столом.'', ''correct'': False}'
+  - '{''text'': ''На свята ми збираємо стіл.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -609,14 +683,10 @@ items:
   source_sentence: This tradition comes from ancient times.
   answer: ''
   options:
-  - text: Ця традиція походить з давніх часів.
-    correct: true
-  - text: Традиція ця від давніх часів.
-    correct: false
-  - text: Ця традиція з давніх часів прийшла.
-    correct: false
-  - text: Давні часи дали цю традицію.
-    correct: false
+  - '{''text'': ''Ця традиція походить з давніх часів.'', ''correct'': True}'
+  - '{''text'': ''Традиція ця від давніх часів.'', ''correct'': False}'
+  - '{''text'': ''Ця традиція з давніх часів прийшла.'', ''correct'': False}'
+  - '{''text'': ''Давні часи дали цю традицію.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -627,14 +697,10 @@ items:
   source_sentence: Thank you for the invitation!
   answer: ''
   options:
-  - text: Дякую за запрошення!
-    correct: true
-  - text: Спасибі за запрошення!
-    correct: false
-  - text: Дякую за запрошувати!
-    correct: false
-  - text: Дяка за запрошення!
-    correct: false
+  - '{''text'': ''Дякую за запрошення!'', ''correct'': True}'
+  - '{''text'': ''Спасибі за запрошення!'', ''correct'': False}'
+  - '{''text'': ''Дякую за запрошувати!'', ''correct'': False}'
+  - '{''text'': ''Дяка за запрошення!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -645,14 +711,10 @@ items:
   source_sentence: Young people jump over the bonfire.
   answer: ''
   options:
-  - text: Молодь стрибає через багаття.
-    correct: true
-  - text: Молоді люди скачуть над вогнем.
-    correct: false
-  - text: Молодь перескакує вогонь.
-    correct: false
-  - text: Молоді стрибають у багаття.
-    correct: false
+  - '{''text'': ''Молодь стрибає через багаття.'', ''correct'': True}'
+  - '{''text'': ''Молоді люди скачуть над вогнем.'', ''correct'': False}'
+  - '{''text'': ''Молодь перескакує вогонь.'', ''correct'': False}'
+  - '{''text'': ''Молоді стрибають у багаття.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

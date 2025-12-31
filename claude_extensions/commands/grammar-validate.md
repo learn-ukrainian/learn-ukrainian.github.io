@@ -73,6 +73,18 @@ If no queue file exists, run the generator:
 ```
 This will create the queue file in the `queue/` subfolder.
 
+**Options:**
+- `--sample 25` - Sample 25% of items for faster validation (useful for large modules)
+
+**Supported activity types:**
+- `error-correction` - Validates error/corrected sentence pairs
+- `fill-in` - Validates complete sentences (answer inserted into blank)
+- `cloze` - Validates complete passages (all blanks filled with answers)
+- `unjumble` - Validates answer sentences
+- `quiz` - Validates questions and options
+- `translate` - Validates Ukrainian sentences
+- `true-false` - Validates statements
+
 ### Step 2: Read Queue
 
 Load the YAML queue file. Each item has this structure:

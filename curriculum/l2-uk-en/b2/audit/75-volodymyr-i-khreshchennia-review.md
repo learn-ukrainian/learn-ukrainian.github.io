@@ -1,0 +1,50 @@
+# Audit Report: 75-volodymyr-i-khreshchennia.md
+**Phase:** B2 | **Level:** B2 | **Pedagogy:** "CBI" | **Target:** 1750
+**Overall Status:** ✅ PASS
+
+## Gates
+- **Words:** ✅ 1821/1750
+- **Activities:** ✅ 14/14
+- **Density:** ✅ All > 16
+- **Unique_types:** ✅ 12/4 types
+- **Priority:** ✅ Priority types used
+- **Engagement:** ✅ 9/6
+- **Audio:** ℹ️ No audio
+- **Vocab:** ✅ 35/35
+- **Structure:** ✅ Valid Structure
+- **Lint:** ✅ Clean Format
+- **Pedagogy:** ✅ Level-appropriate
+- **Immersion:** 🇺🇦 99.8% (target 98-100% (vocab))
+- **Richness:** ✅ 98% (content)
+- **Grammar:** ⏳ Pending validation
+
+## Richness Details
+**Score:** 98% (minimum: 95%)
+**Module Type:** content
+
+### Score Breakdown
+| Metric | Count | Target | Score | Weight | Contribution |
+|--------|-------|--------|-------|--------|--------------|
+| examples | 33 | 15 | 100% | 25% | 25.0% |
+| engagement | 8 | 5 | 100% | 19% | 18.7% |
+| variety | 0.95 | - | 95% | 12% | 11.9% |
+| cultural | 5 | 4 | 100% | 12% | 12.5% |
+| realworld | 6 | 3 | 100% | 12% | 12.5% |
+| visual | 4 | 4 | 100% | 6% | 6.2% |
+| paragraph_var | 0.86 | - | 86% | 6% | 5.4% |
+| questions | 12 | 4 | 100% | 6% | 6.2% |
+| **TOTAL** | | | | | **98.5%** |
+
+## Section Audit
+| Section | Status | Count | Notes |
+|---|---|---|---|
+| **Володимир і хрещення — 988 рік** | ⚪️ | 57 | Skipped |
+| **Вступ** | ⚪️ | 163 | Skipped |
+| **Князь Володимир: від язичника до святого** | ⚪️ | 365 | Skipped |
+| **Корсунський похід і шлюб із Анною** | ⚪️ | 264 | Skipped |
+| **Первинні джерела** | ⚪️ | 251 | Skipped |
+| **Деколонізаційний погляд** | ⚪️ | 278 | Skipped |
+| **Значення хрещення для культури** | ✅ | 291 | Included in Core |
+| **Підсумок** | ✅ | 87 | Included in Core |
+| **Словник** | ⚪️ | 0 | Skipped |
+| **Ресурси** | ⚪️ | 65 | Skipped |

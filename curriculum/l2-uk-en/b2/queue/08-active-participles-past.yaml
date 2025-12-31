@@ -1,15 +1,18 @@
 module: 08-active-participles-past
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/08-active-participles-past.md
-generated: '2025-12-29T21:25:26.862915'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.961103'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте русизми
@@ -572,6 +575,148 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: '{Колишній|Минулий|Майбутній|Колишній} директор компанії звільнився
+    в {минулому|колишньому|майбутньому|минулому} році. {Новопризначений|Новоприбулий|Вищезгаданий|Новопризначений}
+    керівник розпочав реформи.
+
+
+    {Попередній|Наступний|Останній|Попередній} етап роботи завершено. {Наступний|Попередній|Перший|Наступний}
+    крок — впровадження змін.
+
+
+    {Давні|Недавні|Теперішні|Давні} традиції компанії збереглися. {Теперішній|Колишній|Минулий|Теперішній}
+    стан справ задовільний.
+
+
+    {Майбутнє|Минуле|Теперішнє|Майбутнє} покоління працівників матиме кращі умови.
+    Ми {боротимемося|боролися|боремося|боротимемося} за їхні права.
+
+
+    {Вищезгаданий|Нижчепідписаний|Новостворений|Вищезгаданий} документ підтверджує
+    ці зміни. {Широко вживані|Мало досліджені|Добре відомі|Широко вживані} методи
+    будуть переглянуті.
+
+
+    {Новостворена|Колишня|Давня|Новостворена} комісія працюватиме над стандартами.
+    {Недавні|Давні|Майбутні|Недавні} події прискорили процес.
+
+
+    {Першим|Останнім|Наступним|Першим} кроком буде аналіз. {Останнім|Першим|Попереднім|Останнім}
+    — впровадження. {Добре відомий|Мало досліджений|Так званий|Добре відомий} факт
+    — зміни потрібні.
+
+    '
+  blanks:
+  - answer: Колишній
+    options:
+    - Колишній
+    - Минулий
+    - Майбутній
+  - answer: минулому
+    options:
+    - минулому
+    - колишньому
+    - майбутньому
+  - answer: Новопризначений
+    options:
+    - Новопризначений
+    - Новоприбулий
+    - Вищезгаданий
+  - answer: Попередній
+    options:
+    - Попередній
+    - Наступний
+    - Останній
+  - answer: Наступний
+    options:
+    - Наступний
+    - Попередній
+    - Перший
+  - answer: Давні
+    options:
+    - Давні
+    - Недавні
+    - Теперішні
+  - answer: Теперішній
+    options:
+    - Теперішній
+    - Колишній
+    - Минулий
+  - answer: Майбутнє
+    options:
+    - Майбутнє
+    - Минуле
+    - Теперішнє
+  - answer: боротимемося
+    options:
+    - боротимемося
+    - боролися
+    - боремося
+  - answer: Вищезгаданий
+    options:
+    - Вищезгаданий
+    - Нижчепідписаний
+    - Новостворений
+  - answer: Широко вживані
+    options:
+    - Широко вживані
+    - Мало досліджені
+    - Добре відомі
+  - answer: Новостворена
+    options:
+    - Новостворена
+    - Колишня
+    - Давня
+  - answer: Недавні
+    options:
+    - Недавні
+    - Давні
+    - Майбутні
+  - answer: Першим
+    options:
+    - Першим
+    - Останнім
+    - Наступним
+  - answer: Останнім
+    options:
+    - Останнім
+    - Першим
+    - Попереднім
+  - answer: Добре відомий
+    options:
+    - Добре відомий
+    - Мало досліджений
+    - Так званий
+  blank_count: 16
+  complete_passage: 'Колишній директор компанії звільнився в минулому році. Новопризначений
+    керівник розпочав реформи.
+
+
+    Попередній етап роботи завершено. Наступний крок — впровадження змін.
+
+
+    Давні традиції компанії збереглися. Теперішній стан справ задовільний.
+
+
+    Майбутнє покоління працівників матиме кращі умови. Ми боротимемося за їхні права.
+
+
+    Вищезгаданий документ підтверджує ці зміни. Широко вживані методи будуть переглянуті.
+
+
+    Новостворена комісія працюватиме над стандартами. Недавні події прискорили процес.
+
+
+    Першим кроком буде аналіз. Останнім — впровадження. Добре відомий факт — зміни
+    потрібні.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення
   jumbled_words: []
@@ -704,14 +849,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Яка форма є русизмом?
   options:
-  - text: колишній
-    correct: false
-  - text: прочитавший
-    correct: true
-  - text: минулий
-    correct: false
-  - text: майбутній
-    correct: false
+  - '{''text'': ''колишній'', ''correct'': False}'
+  - '{''text'': ''прочитавший'', ''correct'': True}'
+  - '{''text'': ''минулий'', ''correct'': False}'
+  - '{''text'': ''майбутній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -722,14 +863,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Як правильно сказати "the person who arrived"?
   options:
-  - text: людина, приїхавша
-    correct: false
-  - text: людина, яка приїхала
-    correct: true
-  - text: людина, що приїхавший
-    correct: false
-  - text: людина приїхала
-    correct: false
+  - '{''text'': ''людина, приїхавша'', ''correct'': False}'
+  - '{''text'': ''людина, яка приїхала'', ''correct'': True}'
+  - '{''text'': ''людина, що приїхавший'', ''correct'': False}'
+  - '{''text'': ''людина приїхала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -740,14 +877,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Що означає "вищезгаданий"?
   options:
-  - text: above-mentioned
-    correct: true
-  - text: below-mentioned
-    correct: false
-  - text: previously unknown
-    correct: false
-  - text: newly created
-    correct: false
+  - '{''text'': ''above-mentioned'', ''correct'': True}'
+  - '{''text'': ''below-mentioned'', ''correct'': False}'
+  - '{''text'': ''previously unknown'', ''correct'': False}'
+  - '{''text'': ''newly created'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -758,14 +891,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: У якому регістрі найчастіше вживається "новопризначений"?
   options:
-  - text: розмовний
-    correct: false
-  - text: художній
-    correct: false
-  - text: офіційно-діловий
-    correct: true
-  - text: науковий
-    correct: false
+  - '{''text'': ''розмовний'', ''correct'': False}'
+  - '{''text'': ''художній'', ''correct'': False}'
+  - '{''text'': ''офіційно-діловий'', ''correct'': True}'
+  - '{''text'': ''науковий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -776,14 +905,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Що таке синтетичний майбутній час?
   options:
-  - text: буду + інфінітив
-    correct: false
-  - text: форма на -иму/-тиму
-    correct: true
-  - text: минулий час дієслова
-    correct: false
-  - text: наказовий спосіб
-    correct: false
+  - '{''text'': ''буду + інфінітив'', ''correct'': False}'
+  - '{''text'': ''форма на -иму/-тиму'', ''correct'': True}'
+  - '{''text'': ''минулий час дієслова'', ''correct'': False}'
+  - '{''text'': ''наказовий спосіб'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -794,14 +919,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Яка форма "боротися" у синтетичному майбутньому часі (він)?
   options:
-  - text: буде боротися
-    correct: false
-  - text: боротиметься
-    correct: true
-  - text: боровся
-    correct: false
-  - text: борючись
-    correct: false
+  - '{''text'': ''буде боротися'', ''correct'': False}'
+  - '{''text'': ''боротиметься'', ''correct'': True}'
+  - '{''text'': ''боровся'', ''correct'': False}'
+  - '{''text'': ''борючись'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -812,14 +933,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Чому "писавший" — це русизм?
   options:
-  - text: Бо це неправильне дієслово
-    correct: false
-  - text: Бо така форма не властива українській мові
-    correct: true
-  - text: Бо це минулий час
-    correct: false
-  - text: Бо це наказовий спосіб
-    correct: false
+  - '{''text'': ''Бо це неправильне дієслово'', ''correct'': False}'
+  - '{''text'': ''Бо така форма не властива українській мові'', ''correct'': True}'
+  - '{''text'': ''Бо це минулий час'', ''correct'': False}'
+  - '{''text'': ''Бо це наказовий спосіб'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -830,14 +947,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Як замінити русизм "людина, зробивша помилку"?
   options:
-  - text: людина, яка зробила помилку
-    correct: true
-  - text: людина зробила помилку
-    correct: false
-  - text: людина, що зробивший
-    correct: false
-  - text: зробивша помилку людина
-    correct: false
+  - '{''text'': ''людина, яка зробила помилку'', ''correct'': True}'
+  - '{''text'': ''людина зробила помилку'', ''correct'': False}'
+  - '{''text'': ''людина, що зробивший'', ''correct'': False}'
+  - '{''text'': ''зробивша помилку людина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -848,14 +961,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Що означає "нижчепідписаний"?
   options:
-  - text: той, хто підписався нижче
-    correct: true
-  - text: той, хто не підписався
-    correct: false
-  - text: той, хто підписався першим
-    correct: false
-  - text: той, хто відмовився підписати
-    correct: false
+  - '{''text'': ''той, хто підписався нижче'', ''correct'': True}'
+  - '{''text'': ''той, хто не підписався'', ''correct'': False}'
+  - '{''text'': ''той, хто підписався першим'', ''correct'': False}'
+  - '{''text'': ''той, хто відмовився підписати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -866,14 +975,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Яке слово НЕ є складеним прикметником?
   options:
-  - text: новопризначений
-    correct: false
-  - text: вищезгаданий
-    correct: false
-  - text: колишній
-    correct: true
-  - text: новостворений
-    correct: false
+  - '{''text'': ''новопризначений'', ''correct'': False}'
+  - '{''text'': ''вищезгаданий'', ''correct'': False}'
+  - '{''text'': ''колишній'', ''correct'': True}'
+  - '{''text'': ''новостворений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -884,14 +989,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: У якому реченні використано правильну форму?
   options:
-  - text: Студент, прочитавший книгу, здав екзамен.
-    correct: false
-  - text: Студент, який прочитав книгу, здав екзамен.
-    correct: true
-  - text: Студент, що прочитавший книгу, здав екзамен.
-    correct: false
-  - text: Прочитавший книгу студент здав екзамен.
-    correct: false
+  - '{''text'': ''Студент, прочитавший книгу, здав екзамен.'', ''correct'': False}'
+  - '{''text'': ''Студент, який прочитав книгу, здав екзамен.'', ''correct'': True}'
+  - '{''text'': ''Студент, що прочитавший книгу, здав екзамен.'', ''correct'': False}'
+  - '{''text'': ''Прочитавший книгу студент здав екзамен.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -902,14 +1003,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Що означає "попередній"?
   options:
-  - text: previous
-    correct: true
-  - text: next
-    correct: false
-  - text: current
-    correct: false
-  - text: future
-    correct: false
+  - '{''text'': ''previous'', ''correct'': True}'
+  - '{''text'': ''next'', ''correct'': False}'
+  - '{''text'': ''current'', ''correct'': False}'
+  - '{''text'': ''future'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -920,14 +1017,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Коли краще використовувати синтетичний майбутній час?
   options:
-  - text: у розмовному мовленні
-    correct: false
-  - text: у літературному та офіційному стилях
-    correct: true
-  - text: тільки в минулому часі
-    correct: false
-  - text: ніколи
-    correct: false
+  - '{''text'': ''у розмовному мовленні'', ''correct'': False}'
+  - '{''text'': ''у літературному та офіційному стилях'', ''correct'': True}'
+  - '{''text'': ''тільки в минулому часі'', ''correct'': False}'
+  - '{''text'': ''ніколи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -938,14 +1031,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Яка форма "співати" (ми) у синтетичному майбутньому часі?
   options:
-  - text: будемо співати
-    correct: false
-  - text: співатимемо
-    correct: true
-  - text: співаємо
-    correct: false
-  - text: співали
-    correct: false
+  - '{''text'': ''будемо співати'', ''correct'': False}'
+  - '{''text'': ''співатимемо'', ''correct'': True}'
+  - '{''text'': ''співаємо'', ''correct'': False}'
+  - '{''text'': ''співали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -956,14 +1045,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Що означає "так званий"?
   options:
-  - text: so-called
-    correct: true
-  - text: well-known
-    correct: false
-  - text: above-mentioned
-    correct: false
-  - text: newly created
-    correct: false
+  - '{''text'': ''so-called'', ''correct'': True}'
+  - '{''text'': ''well-known'', ''correct'': False}'
+  - '{''text'': ''above-mentioned'', ''correct'': False}'
+  - '{''text'': ''newly created'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -974,14 +1059,10 @@ items:
   title: Розуміння дієприкметникових форм
   question: Яке слово означає "newly elected"?
   options:
-  - text: новоприбулий
-    correct: false
-  - text: новопризначений
-    correct: false
-  - text: новообраний
-    correct: true
-  - text: новостворений
-    correct: false
+  - '{''text'': ''новоприбулий'', ''correct'': False}'
+  - '{''text'': ''новопризначений'', ''correct'': False}'
+  - '{''text'': ''новообраний'', ''correct'': True}'
+  - '{''text'': ''новостворений'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -992,14 +1073,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "читати" (я) у синтетичному майбутньому?
   options:
-  - text: читатиму
-    correct: true
-  - text: буду читати
-    correct: false
-  - text: читаю
-    correct: false
-  - text: читав
-    correct: false
+  - '{''text'': ''читатиму'', ''correct'': True}'
+  - '{''text'': ''буду читати'', ''correct'': False}'
+  - '{''text'': ''читаю'', ''correct'': False}'
+  - '{''text'': ''читав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1010,14 +1087,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "писати" (вона) у синтетичному майбутньому?
   options:
-  - text: писатиме
-    correct: true
-  - text: буде писати
-    correct: false
-  - text: пише
-    correct: false
-  - text: писала
-    correct: false
+  - '{''text'': ''писатиме'', ''correct'': True}'
+  - '{''text'': ''буде писати'', ''correct'': False}'
+  - '{''text'': ''пише'', ''correct'': False}'
+  - '{''text'': ''писала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1028,14 +1101,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "говорити" (ви) у синтетичному майбутньому?
   options:
-  - text: говоритимете
-    correct: true
-  - text: будете говорити
-    correct: false
-  - text: говорите
-    correct: false
-  - text: говорили
-    correct: false
+  - '{''text'': ''говоритимете'', ''correct'': True}'
+  - '{''text'': ''будете говорити'', ''correct'': False}'
+  - '{''text'': ''говорите'', ''correct'': False}'
+  - '{''text'': ''говорили'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1046,14 +1115,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "працювати" (вони) у синтетичному майбутньому?
   options:
-  - text: працюватимуть
-    correct: true
-  - text: будуть працювати
-    correct: false
-  - text: працюють
-    correct: false
-  - text: працювали
-    correct: false
+  - '{''text'': ''працюватимуть'', ''correct'': True}'
+  - '{''text'': ''будуть працювати'', ''correct'': False}'
+  - '{''text'': ''працюють'', ''correct'': False}'
+  - '{''text'': ''працювали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1064,14 +1129,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "жити" (ти) у синтетичному майбутньому?
   options:
-  - text: житимеш
-    correct: true
-  - text: будеш жити
-    correct: false
-  - text: живеш
-    correct: false
-  - text: жив
-    correct: false
+  - '{''text'': ''житимеш'', ''correct'': True}'
+  - '{''text'': ''будеш жити'', ''correct'': False}'
+  - '{''text'': ''живеш'', ''correct'': False}'
+  - '{''text'': ''жив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1082,14 +1143,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "вчити" (ми) у синтетичному майбутньому?
   options:
-  - text: вчитимемо
-    correct: true
-  - text: будемо вчити
-    correct: false
-  - text: вчимо
-    correct: false
-  - text: вчили
-    correct: false
+  - '{''text'': ''вчитимемо'', ''correct'': True}'
+  - '{''text'': ''будемо вчити'', ''correct'': False}'
+  - '{''text'': ''вчимо'', ''correct'': False}'
+  - '{''text'': ''вчили'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1100,14 +1157,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "мріяти" (він) у синтетичному майбутньому?
   options:
-  - text: мріятиме
-    correct: true
-  - text: буде мріяти
-    correct: false
-  - text: мріє
-    correct: false
-  - text: мріяв
-    correct: false
+  - '{''text'': ''мріятиме'', ''correct'': True}'
+  - '{''text'': ''буде мріяти'', ''correct'': False}'
+  - '{''text'': ''мріє'', ''correct'': False}'
+  - '{''text'': ''мріяв'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1118,14 +1171,10 @@ items:
   title: Синтетичний майбутній час
   question: Який суфікс використовується для синтетичного майбутнього?
   options:
-  - text: -иму/-тиму
-    correct: true
-  - text: -ла/-ло
-    correct: false
-  - text: -ти
-    correct: false
-  - text: -вши
-    correct: false
+  - '{''text'': ''-иму/-тиму'', ''correct'': True}'
+  - '{''text'': ''-ла/-ло'', ''correct'': False}'
+  - '{''text'': ''-ти'', ''correct'': False}'
+  - '{''text'': ''-вши'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1136,14 +1185,10 @@ items:
   title: Синтетичний майбутній час
   question: У якому стилі частіше вживається синтетичний майбутній?
   options:
-  - text: літературний
-    correct: true
-  - text: розмовний
-    correct: false
-  - text: діалектний
-    correct: false
-  - text: жаргонний
-    correct: false
+  - '{''text'': ''літературний'', ''correct'': True}'
+  - '{''text'': ''розмовний'', ''correct'': False}'
+  - '{''text'': ''діалектний'', ''correct'': False}'
+  - '{''text'': ''жаргонний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1154,14 +1199,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "кричати" (я) у синтетичному майбутньому?
   options:
-  - text: кричатиму
-    correct: true
-  - text: буду кричати
-    correct: false
-  - text: кричу
-    correct: false
-  - text: кричав
-    correct: false
+  - '{''text'': ''кричатиму'', ''correct'': True}'
+  - '{''text'': ''буду кричати'', ''correct'': False}'
+  - '{''text'': ''кричу'', ''correct'': False}'
+  - '{''text'': ''кричав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1172,14 +1213,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "співати" (вони) у синтетичному майбутньому?
   options:
-  - text: співатимуть
-    correct: true
-  - text: будуть співати
-    correct: false
-  - text: співають
-    correct: false
-  - text: співали
-    correct: false
+  - '{''text'': ''співатимуть'', ''correct'': True}'
+  - '{''text'': ''будуть співати'', ''correct'': False}'
+  - '{''text'': ''співають'', ''correct'': False}'
+  - '{''text'': ''співали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1190,14 +1227,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "думати" (ми) у синтетичному майбутньому?
   options:
-  - text: думатимемо
-    correct: true
-  - text: будемо думати
-    correct: false
-  - text: думаємо
-    correct: false
-  - text: думали
-    correct: false
+  - '{''text'': ''думатимемо'', ''correct'': True}'
+  - '{''text'': ''будемо думати'', ''correct'': False}'
+  - '{''text'': ''думаємо'', ''correct'': False}'
+  - '{''text'': ''думали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1208,14 +1241,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "слухати" (ти) у синтетичному майбутньому?
   options:
-  - text: слухатимеш
-    correct: true
-  - text: будеш слухати
-    correct: false
-  - text: слухаєш
-    correct: false
-  - text: слухав
-    correct: false
+  - '{''text'': ''слухатимеш'', ''correct'': True}'
+  - '{''text'': ''будеш слухати'', ''correct'': False}'
+  - '{''text'': ''слухаєш'', ''correct'': False}'
+  - '{''text'': ''слухав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1226,14 +1255,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "вивчати" (вона) у синтетичному майбутньому?
   options:
-  - text: вивчатиме
-    correct: true
-  - text: буде вивчати
-    correct: false
-  - text: вивчає
-    correct: false
-  - text: вивчала
-    correct: false
+  - '{''text'': ''вивчатиме'', ''correct'': True}'
+  - '{''text'': ''буде вивчати'', ''correct'': False}'
+  - '{''text'': ''вивчає'', ''correct'': False}'
+  - '{''text'': ''вивчала'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1244,14 +1269,10 @@ items:
   title: Синтетичний майбутній час
   question: Яка форма "розповідати" (ви) у синтетичному майбутньому?
   options:
-  - text: розповідатимете
-    correct: true
-  - text: будете розповідати
-    correct: false
-  - text: розповідаєте
-    correct: false
-  - text: розповідали
-    correct: false
+  - '{''text'': ''розповідатимете'', ''correct'': True}'
+  - '{''text'': ''будете розповідати'', ''correct'': False}'
+  - '{''text'': ''розповідаєте'', ''correct'': False}'
+  - '{''text'': ''розповідали'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1262,14 +1283,10 @@ items:
   title: Синтетичний майбутній час
   question: Чи правильна форма "боротимуся"?
   options:
-  - text: Так, це я боротимуся
-    correct: true
-  - text: Ні, це неправильно
-    correct: false
-  - text: Так, це він боротимуся
-    correct: false
-  - text: Так, це ми боротимуся
-    correct: false
+  - '{''text'': ''Так, це я боротимуся'', ''correct'': True}'
+  - '{''text'': ''Ні, це неправильно'', ''correct'': False}'
+  - '{''text'': ''Так, це він боротимуся'', ''correct'': False}'
+  - '{''text'': ''Так, це ми боротимуся'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

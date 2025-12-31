@@ -1,15 +1,18 @@
 module: 01-passive-voice-system
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/01-passive-voice-system.md
-generated: '2025-12-29T21:25:26.228759'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:13.594662'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у пасивних конструкціях
@@ -585,6 +588,139 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст правильними формами
+  passage_template: 'Учора в Києві {відкрито|відкрила|відкритий|відкрито} нову виставку
+    сучасного мистецтва. Експозиція {присвячена|присвячено|присвячується|присвячена}
+    творчості молодих українських художників. На виставці {представлено|представлені|представляється|представлено}
+    понад 50 робіт. Кожен твір {підготовлений|підготовлено|готується|підготовлений}
+    спеціально для цієї події.
+
+
+    За словами організаторів, роботи {відбиралися|відібрано|відбирались|відбиралися}
+    протягом року. Кожна картина {оцінювалася|оцінено|оцінювалась|оцінювалася} журі
+    з п''яти експертів. Переможці {визначено|визначені|визначаються|визначено} минулого
+    тижня. Нагороди {вручено|вручили|вручаються|вручено} на урочистій церемонії.
+
+
+    Особливу увагу {приділено|приділена|приділяється|приділено} роботам у стилі абстракціонізму.
+    Ці твори {створені|створено|створюються|створені} молодими художниками віком до
+    30 років. Виставка {організована|організовано|організується|організована} Міністерством
+    культури. Спонсорами {виділено|виділили|виділяється|виділено} значні кошти на
+    проведення заходу.
+
+
+    Відвідувачі {запрошуються|запрошено|запрошені|запрошуються} до галереї щодня з
+    10:00 до 18:00. Вхід для студентів {безкоштовний|безкоштовно|безкоштовним|безкоштовний}.
+    Каталог виставки {можна|можливо|можуть|можна} придбати в касі. Екскурсії {проводяться|проведено|проведені|проводяться}
+    щогодини.
+
+    '
+  blanks:
+  - answer: відкрито
+    options:
+    - відкрито
+    - відкрила
+    - відкритий
+  - answer: присвячена
+    options:
+    - присвячена
+    - присвячено
+    - присвячується
+  - answer: представлено
+    options:
+    - представлено
+    - представлені
+    - представляється
+  - answer: підготовлений
+    options:
+    - підготовлений
+    - підготовлено
+    - готується
+  - answer: відбиралися
+    options:
+    - відбиралися
+    - відібрано
+    - відбирались
+  - answer: оцінювалася
+    options:
+    - оцінювалася
+    - оцінено
+    - оцінювалась
+  - answer: визначено
+    options:
+    - визначено
+    - визначені
+    - визначаються
+  - answer: вручено
+    options:
+    - вручено
+    - вручили
+    - вручаються
+  - answer: приділено
+    options:
+    - приділено
+    - приділена
+    - приділяється
+  - answer: створені
+    options:
+    - створені
+    - створено
+    - створюються
+  - answer: організована
+    options:
+    - організована
+    - організовано
+    - організується
+  - answer: виділено
+    options:
+    - виділено
+    - виділили
+    - виділяється
+  - answer: запрошуються
+    options:
+    - запрошуються
+    - запрошено
+    - запрошені
+  - answer: безкоштовний
+    options:
+    - безкоштовний
+    - безкоштовно
+    - безкоштовним
+  - answer: можна
+    options:
+    - можна
+    - можливо
+    - можуть
+  - answer: проводяться
+    options:
+    - проводяться
+    - проведено
+    - проведені
+  blank_count: 16
+  complete_passage: 'Учора в Києві відкрито нову виставку сучасного мистецтва. Експозиція
+    присвячена творчості молодих українських художників. На виставці представлено
+    понад 50 робіт. Кожен твір підготовлений спеціально для цієї події.
+
+
+    За словами організаторів, роботи відбиралися протягом року. Кожна картина оцінювалася
+    журі з п''яти експертів. Переможці визначено минулого тижня. Нагороди вручено
+    на урочистій церемонії.
+
+
+    Особливу увагу приділено роботам у стилі абстракціонізму. Ці твори створені молодими
+    художниками віком до 30 років. Виставка організована Міністерством культури. Спонсорами
+    виділено значні кошти на проведення заходу.
+
+
+    Відвідувачі запрошуються до галереї щодня з 10:00 до 18:00. Вхід для студентів
+    безкоштовний. Каталог виставки можна придбати в касі. Екскурсії проводяться щогодини.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть пасивні речення
   jumbled_words: []
@@ -717,14 +853,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану використана в реченні "Книгу написано вчора"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: true
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': True}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -735,14 +867,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану використана в реченні "Лист написаний олівцем"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: true
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -753,14 +881,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану використана в реченні "Будинок будується швидко"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -771,14 +895,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану використана в реченні "Мені сказали правду"?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -789,14 +909,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Для якого регістру найбільш характерна форма -но/-то?
   options:
-  - text: Розмовного
-    correct: false
-  - text: Офіційно-ділового
-    correct: true
-  - text: Художнього
-    correct: false
-  - text: Розмовного та художнього
-    correct: false
+  - '{''text'': ''Розмовного'', ''correct'': False}'
+  - '{''text'': ''Офіційно-ділового'', ''correct'': True}'
+  - '{''text'': ''Художнього'', ''correct'': False}'
+  - '{''text'': ''Розмовного та художнього'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -807,14 +923,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану найчастіше використовується в наукових текстах?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -825,14 +937,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану узгоджується з підметом у роді, числі та відмінку?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: true
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': True}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -843,14 +951,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: У якому відмінку стоїть об'єкт у конструкції з -но/-то?
   options:
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: У знахідному
-    correct: true
-  - text: В орудному
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''У знахідному'', ''correct'': True}'
+  - '{''text'': ''В орудному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -861,14 +965,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану є найбільш розмовною?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -879,14 +979,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Як виражається агент (виконавець дії) у дієприкметниковій конструкції?
   options:
-  - text: У називному відмінку
-    correct: false
-  - text: У родовому відмінку з прийменником "від"
-    correct: false
-  - text: В орудному відмінку
-    correct: true
-  - text: У знахідному відмінку
-    correct: false
+  - '{''text'': ''У називному відмінку'', ''correct'': False}'
+  - '{''text'': ''У родовому відмінку з прийменником "від"'', ''correct'': False}'
+  - '{''text'': ''В орудному відмінку'', ''correct'': True}'
+  - '{''text'': ''У знахідному відмінку'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -897,14 +993,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яке речення є правильним у офіційно-діловому стилі?
   options:
-  - text: Рішення прийняли вчора.
-    correct: false
-  - text: Рішення прийнято вчора.
-    correct: true
-  - text: Рішення було прийняте вчора.
-    correct: false
-  - text: Рішення приймалось вчора.
-    correct: false
+  - '{''text'': ''Рішення прийняли вчора.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнято вчора.'', ''correct'': True}'
+  - '{''text'': ''Рішення було прийняте вчора.'', ''correct'': False}'
+  - '{''text'': ''Рішення приймалось вчора.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -915,14 +1007,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма пасивного стану підкреслює процес, а не результат?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -933,14 +1021,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яке речення містить помилку?
   options:
-  - text: Книга написана автором.
-    correct: false
-  - text: Книгу написано.
-    correct: false
-  - text: Книга написано.
-    correct: true
-  - text: Книгу написали.
-    correct: false
+  - '{''text'': ''Книга написана автором.'', ''correct'': False}'
+  - '{''text'': ''Книгу написано.'', ''correct'': False}'
+  - '{''text'': ''Книга написано.'', ''correct'': True}'
+  - '{''text'': ''Книгу написали.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -951,14 +1035,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Як утворюється форма -но/-то?
   options:
-  - text: Від основи інфінітива + -но/-то
-    correct: false
-  - text: Від пасивного дієприкметника (середній рід)
-    correct: true
-  - text: Від дієслова + постфікс -ся
-    correct: false
-  - text: Від дієслова у 3-й особі множини
-    correct: false
+  - '{''text'': ''Від основи інфінітива + -но/-то'', ''correct'': False}'
+  - '{''text'': ''Від пасивного дієприкметника (середній рід)'', ''correct'': True}'
+  - '{''text'': ''Від дієслова + постфікс -ся'', ''correct'': False}'
+  - '{''text'': ''Від дієслова у 3-й особі множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -969,14 +1049,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яка форма буде правильною для художнього опису картини?
   options:
-  - text: Картину намальовано.
-    correct: false
-  - text: Картина намальована художником.
-    correct: true
-  - text: Картину намалювали.
-    correct: false
-  - text: Картина малюється.
-    correct: false
+  - '{''text'': ''Картину намальовано.'', ''correct'': False}'
+  - '{''text'': ''Картина намальована художником.'', ''correct'': True}'
+  - '{''text'': ''Картину намалювали.'', ''correct'': False}'
+  - '{''text'': ''Картина малюється.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -987,14 +1063,10 @@ items:
   title: Розпізнавання форм пасивного стану
   question: Яке речення є прикладом зворотної пасивної конструкції?
   options:
-  - text: Закон прийнято.
-    correct: false
-  - text: Закон прийнятий парламентом.
-    correct: false
-  - text: Закон приймається парламентом.
-    correct: true
-  - text: Закон прийняли.
-    correct: false
+  - '{''text'': ''Закон прийнято.'', ''correct'': False}'
+  - '{''text'': ''Закон прийнятий парламентом.'', ''correct'': False}'
+  - '{''text'': ''Закон приймається парламентом.'', ''correct'': True}'
+  - '{''text'': ''Закон прийняли.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1006,14 +1078,10 @@ items:
   question: У реченні "Закон прийнято парламентом" слово "парламентом" стоїть у якому
     відмінку?
   options:
-  - text: У називному
-    correct: false
-  - text: У родовому
-    correct: false
-  - text: В орудному
-    correct: true
-  - text: У знахідному
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У родовому'', ''correct'': False}'
+  - '{''text'': ''В орудному'', ''correct'': True}'
+  - '{''text'': ''У знахідному'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1024,14 +1092,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма пасивного стану є найбільш давньою в українській мові?
   options:
-  - text: Дієприкметникова (-ний/-тий)
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: false
-  - text: 3-тя особа множини
-    correct: true
+  - '{''text'': ''Дієприкметникова (-ний/-тий)'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': False}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1042,14 +1106,10 @@ items:
   title: Комплексна перевірка знань
   question: Що підкреслює зворотна пасивна конструкція (-ся)?
   options:
-  - text: Результат дії
-    correct: false
-  - text: Процес дії
-    correct: true
-  - text: Виконавця дії
-    correct: false
-  - text: Час дії
-    correct: false
+  - '{''text'': ''Результат дії'', ''correct'': False}'
+  - '{''text'': ''Процес дії'', ''correct'': True}'
+  - '{''text'': ''Виконавця дії'', ''correct'': False}'
+  - '{''text'': ''Час дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1060,14 +1120,10 @@ items:
   title: Комплексна перевірка знань
   question: У якому стилі НЕ рекомендується вживати форму -но/-то?
   options:
-  - text: В офіційно-діловому
-    correct: false
-  - text: У публіцистичному
-    correct: false
-  - text: У розмовному
-    correct: true
-  - text: У науковому
-    correct: false
+  - '{''text'': ''В офіційно-діловому'', ''correct'': False}'
+  - '{''text'': ''У публіцистичному'', ''correct'': False}'
+  - '{''text'': ''У розмовному'', ''correct'': True}'
+  - '{''text'': ''У науковому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1078,14 +1134,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма буде правильною — "Роман написаний" чи "Роман написано"?
   options:
-  - text: Тільки "написаний"
-    correct: false
-  - text: Тільки "написано"
-    correct: false
-  - text: Обидві правильні, але різний відтінок
-    correct: true
-  - text: Обидві неправильні
-    correct: false
+  - '{''text'': ''Тільки "написаний"'', ''correct'': False}'
+  - '{''text'': ''Тільки "написано"'', ''correct'': False}'
+  - '{''text'': ''Обидві правильні, але різний відтінок'', ''correct'': True}'
+  - '{''text'': ''Обидві неправильні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1096,14 +1148,11 @@ items:
   title: Комплексна перевірка знань
   question: Чому в офіційних документах використовують форму -но/-то?
   options:
-  - text: Вона коротша
-    correct: false
-  - text: Вона підкреслює результат без вказівки на виконавця
-    correct: true
-  - text: Вона звучить красивіше
-    correct: false
-  - text: Вона легша для написання
-    correct: false
+  - '{''text'': ''Вона коротша'', ''correct'': False}'
+  - '{''text'': ''Вона підкреслює результат без вказівки на виконавця'', ''correct'':
+    True}'
+  - '{''text'': ''Вона звучить красивіше'', ''correct'': False}'
+  - '{''text'': ''Вона легша для написання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1114,14 +1163,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке речення містить помилку в узгодженні?
   options:
-  - text: Книга написана.
-    correct: false
-  - text: Листи відправлені.
-    correct: false
-  - text: Рішення прийнятий.
-    correct: true
-  - text: Роман прочитаний.
-    correct: false
+  - '{''text'': ''Книга написана.'', ''correct'': False}'
+  - '{''text'': ''Листи відправлені.'', ''correct'': False}'
+  - '{''text'': ''Рішення прийнятий.'', ''correct'': True}'
+  - '{''text'': ''Роман прочитаний.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1132,14 +1177,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно сказати "The problem is being solved" у науковому тексті?
   options:
-  - text: Проблему вирішили.
-    correct: false
-  - text: Проблему вирішено.
-    correct: false
-  - text: Проблема вирішується.
-    correct: true
-  - text: Проблема вирішена.
-    correct: false
+  - '{''text'': ''Проблему вирішили.'', ''correct'': False}'
+  - '{''text'': ''Проблему вирішено.'', ''correct'': False}'
+  - '{''text'': ''Проблема вирішується.'', ''correct'': True}'
+  - '{''text'': ''Проблема вирішена.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1150,14 +1191,10 @@ items:
   title: Комплексна перевірка знань
   question: У якому реченні правильно виражено агента?
   options:
-  - text: Картина намальована від художника.
-    correct: false
-  - text: Картина намальована для художника.
-    correct: false
-  - text: Картина намальована художником.
-    correct: true
-  - text: Картина намальована до художника.
-    correct: false
+  - '{''text'': ''Картина намальована від художника.'', ''correct'': False}'
+  - '{''text'': ''Картина намальована для художника.'', ''correct'': False}'
+  - '{''text'': ''Картина намальована художником.'', ''correct'': True}'
+  - '{''text'': ''Картина намальована до художника.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1168,14 +1205,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка часова форма у реченні "Лист буде написаний"?
   options:
-  - text: Минулий час
-    correct: false
-  - text: Теперішній час
-    correct: false
-  - text: Майбутній час
-    correct: true
-  - text: Умовний спосіб
-    correct: false
+  - '{''text'': ''Минулий час'', ''correct'': False}'
+  - '{''text'': ''Теперішній час'', ''correct'': False}'
+  - '{''text'': ''Майбутній час'', ''correct'': True}'
+  - '{''text'': ''Умовний спосіб'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1186,14 +1219,10 @@ items:
   title: Комплексна перевірка знань
   question: Скільки форм пасивного стану має українська мова?
   options:
-  - text: Одну
-    correct: false
-  - text: Дві
-    correct: false
-  - text: Три
-    correct: false
-  - text: Чотири
-    correct: true
+  - '{''text'': ''Одну'', ''correct'': False}'
+  - '{''text'': ''Дві'', ''correct'': False}'
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': ''Чотири'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1204,14 +1233,10 @@ items:
   title: Комплексна перевірка знань
   question: У якому реченні використано дієприкметникову пасивну конструкцію?
   options:
-  - text: Книгу написано.
-    correct: false
-  - text: Книга написана автором.
-    correct: true
-  - text: Книгу написали.
-    correct: false
-  - text: Книга пишеться.
-    correct: false
+  - '{''text'': ''Книгу написано.'', ''correct'': False}'
+  - '{''text'': ''Книга написана автором.'', ''correct'': True}'
+  - '{''text'': ''Книгу написали.'', ''correct'': False}'
+  - '{''text'': ''Книга пишеться.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1222,14 +1247,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка форма характерна для інструкцій та технічних описів?
   options:
-  - text: Дієприкметникова
-    correct: false
-  - text: Безособова (-но/-то)
-    correct: false
-  - text: Зворотна (-ся)
-    correct: true
-  - text: 3-тя особа множини
-    correct: false
+  - '{''text'': ''Дієприкметникова'', ''correct'': False}'
+  - '{''text'': ''Безособова (-но/-то)'', ''correct'': False}'
+  - '{''text'': ''Зворотна (-ся)'', ''correct'': True}'
+  - '{''text'': ''3-тя особа множини'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1240,14 +1261,10 @@ items:
   title: Комплексна перевірка знань
   question: Чим відрізняється "Книга написана" від "Книгу написано"?
   options:
-  - text: Значенням
-    correct: false
-  - text: Стилістичним забарвленням
-    correct: true
-  - text: Часом
-    correct: false
-  - text: Видом
-    correct: false
+  - '{''text'': ''Значенням'', ''correct'': False}'
+  - '{''text'': ''Стилістичним забарвленням'', ''correct'': True}'
+  - '{''text'': ''Часом'', ''correct'': False}'
+  - '{''text'': ''Видом'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1258,14 +1275,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке речення є прикладом пасивного стану з майбутнім часом?
   options:
-  - text: Книга була написана.
-    correct: false
-  - text: Книга написана.
-    correct: false
-  - text: Книга буде написана.
-    correct: true
-  - text: Книга пишеться.
-    correct: false
+  - '{''text'': ''Книга була написана.'', ''correct'': False}'
+  - '{''text'': ''Книга написана.'', ''correct'': False}'
+  - '{''text'': ''Книга буде написана.'', ''correct'': True}'
+  - '{''text'': ''Книга пишеться.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1277,14 +1290,10 @@ items:
   question: У якому відмінку стоїть слово "закритим" у реченні "Засідання оголошено
     закритим"?
   options:
-  - text: У називному
-    correct: false
-  - text: У знахідному
-    correct: false
-  - text: В орудному
-    correct: true
-  - text: У місцевому
-    correct: false
+  - '{''text'': ''У називному'', ''correct'': False}'
+  - '{''text'': ''У знахідному'', ''correct'': False}'
+  - '{''text'': ''В орудному'', ''correct'': True}'
+  - '{''text'': ''У місцевому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

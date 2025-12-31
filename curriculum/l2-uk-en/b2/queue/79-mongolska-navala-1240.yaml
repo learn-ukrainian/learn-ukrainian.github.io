@@ -1,0 +1,1418 @@
+module: 79-mongolska-navala-1240
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/79-mongolska-navala-1240.md
+generated: '2025-12-30T19:49:16.875726'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Монгольська орда підійшов до Києва восени 1240 року.
+  error: підійшов
+  answer: підійшла
+  sentence_corrected: Монгольська орда підійшла до Києва восени 1240 року.
+  options:
+  - підійшов
+  - підійшла
+  - підійшли
+  - підійшло
+  original_explanation: Орда — іменник жіночого роду, тому дієслово має форму жіночого
+    роду (підійшла).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Воєвода Дмитро очолив оборони міста.
+  error: оборони
+  answer: оборону
+  sentence_corrected: Воєвода Дмитро очолив оборону міста.
+  options:
+  - оборони
+  - оборону
+  - обороною
+  - обороні
+  original_explanation: Дієслово «очолити» вимагає знахідного відмінка (що? → оборону).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Кияни відмовилися здатися ворогом.
+  error: ворогом
+  answer: ворогові
+  sentence_corrected: Кияни відмовилися здатися ворогові.
+  options:
+  - ворогом
+  - ворогові
+  - ворога
+  - вороги
+  original_explanation: Дієслово «здатися» вимагає давального відмінка (кому? → ворогові).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Штурм тривав кілька день.
+  error: день
+  answer: днів
+  sentence_corrected: Штурм тривав кілька днів.
+  options:
+  - день
+  - днів
+  - дня
+  - дні
+  original_explanation: Після «кілька» іменник стоїть у родовому відмінку множини
+    (кілька чого? → днів).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Батий наказав не щадити нікого.
+  error: none
+  answer: ✓
+  sentence_corrected: Батий наказав не щадити нікого.
+  options:
+  - наказав
+  - щадити
+  - нікого
+  - ✓
+  original_explanation: Речення граматично правильне. Це тримає учнів уважними.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Жорстокість завойовників не мав меж.
+  error: мав
+  answer: мала
+  sentence_corrected: Жорстокість завойовників не мала меж.
+  options:
+  - мав
+  - мала
+  - мало
+  - мали
+  original_explanation: Жорстокість — іменник жіночого роду, тому дієслово має форму
+    жіночого роду (мала).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Населення Києва скоротилося з п'ятдесят тисяч.
+  error: п'ятдесят
+  answer: п'ятдесяти
+  sentence_corrected: Населення Києва скоротилося з п'ятдесяти тисяч.
+  options:
+  - п'ятдесят
+  - п'ятдесяти
+  - п'ятдесятьох
+  - п'ятдесятьма
+  original_explanation: Прийменник «з» вимагає родового відмінка (з чого? → з п'ятдесяти
+    тисяч).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Князі ворогувати між собою замість об'єднатися.
+  error: ворогувати
+  answer: ворогували
+  sentence_corrected: Князі ворогували між собою замість об'єднатися.
+  options:
+  - ворогувати
+  - ворогували
+  - ворогуючи
+  - ворогуватимуть
+  original_explanation: Потрібна особова форма дієслова в минулому часі (ворогували).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Десятинна церква була збудована за Володимир Великий.
+  error: Володимир
+  answer: Володимира
+  sentence_corrected: Десятинна церква була збудована за Володимира Великий.
+  options:
+  - Володимир
+  - Володимира
+  - Володимиру
+  - Володимиром
+  original_explanation: Прийменник «за» у значенні часу вимагає родового відмінка
+    (за кого? → за Володимира).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Монголи пробити мури за допомогою машин.
+  error: пробити
+  answer: пробили
+  sentence_corrected: Монголи пробили мури за допомогою машин.
+  options:
+  - пробити
+  - пробили
+  - пробивши
+  - пробиваючи
+  original_explanation: Потрібна особова форма дієслова в минулому часі (пробили).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Політичний центр перемістився в Галицько-Волинського князівства.
+  error: Галицько-Волинського
+  answer: Галицько-Волинське
+  sentence_corrected: Політичний центр перемістився в Галицько-Волинське князівства.
+  options:
+  - Галицько-Волинського
+  - Галицько-Волинське
+  - Галицько-Волинським
+  - Галицько-Волинському
+  original_explanation: Прийменник «в» (куди?) вимагає знахідного відмінка (в що?
+    → в князівство).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Литописець описує події з великий точністю.
+  error: великий
+  answer: великою
+  sentence_corrected: Литописець описує події з великою точністю.
+  options:
+  - великий
+  - великою
+  - велику
+  - великої
+  original_explanation: Прийменник «з» вимагає орудного відмінка (з чим? → з великою
+    точністю).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Карпіні подорожував до Монголію як посол.
+  error: Монголію
+  answer: Монголії
+  sentence_corrected: Карпіні подорожував до Монголії як посол.
+  options:
+  - Монголію
+  - Монголії
+  - Монголія
+  - Монголією
+  original_explanation: Прийменник «до» вимагає родового відмінка (до чого? → до Монголії).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Українці прагне до демократії.
+  error: прагне
+  answer: прагнуть
+  sentence_corrected: Українці прагнуть до демократії.
+  options:
+  - прагне
+  - прагнуть
+  - прагнути
+  - прагнувши
+  original_explanation: Українці — множина, тому дієслово має форму множини (прагнуть).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Ця різниця помітний досі.
+  error: помітний
+  answer: помітна
+  sentence_corrected: Ця різниця помітна досі.
+  options:
+  - помітний
+  - помітна
+  - помітне
+  - помітні
+  original_explanation: Різниця — іменник жіночого роду, тому прикметник має форму
+    жіночого роду (помітна).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Московія перейняла монгольську модель абсолютна влади.
+  error: абсолютна
+  answer: абсолютної
+  sentence_corrected: Московія перейняла монгольську модель абсолютної влади.
+  options:
+  - абсолютна
+  - абсолютної
+  - абсолютну
+  - абсолютною
+  original_explanation: Потрібен родовий відмінок для узгодження з «влади» (якої?
+    → абсолютної).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Монгольська _____ 1240 року знищила Київську Русь.
+  answer: навала
+  complete_sentence: Монгольська навала__ 1240 року знищила Київську Русь.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Батий був _____ великої Монгольської імперії.
+  answer: ханом
+  complete_sentence: Батий був ханом__ великої Монгольської імперії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Оборону Києва очолив _____ Дмитро.
+  answer: воєвода
+  complete_sentence: Оборону Києва очолив воєвода__ Дмитро.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Монгольська _____ оточила місто з усіх боків.
+  answer: орда
+  complete_sentence: Монгольська орда__ оточила місто з усіх боків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ Києва тривала кілька днів.
+  answer: Облога
+  complete_sentence: Облога__ Києва тривала кілька днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Останній _____ на місто був нищівним.
+  answer: штурм
+  complete_sentence: Останній штурм__ на місто був нищівним.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Після навали місто лежало в _____.
+  answer: руїнах
+  complete_sentence: Після навали місто лежало в руїнах__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ завойовників не мала меж.
+  answer: Жорстокість
+  complete_sentence: Жорстокість__ завойовників не мала меж.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Руські князі мусили платити _____ Орді.
+  answer: данину
+  complete_sentence: Руські князі мусили платити данину__ Орді.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Монгольське _____ тривало понад двісті років.
+  answer: іго
+  complete_sentence: Монгольське іго__ тривало понад двісті років.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Князі їздили до Орди по _____ на князювання.
+  answer: ярлик
+  complete_sentence: Князі їздили до Орди по ярлик__ на князювання.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ багатьох захисників міста була неминучою.
+  answer: Загибель
+  complete_sentence: Загибель__ багатьох захисників міста була неминучою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: _____ Русі послабило її перед навалою.
+  answer: Роздроблення
+  complete_sentence: Роздроблення__ Русі послабило її перед навалою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Московські князі стали найвірнішими _____ Орди.
+  answer: васалами
+  complete_sentence: Московські князі стали найвірнішими васалами__ Орди.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Монголи використовували _____ машини для руйнування стін.
+  answer: стінобитні
+  complete_sentence: Монголи використовували стінобитні__ машини для руйнування стін.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Історична лексика в контексті
+  sentence_template: Це первинне _____ підтверджує масштаб руйнувань.
+  answer: джерело
+  complete_sentence: Це первинне джерело__ підтверджує масштаб руйнувань.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Монголи _____ оборону міста.
+  answer: зламали
+  complete_sentence: Монголи зламали__ оборону міста.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Кияни _____ опір до останнього.
+  answer: чинили
+  complete_sentence: Кияни чинили__ опір до останнього.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Армія Батия _____ місто з усіх боків.
+  answer: оточила
+  complete_sentence: Армія Батия оточила__ місто з усіх боків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Населення _____ різко після навали.
+  answer: скоротилося
+  complete_sentence: Населення скоротилося__ різко після навали.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Політичний центр _____ на захід.
+  answer: перемістився
+  complete_sentence: Політичний центр перемістився__ на захід.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Монголи _____ данину з підкорених земель.
+  answer: збирали
+  complete_sentence: Монголи збирали__ данину з підкорених земель.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Церква _____ під вагою людей.
+  answer: обвалилася
+  complete_sentence: Церква обвалилася__ під вагою людей.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Монголи _____ страшні руйнування.
+  answer: завдали
+  complete_sentence: Монголи завдали__ страшні руйнування.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Князі _____ до Орди по ярлик.
+  answer: їздили
+  complete_sentence: Князі їздили__ до Орди по ярлик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Русь _____ період роздроблення.
+  answer: переживала
+  complete_sentence: Русь переживала__ період роздроблення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Штурм _____ кілька днів.
+  answer: тривав
+  complete_sentence: Штурм тривав__ кілька днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Жорстокість завойовників не _____ меж.
+  answer: мала
+  complete_sentence: Жорстокість завойовників не мала__ меж.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Захисники _____ до останнього.
+  answer: билися
+  complete_sentence: Захисники билися__ до останнього.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Московія _____ авторитарні традиції.
+  answer: успадкувала
+  complete_sentence: Московія успадкувала__ авторитарні традиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Україна _____ до демократії.
+  answer: прагне
+  complete_sentence: Україна прагне__ до демократії.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Сталі вирази
+  sentence_template: Монголи _____ місто дотла.
+  answer: спалили
+  complete_sentence: Монголи спалили__ місто дотла.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст
+  passage_template: 'У грудні 1240 року монгольська {орда|армія|група|орда} хана {Батия|Данила|Дмитра|Батия}
+    підійшла до Києва. {Облога|Свято|Торгівля|Облога} міста тривала кілька днів. Оборону
+    очолив {воєвода|хан|монгол|воєвода} Дмитро, бо князь Данило залишив місто. Кияни
+    відмовилися {здатися|святкувати|торгувати|здатися} ворогові.
+
+
+    Монголи використовували {стінобитні|музичні|швейні|стінобитні} машини для руйнування
+    {стін|пісень|книг|стін}. Останні захисники сховалися в {Десятинній|Софійській|Успенській|Десятинній}
+    церкві. Але церква {обвалилася|розцвіла|зміцніла|обвалилася} під вагою людей.
+    {Жорстокість|Доброта|Щедрість|Жорстокість} завойовників не мала меж.
+
+
+    Після {навали|свята|торгівлі|навали} Київ лежав у {руїнах|квітах|багатстві|руїнах}.
+    {Населення|Свято|Торгівля|Населення} скоротилося з понад п''ятдесяти тисяч до
+    кількох сотень. Руські князі мусили їздити до Орди по {ярлик|подарунок|книгу|ярлик}
+    — дозвіл на князювання. Так почалося монгольське {іго|свято|багатство|іго}, яке
+    тривало понад {двісті|десять|п''ять|двісті} років.
+
+    '
+  blanks:
+  - answer: орда
+    options:
+    - орда
+    - армія
+    - група
+  - answer: Батия
+    options:
+    - Батия
+    - Данила
+    - Дмитра
+  - answer: Облога
+    options:
+    - Облога
+    - Свято
+    - Торгівля
+  - answer: воєвода
+    options:
+    - воєвода
+    - хан
+    - монгол
+  - answer: здатися
+    options:
+    - здатися
+    - святкувати
+    - торгувати
+  - answer: стінобитні
+    options:
+    - стінобитні
+    - музичні
+    - швейні
+  - answer: стін
+    options:
+    - стін
+    - пісень
+    - книг
+  - answer: Десятинній
+    options:
+    - Десятинній
+    - Софійській
+    - Успенській
+  - answer: обвалилася
+    options:
+    - обвалилася
+    - розцвіла
+    - зміцніла
+  - answer: Жорстокість
+    options:
+    - Жорстокість
+    - Доброта
+    - Щедрість
+  - answer: навали
+    options:
+    - навали
+    - свята
+    - торгівлі
+  - answer: руїнах
+    options:
+    - руїнах
+    - квітах
+    - багатстві
+  - answer: Населення
+    options:
+    - Населення
+    - Свято
+    - Торгівля
+  - answer: ярлик
+    options:
+    - ярлик
+    - подарунок
+    - книгу
+  - answer: іго
+    options:
+    - іго
+    - свято
+    - багатство
+  - answer: двісті
+    options:
+    - двісті
+    - десять
+    - п'ять
+  blank_count: 16
+  complete_passage: 'У грудні 1240 року монгольська орда хана Батия підійшла до Києва.
+    Облога міста тривала кілька днів. Оборону очолив воєвода Дмитро, бо князь Данило
+    залишив місто. Кияни відмовилися здатися ворогові.
+
+
+    Монголи використовували стінобитні машини для руйнування стін. Останні захисники
+    сховалися в Десятинній церкві. Але церква обвалилася під вагою людей. Жорстокість
+    завойовників не мала меж.
+
+
+    Після навали Київ лежав у руїнах. Населення скоротилося з понад п''ятдесяти тисяч
+    до кількох сотень. Руські князі мусили їздити до Орди по ярлик — дозвіл на князювання.
+    Так почалося монгольське іго, яке тривало понад двісті років.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Армія Батия підійшла до Києва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Воєвода Дмитро очолив оборону.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Облога тривала кілька днів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Десятинна церква обвалилася.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Місто лежало в руїнах.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Князі мусили платити данину.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Залежність від Орди тривала довго.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Центр перемістився на захід.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Жорстокість завойовників не мала меж.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Князі ворогували між собою.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Населення Києва різко скоротилося.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Князі їздили до Орди по ярлик.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Стінобитні машини руйнували стіни.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Не залишилося більше двохсот будинків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Московія успадкувала авторитарні традиції.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Це був кінець золотої доби Русі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яка була головна причина слабкості Русі перед монгольською
+    навалою?
+  options:
+  - '{''text'': ''Економічна криза та голод'', ''correct'': False}'
+  - '{''text'': ''Роздроблення та ворожнеча між князями'', ''correct'': True}'
+  - '{''text'': ''Релігійні конфлікти'', ''correct'': False}'
+  - '{''text'': ''Епідемія чуми'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Хто очолив оборону Києва під час монгольської облоги?
+  options:
+  - '{''text'': ''Князь Данило Галицький'', ''correct'': False}'
+  - '{''text'': ''Хан Батий'', ''correct'': False}'
+  - '{''text'': ''Воєвода Дмитро'', ''correct'': True}'
+  - '{''text'': ''Князь Володимир'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор описує чисельність монгольської армії?
+  options:
+  - '{''text'': ''Невелика, але добре озброєна'', ''correct'': False}'
+  - '{''text'': ''Настільки численна, що не було чути голосу людського'', ''correct'':
+    True}'
+  - '{''text'': ''Рівна за силою київському війську'', ''correct'': False}'
+  - '{''text'': ''Менша за очікування князів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що сталося з Десятинною церквою під час штурму?
+  options:
+  - '{''text'': ''Монголи її пощадили як святиню'', ''correct'': False}'
+  - '{''text'': ''Церква обвалилася під вагою людей на хорах'', ''correct'': True}'
+  - '{''text'': ''Князь Данило врятував церкву'', ''correct'': False}'
+  - '{''text'': ''Церква згоріла від пожежі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, яким було населення Києва до монгольської навали?
+  options:
+  - '{''text'': ''Близько двохсот осіб'', ''correct'': False}'
+  - '{''text'': ''Кілька тисяч осіб'', ''correct'': False}'
+  - '{''text'': "Понад п''ятдесят тисяч осіб", ''correct'': True}'
+  - '{''text'': ''Близько мільйона осіб'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор характеризує монгольську армію в історичному контексті?
+  options:
+  - '{''text'': ''Як примітивну та погано організовану'', ''correct'': False}'
+  - '{''text'': ''Як одну з найефективніших військових машин середньовіччя'', ''correct'':
+    True}'
+  - '{''text'': ''Як невелику групу кочівників'', ''correct'': False}'
+  - '{''text'': ''Як союзників руських князів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що таке ярлик у контексті монгольського панування?
+  options:
+  - '{''text'': ''Монгольська монета'', ''correct'': False}'
+  - '{''text'': ''Ханський дозвіл на князювання'', ''correct'': True}'
+  - '{''text'': ''Вид данини'', ''correct'': False}'
+  - '{''text'': ''Назва монгольського війська'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, куди перемістився політичний центр після падіння Києва?
+  options:
+  - '{''text'': ''До Москви'', ''correct'': False}'
+  - '{''text'': ''До Новгорода'', ''correct'': False}'
+  - '{''text'': ''До Галицько-Волинського князівства'', ''correct'': True}'
+  - '{''text'': ''До Орди'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Як автор спростовує міф про Русь як захисницю Європи?
+  options:
+  - '{''text'': ''Русь успішно зупинила монголів'', ''correct'': False}'
+  - '{''text'': ''Монголи не планували завойовувати Західну Європу'', ''correct'':
+    True}'
+  - '{''text'': ''Європа допомогла Русі'', ''correct'': False}'
+  - '{''text'': ''Монголи боялися руського війська'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яку роль відіграла Московія щодо Орди, за текстом?
+  options:
+  - '{''text'': ''Очолила опір проти монголів'', ''correct'': False}'
+  - '{''text'': ''Стала найвірнішим васалом Орди'', ''correct'': True}'
+  - '{''text'': ''Уникла монгольського впливу'', ''correct'': False}'
+  - '{''text'': "Об''єднала руські землі проти загарбників", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Коли Плано Карпіні проїжджав через Київ?
+  options:
+  - '{''text'': ''У 1240 році'', ''correct'': False}'
+  - '{''text'': ''У 1246 році'', ''correct'': True}'
+  - '{''text'': ''У 1300 році'', ''correct'': False}'
+  - '{''text'': ''У 1223 році'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Згідно з текстом, чому Галицько-Волинське князівство зберегло більше автономії?
+  options:
+  - '{''text'': ''Воно перемогло монголів у битві'', ''correct'': False}'
+  - '{''text'': ''Воно орієнтувалося на Захід'', ''correct'': True}'
+  - '{''text'': ''Монголи не дійшли до цих земель'', ''correct'': False}'
+  - '{''text'': ''Князь Данило був родичем хана'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яка битва стала першим зіткненням русичів із монголами?
+  options:
+  - '{''text'': ''Битва на Калці'', ''correct'': True}'
+  - '{''text'': ''Облога Києва'', ''correct'': False}'
+  - '{''text'': ''Полтавська битва'', ''correct'': False}'
+  - '{''text'': ''Битва під Москвою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Яке значення монгольської навали підкреслює автор у підсумку?
+  options:
+  - '{''text'': ''Початок економічного розквіту'', ''correct'': False}'
+  - '{''text'': "Нагадування про ціну роз''єднання", ''correct'': True}'
+  - '{''text'': ''Союз із Європою'', ''correct'': False}'
+  - '{''text'': ''Початок демократії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Скільки будинків залишилося в Києві за свідченням Плано Карпіні?
+  options:
+  - '{''text'': ''Близько тисячі'', ''correct'': False}'
+  - '{''text'': ''Не більше двохсот'', ''correct'': True}'
+  - '{''text'': ''Жодного'', ''correct'': False}'
+  - '{''text'': ''Кілька десятків тисяч'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту
+  question: Що успадкувала Московія від монголів, за текстом?
+  options:
+  - '{''text'': ''Демократичні традиції'', ''correct'': False}'
+  - '{''text'': ''Авторитарні політичні традиції'', ''correct'': True}'
+  - '{''text'': ''Релігію'', ''correct'': False}'
+  - '{''text'': ''Мову'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Який міф про монгольську навалу спростовує автор модуля?
+  options:
+  - '{''text'': ''Монголи були слабкою армією'', ''correct'': False}'
+  - '{''text'': ''Русь захистила Європу від монголів'', ''correct'': True}'
+  - '{''text'': ''Київ був маленьким містом'', ''correct'': False}'
+  - '{''text'': ''Данило Галицький очолив оборону'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чому, за текстом, московські князі стали найвірнішими васалами Орди?
+  options:
+  - '{''text'': ''Вони боялися монголів'', ''correct'': False}'
+  - '{''text'': ''Вони отримали право збирати данину з інших'', ''correct'': True}'
+  - '{''text'': ''Вони були родичами хана'', ''correct'': False}'
+  - '{''text'': ''Вони не мали вибору'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Яку модель влади перейняла Московія від монголів, за текстом?
+  options:
+  - '{''text'': ''Демократичну'', ''correct'': False}'
+  - '{''text'': ''Республіканську'', ''correct'': False}'
+  - '{''text'': ''Авторитарну'', ''correct'': True}'
+  - '{''text'': ''Федеративну'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чому Галицько-Волинське князівство зберегло більше європейських традицій?
+  options:
+  - '{''text'': ''Воно орієнтувалося на Захід'', ''correct'': True}'
+  - '{''text'': ''Воно перемогло монголів'', ''correct'': False}'
+  - '{''text'': ''Воно було частиною Монгольської імперії'', ''correct'': False}'
+  - '{''text'': ''Воно не мало контактів з Європою'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Яка різниця між Україною та Росією підкреслюється в модулі?
+  options:
+  - '{''text'': ''Різниця в кліматі'', ''correct'': False}'
+  - '{''text'': ''Різниця в релігії'', ''correct'': False}'
+  - '{''text'': ''Різниця в політичних традиціях'', ''correct'': True}'
+  - '{''text'': ''Різниця в мові'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Що таке деколонізація в контексті української історії?
+  options:
+  - '{''text'': ''Завоювання нових територій'', ''correct'': False}'
+  - '{''text'': ''Звільнення від колоніальних наративів'', ''correct'': True}'
+  - '{''text'': ''Відновлення імперської влади'', ''correct'': False}'
+  - '{''text'': ''Союз із Росією'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чому російська історіографія применшувала значення монгольської навали?
+  options:
+  - '{''text'': ''Монголи не завоювали Москву'', ''correct'': False}'
+  - '{''text'': ''Для виправдання претензій на особливу роль'', ''correct'': True}'
+  - '{''text'': ''Монголи були союзниками Росії'', ''correct'': False}'
+  - '{''text'': ''Навала не мала значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Яку роль відіграла співпраця Московії з Ордою, за текстом?
+  options:
+  - '{''text'': ''Послабила московських князів'', ''correct'': False}'
+  - '{''text'': ''Заклала основи московського авторитаризму'', ''correct'': True}'
+  - '{''text'': ''Привела до демократії'', ''correct'': False}'
+  - '{''text'': ''Не мала жодного значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Що зберегла Україна завдяки меншому монгольському впливу?
+  options:
+  - '{''text'': ''Монгольські традиції'', ''correct'': False}'
+  - '{''text'': ''Елементи європейської політичної культури'', ''correct'': True}'
+  - '{''text'': ''Авторитарні інституції'', ''correct'': False}'
+  - '{''text'': ''Залежність від Орди'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чим відрізнялася модель Великого князівства Литовського від монгольської?
+  options:
+  - '{''text'': ''Абсолютною владою'', ''correct'': False}'
+  - '{''text'': ''Обмеженою монархією та становим представництвом'', ''correct'':
+    True}'
+  - '{''text'': ''Системою данини'', ''correct'': False}'
+  - '{''text'': ''Ярликами на князювання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Яке сучасне значення має пам'ять про монгольську навалу?
+  options:
+  - '{''text'': "Нагадування про ціну роз''єднання", ''correct'': True}'
+  - '{''text'': ''Гордість за перемогу'', ''correct'': False}'
+  - '{''text'': ''Бажання помсти'', ''correct'': False}'
+  - '{''text'': ''Ніякого значення'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Як автор протиставляє сучасні політичні прагнення України та Росії?
+  options:
+  - '{''text'': ''Обидві прагнуть до демократії'', ''correct'': False}'
+  - '{''text'': ''Україна — до демократії, Росія — до авторитаризму'', ''correct'':
+    True}'
+  - '{''text'': ''Обидві зберігають авторитарні традиції'', ''correct'': False}'
+  - '{''text'': ''Обидві прагнуть до ізоляції'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чому важливо вивчати історію з деколонізаційної перспективи?
+  options:
+  - '{''text'': ''Для прославлення імперії'', ''correct'': False}'
+  - '{''text'': ''Для розуміння власної ідентичності'', ''correct'': True}'
+  - '{''text'': ''Для забуття минулого'', ''correct'': False}'
+  - '{''text'': ''Для ізоляції від світу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Яке джерело є прикладом західного погляду на наслідки навали?
+  options:
+  - '{''text'': ''Іпатіївський літопис'', ''correct'': False}'
+  - '{''text'': ''Галицько-Волинський літопис'', ''correct'': False}'
+  - '{''text'': ''Свідчення Плано Карпіні'', ''correct'': True}'
+  - '{''text'': ''Монгольські хроніки'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Чому текст називає московських князів найвірнішими васалами Орди?
+  options:
+  - '{''text'': ''Вони були родичами ханів'', ''correct'': False}'
+  - '{''text'': ''Вони отримували вигоду від співпраці'', ''correct'': True}'
+  - '{''text'': ''Вони перемогли монголів'', ''correct'': False}'
+  - '{''text'': ''Вони не платили данину'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деколонізаційний погляд
+  question: Який урок з монгольської навали актуальний для сучасної України?
+  options:
+  - '{''text'': ''Важливість національної єдності'', ''correct'': True}'
+  - '{''text'': ''Необхідність ізоляції'', ''correct'': False}'
+  - '{''text'': ''Перевага авторитаризму'', ''correct'': False}'
+  - '{''text'': ''Байдужість до історії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Монгольська навала відбулася у 1240 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Князь Данило Галицький особисто очолив оборону Києва.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Десятинна церква була першим кам'яним храмом Київської Русі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Населення Києва після навали становило понад сто тисяч осіб.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Плано Карпіні проїжджав через Київ у 1246 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Монголи планували завоювати Західну Європу, але їх зупинила Русь.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Ярлик — це ханський дозвіл на князювання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Перша битва русичів з монголами відбулася на річці Калці у 1223 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Московія протистояла монголам і зберегла демократичні традиції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Галицько-Волинське князівство орієнтувалося на Захід.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Монгольське іго тривало понад двісті років.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: За свідченням Карпіні, у Києві залишилося близько тисячі будинків.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Руські князі діяли спільно проти монголів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Після падіння Києва політичний центр перемістився до Галицько-Волинського
+    князівства.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Монголи не використовували облогові технології.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи хибність
+  statement: Україна прагне до демократії та європейської інтеграції.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,15 +1,18 @@
 module: 17-register-business-ukrainian
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/17-register-business-ukrainian.md
-generated: '2025-12-29T22:08:24.079186'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.422304'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в діловому листуванні
@@ -574,6 +577,167 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть діловий лист
+  passage_template: '{Шановний|Привіт|Слухай|Шановний} {пане|пан|панове|пане} Коваленко!
+
+
+    {Дозвольте|Слухай|Давай|Дозвольте} {звернутися|скинути|написати|звернутися} до
+    {Вас|тебе|вас|Вас} від імені компанії «Смарт Рішення». Наше {підприємство|контора|заклад|підприємство}
+    спеціалізується на наданні IT-послуг.
+
+
+    {Звертаюся|Пишу|Хочу|Звертаюся} до Вас з {пропозицією|проханням|питанням|пропозицією}
+    {співпраці|допомоги|роботи|співпраці}. Ми {ознайомилися|глянули|подивилися|ознайомилися}
+    з діяльністю Вашої компанії та вважаємо, що наші послуги можуть бути {корисними|класними|нормальними|корисними}
+    для Вашого бізнесу.
+
+
+    {Просимо|Хочемо|Думаємо|Просимо} {надати|скинути|дати|надати} нам можливість {провести|зробити|влаштувати|провести}
+    {презентацію|показ|демо|презентацію} для Вашої команди.
+
+
+    {Заздалегідь|Типу|Ну|Заздалегідь} {дякуємо|дякую|дякс|дякуємо} за увагу. {Чекаємо|Жду|Напиши|Чекаємо}
+    на {Вашу|твою|вашу|Вашу} відповідь.
+
+
+    З {повагою|привітом|любов''ю|повагою},
+
+    Андрій Бондаренко
+
+    Директор з розвитку
+
+    '
+  blanks:
+  - answer: Шановний
+    options:
+    - Шановний
+    - Привіт
+    - Слухай
+  - answer: пане
+    options:
+    - пане
+    - пан
+    - панове
+  - answer: Дозвольте
+    options:
+    - Дозвольте
+    - Слухай
+    - Давай
+  - answer: звернутися
+    options:
+    - звернутися
+    - скинути
+    - написати
+  - answer: Вас
+    options:
+    - Вас
+    - тебе
+    - вас
+  - answer: підприємство
+    options:
+    - підприємство
+    - контора
+    - заклад
+  - answer: Звертаюся
+    options:
+    - Звертаюся
+    - Пишу
+    - Хочу
+  - answer: пропозицією
+    options:
+    - пропозицією
+    - проханням
+    - питанням
+  - answer: співпраці
+    options:
+    - співпраці
+    - допомоги
+    - роботи
+  - answer: ознайомилися
+    options:
+    - ознайомилися
+    - глянули
+    - подивилися
+  - answer: корисними
+    options:
+    - корисними
+    - класними
+    - нормальними
+  - answer: Просимо
+    options:
+    - Просимо
+    - Хочемо
+    - Думаємо
+  - answer: надати
+    options:
+    - надати
+    - скинути
+    - дати
+  - answer: провести
+    options:
+    - провести
+    - зробити
+    - влаштувати
+  - answer: презентацію
+    options:
+    - презентацію
+    - показ
+    - демо
+  - answer: Заздалегідь
+    options:
+    - Заздалегідь
+    - Типу
+    - Ну
+  - answer: дякуємо
+    options:
+    - дякуємо
+    - дякую
+    - дякс
+  - answer: Чекаємо
+    options:
+    - Чекаємо
+    - Жду
+    - Напиши
+  - answer: Вашу
+    options:
+    - Вашу
+    - твою
+    - вашу
+  - answer: повагою
+    options:
+    - повагою
+    - привітом
+    - любов'ю
+  blank_count: 20
+  complete_passage: 'Шановний пане Коваленко!
+
+
+    Дозвольте звернутися до Вас від імені компанії «Смарт Рішення». Наше підприємство
+    спеціалізується на наданні IT-послуг.
+
+
+    Звертаюся до Вас з пропозицією співпраці. Ми ознайомилися з діяльністю Вашої компанії
+    та вважаємо, що наші послуги можуть бути корисними для Вашого бізнесу.
+
+
+    Просимо надати нам можливість провести презентацію для Вашої команди.
+
+
+    Заздалегідь дякуємо за увагу. Чекаємо на Вашу відповідь.
+
+
+    З повагою,
+
+    Андрій Бондаренко
+
+    Директор з розвитку
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть ділові фрази
   jumbled_words: []
@@ -706,14 +870,10 @@ items:
   title: Структура та формули ділового листування
   question: Який елемент є обов'язковим на початку офіційного ділового листа?
   options:
-  - text: Привіт!
-    correct: false
-  - text: Шановний пане/пані!
-    correct: true
-  - text: Слухай!
-    correct: false
-  - text: Гей!
-    correct: false
+  - '{''text'': ''Привіт!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане/пані!'', ''correct'': True}'
+  - '{''text'': ''Слухай!'', ''correct'': False}'
+  - '{''text'': ''Гей!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -724,14 +884,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула є стандартним завершенням ділового листа?
   options:
-  - text: Бувай!
-    correct: false
-  - text: Поки!
-    correct: false
-  - text: З повагою,
-    correct: true
-  - text: Па-па!
-    correct: false
+  - '{''text'': ''Бувай!'', ''correct'': False}'
+  - '{''text'': ''Поки!'', ''correct'': False}'
+  - '{''text'': ''З повагою,'', ''correct'': True}'
+  - '{''text'': ''Па-па!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -742,14 +898,10 @@ items:
   title: Структура та формули ділового листування
   question: Чому в діловому листуванні використовують «просимо» замість «прошу»?
   options:
-  - text: Так коротше
-    correct: false
-  - text: Це створює образ команди та підприємства
-    correct: true
-  - text: Це граматично правильніше
-    correct: false
-  - text: Так прийнято в англійській мові
-    correct: false
+  - '{''text'': ''Так коротше'', ''correct'': False}'
+  - '{''text'': ''Це створює образ команди та підприємства'', ''correct'': True}'
+  - '{''text'': ''Це граматично правильніше'', ''correct'': False}'
+  - '{''text'': ''Так прийнято в англійській мові'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -760,14 +912,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула використовується для ввічливого вступу в діловому листі?
   options:
-  - text: Слухай, хотів сказати...
-    correct: false
-  - text: Ну, типу...
-    correct: false
-  - text: Дозвольте звернутися до Вас...
-    correct: true
-  - text: Гей, маю питання...
-    correct: false
+  - '{''text'': ''Слухай, хотів сказати...'', ''correct'': False}'
+  - '{''text'': ''Ну, типу...'', ''correct'': False}'
+  - '{''text'': ''Дозвольте звернутися до Вас...'', ''correct'': True}'
+  - '{''text'': ''Гей, маю питання...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -778,14 +926,10 @@ items:
   title: Структура та формули ділового листування
   question: Скільки основних елементів має стандартний діловий лист?
   options:
-  - text: Три
-    correct: false
-  - text: Чотири
-    correct: false
-  - text: Шість
-    correct: true
-  - text: Вісім
-    correct: false
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': ''Чотири'', ''correct'': False}'
+  - '{''text'': ''Шість'', ''correct'': True}'
+  - '{''text'': ''Вісім'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -796,14 +940,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула подяки є найбільш офіційною?
   options:
-  - text: Дякую
-    correct: false
-  - text: Дякс
-    correct: false
-  - text: Заздалегідь вдячні за співпрацю
-    correct: true
-  - text: Спасибі
-    correct: false
+  - '{''text'': ''Дякую'', ''correct'': False}'
+  - '{''text'': ''Дякс'', ''correct'': False}'
+  - '{''text'': ''Заздалегідь вдячні за співпрацю'', ''correct'': True}'
+  - '{''text'': ''Спасибі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -814,14 +954,10 @@ items:
   title: Структура та формули ділового листування
   question: Як правильно закінчити діловий лист з очікуванням відповіді?
   options:
-  - text: Напиши мені
-    correct: false
-  - text: Чекаємо на Вашу відповідь
-    correct: true
-  - text: Давай відповідай
-    correct: false
-  - text: Ну, чекаю
-    correct: false
+  - '{''text'': ''Напиши мені'', ''correct'': False}'
+  - '{''text'': ''Чекаємо на Вашу відповідь'', ''correct'': True}'
+  - '{''text'': ''Давай відповідай'', ''correct'': False}'
+  - '{''text'': ''Ну, чекаю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -832,14 +968,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула використовується для посилання на попередній лист?
   options:
-  - text: Ти писав...
-    correct: false
-  - text: Щодо Вашого листа від...
-    correct: true
-  - text: Про що ми говорили...
-    correct: false
-  - text: Пам'ятаєш, ти казав...
-    correct: false
+  - '{''text'': ''Ти писав...'', ''correct'': False}'
+  - '{''text'': ''Щодо Вашого листа від...'', ''correct'': True}'
+  - '{''text'': ''Про що ми говорили...'', ''correct'': False}'
+  - '{''text'': "Пам''ятаєш, ти казав...", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -850,14 +982,10 @@ items:
   title: Структура та формули ділового листування
   question: Яке звертання доречне, коли ім'я адресата невідоме?
   options:
-  - text: Привіт всім!
-    correct: false
-  - text: Шановний пане/пані!
-    correct: true
-  - text: Гей, хтось там!
-    correct: false
-  - text: Слухайте!
-    correct: false
+  - '{''text'': ''Привіт всім!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане/пані!'', ''correct'': True}'
+  - '{''text'': ''Гей, хтось там!'', ''correct'': False}'
+  - '{''text'': ''Слухайте!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -868,14 +996,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка тема листа є найкращою для ділового email?
   options:
-  - text: Лист
-    correct: false
-  - text: Важливо!!!
-    correct: false
-  - text: Пропозиція співпраці від ТОВ «Технолоджі»
-    correct: true
-  - text: Привіт
-    correct: false
+  - '{''text'': ''Лист'', ''correct'': False}'
+  - '{''text'': ''Важливо!!!'', ''correct'': False}'
+  - '{''text'': ''Пропозиція співпраці від ТОВ «Технолоджі»'', ''correct'': True}'
+  - '{''text'': ''Привіт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -886,14 +1010,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула використовується для ввічливої відмови?
   options:
-  - text: Ні, не хочемо
-    correct: false
-  - text: На жаль, на даному етапі не маємо змоги...
-    correct: true
-  - text: Нас це не цікавить
-    correct: false
-  - text: Забудьте про це
-    correct: false
+  - '{''text'': ''Ні, не хочемо'', ''correct'': False}'
+  - '{''text'': ''На жаль, на даному етапі не маємо змоги...'', ''correct'': True}'
+  - '{''text'': ''Нас це не цікавить'', ''correct'': False}'
+  - '{''text'': ''Забудьте про це'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -904,14 +1024,10 @@ items:
   title: Структура та формули ділового листування
   question: Як правильно звернутися до директора компанії у листі?
   options:
-  - text: Привіт, директоре!
-    correct: false
-  - text: Шановний пане директоре!
-    correct: true
-  - text: Гей, директор!
-    correct: false
-  - text: Слухай, директоре!
-    correct: false
+  - '{''text'': ''Привіт, директоре!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане директоре!'', ''correct'': True}'
+  - '{''text'': ''Гей, директор!'', ''correct'': False}'
+  - '{''text'': ''Слухай, директоре!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -922,14 +1038,10 @@ items:
   title: Структура та формули ділового листування
   question: Що таке «корпоративна комунікація»?
   options:
-  - text: Розмова з друзями
-    correct: false
-  - text: Ділове спілкування в межах та між компаніями
-    correct: true
-  - text: Листування в соціальних мережах
-    correct: false
-  - text: Телефонні розмови з родиною
-    correct: false
+  - '{''text'': ''Розмова з друзями'', ''correct'': False}'
+  - '{''text'': ''Ділове спілкування в межах та між компаніями'', ''correct'': True}'
+  - '{''text'': ''Листування в соціальних мережах'', ''correct'': False}'
+  - '{''text'': ''Телефонні розмови з родиною'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -940,14 +1052,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула є найбільш формальною для прохання?
   options:
-  - text: Дай мені...
-    correct: false
-  - text: Мені треба...
-    correct: false
-  - text: Маємо честь просити...
-    correct: true
-  - text: Хочу попросити...
-    correct: false
+  - '{''text'': ''Дай мені...'', ''correct'': False}'
+  - '{''text'': ''Мені треба...'', ''correct'': False}'
+  - '{''text'': ''Маємо честь просити...'', ''correct'': True}'
+  - '{''text'': ''Хочу попросити...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -958,14 +1066,10 @@ items:
   title: Структура та формули ділового листування
   question: Що має бути в підписі ділового листа?
   options:
-  - text: Тільки ім'я
-    correct: false
-  - text: Ім'я, посада, контакти
-    correct: true
-  - text: Тільки номер телефону
-    correct: false
-  - text: Нічого
-    correct: false
+  - '{''text'': "Тільки ім''я", ''correct'': False}'
+  - '{''text'': "Ім''я, посада, контакти", ''correct'': True}'
+  - '{''text'': ''Тільки номер телефону'', ''correct'': False}'
+  - '{''text'': ''Нічого'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -976,14 +1080,10 @@ items:
   title: Структура та формули ділового листування
   question: Яка формула використовується для вираження готовності до співпраці?
   options:
-  - text: Ну, можемо поговорити
-    correct: false
-  - text: Сподіваємося на подальшу співпрацю
-    correct: true
-  - text: Якщо хочете — телефонуйте
-    correct: false
-  - text: Може, колись
-    correct: false
+  - '{''text'': ''Ну, можемо поговорити'', ''correct'': False}'
+  - '{''text'': ''Сподіваємося на подальшу співпрацю'', ''correct'': True}'
+  - '{''text'': ''Якщо хочете — телефонуйте'', ''correct'': False}'
+  - '{''text'': ''Може, колись'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -994,14 +1094,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Який елемент НЕ є обов'язковим у структурі ділового листа?
   options:
-  - text: Звертання
-    correct: false
-  - text: Підпис
-    correct: false
-  - text: Смайлики
-    correct: true
-  - text: Контакти
-    correct: false
+  - '{''text'': ''Звертання'', ''correct'': False}'
+  - '{''text'': ''Підпис'', ''correct'': False}'
+  - '{''text'': ''Смайлики'', ''correct'': True}'
+  - '{''text'': ''Контакти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1012,14 +1108,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка формула є правильною для початку ділового листа до директора?
   options:
-  - text: Привіт, директоре!
-    correct: false
-  - text: Шановний пане директоре!
-    correct: true
-  - text: Гей, директор!
-    correct: false
-  - text: Слухай, директоре!
-    correct: false
+  - '{''text'': ''Привіт, директоре!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане директоре!'', ''correct'': True}'
+  - '{''text'': ''Гей, директор!'', ''correct'': False}'
+  - '{''text'': ''Слухай, директоре!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1122,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Що означає «корпоративна комунікація»?
   options:
-  - text: Спілкування з друзями
-    correct: false
-  - text: Ділове спілкування в бізнес-середовищі
-    correct: true
-  - text: Листування в соціальних мережах
-    correct: false
-  - text: Телефонні розмови з родиною
-    correct: false
+  - '{''text'': ''Спілкування з друзями'', ''correct'': False}'
+  - '{''text'': ''Ділове спілкування в бізнес-середовищі'', ''correct'': True}'
+  - '{''text'': ''Листування в соціальних мережах'', ''correct'': False}'
+  - '{''text'': ''Телефонні розмови з родиною'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1048,14 +1136,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка тема email є найкращою для ділового листування?
   options:
-  - text: Важливо!!!
-    correct: false
-  - text: Лист
-    correct: false
-  - text: Пропозиція співпраці — проєкт «Інновація»
-    correct: true
-  - text: Привіт
-    correct: false
+  - '{''text'': ''Важливо!!!'', ''correct'': False}'
+  - '{''text'': ''Лист'', ''correct'': False}'
+  - '{''text'': ''Пропозиція співпраці — проєкт «Інновація»'', ''correct'': True}'
+  - '{''text'': ''Привіт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1066,14 +1150,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Як правильно завершити діловий лист?
   options:
-  - text: Бувай!
-    correct: false
-  - text: З повагою,
-    correct: true
-  - text: Па-па!
-    correct: false
-  - text: Поки!
-    correct: false
+  - '{''text'': ''Бувай!'', ''correct'': False}'
+  - '{''text'': ''З повагою,'', ''correct'': True}'
+  - '{''text'': ''Па-па!'', ''correct'': False}'
+  - '{''text'': ''Поки!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1084,14 +1164,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка формула використовується для ввічливої відмови?
   options:
-  - text: Ні, не хочемо.
-    correct: false
-  - text: На жаль, на даному етапі не маємо змоги...
-    correct: true
-  - text: Нас це не цікавить.
-    correct: false
-  - text: Забудьте про це.
-    correct: false
+  - '{''text'': ''Ні, не хочемо.'', ''correct'': False}'
+  - '{''text'': ''На жаль, на даному етапі не маємо змоги...'', ''correct'': True}'
+  - '{''text'': ''Нас це не цікавить.'', ''correct'': False}'
+  - '{''text'': ''Забудьте про це.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1102,14 +1178,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Чому в діловому листуванні використовують «просимо» замість «прошу»?
   options:
-  - text: Так коротше
-    correct: false
-  - text: Це граматично правильніше
-    correct: false
-  - text: Це створює образ команди та підприємства
-    correct: true
-  - text: Це модно
-    correct: false
+  - '{''text'': ''Так коротше'', ''correct'': False}'
+  - '{''text'': ''Це граматично правильніше'', ''correct'': False}'
+  - '{''text'': ''Це створює образ команди та підприємства'', ''correct'': True}'
+  - '{''text'': ''Це модно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1120,14 +1192,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яке слово є формальним відповідником до «скинути» (документи)?
   options:
-  - text: Закинути
-    correct: false
-  - text: Надіслати
-    correct: true
-  - text: Кинути
-    correct: false
-  - text: Перекинути
-    correct: false
+  - '{''text'': ''Закинути'', ''correct'': False}'
+  - '{''text'': ''Надіслати'', ''correct'': True}'
+  - '{''text'': ''Кинути'', ''correct'': False}'
+  - '{''text'': ''Перекинути'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1138,14 +1206,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Як правильно почати телефонну розмову в діловому контексті?
   options:
-  - text: Алло, хто це?
-    correct: false
-  - text: Добрий день! Компанія «...», мене звати...
-    correct: true
-  - text: Слухаю!
-    correct: false
-  - text: Привіт!
-    correct: false
+  - '{''text'': ''Алло, хто це?'', ''correct'': False}'
+  - '{''text'': ''Добрий день! Компанія «...», мене звати...'', ''correct'': True}'
+  - '{''text'': ''Слухаю!'', ''correct'': False}'
+  - '{''text'': ''Привіт!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1156,14 +1220,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Що таке «нарада» в діловому контексті?
   options:
-  - text: Зустріч з друзями
-    correct: false
-  - text: Внутрішня робоча зустріч
-    correct: true
-  - text: Вечірка
-    correct: false
-  - text: Свято
-    correct: false
+  - '{''text'': ''Зустріч з друзями'', ''correct'': False}'
+  - '{''text'': ''Внутрішня робоча зустріч'', ''correct'': True}'
+  - '{''text'': ''Вечірка'', ''correct'': False}'
+  - '{''text'': ''Свято'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1174,14 +1234,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка формула використовується для вираження готовності допомогти?
   options:
-  - text: Ну, якщо треба...
-    correct: false
-  - text: Залишаємося до Ваших послуг
-    correct: true
-  - text: Може, допоможемо...
-    correct: false
-  - text: Подивимось...
-    correct: false
+  - '{''text'': ''Ну, якщо треба...'', ''correct'': False}'
+  - '{''text'': ''Залишаємося до Ваших послуг'', ''correct'': True}'
+  - '{''text'': ''Може, допоможемо...'', ''correct'': False}'
+  - '{''text'': ''Подивимось...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1192,14 +1248,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Як правильно звернутися в листі, коли ім'я адресата невідоме?
   options:
-  - text: Привіт всім!
-    correct: false
-  - text: Шановний пане/пані!
-    correct: true
-  - text: Гей, хто там!
-    correct: false
-  - text: Слухайте!
-    correct: false
+  - '{''text'': ''Привіт всім!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане/пані!'', ''correct'': True}'
+  - '{''text'': ''Гей, хто там!'', ''correct'': False}'
+  - '{''text'': ''Слухайте!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1210,14 +1262,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Що таке «контракт» у діловому контексті?
   options:
-  - text: Усна домовленість
-    correct: false
-  - text: Юридична угода між сторонами
-    correct: true
-  - text: Дружня розмова
-    correct: false
-  - text: Телефонний дзвінок
-    correct: false
+  - '{''text'': ''Усна домовленість'', ''correct'': False}'
+  - '{''text'': ''Юридична угода між сторонами'', ''correct'': True}'
+  - '{''text'': ''Дружня розмова'', ''correct'': False}'
+  - '{''text'': ''Телефонний дзвінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1228,14 +1276,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка помилка у фразі «Ваша пропозиція класна!» в діловому листі?
   options:
-  - text: Неправильний відмінок
-    correct: false
-  - text: «Класна» — розмовне слово
-    correct: true
-  - text: Помилки немає
-    correct: false
-  - text: Неправильне звертання
-    correct: false
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''«Класна» — розмовне слово'', ''correct'': True}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
+  - '{''text'': ''Неправильне звертання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1246,14 +1290,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Як правильно попросити документи в діловому листі?
   options:
-  - text: Скинь документи.
-    correct: false
-  - text: Просимо надати документи.
-    correct: true
-  - text: Дай документи.
-    correct: false
-  - text: Кинь документи.
-    correct: false
+  - '{''text'': ''Скинь документи.'', ''correct'': False}'
+  - '{''text'': ''Просимо надати документи.'', ''correct'': True}'
+  - '{''text'': ''Дай документи.'', ''correct'': False}'
+  - '{''text'': ''Кинь документи.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1264,14 +1304,10 @@ items:
   title: Комплексна перевірка знань з ділової комунікації
   question: Яка формула є найбільш формальною для початку прохання?
   options:
-  - text: Слухай, мені треба...
-    correct: false
-  - text: Маємо честь просити...
-    correct: true
-  - text: Можеш допомогти?
-    correct: false
-  - text: Мені треба...
-    correct: false
+  - '{''text'': ''Слухай, мені треба...'', ''correct'': False}'
+  - '{''text'': ''Маємо честь просити...'', ''correct'': True}'
+  - '{''text'': ''Можеш допомогти?'', ''correct'': False}'
+  - '{''text'': ''Мені треба...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

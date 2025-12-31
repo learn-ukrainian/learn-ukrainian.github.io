@@ -1,15 +1,18 @@
 module: 12-parenthetical-expressions
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/12-parenthetical-expressions.md
-generated: '2025-12-29T22:08:26.134666'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.162481'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у вживанні вставних слів
@@ -582,6 +585,135 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст вставними словами
+  passage_template: '{Безумовно|Можливо|На жаль|Безумовно}, мовна політика відіграє
+    важливу роль у суспільстві. {На думку|За даними|Як відомо|На думку} експертів,
+    саме мова є основним маркером ідентичності. {Як відомо|На думку|Можливо|Як відомо},
+    українська мова має давню історію.
+
+
+    {По-перше|Нарешті|Отже|По-перше}, необхідно визначити основні проблеми. {По-друге|Нарешті|До
+    речі|По-друге}, слід проаналізувати можливі рішення. {Нарешті|По-перше|До речі|Нарешті},
+    потрібно обрати найкращий варіант. {Отже|По-перше|Можливо|Отже}, план дій готовий.
+
+
+    {На жаль|На щастя|Можливо|На жаль}, не всі розуміють важливість цього питання.
+    {Проте|Отже|До речі|Проте}, {можливо|безумовно|на жаль|можливо}, ситуація зміниться
+    в майбутньому. {На щастя|На жаль|Мабуть|На щастя}, молодь активно вивчає мову.
+
+
+    {Таким чином|До речі|Можливо|Таким чином}, ми можемо зробити висновок: освіта
+    — ключ до успіху. {Іншими словами|По-перше|На щастя|Іншими словами}, без знань
+    не буде прогресу. {Звичайно|Можливо|На жаль|Звичайно}, це потребує зусиль. {Мабуть|Безумовно|На
+    жаль|Мабуть}, результати будуть позитивними. {До речі|Отже|На жаль|До речі}, подібна
+    ситуація і в інших країнах.
+
+    '
+  blanks:
+  - answer: Безумовно
+    options:
+    - Безумовно
+    - Можливо
+    - На жаль
+  - answer: На думку
+    options:
+    - На думку
+    - За даними
+    - Як відомо
+  - answer: Як відомо
+    options:
+    - Як відомо
+    - На думку
+    - Можливо
+  - answer: По-перше
+    options:
+    - По-перше
+    - Нарешті
+    - Отже
+  - answer: По-друге
+    options:
+    - По-друге
+    - Нарешті
+    - До речі
+  - answer: Нарешті
+    options:
+    - Нарешті
+    - По-перше
+    - До речі
+  - answer: Отже
+    options:
+    - Отже
+    - По-перше
+    - Можливо
+  - answer: На жаль
+    options:
+    - На жаль
+    - На щастя
+    - Можливо
+  - answer: Проте
+    options:
+    - Проте
+    - Отже
+    - До речі
+  - answer: можливо
+    options:
+    - можливо
+    - безумовно
+    - на жаль
+  - answer: На щастя
+    options:
+    - На щастя
+    - На жаль
+    - Мабуть
+  - answer: Таким чином
+    options:
+    - Таким чином
+    - До речі
+    - Можливо
+  - answer: Іншими словами
+    options:
+    - Іншими словами
+    - По-перше
+    - На щастя
+  - answer: Звичайно
+    options:
+    - Звичайно
+    - Можливо
+    - На жаль
+  - answer: Мабуть
+    options:
+    - Мабуть
+    - Безумовно
+    - На жаль
+  - answer: До речі
+    options:
+    - До речі
+    - Отже
+    - На жаль
+  blank_count: 16
+  complete_passage: 'Безумовно, мовна політика відіграє важливу роль у суспільстві.
+    На думку експертів, саме мова є основним маркером ідентичності. Як відомо, українська
+    мова має давню історію.
+
+
+    По-перше, необхідно визначити основні проблеми. По-друге, слід проаналізувати
+    можливі рішення. Нарешті, потрібно обрати найкращий варіант. Отже, план дій готовий.
+
+
+    На жаль, не всі розуміють важливість цього питання. Проте, можливо, ситуація зміниться
+    в майбутньому. На щастя, молодь активно вивчає мову.
+
+
+    Таким чином, ми можемо зробити висновок: освіта — ключ до успіху. Іншими словами,
+    без знань не буде прогресу. Звичайно, це потребує зусиль. Мабуть, результати будуть
+    позитивними. До речі, подібна ситуація і в інших країнах.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення з вставними словами
   jumbled_words: []
@@ -714,14 +846,10 @@ items:
   title: Визначення категорії вставного слова
   question: До якої категорії належить вставне слово "безумовно"?
   options:
-  - text: Впевненість
-    correct: true
-  - text: Невпевненість
-    correct: false
-  - text: Ставлення
-    correct: false
-  - text: Джерело інформації
-    correct: false
+  - '{''text'': ''Впевненість'', ''correct'': True}'
+  - '{''text'': ''Невпевненість'', ''correct'': False}'
+  - '{''text'': ''Ставлення'', ''correct'': False}'
+  - '{''text'': ''Джерело інформації'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -732,14 +860,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке вставне слово виражає негативне ставлення?
   options:
-  - text: на щастя
-    correct: false
-  - text: на жаль
-    correct: true
-  - text: звичайно
-    correct: false
-  - text: мабуть
-    correct: false
+  - '{''text'': ''на щастя'', ''correct'': False}'
+  - '{''text'': ''на жаль'', ''correct'': True}'
+  - '{''text'': ''звичайно'', ''correct'': False}'
+  - '{''text'': ''мабуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -750,14 +874,10 @@ items:
   title: Визначення категорії вставного слова
   question: Який вираз використовується для посилання на статистику?
   options:
-  - text: як відомо
-    correct: false
-  - text: на думку
-    correct: false
-  - text: за даними
-    correct: true
-  - text: як кажуть
-    correct: false
+  - '{''text'': ''як відомо'', ''correct'': False}'
+  - '{''text'': ''на думку'', ''correct'': False}'
+  - '{''text'': ''за даними'', ''correct'': True}'
+  - '{''text'': ''як кажуть'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -768,14 +888,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке вставне слово вказує на логічний порядок?
   options:
-  - text: можливо
-    correct: false
-  - text: по-перше
-    correct: true
-  - text: справді
-    correct: false
-  - text: на диво
-    correct: false
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''по-перше'', ''correct'': True}'
+  - '{''text'': ''справді'', ''correct'': False}'
+  - '{''text'': ''на диво'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -786,14 +902,10 @@ items:
   title: Визначення категорії вставного слова
   question: До якої категорії належить вираз "на думку експертів"?
   options:
-  - text: Впевненість
-    correct: false
-  - text: Невпевненість
-    correct: false
-  - text: Ставлення
-    correct: false
-  - text: Джерело інформації
-    correct: true
+  - '{''text'': ''Впевненість'', ''correct'': False}'
+  - '{''text'': ''Невпевненість'', ''correct'': False}'
+  - '{''text'': ''Ставлення'', ''correct'': False}'
+  - '{''text'': ''Джерело інформації'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -804,14 +916,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке слово виражає суб'єктивне враження мовця?
   options:
-  - text: безперечно
-    correct: false
-  - text: здається
-    correct: true
-  - text: очевидно
-    correct: false
-  - text: таким чином
-    correct: false
+  - '{''text'': ''безперечно'', ''correct'': False}'
+  - '{''text'': ''здається'', ''correct'': True}'
+  - '{''text'': ''очевидно'', ''correct'': False}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -822,14 +930,10 @@ items:
   title: Визначення категорії вставного слова
   question: Який вираз використовується для перефразування?
   options:
-  - text: одним словом
-    correct: false
-  - text: до речі
-    correct: false
-  - text: іншими словами
-    correct: true
-  - text: нарешті
-    correct: false
+  - '{''text'': ''одним словом'', ''correct'': False}'
+  - '{''text'': ''до речі'', ''correct'': False}'
+  - '{''text'': ''іншими словами'', ''correct'': True}'
+  - '{''text'': ''нарешті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -840,14 +944,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке вставне слово має найвищий ступінь впевненості?
   options:
-  - text: мабуть
-    correct: false
-  - text: можливо
-    correct: false
-  - text: напевно
-    correct: false
-  - text: безумовно
-    correct: true
+  - '{''text'': ''мабуть'', ''correct'': False}'
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''напевно'', ''correct'': False}'
+  - '{''text'': ''безумовно'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -858,14 +958,10 @@ items:
   title: Визначення категорії вставного слова
   question: До якої категорії належить "отже"?
   options:
-  - text: Впевненість
-    correct: false
-  - text: Невпевненість
-    correct: false
-  - text: Джерело
-    correct: false
-  - text: Логіка та послідовність
-    correct: true
+  - '{''text'': ''Впевненість'', ''correct'': False}'
+  - '{''text'': ''Невпевненість'', ''correct'': False}'
+  - '{''text'': ''Джерело'', ''correct'': False}'
+  - '{''text'': ''Логіка та послідовність'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -876,14 +972,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке слово НЕ є вставним?
   options:
-  - text: можливо
-    correct: false
-  - text: здається
-    correct: false
-  - text: швидко
-    correct: true
-  - text: звичайно
-    correct: false
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''здається'', ''correct'': False}'
+  - '{''text'': ''швидко'', ''correct'': True}'
+  - '{''text'': ''звичайно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -894,14 +986,10 @@ items:
   title: Визначення категорії вставного слова
   question: Який вираз вказує на загальновідомий факт?
   options:
-  - text: як відомо
-    correct: true
-  - text: на думку
-    correct: false
-  - text: за словами
-    correct: false
-  - text: можливо
-    correct: false
+  - '{''text'': ''як відомо'', ''correct'': True}'
+  - '{''text'': ''на думку'', ''correct'': False}'
+  - '{''text'': ''за словами'', ''correct'': False}'
+  - '{''text'': ''можливо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -912,14 +1000,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке слово виражає здивування?
   options:
-  - text: на жаль
-    correct: false
-  - text: на щастя
-    correct: false
-  - text: на диво
-    correct: true
-  - text: очевидно
-    correct: false
+  - '{''text'': ''на жаль'', ''correct'': False}'
+  - '{''text'': ''на щастя'', ''correct'': False}'
+  - '{''text'': ''на диво'', ''correct'': True}'
+  - '{''text'': ''очевидно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -930,14 +1014,10 @@ items:
   title: Визначення категорії вставного слова
   question: До якої категорії належить "імовірно"?
   options:
-  - text: Впевненість
-    correct: false
-  - text: Невпевненість
-    correct: true
-  - text: Ставлення
-    correct: false
-  - text: Логіка
-    correct: false
+  - '{''text'': ''Впевненість'', ''correct'': False}'
+  - '{''text'': ''Невпевненість'', ''correct'': True}'
+  - '{''text'': ''Ставлення'', ''correct'': False}'
+  - '{''text'': ''Логіка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -948,14 +1028,10 @@ items:
   title: Визначення категорії вставного слова
   question: Який вираз використовується для додаткової інформації?
   options:
-  - text: отже
-    correct: false
-  - text: до речі
-    correct: true
-  - text: таким чином
-    correct: false
-  - text: нарешті
-    correct: false
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''до речі'', ''correct'': True}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -966,14 +1042,10 @@ items:
   title: Визначення категорії вставного слова
   question: Яке слово є офіційним синонімом до "мабуть"?
   options:
-  - text: здається
-    correct: false
-  - text: імовірно
-    correct: true
-  - text: очевидно
-    correct: false
-  - text: справді
-    correct: false
+  - '{''text'': ''здається'', ''correct'': False}'
+  - '{''text'': ''імовірно'', ''correct'': True}'
+  - '{''text'': ''очевидно'', ''correct'': False}'
+  - '{''text'': ''справді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -984,14 +1056,10 @@ items:
   title: Визначення категорії вставного слова
   question: Який вираз завершує перелік аргументів?
   options:
-  - text: по-перше
-    correct: false
-  - text: по-друге
-    correct: false
-  - text: нарешті
-    correct: true
-  - text: до речі
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''по-друге'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': True}'
+  - '{''text'': ''до речі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1002,14 +1070,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Скільки основних категорій вставних слів розглянуто в модулі?
   options:
-  - text: Три
-    correct: false
-  - text: Чотири
-    correct: false
-  - text: П'ять
-    correct: true
-  - text: Шість
-    correct: false
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': ''Чотири'', ''correct'': False}'
+  - '{''text'': "П''ять", ''correct'': True}'
+  - '{''text'': ''Шість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1020,14 +1084,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яка основна синтаксична особливість вставних слів?
   options:
-  - text: Вони є підметами речення
-    correct: false
-  - text: Вони не є членами речення
-    correct: true
-  - text: Вони є присудками
-    correct: false
-  - text: Вони є означеннями
-    correct: false
+  - '{''text'': ''Вони є підметами речення'', ''correct'': False}'
+  - '{''text'': ''Вони не є членами речення'', ''correct'': True}'
+  - '{''text'': ''Вони є присудками'', ''correct'': False}'
+  - '{''text'': ''Вони є означеннями'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1038,14 +1098,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яке вставне слово є русизмом?
   options:
-  - text: звичайно
-    correct: false
-  - text: конечно
-    correct: true
-  - text: безумовно
-    correct: false
-  - text: напевно
-    correct: false
+  - '{''text'': ''звичайно'', ''correct'': False}'
+  - '{''text'': ''конечно'', ''correct'': True}'
+  - '{''text'': ''безумовно'', ''correct'': False}'
+  - '{''text'': ''напевно'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1056,14 +1112,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Як правильно пунктуювати вставне слово в середині речення?
   options:
-  - text: Без ком
-    correct: false
-  - text: Одна кома перед
-    correct: false
-  - text: Коми з обох боків
-    correct: true
-  - text: Одна кома після
-    correct: false
+  - '{''text'': ''Без ком'', ''correct'': False}'
+  - '{''text'': ''Одна кома перед'', ''correct'': False}'
+  - '{''text'': ''Коми з обох боків'', ''correct'': True}'
+  - '{''text'': ''Одна кома після'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1074,14 +1126,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яке слово виражає найвищу ймовірність?
   options:
-  - text: можливо
-    correct: false
-  - text: мабуть
-    correct: false
-  - text: напевно
-    correct: true
-  - text: здається
-    correct: false
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''мабуть'', ''correct'': False}'
+  - '{''text'': ''напевно'', ''correct'': True}'
+  - '{''text'': ''здається'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1092,14 +1140,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Який вираз використовується для перефразування?
   options:
-  - text: одним словом
-    correct: false
-  - text: іншими словами
-    correct: true
-  - text: до речі
-    correct: false
-  - text: отже
-    correct: false
+  - '{''text'': ''одним словом'', ''correct'': False}'
+  - '{''text'': ''іншими словами'', ''correct'': True}'
+  - '{''text'': ''до речі'', ''correct'': False}'
+  - '{''text'': ''отже'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1110,14 +1154,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Чи може слово "здається" бути не вставним?
   options:
-  - text: Ні, воно завжди вставне
-    correct: false
-  - text: Так, воно може бути присудком
-    correct: true
-  - text: Так, воно може бути підметом
-    correct: false
-  - text: Так, воно може бути додатком
-    correct: false
+  - '{''text'': ''Ні, воно завжди вставне'', ''correct'': False}'
+  - '{''text'': ''Так, воно може бути присудком'', ''correct'': True}'
+  - '{''text'': ''Так, воно може бути підметом'', ''correct'': False}'
+  - '{''text'': ''Так, воно може бути додатком'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1128,14 +1168,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Який регістр має вираз "таким чином"?
   options:
-  - text: Розмовний
-    correct: false
-  - text: Нейтральний
-    correct: false
-  - text: Офіційний
-    correct: true
-  - text: Сленговий
-    correct: false
+  - '{''text'': ''Розмовний'', ''correct'': False}'
+  - '{''text'': ''Нейтральний'', ''correct'': False}'
+  - '{''text'': ''Офіційний'', ''correct'': True}'
+  - '{''text'': ''Сленговий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1146,14 +1182,12 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яка різниця між "на думку" та "як відомо"?
   options:
-  - text: Немає різниці
-    correct: false
-  - text: '"На думку" — чужа думка, "як відомо" — загальний факт'
-    correct: true
-  - text: '"Як відомо" — чужа думка, "на думку" — загальний факт'
-    correct: false
-  - text: Обидва вказують на впевненість
-    correct: false
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''"На думку" — чужа думка, "як відомо" — загальний факт'', ''correct'':
+    True}'
+  - '{''text'': ''"Як відомо" — чужа думка, "на думку" — загальний факт'', ''correct'':
+    False}'
+  - '{''text'': ''Обидва вказують на впевненість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1164,14 +1198,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яке речення пунктуаційно правильне?
   options:
-  - text: Можливо він прийде.
-    correct: false
-  - text: Можливо, він прийде.
-    correct: true
-  - text: Можливо; він прийде.
-    correct: false
-  - text: Можливо — він прийде.
-    correct: false
+  - '{''text'': ''Можливо він прийде.'', ''correct'': False}'
+  - '{''text'': ''Можливо, він прийде.'', ''correct'': True}'
+  - '{''text'': ''Можливо; він прийде.'', ''correct'': False}'
+  - '{''text'': ''Можливо — він прийде.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1182,14 +1212,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Який вираз завершує логічний перелік?
   options:
-  - text: по-перше
-    correct: false
-  - text: по-друге
-    correct: false
-  - text: нарешті
-    correct: true
-  - text: до речі
-    correct: false
+  - '{''text'': ''по-перше'', ''correct'': False}'
+  - '{''text'': ''по-друге'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': True}'
+  - '{''text'': ''до речі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1200,14 +1226,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Який вираз є неформальним синонімом до "між іншим"?
   options:
-  - text: до речі
-    correct: true
-  - text: отже
-    correct: false
-  - text: таким чином
-    correct: false
-  - text: нарешті
-    correct: false
+  - '{''text'': ''до речі'', ''correct'': True}'
+  - '{''text'': ''отже'', ''correct'': False}'
+  - '{''text'': ''таким чином'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1218,14 +1240,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Скільки вставних слів на 100 слів у середньому в українському тексті?
   options:
-  - text: 1-2
-    correct: false
-  - text: 3-5
-    correct: true
-  - text: 10-15
-    correct: false
-  - text: 20+
-    correct: false
+  - '{''text'': ''1-2'', ''correct'': False}'
+  - '{''text'': ''3-5'', ''correct'': True}'
+  - '{''text'': ''10-15'', ''correct'': False}'
+  - '{''text'': ''20+'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1236,14 +1254,11 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Яка функція вставних слів у тексті?
   options:
-  - text: Передавати основну інформацію
-    correct: false
-  - text: Виражати ставлення мовця та організовувати текст
-    correct: true
-  - text: Замінювати дієслова
-    correct: false
-  - text: Позначати час дії
-    correct: false
+  - '{''text'': ''Передавати основну інформацію'', ''correct'': False}'
+  - '{''text'': ''Виражати ставлення мовця та організовувати текст'', ''correct'':
+    True}'
+  - '{''text'': ''Замінювати дієслова'', ''correct'': False}'
+  - '{''text'': ''Позначати час дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1254,14 +1269,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Як правильно по-українськи сказати "конечно"?
   options:
-  - text: конечно
-    correct: false
-  - text: звичайно
-    correct: true
-  - text: кончено
-    correct: false
-  - text: конечне
-    correct: false
+  - '{''text'': ''конечно'', ''correct'': False}'
+  - '{''text'': ''звичайно'', ''correct'': True}'
+  - '{''text'': ''кончено'', ''correct'': False}'
+  - '{''text'': ''конечне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1272,14 +1283,10 @@ items:
   title: Комплексна перевірка знань про вставні слова
   question: Який вираз НЕ є вставним?
   options:
-  - text: можливо
-    correct: false
-  - text: на жаль
-    correct: false
-  - text: швидко
-    correct: true
-  - text: до речі
-    correct: false
+  - '{''text'': ''можливо'', ''correct'': False}'
+  - '{''text'': ''на жаль'', ''correct'': False}'
+  - '{''text'': ''швидко'', ''correct'': True}'
+  - '{''text'': ''до речі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

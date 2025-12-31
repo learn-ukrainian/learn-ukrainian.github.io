@@ -80,11 +80,11 @@ def extract_error_correction_items(activities: list[dict]) -> list[dict]:
         title = activity.get('title', 'Untitled')
 
         for item in activity.get('items', []):
-            sentence = item.get('sentence', '')
-            error = item.get('error', '')
-            answer = item.get('answer', '')
+            sentence = str(item.get('sentence', ''))
+            error = str(item.get('error', ''))
+            answer = str(item.get('answer', ''))
             options = item.get('options', [])
-            explanation = item.get('explanation', '')
+            explanation = str(item.get('explanation', ''))
 
             if sentence and error and answer:
                 # Create sentence with error replaced by answer
@@ -126,10 +126,13 @@ def extract_fill_in_items(activities: list[dict]) -> list[dict]:
             sentence = item.get('sentence') or item.get('prompt', '')
             answer = item.get('answer', '')
 
+            # Ensure answer is string (could be int for numbers)
+            answer = str(answer) if answer else ''
+
             if sentence and answer:
                 # Create complete sentence by replacing blank marker with answer
                 # Handle various blank markers: ___, {blank}, etc.
-                complete_sentence = sentence
+                complete_sentence = str(sentence)
                 for marker in ['___', '{blank}', '____', '_____']:
                     complete_sentence = complete_sentence.replace(marker, answer)
 
@@ -150,7 +153,13 @@ def extract_fill_in_items(activities: list[dict]) -> list[dict]:
 
 
 def extract_cloze_items(activities: list[dict]) -> list[dict]:
-    """Extract cloze passage items for validation."""
+    """Extract cloze passage items for validation.
+
+    Supports two formats:
+    1. Inline: {opt1|opt2|opt3|correct} where last option is answer
+    2. Numbered: {1}, {2} with separate blanks array
+    """
+    import re
     items = []
 
     for activity in activities:
@@ -162,12 +171,52 @@ def extract_cloze_items(activities: list[dict]) -> list[dict]:
         passage = activity.get('passage', '')
         blanks = activity.get('blanks', [])
 
-        if passage and blanks:
-            # Reconstruct complete passage
+        if not passage:
+            continue
+
+        # Try inline format first: {opt1|opt2|opt3|correct}
+        inline_pattern = r'\{([^}]+\|[^}]+)\}'
+        inline_matches = re.findall(inline_pattern, passage)
+
+        if inline_matches:
+            # Inline format detected
+            complete_passage = passage
+            extracted_blanks = []
+
+            for match in inline_matches:
+                options = match.split('|')
+                if len(options) >= 2:
+                    # Last option is the correct answer
+                    answer = options[-1].strip()
+                    all_options = [opt.strip() for opt in options[:-1]]
+                    extracted_blanks.append({
+                        'answer': answer,
+                        'options': all_options,
+                    })
+                    # Replace the blank with the answer
+                    complete_passage = complete_passage.replace(
+                        '{' + match + '}', answer, 1
+                    )
+
+            items.append({
+                'activity': 'cloze',
+                'title': title,
+                'passage_template': passage,
+                'blanks': extracted_blanks,
+                'blank_count': len(extracted_blanks),
+                'complete_passage': complete_passage,
+                'validate': {
+                    'passage_valid': None,
+                    'explanation': None,
+                    'confidence': None,
+                }
+            })
+
+        elif blanks:
+            # Numbered format: {1}, {2} with blanks array
             complete_passage = passage
             for i, blank in enumerate(blanks):
                 answer = blank.get('answer', '')
-                # Replace numbered blanks like {1}, {2}, etc.
                 complete_passage = complete_passage.replace(f'{{{i+1}}}', answer)
                 complete_passage = complete_passage.replace(f'{{blank{i+1}}}', answer)
 
@@ -176,6 +225,7 @@ def extract_cloze_items(activities: list[dict]) -> list[dict]:
                 'title': title,
                 'passage_template': passage,
                 'blanks': blanks,
+                'blank_count': len(blanks),
                 'complete_passage': complete_passage,
                 'validate': {
                     'passage_valid': None,
@@ -199,7 +249,7 @@ def extract_unjumble_items(activities: list[dict]) -> list[dict]:
         title = activity.get('title', 'Untitled')
 
         for item in activity.get('items', []):
-            answer = item.get('answer', '')
+            answer = str(item.get('answer', ''))
             jumbled = item.get('jumbled', [])
 
             if answer:
@@ -231,9 +281,9 @@ def extract_quiz_items(activities: list[dict]) -> list[dict]:
 
         for item in activity.get('items', []):
             # Accept both 'question' and 'prompt' field names
-            question = item.get('question') or item.get('prompt', '')
-            options = item.get('options', [])
-            answer = item.get('answer', '')
+            question = str(item.get('question') or item.get('prompt', ''))
+            options = [str(opt) for opt in item.get('options', [])]
+            answer = str(item.get('answer', ''))
 
             if question:
                 items.append({
@@ -266,9 +316,9 @@ def extract_translate_items(activities: list[dict]) -> list[dict]:
 
         for item in activity.get('items', []):
             # Accept both 'sentence' and 'prompt' field names
-            sentence = item.get('sentence') or item.get('prompt', '')
-            answer = item.get('answer', '')
-            options = item.get('options', [])
+            sentence = str(item.get('sentence') or item.get('prompt', ''))
+            answer = str(item.get('answer', ''))
+            options = [str(opt) for opt in item.get('options', [])]
 
             if sentence or answer:
                 items.append({
@@ -300,8 +350,8 @@ def extract_true_false_items(activities: list[dict]) -> list[dict]:
         title = activity.get('title', 'Untitled')
 
         for item in activity.get('items', []):
-            statement = item.get('statement', '')
-            answer = item.get('answer', '')
+            statement = str(item.get('statement', ''))
+            answer = item.get('answer', '')  # Keep as bool if bool
 
             if statement:
                 items.append({
@@ -344,8 +394,13 @@ def extract_module_info(md_file_path: str) -> dict:
     }
 
 
-def generate_queue(md_file_path: str) -> dict | None:
-    """Generate grammar validation queue for a module."""
+def generate_queue(md_file_path: str, sample_percent: int = 100) -> dict | None:
+    """Generate grammar validation queue for a module.
+
+    Args:
+        md_file_path: Path to module markdown file
+        sample_percent: Percentage of items to include (1-100)
+    """
     activities = load_yaml_activities(md_file_path)
 
     if not activities:
@@ -376,6 +431,11 @@ def generate_queue(md_file_path: str) -> dict | None:
     if not all_items:
         return None
 
+    # Apply sampling if requested
+    total_items = len(all_items)
+    if sample_percent < 100:
+        all_items = apply_sampling(all_items, sample_percent)
+
     # Build scope string from activity types found
     scope = ', '.join(sorted(activity_counts.keys()))
 
@@ -386,7 +446,9 @@ def generate_queue(md_file_path: str) -> dict | None:
         'generated': datetime.now().isoformat(),
         'scope': scope,
         'activity_counts': activity_counts,
+        'total_items': total_items,
         'item_count': len(all_items),
+        'sample_percent': sample_percent if sample_percent < 100 else None,
         'items': all_items,
     }
 
@@ -414,7 +476,7 @@ def process_file(md_file_path: str) -> bool:
         print(f"  ❌ File not found: {md_file_path}")
         return False
 
-    queue = generate_queue(md_file_path)
+    queue = generate_queue(md_file_path, SAMPLE_PERCENT)
 
     if not queue:
         print(f"  ⏭️  No validatable activities: {Path(md_file_path).name}")
@@ -424,7 +486,13 @@ def process_file(md_file_path: str) -> bool:
     # Show breakdown by activity type
     counts = queue.get('activity_counts', {})
     breakdown = ', '.join(f"{k}:{v}" for k, v in sorted(counts.items()))
-    print(f"  ✅ Generated queue ({queue['item_count']} items: {breakdown}): {Path(output_path).name}")
+
+    # Show sampling info if applicable
+    if queue.get('sample_percent'):
+        total = queue.get('total_items', queue['item_count'])
+        print(f"  ✅ Generated queue ({queue['item_count']}/{total} sampled: {breakdown}): {Path(output_path).name}")
+    else:
+        print(f"  ✅ Generated queue ({queue['item_count']} items: {breakdown}): {Path(output_path).name}")
     return True
 
 
@@ -446,7 +514,38 @@ def process_directory(dir_path: str) -> tuple[int, int]:
     return success, skipped
 
 
+def apply_sampling(items: list[dict], sample_percent: int) -> list[dict]:
+    """Apply random sampling to items.
+
+    Args:
+        items: List of validation items
+        sample_percent: Percentage of items to keep (1-100)
+
+    Returns:
+        Sampled subset of items
+    """
+    import random
+
+    if sample_percent >= 100:
+        return items
+
+    sample_size = max(1, int(len(items) * sample_percent / 100))
+    sampled = random.sample(items, min(sample_size, len(items)))
+
+    # Mark items as sampled
+    for item in sampled:
+        item['sampled'] = True
+
+    return sampled
+
+
+# Global sample percentage (set from args)
+SAMPLE_PERCENT = 100
+
+
 def main():
+    global SAMPLE_PERCENT
+
     parser = argparse.ArgumentParser(
         description='Generate grammar validation queue from YAML activities'
     )
@@ -454,10 +553,21 @@ def main():
         'path',
         help='Module file (.md) or directory containing modules'
     )
+    parser.add_argument(
+        '--sample',
+        type=int,
+        default=100,
+        metavar='PERCENT',
+        help='Sample percentage of items to validate (default: 100 = all items). Use 20-30 for faster validation.'
+    )
 
     args = parser.parse_args()
+    SAMPLE_PERCENT = args.sample
 
     print("\n🔍 Grammar Queue Generator\n")
+
+    if args.sample < 100:
+        print(f"📊 Sampling mode: {args.sample}% of items will be selected\n")
 
     if os.path.isdir(args.path):
         success, skipped = process_directory(args.path)

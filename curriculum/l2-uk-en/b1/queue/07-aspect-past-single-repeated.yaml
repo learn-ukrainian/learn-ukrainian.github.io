@@ -1,15 +1,18 @@
 module: 07-aspect-past-single-repeated
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/07-aspect-past-single-repeated.md
-generated: '2025-12-29T00:21:58.953855'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.419163'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 10
+  cloze: 1
   unjumble: 8
   quiz: 14
   true-false: 8
-item_count: 48
+total_items: 49
+item_count: 49
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок виду
@@ -256,6 +259,99 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Вид у контексті
+  passage_template: Минулого року я {вивчав|вивчив|вивчати} українську мову в Києві.
+    Я щодня {ходив|пішов|ходити} на заняття в мовну школу і {слухав|послухав|слухати}
+    уважно вчительку. Кожного вечора я {робив|зробив|робити} домашні завдання і {повторював|повторив|повторювати}
+    нові слова. Я часто {читав|прочитав|читати} українські газети і {дивився|подивився|дивитися}
+    фільми українською мовою, щоб покращити своє розуміння. Одного разу я {зустрів|зустрічав|зустрічати}
+    дуже цікаву людину в кав'ярні. Вона {була|є|бути} письменницею і {розповіла|розповідала|розповідати}
+    мені багато про українську літературу. Того дня я {купив|купував|купувати} її
+    книгу і {прочитав|читав|читати} її за два дні. Книга була чудова! Після того випадку
+    я {почав|починав|починати} регулярно відвідувати літературні зустрічі. Я завжди
+    {знаходив|знайшов|знаходити} там цікавих людей і {вів|провів|вести} з ними довгі
+    розмови про книги. Нарешті я {відчув|відчував|відчувати}, що моя українська стала
+    набагато кращою.
+  blanks:
+  - answer: вивчати
+    options:
+    - вивчав
+    - вивчив
+  - answer: ходити
+    options:
+    - ходив
+    - пішов
+  - answer: слухати
+    options:
+    - слухав
+    - послухав
+  - answer: робити
+    options:
+    - робив
+    - зробив
+  - answer: повторювати
+    options:
+    - повторював
+    - повторив
+  - answer: читати
+    options:
+    - читав
+    - прочитав
+  - answer: дивитися
+    options:
+    - дивився
+    - подивився
+  - answer: зустрічати
+    options:
+    - зустрів
+    - зустрічав
+  - answer: бути
+    options:
+    - була
+    - є
+  - answer: розповідати
+    options:
+    - розповіла
+    - розповідала
+  - answer: купувати
+    options:
+    - купив
+    - купував
+  - answer: читати
+    options:
+    - прочитав
+    - читав
+  - answer: починати
+    options:
+    - почав
+    - починав
+  - answer: знаходити
+    options:
+    - знаходив
+    - знайшов
+  - answer: вести
+    options:
+    - вів
+    - провів
+  - answer: відчувати
+    options:
+    - відчув
+    - відчував
+  blank_count: 16
+  complete_passage: Минулого року я вивчати українську мову в Києві. Я щодня ходити
+    на заняття в мовну школу і слухати уважно вчительку. Кожного вечора я робити домашні
+    завдання і повторювати нові слова. Я часто читати українські газети і дивитися
+    фільми українською мовою, щоб покращити своє розуміння. Одного разу я зустрічати
+    дуже цікаву людину в кав'ярні. Вона бути письменницею і розповідати мені багато
+    про українську літературу. Того дня я купувати її книгу і читати її за два дні.
+    Книга була чудова! Після того випадку я починати регулярно відвідувати літературні
+    зустрічі. Я завжди знаходити там цікавих людей і вести з ними довгі розмови про
+    книги. Нарешті я відчувати, що моя українська стала набагато кращою.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення про минуле
   jumbled_words: []
@@ -329,14 +425,10 @@ items:
   question: Одного разу в дитинстві я раптом __________ дуже цікаву книгу про динозаврів
     у бібліотеці.
   options:
-  - text: знайшов
-    correct: true
-  - text: знаходив
-    correct: false
-  - text: знаходжу
-    correct: false
-  - text: шукав
-    correct: false
+  - '{''text'': ''знайшов'', ''correct'': True}'
+  - '{''text'': ''знаходив'', ''correct'': False}'
+  - '{''text'': ''знаходжу'', ''correct'': False}'
+  - '{''text'': ''шукав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -348,14 +440,10 @@ items:
   question: Коли я навчався в університеті, я щотижня регулярно __________ свою бабусю
     у її квартирі на Подолі.
   options:
-  - text: відвідав
-    correct: false
-  - text: відвідував
-    correct: true
-  - text: відвідаю
-    correct: false
-  - text: відвідую
-    correct: false
+  - '{''text'': ''відвідав'', ''correct'': False}'
+  - '{''text'': ''відвідував'', ''correct'': True}'
+  - '{''text'': ''відвідаю'', ''correct'': False}'
+  - '{''text'': ''відвідую'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -367,14 +455,10 @@ items:
   question: Того незабутнього вечора ми нарешті __________ важливе рішення про майбутнє
     нашої компанії та її стратегічний розвиток.
   options:
-  - text: прийняли
-    correct: true
-  - text: приймали
-    correct: false
-  - text: приймаємо
-    correct: false
-  - text: вирішували
-    correct: false
+  - '{''text'': ''прийняли'', ''correct'': True}'
+  - '{''text'': ''приймали'', ''correct'': False}'
+  - '{''text'': ''приймаємо'', ''correct'': False}'
+  - '{''text'': ''вирішували'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -386,14 +470,10 @@ items:
   question: У дитинстві мій брат постійно __________ про свої іграшки та завжди шукав
     їх по всій квартирі.
   options:
-  - text: забув
-    correct: false
-  - text: забував
-    correct: true
-  - text: забуде
-    correct: false
-  - text: пам'ятав
-    correct: false
+  - '{''text'': ''забув'', ''correct'': False}'
+  - '{''text'': ''забував'', ''correct'': True}'
+  - '{''text'': ''забуде'', ''correct'': False}'
+  - '{''text'': "пам''ятав", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -405,14 +485,10 @@ items:
   question: Минулого тижня я вперше в житті __________ справжню українську оперу в
     Національній опері України.
   options:
-  - text: побачив
-    correct: true
-  - text: бачив
-    correct: false
-  - text: дивився
-    correct: false
-  - text: спостерігав
-    correct: false
+  - '{''text'': ''побачив'', ''correct'': True}'
+  - '{''text'': ''бачив'', ''correct'': False}'
+  - '{''text'': ''дивився'', ''correct'': False}'
+  - '{''text'': ''спостерігав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -424,14 +500,10 @@ items:
   question: Коли я жив у Львові, я часто __________ на концерти класичної музики у
     Філармонії майже кожного місяця.
   options:
-  - text: пішов
-    correct: false
-  - text: піду
-    correct: false
-  - text: ходив
-    correct: true
-  - text: прийшов
-    correct: false
+  - '{''text'': ''пішов'', ''correct'': False}'
+  - '{''text'': ''піду'', ''correct'': False}'
+  - '{''text'': ''ходив'', ''correct'': True}'
+  - '{''text'': ''прийшов'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -443,14 +515,10 @@ items:
   question: Якось під час подорожі Європою я раптом __________ давнього шкільного
     друга на вулиці в Парижі.
   options:
-  - text: зустрів
-    correct: true
-  - text: зустрічав
-    correct: false
-  - text: зустрічаю
-    correct: false
-  - text: бачив
-    correct: false
+  - '{''text'': ''зустрів'', ''correct'': True}'
+  - '{''text'': ''зустрічав'', ''correct'': False}'
+  - '{''text'': ''зустрічаю'', ''correct'': False}'
+  - '{''text'': ''бачив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -462,14 +530,10 @@ items:
   question: Мій дідусь регулярно __________ мені різні цікаві історії про своє життя
     та молодість кожного вечора перед сном.
   options:
-  - text: розповів
-    correct: false
-  - text: розповідав
-    correct: true
-  - text: розкаже
-    correct: false
-  - text: сказав
-    correct: false
+  - '{''text'': ''розповів'', ''correct'': False}'
+  - '{''text'': ''розповідав'', ''correct'': True}'
+  - '{''text'': ''розкаже'', ''correct'': False}'
+  - '{''text'': ''сказав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -481,14 +545,10 @@ items:
   question: Восени минулого року я нарешті __________ складний іспит з української
     граматики після довгої та ретельної підготовки.
   options:
-  - text: склав
-    correct: true
-  - text: складав
-    correct: false
-  - text: складаю
-    correct: false
-  - text: здавав
-    correct: false
+  - '{''text'': ''склав'', ''correct'': True}'
+  - '{''text'': ''складав'', ''correct'': False}'
+  - '{''text'': ''складаю'', ''correct'': False}'
+  - '{''text'': ''здавав'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -500,14 +560,10 @@ items:
   question: Протягом усього минулого семестру студенти щодня старанно __________ нові
     граматичні правила та лексику української мови.
   options:
-  - text: вивчили
-    correct: false
-  - text: вивчали
-    correct: true
-  - text: вивчать
-    correct: false
-  - text: вивчили б
-    correct: false
+  - '{''text'': ''вивчили'', ''correct'': False}'
+  - '{''text'': ''вивчали'', ''correct'': True}'
+  - '{''text'': ''вивчать'', ''correct'': False}'
+  - '{''text'': ''вивчили б'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -519,14 +575,10 @@ items:
   question: Тієї весни я востаннє __________ з моїм старим другом перед його переїздом
     до Канади.
   options:
-  - text: побачився
-    correct: true
-  - text: бачився
-    correct: false
-  - text: зустрічався
-    correct: false
-  - text: бачив
-    correct: false
+  - '{''text'': ''побачився'', ''correct'': True}'
+  - '{''text'': ''бачився'', ''correct'': False}'
+  - '{''text'': ''зустрічався'', ''correct'': False}'
+  - '{''text'': ''бачив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -538,14 +590,10 @@ items:
   question: Коли я працював у тій компанії, я періодично __________ ділові листи англійською
     мовою для міжнародних партнерів.
   options:
-  - text: написав
-    correct: false
-  - text: писав
-    correct: true
-  - text: пишу
-    correct: false
-  - text: напишу
-    correct: false
+  - '{''text'': ''написав'', ''correct'': False}'
+  - '{''text'': ''писав'', ''correct'': True}'
+  - '{''text'': ''пишу'', ''correct'': False}'
+  - '{''text'': ''напишу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -557,14 +605,10 @@ items:
   question: Нещодавно під час прогулянки парком я випадково __________ гарне старовинне
     кафе, де готують чудову каву.
   options:
-  - text: знайшов
-    correct: true
-  - text: знаходив
-    correct: false
-  - text: шукав
-    correct: false
-  - text: відкрив
-    correct: false
+  - '{''text'': ''знайшов'', ''correct'': True}'
+  - '{''text'': ''знаходив'', ''correct'': False}'
+  - '{''text'': ''шукав'', ''correct'': False}'
+  - '{''text'': ''відкрив'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -576,14 +620,10 @@ items:
   question: У студентські роки ми з друзями іноді __________ на вихідні до Карпат,
     щоб відпочити від навчання та насолодитися природою.
   options:
-  - text: поїхали
-    correct: false
-  - text: їздили
-    correct: true
-  - text: поїдемо
-    correct: false
-  - text: їдемо
-    correct: false
+  - '{''text'': ''поїхали'', ''correct'': False}'
+  - '{''text'': ''їздили'', ''correct'': True}'
+  - '{''text'': ''поїдемо'', ''correct'': False}'
+  - '{''text'': ''їдемо'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

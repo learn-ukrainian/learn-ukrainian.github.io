@@ -1,16 +1,19 @@
 module: 48-diminutives-master-class
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/48-diminutives-master-class.md
-generated: '2025-12-29T00:22:02.272463'
-scope: error-correction, fill-in, quiz, translate, true-false, unjumble
+generated: '2025-12-30T19:49:28.607990'
+scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 6
   fill-in: 8
+  cloze: 1
   unjumble: 6
   quiz: 8
   translate: 6
   true-false: 8
-item_count: 42
+total_items: 43
+item_count: 43
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки
@@ -186,6 +189,97 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Мова бабусі
+  passage_template: Ой, {синочку|хлопче|синочку|онуче}, як ти виріс! Сідай, я тобі
+    {кашку|кашу|кашку|каші} приготувала. Будеш {чайок|чай|чайок|чаю} з молочком? А
+    ось {хлібчик|хліб|хлібчик|хлібець} свіженький, тільки з печі. Після обіду підемо
+    у {садочок|сад|садочок|садок}, де {квіточки|квіти|квіточки|квітки} ростуть. А
+    поки їж {кашку|все|кашку|обід}. Ось тобі {пиріжечок|пиріг|пиріжечок|пиріжок} з
+    вареннячком. Яке ти в мене {гарненьке|гарне|гарненьке|гарний}! Потім почитаємо
+    {книжечку|книгу|книжечку|книжку} про {котика|кота|котика|кошеня} та {песика|пса|песика|собаку}.
+    Люблю тебе, моє {сонечко|сонце|сонечко|промінь}! Ти моя {зірочка|зірка|зірочка|радість}.
+  blanks:
+  - answer: онуче
+    options:
+    - синочку
+    - хлопче
+    - синочку
+  - answer: каші
+    options:
+    - кашку
+    - кашу
+    - кашку
+  - answer: чаю
+    options:
+    - чайок
+    - чай
+    - чайок
+  - answer: хлібець
+    options:
+    - хлібчик
+    - хліб
+    - хлібчик
+  - answer: садок
+    options:
+    - садочок
+    - сад
+    - садочок
+  - answer: квітки
+    options:
+    - квіточки
+    - квіти
+    - квіточки
+  - answer: обід
+    options:
+    - кашку
+    - все
+    - кашку
+  - answer: пиріжок
+    options:
+    - пиріжечок
+    - пиріг
+    - пиріжечок
+  - answer: гарний
+    options:
+    - гарненьке
+    - гарне
+    - гарненьке
+  - answer: книжку
+    options:
+    - книжечку
+    - книгу
+    - книжечку
+  - answer: кошеня
+    options:
+    - котика
+    - кота
+    - котика
+  - answer: собаку
+    options:
+    - песика
+    - пса
+    - песика
+  - answer: промінь
+    options:
+    - сонечко
+    - сонце
+    - сонечко
+  - answer: радість
+    options:
+    - зірочка
+    - зірка
+    - зірочка
+  blank_count: 14
+  complete_passage: Ой, онуче, як ти виріс! Сідай, я тобі каші приготувала. Будеш
+    чаю з молочком? А ось хлібець свіженький, тільки з печі. Після обіду підемо у
+    садок, де квітки ростуть. А поки їж обід. Ось тобі пиріжок з вареннячком. Яке
+    ти в мене гарний! Потім почитаємо книжку про кошеня та собаку. Люблю тебе, моє
+    промінь! Ти моя радість.
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Побудуйте речення з демінутивами
   jumbled_words: []
@@ -241,14 +335,14 @@ items:
   question: Яка найпоширеніша функція демінутивів в українській мові, коли ми говоримо
     не про фізичний розмір предмета?
   options:
-  - text: Вираження офіційності та формальності в ділових документах
-    correct: false
-  - text: Вираження ніжності, любові та теплого ставлення до співрозмовника
-    correct: true
-  - text: Підкреслення негативного ставлення до предмета розмови
-    correct: false
-  - text: Заміна складних граматичних конструкцій простішими
-    correct: false
+  - '{''text'': ''Вираження офіційності та формальності в ділових документах'', ''correct'':
+    False}'
+  - '{''text'': ''Вираження ніжності, любові та теплого ставлення до співрозмовника'',
+    ''correct'': True}'
+  - '{''text'': ''Підкреслення негативного ставлення до предмета розмови'', ''correct'':
+    False}'
+  - '{''text'': ''Заміна складних граматичних конструкцій простішими'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -260,14 +354,14 @@ items:
   question: У якому контексті речення «У нас маленька проблемка» найімовірніше виражає
     іронію, а не справжній малий розмір проблеми?
   options:
-  - text: Коли батьки говорять з маленькою дитиною про її іграшки
-    correct: false
-  - text: Коли продавець пропонує товар покупцеві на ринку
-    correct: false
-  - text: Коли колега повідомляє про серйозну помилку в проекті
-    correct: true
-  - text: Коли бабуся розмовляє з онуком про його домашнє завдання
-    correct: false
+  - '{''text'': ''Коли батьки говорять з маленькою дитиною про її іграшки'', ''correct'':
+    False}'
+  - '{''text'': ''Коли продавець пропонує товар покупцеві на ринку'', ''correct'':
+    False}'
+  - '{''text'': ''Коли колега повідомляє про серйозну помилку в проекті'', ''correct'':
+    True}'
+  - '{''text'': ''Коли бабуся розмовляє з онуком про його домашнє завдання'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -279,14 +373,10 @@ items:
   question: Який суфікс утворює найніжніший демінутив від слова «мати», якщо ми хочемо
     висловити особливу любов?
   options:
-  - text: -ка (матка)
-    correct: false
-  - text: -інка (матінка) або -уся (матуся)
-    correct: true
-  - text: -ця (матиця)
-    correct: false
-  - text: -иха (матиха)
-    correct: false
+  - '{''text'': ''-ка (матка)'', ''correct'': False}'
+  - '{''text'': ''-інка (матінка) або -уся (матуся)'', ''correct'': True}'
+  - '{''text'': ''-ця (матиця)'', ''correct'': False}'
+  - '{''text'': ''-иха (матиха)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -298,14 +388,14 @@ items:
   question: Чому використання демінутивів у формальних документах вважається серйозною
     помилкою стилю та порушенням норм?
   options:
-  - text: Бо демінутиви не існують в українській літературній мові
-    correct: false
-  - text: Бо демінутиви завжди виражають негативне ставлення автора
-    correct: false
-  - text: Бо демінутиви надають тексту неформального або іронічного звучання
-    correct: true
-  - text: Бо демінутиви використовуються виключно в дитячій літературі
-    correct: false
+  - '{''text'': ''Бо демінутиви не існують в українській літературній мові'', ''correct'':
+    False}'
+  - '{''text'': ''Бо демінутиви завжди виражають негативне ставлення автора'', ''correct'':
+    False}'
+  - '{''text'': ''Бо демінутиви надають тексту неформального або іронічного звучання'',
+    ''correct'': True}'
+  - '{''text'': ''Бо демінутиви використовуються виключно в дитячій літературі'',
+    ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -317,14 +407,10 @@ items:
   question: Яке речення демонструє правильне використання демінутива для ввічливого
     прохання в повсякденній ситуації спілкування?
   options:
-  - text: Директоре, підпишіть документик терміново!
-    correct: false
-  - text: Колеги, маємо проблемку з бюджетиком.
-    correct: false
-  - text: Можна водички, будь ласка?
-    correct: true
-  - text: Ваша зарплатка цього місяця буде менша.
-    correct: false
+  - '{''text'': ''Директоре, підпишіть документик терміново!'', ''correct'': False}'
+  - '{''text'': ''Колеги, маємо проблемку з бюджетиком.'', ''correct'': False}'
+  - '{''text'': ''Можна водички, будь ласка?'', ''correct'': True}'
+  - '{''text'': ''Ваша зарплатка цього місяця буде менша.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -336,14 +422,10 @@ items:
   question: Який подвійний демінутив від слова «малий» виражає максимальний ступінь
     зменшення в ланцюжку нанизування суфіксів?
   options:
-  - text: маленький
-    correct: false
-  - text: малюсенький
-    correct: false
-  - text: малесесенький
-    correct: true
-  - text: малесенько
-    correct: false
+  - '{''text'': ''маленький'', ''correct'': False}'
+  - '{''text'': ''малюсенький'', ''correct'': False}'
+  - '{''text'': ''малесесенький'', ''correct'': True}'
+  - '{''text'': ''малесенько'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -355,14 +437,13 @@ items:
   question: У якому діалозі демінутиви використовуються найприродніше відповідно до
     українських мовних норм і культурних традицій?
   options:
-  - text: 'Бабуся до онука: «Синочку, їстимеш кашку?»'
-    correct: true
-  - text: 'Директор до підлеглого: «Колего, маємо проблемку з договорчиком.»'
-    correct: false
-  - text: 'Лікар до пацієнта: «Ви маєте серйозну хворобку.»'
-    correct: false
-  - text: 'Суддя на засіданні: «Підсудний, підпишіть протокольчик.»'
-    correct: false
+  - '{''text'': ''Бабуся до онука: «Синочку, їстимеш кашку?»'', ''correct'': True}'
+  - '{''text'': ''Директор до підлеглого: «Колего, маємо проблемку з договорчиком.»'',
+    ''correct'': False}'
+  - '{''text'': ''Лікар до пацієнта: «Ви маєте серйозну хворобку.»'', ''correct'':
+    False}'
+  - '{''text'': ''Суддя на засіданні: «Підсудний, підпишіть протокольчик.»'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -374,14 +455,13 @@ items:
   question: Яка функція демінутива «котику» як звертання між закоханими в сучасній
     українській мові та культурі?
   options:
-  - text: Вказівка на те, що людина схожа на кота зовнішньо
-    correct: false
-  - text: Іронічне зауваження про поведінку партнера
-    correct: false
-  - text: Вираження ніжності та близькості між партнерами
-    correct: true
-  - text: Нейтральне звертання без емоційного забарвлення
-    correct: false
+  - '{''text'': ''Вказівка на те, що людина схожа на кота зовнішньо'', ''correct'':
+    False}'
+  - '{''text'': ''Іронічне зауваження про поведінку партнера'', ''correct'': False}'
+  - '{''text'': ''Вираження ніжності та близькості між партнерами'', ''correct'':
+    True}'
+  - '{''text'': ''Нейтральне звертання без емоційного забарвлення'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -393,14 +473,10 @@ items:
   source_sentence: Give me some bread, please. (politely)
   answer: ''
   options:
-  - text: Дай мені хліба, будь ласка.
-    correct: false
-  - text: Дай мені хлібчика, будь ласка.
-    correct: true
-  - text: Дай мені хлібище, будь ласка.
-    correct: false
-  - text: Дай мені хлібина, будь ласка.
-    correct: false
+  - '{''text'': ''Дай мені хліба, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Дай мені хлібчика, будь ласка.'', ''correct'': True}'
+  - '{''text'': ''Дай мені хлібище, будь ласка.'', ''correct'': False}'
+  - '{''text'': ''Дай мені хлібина, будь ласка.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -411,14 +487,10 @@ items:
   source_sentence: My dear son, how was school?
   answer: ''
   options:
-  - text: Синочку, як було в школі?
-    correct: true
-  - text: Сину, як було в школі?
-    correct: false
-  - text: Синище, як було в школі?
-    correct: false
-  - text: Синовий, як було в школі?
-    correct: false
+  - '{''text'': ''Синочку, як було в школі?'', ''correct'': True}'
+  - '{''text'': ''Сину, як було в школі?'', ''correct'': False}'
+  - '{''text'': ''Синище, як було в школі?'', ''correct'': False}'
+  - '{''text'': ''Синовий, як було в школі?'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -429,14 +501,10 @@ items:
   source_sentence: What a cute kitty!
   answer: ''
   options:
-  - text: Який кіт!
-    correct: false
-  - text: Який гарненький котик!
-    correct: true
-  - text: Який котище!
-    correct: false
-  - text: Який кошеня!
-    correct: false
+  - '{''text'': ''Який кіт!'', ''correct'': False}'
+  - '{''text'': ''Який гарненький котик!'', ''correct'': True}'
+  - '{''text'': ''Який котище!'', ''correct'': False}'
+  - '{''text'': ''Який кошеня!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -447,14 +515,10 @@ items:
   source_sentence: We have a small problem. (ironic, actually big)
   answer: ''
   options:
-  - text: Маємо невелику проблему.
-    correct: false
-  - text: Маємо проблемку.
-    correct: true
-  - text: Маємо величезну проблему.
-    correct: false
-  - text: Маємо проблемище.
-    correct: false
+  - '{''text'': ''Маємо невелику проблему.'', ''correct'': False}'
+  - '{''text'': ''Маємо проблемку.'', ''correct'': True}'
+  - '{''text'': ''Маємо величезну проблему.'', ''correct'': False}'
+  - '{''text'': ''Маємо проблемище.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -465,14 +529,10 @@ items:
   source_sentence: Grandma, thank you for the delicious pie!
   answer: ''
   options:
-  - text: Бабо, дякую за пиріг!
-    correct: false
-  - text: Бабусю, дякую за пиріжечок!
-    correct: true
-  - text: Бабище, дякую за пиріжок!
-    correct: false
-  - text: Бабуля, дякую за пиріженьку!
-    correct: false
+  - '{''text'': ''Бабо, дякую за пиріг!'', ''correct'': False}'
+  - '{''text'': ''Бабусю, дякую за пиріжечок!'', ''correct'': True}'
+  - '{''text'': ''Бабище, дякую за пиріжок!'', ''correct'': False}'
+  - '{''text'': ''Бабуля, дякую за пиріженьку!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -483,14 +543,10 @@ items:
   source_sentence: Would you have a minute? (politely)
   answer: ''
   options:
-  - text: Маєте хвилину?
-    correct: false
-  - text: Маєте хвилинку?
-    correct: true
-  - text: Маєте хвилище?
-    correct: false
-  - text: Маєте хвилинище?
-    correct: false
+  - '{''text'': ''Маєте хвилину?'', ''correct'': False}'
+  - '{''text'': ''Маєте хвилинку?'', ''correct'': True}'
+  - '{''text'': ''Маєте хвилище?'', ''correct'': False}'
+  - '{''text'': ''Маєте хвилинище?'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

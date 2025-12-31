@@ -1,14 +1,16 @@
 module: 27-law-justice-vocabulary
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/27-law-justice-vocabulary.md
-generated: '2025-12-29T22:46:06.889109'
+generated: '2025-12-30T19:49:14.936571'
 scope: error-correction, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   unjumble: 16
   quiz: 32
   true-false: 16
+total_items: 80
 item_count: 80
+sample_percent: null
 items:
 - activity: error-correction
   title: Юридична мова
@@ -414,14 +416,10 @@ items:
   title: Судова система України
   question: Який суд є найвищим у системі судоустрою України?
   options:
-  - text: Конституційний Суд
-    correct: false
-  - text: Апеляційний суд
-    correct: false
-  - text: Верховний Суд
-    correct: true
-  - text: Місцевий суд
-    correct: false
+  - '{''text'': ''Конституційний Суд'', ''correct'': False}'
+  - '{''text'': ''Апеляційний суд'', ''correct'': False}'
+  - '{''text'': ''Верховний Суд'', ''correct'': True}'
+  - '{''text'': ''Місцевий суд'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -432,14 +430,10 @@ items:
   title: Судова система України
   question: Яка функція Конституційного Суду?
   options:
-  - text: Розглядати кримінальні справи
-    correct: false
-  - text: Перевіряти відповідність законів Конституції
-    correct: true
-  - text: Виносити вироки
-    correct: false
-  - text: Призначати покарання
-    correct: false
+  - '{''text'': ''Розглядати кримінальні справи'', ''correct'': False}'
+  - '{''text'': ''Перевіряти відповідність законів Конституції'', ''correct'': True}'
+  - '{''text'': ''Виносити вироки'', ''correct'': False}'
+  - '{''text'': ''Призначати покарання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -450,14 +444,10 @@ items:
   title: Судова система України
   question: Хто підтримує обвинувачення у кримінальному процесі?
   options:
-  - text: Адвокат
-    correct: false
-  - text: Суддя
-    correct: false
-  - text: Прокурор
-    correct: true
-  - text: Свідок
-    correct: false
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': True}'
+  - '{''text'': ''Свідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -468,14 +458,10 @@ items:
   title: Судова система України
   question: Що таке апеляція?
   options:
-  - text: Початок судового процесу
-    correct: false
-  - text: Оскарження рішення суду
-    correct: true
-  - text: Визнання провини
-    correct: false
-  - text: Звернення до поліції
-    correct: false
+  - '{''text'': ''Початок судового процесу'', ''correct'': False}'
+  - '{''text'': ''Оскарження рішення суду'', ''correct'': True}'
+  - '{''text'': ''Визнання провини'', ''correct'': False}'
+  - '{''text'': ''Звернення до поліції'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -486,14 +472,10 @@ items:
   title: Судова система України
   question: Як називається особа, яка подає позов у цивільній справі?
   options:
-  - text: Відповідач
-    correct: false
-  - text: Обвинувачений
-    correct: false
-  - text: Позивач
-    correct: true
-  - text: Потерпілий
-    correct: false
+  - '{''text'': ''Відповідач'', ''correct'': False}'
+  - '{''text'': ''Обвинувачений'', ''correct'': False}'
+  - '{''text'': ''Позивач'', ''correct'': True}'
+  - '{''text'': ''Потерпілий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -504,14 +486,10 @@ items:
   title: Судова система України
   question: Яке рішення виносить суд у кримінальній справі?
   options:
-  - text: Позов
-    correct: false
-  - text: Скаргу
-    correct: false
-  - text: Рішення
-    correct: false
-  - text: Вирок
-    correct: true
+  - '{''text'': ''Позов'', ''correct'': False}'
+  - '{''text'': ''Скаргу'', ''correct'': False}'
+  - '{''text'': ''Рішення'', ''correct'': False}'
+  - '{''text'': ''Вирок'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -522,14 +500,10 @@ items:
   title: Судова система України
   question: Що означає 'презумпція невинуватості'?
   options:
-  - text: Винуватість доведена
-    correct: false
-  - text: Особа невинувата до вироку суду
-    correct: true
-  - text: Особа визнала провину
-    correct: false
-  - text: Суддя сумнівається
-    correct: false
+  - '{''text'': ''Винуватість доведена'', ''correct'': False}'
+  - '{''text'': ''Особа невинувата до вироку суду'', ''correct'': True}'
+  - '{''text'': ''Особа визнала провину'', ''correct'': False}'
+  - '{''text'': ''Суддя сумнівається'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -540,14 +514,10 @@ items:
   title: Судова система України
   question: Хто захищає інтереси обвинуваченого?
   options:
-  - text: Прокурор
-    correct: false
-  - text: Потерпілий
-    correct: false
-  - text: Адвокат
-    correct: true
-  - text: Свідок
-    correct: false
+  - '{''text'': ''Прокурор'', ''correct'': False}'
+  - '{''text'': ''Потерпілий'', ''correct'': False}'
+  - '{''text'': ''Адвокат'', ''correct'': True}'
+  - '{''text'': ''Свідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -558,14 +528,10 @@ items:
   title: Судова система України
   question: Скільки рівнів має судова система України?
   options:
-  - text: Два
-    correct: false
-  - text: Три
-    correct: true
-  - text: Чотири
-    correct: false
-  - text: П'ять
-    correct: false
+  - '{''text'': ''Два'', ''correct'': False}'
+  - '{''text'': ''Три'', ''correct'': True}'
+  - '{''text'': ''Чотири'', ''correct'': False}'
+  - '{''text'': "П''ять", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -576,14 +542,10 @@ items:
   title: Судова система України
   question: Яка справа стосується майнових відносин?
   options:
-  - text: Кримінальна
-    correct: false
-  - text: Цивільна
-    correct: true
-  - text: Адміністративна
-    correct: false
-  - text: Конституційна
-    correct: false
+  - '{''text'': ''Кримінальна'', ''correct'': False}'
+  - '{''text'': ''Цивільна'', ''correct'': True}'
+  - '{''text'': ''Адміністративна'', ''correct'': False}'
+  - '{''text'': ''Конституційна'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -594,14 +556,10 @@ items:
   title: Судова система України
   question: Що таке касація?
   options:
-  - text: Перша інстанція
-    correct: false
-  - text: Друга інстанція
-    correct: false
-  - text: Перевірка правильності застосування закону
-    correct: true
-  - text: Звернення до поліції
-    correct: false
+  - '{''text'': ''Перша інстанція'', ''correct'': False}'
+  - '{''text'': ''Друга інстанція'', ''correct'': False}'
+  - '{''text'': ''Перевірка правильності застосування закону'', ''correct'': True}'
+  - '{''text'': ''Звернення до поліції'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -612,14 +570,10 @@ items:
   title: Судова система України
   question: Хто є потерпілим?
   options:
-  - text: Особа, яка скоїла злочин
-    correct: false
-  - text: Особа, якій злочином завдано шкоди
-    correct: true
-  - text: Особа, яка судить
-    correct: false
-  - text: Особа, яка захищає
-    correct: false
+  - '{''text'': ''Особа, яка скоїла злочин'', ''correct'': False}'
+  - '{''text'': ''Особа, якій злочином завдано шкоди'', ''correct'': True}'
+  - '{''text'': ''Особа, яка судить'', ''correct'': False}'
+  - '{''text'': ''Особа, яка захищає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -630,14 +584,10 @@ items:
   title: Судова система України
   question: Що означає 'справа набрала законної сили'?
   options:
-  - text: Справу закрито без розгляду
-    correct: false
-  - text: Рішення стало обов'язковим
-    correct: true
-  - text: Справу передано до іншого суду
-    correct: false
-  - text: Справу відкладено
-    correct: false
+  - '{''text'': ''Справу закрито без розгляду'', ''correct'': False}'
+  - '{''text'': "Рішення стало обов''язковим", ''correct'': True}'
+  - '{''text'': ''Справу передано до іншого суду'', ''correct'': False}'
+  - '{''text'': ''Справу відкладено'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -648,14 +598,10 @@ items:
   title: Судова система України
   question: Де розглядаються більшість справ першої інстанції?
   options:
-  - text: У Верховному Суді
-    correct: false
-  - text: В апеляційних судах
-    correct: false
-  - text: У місцевих судах
-    correct: true
-  - text: У Конституційному Суді
-    correct: false
+  - '{''text'': ''У Верховному Суді'', ''correct'': False}'
+  - '{''text'': ''В апеляційних судах'', ''correct'': False}'
+  - '{''text'': ''У місцевих судах'', ''correct'': True}'
+  - '{''text'': ''У Конституційному Суді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -666,14 +612,10 @@ items:
   title: Судова система України
   question: Що таке алібі?
   options:
-  - text: Визнання провини
-    correct: false
-  - text: Доказ відсутності на місці злочину
-    correct: true
-  - text: Свідчення очевидця
-    correct: false
-  - text: Документ про арешт
-    correct: false
+  - '{''text'': ''Визнання провини'', ''correct'': False}'
+  - '{''text'': ''Доказ відсутності на місці злочину'', ''correct'': True}'
+  - '{''text'': ''Свідчення очевидця'', ''correct'': False}'
+  - '{''text'': ''Документ про арешт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -684,14 +626,10 @@ items:
   title: Судова система України
   question: Яке покарання передбачає позбавлення волі?
   options:
-  - text: Штраф
-    correct: false
-  - text: Умовний термін
-    correct: false
-  - text: Ув'язнення
-    correct: true
-  - text: Громадські роботи
-    correct: false
+  - '{''text'': ''Штраф'', ''correct'': False}'
+  - '{''text'': ''Умовний термін'', ''correct'': False}'
+  - '{''text'': "Ув''язнення", ''correct'': True}'
+  - '{''text'': ''Громадські роботи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -702,14 +640,10 @@ items:
   title: Учасники судового процесу
   question: Хто керує судовим процесом?
   options:
-  - text: Прокурор
-    correct: false
-  - text: Адвокат
-    correct: false
-  - text: Суддя
-    correct: true
-  - text: Секретар
-    correct: false
+  - '{''text'': ''Прокурор'', ''correct'': False}'
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Суддя'', ''correct'': True}'
+  - '{''text'': ''Секретар'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -720,14 +654,10 @@ items:
   title: Учасники судового процесу
   question: Проти кого подається позов у цивільній справі?
   options:
-  - text: Позивача
-    correct: false
-  - text: Відповідача
-    correct: true
-  - text: Свідка
-    correct: false
-  - text: Прокурора
-    correct: false
+  - '{''text'': ''Позивача'', ''correct'': False}'
+  - '{''text'': ''Відповідача'', ''correct'': True}'
+  - '{''text'': ''Свідка'', ''correct'': False}'
+  - '{''text'': ''Прокурора'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -738,14 +668,10 @@ items:
   title: Учасники судового процесу
   question: Хто дає показання у справі?
   options:
-  - text: Суддя
-    correct: false
-  - text: Прокурор
-    correct: false
-  - text: Свідок
-    correct: true
-  - text: Адвокат
-    correct: false
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': False}'
+  - '{''text'': ''Свідок'', ''correct'': True}'
+  - '{''text'': ''Адвокат'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -756,14 +682,10 @@ items:
   title: Учасники судового процесу
   question: Як називається особа, яку судять у кримінальному процесі?
   options:
-  - text: Позивач
-    correct: false
-  - text: Відповідач
-    correct: false
-  - text: Підсудний
-    correct: true
-  - text: Потерпілий
-    correct: false
+  - '{''text'': ''Позивач'', ''correct'': False}'
+  - '{''text'': ''Відповідач'', ''correct'': False}'
+  - '{''text'': ''Підсудний'', ''correct'': True}'
+  - '{''text'': ''Потерпілий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -774,14 +696,10 @@ items:
   title: Учасники судового процесу
   question: Хто представляє інтереси держави в обвинуваченні?
   options:
-  - text: Адвокат
-    correct: false
-  - text: Суддя
-    correct: false
-  - text: Прокурор
-    correct: true
-  - text: Нотаріус
-    correct: false
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': True}'
+  - '{''text'': ''Нотаріус'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -792,14 +710,10 @@ items:
   title: Учасники судового процесу
   question: Хто бере участь у винесенні рішення в суді присяжних?
   options:
-  - text: Тільки суддя
-    correct: false
-  - text: Присяжні
-    correct: true
-  - text: Тільки прокурор
-    correct: false
-  - text: Тільки адвокат
-    correct: false
+  - '{''text'': ''Тільки суддя'', ''correct'': False}'
+  - '{''text'': ''Присяжні'', ''correct'': True}'
+  - '{''text'': ''Тільки прокурор'', ''correct'': False}'
+  - '{''text'': ''Тільки адвокат'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -810,14 +724,10 @@ items:
   title: Учасники судового процесу
   question: Як називається представник сторони в цивільному процесі?
   options:
-  - text: Прокурор
-    correct: false
-  - text: Слідчий
-    correct: false
-  - text: Адвокат
-    correct: true
-  - text: Потерпілий
-    correct: false
+  - '{''text'': ''Прокурор'', ''correct'': False}'
+  - '{''text'': ''Слідчий'', ''correct'': False}'
+  - '{''text'': ''Адвокат'', ''correct'': True}'
+  - '{''text'': ''Потерпілий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -828,14 +738,10 @@ items:
   title: Учасники судового процесу
   question: Хто проводить досудове розслідування?
   options:
-  - text: Суддя
-    correct: false
-  - text: Слідчий
-    correct: true
-  - text: Адвокат
-    correct: false
-  - text: Нотаріус
-    correct: false
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Слідчий'', ''correct'': True}'
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Нотаріус'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -846,14 +752,10 @@ items:
   title: Учасники судового процесу
   question: Хто оформляє заповіт?
   options:
-  - text: Суддя
-    correct: false
-  - text: Нотаріус
-    correct: true
-  - text: Адвокат
-    correct: false
-  - text: Прокурор
-    correct: false
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Нотаріус'', ''correct'': True}'
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -864,14 +766,10 @@ items:
   title: Учасники судового процесу
   question: Що робить медіатор?
   options:
-  - text: Виносить вирок
-    correct: false
-  - text: Допомагає сторонам домовитись
-    correct: true
-  - text: Підтримує обвинувачення
-    correct: false
-  - text: Захищає підсудного
-    correct: false
+  - '{''text'': ''Виносить вирок'', ''correct'': False}'
+  - '{''text'': ''Допомагає сторонам домовитись'', ''correct'': True}'
+  - '{''text'': ''Підтримує обвинувачення'', ''correct'': False}'
+  - '{''text'': ''Захищає підсудного'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -882,14 +780,10 @@ items:
   title: Учасники судового процесу
   question: Хто подає позовну заяву?
   options:
-  - text: Відповідач
-    correct: false
-  - text: Позивач
-    correct: true
-  - text: Суддя
-    correct: false
-  - text: Прокурор
-    correct: false
+  - '{''text'': ''Відповідач'', ''correct'': False}'
+  - '{''text'': ''Позивач'', ''correct'': True}'
+  - '{''text'': ''Суддя'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -900,14 +794,10 @@ items:
   title: Учасники судового процесу
   question: Як називається особа, якій пред'явлено обвинувачення?
   options:
-  - text: Позивач
-    correct: false
-  - text: Потерпілий
-    correct: false
-  - text: Обвинувачений
-    correct: true
-  - text: Свідок
-    correct: false
+  - '{''text'': ''Позивач'', ''correct'': False}'
+  - '{''text'': ''Потерпілий'', ''correct'': False}'
+  - '{''text'': ''Обвинувачений'', ''correct'': True}'
+  - '{''text'': ''Свідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -918,14 +808,10 @@ items:
   title: Учасники судового процесу
   question: Хто виносить вердикт?
   options:
-  - text: Адвокат
-    correct: false
-  - text: Прокурор
-    correct: false
-  - text: Присяжні
-    correct: true
-  - text: Свідок
-    correct: false
+  - '{''text'': ''Адвокат'', ''correct'': False}'
+  - '{''text'': ''Прокурор'', ''correct'': False}'
+  - '{''text'': ''Присяжні'', ''correct'': True}'
+  - '{''text'': ''Свідок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -936,14 +822,10 @@ items:
   title: Учасники судового процесу
   question: Як звертаються до судді?
   options:
-  - text: Пане адвокате
-    correct: false
-  - text: Шановний суд
-    correct: true
-  - text: Пане прокуроре
-    correct: false
-  - text: Шановний колего
-    correct: false
+  - '{''text'': ''Пане адвокате'', ''correct'': False}'
+  - '{''text'': ''Шановний суд'', ''correct'': True}'
+  - '{''text'': ''Пане прокуроре'', ''correct'': False}'
+  - '{''text'': ''Шановний колего'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -954,14 +836,10 @@ items:
   title: Учасники судового процесу
   question: Хто може оскаржити рішення суду?
   options:
-  - text: Тільки позивач
-    correct: false
-  - text: Будь-яка сторона процесу
-    correct: true
-  - text: Тільки суддя
-    correct: false
-  - text: Тільки прокурор
-    correct: false
+  - '{''text'': ''Тільки позивач'', ''correct'': False}'
+  - '{''text'': ''Будь-яка сторона процесу'', ''correct'': True}'
+  - '{''text'': ''Тільки суддя'', ''correct'': False}'
+  - '{''text'': ''Тільки прокурор'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -972,14 +850,10 @@ items:
   title: Учасники судового процесу
   question: Що таке запобіжний захід?
   options:
-  - text: Покарання після вироку
-    correct: false
-  - text: Обмеження до винесення вироку
-    correct: true
-  - text: Виправдання підсудного
-    correct: false
-  - text: Закриття справи
-    correct: false
+  - '{''text'': ''Покарання після вироку'', ''correct'': False}'
+  - '{''text'': ''Обмеження до винесення вироку'', ''correct'': True}'
+  - '{''text'': ''Виправдання підсудного'', ''correct'': False}'
+  - '{''text'': ''Закриття справи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

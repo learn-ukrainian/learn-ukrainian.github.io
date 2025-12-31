@@ -1,0 +1,1424 @@
+module: 85-zaporizka-sich
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/85-zaporizka-sich.md
+generated: '2025-12-30T19:49:17.173216'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 16
+  fill-in: 32
+  cloze: 1
+  unjumble: 16
+  quiz: 32
+  true-false: 16
+total_items: 113
+item_count: 113
+sample_percent: null
+items:
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Запорозька Січ була унікальна демократією.
+  error: унікальна
+  answer: унікальною
+  sentence_corrected: Запорозька Січ була унікальною демократією.
+  options:
+  - унікальна
+  - унікальною
+  - унікальної
+  - унікальну
+  original_explanation: Після дієслова «була» орудний відмінок — була унікальною демократією
+    (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки жили за порогам Дніпра.
+  error: порогам
+  answer: порогами
+  sentence_corrected: Козаки жили за порогами Дніпра.
+  options:
+  - порогам
+  - порогами
+  - порогів
+  - пороги
+  original_explanation: Прийменник «за» з орудним відмінком — за порогами (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Хортиця — найбільший острів на Дніпрі.
+  error: none
+  answer: none
+  sentence_corrected: Хортиця — найбільший острів на Дніпрі.
+  options:
+  - none
+  - найбільший
+  - острів
+  - Дніпрі
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Рада приймала усі важливий рішення.
+  error: важливий
+  answer: важливі
+  sentence_corrected: Рада приймала усі важливі рішення.
+  options:
+  - важливий
+  - важливі
+  - важливих
+  - важливими
+  original_explanation: Прикметник узгоджується з іменником «рішення» (множина, середній
+    рід) — важливі рішення.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Гетьмана обирали щороку 1 січень.
+  error: січень
+  answer: січня
+  sentence_corrected: Гетьмана обирали щороку 1 січня.
+  options:
+  - січень
+  - січня
+  - січню
+  - січнем
+  original_explanation: При позначенні дати місяць у родовому відмінку — 1 січня.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Булава була символ влади гетьмана.
+  error: символ
+  answer: символом
+  sentence_corrected: Булава була символом влади гетьмана.
+  options:
+  - символ
+  - символом
+  - символу
+  - символі
+  original_explanation: Після дієслова «була» орудний відмінок — була символом (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки будували укріплення на острів.
+  error: острів
+  answer: острові
+  sentence_corrected: Козаки будували укріплення на острові.
+  options:
+  - острів
+  - острові
+  - острова
+  - островом
+  original_explanation: Прийменник «на» з місцевим відмінком — на острові (де?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Катерина II зруйнувала Січ у 1775 році.
+  error: none
+  answer: none
+  sentence_corrected: Катерина II зруйнувала Січ у 1775 році.
+  options:
+  - none
+  - зруйнувала
+  - Січ
+  - році
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Клейноди — символи козацький влади.
+  error: козацький
+  answer: козацької
+  sentence_corrected: Клейноди — символи козацької влади.
+  options:
+  - козацький
+  - козацької
+  - козацькою
+  - козацьку
+  original_explanation: Іменник «влади» — жіночий рід, родовий відмінок, тому «козацької».
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Конституцію уклав гетьман Орлика.
+  error: Орлика
+  answer: Орлик
+  sentence_corrected: Конституцію уклав гетьман Орлик.
+  options:
+  - Орлика
+  - Орлик
+  - Орликові
+  - Орликом
+  original_explanation: Підмет у називному відмінку — гетьман Орлик.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Пороги затопив вода Дніпрогесу.
+  error: затопив
+  answer: затопила
+  sentence_corrected: Пороги затопила вода Дніпрогесу.
+  options:
+  - затопив
+  - затопила
+  - затопило
+  - затопили
+  original_explanation: Дієслово узгоджується з підметом «вода» (жіночий рід) — вода
+    затопила.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Демократія панувала серед козаків.
+  error: none
+  answer: none
+  sentence_corrected: Демократія панувала серед козаків.
+  options:
+  - none
+  - Демократія
+  - панувала
+  - козаків
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Майдан був площею для збор.
+  error: збор
+  answer: зборів
+  sentence_corrected: Майдан був площею для зборів.
+  options:
+  - збор
+  - зборів
+  - зборам
+  - зборами
+  original_explanation: Прийменник «для» вимагає родового відмінка — для зборів (чого?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Вибори проходили кожного рік.
+  error: рік
+  answer: року
+  sentence_corrected: Вибори проходили кожного року.
+  options:
+  - рік
+  - року
+  - рокові
+  - роком
+  original_explanation: Прикметник «кожного» вимагає родового відмінку — кожного року.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Курені були великий казармами.
+  error: великий
+  answer: великими
+  sentence_corrected: Курені були великими казармами.
+  options:
+  - великий
+  - великими
+  - великих
+  - велике
+  original_explanation: Орудний відмінок множини — були великими казармами (чим?).
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Граматика в історичних реченнях
+  sentence_with_error: Козаки мали право голосу на раді.
+  error: none
+  answer: none
+  sentence_corrected: Козаки мали право голосу на раді.
+  options:
+  - none
+  - мали
+  - голосу
+  - раді
+  original_explanation: Речення граматично правильне.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Запорозька _____ була унікальною демократією в Європі.
+  answer: Січ
+  complete_sentence: Запорозька Січ__ була унікальною демократією в Європі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Найбільший острів на Дніпрі — це _____.
+  answer: Хортиця
+  complete_sentence: Найбільший острів на Дніпрі — це Хортиця__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Козаки жили «за _____ » — нижче небезпечних дніпровських перепон.
+  answer: порогами
+  complete_sentence: Козаки жили «за порогами__ » — нижче небезпечних дніпровських
+    перепон.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: У центрі Січі стояв _____ — площа для зборів.
+  answer: майдан
+  complete_sentence: У центрі Січі стояв майдан__ — площа для зборів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ — так називали козацьку громаду або її уряд.
+  answer: Кіш
+  complete_sentence: Кіш__ — так називали козацьку громаду або її уряд.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Великі казарми, де жили козаки, називалися _____.
+  answer: куренями
+  complete_sentence: Великі казарми, де жили козаки, називалися куренями__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Усі важливі рішення приймала _____ — загальні збори козаків.
+  answer: рада
+  complete_sentence: Усі важливі рішення приймала рада__ — загальні збори козаків.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ — верховний керівник козацтва.
+  answer: Гетьман
+  complete_sentence: Гетьман__ — верховний керівник козацтва.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ — голова Січі, якого обирали щороку.
+  answer: Отаман
+  complete_sentence: Отаман__ — голова Січі, якого обирали щороку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ — символ влади гетьмана.
+  answer: Булава
+  complete_sentence: Булава__ — символ влади гетьмана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ — загальна назва символів козацької влади.
+  answer: Клейноди
+  complete_sentence: Клейноди__ — загальна назва символів козацької влади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ проходили щороку 1 січня.
+  answer: Вибори
+  complete_sentence: Вибори__ проходили щороку 1 січня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: _____ була основним принципом у Січі.
+  answer: Рівність
+  complete_sentence: Рівність__ була основним принципом у Січі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Перші укріплення на Хортиці побудував князь Дмитро _____.
+  answer: Вишневецький
+  complete_sentence: Перші укріплення на Хортиці побудував князь Дмитро Вишневецький__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Конституцію 1710 року уклав гетьман Пилип _____.
+  answer: Орлик
+  complete_sentence: Конституцію 1710 року уклав гетьман Пилип Орлик__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Козацька лексика в контексті
+  sentence_template: Січ зруйнувала _____ II у 1775 році.
+  answer: Катерина
+  complete_sentence: Січ зруйнувала Катерина__ II у 1775 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Запорозька Січ була унікальною _____.
+  answer: демократією
+  complete_sentence: Запорозька Січ була унікальною демократією__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки жили за _____ Дніпра.
+  answer: порогами
+  complete_sentence: Козаки жили за порогами__ Дніпра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Хортиця — найбільший острів на _____.
+  answer: Дніпрі
+  complete_sentence: Хортиця — найбільший острів на Дніпрі__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Рада приймала усі важливі _____.
+  answer: рішення
+  complete_sentence: Рада приймала усі важливі рішення__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Гетьмана обирали 1 _____ щороку.
+  answer: січня
+  complete_sentence: Гетьмана обирали 1 січня__ щороку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Булава була _____ влади.
+  answer: символом
+  complete_sentence: Булава була символом__ влади.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Клейноди — символи козацької _____.
+  answer: влади
+  complete_sentence: Клейноди — символи козацької влади__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Катерина II зруйнувала _____ у 1775 році.
+  answer: Січ
+  complete_sentence: Катерина II зруйнувала Січ__ у 1775 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Козаки будували укріплення на _____.
+  answer: острові
+  complete_sentence: Козаки будували укріплення на острові__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Курені були козацькими _____.
+  answer: казармами
+  complete_sentence: Курені були козацькими казармами__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Будь-який козак міг стати _____.
+  answer: кандидатом
+  complete_sentence: Будь-який козак міг стати кандидатом__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Майдан був площею для _____.
+  answer: зборів
+  complete_sentence: Майдан був площею для зборів__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Кіш був козацькою _____.
+  answer: громадою
+  complete_sentence: Кіш був козацькою громадою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Конституція обмежувала владу _____.
+  answer: гетьмана
+  complete_sentence: Конституція обмежувала владу гетьмана__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Старшина була козацькою _____.
+  answer: елітою
+  complete_sentence: Старшина була козацькою елітою__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вибір правильного відмінка
+  sentence_template: Пороги створювали природну _____.
+  answer: фортецю
+  complete_sentence: Пороги створювали природну фортецю__.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Заповніть текст про демократію Січі
+  passage_template: 'Запорозька {Січ|Хортиця|фортеця|Січ} була унікальною {демократією|монархією|олігархією|демократією}
+    в Європі. Усі важливі рішення приймала {рада|старшина|церква|рада} — загальні
+    збори козаків на {майдані|курені|кошу|майдані}.
+
+
+    Тут обирали {гетьмана|царя|короля|гетьмана} — верховного керівника, та {отамана|князя|боярина|отамана}
+    — голову Січі. {Вибори|Призначення|Спадкування|Вибори} проходили щороку 1 січня.
+
+
+    Будь-який {козак|боярин|князь|козак} міг стати {кандидатом|гетьманом|царем|кандидатом}
+    — не важливо, яке {походження|багатство|звання|походження} чи багатство він мав.
+    {Рівність|Знатність|Багатство|Рівність} була основним принципом.
+
+
+    {Булава|Корона|Шабля|Булава} — символ влади гетьмана. {Клейноди|Скарби|Зброя|Клейноди}
+    — загальна назва для всіх символів козацької влади: булави, {бунчука|прапора|корони|бунчука},
+    печатки, литавр.
+
+
+    {Конституція|Закон|Указ|Конституція} Пилипа Орлика 1710 року закріпила: «{Гетьман|Цар|Король|Гетьман}
+    не має права нічого вирішувати сам, без волі генеральної {старшини|армії|церкви|старшини}».
+
+    '
+  blanks:
+  - answer: Січ
+    options:
+    - Січ
+    - Хортиця
+    - фортеця
+  - answer: демократією
+    options:
+    - демократією
+    - монархією
+    - олігархією
+  - answer: рада
+    options:
+    - рада
+    - старшина
+    - церква
+  - answer: майдані
+    options:
+    - майдані
+    - курені
+    - кошу
+  - answer: гетьмана
+    options:
+    - гетьмана
+    - царя
+    - короля
+  - answer: отамана
+    options:
+    - отамана
+    - князя
+    - боярина
+  - answer: Вибори
+    options:
+    - Вибори
+    - Призначення
+    - Спадкування
+  - answer: козак
+    options:
+    - козак
+    - боярин
+    - князь
+  - answer: кандидатом
+    options:
+    - кандидатом
+    - гетьманом
+    - царем
+  - answer: походження
+    options:
+    - походження
+    - багатство
+    - звання
+  - answer: Рівність
+    options:
+    - Рівність
+    - Знатність
+    - Багатство
+  - answer: Булава
+    options:
+    - Булава
+    - Корона
+    - Шабля
+  - answer: Клейноди
+    options:
+    - Клейноди
+    - Скарби
+    - Зброя
+  - answer: бунчука
+    options:
+    - бунчука
+    - прапора
+    - корони
+  - answer: Конституція
+    options:
+    - Конституція
+    - Закон
+    - Указ
+  - answer: Гетьман
+    options:
+    - Гетьман
+    - Цар
+    - Король
+  - answer: старшини
+    options:
+    - старшини
+    - армії
+    - церкви
+  blank_count: 17
+  complete_passage: 'Запорозька Січ була унікальною демократією в Європі. Усі важливі
+    рішення приймала рада — загальні збори козаків на майдані.
+
+
+    Тут обирали гетьмана — верховного керівника, та отамана — голову Січі. Вибори
+    проходили щороку 1 січня.
+
+
+    Будь-який козак міг стати кандидатом — не важливо, яке походження чи багатство
+    він мав. Рівність була основним принципом.
+
+
+    Булава — символ влади гетьмана. Клейноди — загальна назва для всіх символів козацької
+    влади: булави, бунчука, печатки, литавр.
+
+
+    Конституція Пилипа Орлика 1710 року закріпила: «Гетьман не має права нічого вирішувати
+    сам, без волі генеральної старшини».
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Запорозька Січ була козацька республіка.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Хортиця — найбільший острів на Дніпрі.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Козаки жили за порогами Дніпра.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Рада приймала усі важливі рішення.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Гетьмана обирали щороку 1 січня.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Булава — символ влади гетьмана.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Рівність була основним принципом.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Курені були козацькі казарми.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Катерина II зруйнувала Січ 1775 року.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Орлик уклав Конституцію у 1710 році.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Дмитро Вишневецький заснував першу Січ.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Січ змінювала місце вісім разів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Майдан — це площа для зборів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Січ була унікальна демократія.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Кіш — так називали козацьку громаду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення про козацтво
+  jumbled_words: []
+  answer: Дніпрогес затопив дніпровські пороги.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, від якого слова походить назва «Січ»?
+  options:
+  - '{''text'': ''Від слова «сікти» — рубати ліс'', ''correct'': True}'
+  - '{''text'': ''Від слова «січень» — зимовий місяць'', ''correct'': False}'
+  - '{''text'': ''Від слова «січа» — битва'', ''correct'': False}'
+  - '{''text'': ''Від слова «січ» — різати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, чому козаків називали «запорозькими»?
+  options:
+  - '{''text'': ''Бо вони жили за порогами на Дніпрі'', ''correct'': True}'
+  - '{''text'': ''Бо вони жили біля міста Запоріжжя'', ''correct'': False}'
+  - '{''text'': ''Бо вони охороняли пороги'', ''correct'': False}'
+  - '{''text'': ''Бо їхній гетьман був із Запоріжжя'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, скільки порогів було на Дніпрі?
+  options:
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': ''Сім'', ''correct'': False}'
+  - '{''text'': "Дев''ять", ''correct'': True}'
+  - '{''text'': ''Дванадцять'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Як текст характеризує Хортицю?
+  options:
+  - '{''text'': ''Як найменший острів на Дніпрі'', ''correct'': False}'
+  - '{''text'': ''Як найбільший острів на Дніпрі'', ''correct'': True}'
+  - '{''text'': ''Як штучний острів'', ''correct'': False}'
+  - '{''text'': ''Як острів у Чорному морі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, хто побудував перші козацькі укріплення на Хортиці?
+  options:
+  - '{''text'': ''Богдан Хмельницький'', ''correct'': False}'
+  - '{''text'': ''Іван Сірко'', ''correct'': False}'
+  - '{''text'': ''Дмитро Вишневецький (Байда)'', ''correct'': True}'
+  - '{''text'': ''Пилип Орлик'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, скільки разів Січ змінювала місце розташування?
+  options:
+  - '{''text'': "П''ять разів", ''correct'': False}'
+  - '{''text'': ''Вісім разів'', ''correct'': True}'
+  - '{''text'': ''Три рази'', ''correct'': False}'
+  - '{''text'': ''Десять разів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Як текст пояснює походження слова «курінь»?
+  options:
+  - '{''text'': ''Від слова «кур» — дим'', ''correct'': True}'
+  - '{''text'': ''Від слова «курка» — птах'', ''correct'': False}'
+  - '{''text'': ''Від слова «кур» — петух'', ''correct'': False}'
+  - '{''text'': ''Від слова «курява» — пил'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, коли проходили вибори гетьмана?
+  options:
+  - '{''text'': ''1 січня щороку'', ''correct'': True}'
+  - '{''text'': ''1 вересня щороку'', ''correct'': False}'
+  - '{''text'': "Раз на п''ять років", ''correct'': False}'
+  - '{''text'': ''Після смерті попереднього гетьмана'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Як текст характеризує систему влади на Січі?
+  options:
+  - '{''text'': ''Як абсолютну монархію'', ''correct'': False}'
+  - '{''text'': ''Як демократію з виборною владою'', ''correct'': True}'
+  - '{''text'': ''Як теократію'', ''correct'': False}'
+  - '{''text'': ''Як олігархію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Що таке «клейноди» згідно з текстом?
+  options:
+  - '{''text'': ''Козацькі коні'', ''correct'': False}'
+  - '{''text'': ''Символи козацької влади'', ''correct'': True}'
+  - '{''text'': ''Козацькі закони'', ''correct'': False}'
+  - '{''text'': ''Козацькі землі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Яку особливість Січі щодо жінок згадує текст?
+  options:
+  - '{''text'': ''Жінки керували господарством'', ''correct'': False}'
+  - '{''text'': ''У Січі не могли жити жінки'', ''correct'': True}'
+  - '{''text'': ''Жінки мали право голосу'', ''correct'': False}'
+  - '{''text'': ''Жінки служили в армії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Згідно з текстом, хто зруйнував Січ 1775 року?
+  options:
+  - '{''text'': ''Турецький султан'', ''correct'': False}'
+  - '{''text'': ''Польський король'', ''correct'': False}'
+  - '{''text'': ''Катерина II'', ''correct'': True}'
+  - '{''text'': ''Іван Сірко'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Як текст описує Конституцію Пилипа Орлика 1710 року?
+  options:
+  - '{''text'': ''Як копію європейських конституцій'', ''correct'': False}'
+  - '{''text'': ''Як одну з перших конституцій у світі'', ''correct'': True}'
+  - '{''text'': ''Як суто військовий документ'', ''correct'': False}'
+  - '{''text'': ''Як релігійний текст'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Хто такий Гійом де Боплан згідно з текстом?
+  options:
+  - '{''text'': ''Український гетьман'', ''correct'': False}'
+  - '{''text'': ''Французький інженер XVII століття'', ''correct'': True}'
+  - '{''text'': ''Турецький посол'', ''correct'': False}'
+  - '{''text'': ''Польський король'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Як текст пов'язує козацькі традиції з сучасністю?
+  options:
+  - '{''text'': ''Козацькі традиції забуті'', ''correct'': False}'
+  - '{''text'': ''Протестувальники на Майдані називали табір «Січчю»'', ''correct'':
+    True}'
+  - '{''text'': ''Козацтво відроджено офіційно'', ''correct'': False}'
+  - '{''text'': ''Сучасна армія має козацькі звання'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Розуміння тексту про Запорозьку Січ
+  question: Що сталося з Дніпровими порогами у XX столітті згідно з текстом?
+  options:
+  - '{''text'': "Їх зберегли як пам''ятку", ''correct'': False}'
+  - '{''text'': ''Їх затопила вода Дніпрогесу'', ''correct'': True}'
+  - '{''text'': ''Їх знищили вибухами'', ''correct'': False}'
+  - '{''text'': ''Вони існують досі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Боплан характеризує козацьку систему влади у своєму описі?
+  options:
+  - '{''text'': ''Як абсолютну монархію'', ''correct'': False}'
+  - '{''text'': ''Як систему щорічних виборів із рівністю'', ''correct'': True}'
+  - '{''text'': ''Як спадкову аристократію'', ''correct'': False}'
+  - '{''text'': ''Як релігійну теократію'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку особливість козацької демократії підкреслює Боплан?
+  options:
+  - '{''text'': ''Багатство визначає владу'', ''correct'': False}'
+  - '{''text'': ''Повна рівність незалежно від походження'', ''correct'': True}'
+  - '{''text'': ''Влада церкви'', ''correct'': False}'
+  - '{''text'': ''Спадковість посад'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як Конституція Орлика обмежує владу гетьмана?
+  options:
+  - '{''text'': ''Гетьман не може нічого вирішувати без волі старшини'', ''correct'':
+    True}'
+  - '{''text'': ''Гетьман має радитися тільки з церквою'', ''correct'': False}'
+  - '{''text'': ''Гетьман обирається довічно'', ''correct'': False}'
+  - '{''text'': ''Гетьман має абсолютну владу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як часто має збиратися Генеральна Рада за Конституцією Орлика?
+  options:
+  - '{''text'': ''Раз на рік'', ''correct'': False}'
+  - '{''text'': ''Тричі на рік'', ''correct'': True}'
+  - '{''text'': ''Щомісяця'', ''correct'': False}'
+  - '{''text'': "Раз на п''ять років", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який обов'язок гетьмана визначає Конституція Орлика?
+  options:
+  - '{''text'': ''Збагачуватися'', ''correct'': False}'
+  - '{''text'': ''Стояти на сторожі прав і вольностей козаків'', ''correct'': True}'
+  - '{''text'': ''Підкорятися царю'', ''correct'': False}'
+  - '{''text'': ''Знищувати ворогів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Який тон листа запорожців до султана?
+  options:
+  - '{''text'': ''Шанобливий і покірний'', ''correct'': False}'
+  - '{''text'': ''Грубий і насмішкуватий'', ''correct'': True}'
+  - '{''text'': ''Діловий і формальний'', ''correct'': False}'
+  - '{''text'': ''Просительний'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що свідчить лист про козацьке самоусвідомлення?
+  options:
+  - '{''text'': ''Козаки боялися султана'', ''correct'': False}'
+  - '{''text'': ''Козаки вважали себе рівними султану'', ''correct'': True}'
+  - '{''text'': ''Козаки хотіли підкоритися'', ''correct'': False}'
+  - '{''text'': ''Козаки шукали союзу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Хто підписав лист запорожців?
+  options:
+  - '{''text'': ''Богдан Хмельницький'', ''correct'': False}'
+  - '{''text'': ''Іван Сірко з усім кошем'', ''correct'': True}'
+  - '{''text'': ''Пилип Орлик'', ''correct'': False}'
+  - '{''text'': ''Дмитро Вишневецький'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яку роль грає гумор у листі запорожців?
+  options:
+  - '{''text'': ''Він послаблює напруженість'', ''correct'': False}'
+  - '{''text'': ''Він демонструє зневагу до ворога'', ''correct'': True}'
+  - '{''text'': ''Він показує дружелюбність'', ''correct'': False}'
+  - '{''text'': ''Він маскує страх'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Конституцію Орлика називають «однією з перших»?
+  options:
+  - '{''text'': ''Бо вона перша в Європі'', ''correct'': False}'
+  - '{''text'': ''Бо вона обмежує владу правителя і гарантує права'', ''correct'':
+    True}'
+  - '{''text'': ''Бо вона написана українською'', ''correct'': False}'
+  - '{''text'': ''Бо вона найдовша'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому Боплан є цінним джерелом про козацтво?
+  options:
+  - '{''text'': ''Бо він був українцем'', ''correct'': False}'
+  - '{''text'': ''Бо він був іноземним очевидцем XVII століття'', ''correct'': True}'
+  - '{''text'': ''Бо він був гетьманом'', ''correct'': False}'
+  - '{''text'': ''Бо він був священиком'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яке значення має фраза Боплана «ніхто не є більшим за іншого»?
+  options:
+  - '{''text'': ''Усі козаки бідні'', ''correct'': False}'
+  - '{''text'': ''Рівність прав незалежно від походження'', ''correct'': True}'
+  - '{''text'': ''Козаки не мають лідерів'', ''correct'': False}'
+  - '{''text'': ''Козаки не поважають старших'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Що означає «вольності» в контексті Конституції Орлика?
+  options:
+  - '{''text'': ''Свободу від законів'', ''correct'': False}'
+  - '{''text'': ''Козацькі права та привілеї'', ''correct'': True}'
+  - '{''text'': ''Можливість грабувати'', ''correct'': False}'
+  - '{''text'': ''Релігійну свободу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Чому козаки у листі кажуть «числа не знаєм, бо календаря не маєм»?
+  options:
+  - '{''text'': ''Тому що вони неграмотні'', ''correct'': False}'
+  - '{''text'': ''Це насмішка і демонстрація зневаги'', ''correct'': True}'
+  - '{''text'': ''Тому що вони не мають часу'', ''correct'': False}'
+  - '{''text'': ''Тому що це військова таємниця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Яка мета цитування первинних джерел у модулі?
+  options:
+  - '{''text'': ''Заповнити обсяг тексту'', ''correct'': False}'
+  - '{''text'': ''Дати автентичні свідчення з різних перспектив'', ''correct'': True}'
+  - '{''text'': ''Показати давню мову'', ''correct'': False}'
+  - '{''text'': ''Розважити читачів'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Аналіз первинних джерел
+  question: Як джерела доповнюють одне одного?
+  options:
+  - '{''text'': ''Вони суперечать одне одному'', ''correct'': False}'
+  - '{''text'': ''Вони показують різні аспекти козацької демократії'', ''correct'':
+    True}'
+  - '{''text'': ''Вони повторюють те саме'', ''correct'': False}'
+  - '{''text'': "Вони не пов''язані між собою", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, слово «Січ» походить від «сікти» — рубати ліс.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, Хортиця — найменший острів на Дніпрі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, козаки обирали гетьмана щороку 1 січня.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, у Січі могли жити тільки одружені козаки.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, Січ змінювала місце розташування вісім разів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, булава — символ влади кошового отамана.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, на Дніпрі було дев'ять порогів.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, Січ зруйнувала Катерина II у 1775 році.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, будь-який козак міг стати кандидатом на виборах.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, слово «курінь» походить від «курка».
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, Конституція Орлика — одна з перших у світі.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, гетьман мав абсолютну владу без обмежень.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, Гійом де Боплан був українським гетьманом.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, дніпровські пороги затопив Дніпрогес.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, кіш — це назва козацької громади або уряду.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Факти про Запорозьку Січ
+  statement: Згідно з текстом, першу Січ на Хортиці заснував Богдан Хмельницький.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

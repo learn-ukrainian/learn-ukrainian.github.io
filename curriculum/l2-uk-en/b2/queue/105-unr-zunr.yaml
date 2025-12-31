@@ -1,0 +1,284 @@
+module: 105-unr-zunr
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/105-unr-zunr.md
+generated: '2025-12-30T22:33:22.813120'
+scope: quiz, unjumble
+activity_counts:
+  unjumble: 6
+  quiz: 16
+total_items: 22
+item_count: 22
+sample_percent: null
+items:
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: Ще не вмерла України і слава, і воля,
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: Ще нам, браття молодії, усміхнеться доля.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: Згинуть наші воріженьки, як роса на сонці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: Запануєм і ми, браття, у своїй сторонці.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: Душу й тіло ми положим за нашу свободу,
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Гімн України
+  jumbled_words: []
+  answer: І покажем, що ми, браття, козацького роду.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Хто очолив Центральну Раду?
+  options:
+  - '{''text'': ''Михайло Грушевський'', ''correct'': True}'
+  - '{''text'': ''Павло Скоропадський'', ''correct'': False}'
+  - '{''text'': ''Симон Петлюра'', ''correct'': False}'
+  - '{''text'': ''Володимир Ленін'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Що таке Універсал?
+  options:
+  - '{''text'': ''Закон або указ Центральної Ради'', ''correct'': True}'
+  - '{''text'': ''Тип автомобіля'', ''correct'': False}'
+  - '{''text'': ''Військове звання'', ''correct'': False}'
+  - '{''text'': ''Назва міста'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Коли була проголошена повна незалежність УНР?
+  options:
+  - '{''text'': ''22 січня 1918 року'', ''correct'': True}'
+  - '{''text'': ''24 серпня 1991 року'', ''correct'': False}'
+  - '{''text'': ''1 листопада 1918 року'', ''correct'': False}'
+  - '{''text'': ''28 червня 1996 року'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Що сталося під Крутами?
+  options:
+  - '{''text'': ''Бій студентів проти більшовиків'', ''correct'': True}'
+  - '{''text'': ''Мирні переговори'', ''correct'': False}'
+  - '{''text'': ''Спортивні змагання'', ''correct'': False}'
+  - '{''text'': ''Концерт'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Кого називали 'гетьманом' у 1918 році?
+  options:
+  - '{''text'': ''Павла Скоропадського'', ''correct'': True}'
+  - '{''text'': ''Богдана Хмельницького'', ''correct'': False}'
+  - '{''text'': ''Івана Мазепу'', ''correct'': False}'
+  - '{''text'': ''Михайла Грушевського'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Що таке Акт Злуки?
+  options:
+  - '{''text'': "Об''єднання УНР і ЗУНР", ''correct'': True}'
+  - '{''text'': ''Розпад імперії'', ''correct'': False}'
+  - '{''text'': ''Мирний договір з Росією'', ''correct'': False}'
+  - '{''text'': ''Створення армії'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Коли ми святкуємо День Соборності?
+  options:
+  - '{''text'': ''22 січня'', ''correct'': True}'
+  - '{''text'': ''24 серпня'', ''correct'': False}'
+  - '{''text'': ''14 жовтня'', ''correct'': False}'
+  - '{''text'': ''9 травня'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Факти про Революцію
+  question: Хто такі більшовики?
+  options:
+  - '{''text'': ''Російські комуністи (червоні)'', ''correct'': True}'
+  - '{''text'': ''Українські патріоти'', ''correct'': False}'
+  - '{''text'': ''Німецькі солдати'', ''correct'': False}'
+  - '{''text'': ''Польські шляхтичі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Чим закінчилася Українська революція 1917-1921?
+  options:
+  - '{''text'': ''Поразкою і радянською окупацією'', ''correct'': True}'
+  - '{''text'': ''Повною перемогою'', ''correct'': False}'
+  - '{''text'': ''Приєднанням до Польщі'', ''correct'': False}'
+  - '{''text'': ''Створенням ЄС'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Хто такий Симон Петлюра?
+  options:
+  - '{''text'': ''Головний отаман військ УНР'', ''correct'': True}'
+  - '{''text'': ''Відомий поет'', ''correct'': False}'
+  - '{''text'': ''Російський шпигун'', ''correct'': False}'
+  - '{''text'': ''Австрійський ерцгерцог'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Що означає слово 'автономія'?
+  options:
+  - '{''text'': ''Самоврядування'', ''correct'': True}'
+  - '{''text'': ''Повна незалежність'', ''correct'': False}'
+  - '{''text'': ''Відсутність влади'', ''correct'': False}'
+  - '{''text'': ''Королівство'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Чому бій під Крутами такий важливий?
+  options:
+  - '{''text'': ''Він затримав ворога і дав час уряду'', ''correct'': True}'
+  - '{''text'': ''Це була найбільша битва в історії'', ''correct'': False}'
+  - '{''text'': ''Там ніхто не загинув'', ''correct'': False}'
+  - '{''text'': ''Це вигадка письменників'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Якого кольору був прапор УНР?
+  options:
+  - '{''text'': ''Синьо-жовтий'', ''correct'': True}'
+  - '{''text'': ''Червоний'', ''correct'': False}'
+  - '{''text'': ''Білий'', ''correct'': False}'
+  - '{''text'': ''Чорно-червоний'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Хто підтримав Гетьмана Скоропадського?
+  options:
+  - '{''text'': ''Німеччина'', ''correct'': True}'
+  - '{''text'': ''Росія'', ''correct'': False}'
+  - '{''text'': ''США'', ''correct'': False}'
+  - '{''text'': ''Франція'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Де поховані Герої Крут?
+  options:
+  - '{''text'': ''На Аскольдовій могилі в Києві'', ''correct'': True}'
+  - '{''text'': ''У Львові'', ''correct'': False}'
+  - '{''text'': ''В полі під Крутами'', ''correct'': False}'
+  - '{''text'': ''У Москві'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Підсумок
+  question: Хто написав музику до гімну?
+  options:
+  - '{''text'': ''Михайло Вербицький'', ''correct'': True}'
+  - '{''text'': ''Тарас Шевченко'', ''correct'': False}'
+  - '{''text'': ''Павло Чубинський'', ''correct'': False}'
+  - '{''text'': ''Микола Лисенко'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null

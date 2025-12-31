@@ -1,15 +1,18 @@
 module: 01-how-to-talk-about-grammar
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/01-how-to-talk-about-grammar.md
-generated: '2025-12-29T00:21:58.248921'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.114706'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 28
+  cloze: 1
   unjumble: 14
   quiz: 28
   true-false: 14
-item_count: 98
+total_items: 99
+item_count: 99
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок
@@ -501,6 +504,91 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Граматичний текст
+  passage_template: 'В українській мові є десять {частин мови|відмінків|родів}. Слова
+    типу «книга», «стіл» називаються {іменниками|дієсловами|прикметниками}. Слова
+    типу «читати», «писати» — це {дієслова|іменники|прислівники}. Слова «гарний»,
+    «великий» — {прикметники|прислівники|дієслова}, а «швидко», «добре» — {прислівники|прикметники|займенники}.
+    Для зв''язку слів використовують {прийменники|іменники|прислівники} та {сполучники|іменники|дієслова}.
+    Іменники змінюються за {відмінками|родами|числами} — їх в українській мові {сім|шість|п''ять}.
+    Перший — {називний|родовий|давальний}, останній — {кличний|місцевий|орудний}.
+    Для звертання використовують {кличний|місцевий|орудний} відмінок. Орудний відмінок
+    відповідає на питання «{ким? чим|кого? чого|кому? чому}»? Місцевий відмінок —
+    {шостий|п''ятий|сьомий} за порядком.
+
+    '
+  blanks:
+  - answer: родів
+    options:
+    - частин мови
+    - відмінків
+  - answer: прикметниками
+    options:
+    - іменниками
+    - дієсловами
+  - answer: прислівники
+    options:
+    - дієслова
+    - іменники
+  - answer: дієслова
+    options:
+    - прикметники
+    - прислівники
+  - answer: займенники
+    options:
+    - прислівники
+    - прикметники
+  - answer: прислівники
+    options:
+    - прийменники
+    - іменники
+  - answer: дієслова
+    options:
+    - сполучники
+    - іменники
+  - answer: числами
+    options:
+    - відмінками
+    - родами
+  - answer: п'ять
+    options:
+    - сім
+    - шість
+  - answer: давальний
+    options:
+    - називний
+    - родовий
+  - answer: орудний
+    options:
+    - кличний
+    - місцевий
+  - answer: орудний
+    options:
+    - кличний
+    - місцевий
+  - answer: кому? чому
+    options:
+    - ким? чим
+    - кого? чого
+  - answer: сьомий
+    options:
+    - шостий
+    - п'ятий
+  blank_count: 14
+  complete_passage: 'В українській мові є десять родів. Слова типу «книга», «стіл»
+    називаються прикметниками. Слова типу «читати», «писати» — це прислівники. Слова
+    «гарний», «великий» — дієслова, а «швидко», «добре» — займенники. Для зв''язку
+    слів використовують прислівники та дієслова. Іменники змінюються за числами —
+    їх в українській мові п''ять. Перший — давальний, останній — орудний. Для звертання
+    використовують орудний відмінок. Орудний відмінок відповідає на питання «кому?
+    чому»? Місцевий відмінок — сьомий за порядком.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Граматичні терміни
   jumbled_words: []
@@ -618,14 +706,10 @@ items:
   question: Коли українська вчителька каже "поставте іменник у множині", який термін
     вона використовує для позначення слів типу "книга" чи "стіл"?
   options:
-  - text: дієслово
-    correct: false
-  - text: іменник
-    correct: true
-  - text: прикметник
-    correct: false
-  - text: прислівник
-    correct: false
+  - '{''text'': ''дієслово'', ''correct'': False}'
+  - '{''text'': ''іменник'', ''correct'': True}'
+  - '{''text'': ''прикметник'', ''correct'': False}'
+  - '{''text'': ''прислівник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -637,14 +721,10 @@ items:
   question: Ви читаєте українську граматику й бачите речення "прислівник описує дію
     або ознаку" — яке слово у цьому реченні є прикладом прислівника?
   options:
-  - text: іменник
-    correct: false
-  - text: дієслово
-    correct: false
-  - text: прикметник
-    correct: false
-  - text: прислівник
-    correct: true
+  - '{''text'': ''іменник'', ''correct'': False}'
+  - '{''text'': ''дієслово'', ''correct'': False}'
+  - '{''text'': ''прикметник'', ''correct'': False}'
+  - '{''text'': ''прислівник'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -656,14 +736,10 @@ items:
   question: У підручнику написано "дієслово змінюється за часами й особами" — яку
     частину мови означає слово "дієслово" в цьому поясненні?
   options:
-  - text: іменник
-    correct: false
-  - text: дієслово
-    correct: true
-  - text: прикметник
-    correct: false
-  - text: сполучник
-    correct: false
+  - '{''text'': ''іменник'', ''correct'': False}'
+  - '{''text'': ''дієслово'', ''correct'': True}'
+  - '{''text'': ''прикметник'', ''correct'': False}'
+  - '{''text'': ''сполучник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -675,14 +751,10 @@ items:
   question: Вчитель просить знайти всі прикметники в реченні "гарний хлопець читає
     цікаву книгу" — скільки прикметників у цьому реченні?
   options:
-  - text: один прикметник
-    correct: false
-  - text: два прикметники
-    correct: true
-  - text: три прикметники
-    correct: false
-  - text: чотири прикметники
-    correct: false
+  - '{''text'': ''один прикметник'', ''correct'': False}'
+  - '{''text'': ''два прикметники'', ''correct'': True}'
+  - '{''text'': ''три прикметники'', ''correct'': False}'
+  - '{''text'': ''чотири прикметники'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -694,14 +766,10 @@ items:
   question: Коли граматика каже "прийменник вимагає певного відмінка", який термін
     означає слова типу "в", "на", "до", "з"?
   options:
-  - text: сполучник
-    correct: false
-  - text: прийменник
-    correct: true
-  - text: частка
-    correct: false
-  - text: вигук
-    correct: false
+  - '{''text'': ''сполучник'', ''correct'': False}'
+  - '{''text'': ''прийменник'', ''correct'': True}'
+  - '{''text'': ''частка'', ''correct'': False}'
+  - '{''text'': ''вигук'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -713,14 +781,10 @@ items:
   question: У реченні "я хочу поїхати, але не маю часу" слово "але" з'єднує дві частини
     — якою частиною мови воно є?
   options:
-  - text: прийменник
-    correct: false
-  - text: сполучник
-    correct: true
-  - text: частка
-    correct: false
-  - text: вигук
-    correct: false
+  - '{''text'': ''прийменник'', ''correct'': False}'
+  - '{''text'': ''сполучник'', ''correct'': True}'
+  - '{''text'': ''частка'', ''correct'': False}'
+  - '{''text'': ''вигук'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -732,14 +796,10 @@ items:
   question: Підручник пояснює, що займенники замінюють іменники в реченні — яке слово
     є займенником у фразі "вона читає книгу"?
   options:
-  - text: читає
-    correct: false
-  - text: книгу
-    correct: false
-  - text: вона
-    correct: true
-  - text: читає книгу
-    correct: false
+  - '{''text'': ''читає'', ''correct'': False}'
+  - '{''text'': ''книгу'', ''correct'': False}'
+  - '{''text'': ''вона'', ''correct'': True}'
+  - '{''text'': ''читає книгу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -751,14 +811,10 @@ items:
   question: Ви бачите в тексті емоційний вигук "ой, як боляче!" — якою частиною мови
     є слово "ой" у цьому виразі?
   options:
-  - text: сполучник
-    correct: false
-  - text: частка
-    correct: false
-  - text: вигук
-    correct: true
-  - text: прийменник
-    correct: false
+  - '{''text'': ''сполучник'', ''correct'': False}'
+  - '{''text'': ''частка'', ''correct'': False}'
+  - '{''text'': ''вигук'', ''correct'': True}'
+  - '{''text'': ''прийменник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -770,14 +826,10 @@ items:
   question: Коли граматист каже "визначте частину мови кожного слова", що саме він
     просить вас визначити для кожного слова?
   options:
-  - text: частина мови
-    correct: true
-  - text: відмінок
-    correct: false
-  - text: рід
-    correct: false
-  - text: число
-    correct: false
+  - '{''text'': ''частина мови'', ''correct'': True}'
+  - '{''text'': ''відмінок'', ''correct'': False}'
+  - '{''text'': ''рід'', ''correct'': False}'
+  - '{''text'': ''число'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -789,14 +841,10 @@ items:
   question: У вправі написано "знайдіть числівники" — який тип слів ви шукатимете
     серед варіантів "п'ять", "швидко", "гарний", "книга"?
   options:
-  - text: іменник
-    correct: false
-  - text: прислівник
-    correct: false
-  - text: числівник
-    correct: true
-  - text: прикметник
-    correct: false
+  - '{''text'': ''іменник'', ''correct'': False}'
+  - '{''text'': ''прислівник'', ''correct'': False}'
+  - '{''text'': ''числівник'', ''correct'': True}'
+  - '{''text'': ''прикметник'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -808,14 +856,10 @@ items:
   question: Граматика пояснює "частка 'не' заперечує значення дієслова" — яким терміном
     позначають слова типу "не", "ні", "хай"?
   options:
-  - text: сполучник
-    correct: false
-  - text: прийменник
-    correct: false
-  - text: частка
-    correct: true
-  - text: вигук
-    correct: false
+  - '{''text'': ''сполучник'', ''correct'': False}'
+  - '{''text'': ''прийменник'', ''correct'': False}'
+  - '{''text'': ''частка'', ''correct'': True}'
+  - '{''text'': ''вигук'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -827,14 +871,10 @@ items:
   question: Вчитель каже "займенники мають такі ж граматичні категорії, як іменники"
     — яким словом у реченні "він бачить її" є займенник?
   options:
-  - text: бачить
-    correct: false
-  - text: він
-    correct: false
-  - text: лише "її"
-    correct: false
-  - text: і "він", і "її"
-    correct: true
+  - '{''text'': ''бачить'', ''correct'': False}'
+  - '{''text'': ''він'', ''correct'': False}'
+  - '{''text'': ''лише "її"'', ''correct'': False}'
+  - '{''text'': ''і "він", і "її"'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -846,14 +886,10 @@ items:
   question: Підручник пояснює "сполучники поєднують слова або речення" — яке слово
     є сполучником у фразі "мама і тато"?
   options:
-  - text: і
-    correct: true
-  - text: мама
-    correct: false
-  - text: тато
-    correct: false
-  - text: мама тато
-    correct: false
+  - '{''text'': ''і'', ''correct'': True}'
+  - '{''text'': ''мама'', ''correct'': False}'
+  - '{''text'': ''тато'', ''correct'': False}'
+  - '{''text'': ''мама тато'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -865,14 +901,10 @@ items:
   question: Коли вчитель каже "прийменник керує відмінком іменника", яке слово є прийменником
     у фразі "книга на столі"?
   options:
-  - text: на
-    correct: true
-  - text: книга
-    correct: false
-  - text: столі
-    correct: false
-  - text: книга столі
-    correct: false
+  - '{''text'': ''на'', ''correct'': True}'
+  - '{''text'': ''книга'', ''correct'': False}'
+  - '{''text'': ''столі'', ''correct'': False}'
+  - '{''text'': ''книга столі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -883,14 +915,10 @@ items:
   title: Відмінки
   question: У мнемоніці "Н-Р-Д-З-О-М-К" літера "Н" означає який відмінок?
   options:
-  - text: називний
-    correct: true
-  - text: родовий
-    correct: false
-  - text: давальний
-    correct: false
-  - text: знахідний
-    correct: false
+  - '{''text'': ''називний'', ''correct'': True}'
+  - '{''text'': ''родовий'', ''correct'': False}'
+  - '{''text'': ''давальний'', ''correct'': False}'
+  - '{''text'': ''знахідний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -902,14 +930,10 @@ items:
   question: Підручник каже "родовий відмінок відповідає на питання кого? чого?" —
     яку форму слова "книга" ви напишете в родовому відмінку?
   options:
-  - text: називний
-    correct: false
-  - text: родовий
-    correct: true
-  - text: давальний
-    correct: false
-  - text: знахідний
-    correct: false
+  - '{''text'': ''називний'', ''correct'': False}'
+  - '{''text'': ''родовий'', ''correct'': True}'
+  - '{''text'': ''давальний'', ''correct'': False}'
+  - '{''text'': ''знахідний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -921,14 +945,10 @@ items:
   question: Вчитель пояснює "давальний відмінок показує, кому адресована дія" — яким
     відмінком є слово "сестрі" в реченні "я дав книгу сестрі"?
   options:
-  - text: родовий відмінок
-    correct: false
-  - text: давальний відмінок
-    correct: true
-  - text: знахідний відмінок
-    correct: false
-  - text: орудний відмінок
-    correct: false
+  - '{''text'': ''родовий відмінок'', ''correct'': False}'
+  - '{''text'': ''давальний відмінок'', ''correct'': True}'
+  - '{''text'': ''знахідний відмінок'', ''correct'': False}'
+  - '{''text'': ''орудний відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -940,14 +960,10 @@ items:
   question: У реченні "студент читає книгу" граматика каже, що слово "книгу" стоїть
     у відмінку для прямого додатка — який це відмінок?
   options:
-  - text: родовий
-    correct: false
-  - text: давальний
-    correct: false
-  - text: знахідний
-    correct: true
-  - text: орудний
-    correct: false
+  - '{''text'': ''родовий'', ''correct'': False}'
+  - '{''text'': ''давальний'', ''correct'': False}'
+  - '{''text'': ''знахідний'', ''correct'': True}'
+  - '{''text'': ''орудний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -959,14 +975,10 @@ items:
   question: Коли мнемоніка каже "орішки" для п'ятого відмінка, на яку літеру починається
     назва цього відмінка в українській граматиці?
   options:
-  - text: знахідний
-    correct: false
-  - text: орудний
-    correct: true
-  - text: місцевий
-    correct: false
-  - text: кличний
-    correct: false
+  - '{''text'': ''знахідний'', ''correct'': False}'
+  - '{''text'': ''орудний'', ''correct'': True}'
+  - '{''text'': ''місцевий'', ''correct'': False}'
+  - '{''text'': ''кличний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +990,10 @@ items:
   question: Підручник пояснює "після прийменника 'на' для позначення місця вживається
     місцевий відмінок" — яка форма слова "стіл" буде правильною після "на"?
   options:
-  - text: знахідний
-    correct: false
-  - text: орудний
-    correct: false
-  - text: місцевий
-    correct: true
-  - text: кличний
-    correct: false
+  - '{''text'': ''знахідний'', ''correct'': False}'
+  - '{''text'': ''орудний'', ''correct'': False}'
+  - '{''text'': ''місцевий'', ''correct'': True}'
+  - '{''text'': ''кличний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -997,14 +1005,10 @@ items:
   question: Коли українець звертається до друга "Тарасе!", він використовує спеціальний
     відмінок для звертання — як називається цей відмінок?
   options:
-  - text: називний
-    correct: false
-  - text: місцевий
-    correct: false
-  - text: кличний
-    correct: true
-  - text: орудний
-    correct: false
+  - '{''text'': ''називний'', ''correct'': False}'
+  - '{''text'': ''місцевий'', ''correct'': False}'
+  - '{''text'': ''кличний'', ''correct'': True}'
+  - '{''text'': ''орудний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1016,14 +1020,10 @@ items:
   question: Студент запитує "скільки відмінків потрібно вивчити в українській мові?"
     — яка правильна відповідь на це запитання?
   options:
-  - text: '5'
-    correct: false
-  - text: '6'
-    correct: false
-  - text: '7'
-    correct: true
-  - text: '8'
-    correct: false
+  - '{''text'': ''5'', ''correct'': False}'
+  - '{''text'': ''6'', ''correct'': False}'
+  - '{''text'': ''7'', ''correct'': True}'
+  - '{''text'': ''8'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1035,14 +1035,10 @@ items:
   question: Граматика пояснює "давальний відмінок відповідає на питання кому? чому?"
     — яким відмінком стоїть слово "мамі" в реченні "я допомагаю мамі"?
   options:
-  - text: кого? чого?
-    correct: false
-  - text: кому? чому?
-    correct: true
-  - text: кого? що?
-    correct: false
-  - text: ким? чим?
-    correct: false
+  - '{''text'': ''кого? чого?'', ''correct'': False}'
+  - '{''text'': ''кому? чому?'', ''correct'': True}'
+  - '{''text'': ''кого? що?'', ''correct'': False}'
+  - '{''text'': ''ким? чим?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1054,14 +1050,10 @@ items:
   question: Коли граматика каже "орудний відмінок показує інструмент дії", яким відмінком
     є слово "ручкою" в реченні "пишу ручкою"?
   options:
-  - text: знахідний відмінок
-    correct: false
-  - text: орудний відмінок
-    correct: true
-  - text: місцевий відмінок
-    correct: false
-  - text: родовий відмінок
-    correct: false
+  - '{''text'': ''знахідний відмінок'', ''correct'': False}'
+  - '{''text'': ''орудний відмінок'', ''correct'': True}'
+  - '{''text'': ''місцевий відмінок'', ''correct'': False}'
+  - '{''text'': ''родовий відмінок'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1073,14 +1065,10 @@ items:
   question: У мнемоніці "На Різдво Дід Загубив Орішки Між Ковбасками" яку літеру "Д"
     означає третій відмінок?
   options:
-  - text: родовий
-    correct: false
-  - text: давальний
-    correct: true
-  - text: знахідний
-    correct: false
-  - text: орудний
-    correct: false
+  - '{''text'': ''родовий'', ''correct'': False}'
+  - '{''text'': ''давальний'', ''correct'': True}'
+  - '{''text'': ''знахідний'', ''correct'': False}'
+  - '{''text'': ''орудний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1092,14 +1080,10 @@ items:
   question: Підручник пояснює "відмінок — це граматична категорія, що показує роль
     слова в реченні" — яким терміном називають цю категорію?
   options:
-  - text: рід
-    correct: false
-  - text: число
-    correct: false
-  - text: відмінок
-    correct: true
-  - text: особа
-    correct: false
+  - '{''text'': ''рід'', ''correct'': False}'
+  - '{''text'': ''число'', ''correct'': False}'
+  - '{''text'': ''відмінок'', ''correct'': True}'
+  - '{''text'': ''особа'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1111,14 +1095,10 @@ items:
   question: Коли граматика каже "орудний відмінок відповідає на ким? чим?", яким відмінком
     стоїть слово "олівцем" у реченні "малюю олівцем"?
   options:
-  - text: кого? чого?
-    correct: false
-  - text: кому? чому?
-    correct: false
-  - text: кого? що?
-    correct: false
-  - text: ким? чим?
-    correct: true
+  - '{''text'': ''кого? чого?'', ''correct'': False}'
+  - '{''text'': ''кому? чому?'', ''correct'': False}'
+  - '{''text'': ''кого? що?'', ''correct'': False}'
+  - '{''text'': ''ким? чим?'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1130,14 +1110,10 @@ items:
   question: У мнемоніці "На Різдво Дід Загубив Орішки Між Ковбасками" остання літера
     "К" означає сьомий відмінок — як він називається?
   options:
-  - text: орудний
-    correct: false
-  - text: місцевий
-    correct: false
-  - text: кличний
-    correct: true
-  - text: знахідний
-    correct: false
+  - '{''text'': ''орудний'', ''correct'': False}'
+  - '{''text'': ''місцевий'', ''correct'': False}'
+  - '{''text'': ''кличний'', ''correct'': True}'
+  - '{''text'': ''знахідний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

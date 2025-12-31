@@ -1,7 +1,7 @@
 module: 11-aspect-in-imperatives
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/11-aspect-in-imperatives.md
-generated: '2025-12-29T00:21:59.232972'
+generated: '2025-12-30T19:49:27.524444'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 8
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 8
   translate: 8
   true-false: 12
+total_items: 59
 item_count: 59
+sample_percent: null
 items:
 - activity: error-correction
   title: Знайдіть та виправте помилку у виборі аспекту
@@ -333,88 +335,59 @@ items:
     з балкона і приступай до роботи негайно! {Попроси|Проси} сестру допомогти тобі
     з посудом, якщо буде складно.'
   blanks:
-  - id: 1
-    answer: допоможи
+  - answer: допомагай
     options:
     - допоможи
-    - допомагай
-  - id: 2
-    answer: помий
+  - answer: мий
     options:
     - помий
-    - мий
-  - id: 3
-    answer: витри
+  - answer: витирай
     options:
     - витри
-    - витирай
-  - id: 4
-    answer: Поклади
+  - answer: Клади
     options:
     - Поклади
-    - Клади
-  - id: 5
-    answer: підмети
+  - answer: підмітай
     options:
     - підмети
-    - підмітай
-  - id: 6
-    answer: пропилосось
+  - answer: пилосось
     options:
     - пропилосось
-    - пилосось
-  - id: 7
-    answer: слухай
+  - answer: послухай
     options:
     - слухай
-    - послухай
-  - id: 8
-    answer: працюй
+  - answer: попрацюй
     options:
     - працюй
-    - попрацюй
-  - id: 9
-    answer: Зайди
+  - answer: Заходь
     options:
     - Зайди
-    - Заходь
-  - id: 10
-    answer: допомагаєш
+  - answer: допоможеш
     options:
     - допомагаєш
-    - допоможеш
-  - id: 11
-    answer: Починай
+  - answer: Почни
     options:
     - Починай
-    - Почни
-  - id: 12
-    answer: ціную
+  - answer: оціню
     options:
     - ціную
-    - оціню
-  - id: 13
-    answer: Візьми
+  - answer: Бери
     options:
     - Візьми
-    - Бери
-  - id: 14
-    answer: Попроси
+  - answer: Проси
     options:
     - Попроси
-    - Проси
-  complete_passage: 'Мама: Андрію, {допоможи|допомагай} мені сьогодні з прибиранням
-    кімнати до приходу гостей! Спочатку {помий|мий} посуд на кухні — він там накопичився
-    за два дні. Потім {витри|витирай} пил із полиць у вітальні, щоб було чисто. {Поклади|Клади}
-    книги на місце акуратно та {підмети|підмітай} підлогу в коридорі. Коли закінчиш
-    з коридором, {пропилосось|пилосось} килим у моїй спальні. А тепер {слухай|послухай}
-    уважно: гості прийдуть о шостій вечора, тож {працюй|попрацюй} швидко і старанно,
-    не відволікайся на телефон. {Зайди|Заходь} до мене в кімнату, коли все зробиш,
-    і я перевірю. Дякую, що {допомагаєш|допоможеш} матусі з цими справами! Без твоєї
-    допомоги я б не встигла. {Починай|Почни} просто зараз, бо часу мало залишилось!
-    Ти знаєш, як я {ціную|оціню} твою допомогу кожного разу. {Візьми|Бери} швабру
-    з балкона і приступай до роботи негайно! {Попроси|Проси} сестру допомогти тобі
-    з посудом, якщо буде складно.'
+  blank_count: 14
+  complete_passage: 'Мама: Андрію, допомагай мені сьогодні з прибиранням кімнати до
+    приходу гостей! Спочатку мий посуд на кухні — він там накопичився за два дні.
+    Потім витирай пил із полиць у вітальні, щоб було чисто. Клади книги на місце акуратно
+    та підмітай підлогу в коридорі. Коли закінчиш з коридором, пилосось килим у моїй
+    спальні. А тепер послухай уважно: гості прийдуть о шостій вечора, тож попрацюй
+    швидко і старанно, не відволікайся на телефон. Заходь до мене в кімнату, коли
+    все зробиш, і я перевірю. Дякую, що допоможеш матусі з цими справами! Без твоєї
+    допомоги я б не встигла. Почни просто зараз, бо часу мало залишилось! Ти знаєш,
+    як я оціню твою допомогу кожного разу. Бери швабру з балкона і приступай до роботи
+    негайно! Проси сестру допомогти тобі з посудом, якщо буде складно.'
   validate:
     passage_valid: null
     explanation: null
@@ -488,14 +461,10 @@ items:
   question: Ви приймаєте гостей удома і хочете запропонувати їм сісти за стіл, який
     аспект використати в цій ситуації?
   options:
-  - text: Сідайте! (НДВ — гостинне запрошення)
-    correct: true
-  - text: Сядьте! (ДВ — конкретна інструкція)
-    correct: false
-  - text: Посідали! (минулий час)
-    correct: false
-  - text: Сидіти! (інфінітив)
-    correct: false
+  - '{''text'': ''Сідайте! (НДВ — гостинне запрошення)'', ''correct'': True}'
+  - '{''text'': ''Сядьте! (ДВ — конкретна інструкція)'', ''correct'': False}'
+  - '{''text'': ''Посідали! (минулий час)'', ''correct'': False}'
+  - '{''text'': ''Сидіти! (інфінітив)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -507,14 +476,10 @@ items:
   question: Вам потрібно, щоб колега надіслав документ електронною поштою до кінця
     робочого дня, яку форму обрати?
   options:
-  - text: Надсилай! (НДВ — регулярна дія)
-    correct: false
-  - text: Надішли! (ДВ — конкретна одноразова дія)
-    correct: true
-  - text: Надсилати! (інфінітив)
-    correct: false
-  - text: Надсилаючи! (дієприслівник)
-    correct: false
+  - '{''text'': ''Надсилай! (НДВ — регулярна дія)'', ''correct'': False}'
+  - '{''text'': ''Надішли! (ДВ — конкретна одноразова дія)'', ''correct'': True}'
+  - '{''text'': ''Надсилати! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Надсилаючи! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -526,14 +491,10 @@ items:
   question: Вчитель хоче, щоб учні продовжували читати текст протягом уроку без зупинки,
     яка форма правильна?
   options:
-  - text: Читайте! (НДВ — тривалий процес)
-    correct: true
-  - text: Прочитайте! (ДВ — завершити читання)
-    correct: false
-  - text: Прочитали! (минулий час)
-    correct: false
-  - text: Читати! (інфінітив)
-    correct: false
+  - '{''text'': ''Читайте! (НДВ — тривалий процес)'', ''correct'': True}'
+  - '{''text'': ''Прочитайте! (ДВ — завершити читання)'', ''correct'': False}'
+  - '{''text'': ''Прочитали! (минулий час)'', ''correct'': False}'
+  - '{''text'': ''Читати! (інфінітив)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -545,14 +506,10 @@ items:
   question: Батько хоче, щоб дитина закрила вікно в кімнаті через холодний вітер,
     яку форму обрати?
   options:
-  - text: Закривай! (НДВ)
-    correct: false
-  - text: Закрий! (ДВ — одноразова дія)
-    correct: true
-  - text: Закривати! (інфінітив)
-    correct: false
-  - text: Закривши! (дієприслівник)
-    correct: false
+  - '{''text'': ''Закривай! (НДВ)'', ''correct'': False}'
+  - '{''text'': ''Закрий! (ДВ — одноразова дія)'', ''correct'': True}'
+  - '{''text'': ''Закривати! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Закривши! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -564,14 +521,10 @@ items:
   question: На базарі продавець хоче залучити покупців подивитися на товар без зобов'язань,
     яку форму обрати?
   options:
-  - text: Дивіться! (НДВ — запрошення без тиску)
-    correct: true
-  - text: Подивіться! (ДВ — конкретна дія)
-    correct: false
-  - text: Дивитися! (інфінітив)
-    correct: false
-  - text: Подивившись! (дієприслівник)
-    correct: false
+  - '{''text'': ''Дивіться! (НДВ — запрошення без тиску)'', ''correct'': True}'
+  - '{''text'': ''Подивіться! (ДВ — конкретна дія)'', ''correct'': False}'
+  - '{''text'': ''Дивитися! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Подивившись! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -583,14 +536,10 @@ items:
   question: Мама просить сина допомогти їй регулярно з домашніми справами кожного
     вечора, яка форма правильна?
   options:
-  - text: Допомагай! (НДВ — регулярна дія)
-    correct: true
-  - text: Допоможи! (ДВ — одноразова допомога)
-    correct: false
-  - text: Допомагати! (інфінітив)
-    correct: false
-  - text: Допомігши! (дієприслівник)
-    correct: false
+  - '{''text'': ''Допомагай! (НДВ — регулярна дія)'', ''correct'': True}'
+  - '{''text'': ''Допоможи! (ДВ — одноразова допомога)'', ''correct'': False}'
+  - '{''text'': ''Допомагати! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Допомігши! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -602,14 +551,10 @@ items:
   question: Керівник дає завдання працівнику перевірити звіт один раз і повідомити
     про помилки, яку форму обрати?
   options:
-  - text: Перевіряй! (НДВ — регулярне перевіряння)
-    correct: false
-  - text: Перевір! (ДВ — одноразова перевірка)
-    correct: true
-  - text: Перевіряти! (інфінітив)
-    correct: false
-  - text: Перевіривши! (дієприслівник)
-    correct: false
+  - '{''text'': ''Перевіряй! (НДВ — регулярне перевіряння)'', ''correct'': False}'
+  - '{''text'': ''Перевір! (ДВ — одноразова перевірка)'', ''correct'': True}'
+  - '{''text'': ''Перевіряти! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Перевіривши! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -621,14 +566,10 @@ items:
   question: Лікар радить пацієнту приймати ліки регулярно тричі на день протягом тижня,
     яку форму обрати?
   options:
-  - text: Приймай! (НДВ — регулярна дія)
-    correct: true
-  - text: Прийми! (ДВ — одноразова дія)
-    correct: false
-  - text: Приймати! (інфінітив)
-    correct: false
-  - text: Прийнявши! (дієприслівник)
-    correct: false
+  - '{''text'': ''Приймай! (НДВ — регулярна дія)'', ''correct'': True}'
+  - '{''text'': ''Прийми! (ДВ — одноразова дія)'', ''correct'': False}'
+  - '{''text'': ''Приймати! (інфінітив)'', ''correct'': False}'
+  - '{''text'': ''Прийнявши! (дієприслівник)'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -640,14 +581,10 @@ items:
   source_sentence: Come in and sit down, please! (polite invitation to guests)
   answer: ''
   options:
-  - text: Зайдіть і сядьте, будь ласка!
-    correct: false
-  - text: Заходьте і сідайте, будь ласка!
-    correct: true
-  - text: Заходь і сідай, будь ласка!
-    correct: false
-  - text: Зайди і сядь, будь ласка!
-    correct: false
+  - '{''text'': ''Зайдіть і сядьте, будь ласка!'', ''correct'': False}'
+  - '{''text'': ''Заходьте і сідайте, будь ласка!'', ''correct'': True}'
+  - '{''text'': ''Заходь і сідай, будь ласка!'', ''correct'': False}'
+  - '{''text'': ''Зайди і сядь, будь ласка!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -658,14 +595,10 @@ items:
   source_sentence: Read this book and tell me your opinion! (specific task)
   answer: ''
   options:
-  - text: Прочитай цю книгу і скажи мені свою думку!
-    correct: true
-  - text: Читай цю книгу і кажи мені свою думку!
-    correct: false
-  - text: Прочитайте цю книгу і скажіть мені свою думку!
-    correct: false
-  - text: Читайте цю книгу і кажіть мені свою думку!
-    correct: false
+  - '{''text'': ''Прочитай цю книгу і скажи мені свою думку!'', ''correct'': True}'
+  - '{''text'': ''Читай цю книгу і кажи мені свою думку!'', ''correct'': False}'
+  - '{''text'': ''Прочитайте цю книгу і скажіть мені свою думку!'', ''correct'': False}'
+  - '{''text'': ''Читайте цю книгу і кажіть мені свою думку!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -676,14 +609,13 @@ items:
   source_sentence: Call me every evening when you finish work! (regular action)
   answer: ''
   options:
-  - text: Зателефонуй мені щовечора, коли закінчиш роботу!
-    correct: false
-  - text: Телефонуй мені щовечора, коли закінчуєш роботу!
-    correct: true
-  - text: Подзвони мені щовечора, коли закінчиш роботу!
-    correct: false
-  - text: Дзвони мені щовечора, коли закінчуватимеш роботу!
-    correct: false
+  - '{''text'': ''Зателефонуй мені щовечора, коли закінчиш роботу!'', ''correct'':
+    False}'
+  - '{''text'': ''Телефонуй мені щовечора, коли закінчуєш роботу!'', ''correct'':
+    True}'
+  - '{''text'': ''Подзвони мені щовечора, коли закінчиш роботу!'', ''correct'': False}'
+  - '{''text'': ''Дзвони мені щовечора, коли закінчуватимеш роботу!'', ''correct'':
+    False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -694,14 +626,10 @@ items:
   source_sentence: Close the window, it is cold! (specific one-time action)
   answer: ''
   options:
-  - text: Закрий вікно, холодно!
-    correct: true
-  - text: Закривай вікно, холодно!
-    correct: false
-  - text: Зачини вікно, холодно!
-    correct: false
-  - text: Зачиняй вікно, холодно!
-    correct: false
+  - '{''text'': ''Закрий вікно, холодно!'', ''correct'': True}'
+  - '{''text'': ''Закривай вікно, холодно!'', ''correct'': False}'
+  - '{''text'': ''Зачини вікно, холодно!'', ''correct'': False}'
+  - '{''text'': ''Зачиняй вікно, холодно!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -712,14 +640,10 @@ items:
   source_sentence: Help your brother with homework every day! (regular advice)
   answer: ''
   options:
-  - text: Допоможи братові з уроками щодня!
-    correct: false
-  - text: Допомагай братові з уроками щодня!
-    correct: true
-  - text: Допоможіть братові з уроками щодня!
-    correct: false
-  - text: Допомагайте братові з уроками щодня!
-    correct: false
+  - '{''text'': ''Допоможи братові з уроками щодня!'', ''correct'': False}'
+  - '{''text'': ''Допомагай братові з уроками щодня!'', ''correct'': True}'
+  - '{''text'': ''Допоможіть братові з уроками щодня!'', ''correct'': False}'
+  - '{''text'': ''Допомагайте братові з уроками щодня!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -730,14 +654,10 @@ items:
   source_sentence: Send me the document immediately! (urgent specific action)
   answer: ''
   options:
-  - text: Надішли мені документ негайно!
-    correct: true
-  - text: Надсилай мені документ негайно!
-    correct: false
-  - text: Відправ мені документ негайно!
-    correct: false
-  - text: Відправляй мені документ негайно!
-    correct: false
+  - '{''text'': ''Надішли мені документ негайно!'', ''correct'': True}'
+  - '{''text'': ''Надсилай мені документ негайно!'', ''correct'': False}'
+  - '{''text'': ''Відправ мені документ негайно!'', ''correct'': False}'
+  - '{''text'': ''Відправляй мені документ негайно!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -748,14 +668,10 @@ items:
   source_sentence: Listen carefully to the teacher during the lesson! (ongoing attention)
   answer: ''
   options:
-  - text: Слухай уважно вчителя на уроці!
-    correct: true
-  - text: Послухай уважно вчителя на уроці!
-    correct: false
-  - text: Слухайте уважно вчителя на уроці!
-    correct: false
-  - text: Послухайте уважно вчителя на уроці!
-    correct: false
+  - '{''text'': ''Слухай уважно вчителя на уроці!'', ''correct'': True}'
+  - '{''text'': ''Послухай уважно вчителя на уроці!'', ''correct'': False}'
+  - '{''text'': ''Слухайте уважно вчителя на уроці!'', ''correct'': False}'
+  - '{''text'': ''Послухайте уважно вчителя на уроці!'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -766,14 +682,10 @@ items:
   source_sentence: Write the report and submit it by Friday! (specific completed tasks)
   answer: ''
   options:
-  - text: Напиши звіт і здай його до п'ятниці!
-    correct: true
-  - text: Пиши звіт і здавай його до п'ятниці!
-    correct: false
-  - text: Напишіть звіт і здайте його до п'ятниці!
-    correct: false
-  - text: Пишіть звіт і здавайте його до п'ятниці!
-    correct: false
+  - '{''text'': "Напиши звіт і здай його до п''ятниці!", ''correct'': True}'
+  - '{''text'': "Пиши звіт і здавай його до п''ятниці!", ''correct'': False}'
+  - '{''text'': "Напишіть звіт і здайте його до п''ятниці!", ''correct'': False}'
+  - '{''text'': "Пишіть звіт і здавайте його до п''ятниці!", ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

@@ -1,15 +1,18 @@
 module: 35-word-formation-place-object-names
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/35-word-formation-place-object-names.md
-generated: '2025-12-29T18:17:19.292073'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.341552'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у назвах місць
@@ -571,6 +574,138 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст назвами місць
+  passage_template: 'Наше маленьке містечко має все необхідне для життя. У центрі
+    розташована велика {бібліотека|читарня|книгарище|бібліотека} з затишною {читальнею|читарнею|читищем|читальнею}.
+    Поруч — міська {лікарня|лікальня|лікище|лікарня}, де працюють досвідчені лікарі.
+
+
+    На головній вулиці відкрили нову {пекарню|пекальню|пекище|пекарню} — там завжди
+    свіжий хліб. Біля неї — маленька {перукарня|перукальня|перукище|перукарня}, де
+    завжди черга. Через дорогу працює цілодобова {аптека|аптечище|аптарня|аптека}.
+
+
+    На околиці міста знаходиться старе {кладовище|кладарня|кладальня|кладовище}, де
+    похований знаменитий поет. Поруч — археологічне {городище|городарня|городальня|городище}
+    з унікальними знахідками. За містом — велике {пасовище|пасарня|пасальня|пасовище},
+    де пасуться корови.
+
+
+    У новому районі відкрили сучасну {їдальню|їдарню|їдище|їдальню} та {пральню|праларню|пральище|пральню}
+    самообслуговування. На місці старого {звалища|звальні|звалки|звалища} тепер парк.
+    Туристи відвідують стару {друкарню|друкальню|друкище|друкарню}, де колись видавали
+    газету. Діти сплять у затишній {спальні|спарні|спищі|спальні}. У великій {майстерні|майстральні|майстрищі|майстерні}
+    працюють місцеві художники. Усе життя зосереджене навколо центральної {вітальні|вітарні|вітища|вітальні}
+    культурного центру.
+
+    '
+  blanks:
+  - answer: бібліотека
+    options:
+    - бібліотека
+    - читарня
+    - книгарище
+  - answer: читальнею
+    options:
+    - читальнею
+    - читарнею
+    - читищем
+  - answer: лікарня
+    options:
+    - лікарня
+    - лікальня
+    - лікище
+  - answer: пекарню
+    options:
+    - пекарню
+    - пекальню
+    - пекище
+  - answer: перукарня
+    options:
+    - перукарня
+    - перукальня
+    - перукище
+  - answer: аптека
+    options:
+    - аптека
+    - аптечище
+    - аптарня
+  - answer: кладовище
+    options:
+    - кладовище
+    - кладарня
+    - кладальня
+  - answer: городище
+    options:
+    - городище
+    - городарня
+    - городальня
+  - answer: пасовище
+    options:
+    - пасовище
+    - пасарня
+    - пасальня
+  - answer: їдальню
+    options:
+    - їдальню
+    - їдарню
+    - їдище
+  - answer: пральню
+    options:
+    - пральню
+    - праларню
+    - пральище
+  - answer: звалища
+    options:
+    - звалища
+    - звальні
+    - звалки
+  - answer: друкарню
+    options:
+    - друкарню
+    - друкальню
+    - друкище
+  - answer: спальні
+    options:
+    - спальні
+    - спарні
+    - спищі
+  - answer: майстерні
+    options:
+    - майстерні
+    - майстральні
+    - майстрищі
+  - answer: вітальні
+    options:
+    - вітальні
+    - вітарні
+    - вітища
+  blank_count: 16
+  complete_passage: 'Наше маленьке містечко має все необхідне для життя. У центрі
+    розташована велика бібліотека з затишною читальнею. Поруч — міська лікарня, де
+    працюють досвідчені лікарі.
+
+
+    На головній вулиці відкрили нову пекарню — там завжди свіжий хліб. Біля неї —
+    маленька перукарня, де завжди черга. Через дорогу працює цілодобова аптека.
+
+
+    На околиці міста знаходиться старе кладовище, де похований знаменитий поет. Поруч
+    — археологічне городище з унікальними знахідками. За містом — велике пасовище,
+    де пасуться корови.
+
+
+    У новому районі відкрили сучасну їдальню та пральню самообслуговування. На місці
+    старого звалища тепер парк. Туристи відвідують стару друкарню, де колись видавали
+    газету. Діти сплять у затишній спальні. У великій майстерні працюють місцеві художники.
+    Усе життя зосереджене навколо центральної вітальні культурного центру.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення про місця
   jumbled_words: []
@@ -703,14 +838,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який суфікс використано для утворення слова «читальня»?
   options:
-  - text: -ище
-    correct: false
-  - text: -альня
-    correct: true
-  - text: -арня
-    correct: false
-  - text: -ка
-    correct: false
+  - '{''text'': ''-ище'', ''correct'': False}'
+  - '{''text'': ''-альня'', ''correct'': True}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -721,14 +852,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Від якого слова утворено назву «лікарня»?
   options:
-  - text: Від дієслова «лікувати»
-    correct: false
-  - text: Від іменника «лікар»
-    correct: true
-  - text: Від прикметника «лікарський»
-    correct: false
-  - text: Від іменника «ліки»
-    correct: false
+  - '{''text'': ''Від дієслова «лікувати»'', ''correct'': False}'
+  - '{''text'': ''Від іменника «лікар»'', ''correct'': True}'
+  - '{''text'': ''Від прикметника «лікарський»'', ''correct'': False}'
+  - '{''text'': ''Від іменника «ліки»'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -739,14 +866,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який суфікс використовується для утворення назв територій та великих просторів?
   options:
-  - text: -альня
-    correct: false
-  - text: -арня
-    correct: false
-  - text: -ище
-    correct: true
-  - text: -ка
-    correct: false
+  - '{''text'': ''-альня'', ''correct'': False}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ище'', ''correct'': True}'
+  - '{''text'': ''-ка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -757,14 +880,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке слово утворене за іншою моделлю, ніж інші?
   options:
-  - text: читальня
-    correct: false
-  - text: спальня
-    correct: false
-  - text: лікарня
-    correct: true
-  - text: їдальня
-    correct: false
+  - '{''text'': ''читальня'', ''correct'': False}'
+  - '{''text'': ''спальня'', ''correct'': False}'
+  - '{''text'': ''лікарня'', ''correct'': True}'
+  - '{''text'': ''їдальня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -775,14 +894,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який граматичний рід має слово «кладовище»?
   options:
-  - text: Чоловічий
-    correct: false
-  - text: Жіночий
-    correct: false
-  - text: Середній
-    correct: true
-  - text: Спільний
-    correct: false
+  - '{''text'': ''Чоловічий'', ''correct'': False}'
+  - '{''text'': ''Жіночий'', ''correct'': False}'
+  - '{''text'': ''Середній'', ''correct'': True}'
+  - '{''text'': ''Спільний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -793,14 +908,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Від якого дієслова утворено слово «сховище»?
   options:
-  - text: сховатися
-    correct: false
-  - text: ховати
-    correct: true
-  - text: сховок
-    correct: false
-  - text: ховатися
-    correct: false
+  - '{''text'': ''сховатися'', ''correct'': False}'
+  - '{''text'': ''ховати'', ''correct'': True}'
+  - '{''text'': ''сховок'', ''correct'': False}'
+  - '{''text'': ''ховатися'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -811,14 +922,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке слово НЕ утворене за допомогою суфікса -арня?
   options:
-  - text: пекарня
-    correct: false
-  - text: друкарня
-    correct: false
-  - text: перукарня
-    correct: false
-  - text: пральня
-    correct: true
+  - '{''text'': ''пекарня'', ''correct'': False}'
+  - '{''text'': ''друкарня'', ''correct'': False}'
+  - '{''text'': ''перукарня'', ''correct'': False}'
+  - '{''text'': ''пральня'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -829,14 +936,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який суфікс використовується після шиплячих приголосних для назв приміщень?
   options:
-  - text: -альня
-    correct: false
-  - text: -ильня
-    correct: true
-  - text: -арня
-    correct: false
-  - text: -ище
-    correct: false
+  - '{''text'': ''-альня'', ''correct'': False}'
+  - '{''text'': ''-ильня'', ''correct'': True}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -847,14 +950,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке значення має суфікс -арня у словотворенні?
   options:
-  - text: Місце діяльності від дієслова
-    correct: false
-  - text: Заклад або майстерня від назви професії
-    correct: true
-  - text: Територія або простір
-    correct: false
-  - text: Абстрактне поняття
-    correct: false
+  - '{''text'': ''Місце діяльності від дієслова'', ''correct'': False}'
+  - '{''text'': ''Заклад або майстерня від назви професії'', ''correct'': True}'
+  - '{''text'': ''Територія або простір'', ''correct'': False}'
+  - '{''text'': ''Абстрактне поняття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -865,14 +964,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке слово є історичним терміном для стародавнього поселення?
   options:
-  - text: кладовище
-    correct: false
-  - text: пасовище
-    correct: false
-  - text: городище
-    correct: true
-  - text: сховище
-    correct: false
+  - '{''text'': ''кладовище'', ''correct'': False}'
+  - '{''text'': ''пасовище'', ''correct'': False}'
+  - '{''text'': ''городище'', ''correct'': True}'
+  - '{''text'': ''сховище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -883,14 +978,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Від якого кореня утворено слово «вітальня»?
   options:
-  - text: віт (вітер)
-    correct: false
-  - text: вітати
-    correct: true
-  - text: вітрина
-    correct: false
-  - text: вітчизна
-    correct: false
+  - '{''text'': ''віт (вітер)'', ''correct'': False}'
+  - '{''text'': ''вітати'', ''correct'': True}'
+  - '{''text'': ''вітрина'', ''correct'': False}'
+  - '{''text'': ''вітчизна'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -901,14 +992,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке слово є грецьким запозиченням?
   options:
-  - text: читальня
-    correct: false
-  - text: бібліотека
-    correct: true
-  - text: лікарня
-    correct: false
-  - text: спальня
-    correct: false
+  - '{''text'': ''читальня'', ''correct'': False}'
+  - '{''text'': ''бібліотека'', ''correct'': True}'
+  - '{''text'': ''лікарня'', ''correct'': False}'
+  - '{''text'': ''спальня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -919,14 +1006,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який граматичний рід має слово «лікарня»?
   options:
-  - text: Чоловічий
-    correct: false
-  - text: Жіночий
-    correct: true
-  - text: Середній
-    correct: false
-  - text: Спільний
-    correct: false
+  - '{''text'': ''Чоловічий'', ''correct'': False}'
+  - '{''text'': ''Жіночий'', ''correct'': True}'
+  - '{''text'': ''Середній'', ''correct'': False}'
+  - '{''text'': ''Спільний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -937,14 +1020,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Яке слово означає місце для поховання?
   options:
-  - text: сховище
-    correct: false
-  - text: кладовище
-    correct: true
-  - text: городище
-    correct: false
-  - text: звалище
-    correct: false
+  - '{''text'': ''сховище'', ''correct'': False}'
+  - '{''text'': ''кладовище'', ''correct'': True}'
+  - '{''text'': ''городище'', ''correct'': False}'
+  - '{''text'': ''звалище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -955,14 +1034,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Який суфікс є найпродуктивнішим для творення назв приміщень?
   options:
-  - text: -ище
-    correct: false
-  - text: -арня
-    correct: false
-  - text: -ня/-альня/-ильня
-    correct: true
-  - text: -ка
-    correct: false
+  - '{''text'': ''-ище'', ''correct'': False}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ня/-альня/-ильня'', ''correct'': True}'
+  - '{''text'': ''-ка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -973,14 +1048,10 @@ items:
   title: Визначення суфіксів для назв місць
   question: Від якого слова утворено назву «пасовище»?
   options:
-  - text: пасти
-    correct: true
-  - text: пас
-    correct: false
-  - text: пасмо
-    correct: false
-  - text: пасовий
-    correct: false
+  - '{''text'': ''пасти'', ''correct'': True}'
+  - '{''text'': ''пас'', ''correct'': False}'
+  - '{''text'': ''пасмо'', ''correct'': False}'
+  - '{''text'': ''пасовий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -991,14 +1062,10 @@ items:
   title: Комплексна перевірка знань
   question: Який суфікс використовується для утворення назв приміщень від дієслів?
   options:
-  - text: -ище
-    correct: false
-  - text: -альня/-ильня
-    correct: true
-  - text: -арня
-    correct: false
-  - text: -ка
-    correct: false
+  - '{''text'': ''-ище'', ''correct'': False}'
+  - '{''text'': ''-альня/-ильня'', ''correct'': True}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1009,14 +1076,10 @@ items:
   title: Комплексна перевірка знань
   question: Чому слово «лікарня» утворене не від дієслова «лікувати»?
   options:
-  - text: Бо таке правило
-    correct: false
-  - text: Бо є усталена назва професії «лікар»
-    correct: true
-  - text: Бо «лікувати» — неправильне дієслово
-    correct: false
-  - text: Бо суфікс -арня не поєднується з дієсловами
-    correct: false
+  - '{''text'': ''Бо таке правило'', ''correct'': False}'
+  - '{''text'': ''Бо є усталена назва професії «лікар»'', ''correct'': True}'
+  - '{''text'': ''Бо «лікувати» — неправильне дієслово'', ''correct'': False}'
+  - '{''text'': ''Бо суфікс -арня не поєднується з дієсловами'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1027,14 +1090,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке значення має суфікс -ище у словотворенні?
   options:
-  - text: Місце діяльності
-    correct: false
-  - text: Заклад чи майстерня
-    correct: false
-  - text: Територія або великий простір
-    correct: true
-  - text: Абстрактне поняття
-    correct: false
+  - '{''text'': ''Місце діяльності'', ''correct'': False}'
+  - '{''text'': ''Заклад чи майстерня'', ''correct'': False}'
+  - '{''text'': ''Територія або великий простір'', ''correct'': True}'
+  - '{''text'': ''Абстрактне поняття'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1045,14 +1104,10 @@ items:
   title: Комплексна перевірка знань
   question: До якого роду належать слова із суфіксом -ище?
   options:
-  - text: Чоловічого
-    correct: false
-  - text: Жіночого
-    correct: false
-  - text: Середнього
-    correct: true
-  - text: Спільного
-    correct: false
+  - '{''text'': ''Чоловічого'', ''correct'': False}'
+  - '{''text'': ''Жіночого'', ''correct'': False}'
+  - '{''text'': ''Середнього'', ''correct'': True}'
+  - '{''text'': ''Спільного'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1063,14 +1118,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово НЕ є грецьким запозиченням?
   options:
-  - text: бібліотека
-    correct: false
-  - text: аптека
-    correct: false
-  - text: читальня
-    correct: true
-  - text: Усі є запозиченнями
-    correct: false
+  - '{''text'': ''бібліотека'', ''correct'': False}'
+  - '{''text'': ''аптека'', ''correct'': False}'
+  - '{''text'': ''читальня'', ''correct'': True}'
+  - '{''text'': ''Усі є запозиченнями'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1081,14 +1132,10 @@ items:
   title: Комплексна перевірка знань
   question: Який варіант суфікса використовується після шиплячих?
   options:
-  - text: -альня
-    correct: false
-  - text: -ильня
-    correct: true
-  - text: -ерня
-    correct: false
-  - text: -арня
-    correct: false
+  - '{''text'': ''-альня'', ''correct'': False}'
+  - '{''text'': ''-ильня'', ''correct'': True}'
+  - '{''text'': ''-ерня'', ''correct'': False}'
+  - '{''text'': ''-арня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1099,14 +1146,10 @@ items:
   title: Комплексна перевірка знань
   question: Від якого слова утворено назву «вітальня»?
   options:
-  - text: вітер
-    correct: false
-  - text: вітати
-    correct: true
-  - text: вітрина
-    correct: false
-  - text: віт
-    correct: false
+  - '{''text'': ''вітер'', ''correct'': False}'
+  - '{''text'': ''вітати'', ''correct'': True}'
+  - '{''text'': ''вітрина'', ''correct'': False}'
+  - '{''text'': ''віт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1117,14 +1160,10 @@ items:
   title: Комплексна перевірка знань
   question: Який суфікс є найпродуктивнішим для назв місць?
   options:
-  - text: -ище
-    correct: false
-  - text: -арня
-    correct: false
-  - text: -ня/-альня/-ильня
-    correct: true
-  - text: -ка
-    correct: false
+  - '{''text'': ''-ище'', ''correct'': False}'
+  - '{''text'': ''-арня'', ''correct'': False}'
+  - '{''text'': ''-ня/-альня/-ильня'', ''correct'': True}'
+  - '{''text'': ''-ка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1135,14 +1174,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово означає стародавнє слов'янське поселення?
   options:
-  - text: кладовище
-    correct: false
-  - text: пасовище
-    correct: false
-  - text: городище
-    correct: true
-  - text: сховище
-    correct: false
+  - '{''text'': ''кладовище'', ''correct'': False}'
+  - '{''text'': ''пасовище'', ''correct'': False}'
+  - '{''text'': ''городище'', ''correct'': True}'
+  - '{''text'': ''сховище'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1153,14 +1188,10 @@ items:
   title: Комплексна перевірка знань
   question: До якого роду належать слова із суфіксом -арня?
   options:
-  - text: Чоловічого
-    correct: false
-  - text: Жіночого
-    correct: true
-  - text: Середнього
-    correct: false
-  - text: Спільного
-    correct: false
+  - '{''text'': ''Чоловічого'', ''correct'': False}'
+  - '{''text'': ''Жіночого'', ''correct'': True}'
+  - '{''text'': ''Середнього'', ''correct'': False}'
+  - '{''text'': ''Спільного'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1171,14 +1202,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово утворене від назви матеріалу/товару, а не професії?
   options:
-  - text: лікарня
-    correct: false
-  - text: друкарня
-    correct: false
-  - text: книгарня
-    correct: true
-  - text: пекарня
-    correct: false
+  - '{''text'': ''лікарня'', ''correct'': False}'
+  - '{''text'': ''друкарня'', ''correct'': False}'
+  - '{''text'': ''книгарня'', ''correct'': True}'
+  - '{''text'': ''пекарня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1189,14 +1216,10 @@ items:
   title: Комплексна перевірка знань
   question: На який склад падає наголос у слові «читальня»?
   options:
-  - text: На перший (чИтальня)
-    correct: false
-  - text: На другий (читАльня)
-    correct: true
-  - text: На третій (читальнЯ)
-    correct: false
-  - text: Наголос вільний
-    correct: false
+  - '{''text'': ''На перший (чИтальня)'', ''correct'': False}'
+  - '{''text'': ''На другий (читАльня)'', ''correct'': True}'
+  - '{''text'': ''На третій (читальнЯ)'', ''correct'': False}'
+  - '{''text'': ''Наголос вільний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1207,14 +1230,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово походить від німецького запозичення?
   options:
-  - text: читальня
-    correct: false
-  - text: перукарня
-    correct: true
-  - text: пекарня
-    correct: false
-  - text: друкарня
-    correct: false
+  - '{''text'': ''читальня'', ''correct'': False}'
+  - '{''text'': ''перукарня'', ''correct'': True}'
+  - '{''text'': ''пекарня'', ''correct'': False}'
+  - '{''text'': ''друкарня'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1225,14 +1244,10 @@ items:
   title: Комплексна перевірка знань
   question: Що означає слово «сховище»?
   options:
-  - text: Місце для відпочинку
-    correct: false
-  - text: Місце для зберігання
-    correct: true
-  - text: Місце для роботи
-    correct: false
-  - text: Місце для поховання
-    correct: false
+  - '{''text'': ''Місце для відпочинку'', ''correct'': False}'
+  - '{''text'': ''Місце для зберігання'', ''correct'': True}'
+  - '{''text'': ''Місце для роботи'', ''correct'': False}'
+  - '{''text'': ''Місце для поховання'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1243,14 +1258,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка правильна форма — «у пекарні» чи «у пекарню»?
   options:
-  - text: Тільки «у пекарні»
-    correct: false
-  - text: Тільки «у пекарню»
-    correct: false
-  - text: Обидві правильні, але різні відмінки
-    correct: true
-  - text: Обидві неправильні
-    correct: false
+  - '{''text'': ''Тільки «у пекарні»'', ''correct'': False}'
+  - '{''text'': ''Тільки «у пекарню»'', ''correct'': False}'
+  - '{''text'': ''Обидві правильні, але різні відмінки'', ''correct'': True}'
+  - '{''text'': ''Обидві неправильні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1261,14 +1272,10 @@ items:
   title: Комплексна перевірка знань
   question: Від якого кореня утворено слово «кладовище»?
   options:
-  - text: кладка
-    correct: false
-  - text: клад (класти)
-    correct: true
-  - text: кладовий
-    correct: false
-  - text: кладочка
-    correct: false
+  - '{''text'': ''кладка'', ''correct'': False}'
+  - '{''text'': ''клад (класти)'', ''correct'': True}'
+  - '{''text'': ''кладовий'', ''correct'': False}'
+  - '{''text'': ''кладочка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

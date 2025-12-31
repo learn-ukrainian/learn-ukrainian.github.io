@@ -1,7 +1,7 @@
 module: 38-complex-sentence-integration
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/38-complex-sentence-integration.md
-generated: '2025-12-29T00:22:01.327840'
+generated: '2025-12-30T19:49:28.303050'
 scope: cloze, error-correction, fill-in, quiz, translate, true-false, unjumble
 activity_counts:
   error-correction: 6
@@ -11,7 +11,9 @@ activity_counts:
   quiz: 14
   translate: 6
   true-false: 14
+total_items: 61
 item_count: 61
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок у складних реченнях
@@ -257,121 +259,90 @@ items:
     {які|що|коли|тому що} він завжди розповідає після подорожей. {Оскільки|Що|Який|Коли}
     ми давно не бачились, буде багато {що|який|коли|де} обговорити разом.
   blanks:
-  - id: 1
-    answer: Коли
+  - answer: Або
     options:
     - Коли
     - Тому що
     - Але
-    - Або
-  - id: 2
-    answer: що
+  - answer: але
     options:
     - що
     - який
     - коли
-    - але
-  - id: 3
-    answer: але
+  - answer: який
     options:
     - але
     - і
     - що
-    - який
-  - id: 4
-    answer: і
+  - answer: який
     options:
     - і
     - але
     - що
-    - який
-  - id: 5
-    answer: тому що
+  - answer: який
     options:
     - тому що
     - і
     - а
-    - який
-  - id: 6
-    answer: Коли
+  - answer: Який
     options:
     - Коли
     - Тому що
     - Що
-    - Який
-  - id: 7
-    answer: який
+  - answer: але
     options:
     - який
     - що
     - коли
-    - але
-  - id: 8
-    answer: що
+  - answer: тому що
     options:
     - що
     - який
     - коли
-    - тому що
-  - id: 9
-    answer: Оскільки
+  - answer: Коли
     options:
     - Оскільки
     - Що
     - Який
-    - Коли
-  - id: 10
-    answer: Коли
+  - answer: Але
     options:
     - Коли
     - Тому що
     - Що
-    - Але
-  - id: 11
-    answer: Якщо
+  - answer: Хоча
     options:
     - Якщо
     - Тому що
     - Що
-    - Хоча
-  - id: 12
-    answer: що
+  - answer: але
     options:
     - що
     - який
     - коли
-    - але
-  - id: 13
-    answer: які
+  - answer: тому що
     options:
     - які
     - що
     - коли
-    - тому що
-  - id: 14
-    answer: Оскільки
+  - answer: Коли
     options:
     - Оскільки
     - Що
     - Який
-    - Коли
-  - id: 15
-    answer: що
+  - answer: де
     options:
     - що
     - який
     - коли
-    - де
-  complete_passage: Минулого тижня я вирішив відвідати друга. {Коли|Тому що|Але|Або}
-    я приїхав до його дому, побачив, {що|який|коли|але} вікна зачинені. Зателефонував
-    йому, {але|і|що|який} він не відповідав. Почекав півгодини {і|але|що|який} вирішив
-    піти, {тому що|і|а|який} вже було пізно. {Коли|Тому що|Що|Який} я йшов додому,
-    зустрів сусіда, {який|що|коли|але} сказав, {що|який|коли|тому що} друг поїхав
-    у відрядження. {Оскільки|Що|Який|Коли} я не знав про це, дуже здивувався. {Коли|Тому
-    що|Що|Але} він повернеться, обов'язково зустрінемось. {Якщо|Тому що|Що|Хоча} буде
-    час, поговоримо про все. Я сподіваюсь, {що|який|коли|але} він привезе цікаві історії,
-    {які|що|коли|тому що} він завжди розповідає після подорожей. {Оскільки|Що|Який|Коли}
-    ми давно не бачились, буде багато {що|який|коли|де} обговорити разом.
+  blank_count: 15
+  complete_passage: Минулого тижня я вирішив відвідати друга. Або я приїхав до його
+    дому, побачив, але вікна зачинені. Зателефонував йому, який він не відповідав.
+    Почекав півгодини який вирішив піти, який вже було пізно. Який я йшов додому,
+    зустрів сусіда, але сказав, тому що друг поїхав у відрядження. Коли я не знав
+    про це, дуже здивувався. Але він повернеться, обов'язково зустрінемось. Хоча буде
+    час, поговоримо про все. Я сподіваюсь, але він привезе цікаві історії, тому що
+    він завжди розповідає після подорожей. Коли ми давно не бачились, буде багато
+    де обговорити разом.
   validate:
     passage_valid: null
     explanation: null
@@ -429,14 +400,10 @@ items:
   question: Яке речення є прикладом сурядного зв'язку між частинами в українській
     синтаксичній системі?
   options:
-  - text: Він прийшов, і ми поговорили.
-    correct: true
-  - text: Він прийшов, коли я читав.
-    correct: false
-  - text: Він прийшов, тому що хотів.
-    correct: false
-  - text: Він прийшов, щоб поговорити.
-    correct: false
+  - '{''text'': ''Він прийшов, і ми поговорили.'', ''correct'': True}'
+  - '{''text'': ''Він прийшов, коли я читав.'', ''correct'': False}'
+  - '{''text'': ''Він прийшов, тому що хотів.'', ''correct'': False}'
+  - '{''text'': ''Він прийшов, щоб поговорити.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -448,14 +415,10 @@ items:
   question: Яке речення містить підрядне причинове, яке пояснює причину основної дії
     в тексті?
   options:
-  - text: Коли він прийшов, ми обідали.
-    correct: false
-  - text: Він не прийшов, тому що захворів.
-    correct: true
-  - text: Якщо буде час, зателефоную.
-    correct: false
-  - text: Книга, яку ти дав, цікава.
-    correct: false
+  - '{''text'': ''Коли він прийшов, ми обідали.'', ''correct'': False}'
+  - '{''text'': ''Він не прийшов, тому що захворів.'', ''correct'': True}'
+  - '{''text'': ''Якщо буде час, зателефоную.'', ''correct'': False}'
+  - '{''text'': ''Книга, яку ти дав, цікава.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -467,14 +430,10 @@ items:
   question: Скільки рівнів підрядності в реченні «Я знаю, що він прийде, коли закінчить
     роботу»?
   options:
-  - text: Один рівень підрядності
-    correct: false
-  - text: Два рівні підрядності
-    correct: true
-  - text: Три рівні підрядності
-    correct: false
-  - text: Немає підрядних речень
-    correct: false
+  - '{''text'': ''Один рівень підрядності'', ''correct'': False}'
+  - '{''text'': ''Два рівні підрядності'', ''correct'': True}'
+  - '{''text'': ''Три рівні підрядності'', ''correct'': False}'
+  - '{''text'': ''Немає підрядних речень'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -486,14 +445,10 @@ items:
   question: Який сполучник використовується для зіставлення двох дій або ситуацій
     у сурядному реченні?
   options:
-  - text: і
-    correct: false
-  - text: а
-    correct: true
-  - text: або
-    correct: false
-  - text: тому що
-    correct: false
+  - '{''text'': ''і'', ''correct'': False}'
+  - '{''text'': ''а'', ''correct'': True}'
+  - '{''text'': ''або'', ''correct'': False}'
+  - '{''text'': ''тому що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -505,14 +460,11 @@ items:
   question: Яке з наведених речень правильно комбінує часове та причинове підрядні
     речення в одному?
   options:
-  - text: Коли він прийшов, ми вже спали, тому що втомились.
-    correct: true
-  - text: Тому що він прийшов коли ми спали.
-    correct: false
-  - text: Він прийшов тому що коли ми спали.
-    correct: false
-  - text: Коли тому що він прийшов ми спали.
-    correct: false
+  - '{''text'': ''Коли він прийшов, ми вже спали, тому що втомились.'', ''correct'':
+    True}'
+  - '{''text'': ''Тому що він прийшов коли ми спали.'', ''correct'': False}'
+  - '{''text'': ''Він прийшов тому що коли ми спали.'', ''correct'': False}'
+  - '{''text'': ''Коли тому що він прийшов ми спали.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -524,14 +476,10 @@ items:
   question: Що таке означальне підрядне речення згідно з українською синтаксичною
     класифікацією складних речень?
   options:
-  - text: Речення, що відповідає на «чому?»
-    correct: false
-  - text: Речення, що відповідає на «коли?»
-    correct: false
-  - text: Речення, що відповідає на «який?»
-    correct: true
-  - text: Речення, що відповідає на «що?»
-    correct: false
+  - '{''text'': ''Речення, що відповідає на «чому?»'', ''correct'': False}'
+  - '{''text'': ''Речення, що відповідає на «коли?»'', ''correct'': False}'
+  - '{''text'': ''Речення, що відповідає на «який?»'', ''correct'': True}'
+  - '{''text'': ''Речення, що відповідає на «що?»'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -543,14 +491,10 @@ items:
   question: Який сполучник використовується для вираження протиставлення в сурядному
     складному реченні?
   options:
-  - text: і
-    correct: false
-  - text: а
-    correct: false
-  - text: але
-    correct: true
-  - text: або
-    correct: false
+  - '{''text'': ''і'', ''correct'': False}'
+  - '{''text'': ''а'', ''correct'': False}'
+  - '{''text'': ''але'', ''correct'': True}'
+  - '{''text'': ''або'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -562,14 +506,10 @@ items:
   question: У реченні «Мама попросила, щоб я купив хліб, який пече пекарня» скільки
     є підрядних речень?
   options:
-  - text: Одне підрядне речення
-    correct: false
-  - text: Два підрядних речення
-    correct: true
-  - text: Три підрядних речення
-    correct: false
-  - text: Немає підрядних речень
-    correct: false
+  - '{''text'': ''Одне підрядне речення'', ''correct'': False}'
+  - '{''text'': ''Два підрядних речення'', ''correct'': True}'
+  - '{''text'': ''Три підрядних речення'', ''correct'': False}'
+  - '{''text'': ''Немає підрядних речень'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -581,14 +521,11 @@ items:
   question: Яке речення поєднує сурядний та підрядний зв'язки одночасно в одній синтаксичній
     структурі?
   options:
-  - text: Він прийшов, коли сонце зайшло.
-    correct: false
-  - text: Сонце зайшло, і ми пішли додому.
-    correct: false
-  - text: Він прийшов, коли сонце зайшло, і ми поговорили.
-    correct: true
-  - text: Він прийшов, тому що хотів поговорити.
-    correct: false
+  - '{''text'': ''Він прийшов, коли сонце зайшло.'', ''correct'': False}'
+  - '{''text'': ''Сонце зайшло, і ми пішли додому.'', ''correct'': False}'
+  - '{''text'': ''Він прийшов, коли сонце зайшло, і ми поговорили.'', ''correct'':
+    True}'
+  - '{''text'': ''Він прийшов, тому що хотів поговорити.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -600,14 +537,10 @@ items:
   question: Яка функція допустового підрядного речення, яке вводиться сполучником
     «хоча» в українській мові?
   options:
-  - text: Вказує на причину дії
-    correct: false
-  - text: Вказує на час дії
-    correct: false
-  - text: Вказує на протиставлення всупереч обставинам
-    correct: true
-  - text: Вказує на мету дії
-    correct: false
+  - '{''text'': ''Вказує на причину дії'', ''correct'': False}'
+  - '{''text'': ''Вказує на час дії'', ''correct'': False}'
+  - '{''text'': ''Вказує на протиставлення всупереч обставинам'', ''correct'': True}'
+  - '{''text'': ''Вказує на мету дії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -619,14 +552,10 @@ items:
   question: Яке питання допомагає визначити з'ясувальне підрядне речення в складному
     реченні української мови?
   options:
-  - text: Коли?
-    correct: false
-  - text: Чому?
-    correct: false
-  - text: Що?
-    correct: true
-  - text: Який?
-    correct: false
+  - '{''text'': ''Коли?'', ''correct'': False}'
+  - '{''text'': ''Чому?'', ''correct'': False}'
+  - '{''text'': ''Що?'', ''correct'': True}'
+  - '{''text'': ''Який?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -638,14 +567,10 @@ items:
   question: У реченні «Якщо буде гарна погода, ми поїдемо на пікнік» яке підрядне
     речення використано?
   options:
-  - text: Часове підрядне
-    correct: false
-  - text: Умовне підрядне
-    correct: true
-  - text: Причинове підрядне
-    correct: false
-  - text: Означальне підрядне
-    correct: false
+  - '{''text'': ''Часове підрядне'', ''correct'': False}'
+  - '{''text'': ''Умовне підрядне'', ''correct'': True}'
+  - '{''text'': ''Причинове підрядне'', ''correct'': False}'
+  - '{''text'': ''Означальне підрядне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -657,14 +582,10 @@ items:
   question: Яка правильна послідовність підрядних речень у складному реченні з часом,
     причиною та умовою?
   options:
-  - text: Причина, час, умова
-    correct: false
-  - text: Умова, причина, час
-    correct: false
-  - text: Час, причина, умова
-    correct: true
-  - text: Час, умова, причина
-    correct: false
+  - '{''text'': ''Причина, час, умова'', ''correct'': False}'
+  - '{''text'': ''Умова, причина, час'', ''correct'': False}'
+  - '{''text'': ''Час, причина, умова'', ''correct'': True}'
+  - '{''text'': ''Час, умова, причина'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -676,14 +597,11 @@ items:
   question: Що характерно для трирівневої конструкції підрядності в складному реченні
     української мови?
   options:
-  - text: Три сурядних частини
-    correct: false
-  - text: Підрядне залежить від підрядного, яке залежить від головного
-    correct: true
-  - text: Три головних речення
-    correct: false
-  - text: Три різних сполучники
-    correct: false
+  - '{''text'': ''Три сурядних частини'', ''correct'': False}'
+  - '{''text'': ''Підрядне залежить від підрядного, яке залежить від головного'',
+    ''correct'': True}'
+  - '{''text'': ''Три головних речення'', ''correct'': False}'
+  - '{''text'': ''Три різних сполучники'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -695,14 +613,10 @@ items:
   source_sentence: When he arrived, we were already sleeping because we were tired.
   answer: ''
   options:
-  - text: Коли він приїхав, ми вже спали, бо втомились.
-    correct: true
-  - text: Він приїхав коли ми спали бо втомились.
-    correct: false
-  - text: Тому що він приїхав ми спали.
-    correct: false
-  - text: Коли він бо приїхав ми спали.
-    correct: false
+  - '{''text'': ''Коли він приїхав, ми вже спали, бо втомились.'', ''correct'': True}'
+  - '{''text'': ''Він приїхав коли ми спали бо втомились.'', ''correct'': False}'
+  - '{''text'': ''Тому що він приїхав ми спали.'', ''correct'': False}'
+  - '{''text'': ''Коли він бо приїхав ми спали.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -713,14 +627,10 @@ items:
   source_sentence: I know that he will come if he has time tomorrow.
   answer: ''
   options:
-  - text: Я знаю, що він прийде, якщо матиме час завтра.
-    correct: true
-  - text: Я знаю він прийде якщо час.
-    correct: false
-  - text: Він прийде що я знаю якщо час.
-    correct: false
-  - text: Якщо час він прийде що знаю.
-    correct: false
+  - '{''text'': ''Я знаю, що він прийде, якщо матиме час завтра.'', ''correct'': True}'
+  - '{''text'': ''Я знаю він прийде якщо час.'', ''correct'': False}'
+  - '{''text'': ''Він прийде що я знаю якщо час.'', ''correct'': False}'
+  - '{''text'': ''Якщо час він прийде що знаю.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -731,14 +641,11 @@ items:
   source_sentence: The book that you gave me is very interesting and educational.
   answer: ''
   options:
-  - text: Книга, яку ти мені дав, дуже цікава і повчальна.
-    correct: true
-  - text: Книга яку дав цікава.
-    correct: false
-  - text: Ти дав книга яку цікава.
-    correct: false
-  - text: Яку книга ти дав цікава.
-    correct: false
+  - '{''text'': ''Книга, яку ти мені дав, дуже цікава і повчальна.'', ''correct'':
+    True}'
+  - '{''text'': ''Книга яку дав цікава.'', ''correct'': False}'
+  - '{''text'': ''Ти дав книга яку цікава.'', ''correct'': False}'
+  - '{''text'': ''Яку книга ти дав цікава.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -749,14 +656,10 @@ items:
   source_sentence: He didn't come because he was sick, although he wanted to.
   answer: ''
   options:
-  - text: Він не прийшов, тому що захворів, хоча хотів.
-    correct: true
-  - text: Тому що він не прийшов хворий хоча.
-    correct: false
-  - text: Хоча хотів він не прийшов тому.
-    correct: false
-  - text: Він хотів не прийшов тому хоча.
-    correct: false
+  - '{''text'': ''Він не прийшов, тому що захворів, хоча хотів.'', ''correct'': True}'
+  - '{''text'': ''Тому що він не прийшов хворий хоча.'', ''correct'': False}'
+  - '{''text'': ''Хоча хотів він не прийшов тому.'', ''correct'': False}'
+  - '{''text'': ''Він хотів не прийшов тому хоча.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -767,14 +670,11 @@ items:
   source_sentence: When I finish work, I will call you if it's not too late.
   answer: ''
   options:
-  - text: Коли закінчу роботу, зателефоную, якщо не буде надто пізно.
-    correct: true
-  - text: Закінчу роботу коли зателефоную якщо.
-    correct: false
-  - text: Якщо коли закінчу зателефоную.
-    correct: false
-  - text: Роботу закінчу коли зателефоную.
-    correct: false
+  - '{''text'': ''Коли закінчу роботу, зателефоную, якщо не буде надто пізно.'', ''correct'':
+    True}'
+  - '{''text'': ''Закінчу роботу коли зателефоную якщо.'', ''correct'': False}'
+  - '{''text'': ''Якщо коли закінчу зателефоную.'', ''correct'': False}'
+  - '{''text'': ''Роботу закінчу коли зателефоную.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null
@@ -785,14 +685,11 @@ items:
   source_sentence: She said that she would come after she finished her project.
   answer: ''
   options:
-  - text: Вона сказала, що прийде після того, як закінчить проект.
-    correct: true
-  - text: Сказала вона що прийде після проект.
-    correct: false
-  - text: Після того прийде що сказала.
-    correct: false
-  - text: Проект закінчить що прийде сказала.
-    correct: false
+  - '{''text'': ''Вона сказала, що прийде після того, як закінчить проект.'', ''correct'':
+    True}'
+  - '{''text'': ''Сказала вона що прийде після проект.'', ''correct'': False}'
+  - '{''text'': ''Після того прийде що сказала.'', ''correct'': False}'
+  - '{''text'': ''Проект закінчить що прийде сказала.'', ''correct'': False}'
   validate:
     source_valid: null
     answer_valid: null

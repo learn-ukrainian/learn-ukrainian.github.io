@@ -1,15 +1,18 @@
 module: 43-correlative-constructions
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/43-correlative-constructions.md
-generated: '2025-12-29T23:56:15.672514'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:15.811534'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у співвідносних конструкціях
@@ -573,6 +576,131 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Доповніть текст співвідносними конструкціями
+  passage_template: 'Освіта — це фундамент успіху. {Той|Те|Там|Той}, {хто|що|де|хто}
+    наполегливо вчиться, здобуває знання, що відкривають нові можливості. {Те|Той|Там|Те},
+    {що|хто|де|що} ми вивчаємо сьогодні, визначає наше майбутнє.
+
+
+    {Там|Той|Те|Там}, {де|хто|що|де} цінують освіту, процвітає суспільство. Розвинені
+    країни інвестують в освіту {стільки|настільки|так|стільки}, {скільки|наскільки|як|скільки}
+    потрібно для забезпечення якості.
+
+
+    {Тоді|Там|Той|Тоді}, {коли|де|хто|коли} людина відкрита до нових знань, вона здатна
+    досягти {такого|того|там|такого} результату, {якого|що|хто|якого} раніше вважала
+    неможливим.
+
+
+    {Ті|Там|Те|Ті}, {хто|де|що|хто} недооцінюють освіту, втрачають конкурентні переваги.
+    {Туди|Там|Тоді|Туди}, {куди|де|коли|куди} спрямовуються освічені люди, приходять
+    інновації.
+
+    '
+  blanks:
+  - answer: Той
+    options:
+    - Той
+    - Те
+    - Там
+  - answer: хто
+    options:
+    - хто
+    - що
+    - де
+  - answer: Те
+    options:
+    - Те
+    - Той
+    - Там
+  - answer: що
+    options:
+    - що
+    - хто
+    - де
+  - answer: Там
+    options:
+    - Там
+    - Той
+    - Те
+  - answer: де
+    options:
+    - де
+    - хто
+    - що
+  - answer: стільки
+    options:
+    - стільки
+    - настільки
+    - так
+  - answer: скільки
+    options:
+    - скільки
+    - наскільки
+    - як
+  - answer: Тоді
+    options:
+    - Тоді
+    - Там
+    - Той
+  - answer: коли
+    options:
+    - коли
+    - де
+    - хто
+  - answer: такого
+    options:
+    - такого
+    - того
+    - там
+  - answer: якого
+    options:
+    - якого
+    - що
+    - хто
+  - answer: Ті
+    options:
+    - Ті
+    - Там
+    - Те
+  - answer: хто
+    options:
+    - хто
+    - де
+    - що
+  - answer: Туди
+    options:
+    - Туди
+    - Там
+    - Тоді
+  - answer: куди
+    options:
+    - куди
+    - де
+    - коли
+  blank_count: 16
+  complete_passage: 'Освіта — це фундамент успіху. Той, хто наполегливо вчиться, здобуває
+    знання, що відкривають нові можливості. Те, що ми вивчаємо сьогодні, визначає
+    наше майбутнє.
+
+
+    Там, де цінують освіту, процвітає суспільство. Розвинені країни інвестують в освіту
+    стільки, скільки потрібно для забезпечення якості.
+
+
+    Тоді, коли людина відкрита до нових знань, вона здатна досягти такого результату,
+    якого раніше вважала неможливим.
+
+
+    Ті, хто недооцінюють освіту, втрачають конкурентні переваги. Туди, куди спрямовуються
+    освічені люди, приходять інновації.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення зі співвідносними конструкціями
   jumbled_words: []
@@ -705,14 +833,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара є особовим корелятивом?
   options:
-  - text: той... хто
-    correct: true
-  - text: там... де
-    correct: false
-  - text: тоді... коли
-    correct: false
-  - text: стільки... скільки
-    correct: false
+  - '{''text'': ''той... хто'', ''correct'': True}'
+  - '{''text'': ''там... де'', ''correct'': False}'
+  - '{''text'': ''тоді... коли'', ''correct'': False}'
+  - '{''text'': ''стільки... скільки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -723,14 +847,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення містить просторовий корелятив?
   options:
-  - text: Той, хто працює, досягає успіху.
-    correct: false
-  - text: Там, де тихо, добре думається.
-    correct: true
-  - text: Те, що ти сказав, важливо.
-    correct: false
-  - text: Тоді, коли настане час, все зміниться.
-    correct: false
+  - '{''text'': ''Той, хто працює, досягає успіху.'', ''correct'': False}'
+  - '{''text'': ''Там, де тихо, добре думається.'', ''correct'': True}'
+  - '{''text'': ''Те, що ти сказав, важливо.'', ''correct'': False}'
+  - '{''text'': ''Тоді, коли настане час, все зміниться.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -741,14 +861,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара виражає кількість?
   options:
-  - text: такий... який
-    correct: false
-  - text: туди... куди
-    correct: false
-  - text: стільки... скільки
-    correct: true
-  - text: доти... поки
-    correct: false
+  - '{''text'': ''такий... який'', ''correct'': False}'
+  - '{''text'': ''туди... куди'', ''correct'': False}'
+  - '{''text'': ''стільки... скільки'', ''correct'': True}'
+  - '{''text'': ''доти... поки'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -759,14 +875,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке відносне слово поєднується з вказівним "той"?
   options:
-  - text: що
-    correct: false
-  - text: який
-    correct: false
-  - text: хто
-    correct: true
-  - text: де
-    correct: false
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''який'', ''correct'': False}'
+  - '{''text'': ''хто'', ''correct'': True}'
+  - '{''text'': ''де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -777,14 +889,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення є граматично правильним?
   options:
-  - text: Те, яке ти сказав, цікаво.
-    correct: false
-  - text: Те, що ти сказав, цікаво.
-    correct: true
-  - text: Те, хто ти сказав, цікаво.
-    correct: false
-  - text: Те, де ти сказав, цікаво.
-    correct: false
+  - '{''text'': ''Те, яке ти сказав, цікаво.'', ''correct'': False}'
+  - '{''text'': ''Те, що ти сказав, цікаво.'', ''correct'': True}'
+  - '{''text'': ''Те, хто ти сказав, цікаво.'', ''correct'': False}'
+  - '{''text'': ''Те, де ти сказав, цікаво.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -795,14 +903,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара виражає напрямок руху?
   options:
-  - text: там... де
-    correct: false
-  - text: туди... куди
-    correct: true
-  - text: звідти... звідки
-    correct: false
-  - text: тоді... коли
-    correct: false
+  - '{''text'': ''там... де'', ''correct'': False}'
+  - '{''text'': ''туди... куди'', ''correct'': True}'
+  - '{''text'': ''звідти... звідки'', ''correct'': False}'
+  - '{''text'': ''тоді... коли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -813,14 +917,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення містить часовий корелятив?
   options:
-  - text: Той, хто рано встає, тому Бог дає.
-    correct: false
-  - text: Там, де порядок, там і успіх.
-    correct: false
-  - text: Тоді, коли сонце сідає, стає прохолодно.
-    correct: true
-  - text: Стільки, скільки потрібно.
-    correct: false
+  - '{''text'': ''Той, хто рано встає, тому Бог дає.'', ''correct'': False}'
+  - '{''text'': ''Там, де порядок, там і успіх.'', ''correct'': False}'
+  - '{''text'': ''Тоді, коли сонце сідає, стає прохолодно.'', ''correct'': True}'
+  - '{''text'': ''Стільки, скільки потрібно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -831,14 +931,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка форма правильна для давального відмінка?
   options:
-  - text: Допоможи той, хто потребує.
-    correct: false
-  - text: Допоможи тому, хто потребує.
-    correct: true
-  - text: Допоможи того, хто потребує.
-    correct: false
-  - text: Допоможи тим, хто потребує.
-    correct: false
+  - '{''text'': ''Допоможи той, хто потребує.'', ''correct'': False}'
+  - '{''text'': ''Допоможи тому, хто потребує.'', ''correct'': True}'
+  - '{''text'': ''Допоможи того, хто потребує.'', ''correct'': False}'
+  - '{''text'': ''Допоможи тим, хто потребує.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -849,14 +945,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара виражає тривалість?
   options:
-  - text: тоді... коли
-    correct: false
-  - text: доти... поки
-    correct: true
-  - text: там... де
-    correct: false
-  - text: туди... куди
-    correct: false
+  - '{''text'': ''тоді... коли'', ''correct'': False}'
+  - '{''text'': ''доти... поки'', ''correct'': True}'
+  - '{''text'': ''там... де'', ''correct'': False}'
+  - '{''text'': ''туди... куди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -867,14 +959,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення містить якісний корелятив?
   options:
-  - text: Той, хто знає, мовчить.
-    correct: false
-  - text: Такий результат, якого ми чекали.
-    correct: true
-  - text: Там, де тихо, там і добре.
-    correct: false
-  - text: Стільки часу, скільки потрібно.
-    correct: false
+  - '{''text'': ''Той, хто знає, мовчить.'', ''correct'': False}'
+  - '{''text'': ''Такий результат, якого ми чекали.'', ''correct'': True}'
+  - '{''text'': ''Там, де тихо, там і добре.'', ''correct'': False}'
+  - '{''text'': ''Стільки часу, скільки потрібно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -885,14 +973,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке відносне слово поєднується з "там"?
   options:
-  - text: хто
-    correct: false
-  - text: що
-    correct: false
-  - text: куди
-    correct: false
-  - text: де
-    correct: true
+  - '{''text'': ''хто'', ''correct'': False}'
+  - '{''text'': ''що'', ''correct'': False}'
+  - '{''text'': ''куди'', ''correct'': False}'
+  - '{''text'': ''де'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -903,14 +987,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара виражає походження?
   options:
-  - text: там... де
-    correct: false
-  - text: туди... куди
-    correct: false
-  - text: звідти... звідки
-    correct: true
-  - text: тоді... коли
-    correct: false
+  - '{''text'': ''там... де'', ''correct'': False}'
+  - '{''text'': ''туди... куди'', ''correct'': False}'
+  - '{''text'': ''звідти... звідки'', ''correct'': True}'
+  - '{''text'': ''тоді... коли'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -921,14 +1001,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення правильно пунктуоване?
   options:
-  - text: Той хто знає мовчить.
-    correct: false
-  - text: Той, хто знає, мовчить.
-    correct: true
-  - text: Той, хто знає мовчить.
-    correct: false
-  - text: Той хто знає, мовчить.
-    correct: false
+  - '{''text'': ''Той хто знає мовчить.'', ''correct'': False}'
+  - '{''text'': ''Той, хто знає, мовчить.'', ''correct'': True}'
+  - '{''text'': ''Той, хто знає мовчить.'', ''correct'': False}'
+  - '{''text'': ''Той хто знає, мовчить.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -939,14 +1015,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка пара виражає спосіб дії?
   options:
-  - text: стільки... скільки
-    correct: false
-  - text: так... як
-    correct: true
-  - text: тоді... коли
-    correct: false
-  - text: там... де
-    correct: false
+  - '{''text'': ''стільки... скільки'', ''correct'': False}'
+  - '{''text'': ''так... як'', ''correct'': True}'
+  - '{''text'': ''тоді... коли'', ''correct'': False}'
+  - '{''text'': ''там... де'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -957,14 +1029,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яке речення містить причиновий корелятив?
   options:
-  - text: Він прийшов тому, що хотів допомогти.
-    correct: true
-  - text: Там, де порядок, там і успіх.
-    correct: false
-  - text: Той, хто працює, досягає успіху.
-    correct: false
-  - text: Такий результат, який ми очікували.
-    correct: false
+  - '{''text'': ''Він прийшов тому, що хотів допомогти.'', ''correct'': True}'
+  - '{''text'': ''Там, де порядок, там і успіх.'', ''correct'': False}'
+  - '{''text'': ''Той, хто працює, досягає успіху.'', ''correct'': False}'
+  - '{''text'': ''Такий результат, який ми очікували.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -975,14 +1043,10 @@ items:
   title: Визначення типів співвідносних конструкцій
   question: Яка форма правильна для множини?
   options:
-  - text: Той, хто працюють, досягають успіху.
-    correct: false
-  - text: Ті, хто працюють, досягають успіху.
-    correct: true
-  - text: Ті, хто працює, досягає успіху.
-    correct: false
-  - text: Тих, хто працюють, досягають успіху.
-    correct: false
+  - '{''text'': ''Той, хто працюють, досягають успіху.'', ''correct'': False}'
+  - '{''text'': ''Ті, хто працюють, досягають успіху.'', ''correct'': True}'
+  - '{''text'': ''Ті, хто працює, досягає успіху.'', ''correct'': False}'
+  - '{''text'': ''Тих, хто працюють, досягають успіху.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -993,14 +1057,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Скільки основних типів співвідносних конструкцій існує?
   options:
-  - text: Три
-    correct: false
-  - text: П'ять
-    correct: false
-  - text: Сім
-    correct: true
-  - text: Десять
-    correct: false
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': "П''ять", ''correct'': False}'
+  - '{''text'': ''Сім'', ''correct'': True}'
+  - '{''text'': ''Десять'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1011,14 +1071,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яка пара НЕ є співвідносною конструкцією?
   options:
-  - text: той... хто
-    correct: false
-  - text: там... де
-    correct: false
-  - text: тому... що
-    correct: false
-  - text: але... однак
-    correct: true
+  - '{''text'': ''той... хто'', ''correct'': False}'
+  - '{''text'': ''там... де'', ''correct'': False}'
+  - '{''text'': ''тому... що'', ''correct'': False}'
+  - '{''text'': ''але... однак'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1029,14 +1085,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: У якому реченні правильно змінено відмінок?
   options:
-  - text: Допоможи той, хто потребує.
-    correct: false
-  - text: Допоможи тому, хто потребує.
-    correct: true
-  - text: Допоможи того, хто потребує.
-    correct: false
-  - text: Допоможи тим, хто потребує.
-    correct: false
+  - '{''text'': ''Допоможи той, хто потребує.'', ''correct'': False}'
+  - '{''text'': ''Допоможи тому, хто потребує.'', ''correct'': True}'
+  - '{''text'': ''Допоможи того, хто потребує.'', ''correct'': False}'
+  - '{''text'': ''Допоможи тим, хто потребує.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1047,14 +1099,11 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яка різниця між "там... де" і "туди... куди"?
   options:
-  - text: Немає різниці
-    correct: false
-  - text: '"Там... де" — місце, "туди... куди" — напрямок'
-    correct: true
-  - text: '"Там... де" — час, "туди... куди" — місце'
-    correct: false
-  - text: '"Там... де" — причина, "туди... куди" — наслідок'
-    correct: false
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
+  - '{''text'': ''"Там... де" — місце, "туди... куди" — напрямок'', ''correct'': True}'
+  - '{''text'': ''"Там... де" — час, "туди... куди" — місце'', ''correct'': False}'
+  - '{''text'': ''"Там... де" — причина, "туди... куди" — наслідок'', ''correct'':
+    False}'
   answer: ''
   validate:
     question_valid: null
@@ -1065,14 +1114,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яке речення містить найбільше корелятивів?
   options:
-  - text: Той, хто знає, мовчить.
-    correct: false
-  - text: Там, де тихо, там і добре.
-    correct: false
-  - text: Той, хто там, де тихо, мовчить.
-    correct: true
-  - text: Стільки, скільки потрібно.
-    correct: false
+  - '{''text'': ''Той, хто знає, мовчить.'', ''correct'': False}'
+  - '{''text'': ''Там, де тихо, там і добре.'', ''correct'': False}'
+  - '{''text'': ''Той, хто там, де тихо, мовчить.'', ''correct'': True}'
+  - '{''text'': ''Стільки, скільки потрібно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1083,14 +1128,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: У якому стилі співвідносні конструкції вживаються найрідше?
   options:
-  - text: Науковому
-    correct: false
-  - text: Офіційному
-    correct: false
-  - text: Публіцистичному
-    correct: false
-  - text: Розмовному (у повній формі)
-    correct: true
+  - '{''text'': ''Науковому'', ''correct'': False}'
+  - '{''text'': ''Офіційному'', ''correct'': False}'
+  - '{''text'': ''Публіцистичному'', ''correct'': False}'
+  - '{''text'': ''Розмовному (у повній формі)'', ''correct'': True}'
   answer: ''
   validate:
     question_valid: null
@@ -1101,14 +1142,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яке вказівне слово поєднується з "поки"?
   options:
-  - text: тоді
-    correct: false
-  - text: доти
-    correct: true
-  - text: там
-    correct: false
-  - text: туди
-    correct: false
+  - '{''text'': ''тоді'', ''correct'': False}'
+  - '{''text'': ''доти'', ''correct'': True}'
+  - '{''text'': ''там'', ''correct'': False}'
+  - '{''text'': ''туди'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1119,14 +1156,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: У якому реченні помилка у виборі відносного слова?
   options:
-  - text: Той, хто працює, досягає.
-    correct: false
-  - text: Те, що важливо, запам'ятай.
-    correct: false
-  - text: Там, куди тихо, добре.
-    correct: true
-  - text: Тоді, коли настане час.
-    correct: false
+  - '{''text'': ''Той, хто працює, досягає.'', ''correct'': False}'
+  - '{''text'': "Те, що важливо, запам''ятай.", ''correct'': False}'
+  - '{''text'': ''Там, куди тихо, добре.'', ''correct'': True}'
+  - '{''text'': ''Тоді, коли настане час.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1137,14 +1170,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яка форма правильна для орудного відмінка?
   options:
-  - text: Пишаюся той, хто переміг.
-    correct: false
-  - text: Пишаюся того, хто переміг.
-    correct: false
-  - text: Пишаюся тим, хто переміг.
-    correct: true
-  - text: Пишаюся тому, хто переміг.
-    correct: false
+  - '{''text'': ''Пишаюся той, хто переміг.'', ''correct'': False}'
+  - '{''text'': ''Пишаюся того, хто переміг.'', ''correct'': False}'
+  - '{''text'': ''Пишаюся тим, хто переміг.'', ''correct'': True}'
+  - '{''text'': ''Пишаюся тому, хто переміг.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1155,14 +1184,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Що означає "настільки... наскільки"?
   options:
-  - text: Кількість
-    correct: false
-  - text: Міра або ступінь
-    correct: true
-  - text: Час
-    correct: false
-  - text: Місце
-    correct: false
+  - '{''text'': ''Кількість'', ''correct'': False}'
+  - '{''text'': ''Міра або ступінь'', ''correct'': True}'
+  - '{''text'': ''Час'', ''correct'': False}'
+  - '{''text'': ''Місце'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1173,14 +1198,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Скільки ком потрібно у реченні "Той хто рано встає тому Бог дає"?
   options:
-  - text: Одна
-    correct: false
-  - text: Дві
-    correct: true
-  - text: Три
-    correct: false
-  - text: Жодної
-    correct: false
+  - '{''text'': ''Одна'', ''correct'': False}'
+  - '{''text'': ''Дві'', ''correct'': True}'
+  - '{''text'': ''Три'', ''correct'': False}'
+  - '{''text'': ''Жодної'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1191,14 +1212,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яка пара виражає спосіб дії?
   options:
-  - text: такий... який
-    correct: false
-  - text: так... як
-    correct: true
-  - text: стільки... скільки
-    correct: false
-  - text: тому... що
-    correct: false
+  - '{''text'': ''такий... який'', ''correct'': False}'
+  - '{''text'': ''так... як'', ''correct'': True}'
+  - '{''text'': ''стільки... скільки'', ''correct'': False}'
+  - '{''text'': ''тому... що'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1209,14 +1226,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: 'У множині замість "той" використовується:'
   options:
-  - text: та
-    correct: false
-  - text: те
-    correct: false
-  - text: ті
-    correct: true
-  - text: тому
-    correct: false
+  - '{''text'': ''та'', ''correct'': False}'
+  - '{''text'': ''те'', ''correct'': False}'
+  - '{''text'': ''ті'', ''correct'': True}'
+  - '{''text'': ''тому'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1227,14 +1240,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яке речення є прикладом української народної мудрості?
   options:
-  - text: Той, хто рано встає, тому Бог дає.
-    correct: true
-  - text: Там, де порядок, там і успіх.
-    correct: false
-  - text: Те, що важливо, запам'ятай.
-    correct: false
-  - text: Стільки, скільки потрібно.
-    correct: false
+  - '{''text'': ''Той, хто рано встає, тому Бог дає.'', ''correct'': True}'
+  - '{''text'': ''Там, де порядок, там і успіх.'', ''correct'': False}'
+  - '{''text'': "Те, що важливо, запам''ятай.", ''correct'': False}'
+  - '{''text'': ''Стільки, скільки потрібно.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1245,14 +1254,10 @@ items:
   title: Комплексна перевірка знань про співвідносні конструкції
   question: Яка функція співвідносних конструкцій у науковому стилі?
   options:
-  - text: Емоційне підсилення
-    correct: false
-  - text: Точні визначення
-    correct: true
-  - text: Створення ритму
-    correct: false
-  - text: Скорочення тексту
-    correct: false
+  - '{''text'': ''Емоційне підсилення'', ''correct'': False}'
+  - '{''text'': ''Точні визначення'', ''correct'': True}'
+  - '{''text'': ''Створення ритму'', ''correct'': False}'
+  - '{''text'': ''Скорочення тексту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1264,14 +1269,10 @@ items:
   question: Який корелятив підходить для речення "_____, звідки він приїхав, далеко
     до моря"?
   options:
-  - text: Там
-    correct: false
-  - text: Туди
-    correct: false
-  - text: Звідти
-    correct: true
-  - text: Тоді
-    correct: false
+  - '{''text'': ''Там'', ''correct'': False}'
+  - '{''text'': ''Туди'', ''correct'': False}'
+  - '{''text'': ''Звідти'', ''correct'': True}'
+  - '{''text'': ''Тоді'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

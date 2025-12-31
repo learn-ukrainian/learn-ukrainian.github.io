@@ -1,0 +1,702 @@
+module: 51-idioms-body
+level: B2
+file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/51-idioms-body.md
+generated: '2025-12-30T19:49:16.174453'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
+activity_counts:
+  error-correction: 8
+  fill-in: 8
+  cloze: 1
+  unjumble: 8
+  quiz: 16
+  true-false: 8
+total_items: 49
+item_count: 49
+sample_percent: null
+items:
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Коли я злякався, у мене серце в п'яти пішло.
+  error: серце
+  answer: душа
+  sentence_corrected: Коли я злякався, у мене душа в п'яти пішло.
+  options:
+  - серце
+  - душа
+  - голова
+  - нога
+  original_explanation: Правильний вираз - душа в п'яти.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Після іспиту в мене цегла з душі впала.
+  error: цегла
+  answer: камінь
+  sentence_corrected: Після іспиту в мене камінь з душі впала.
+  options:
+  - цегла
+  - камінь
+  - гора
+  - будинок
+  original_explanation: Правильний вираз - камінь з душі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Не бери це до голови, все буде добре.
+  error: голови
+  answer: серця
+  sentence_corrected: Не бери це до серця, все буде добре.
+  options:
+  - голови
+  - серця
+  - печінки
+  - рук
+  original_explanation: У значенні переживати кажуть брати до серця.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Він така закрита людина, душа нараспашку.
+  error: закрита
+  answer: відкрита
+  sentence_corrected: Він така відкрита людина, душа нараспашку.
+  options:
+  - закрита
+  - відкрита
+  - зла
+  - сумна
+  original_explanation: Душа нараспашку — це про відкриту людину.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: У нього камінь з серця впав після новини.
+  error: серця
+  answer: душі
+  sentence_corrected: У нього камінь з душі впав після новини.
+  options:
+  - серця
+  - душі
+  - голови
+  - рук
+  original_explanation: Правильно камінь з душі.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Моя споріднена серце завжди поруч.
+  error: серце
+  answer: душа
+  sentence_corrected: Моя споріднена душа завжди поруч.
+  options:
+  - серце
+  - душа
+  - людина
+  - друг
+  original_explanation: Правильно споріднена душа.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Вона всім серцем вірить у перемогу.
+  error: none
+  answer: correct
+  sentence_corrected: Вона всім серцем вірить у перемогу.
+  options:
+  - серцем
+  - душею
+  - розумом
+  - тілом
+  original_explanation: Всім серцем — це варіант всією душею.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: error-correction
+  title: Знайди помилку
+  sentence_with_error: Від щирого слова вітаємо вас.
+  error: слова
+  answer: серця
+  sentence_corrected: Від щирого серця вітаємо вас.
+  options:
+  - слова
+  - серця
+  - душі
+  - настрою
+  original_explanation: Правильно від щирого серця.
+  validate:
+    error_is_real_mistake: null
+    corrected_sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Коли я почув гарну новину, у мене [___] з душі впав.
+  answer: камінь
+  complete_sentence: Коли я почув гарну новину, у мене [камінь] з душі впав.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Не бери дурниць до [___], бережи нерви.
+  answer: серця
+  complete_sentence: Не бери дурниць до [серця], бережи нерви.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Від різкого звуку в мене душа в [___] пішла.
+  answer: п'яти
+  complete_sentence: Від різкого звуку в мене душа в [п'яти] пішла.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Вітаю вас із днем народження від [___] серця!
+  answer: щирого
+  complete_sentence: Вітаю вас із днем народження від [щирого] серця!
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Вона така відкрита, справжня душа [___].
+  answer: нараспашку
+  complete_sentence: Вона така відкрита, справжня душа [нараспашку].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Коли я бачу безпритульних цуценят, у мене серце [___].
+  answer: крається
+  complete_sentence: Коли я бачу безпритульних цуценят, у мене серце [крається].
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Ми з ним — [___] душі, розуміємося без слів.
+  answer: споріднені
+  complete_sentence: Ми з ним — [споріднені] душі, розуміємося без слів.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: fill-in
+  title: Вставте пропущене слово
+  sentence_template: Я люблю свою роботу [___] душею.
+  answer: всією
+  complete_sentence: Я люблю свою роботу [всією] душею.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: cloze
+  title: Історія з фразеологізмами
+  passage_template: 'Учора я мав складати {іспит|екзамен|тест|іспит} з водіння. Чесно
+    кажучи, коли я сів у {машину|авто|автомобіль|машину}, у мене {душа|серце|розум|душа}
+    в п''яти пішла від {страху|жаху|паніки|страху}. Інструктор був {суворим|добрим|злим|суворим},
+    і я почав брати кожне його {зауваження|слово|питання|зауваження} до {серця|душі|голови|серця}.
+    Але коли я успішно {припаркувався|зупинився|виїхав|припаркувався} і почув "Іспит
+    складено", у мене наче {камінь|гора|вантаж|камінь} з {душі|серця|голови|душі}
+    впав! Я подякував інструктору від {щирого|чистого|доброго|щирого} серця. Тепер
+    я {всією|повною|цілою|всією} душею люблю водити авто! Я відчув неймовірну {радість|втіху|насолоду|радість}
+    та {полегшення|свободу|силу|полегшення}. Це була справжня {перемога|успіх|досягнення|перемога}
+    над собою. Моя {щирість|відвертість|доброта|щирість} допомогла мені знайти контакт
+    з {людьми|людиною|інструктором|людьми}. Внутрішній {світ|стан|спокій|світ} нарешті
+    став {стабільним|гарним|чудовим|стабільним}.
+
+    '
+  blanks:
+  - answer: іспит
+    options:
+    - іспит
+    - екзамен
+    - тест
+  - answer: машину
+    options:
+    - машину
+    - авто
+    - автомобіль
+  - answer: душа
+    options:
+    - душа
+    - серце
+    - розум
+  - answer: страху
+    options:
+    - страху
+    - жаху
+    - паніки
+  - answer: суворим
+    options:
+    - суворим
+    - добрим
+    - злим
+  - answer: зауваження
+    options:
+    - зауваження
+    - слово
+    - питання
+  - answer: серця
+    options:
+    - серця
+    - душі
+    - голови
+  - answer: припаркувався
+    options:
+    - припаркувався
+    - зупинився
+    - виїхав
+  - answer: камінь
+    options:
+    - камінь
+    - гора
+    - вантаж
+  - answer: душі
+    options:
+    - душі
+    - серця
+    - голови
+  - answer: щирого
+    options:
+    - щирого
+    - чистого
+    - доброго
+  - answer: всією
+    options:
+    - всією
+    - повною
+    - цілою
+  - answer: радість
+    options:
+    - радість
+    - втіху
+    - насолоду
+  - answer: полегшення
+    options:
+    - полегшення
+    - свободу
+    - силу
+  - answer: перемога
+    options:
+    - перемога
+    - успіх
+    - досягнення
+  - answer: щирість
+    options:
+    - щирість
+    - відвертість
+    - доброта
+  - answer: людьми
+    options:
+    - людьми
+    - людиною
+    - інструктором
+  - answer: світ
+    options:
+    - світ
+    - стан
+    - спокій
+  - answer: стабільним
+    options:
+    - стабільним
+    - гарним
+    - чудовим
+  blank_count: 19
+  complete_passage: 'Учора я мав складати іспит з водіння. Чесно кажучи, коли я сів
+    у машину, у мене душа в п''яти пішла від страху. Інструктор був суворим, і я почав
+    брати кожне його зауваження до серця. Але коли я успішно припаркувався і почув
+    "Іспит складено", у мене наче камінь з душі впав! Я подякував інструктору від
+    щирого серця. Тепер я всією душею люблю водити авто! Я відчув неймовірну радість
+    та полегшення. Це була справжня перемога над собою. Моя щирість допомогла мені
+    знайти контакт з людьми. Внутрішній світ нарешті став стабільним.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Наче камінь з душі впав.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Не бери це до серця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Душа в п'яти пішла.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Серце крається, коли я бачу це.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Бажаю щастя від щирого серця.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Він людина — душа нараспашку.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Я знайшов споріднену душу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: unjumble
+  title: Складіть речення
+  jumbled_words: []
+  answer: Всією душею вірю в цю справу.
+  validate:
+    sentence_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Коли я дізнався, що екзамен скасували, я відчув неймовірне полегшення.
+  options:
+  - '{''text'': ''Камінь з душі впав'', ''correct'': True}'
+  - '{''text'': ''Серце крається'', ''correct'': False}'
+  - '{''text'': "Душа в п''яти пішла", ''correct'': False}'
+  - '{''text'': ''Душа нараспашку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Вона дуже чутлива і постійно переживає через дрібниці.
+  options:
+  - '{''text'': ''Вона бере все до серця'', ''correct'': True}'
+  - '{''text'': ''У неї камінь з душі'', ''correct'': False}'
+  - '{''text'': ''Вона споріднена душа'', ''correct'': False}'
+  - '{''text'': ''Вона від щирого серця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Коли ми йшли темним лісом, я дуже боявся.
+  options:
+  - '{''text'': "У мене душа в п''яти пішла", ''correct'': True}'
+  - '{''text'': ''У мене серце краялося'', ''correct'': False}'
+  - '{''text'': ''Я був душею нараспашку'', ''correct'': False}'
+  - '{''text'': ''Я брав це до серця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Ми розуміємо одне одного з півслова, у нас схожі смаки.
+  options:
+  - '{''text'': ''Ми споріднені душі'', ''correct'': True}'
+  - '{''text'': ''Ми беремо до серця'', ''correct'': False}'
+  - '{''text'': ''У нас камінь з душі'', ''correct'': False}'
+  - '{''text'': ''Ми від щирого серця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Він ніколи нічого не приховує, завжди говорить те, що думає.
+  options:
+  - '{''text'': ''Він людина — душа нараспашку'', ''correct'': True}'
+  - '{''text'': "У нього душа в п''яти", ''correct'': False}'
+  - '{''text'': ''У нього серце крається'', ''correct'': False}'
+  - '{''text'': ''Він бере до серця'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Мені так шкода дивитися на ці зруйновані будинки.
+  options:
+  - '{''text'': ''Серце крається'', ''correct'': True}'
+  - '{''text'': ''Камінь з душі'', ''correct'': False}'
+  - '{''text'': "Душа в п''яти", ''correct'': False}'
+  - '{''text'': ''Всією душею'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Я бажаю вам щастя без жодного лукавства.
+  options:
+  - '{''text'': ''Від щирого серця'', ''correct'': True}'
+  - '{''text'': ''З каменем на душі'', ''correct'': False}'
+  - '{''text'': "З душею в п''ятах", ''correct'': False}'
+  - '{''text'': ''З серцем, що крається'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Оберіть правильний фразеологізм
+  question: Я дуже сильно хочу, щоб цей проєкт був успішним.
+  options:
+  - '{''text'': ''Я вболіваю за нього всією душею'', ''correct'': True}'
+  - '{''text'': ''Я беру його до серця'', ''correct'': False}'
+  - '{''text'': ''Я маю душу нараспашку'', ''correct'': False}'
+  - '{''text'': "У мене душа в п''ятах", ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Який вираз найкраще описує людину, яка дуже швидко довіряє іншим?
+  options:
+  - '{''text'': ''Душа нараспашку'', ''correct'': True}'
+  - '{''text'': "Душа в п''яти", ''correct'': False}'
+  - '{''text'': ''Споріднена душа'', ''correct'': False}'
+  - '{''text'': ''Камінь з душі'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Коли ми кажемо, що камінь ВПАВ з душі, ми маємо на увазі...
+  options:
+  - '{''text'': ''Фізичну втому'', ''correct'': False}'
+  - '{''text'': ''Емоційне полегшення'', ''correct'': True}'
+  - '{''text'': ''Нову проблему'', ''correct'': False}'
+  - '{''text'': ''Поганий настрій'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Як можна замінити вираз брати до серця?
+  options:
+  - '{''text'': ''Перейматися'', ''correct'': True}'
+  - '{''text'': ''Радіти'', ''correct'': False}'
+  - '{''text'': ''Сміятися'', ''correct'': False}'
+  - '{''text'': ''Мовчати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Вираз серце крається найчастіше вживається, коли ми відчуваємо...
+  options:
+  - '{''text'': ''Гнів'', ''correct'': False}'
+  - '{''text'': ''Страх'', ''correct'': False}'
+  - '{''text'': ''Жаль та співчуття'', ''correct'': True}'
+  - '{''text'': ''Гордість'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Споріднена душа — це людина, яка...
+  options:
+  - '{''text'': ''Є вашим родичем'', ''correct'': False}'
+  - '{''text'': ''Розуміє вас на глибокому рівні'', ''correct'': True}'
+  - '{''text'': ''Постійно з вами сперечається'', ''correct'': False}'
+  - '{''text'': ''Живе у вашому будинку'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Коли ми кажемо від щирого серця, ми підкреслюємо...
+  options:
+  - '{''text'': ''Свою швидкість'', ''correct'': False}'
+  - '{''text'': ''Свою нечесність'', ''correct'': False}'
+  - '{''text'': ''Свою справжність та щирість'', ''correct'': True}'
+  - '{''text'': ''Свій високий статус'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Вираз душа в п'яти походить від відчуття...
+  options:
+  - '{''text'': ''Холоду в ногах'', ''correct'': False}'
+  - '{''text'': ''Раптового сильного переляку'', ''correct'': True}'
+  - '{''text'': ''Великої радості'', ''correct'': False}'
+  - '{''text'': ''Бажання танцювати'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: quiz
+  title: Деталі значення
+  question: Всією душею любити — це значить любити...
+  options:
+  - '{''text'': ''Лише іноді'', ''correct'': False}'
+  - '{''text'': ''Наполовину'', ''correct'': False}'
+  - '{''text'': ''Повністю, всім своїм єством'', ''correct'': True}'
+  - '{''text'': ''Через силу'', ''correct'': False}'
+  answer: ''
+  validate:
+    question_valid: null
+    options_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Душа в п'яти означає, що людина дуже швидко біжить.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Камінь з душі означає відчуття полегшення.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Брати до серця означає мати серцеву хворобу.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Душа нараспашку — це про людину, яка носить розстебнутий одяг.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Споріднена душа — це брат або сестра.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Серце крається означає відчувати сильний жаль.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Від щирого серця можна сказати, коли вітаєш когось.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null
+- activity: true-false
+  title: Правда чи ні?
+  statement: Всією душею означає робити щось наполовину, без бажання.
+  answer: ''
+  validate:
+    statement_valid: null
+    explanation: null
+    confidence: null

@@ -1,15 +1,18 @@
 module: 19-register-official-legal
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/19-register-official-legal.md
-generated: '2025-12-29T22:08:23.842557'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.523127'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в офіційних документах
@@ -575,6 +578,152 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть офіційну заяву
+  passage_template: '{Директору|Директор|Директора|Директору} ТОВ «Прогрес»
+
+    {Коваленку|Коваленко|Коваленка|Коваленку} Івану {Петровичу|Петрович|Петровича|Петровичу}
+
+    від {інженера|інженер|інженеру|інженера}
+
+    Петренко Марії {Сергіївни|Сергіївна|Сергіївно|Сергіївни}
+
+
+    ЗАЯВА
+
+
+    {Прошу|Хочу|Даю|Прошу} {надати|дати|скинути|надати} мені {щорічну|щорічна|щорічної|щорічну}
+    оплачувану відпустку тривалістю 24 {календарних|календарні|календарним|календарних}
+    дні.
+
+
+    {Підстава|Причина|Бо|Підстава}: стаття 74 Кодексу законів про працю України.
+
+
+    {Відповідно|Згідно|По|Відповідно} {до|з|від|до} {чинного|чинний|чинним|чинного}
+    законодавства, за мною {зберігається|зберігаю|зберігатись|зберігається} місце
+    роботи.
+
+
+    До заяви {долучено|скинуто|дано|долучено} копію {паспорта|паспорт|паспортом|паспорта}.
+
+
+    15.06.2024                                     Петренко М.С.
+
+    '
+  blanks:
+  - answer: Директору
+    options:
+    - Директору
+    - Директор
+    - Директора
+  - answer: Коваленку
+    options:
+    - Коваленку
+    - Коваленко
+    - Коваленка
+  - answer: Петровичу
+    options:
+    - Петровичу
+    - Петрович
+    - Петровича
+  - answer: інженера
+    options:
+    - інженера
+    - інженер
+    - інженеру
+  - answer: Сергіївни
+    options:
+    - Сергіївни
+    - Сергіївна
+    - Сергіївно
+  - answer: Прошу
+    options:
+    - Прошу
+    - Хочу
+    - Даю
+  - answer: надати
+    options:
+    - надати
+    - дати
+    - скинути
+  - answer: щорічну
+    options:
+    - щорічну
+    - щорічна
+    - щорічної
+  - answer: календарних
+    options:
+    - календарних
+    - календарні
+    - календарним
+  - answer: Підстава
+    options:
+    - Підстава
+    - Причина
+    - Бо
+  - answer: Відповідно
+    options:
+    - Відповідно
+    - Згідно
+    - По
+  - answer: до
+    options:
+    - до
+    - з
+    - від
+  - answer: чинного
+    options:
+    - чинного
+    - чинний
+    - чинним
+  - answer: зберігається
+    options:
+    - зберігається
+    - зберігаю
+    - зберігатись
+  - answer: долучено
+    options:
+    - долучено
+    - скинуто
+    - дано
+  - answer: паспорта
+    options:
+    - паспорта
+    - паспорт
+    - паспортом
+  blank_count: 16
+  complete_passage: 'Директору ТОВ «Прогрес»
+
+    Коваленку Івану Петровичу
+
+    від інженера
+
+    Петренко Марії Сергіївни
+
+
+    ЗАЯВА
+
+
+    Прошу надати мені щорічну оплачувану відпустку тривалістю 24 календарних дні.
+
+
+    Підстава: стаття 74 Кодексу законів про працю України.
+
+
+    Відповідно до чинного законодавства, за мною зберігається місце роботи.
+
+
+    До заяви долучено копію паспорта.
+
+
+    15.06.2024                                     Петренко М.С.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть офіційні формулювання
   jumbled_words: []
@@ -708,14 +857,10 @@ items:
   question: Яка граматична конструкція є найхарактернішою ознакою офіційно-ділового
     стилю?
   options:
-  - text: Особові форми дієслова
-    correct: false
-  - text: Безособові конструкції на -но/-то
-    correct: true
-  - text: Дієприкметникові звороти
-    correct: false
-  - text: Розмовні скорочення
-    correct: false
+  - '{''text'': ''Особові форми дієслова'', ''correct'': False}'
+  - '{''text'': ''Безособові конструкції на -но/-то'', ''correct'': True}'
+  - '{''text'': ''Дієприкметникові звороти'', ''correct'': False}'
+  - '{''text'': ''Розмовні скорочення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -726,14 +871,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Як правильно утворити безособову форму від дієслова «прийняти»?
   options:
-  - text: Прийнятий
-    correct: false
-  - text: Прийнято
-    correct: true
-  - text: Прийняти
-    correct: false
-  - text: Приймають
-    correct: false
+  - '{''text'': ''Прийнятий'', ''correct'': False}'
+  - '{''text'': ''Прийнято'', ''correct'': True}'
+  - '{''text'': ''Прийняти'', ''correct'': False}'
+  - '{''text'': ''Приймають'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -744,14 +885,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Який прийменник вживається з «відповідно»?
   options:
-  - text: з
-    correct: false
-  - text: до
-    correct: true
-  - text: від
-    correct: false
-  - text: на
-    correct: false
+  - '{''text'': ''з'', ''correct'': False}'
+  - '{''text'': ''до'', ''correct'': True}'
+  - '{''text'': ''від'', ''correct'': False}'
+  - '{''text'': ''на'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -762,14 +899,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Який прийменник вживається з «згідно»?
   options:
-  - text: до
-    correct: false
-  - text: з
-    correct: true
-  - text: від
-    correct: false
-  - text: на
-    correct: false
+  - '{''text'': ''до'', ''correct'': False}'
+  - '{''text'': ''з'', ''correct'': True}'
+  - '{''text'': ''від'', ''correct'': False}'
+  - '{''text'': ''на'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -780,14 +913,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яке звертання є найбільш формальним у судовому процесі?
   options:
-  - text: Пане суддя
-    correct: false
-  - text: Високоповажний суде
-    correct: true
-  - text: Шановний суддя
-    correct: false
-  - text: Суддя
-    correct: false
+  - '{''text'': ''Пане суддя'', ''correct'': False}'
+  - '{''text'': ''Високоповажний суде'', ''correct'': True}'
+  - '{''text'': ''Шановний суддя'', ''correct'': False}'
+  - '{''text'': ''Суддя'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -798,14 +927,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Який документ фіксує хід засідання?
   options:
-  - text: Заява
-    correct: false
-  - text: Протокол
-    correct: true
-  - text: Наказ
-    correct: false
-  - text: Указ
-    correct: false
+  - '{''text'': ''Заява'', ''correct'': False}'
+  - '{''text'': ''Протокол'', ''correct'': True}'
+  - '{''text'': ''Наказ'', ''correct'': False}'
+  - '{''text'': ''Указ'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -816,14 +941,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яка формула використовується на початку заяви?
   options:
-  - text: Наказую
-    correct: false
-  - text: Прошу надати
-    correct: true
-  - text: Слухали
-    correct: false
-  - text: Постановляю
-    correct: false
+  - '{''text'': ''Наказую'', ''correct'': False}'
+  - '{''text'': ''Прошу надати'', ''correct'': True}'
+  - '{''text'': ''Слухали'', ''correct'': False}'
+  - '{''text'': ''Постановляю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -834,14 +955,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Чому в офіційних документах уникають вказівки на виконавця дії?
   options:
-  - text: Бо це секретна інформація
-    correct: false
-  - text: Бо важливий результат, а не виконавець
-    correct: true
-  - text: Бо це скорочує текст
-    correct: false
-  - text: Бо це традиція
-    correct: false
+  - '{''text'': ''Бо це секретна інформація'', ''correct'': False}'
+  - '{''text'': ''Бо важливий результат, а не виконавець'', ''correct'': True}'
+  - '{''text'': ''Бо це скорочує текст'', ''correct'': False}'
+  - '{''text'': ''Бо це традиція'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +969,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яке скорочення означає «місце печатки»?
   options:
-  - text: М.Д.
-    correct: false
-  - text: М.П.
-    correct: true
-  - text: П.М.
-    correct: false
-  - text: М.С.
-    correct: false
+  - '{''text'': ''М.Д.'', ''correct'': False}'
+  - '{''text'': ''М.П.'', ''correct'': True}'
+  - '{''text'': ''П.М.'', ''correct'': False}'
+  - '{''text'': ''М.С.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -870,14 +983,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яка структура характерна для протоколу засідання?
   options:
-  - text: Прошу... Підстава...
-    correct: false
-  - text: Слухали... Ухвалили...
-    correct: true
-  - text: Наказую... Контроль...
-    correct: false
-  - text: Вступ... Висновок...
-    correct: false
+  - '{''text'': ''Прошу... Підстава...'', ''correct'': False}'
+  - '{''text'': ''Слухали... Ухвалили...'', ''correct'': True}'
+  - '{''text'': ''Наказую... Контроль...'', ''correct'': False}'
+  - '{''text'': ''Вступ... Висновок...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -888,14 +997,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Який документ видає глава держави?
   options:
-  - text: Постанова
-    correct: false
-  - text: Указ
-    correct: true
-  - text: Наказ
-    correct: false
-  - text: Протокол
-    correct: false
+  - '{''text'': ''Постанова'', ''correct'': False}'
+  - '{''text'': ''Указ'', ''correct'': True}'
+  - '{''text'': ''Наказ'', ''correct'': False}'
+  - '{''text'': ''Протокол'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -906,14 +1011,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Як правильно оформити дату в офіційному документі?
   options:
-  - text: 1 січня 2024
-    correct: false
-  - text: 01.01.2024
-    correct: true
-  - text: січень 2024
-    correct: false
-  - text: 1/1/24
-    correct: false
+  - '{''text'': ''1 січня 2024'', ''correct'': False}'
+  - '{''text'': ''01.01.2024'', ''correct'': True}'
+  - '{''text'': ''січень 2024'', ''correct'': False}'
+  - '{''text'': ''1/1/24'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -924,14 +1025,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яке слово є формальним синонімом до «дати»?
   options:
-  - text: Кинути
-    correct: false
-  - text: Надати
-    correct: true
-  - text: Скинути
-    correct: false
-  - text: Передати
-    correct: false
+  - '{''text'': ''Кинути'', ''correct'': False}'
+  - '{''text'': ''Надати'', ''correct'': True}'
+  - '{''text'': ''Скинути'', ''correct'': False}'
+  - '{''text'': ''Передати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -942,14 +1039,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Що означає конструкція «було прийнято»?
   options:
-  - text: Дія відбувається зараз
-    correct: false
-  - text: Дія завершилась у минулому
-    correct: true
-  - text: Дія відбудеться в майбутньому
-    correct: false
-  - text: Дія не відбулася
-    correct: false
+  - '{''text'': ''Дія відбувається зараз'', ''correct'': False}'
+  - '{''text'': ''Дія завершилась у минулому'', ''correct'': True}'
+  - '{''text'': ''Дія відбудеться в майбутньому'', ''correct'': False}'
+  - '{''text'': ''Дія не відбулася'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -960,14 +1053,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Яка головна вимога до офіційно-ділового стилю?
   options:
-  - text: Емоційність
-    correct: false
-  - text: Точність та однозначність
-    correct: true
-  - text: Образність
-    correct: false
-  - text: Стислість
-    correct: false
+  - '{''text'': ''Емоційність'', ''correct'': False}'
+  - '{''text'': ''Точність та однозначність'', ''correct'': True}'
+  - '{''text'': ''Образність'', ''correct'': False}'
+  - '{''text'': ''Стислість'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -978,14 +1067,10 @@ items:
   title: Основи офіційно-ділового стилю
   question: Як оформити звертання до директора в офіційному листі?
   options:
-  - text: Директор Коваленко!
-    correct: false
-  - text: Шановний пане директоре!
-    correct: true
-  - text: Пан директор!
-    correct: false
-  - text: Директоре!
-    correct: false
+  - '{''text'': ''Директор Коваленко!'', ''correct'': False}'
+  - '{''text'': ''Шановний пане директоре!'', ''correct'': True}'
+  - '{''text'': ''Пан директор!'', ''correct'': False}'
+  - '{''text'': ''Директоре!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -996,14 +1081,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка конструкція правильна для офіційного документа?
   options:
-  - text: Ми затвердили план
-    correct: false
-  - text: План затверджено
-    correct: true
-  - text: План затвердили
-    correct: false
-  - text: Затвердили план
-    correct: false
+  - '{''text'': ''Ми затвердили план'', ''correct'': False}'
+  - '{''text'': ''План затверджено'', ''correct'': True}'
+  - '{''text'': ''План затвердили'', ''correct'': False}'
+  - '{''text'': ''Затвердили план'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1014,14 +1095,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно оформити шапку заяви?
   options:
-  - text: Директор ТОВ "Прогрес"
-    correct: false
-  - text: Директору ТОВ "Прогрес"
-    correct: true
-  - text: Директора ТОВ "Прогрес"
-    correct: false
-  - text: До директора ТОВ "Прогрес"
-    correct: false
+  - '{''text'': ''Директор ТОВ "Прогрес"'', ''correct'': False}'
+  - '{''text'': ''Директору ТОВ "Прогрес"'', ''correct'': True}'
+  - '{''text'': ''Директора ТОВ "Прогрес"'', ''correct'': False}'
+  - '{''text'': ''До директора ТОВ "Прогрес"'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1032,14 +1109,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово є русизмом в офіційному стилі?
   options:
-  - text: Затвердити
-    correct: false
-  - text: Заключити (договір)
-    correct: true
-  - text: Погодити
-    correct: false
-  - text: Виконати
-    correct: false
+  - '{''text'': ''Затвердити'', ''correct'': False}'
+  - '{''text'': ''Заключити (договір)'', ''correct'': True}'
+  - '{''text'': ''Погодити'', ''correct'': False}'
+  - '{''text'': ''Виконати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1050,14 +1123,10 @@ items:
   title: Комплексна перевірка знань
   question: Що означає скорочення "м/п" у документах?
   options:
-  - text: Місце підпису
-    correct: false
-  - text: Місце печатки
-    correct: true
-  - text: Мій підпис
-    correct: false
-  - text: Можливий підпис
-    correct: false
+  - '{''text'': ''Місце підпису'', ''correct'': False}'
+  - '{''text'': ''Місце печатки'', ''correct'': True}'
+  - '{''text'': ''Мій підпис'', ''correct'': False}'
+  - '{''text'': ''Можливий підпис'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1068,14 +1137,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка структура характерна для наказу?
   options:
-  - text: Прошу... Підстава...
-    correct: false
-  - text: 'Наказую: 1... 2... Контроль...'
-    correct: true
-  - text: Слухали... Ухвалили...
-    correct: false
-  - text: Сторони домовились...
-    correct: false
+  - '{''text'': ''Прошу... Підстава...'', ''correct'': False}'
+  - '{''text'': ''Наказую: 1... 2... Контроль...'', ''correct'': True}'
+  - '{''text'': ''Слухали... Ухвалили...'', ''correct'': False}'
+  - '{''text'': ''Сторони домовились...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1086,14 +1151,10 @@ items:
   title: Комплексна перевірка знань
   question: Який документ видає колегіальний орган?
   options:
-  - text: Наказ
-    correct: false
-  - text: Постанова
-    correct: true
-  - text: Указ
-    correct: false
-  - text: Розпорядження
-    correct: false
+  - '{''text'': ''Наказ'', ''correct'': False}'
+  - '{''text'': ''Постанова'', ''correct'': True}'
+  - '{''text'': ''Указ'', ''correct'': False}'
+  - '{''text'': ''Розпорядження'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1104,14 +1165,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно написати дату в офіційному документі?
   options:
-  - text: 1 січня 2024 р.
-    correct: false
-  - text: 01.01.2024
-    correct: true
-  - text: січень 2024
-    correct: false
-  - text: 2024-01-01
-    correct: false
+  - '{''text'': ''1 січня 2024 р.'', ''correct'': False}'
+  - '{''text'': ''01.01.2024'', ''correct'': True}'
+  - '{''text'': ''січень 2024'', ''correct'': False}'
+  - '{''text'': datetime.date(2024, 1, 1), ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1122,14 +1179,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка помилка у фразі "згідно закону"?
   options:
-  - text: Неправильний відмінок
-    correct: false
-  - text: Відсутній прийменник "з"
-    correct: true
-  - text: Неправильне слово
-    correct: false
-  - text: Помилки немає
-    correct: false
+  - '{''text'': ''Неправильний відмінок'', ''correct'': False}'
+  - '{''text'': ''Відсутній прийменник "з"'', ''correct'': True}'
+  - '{''text'': ''Неправильне слово'', ''correct'': False}'
+  - '{''text'': ''Помилки немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1140,14 +1193,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке звертання правильне до судді?
   options:
-  - text: Пане суддя
-    correct: false
-  - text: Високоповажний суде
-    correct: true
-  - text: Шановний суддя
-    correct: false
-  - text: Суддя
-    correct: false
+  - '{''text'': ''Пане суддя'', ''correct'': False}'
+  - '{''text'': ''Високоповажний суде'', ''correct'': True}'
+  - '{''text'': ''Шановний суддя'', ''correct'': False}'
+  - '{''text'': ''Суддя'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1158,14 +1207,10 @@ items:
   title: Комплексна перевірка знань
   question: Що означає "клопотання"?
   options:
-  - text: Скарга
-    correct: false
-  - text: Офіційне прохання
-    correct: true
-  - text: Наказ
-    correct: false
-  - text: Протест
-    correct: false
+  - '{''text'': ''Скарга'', ''correct'': False}'
+  - '{''text'': ''Офіційне прохання'', ''correct'': True}'
+  - '{''text'': ''Наказ'', ''correct'': False}'
+  - '{''text'': ''Протест'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1176,14 +1221,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка формула використовується для посилання на правову підставу?
   options:
-  - text: Бо так написано в законі
-    correct: false
-  - text: На підставі статті...
-    correct: true
-  - text: По закону...
-    correct: false
-  - text: Закон каже...
-    correct: false
+  - '{''text'': ''Бо так написано в законі'', ''correct'': False}'
+  - '{''text'': ''На підставі статті...'', ''correct'': True}'
+  - '{''text'': ''По закону...'', ''correct'': False}'
+  - '{''text'': ''Закон каже...'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1194,14 +1235,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно оформити завершення офіційного листа?
   options:
-  - text: Бувай
-    correct: false
-  - text: З повагою, (підпис)
-    correct: true
-  - text: Поки
-    correct: false
-  - text: До зустрічі
-    correct: false
+  - '{''text'': ''Бувай'', ''correct'': False}'
+  - '{''text'': ''З повагою, (підпис)'', ''correct'': True}'
+  - '{''text'': ''Поки'', ''correct'': False}'
+  - '{''text'': ''До зустрічі'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1212,14 +1249,10 @@ items:
   title: Комплексна перевірка знань
   question: Яке слово є правильним українським відповідником до "следующий"?
   options:
-  - text: Слідуючий
-    correct: false
-  - text: Наступний
-    correct: true
-  - text: Слідуємий
-    correct: false
-  - text: Будучий
-    correct: false
+  - '{''text'': ''Слідуючий'', ''correct'': False}'
+  - '{''text'': ''Наступний'', ''correct'': True}'
+  - '{''text'': ''Слідуємий'', ''correct'': False}'
+  - '{''text'': ''Будучий'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1230,14 +1263,10 @@ items:
   title: Комплексна перевірка знань
   question: Яка головна функція безособових конструкцій в офіційному стилі?
   options:
-  - text: Зробити текст коротшим
-    correct: false
-  - text: Підкреслити результат, а не виконавця
-    correct: true
-  - text: Зробити текст складнішим
-    correct: false
-  - text: Сховати інформацію
-    correct: false
+  - '{''text'': ''Зробити текст коротшим'', ''correct'': False}'
+  - '{''text'': ''Підкреслити результат, а не виконавця'', ''correct'': True}'
+  - '{''text'': ''Зробити текст складнішим'', ''correct'': False}'
+  - '{''text'': ''Сховати інформацію'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1248,14 +1277,10 @@ items:
   title: Комплексна перевірка знань
   question: Який документ фіксує угоду між двома сторонами?
   options:
-  - text: Наказ
-    correct: false
-  - text: Договір
-    correct: true
-  - text: Постанова
-    correct: false
-  - text: Протокол
-    correct: false
+  - '{''text'': ''Наказ'', ''correct'': False}'
+  - '{''text'': ''Договір'', ''correct'': True}'
+  - '{''text'': ''Постанова'', ''correct'': False}'
+  - '{''text'': ''Протокол'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1266,14 +1291,10 @@ items:
   title: Комплексна перевірка знань
   question: Як правильно написати "присутствуючі" по-українськи?
   options:
-  - text: Присутствуючі
-    correct: false
-  - text: Присутні
-    correct: true
-  - text: Присутствуємі
-    correct: false
-  - text: Бувші присутні
-    correct: false
+  - '{''text'': ''Присутствуючі'', ''correct'': False}'
+  - '{''text'': ''Присутні'', ''correct'': True}'
+  - '{''text'': ''Присутствуємі'', ''correct'': False}'
+  - '{''text'': ''Бувші присутні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

@@ -1,15 +1,18 @@
 module: 28-economics-business-vocabulary
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/28-economics-business-vocabulary.md
-generated: '2025-12-29T22:44:02.834692'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.980717'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки в економічних текстах
@@ -574,6 +577,154 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть текст про українську економіку
+  passage_template: 'Українська {економіка|політика|культура|економіка} переживає
+    складний період. {ВВП|ПДВ|НБУ|ВВП} країни знизився через війну, але {інфляцію|дефляцію|рецесію|інфляцію}
+    вдалося стабілізувати.
+
+
+    Національний банк {знизив|підняв|створив|знизив} облікову ставку, що зробило {кредити|депозити|акції|кредити}
+    дешевшими для бізнесу.
+
+
+    Курс {гривні|долара|євро|гривні} стабілізувався на рівні близько 41 за {долар|євро|фунт|долар}.
+    {Девальвації|Інфляції|Дефляції|Девальвації} вдалося уникнути.
+
+
+    Україна продовжує {експортувати|імпортувати|виробляти|експортувати} сільськогосподарську
+    продукцію до ЄС. {Експорт|Імпорт|Транзит|Експорт} зерна залишається важливим джерелом
+    доходів.
+
+
+    {Дефіцит|Профіцит|Баланс|Дефіцит} бюджету покривається за рахунок міжнародної
+    допомоги та {запозичень|заощаджень|інвестицій|запозичень}.
+
+
+    {Податки|Субсидії|Кредити|Податки} є основним джерелом наповнення {бюджету|доходу|капіталу|бюджету}.
+    Громадяни сплачують податок на доходи, а компанії — на {прибуток|збиток|виробництво|прибуток}.
+
+
+    Незважаючи на труднощі, {інвестори|туристи|студенти|інвестори} з-за кордону продовжують
+    вкладати гроші в українську {економіку|політику|культуру|економіку}.
+
+    '
+  blanks:
+  - answer: економіка
+    options:
+    - економіка
+    - політика
+    - культура
+  - answer: ВВП
+    options:
+    - ВВП
+    - ПДВ
+    - НБУ
+  - answer: інфляцію
+    options:
+    - інфляцію
+    - дефляцію
+    - рецесію
+  - answer: знизив
+    options:
+    - знизив
+    - підняв
+    - створив
+  - answer: кредити
+    options:
+    - кредити
+    - депозити
+    - акції
+  - answer: гривні
+    options:
+    - гривні
+    - долара
+    - євро
+  - answer: долар
+    options:
+    - долар
+    - євро
+    - фунт
+  - answer: Девальвації
+    options:
+    - Девальвації
+    - Інфляції
+    - Дефляції
+  - answer: експортувати
+    options:
+    - експортувати
+    - імпортувати
+    - виробляти
+  - answer: Експорт
+    options:
+    - Експорт
+    - Імпорт
+    - Транзит
+  - answer: Дефіцит
+    options:
+    - Дефіцит
+    - Профіцит
+    - Баланс
+  - answer: запозичень
+    options:
+    - запозичень
+    - заощаджень
+    - інвестицій
+  - answer: Податки
+    options:
+    - Податки
+    - Субсидії
+    - Кредити
+  - answer: бюджету
+    options:
+    - бюджету
+    - доходу
+    - капіталу
+  - answer: прибуток
+    options:
+    - прибуток
+    - збиток
+    - виробництво
+  - answer: інвестори
+    options:
+    - інвестори
+    - туристи
+    - студенти
+  - answer: економіку
+    options:
+    - економіку
+    - політику
+    - культуру
+  blank_count: 17
+  complete_passage: 'Українська економіка переживає складний період. ВВП країни знизився
+    через війну, але інфляцію вдалося стабілізувати.
+
+
+    Національний банк знизив облікову ставку, що зробило кредити дешевшими для бізнесу.
+
+
+    Курс гривні стабілізувався на рівні близько 41 за долар. Девальвації вдалося уникнути.
+
+
+    Україна продовжує експортувати сільськогосподарську продукцію до ЄС. Експорт зерна
+    залишається важливим джерелом доходів.
+
+
+    Дефіцит бюджету покривається за рахунок міжнародної допомоги та запозичень.
+
+
+    Податки є основним джерелом наповнення бюджету. Громадяни сплачують податок на
+    доходи, а компанії — на прибуток.
+
+
+    Незважаючи на труднощі, інвестори з-за кордону продовжують вкладати гроші в українську
+    економіку.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть економічні речення
   jumbled_words: []
@@ -706,14 +857,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке ВВП?
   options:
-  - text: Валютний внутрішній продукт
-    correct: false
-  - text: Валовий внутрішній продукт
-    correct: true
-  - text: Великий внутрішній прибуток
-    correct: false
-  - text: Валовий імпортний продукт
-    correct: false
+  - '{''text'': ''Валютний внутрішній продукт'', ''correct'': False}'
+  - '{''text'': ''Валовий внутрішній продукт'', ''correct'': True}'
+  - '{''text'': ''Великий внутрішній прибуток'', ''correct'': False}'
+  - '{''text'': ''Валовий імпортний продукт'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -724,14 +871,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що означає «інфляція»?
   options:
-  - text: Зниження цін
-    correct: false
-  - text: Зростання цін
-    correct: true
-  - text: Стабільність цін
-    correct: false
-  - text: Курс валюти
-    correct: false
+  - '{''text'': ''Зниження цін'', ''correct'': False}'
+  - '{''text'': ''Зростання цін'', ''correct'': True}'
+  - '{''text'': ''Стабільність цін'', ''correct'': False}'
+  - '{''text'': ''Курс валюти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -742,14 +885,10 @@ items:
   title: Економічні поняття та термінологія
   question: Як називається продаж товарів за кордон?
   options:
-  - text: Імпорт
-    correct: false
-  - text: Експорт
-    correct: true
-  - text: Транзит
-    correct: false
-  - text: Торгівля
-    correct: false
+  - '{''text'': ''Імпорт'', ''correct'': False}'
+  - '{''text'': ''Експорт'', ''correct'': True}'
+  - '{''text'': ''Транзит'', ''correct'': False}'
+  - '{''text'': ''Торгівля'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -760,14 +899,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке «дефіцит бюджету»?
   options:
-  - text: Коли доходи перевищують витрати
-    correct: false
-  - text: Коли витрати перевищують доходи
-    correct: true
-  - text: Коли бюджет збалансований
-    correct: false
-  - text: Коли немає боргів
-    correct: false
+  - '{''text'': ''Коли доходи перевищують витрати'', ''correct'': False}'
+  - '{''text'': ''Коли витрати перевищують доходи'', ''correct'': True}'
+  - '{''text'': ''Коли бюджет збалансований'', ''correct'': False}'
+  - '{''text'': ''Коли немає боргів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -778,14 +913,10 @@ items:
   title: Економічні поняття та термінологія
   question: Як називається плата за користування кредитом?
   options:
-  - text: Податок
-    correct: false
-  - text: Процент
-    correct: true
-  - text: Мито
-    correct: false
-  - text: Субсидія
-    correct: false
+  - '{''text'': ''Податок'', ''correct'': False}'
+  - '{''text'': ''Процент'', ''correct'': True}'
+  - '{''text'': ''Мито'', ''correct'': False}'
+  - '{''text'': ''Субсидія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -796,14 +927,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке «облікова ставка»?
   options:
-  - text: Ставка податку
-    correct: false
-  - text: Ставка кредитування центрального банку
-    correct: true
-  - text: Курс валюти
-    correct: false
-  - text: Ставка страхування
-    correct: false
+  - '{''text'': ''Ставка податку'', ''correct'': False}'
+  - '{''text'': ''Ставка кредитування центрального банку'', ''correct'': True}'
+  - '{''text'': ''Курс валюти'', ''correct'': False}'
+  - '{''text'': ''Ставка страхування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -814,14 +941,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що означає «девальвація»?
   options:
-  - text: Зростання курсу валюти
-    correct: false
-  - text: Падіння курсу валюти
-    correct: true
-  - text: Стабілізація валюти
-    correct: false
-  - text: Обмін валюти
-    correct: false
+  - '{''text'': ''Зростання курсу валюти'', ''correct'': False}'
+  - '{''text'': ''Падіння курсу валюти'', ''correct'': True}'
+  - '{''text'': ''Стабілізація валюти'', ''correct'': False}'
+  - '{''text'': ''Обмін валюти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -832,14 +955,10 @@ items:
   title: Економічні поняття та термінологія
   question: Як називається податок на імпортні товари?
   options:
-  - text: ПДВ
-    correct: false
-  - text: Мито
-    correct: true
-  - text: Акциз
-    correct: false
-  - text: Субсидія
-    correct: false
+  - '{''text'': ''ПДВ'', ''correct'': False}'
+  - '{''text'': ''Мито'', ''correct'': True}'
+  - '{''text'': ''Акциз'', ''correct'': False}'
+  - '{''text'': ''Субсидія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -850,14 +969,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке «монополія»?
   options:
-  - text: Конкуренція багатьох компаній
-    correct: false
-  - text: Контроль ринку однією компанією
-    correct: true
-  - text: Державна власність
-    correct: false
-  - text: Міжнародна торгівля
-    correct: false
+  - '{''text'': ''Конкуренція багатьох компаній'', ''correct'': False}'
+  - '{''text'': ''Контроль ринку однією компанією'', ''correct'': True}'
+  - '{''text'': ''Державна власність'', ''correct'': False}'
+  - '{''text'': ''Міжнародна торгівля'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -868,14 +983,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що означає «приватизація»?
   options:
-  - text: Передача приватної власності державі
-    correct: false
-  - text: Передача державної власності у приватні руки
-    correct: true
-  - text: Заборона приватного бізнесу
-    correct: false
-  - text: Регулювання приватних компаній
-    correct: false
+  - '{''text'': ''Передача приватної власності державі'', ''correct'': False}'
+  - '{''text'': ''Передача державної власності у приватні руки'', ''correct'': True}'
+  - '{''text'': ''Заборона приватного бізнесу'', ''correct'': False}'
+  - '{''text'': ''Регулювання приватних компаній'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -886,14 +997,10 @@ items:
   title: Економічні поняття та термінологія
   question: Як називається частка власності в компанії?
   options:
-  - text: Облігація
-    correct: false
-  - text: Акція
-    correct: true
-  - text: Депозит
-    correct: false
-  - text: Кредит
-    correct: false
+  - '{''text'': ''Облігація'', ''correct'': False}'
+  - '{''text'': ''Акція'', ''correct'': True}'
+  - '{''text'': ''Депозит'', ''correct'': False}'
+  - '{''text'': ''Кредит'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -904,14 +1011,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке «санкції» в економіці?
   options:
-  - text: Заохочення торгівлі
-    correct: false
-  - text: Обмеження торгівлі
-    correct: true
-  - text: Митні пільги
-    correct: false
-  - text: Субсидії
-    correct: false
+  - '{''text'': ''Заохочення торгівлі'', ''correct'': False}'
+  - '{''text'': ''Обмеження торгівлі'', ''correct'': True}'
+  - '{''text'': ''Митні пільги'', ''correct'': False}'
+  - '{''text'': ''Субсидії'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -922,14 +1025,10 @@ items:
   title: Економічні поняття та термінологія
   question: Як називається повна заборона торгівлі?
   options:
-  - text: Санкція
-    correct: false
-  - text: Ембарго
-    correct: true
-  - text: Мито
-    correct: false
-  - text: Квота
-    correct: false
+  - '{''text'': ''Санкція'', ''correct'': False}'
+  - '{''text'': ''Ембарго'', ''correct'': True}'
+  - '{''text'': ''Мито'', ''correct'': False}'
+  - '{''text'': ''Квота'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -940,14 +1039,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що таке «облігація»?
   options:
-  - text: Частка власності в компанії
-    correct: false
-  - text: Боргове зобов'язання
-    correct: true
-  - text: Банківський рахунок
-    correct: false
-  - text: Страховий поліс
-    correct: false
+  - '{''text'': ''Частка власності в компанії'', ''correct'': False}'
+  - '{''text'': "Боргове зобов''язання", ''correct'': True}'
+  - '{''text'': ''Банківський рахунок'', ''correct'': False}'
+  - '{''text'': ''Страховий поліс'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -958,14 +1053,10 @@ items:
   title: Економічні поняття та термінологія
   question: Яка протилежність інфляції?
   options:
-  - text: Рецесія
-    correct: false
-  - text: Дефляція
-    correct: true
-  - text: Стагнація
-    correct: false
-  - text: Девальвація
-    correct: false
+  - '{''text'': ''Рецесія'', ''correct'': False}'
+  - '{''text'': ''Дефляція'', ''correct'': True}'
+  - '{''text'': ''Стагнація'', ''correct'': False}'
+  - '{''text'': ''Девальвація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -976,14 +1067,10 @@ items:
   title: Економічні поняття та термінологія
   question: Що означає «зайнятість»?
   options:
-  - text: Відсоток безробітних
-    correct: false
-  - text: Відсоток працюючих
-    correct: true
-  - text: Кількість вакансій
-    correct: false
-  - text: Рівень зарплат
-    correct: false
+  - '{''text'': ''Відсоток безробітних'', ''correct'': False}'
+  - '{''text'': ''Відсоток працюючих'', ''correct'': True}'
+  - '{''text'': ''Кількість вакансій'', ''correct'': False}'
+  - '{''text'': ''Рівень зарплат'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -994,14 +1081,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Яке правильне формулювання про зростання ВВП?
   options:
-  - text: ВВП зріс до 5%.
-    correct: false
-  - text: ВВП зріс на 5%.
-    correct: true
-  - text: ВВП зріс у 5%.
-    correct: false
-  - text: ВВП зріс при 5%.
-    correct: false
+  - '{''text'': ''ВВП зріс до 5%.'', ''correct'': False}'
+  - '{''text'': ''ВВП зріс на 5%.'', ''correct'': True}'
+  - '{''text'': ''ВВП зріс у 5%.'', ''correct'': False}'
+  - '{''text'': ''ВВП зріс при 5%.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1012,14 +1095,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як правильно сказати про рівень інфляції?
   options:
-  - text: Інфляція дорівнює до 5%.
-    correct: false
-  - text: Інфляція становить 5%.
-    correct: true
-  - text: Інфляція є 5%.
-    correct: false
-  - text: Інфляція має 5%.
-    correct: false
+  - '{''text'': ''Інфляція дорівнює до 5%.'', ''correct'': False}'
+  - '{''text'': ''Інфляція становить 5%.'', ''correct'': True}'
+  - '{''text'': ''Інфляція є 5%.'', ''correct'': False}'
+  - '{''text'': ''Інфляція має 5%.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1030,14 +1109,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Що є джерелом доходів державного бюджету?
   options:
-  - text: Субсидії
-    correct: false
-  - text: Податки
-    correct: true
-  - text: Кредити
-    correct: false
-  - text: Інвестиції
-    correct: false
+  - '{''text'': ''Субсидії'', ''correct'': False}'
+  - '{''text'': ''Податки'', ''correct'': True}'
+  - '{''text'': ''Кредити'', ''correct'': False}'
+  - '{''text'': ''Інвестиції'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1048,14 +1123,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як називається ситуація, коли витрати бюджету перевищують доходи?
   options:
-  - text: Профіцит
-    correct: false
-  - text: Дефіцит
-    correct: true
-  - text: Баланс
-    correct: false
-  - text: Борг
-    correct: false
+  - '{''text'': ''Профіцит'', ''correct'': False}'
+  - '{''text'': ''Дефіцит'', ''correct'': True}'
+  - '{''text'': ''Баланс'', ''correct'': False}'
+  - '{''text'': ''Борг'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1066,14 +1137,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Яке дієслово правильно описує рух акцій на біржі?
   options:
-  - text: Акції торгують
-    correct: false
-  - text: Акції торгуються
-    correct: true
-  - text: Акції продають
-    correct: false
-  - text: Акції є
-    correct: false
+  - '{''text'': ''Акції торгують'', ''correct'': False}'
+  - '{''text'': ''Акції торгуються'', ''correct'': True}'
+  - '{''text'': ''Акції продають'', ''correct'': False}'
+  - '{''text'': ''Акції є'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1084,14 +1151,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як правильно описати напрямок експорту?
   options:
-  - text: Експортувати на Європу
-    correct: false
-  - text: Експортувати до Європи
-    correct: true
-  - text: Експортувати в Європу
-    correct: false
-  - text: Експортувати для Європи
-    correct: false
+  - '{''text'': ''Експортувати на Європу'', ''correct'': False}'
+  - '{''text'': ''Експортувати до Європи'', ''correct'': True}'
+  - '{''text'': ''Експортувати в Європу'', ''correct'': False}'
+  - '{''text'': ''Експортувати для Європи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1102,14 +1165,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Що означає «облікова ставка НБУ»?
   options:
-  - text: Ставка податку
-    correct: false
-  - text: Ставка кредитування центрального банку
-    correct: true
-  - text: Курс валюти
-    correct: false
-  - text: Рівень інфляції
-    correct: false
+  - '{''text'': ''Ставка податку'', ''correct'': False}'
+  - '{''text'': ''Ставка кредитування центрального банку'', ''correct'': True}'
+  - '{''text'': ''Курс валюти'', ''correct'': False}'
+  - '{''text'': ''Рівень інфляції'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1120,14 +1179,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Яка різниця між акцією та облігацією?
   options:
-  - text: Акція — борг, облігація — власність
-    correct: false
-  - text: Акція — власність, облігація — борг
-    correct: true
-  - text: Це синоніми
-    correct: false
-  - text: Різниці немає
-    correct: false
+  - '{''text'': ''Акція — борг, облігація — власність'', ''correct'': False}'
+  - '{''text'': ''Акція — власність, облігація — борг'', ''correct'': True}'
+  - '{''text'': ''Це синоніми'', ''correct'': False}'
+  - '{''text'': ''Різниці немає'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1138,14 +1193,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Що таке «девальвація»?
   options:
-  - text: Зростання курсу валюти
-    correct: false
-  - text: Падіння курсу валюти
-    correct: true
-  - text: Зростання інфляції
-    correct: false
-  - text: Зниження податків
-    correct: false
+  - '{''text'': ''Зростання курсу валюти'', ''correct'': False}'
+  - '{''text'': ''Падіння курсу валюти'', ''correct'': True}'
+  - '{''text'': ''Зростання інфляції'', ''correct'': False}'
+  - '{''text'': ''Зниження податків'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1156,14 +1207,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Яке слово правильно вживати для державної допомоги компаніям?
   options:
-  - text: Кредит
-    correct: false
-  - text: Субсидія
-    correct: true
-  - text: Податок
-    correct: false
-  - text: Мито
-    correct: false
+  - '{''text'': ''Кредит'', ''correct'': False}'
+  - '{''text'': ''Субсидія'', ''correct'': True}'
+  - '{''text'': ''Податок'', ''correct'': False}'
+  - '{''text'': ''Мито'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1174,14 +1221,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як правильно сказати про надання кредиту банком?
   options:
-  - text: Банк дав кредита
-    correct: false
-  - text: Банк надав кредит
-    correct: true
-  - text: Банк зробив кредит
-    correct: false
-  - text: Банк видав кредиту
-    correct: false
+  - '{''text'': ''Банк дав кредита'', ''correct'': False}'
+  - '{''text'': ''Банк надав кредит'', ''correct'': True}'
+  - '{''text'': ''Банк зробив кредит'', ''correct'': False}'
+  - '{''text'': ''Банк видав кредиту'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1192,14 +1235,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Що є протилежністю приватизації?
   options:
-  - text: Лібералізація
-    correct: false
-  - text: Націоналізація
-    correct: true
-  - text: Модернізація
-    correct: false
-  - text: Глобалізація
-    correct: false
+  - '{''text'': ''Лібералізація'', ''correct'': False}'
+  - '{''text'': ''Націоналізація'', ''correct'': True}'
+  - '{''text'': ''Модернізація'', ''correct'': False}'
+  - '{''text'': ''Глобалізація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1210,14 +1249,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як правильно описати ситуацію стабільності на ринку?
   options:
-  - text: Ринок стабілізувався
-    correct: true
-  - text: Ринок став стабільний
-    correct: false
-  - text: Ринок зробився стабільним
-    correct: false
-  - text: Ринок є стабільний
-    correct: false
+  - '{''text'': ''Ринок стабілізувався'', ''correct'': True}'
+  - '{''text'': ''Ринок став стабільний'', ''correct'': False}'
+  - '{''text'': ''Ринок зробився стабільним'', ''correct'': False}'
+  - '{''text'': ''Ринок є стабільний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1228,14 +1263,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Що означає «ембарго»?
   options:
-  - text: Часткові обмеження торгівлі
-    correct: false
-  - text: Повна заборона торгівлі
-    correct: true
-  - text: Митні пільги
-    correct: false
-  - text: Торговельна угода
-    correct: false
+  - '{''text'': ''Часткові обмеження торгівлі'', ''correct'': False}'
+  - '{''text'': ''Повна заборона торгівлі'', ''correct'': True}'
+  - '{''text'': ''Митні пільги'', ''correct'': False}'
+  - '{''text'': ''Торговельна угода'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1246,14 +1277,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Як правильно вживати дієслово «субсидіювати»?
   options:
-  - text: Уряд субсидує фермерів
-    correct: false
-  - text: Уряд субсидіює фермерів
-    correct: true
-  - text: Уряд субсидірує фермерів
-    correct: false
-  - text: Уряд субсидіє фермерів
-    correct: false
+  - '{''text'': ''Уряд субсидує фермерів'', ''correct'': False}'
+  - '{''text'': ''Уряд субсидіює фермерів'', ''correct'': True}'
+  - '{''text'': ''Уряд субсидірує фермерів'', ''correct'': False}'
+  - '{''text'': ''Уряд субсидіє фермерів'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1264,14 +1291,10 @@ items:
   title: Комплексна перевірка економічної лексики
   question: Яке правильне завершення речення «Безробіття впало...»?
   options:
-  - text: '...до рекордних показників'
-    correct: false
-  - text: '...до рекордно низьких показників'
-    correct: true
-  - text: '...на рекордні показники'
-    correct: false
-  - text: '...у рекордні показники'
-    correct: false
+  - '{''text'': ''...до рекордних показників'', ''correct'': False}'
+  - '{''text'': ''...до рекордно низьких показників'', ''correct'': True}'
+  - '{''text'': ''...на рекордні показники'', ''correct'': False}'
+  - '{''text'': ''...у рекордні показники'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

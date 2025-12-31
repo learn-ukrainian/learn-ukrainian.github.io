@@ -1,15 +1,18 @@
 module: 68-synonymy-thinking-verbs
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/68-synonymy-thinking-verbs.md
-generated: '2025-12-29T00:22:03.706716'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:29.190784'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 8
   fill-in: 12
+  cloze: 1
   unjumble: 10
   quiz: 8
   true-false: 12
-item_count: 50
+total_items: 51
+item_count: 51
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у дієсловах мислення
@@ -261,6 +264,123 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть пропуски в тексті
+  passage_template: 'Що означає справді мислити? Великі філософи {вважали|думали|вважали|гадали},
+    що справжнє мислення вимагає зусиль. Григорій Сковорода все життя {міркував|думав|міркував|гадав}
+    над питаннями щастя. Він {усвідомив|думав|усвідомив|гадав}, що щастя — це гармонія.
+
+
+    Сучасна людина часто {припускає|думає|припускає|вважає}, що вона думає, коли насправді
+    лише реагує. {Аналізувати|Думати|Аналізувати|Гадати} та {оцінювати|думати|оцінювати|гадати}
+    — це потребує часу. Ми повинні {усвідомити|думати|усвідомити|гадати}: справжнє
+    мислення — це навичка.
+
+
+    На роботі керівник сказав: "Я {вважаю|гадаю|вважаю|думаю}, що ми на правильному
+    шляху. {Гадаю|Вважаю|Гадаю|Аналізую}, результати побачимо через місяць." Команда
+    почала {обмірковувати|думати|обмірковувати|гадати} нову стратегію. Ніхто не {сумнівався|думав|сумнівався|гадав}
+    у її успіху.
+
+
+    Не {судіть|думайте|судіть|гадайте} інших поспішно! Краще {уявіть|думайте|уявіть|гадайте}
+    себе на їхньому місці. Так легше {зрозуміти|гадати|зрозуміти|думати} їхні мотиви.
+
+    '
+  blanks:
+  - answer: гадали
+    options:
+    - вважали
+    - думали
+    - вважали
+  - answer: гадав
+    options:
+    - міркував
+    - думав
+    - міркував
+  - answer: гадав
+    options:
+    - усвідомив
+    - думав
+    - усвідомив
+  - answer: вважає
+    options:
+    - припускає
+    - думає
+    - припускає
+  - answer: Гадати
+    options:
+    - Аналізувати
+    - Думати
+    - Аналізувати
+  - answer: гадати
+    options:
+    - оцінювати
+    - думати
+    - оцінювати
+  - answer: гадати
+    options:
+    - усвідомити
+    - думати
+    - усвідомити
+  - answer: думаю
+    options:
+    - вважаю
+    - гадаю
+    - вважаю
+  - answer: Аналізую
+    options:
+    - Гадаю
+    - Вважаю
+    - Гадаю
+  - answer: гадати
+    options:
+    - обмірковувати
+    - думати
+    - обмірковувати
+  - answer: гадав
+    options:
+    - сумнівався
+    - думав
+    - сумнівався
+  - answer: гадайте
+    options:
+    - судіть
+    - думайте
+    - судіть
+  - answer: гадайте
+    options:
+    - уявіть
+    - думайте
+    - уявіть
+  - answer: думати
+    options:
+    - зрозуміти
+    - гадати
+    - зрозуміти
+  blank_count: 14
+  complete_passage: 'Що означає справді мислити? Великі філософи гадали, що справжнє
+    мислення вимагає зусиль. Григорій Сковорода все життя гадав над питаннями щастя.
+    Він гадав, що щастя — це гармонія.
+
+
+    Сучасна людина часто вважає, що вона думає, коли насправді лише реагує. Гадати
+    та гадати — це потребує часу. Ми повинні гадати: справжнє мислення — це навичка.
+
+
+    На роботі керівник сказав: "Я думаю, що ми на правильному шляху. Аналізую, результати
+    побачимо через місяць." Команда почала гадати нову стратегію. Ніхто не гадав у
+    її успіху.
+
+
+    Не гадайте інших поспішно! Краще гадайте себе на їхньому місці. Так легше думати
+    їхні мотиви.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть речення правильно
   jumbled_words: []
@@ -345,14 +465,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово виражає невпевненість або припущення без доказів?
   options:
-  - text: вважати
-    correct: false
-  - text: гадати
-    correct: true
-  - text: аналізувати
-    correct: false
-  - text: усвідомлювати
-    correct: false
+  - '{''text'': ''вважати'', ''correct'': False}'
+  - '{''text'': ''гадати'', ''correct'': True}'
+  - '{''text'': ''аналізувати'', ''correct'': False}'
+  - '{''text'': ''усвідомлювати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -364,14 +480,10 @@ items:
   question: Яке дієслово найкраще описує глибоке філософське обдумування абстрактних
     тем?
   options:
-  - text: думати
-    correct: false
-  - text: гадати
-    correct: false
-  - text: розмірковувати
-    correct: true
-  - text: планувати
-    correct: false
+  - '{''text'': ''думати'', ''correct'': False}'
+  - '{''text'': ''гадати'', ''correct'': False}'
+  - '{''text'': ''розмірковувати'', ''correct'': True}'
+  - '{''text'': ''планувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -382,14 +494,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово означає "мати тверду позицію або переконання" українською?
   options:
-  - text: гадати
-    correct: false
-  - text: припускати
-    correct: false
-  - text: вважати
-    correct: true
-  - text: уявляти
-    correct: false
+  - '{''text'': ''гадати'', ''correct'': False}'
+  - '{''text'': ''припускати'', ''correct'': False}'
+  - '{''text'': ''вважати'', ''correct'': True}'
+  - '{''text'': ''уявляти'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -400,14 +508,11 @@ items:
   title: Розуміння дієслів мислення
   question: Яка різниця між "думати про" та "думати над"?
   options:
-  - text: Немає різниці, це синоніми
-    correct: false
-  - text: '"Про" — загальні думки, "над" — обдумування проблеми'
-    correct: true
-  - text: '"Над" використовується тільки в минулому часі'
-    correct: false
-  - text: '"Про" — формальне, "над" — розмовне'
-    correct: false
+  - '{''text'': ''Немає різниці, це синоніми'', ''correct'': False}'
+  - '{''text'': ''"Про" — загальні думки, "над" — обдумування проблеми'', ''correct'':
+    True}'
+  - '{''text'': ''"Над" використовується тільки в минулому часі'', ''correct'': False}'
+  - '{''text'': ''"Про" — формальне, "над" — розмовне'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -418,14 +523,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово означає "стати свідомим чогось" або "зрозуміти глибоко"?
   options:
-  - text: сприймати
-    correct: false
-  - text: гадати
-    correct: false
-  - text: усвідомлювати
-    correct: true
-  - text: судити
-    correct: false
+  - '{''text'': ''сприймати'', ''correct'': False}'
+  - '{''text'': ''гадати'', ''correct'': False}'
+  - '{''text'': ''усвідомлювати'', ''correct'': True}'
+  - '{''text'': ''судити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -436,14 +537,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово найкраще підходить для ситуації "я не впевнений, але припускаю"?
   options:
-  - text: Я вважаю, що він прийде.
-    correct: false
-  - text: Я гадаю, що він прийде.
-    correct: true
-  - text: Я аналізую, що він прийде.
-    correct: false
-  - text: Я усвідомлюю, що він прийде.
-    correct: false
+  - '{''text'': ''Я вважаю, що він прийде.'', ''correct'': False}'
+  - '{''text'': ''Я гадаю, що він прийде.'', ''correct'': True}'
+  - '{''text'': ''Я аналізую, що він прийде.'', ''correct'': False}'
+  - '{''text'': ''Я усвідомлюю, що він прийде.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -454,14 +551,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово має значення "оцінювати когось критично"?
   options:
-  - text: рахувати
-    correct: false
-  - text: оцінювати
-    correct: false
-  - text: судити
-    correct: true
-  - text: планувати
-    correct: false
+  - '{''text'': ''рахувати'', ''correct'': False}'
+  - '{''text'': ''оцінювати'', ''correct'': False}'
+  - '{''text'': ''судити'', ''correct'': True}'
+  - '{''text'': ''планувати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -472,14 +565,10 @@ items:
   title: Розуміння дієслів мислення
   question: Яке дієслово найбільш формальне для вираження "я вважаю за потрібне"?
   options:
-  - text: думати
-    correct: false
-  - text: гадати
-    correct: false
-  - text: рахувати
-    correct: true
-  - text: припускати
-    correct: false
+  - '{''text'': ''думати'', ''correct'': False}'
+  - '{''text'': ''гадати'', ''correct'': False}'
+  - '{''text'': ''рахувати'', ''correct'': True}'
+  - '{''text'': ''припускати'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

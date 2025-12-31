@@ -1,15 +1,18 @@
 module: 20-register-medical-ukrainian
 level: B2
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b2/20-register-medical-ukrainian.md
-generated: '2025-12-29T22:08:23.655966'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:14.571975'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 16
   fill-in: 32
+  cloze: 1
   unjumble: 16
   quiz: 32
   true-false: 16
-item_count: 112
+total_items: 113
+item_count: 113
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправте помилки у медичному мовленні
@@ -571,6 +574,174 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Заповніть діалог на прийомі у лікаря
+  passage_template: 'Добрий день! {Сідайте|Сядьте|Лягайте|Сідайте}, будь ласка. На
+    що {скаржитесь|хворієте|болієте|скаржитесь}?
+
+
+    У мене {болить|боліє|болять|болить} голова і {тримається|є|тримає|тримається}
+    температура 37,8.
+
+
+    Як {давно|довго|часто|давно} це почалося?
+
+
+    {Три|Третій|Три|Три} дні тому.
+
+
+    Чи є {нежить|насморк|сопля|нежить} або кашель?
+
+
+    Так, нежить є. Кашлю {немає|нема|ні|немає}.
+
+
+    Давайте {виміряємо|поміряємо|зміримо|виміряємо} тиск. 120 на 80 — {нормальний|добрий|звичайний|нормальний}.
+
+
+    {Випишу|Напишу|Дам|Випишу} вам {рецепт|ліки|таблетки|рецепт}.
+
+
+    {Приймайте|Пийте|Їжте|Приймайте} по одній таблетці {тричі|три рази|три|тричі}
+    на день {після|по|за|після} їжі.
+
+
+    {Дотримуйтесь|Слідкуйте|Виконуйте|Дотримуйтесь} {ліжкового|постільного|лежачого|ліжкового}
+    режиму три-чотири дні.
+
+
+    Дякую, пане {лікарю|лікар|доктор|лікарю}!
+
+    '
+  blanks:
+  - answer: Сідайте
+    options:
+    - Сідайте
+    - Сядьте
+    - Лягайте
+  - answer: скаржитесь
+    options:
+    - скаржитесь
+    - хворієте
+    - болієте
+  - answer: болить
+    options:
+    - болить
+    - боліє
+    - болять
+  - answer: тримається
+    options:
+    - тримається
+    - є
+    - тримає
+  - answer: давно
+    options:
+    - давно
+    - довго
+    - часто
+  - answer: Три
+    options:
+    - Три
+    - Третій
+    - Три
+  - answer: нежить
+    options:
+    - нежить
+    - насморк
+    - сопля
+  - answer: немає
+    options:
+    - немає
+    - нема
+    - ні
+  - answer: виміряємо
+    options:
+    - виміряємо
+    - поміряємо
+    - зміримо
+  - answer: нормальний
+    options:
+    - нормальний
+    - добрий
+    - звичайний
+  - answer: Випишу
+    options:
+    - Випишу
+    - Напишу
+    - Дам
+  - answer: рецепт
+    options:
+    - рецепт
+    - ліки
+    - таблетки
+  - answer: Приймайте
+    options:
+    - Приймайте
+    - Пийте
+    - Їжте
+  - answer: тричі
+    options:
+    - тричі
+    - три рази
+    - три
+  - answer: після
+    options:
+    - після
+    - по
+    - за
+  - answer: Дотримуйтесь
+    options:
+    - Дотримуйтесь
+    - Слідкуйте
+    - Виконуйте
+  - answer: ліжкового
+    options:
+    - ліжкового
+    - постільного
+    - лежачого
+  - answer: лікарю
+    options:
+    - лікарю
+    - лікар
+    - доктор
+  blank_count: 18
+  complete_passage: 'Добрий день! Сідайте, будь ласка. На що скаржитесь?
+
+
+    У мене болить голова і тримається температура 37,8.
+
+
+    Як давно це почалося?
+
+
+    Три дні тому.
+
+
+    Чи є нежить або кашель?
+
+
+    Так, нежить є. Кашлю немає.
+
+
+    Давайте виміряємо тиск. 120 на 80 — нормальний.
+
+
+    Випишу вам рецепт.
+
+
+    Приймайте по одній таблетці тричі на день після їжі.
+
+
+    Дотримуйтесь ліжкового режиму три-чотири дні.
+
+
+    Дякую, пане лікарю!
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Складіть медичні інструкції
   jumbled_words: []
@@ -703,14 +874,10 @@ items:
   title: Медична лексика та комунікація
   question: Яке питання лікар зазвичай ставить на початку прийому?
   options:
-  - text: Як справи?
-    correct: false
-  - text: На що скаржитесь?
-    correct: true
-  - text: Що нового?
-    correct: false
-  - text: Як настрій?
-    correct: false
+  - '{''text'': ''Як справи?'', ''correct'': False}'
+  - '{''text'': ''На що скаржитесь?'', ''correct'': True}'
+  - '{''text'': ''Що нового?'', ''correct'': False}'
+  - '{''text'': ''Як настрій?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -721,14 +888,10 @@ items:
   title: Медична лексика та комунікація
   question: Як правильно сказати українською про високу температуру тіла?
   options:
-  - text: У мене жар.
-    correct: false
-  - text: У мене висока температура.
-    correct: true
-  - text: У мене горячка.
-    correct: false
-  - text: Мені гаряче.
-    correct: false
+  - '{''text'': ''У мене жар.'', ''correct'': False}'
+  - '{''text'': ''У мене висока температура.'', ''correct'': True}'
+  - '{''text'': ''У мене горячка.'', ''correct'': False}'
+  - '{''text'': ''Мені гаряче.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -739,14 +902,10 @@ items:
   title: Медична лексика та комунікація
   question: Що означає інструкція «приймайте по одній таблетці тричі на день»?
   options:
-  - text: 3 таблетки один раз
-    correct: false
-  - text: 1 таблетка 3 рази на день
-    correct: true
-  - text: 3 таблетки 3 рази
-    correct: false
-  - text: 1 таблетка на 3 дні
-    correct: false
+  - '{''text'': ''3 таблетки один раз'', ''correct'': False}'
+  - '{''text'': ''1 таблетка 3 рази на день'', ''correct'': True}'
+  - '{''text'': ''3 таблетки 3 рази'', ''correct'': False}'
+  - '{''text'': ''1 таблетка на 3 дні'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -757,14 +916,10 @@ items:
   title: Медична лексика та комунікація
   question: Як називається заклад, де пацієнти лежать на лікуванні?
   options:
-  - text: Поліклініка
-    correct: false
-  - text: Лікарня
-    correct: true
-  - text: Аптека
-    correct: false
-  - text: Лабораторія
-    correct: false
+  - '{''text'': ''Поліклініка'', ''correct'': False}'
+  - '{''text'': ''Лікарня'', ''correct'': True}'
+  - '{''text'': ''Аптека'', ''correct'': False}'
+  - '{''text'': ''Лабораторія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -775,14 +930,10 @@ items:
   title: Медична лексика та комунікація
   question: Яке слово позначає документ із призначенням ліків?
   options:
-  - text: Діагноз
-    correct: false
-  - text: Рецепт
-    correct: true
-  - text: Аналіз
-    correct: false
-  - text: Направлення
-    correct: false
+  - '{''text'': ''Діагноз'', ''correct'': False}'
+  - '{''text'': ''Рецепт'', ''correct'': True}'
+  - '{''text'': ''Аналіз'', ''correct'': False}'
+  - '{''text'': ''Направлення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -793,14 +944,10 @@ items:
   title: Медична лексика та комунікація
   question: Як правильно сказати про біль у голові?
   options:
-  - text: Болить голову.
-    correct: false
-  - text: Болить голова.
-    correct: true
-  - text: Болить головою.
-    correct: false
-  - text: Болить голові.
-    correct: false
+  - '{''text'': ''Болить голову.'', ''correct'': False}'
+  - '{''text'': ''Болить голова.'', ''correct'': True}'
+  - '{''text'': ''Болить головою.'', ''correct'': False}'
+  - '{''text'': ''Болить голові.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -811,14 +958,10 @@ items:
   title: Медична лексика та комунікація
   question: Що означає вираз «гострий біль»?
   options:
-  - text: Біль від гострого предмета
-    correct: false
-  - text: Сильний, різкий біль
-    correct: true
-  - text: Короткий біль
-    correct: false
-  - text: Біль у гострій формі хвороби
-    correct: false
+  - '{''text'': ''Біль від гострого предмета'', ''correct'': False}'
+  - '{''text'': ''Сильний, різкий біль'', ''correct'': True}'
+  - '{''text'': ''Короткий біль'', ''correct'': False}'
+  - '{''text'': ''Біль у гострій формі хвороби'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -829,14 +972,10 @@ items:
   title: Медична лексика та комунікація
   question: Яке слово є синонімом до «нежить»?
   options:
-  - text: Головний біль
-    correct: false
-  - text: Закладений ніс
-    correct: true
-  - text: Біль у горлі
-    correct: false
-  - text: Кашель
-    correct: false
+  - '{''text'': ''Головний біль'', ''correct'': False}'
+  - '{''text'': ''Закладений ніс'', ''correct'': True}'
+  - '{''text'': ''Біль у горлі'', ''correct'': False}'
+  - '{''text'': ''Кашель'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -847,14 +986,10 @@ items:
   title: Медична лексика та комунікація
   question: Як правильно звернутися до лікаря?
   options:
-  - text: Гей, лікарю!
-    correct: false
-  - text: Пане лікарю!
-    correct: true
-  - text: Товаришу лікарю!
-    correct: false
-  - text: Слухай, лікарю!
-    correct: false
+  - '{''text'': ''Гей, лікарю!'', ''correct'': False}'
+  - '{''text'': ''Пане лікарю!'', ''correct'': True}'
+  - '{''text'': ''Товаришу лікарю!'', ''correct'': False}'
+  - '{''text'': ''Слухай, лікарю!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -865,14 +1000,10 @@ items:
   title: Медична лексика та комунікація
   question: Що таке «профілактика»?
   options:
-  - text: Лікування хвороби
-    correct: false
-  - text: Попередження хвороби
-    correct: true
-  - text: Діагностика
-    correct: false
-  - text: Реабілітація
-    correct: false
+  - '{''text'': ''Лікування хвороби'', ''correct'': False}'
+  - '{''text'': ''Попередження хвороби'', ''correct'': True}'
+  - '{''text'': ''Діагностика'', ''correct'': False}'
+  - '{''text'': ''Реабілітація'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -883,14 +1014,10 @@ items:
   title: Медична лексика та комунікація
   question: Яка інструкція означає «приймати ліки до їжі»?
   options:
-  - text: Після їжі
-    correct: false
-  - text: Натщесерце
-    correct: true
-  - text: Під час їжі
-    correct: false
-  - text: Перед сном
-    correct: false
+  - '{''text'': ''Після їжі'', ''correct'': False}'
+  - '{''text'': ''Натщесерце'', ''correct'': True}'
+  - '{''text'': ''Під час їжі'', ''correct'': False}'
+  - '{''text'': ''Перед сном'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -901,14 +1028,10 @@ items:
   title: Медична лексика та комунікація
   question: Як називається медичний працівник, що допомагає лікарю?
   options:
-  - text: Пацієнт
-    correct: false
-  - text: Медсестра
-    correct: true
-  - text: Реєстратор
-    correct: false
-  - text: Санітар
-    correct: false
+  - '{''text'': ''Пацієнт'', ''correct'': False}'
+  - '{''text'': ''Медсестра'', ''correct'': True}'
+  - '{''text'': ''Реєстратор'', ''correct'': False}'
+  - '{''text'': ''Санітар'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -919,14 +1042,10 @@ items:
   title: Медична лексика та комунікація
   question: Що означає «здати аналізи»?
   options:
-  - text: Повернути аналізи
-    correct: false
-  - text: Пройти лабораторне дослідження
-    correct: true
-  - text: Вивчити аналізи
-    correct: false
-  - text: Отримати аналізи
-    correct: false
+  - '{''text'': ''Повернути аналізи'', ''correct'': False}'
+  - '{''text'': ''Пройти лабораторне дослідження'', ''correct'': True}'
+  - '{''text'': ''Вивчити аналізи'', ''correct'': False}'
+  - '{''text'': ''Отримати аналізи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -937,14 +1056,10 @@ items:
   title: Медична лексика та комунікація
   question: Яке слово означає «запалення легень»?
   options:
-  - text: Бронхіт
-    correct: false
-  - text: Пневмонія
-    correct: true
-  - text: Астма
-    correct: false
-  - text: Грип
-    correct: false
+  - '{''text'': ''Бронхіт'', ''correct'': False}'
+  - '{''text'': ''Пневмонія'', ''correct'': True}'
+  - '{''text'': ''Астма'', ''correct'': False}'
+  - '{''text'': ''Грип'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -955,14 +1070,10 @@ items:
   title: Медична лексика та комунікація
   question: Як правильно описати біль, який то з''являється, то зникає?
   options:
-  - text: Постійний біль
-    correct: false
-  - text: Періодичний біль
-    correct: true
-  - text: Гострий біль
-    correct: false
-  - text: Тупий біль
-    correct: false
+  - '{''text'': ''Постійний біль'', ''correct'': False}'
+  - '{''text'': ''Періодичний біль'', ''correct'': True}'
+  - '{''text'': ''Гострий біль'', ''correct'': False}'
+  - '{''text'': ''Тупий біль'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -973,14 +1084,10 @@ items:
   title: Медична лексика та комунікація
   question: Що означає «ліжковий режим»?
   options:
-  - text: Режим роботи лікарні
-    correct: false
-  - text: Рекомендація залишатися в ліжку
-    correct: true
-  - text: Час прийому ліків
-    correct: false
-  - text: Режим харчування
-    correct: false
+  - '{''text'': ''Режим роботи лікарні'', ''correct'': False}'
+  - '{''text'': ''Рекомендація залишатися в ліжку'', ''correct'': True}'
+  - '{''text'': ''Час прийому ліків'', ''correct'': False}'
+  - '{''text'': ''Режим харчування'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -991,14 +1098,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Яка правильна форма інструкції для прийому ліків?
   options:
-  - text: Пийте таблетки три рази.
-    correct: false
-  - text: Приймайте по одній таблетці тричі на день.
-    correct: true
-  - text: Їжте одну таблетку тричі.
-    correct: false
-  - text: Беріть три таблетки.
-    correct: false
+  - '{''text'': ''Пийте таблетки три рази.'', ''correct'': False}'
+  - '{''text'': ''Приймайте по одній таблетці тричі на день.'', ''correct'': True}'
+  - '{''text'': ''Їжте одну таблетку тричі.'', ''correct'': False}'
+  - '{''text'': ''Беріть три таблетки.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1009,14 +1112,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно сказати про симптоми застуди?
   options:
-  - text: У мене жар і насморк.
-    correct: false
-  - text: У мене температура і нежить.
-    correct: true
-  - text: Мені гаряче і тече з носа.
-    correct: false
-  - text: У мене жар і нежить.
-    correct: false
+  - '{''text'': ''У мене жар і насморк.'', ''correct'': False}'
+  - '{''text'': ''У мене температура і нежить.'', ''correct'': True}'
+  - '{''text'': ''Мені гаряче і тече з носа.'', ''correct'': False}'
+  - '{''text'': ''У мене жар і нежить.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1027,14 +1126,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Що означає «натщесерце»?
   options:
-  - text: Після їжі
-    correct: false
-  - text: На порожній шлунок
-    correct: true
-  - text: Під час їжі
-    correct: false
-  - text: Перед сном
-    correct: false
+  - '{''text'': ''Після їжі'', ''correct'': False}'
+  - '{''text'': ''На порожній шлунок'', ''correct'': True}'
+  - '{''text'': ''Під час їжі'', ''correct'': False}'
+  - '{''text'': ''Перед сном'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1045,14 +1140,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно звернутися до лікаря в кличному відмінку?
   options:
-  - text: Пан лікар
-    correct: false
-  - text: Пане лікарю
-    correct: true
-  - text: Пане лікар
-    correct: false
-  - text: Пану лікарю
-    correct: false
+  - '{''text'': ''Пан лікар'', ''correct'': False}'
+  - '{''text'': ''Пане лікарю'', ''correct'': True}'
+  - '{''text'': ''Пане лікар'', ''correct'': False}'
+  - '{''text'': ''Пану лікарю'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1063,14 +1154,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Яке слово правильно описує стан, коли важко дихати?
   options:
-  - text: Задуха
-    correct: false
-  - text: Задишка
-    correct: true
-  - text: Задихання
-    correct: false
-  - text: Дишка
-    correct: false
+  - '{''text'': ''Задуха'', ''correct'': False}'
+  - '{''text'': ''Задишка'', ''correct'': True}'
+  - '{''text'': ''Задихання'', ''correct'': False}'
+  - '{''text'': ''Дишка'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1081,14 +1168,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно сказати «здати аналізи»?
   options:
-  - text: Сдати аналізи
-    correct: false
-  - text: Здати аналізи
-    correct: true
-  - text: Зробити аналізи
-    correct: false
-  - text: Пройти аналізи
-    correct: false
+  - '{''text'': ''Сдати аналізи'', ''correct'': False}'
+  - '{''text'': ''Здати аналізи'', ''correct'': True}'
+  - '{''text'': ''Зробити аналізи'', ''correct'': False}'
+  - '{''text'': ''Пройти аналізи'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1099,14 +1182,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Яке питання є стандартним на початку медичного прийому?
   options:
-  - text: Що у вас болить?
-    correct: false
-  - text: На що скаржитесь?
-    correct: true
-  - text: Як справи?
-    correct: false
-  - text: Що сталося?
-    correct: false
+  - '{''text'': ''Що у вас болить?'', ''correct'': False}'
+  - '{''text'': ''На що скаржитесь?'', ''correct'': True}'
+  - '{''text'': ''Як справи?'', ''correct'': False}'
+  - '{''text'': ''Що сталося?'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1117,14 +1196,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно описати біль, який то з'являється, то зникає?
   options:
-  - text: Постійний біль
-    correct: false
-  - text: Періодичний біль
-    correct: true
-  - text: Гострий біль
-    correct: false
-  - text: Хронічний біль
-    correct: false
+  - '{''text'': ''Постійний біль'', ''correct'': False}'
+  - '{''text'': ''Періодичний біль'', ''correct'': True}'
+  - '{''text'': ''Гострий біль'', ''correct'': False}'
+  - '{''text'': ''Хронічний біль'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1135,14 +1210,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Що таке «поліклініка»?
   options:
-  - text: Заклад для стаціонарного лікування
-    correct: false
-  - text: Заклад для амбулаторного лікування
-    correct: true
-  - text: Аптека
-    correct: false
-  - text: Лабораторія
-    correct: false
+  - '{''text'': ''Заклад для стаціонарного лікування'', ''correct'': False}'
+  - '{''text'': ''Заклад для амбулаторного лікування'', ''correct'': True}'
+  - '{''text'': ''Аптека'', ''correct'': False}'
+  - '{''text'': ''Лабораторія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1153,14 +1224,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно закінчити інструкцію про прийом ліків?
   options:
-  - text: '...приймайте після їжу.'
-    correct: false
-  - text: '...приймайте після їжі.'
-    correct: true
-  - text: '...приймайте по їжі.'
-    correct: false
-  - text: '...приймайте за їжею.'
-    correct: false
+  - '{''text'': ''...приймайте після їжу.'', ''correct'': False}'
+  - '{''text'': ''...приймайте після їжі.'', ''correct'': True}'
+  - '{''text'': ''...приймайте по їжі.'', ''correct'': False}'
+  - '{''text'': ''...приймайте за їжею.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1171,14 +1238,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Яке слово означає «inflammation» українською?
   options:
-  - text: Інфекція
-    correct: false
-  - text: Запалення
-    correct: true
-  - text: Набряк
-    correct: false
-  - text: Алергія
-    correct: false
+  - '{''text'': ''Інфекція'', ''correct'': False}'
+  - '{''text'': ''Запалення'', ''correct'': True}'
+  - '{''text'': ''Набряк'', ''correct'': False}'
+  - '{''text'': ''Алергія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1189,14 +1252,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно сформулювати дозування крапель?
   options:
-  - text: Капайте дві краплі в око.
-    correct: false
-  - text: Закапуйте по дві краплі в кожне око.
-    correct: true
-  - text: Ллийте краплі в очі.
-    correct: false
-  - text: Крапайте двічі в око.
-    correct: false
+  - '{''text'': ''Капайте дві краплі в око.'', ''correct'': False}'
+  - '{''text'': ''Закапуйте по дві краплі в кожне око.'', ''correct'': True}'
+  - '{''text'': ''Ллийте краплі в очі.'', ''correct'': False}'
+  - '{''text'': ''Крапайте двічі в око.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1207,14 +1266,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Що означає «ліжковий режим»?
   options:
-  - text: Режим роботи лікарні
-    correct: false
-  - text: Рекомендація залишатися в ліжку
-    correct: true
-  - text: Час прийому ліків
-    correct: false
-  - text: Режим сну
-    correct: false
+  - '{''text'': ''Режим роботи лікарні'', ''correct'': False}'
+  - '{''text'': ''Рекомендація залишатися в ліжку'', ''correct'': True}'
+  - '{''text'': ''Час прийому ліків'', ''correct'': False}'
+  - '{''text'': ''Режим сну'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1225,14 +1280,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Яка різниця між «хронічний» і «гострий» біль?
   options:
-  - text: Хронічний — сильний, гострий — слабкий
-    correct: false
-  - text: Хронічний — тривалий, гострий — раптовий
-    correct: true
-  - text: Хронічний — у животі, гострий — у голові
-    correct: false
-  - text: Немає різниці
-    correct: false
+  - '{''text'': ''Хронічний — сильний, гострий — слабкий'', ''correct'': False}'
+  - '{''text'': ''Хронічний — тривалий, гострий — раптовий'', ''correct'': True}'
+  - '{''text'': ''Хронічний — у животі, гострий — у голові'', ''correct'': False}'
+  - '{''text'': ''Немає різниці'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1243,14 +1294,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як правильно попросити лікаря виписати рецепт?
   options:
-  - text: Напишіть мені рецепту.
-    correct: false
-  - text: Випишіть мені, будь ласка, рецепт.
-    correct: true
-  - text: Зробіть мені рецепт.
-    correct: false
-  - text: Дайте мені рецепта.
-    correct: false
+  - '{''text'': ''Напишіть мені рецепту.'', ''correct'': False}'
+  - '{''text'': ''Випишіть мені, будь ласка, рецепт.'', ''correct'': True}'
+  - '{''text'': ''Зробіть мені рецепт.'', ''correct'': False}'
+  - '{''text'': ''Дайте мені рецепта.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -1261,14 +1308,10 @@ items:
   title: Комплексна перевірка медичної лексики
   question: Як лікар прощається з пацієнтом?
   options:
-  - text: Бувай!
-    correct: false
-  - text: Одужуйте!
-    correct: true
-  - text: Па-па!
-    correct: false
-  - text: Поки!
-    correct: false
+  - '{''text'': ''Бувай!'', ''correct'': False}'
+  - '{''text'': ''Одужуйте!'', ''correct'': True}'
+  - '{''text'': ''Па-па!'', ''correct'': False}'
+  - '{''text'': ''Поки!'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null

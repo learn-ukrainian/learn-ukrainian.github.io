@@ -1,15 +1,18 @@
 module: 06-aspect-complete-system
 level: B1
 file: /Users/krisztiankoos/projects/learn-ukrainian/curriculum/l2-uk-en/b1/06-aspect-complete-system.md
-generated: '2025-12-29T00:21:58.731659'
-scope: error-correction, fill-in, quiz, true-false, unjumble
+generated: '2025-12-30T19:49:27.389498'
+scope: cloze, error-correction, fill-in, quiz, true-false, unjumble
 activity_counts:
   error-correction: 14
   fill-in: 24
+  cloze: 1
   unjumble: 16
   quiz: 14
   true-false: 14
-item_count: 82
+total_items: 83
+item_count: 83
+sample_percent: null
 items:
 - activity: error-correction
   title: Виправлення помилок
@@ -466,6 +469,76 @@ items:
     sentence_valid: null
     explanation: null
     confidence: null
+- activity: cloze
+  title: Текст про аспект
+  passage_template: 'Минулого тижня я {читав|прочитав} цікаву книгу про вивчення мов.
+    Я {читав|прочитав} її три дні поспіль, бо вона була дуже корисною. Кожного вечора
+    я {вчив|вивчив} по дві години, {виписував|виписав} важливі місця і {робив|зробив}
+    нотатки. Нарешті в неділю я {прочитав|читав} її до кінця і все {зрозумів|розумів}.
+    Книга була про студента, який {вивчав|вивчив} українську мову в університеті.
+    Він {вчив|вивчив} слова щодня, ретельно {робив|зробив} граматичні вправи та активно
+    {спілкувався|поспілкувався} з носіями мови онлайн. За рік він {вивчив|вчив} дуже
+    багато нових слів, {зрозумів|розумів} складну граматику і нарешті {зміг|міг} вільно
+    розмовляти українською без перекладу.
+
+    '
+  blanks:
+  - answer: прочитав
+    options:
+    - читав
+  - answer: прочитав
+    options:
+    - читав
+  - answer: вивчив
+    options:
+    - вчив
+  - answer: виписав
+    options:
+    - виписував
+  - answer: зробив
+    options:
+    - робив
+  - answer: читав
+    options:
+    - прочитав
+  - answer: розумів
+    options:
+    - зрозумів
+  - answer: вивчив
+    options:
+    - вивчав
+  - answer: вивчив
+    options:
+    - вчив
+  - answer: зробив
+    options:
+    - робив
+  - answer: поспілкувався
+    options:
+    - спілкувався
+  - answer: вчив
+    options:
+    - вивчив
+  - answer: розумів
+    options:
+    - зрозумів
+  - answer: міг
+    options:
+    - зміг
+  blank_count: 14
+  complete_passage: 'Минулого тижня я прочитав цікаву книгу про вивчення мов. Я прочитав
+    її три дні поспіль, бо вона була дуже корисною. Кожного вечора я вивчив по дві
+    години, виписав важливі місця і зробив нотатки. Нарешті в неділю я читав її до
+    кінця і все розумів. Книга була про студента, який вивчив українську мову в університеті.
+    Він вивчив слова щодня, ретельно зробив граматичні вправи та активно поспілкувався
+    з носіями мови онлайн. За рік він вчив дуже багато нових слів, розумів складну
+    граматику і нарешті міг вільно розмовляти українською без перекладу.
+
+    '
+  validate:
+    passage_valid: null
+    explanation: null
+    confidence: null
 - activity: unjumble
   title: Речення про вид
   jumbled_words: []
@@ -605,14 +678,10 @@ items:
   question: Яке з наведених нижче дієслів виражає процес дії без акценту на її завершенні
     або результаті?
   options:
-  - text: писати
-    correct: true
-  - text: написати
-    correct: false
-  - text: відправити
-    correct: false
-  - text: зробити
-    correct: false
+  - '{''text'': ''писати'', ''correct'': True}'
+  - '{''text'': ''написати'', ''correct'': False}'
+  - '{''text'': ''відправити'', ''correct'': False}'
+  - '{''text'': ''зробити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -624,14 +693,10 @@ items:
   question: Яке з поданих дієслів підкреслює завершеність дії та наявність конкретного
     результату в минулому чи майбутньому?
   options:
-  - text: читати
-    correct: false
-  - text: робити
-    correct: false
-  - text: прочитати
-    correct: true
-  - text: вчити
-    correct: false
+  - '{''text'': ''читати'', ''correct'': False}'
+  - '{''text'': ''робити'', ''correct'': False}'
+  - '{''text'': ''прочитати'', ''correct'': True}'
+  - '{''text'': ''вчити'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -643,14 +708,10 @@ items:
   question: У реченні "Я читав книгу дві години" використано недоконаний чи доконаний
     вид дієслова, і чому?
   options:
-  - text: недоконаний
-    correct: true
-  - text: доконаний
-    correct: false
-  - text: обидва
-    correct: false
-  - text: жодний
-    correct: false
+  - '{''text'': ''недоконаний'', ''correct'': True}'
+  - '{''text'': ''доконаний'', ''correct'': False}'
+  - '{''text'': ''обидва'', ''correct'': False}'
+  - '{''text'': ''жодний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -662,14 +723,10 @@ items:
   question: Яке значення має речення "Я прочитав книгу" — процес читання чи завершення
     читання з результатом?
   options:
-  - text: недоконаний
-    correct: false
-  - text: доконаний
-    correct: true
-  - text: обидва
-    correct: false
-  - text: жодний
-    correct: false
+  - '{''text'': ''недоконаний'', ''correct'': False}'
+  - '{''text'': ''доконаний'', ''correct'': True}'
+  - '{''text'': ''обидва'', ''correct'': False}'
+  - '{''text'': ''жодний'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -681,14 +738,10 @@ items:
   question: Яке з наведених речень описує регулярну звичку в минулому, а не одноразову
     завершену дію?
   options:
-  - text: Він завжди пив каву вранці.
-    correct: true
-  - text: Він випив каву.
-    correct: false
-  - text: Він п'є каву зараз.
-    correct: false
-  - text: Він вип'є каву завтра.
-    correct: false
+  - '{''text'': ''Він завжди пив каву вранці.'', ''correct'': True}'
+  - '{''text'': ''Він випив каву.'', ''correct'': False}'
+  - '{''text'': "Він п''є каву зараз.", ''correct'': False}'
+  - '{''text'': "Він вип''є каву завтра.", ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -700,14 +753,10 @@ items:
   question: Яке речення описує одноразову завершену дію в конкретний момент минулого,
     а не повторювану або тривалу дію?
   options:
-  - text: Я часто писав листи.
-    correct: false
-  - text: Я написав листа вчора.
-    correct: true
-  - text: Я писав листи щодня.
-    correct: false
-  - text: Я писав листа годину.
-    correct: false
+  - '{''text'': ''Я часто писав листи.'', ''correct'': False}'
+  - '{''text'': ''Я написав листа вчора.'', ''correct'': True}'
+  - '{''text'': ''Я писав листи щодня.'', ''correct'': False}'
+  - '{''text'': ''Я писав листа годину.'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -719,14 +768,10 @@ items:
   question: У реченні "Вона робила вправи весь вечір" що підкреслюється — тривалість
     процесу чи досягнення кінцевого результату?
   options:
-  - text: процес
-    correct: true
-  - text: результат
-    correct: false
-  - text: початок
-    correct: false
-  - text: кінець
-    correct: false
+  - '{''text'': ''процес'', ''correct'': True}'
+  - '{''text'': ''результат'', ''correct'': False}'
+  - '{''text'': ''початок'', ''correct'': False}'
+  - '{''text'': ''кінець'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -738,14 +783,10 @@ items:
   question: Коли ми говоримо "Вона зробила всі вправи", на що ми робимо акцент — на
     процесі виконання чи на завершенні всіх вправ?
   options:
-  - text: процес
-    correct: false
-  - text: результат
-    correct: true
-  - text: тривалість
-    correct: false
-  - text: повторення
-    correct: false
+  - '{''text'': ''процес'', ''correct'': False}'
+  - '{''text'': ''результат'', ''correct'': True}'
+  - '{''text'': ''тривалість'', ''correct'': False}'
+  - '{''text'': ''повторення'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -757,14 +798,10 @@ items:
   question: Який з наведених маркерів часу зазвичай вказує на недоконаний вид дієслова,
     підкреслюючи тривалість процесу без акценту на результаті?
   options:
-  - text: весь день
-    correct: true
-  - text: нарешті
-    correct: false
-  - text: вже
-    correct: false
-  - text: одного разу
-    correct: false
+  - '{''text'': ''весь день'', ''correct'': True}'
+  - '{''text'': ''нарешті'', ''correct'': False}'
+  - '{''text'': ''вже'', ''correct'': False}'
+  - '{''text'': ''одного разу'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -776,14 +813,10 @@ items:
   question: Який темпоральний маркер найчастіше супроводжує доконаний вид дієслова,
     сигналізуючи про завершення дії та досягнення результату?
   options:
-  - text: довго
-    correct: false
-  - text: годину
-    correct: false
-  - text: нарешті
-    correct: true
-  - text: часто
-    correct: false
+  - '{''text'': ''довго'', ''correct'': False}'
+  - '{''text'': ''годину'', ''correct'': False}'
+  - '{''text'': ''нарешті'', ''correct'': True}'
+  - '{''text'': ''часто'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -795,14 +828,10 @@ items:
   question: Що означає речення "Я вчив слова два дні" — що мовець досяг результату
     чи що він був залучений у процес вивчення протягом двох днів?
   options:
-  - text: процес навчання
-    correct: true
-  - text: результат вивчення
-    correct: false
-  - text: одноразова дія
-    correct: false
-  - text: майбутня дія
-    correct: false
+  - '{''text'': ''процес навчання'', ''correct'': True}'
+  - '{''text'': ''результат вивчення'', ''correct'': False}'
+  - '{''text'': ''одноразова дія'', ''correct'': False}'
+  - '{''text'': ''майбутня дія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -814,14 +843,10 @@ items:
   question: Коли хтось каже "Я вивчив усі слова", що це повідомляє — факт залучення
     до процесу чи досягнення конкретного результату?
   options:
-  - text: процес навчання
-    correct: false
-  - text: результат вивчення
-    correct: true
-  - text: повторювана дія
-    correct: false
-  - text: незавершена дія
-    correct: false
+  - '{''text'': ''процес навчання'', ''correct'': False}'
+  - '{''text'': ''результат вивчення'', ''correct'': True}'
+  - '{''text'': ''повторювана дія'', ''correct'': False}'
+  - '{''text'': ''незавершена дія'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -833,14 +858,10 @@ items:
   question: У яких ситуаціях слід використовувати недоконаний вид дієслова, щоб правильно
     передати характер дії в українській мові?
   options:
-  - text: для опису процесу
-    correct: true
-  - text: для одноразової дії
-    correct: false
-  - text: для завершеної дії
-    correct: false
-  - text: для результату
-    correct: false
+  - '{''text'': ''для опису процесу'', ''correct'': True}'
+  - '{''text'': ''для одноразової дії'', ''correct'': False}'
+  - '{''text'': ''для завершеної дії'', ''correct'': False}'
+  - '{''text'': ''для результату'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
@@ -852,14 +873,10 @@ items:
   question: У якому контексті доречно використовувати доконаний вид дієслова, щоб
     передати завершеність та результативність дії в українському реченні?
   options:
-  - text: для процесу
-    correct: false
-  - text: для звички
-    correct: false
-  - text: для завершеної дії
-    correct: true
-  - text: для тривалості
-    correct: false
+  - '{''text'': ''для процесу'', ''correct'': False}'
+  - '{''text'': ''для звички'', ''correct'': False}'
+  - '{''text'': ''для завершеної дії'', ''correct'': True}'
+  - '{''text'': ''для тривалості'', ''correct'': False}'
   answer: ''
   validate:
     question_valid: null
