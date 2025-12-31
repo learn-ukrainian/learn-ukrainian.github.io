@@ -3,11 +3,12 @@
 <critical>
 ## ALWAYS Work in `claude_extensions/` First
 
-**NEVER edit files directly in `.claude/` or `.agent/` directories.**
+**NEVER edit files directly in `.claude/`, `.agent/`, or `.gemini/` directories.**
 
-These are DEPLOYMENT targets, not source files:
+These are agent-specific runtime directories:
 - `.claude/` ← deployed FROM `claude_extensions/` (used by Claude Code)
-- `.agent/` ← deployed FROM `claude_extensions/` (used by Antigravity/Gemini)
+- `.agent/` ← deployed FROM `claude_extensions/` (used by Antigravity)
+- `.gemini/` ← used by gemini-cli (GEMINI.md, config.yaml)
 
 **Workflow:**
 1. Edit files in `claude_extensions/` (commands, skills, stages, quick-ref)
