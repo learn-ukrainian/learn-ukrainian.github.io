@@ -25,18 +25,31 @@ Create `scripts/sync_landing_pages.py` that:
 ## Status Logic
 
 ```python
-def get_level_status(level):
-    planned = get_planned_count(level)   # From curriculum plan
-    ready = count_mdx_files(level)        # Actually generated
+def get_level_status(level, completion_pct):
+    """
+    Status based on module completion percentage.
 
-    if ready == 0:
-        return "📋 Planned"
-    elif ready < planned * 0.5:
-        return "🚧 In Progress"
-    elif ready < planned:
-        return "🔍 In QA"
+    Note: "Complete" is never automatic - even 100% means "In QA".
+    Complete status requires manual flag (e.g., in config or frontmatter).
+    """
+    if completion_pct == 100:
+        return "🔍 In QA"        # All modules exist, needs final review
+    elif completion_pct >= 10:
+        return "🚧 In Progress"  # Actively being built
     else:
-        return "✅ Complete"
+        return "📋 Planned"      # <10% or curriculum plan only
+```
+
+### Manual "Complete" Override
+
+To mark a level as truly complete (passed QA), add to a config file:
+
+```yaml
+# docs/l2-uk-en/level-status.yaml
+a1: complete   # Manually verified
+a2: complete   # Manually verified
+b1: auto       # Use calculated status
+b2: auto
 ```
 
 ---
@@ -88,11 +101,12 @@ def collect_curriculum_stats():
 
 ```python
 STATUS_THRESHOLDS = {
-    'complete': 1.0,    # 100% ready
-    'qa': 0.9,          # 90%+ ready
-    'progress': 0.5,    # 50%+ ready
-    'planned': 0.0,     # <50% ready
+    'qa': 1.0,          # 100% = In QA (needs final review)
+    'progress': 0.10,   # 10-99% = In Progress
+    'planned': 0.0,     # <10% = Planned
 }
+
+# "Complete" requires manual override in level-status.yaml
 ```
 
 ### Step 3: MDX Updates
