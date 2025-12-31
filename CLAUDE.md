@@ -38,6 +38,41 @@ python3 scripts/audit_module.py ...
 
 **Why:** Project dependencies (pyyaml, etc.) are installed in `.venv/`, not system Python.
 
+## Modern CLI Tools (Use These Instead of Traditional Commands)
+
+**15 modern CLI tools are installed for efficiency and context savings:**
+
+| Traditional | Modern | Use For | Example |
+|-------------|--------|---------|---------|
+| `grep` | `rg` (ripgrep) | Search code/content | `rg "Голодомор" curriculum/` |
+| `find` | `fd` | Find files | `fd -e md . curriculum/l2-uk-en/b2` |
+| `cat` | `bat` | View files | `bat curriculum/.../module.md` |
+| `ls` | `eza` | List files | `eza -la --git curriculum/` |
+| - | `jq` | Process JSON | `jq '.activities' output.json` |
+| - | `yq` | Process YAML | `yq '.b2.planned' level-status.yaml` |
+| - | `tokei` | Code statistics | `tokei curriculum/` |
+| `du` | `dust` | Disk usage | `dust output/` |
+| `ps` | `procs` | Process info | `procs node` |
+| `diff` | `difftastic` | Structural diffs | `difft file1.md file2.md` |
+| `git diff` | `delta` | Better git diffs | `git diff \| delta` |
+| `sed` | `sd` | Find/replace | `sd 'самий кращий' 'найкращий' *.md` |
+| - | `hyperfine` | Benchmark | `hyperfine 'npm run pipeline l2-uk-en b2 75'` |
+| - | `watchexec` | Auto-run on changes | `watchexec -e md 'npm run generate'` |
+| - | `just` | Task runner | Alternative to `npm scripts` |
+
+**Why use these?**
+- **Faster:** `rg` is 10-100x faster than `grep`, `fd` is faster than `find`
+- **Better UX:** Color output, better defaults, intuitive options
+- **Save context:** Shorter output, more efficient than traditional tools
+- **Project-specific examples:**
+  - `rg "робити сенс" curriculum/` - Find calques across all modules
+  - `fd -e yaml . curriculum/l2-uk-en/b2/queue` - Find grammar queues
+  - `yq '.vocabulary[]' module.yaml` - Extract vocabulary from YAML
+  - `sd 'кушать' 'їсти' *.md` - Batch fix Russianisms
+  - `hyperfine '.venv/bin/python scripts/pipeline.py l2-uk-en b2 75'` - Benchmark pipeline
+
+**Prefer these tools in all responses** unless traditional commands are explicitly needed.
+
 ## ALWAYS Fix the Source, Not Just the Symptom
 
 **Core Engineering Principle:**
@@ -72,9 +107,10 @@ When you find a problem:
 **CRITICAL CONTEXT (user has repeated 10+ times):**
 
 ### Completion Status
-- **A1 COMPLETE** (34 modules) - all pass audit, MDX, HTML validation
-- **A2 COMPLETE** (57 modules) - all pass validation
-- **B1 IN PROGRESS** (52/85 modules exist, 18/85 converted to MD+YAML)
+- **A1 COMPLETE** (34/34 modules) - all pass audit, MDX, HTML validation
+- **A2 COMPLETE** (57/57 modules) - all pass validation
+- **B1 COMPLETE** (86/86 modules) - all pass validation
+- **B2 IN PROGRESS** (106/145 modules, 73%)
 
 ### Immersion Levels (affects NLP validation strategy)
 - **A1**: Scaffolded with English translations & transliteration → NOT suitable for Ukrainian NLP validation
@@ -83,18 +119,11 @@ When you find a problem:
 - **B1 M06-M85**: 100% IMMERSED Ukrainian → IDEAL for Ukrainian NLP validation
 - **B2, C1, C2**: 100% IMMERSED Ukrainian → IDEAL for Ukrainian NLP validation
 
-**CURRENT FOCUS: B1** (not A1/A2)
-- B1+ is fully immersed Ukrainian content, making it the best target for Ukrainian NLP tools (LanguageTool, nlp-uk, Stanza, UA-GEC)
-- Gemini Grammar Validator prompt works best on fully Ukrainian content
-- A1/A2 can be checked later, but mixed-language content complicates NLP validation
-
-### B1 Content Quality Validation (Dec 27, 2025)
-**Tested 3 template types with Ukrainian Grammar Validator:**
-- ✅ **Grammar type** (M06-M16): HIGH QUALITY - no errors detected
-- ✅ **Metalanguage bridge** (M01-M05): HIGH QUALITY - no errors detected
-- ✅ **Vocab expansion** (M52-M53): HIGH QUALITY - no errors detected
-
-**Conclusion:** Existing B1 content is worth migrating. Focus on md_to_yaml conversion as primary obstacle.
+**CURRENT FOCUS: B2** (A1, A2, B1 complete)
+- B2 focuses on Ukrainian history (M71-131), passive voice, registers, and advanced grammar
+- 106/145 modules complete (73%) - need modules 107-145
+- Remaining modules cover: Cossack era synthesis, Soviet trauma, independence, modern war
+- B1-B2-C1-C2 are fully immersed Ukrainian content, ideal for Ukrainian NLP validation
 
 ---
 
@@ -180,7 +209,7 @@ These were all documented requirements that were ignored during creation.
 ## Project Overview
 
 <context>
-**Curricula Opus** (CO) is a language content factory generating Ukrainian language learning curricula.
+**Learn Ukrainian** is a language content factory generating Ukrainian language learning curricula.
 
 - **Source of truth**: Markdown files in `curriculum/l2-uk-en/{level}/` folders
 - **Output**: HTML (web lessons) + JSON (Vibe app import)
@@ -299,20 +328,20 @@ npm run validate:html l2-uk-en a1 [moduleNum] # Browser rendering
 ## Directory Structure
 
 ```
-curricula-opus/
+learn-ukrainian/
 ├── curriculum/l2-uk-en/
-│   ├── a1/               # A1 modules (34 modules)
+│   ├── a1/               # A1 modules (34 complete)
 │   │   ├── 01-cyrillic-code-i.md  # Module markdown
 │   │   ├── activities/   # YAML activity files
 │   │   │   └── 01-cyrillic-code-i.yaml
 │   │   ├── queue/        # Grammar validation queues
 │   │   │   └── 01-cyrillic-code-i.yaml
 │   │   └── audit/        # Review reports
-│   ├── a2/               # A2 modules (50 modules)
-│   ├── b1/               # B1 modules (85 modules)
-│   ├── b2/               # B2 modules (110 modules)
-│   ├── c1/               # C1 modules (160 modules)
-│   ├── c2/               # C2 modules (100 modules)
+│   ├── a2/               # A2 modules (57 complete)
+│   ├── b1/               # B1 modules (86 complete)
+│   ├── b2/               # B2 modules (106/145, 73%)
+│   ├── c1/               # C1 modules (0/182 planned)
+│   ├── c2/               # C2 modules (0/80 planned)
 │   ├── vocabulary.db     # Master vocabulary database (SQLite)
 │   └── module-mapping.json  # Old→new path mapping reference
 ├── scripts/              # Generator code
@@ -338,11 +367,11 @@ Level and module number are derived from the file path, not frontmatter.
 | Level | Folder | Modules | Vocab Target | Description |
 |-------|--------|---------|--------------|-------------|
 | A1 | `a1/` | 34 | ~750 | Beginner - Cyrillic, basic phrases, simple grammar |
-| A2 | `a2/` | 50 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
-| B1 | `b1/` | 85 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
-| B2 | `b2/` | 110 | ~2,640 | Advanced - Grammar mastery, phraseology, Ukrainian history |
-| C1 | `c1/` | 160 | ~3,840 | Proficient - Biographies, stylistics, folk culture, literature |
-| C2 | `c2/` | 100 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
+| A2 | `a2/` | 57 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
+| B1 | `b1/` | 86 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
+| B2 | `b2/` | 145 | ~2,640 | Upper-Intermediate - Passive voice, registers, Ukrainian history |
+| C1 | `c1/` | 182 | ~3,840 | Advanced - Biographies, stylistics, folk culture, literature |
+| C2 | `c2/` | 80 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
 
 **Vocabulary Progression:**
 - A1: ~750 cumulative
@@ -381,16 +410,20 @@ npm run validate:mdx l2-uk-en a1       # Check MDX content integrity
 npm run validate:html l2-uk-en a1      # Browser rendering check (needs dev server)
 
 # Run audit
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 
 # Content quality audit (optional, requires API key)
 export GEMINI_API_KEY="your-key"
 export AUDIT_CONTENT_QUALITY="true"
-python3 scripts/audit_module.py {file_path}
+.venv/bin/python scripts/audit_module.py {file_path}
 
 # Vocabulary
 npm run vocab:enrich l2-uk-en [moduleNum]
 npm run vocab:rebuild                  # Rebuild vocabulary database
+
+# Landing page sync
+npm run sync:landing                   # Update landing pages with current stats
+npm run sync:landing:dry               # Preview changes without applying
 
 # Deploy Claude skills
 npm run claude:deploy
@@ -485,16 +518,25 @@ Is this a real error or pedagogically acceptable? Respond in JSON.
 
 **Result:** Fix confirmed → Update module with "моєму другу"
 
-## Level Status
+## Level Status (Updated: Dec 31, 2024)
 
 | Level | Modules | Status | Pipeline | Next Step |
 |-------|---------|--------|----------|-----------|
-| A1 | 34/34 | ✅ Complete | ✅ All pass | Ready |
-| A2 | 5/50 | ⏳ In progress | ⏳ | Continue enrichment |
-| B1 | 5/85 | ⏳ In progress | ⏳ | Waiting for A2 |
-| B2 | 0/110 | ❌ Not started | ❌ | Waiting for B1 |
-| C1 | 0/160 | ❌ Not started | ❌ | Waiting for B2 |
-| C2 | 0/100 | ❌ Not started | ❌ | Waiting for C1 |
+| A1 | 34/34 | ✅ Complete | ✅ All pass | ✅ Ready for production |
+| A2 | 57/57 | ✅ Complete | ✅ All pass | ✅ Ready for production |
+| B1 | 86/86 | ✅ Complete | ✅ All pass | ✅ Ready for production |
+| B2 | 106/145 | 🚧 In Progress (73%) | ⏳ Partial | Continue M107-145 |
+| C1 | 0/182 | 📋 Planned | ❌ Not started | Waiting for B2 |
+| C2 | 0/80 | 📋 Planned | ❌ Not started | Waiting for C1 |
+
+**Current B2 Focus:**
+- **Completed:** M01-106 (Grammar, Vocabulary, Early History)
+- **Remaining:** M107-145 (39 modules)
+  - M107: Synthesis (Cossacks to 1920s)
+  - M108-119: Trauma & Resistance (Holodomor, WWII, Chornobyl)
+  - M120-125: Independence & War (1991-2014)
+  - M126-131: War for Existence (Euromaidan, Crimea, 2022)
+  - M132-145: Skills & Capstone
 
 **Per-level workflow:**
 1. Build all modules (stages 1-3)
@@ -502,7 +544,7 @@ Is this a real error or pedagogically acceptable? Respond in JSON.
 3. Run pipeline: `npm run pipeline l2-uk-en {level}`
 4. Generate JSON: `npm run generate:json l2-uk-en {level}`
 5. Finalize vocabulary → `npm run vocab:rebuild`
-6. THEN next level can begin
+6. Update landing pages → `npm run sync:landing`
 
 ## Documentation Links
 
