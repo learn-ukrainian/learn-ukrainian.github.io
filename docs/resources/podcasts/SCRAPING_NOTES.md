@@ -10,13 +10,17 @@ Initial data extraction for Ukrainian Lessons Podcast (Season 1, Episodes 1-5) w
 
 ### URL Structure
 - **Pattern:** `https://www.ukrainianlessons.com/episode{N}/`
-- **Verified:** Episodes 1-5 are accessible.
-- **Note:** Some URLs redirect (e.g., `episode1/` -> `episode-1/` in some internal links, but the canonical structure seems to be `episode{N}/`).
+- **Verified:** Episodes 1-5 exist.
+- **Season 2-6 Confirmation:** Verified via spot checks (e.g., Ep 80=S2, Ep 120=S3, Ep 200=S5). The numbering is continuous: `episode1` to `episode200+`.
 
 ### Anti-Crawler Protection
 - **System:** Cloudflare
-- **Impact:** Automated scrapers (like `curl`, `requests`) may be blocked without proper headers or browser emulation (e.g., Selenium, Playwright).
-- **Strategy for Phase 2:** Use browser-based extraction or robust headers if automation is required.
+- **Impact:** Automated scrapers (like `requests`) are blocked with **403 Forbidden** errors after 1-3 sequential requests, even with browser headers.
+- **Workaround:**
+    - High delay (30s+).
+    - IP rotation / Proxies.
+    - Browser automation (Selenium/Playwright) might fare better but is slower.
+- **Status:** Created `scripts/scrape_podcasts.py` as a proof-of-concept tool. It works for single requests but hits rate limits quickly.
 
 ### HTML Structure (Elementor)
 The website uses the Elementor page builder. Key selectors identified:
@@ -34,12 +38,8 @@ The website uses the Elementor page builder. Key selectors identified:
 ## Future Automation Strategy
 To scale to all ~200+ episodes, a Python script using `BeautifulSoup` and `requests` (with headers) or `playwright` is recommended.
 
-**Pseudo-code:**
-```python
-for i in range(1, 250):
-    url = f"https://www.ukrainianlessons.com/episode{i}/"
-    # fetch content
-    # parse title, summary
-    # extract tags if available (or use LLM to tag based on summary)
-    # save to JSON
-```
+**Current Script:** `scripts/scrape_podcasts.py`
+- Implements headers, delay, and parsing logic.
+- Extracts Title, ID, Season, Episode, Summary (basic).
+- Audio URL extraction is hit-or-miss (often hidden).
+- Use with caution/delays to avoid IP bans.

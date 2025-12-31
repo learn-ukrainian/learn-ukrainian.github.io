@@ -1,0 +1,30 @@
+[
+  {
+    "id": "ULP-021",
+    "season": 1,
+    "episode_number": 21,
+    "title": "What Languages Do You Speak?",
+    "url": "https://www.ukrainianlessons.com/episode21/",
+    "summary": "Ви розмовляєте англійською, французькою, іспанською?",
+    "tags": [
+      "Podcast",
+      "Season 1"
+    ],
+    "audio_url": "",
+    "transcript_available": true
+  },
+  {
+    "id": "ULP-022",
+    "season": 1,
+    "episode_number": 22,
+    "title": "Are You Going to the Party? – First Verb Conjugation in Ukrainian",
+    "url": "https://www.ukrainianlessons.com/episode22/",
+    "summary": "In this lesson, you will learn more about thefirst verb conjugation in Ukrainian.",
+    "tags": [
+      "Podcast",
+      "Season 1"
+    ],
+    "audio_url": "",
+    "transcript_available": true
+  }
+]
