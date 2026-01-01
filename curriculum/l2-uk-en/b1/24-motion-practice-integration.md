@@ -22,6 +22,7 @@ objectives:
   - "Correctly use prepositions with specific motion prefixes"
   - "Understand and use high-frequency motion idioms"
 vocabulary_count: 34
+vocab_count: 88
 ---
 
 # Дієслова руху: практика та інтеграція
@@ -273,41 +274,3 @@ vocabulary_count: 34
 
 
 ---
-
-# Словник
-
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|---|---|---|---|---|
-| **маршрут** | /mɑrˈʃrut/ | route | ім. | travel plan |
-| **напрямок** | /nɑˈprʲɑmɔk/ | direction | ім. | vector |
-| **перехрестя** | /pɛrɛˈxrɛstʲɑ/ | intersection | ім. | crossroad |
-| **пункт** | /punkt/ | point / location | ім. | specific spot |
-| **вихідний** | /wɪxidˈnɪj/ | starting / initial | прикм. | starting point |
-| **траса** | /ˈtrɑsɑ/ | highway / main road | ім. | intercity road |
-| **поворот** | /pɔwɔˈrɔt/ | turn | ім. | change of direction |
-| **пункт призначення** | /punkt prɪzˈnɑt͡ʃɛɲːɑ/ | destination | ім. | final point |
-| **автострада** | /ɑwtɔˈstrɑdɑ/ | motorway | ім. | highway |
-| **проміжна зупинка** | /prɔˈmiʒnɑ zuˈpɪnkɑ/ | stopover | ім. | intermediate stop |
-| **розвилка** | /rɔzˈwɪlkɑ/ | fork (road) | ім. | road split |
-| **стежка** | /ˈstɛʒkɑ/ | path / trail | ім. | small path |
-| **траєкторія** | /trɑjɛkˈtɔrʲijɑ/ | trajectory | ім. | path of motion |
-| **глухий кут** | /ɦluˈxɪj kut/ | dead end | ім. | literal/figurative |
-| **світлофор** | /switlɔˈfɔr/ | traffic light | ім. | |
-| **затор** | /zɑˈtɔr/ | traffic jam | ім. | congestion |
-| **об'їзд** | /ɔbˈjizd/ | detour | ім. | way around |
-| **зупинка** | /zuˈpɪnkɑ/ | stop (bus/tram) | ім. | location |
-| **пішохід** | /piʃɔˈxid/ | pedestrian | ім. | person walking |
-| **водій** | /wɔˈdij/ | driver | ім. | person driving |
-| **пасажир** | /pɑsɑˈʒɪr/ | passenger | ім. | rider |
-| **квиток** | /kwɪˈtɔk/ | ticket | ім. | document |
-| **вокзал** | /wɔkˈzɑl/ | station (train) | ім. | building |
-| **аеропорт** | /ɑɛrɔˈpɔrt/ | airport | ім. | |
-| **дорога** | /dɔˈrɔɦɑ/ | road / way | ім. | path |
-| **шлях** | /ʃlʲɑx/ | way / path | ім. | poetic/abstract |
-| **відстань** | /ˈvidstɑnʲ/ | distance | ім. | space between |
-| **швидкість** | /ˈʃwɪdkistʲ/ | speed | ім. | velocity |
-| **мапа** | /ˈmɑpɑ/ | map | ім. | navigation |
-| **північ** | /ˈpiwnit͡ʃ/ | North | ім. | direction |
-| **південь** | /ˈpiwdɛnʲ/ | South | ім. | direction |
-| **схід** | /sxid/ | East | ім. | direction |
-| **захід** | /ˈzɑxid/ | West | ім. | direction |

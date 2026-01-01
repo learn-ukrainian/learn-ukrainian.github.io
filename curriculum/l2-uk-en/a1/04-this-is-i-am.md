@@ -1,21 +1,21 @@
 ---
-
 module: a1-04
-title: "This Is / I Am"
-subtitle: "Zero Copula and Personal Pronouns"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
+title: 'This Is / I Am'
+subtitle: 'Zero Copula and Personal Pronouns'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
 duration: 60
-transliteration: "full"
-tags: ["grammar", "pronouns", "identity", "zero-copula"]
-grammar: ["personal-pronouns", "zero-copula", "це-demonstrative"]
+transliteration: 'full'
+tags: ['grammar', 'pronouns', 'identity', 'zero-copula']
+grammar: ['personal-pronouns', 'zero-copula', 'це-demonstrative']
 objectives:
-  - "Learner can use personal pronouns (я, ти, він, вона, etc.)"
+  - 'Learner can use personal pronouns (я, ти, він, вона, etc.)'
   - "Learner can form identity statements without 'to be' (zero copula)"
-  - "Learner can use це to point out people and objects"
-  - "Learner can distinguish masculine and feminine nationality forms"
+  - 'Learner can use це to point out people and objects'
+  - 'Learner can distinguish masculine and feminine nationality forms'
 vocabulary_count: 32
+vocab_count: 45
 ---
 
 # This Is / I Am
@@ -27,6 +27,7 @@ Here's something that feels strange at first: Ukrainian doesn't use "am," "is," 
 In English, we say: "I **am** a student. She **is** Ukrainian. This **is** a book."
 
 In Ukrainian, you just... skip it:
+
 - Я студент. (I student.)
 - Вона українка. (She Ukrainian.)
 - Це книга. (This book.)
@@ -43,26 +44,28 @@ Why? Because Ukrainian belongs to the "pro-drop" language family. The verb "to b
 
 Ukrainian has the same number of pronouns as English, but with one important split: the formal "you."
 
-| Pronoun | IPA | English | When to use |
-|---------|-----|---------|-------------|
-| я | /jɑ/ | I | Always singular, always lowercase (except at sentence start) |
-| ти | /tɪ/ | you (singular informal) | Friends, family, children, pets |
-| він | /win/ | he | Masculine people, masculine nouns |
-| вона | /wɔˈnɑ/ | she | Feminine people, feminine nouns |
-| воно | /wɔˈnɔ/ | it | Neuter nouns, rarely for people |
-| ми | /mɪ/ | we | Plural first person |
-| ви | /vɪ/ | you (plural OR formal singular) | Multiple people OR one person (formal/respectful) |
-| вони | /wɔˈnɪ/ | they | Plural third person (all genders) |
+| Pronoun | IPA     | English                         | When to use                                                  |
+| ------- | ------- | ------------------------------- | ------------------------------------------------------------ |
+| я       | /jɑ/    | I                               | Always singular, always lowercase (except at sentence start) |
+| ти      | /tɪ/    | you (singular informal)         | Friends, family, children, pets                              |
+| він     | /win/   | he                              | Masculine people, masculine nouns                            |
+| вона    | /wɔˈnɑ/ | she                             | Feminine people, feminine nouns                              |
+| воно    | /wɔˈnɔ/ | it                              | Neuter nouns, rarely for people                              |
+| ми      | /mɪ/    | we                              | Plural first person                                          |
+| ви      | /vɪ/    | you (plural OR formal singular) | Multiple people OR one person (formal/respectful)            |
+| вони    | /wɔˈnɪ/ | they                            | Plural third person (all genders)                            |
 
 **The Ви vs Ти Choice**
 
 This is crucial for politeness:
+
 - **Ти** (informal): Use with friends your age, family members you're close to, children, animals.
 - **Ви** (formal): Use with strangers, authority figures (professors, doctors, bosses), elders, or anyone you want to show respect to.
 
 **Real-life scenario:**
 
 You meet your Ukrainian teacher for the first time:
+
 - ❌ Як твоє ім'я? (Too informal—sounds rude!)
 - ✅ Як Ваше ім'я? (Polite and respectful)
 
@@ -78,15 +81,16 @@ Later, after a few months, the teacher might say: "Можеш мене на 'т�
 
 **Pattern: Subject + Predicate (no verb)**
 
-| Ukrainian | Word-for-word | English |
-|-----------|---------------|---------|
-| Я студент. | I student | I am a student |
-| Ти лікар? | You doctor? | Are you a doctor? |
-| Він українець. | He Ukrainian | He is Ukrainian |
+| Ukrainian        | Word-for-word | English            |
+| ---------------- | ------------- | ------------------ |
+| Я студент.       | I student     | I am a student     |
+| Ти лікар?        | You doctor?   | Are you a doctor?  |
+| Він українець.   | He Ukrainian  | He is Ukrainian    |
 | Вона професорка. | She professor | She is a professor |
-| Це книга. | This book | This is a book |
+| Це книга.        | This book     | This is a book     |
 
 The linking verb "є" (is/are) exists, but it's only used for emphasis or in writing. In speech, you'll almost never hear it:
+
 - Київ місто. (Kyiv is a city.)
 - Київ є місто. (Sounds overly formal, bookish)
 
@@ -124,31 +128,33 @@ A: Я професорка.
 
 > 🎬 **Pop Culture Moment: Groot's Perfect Ukrainian**
 >
-> In the Ukrainian dub of *Guardians of the Galaxy*, Groot says "Я Ґрут" (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
+> In the Ukrainian dub of _Guardians of the Galaxy_, Groot says "Я Ґрут" (I Groot). No verb needed! It's grammatically perfect Ukrainian—subject + predicate. Groot would ace this module.
 
 ### People and Professions
 
 When talking about people, Ukrainian distinguishes **masculine** and **feminine** forms for most nationalities and professions:
 
-| Masculine | Feminine | English |
-|-----------|----------|---------|
-| українець | українка | Ukrainian |
-| англієць | англійка | English person |
-| американець | американка | American |
-| канадець | канадка | Canadian |
-| студент | студентка | student |
-| професор | професорка | professor |
-| лікар | лікарка | doctor |
+| Masculine   | Feminine   | English        |
+| ----------- | ---------- | -------------- |
+| українець   | українка   | Ukrainian      |
+| англієць    | англійка   | English person |
+| американець | американка | American       |
+| канадець    | канадка    | Canadian       |
+| студент     | студентка  | student        |
+| професор    | професорка | professor      |
+| лікар       | лікарка    | doctor         |
 
 **Pattern:** Most feminine forms add **-ка** to the masculine stem.
 
 **Usage:**
+
 - Він американець. (He's American.)
 - Вона американка. (She's American.)
 - Я студент. (I'm a student—said by a male.)
 - Я студентка. (I'm a student—said by a female.)
 
 **Gender-neutral/unknown:** In Ukrainian, if you don't know someone's gender, you'd typically use the masculine form as default, but this is evolving. When addressing mixed groups, use the plural:
+
 - Вони студенти. (They are students—mixed or all male.)
 - Вони студентки. (They are students—all female.)
 
@@ -174,22 +180,24 @@ B: Він студент.
 
 Beyond nationalities and professions, here are key people words:
 
-| Ukrainian | IPA | English | Gender |
-|-----------|-----|---------|--------|
-| людина | /lʲuˈdɪnɑ/ | person, human | f (for all) |
-| чоловік | /t͡ʃɔlɔˈwik/ | man | m |
-| жінка | /ˈʒinkɑ/ | woman | f |
-| хлопець | /ˈxlɔpet͡sʲ/ | boy, guy | m |
-| дівчина | /diwˈt͡ʃɪnɑ/ | girl | f |
-| друг | /druh/ | friend (male) | m |
-| подруга | /pɔˈdruhɑ/ | friend (female) | f |
+| Ukrainian | IPA         | English         | Gender      |
+| --------- | ----------- | --------------- | ----------- |
+| людина    | /lʲuˈdɪnɑ/  | person, human   | f (for all) |
+| чоловік   | /t͡ʃɔlɔˈwik/ | man             | m           |
+| жінка     | /ˈʒinkɑ/    | woman           | f           |
+| хлопець   | /ˈxlɔpet͡sʲ/ | boy, guy        | m           |
+| дівчина   | /diwˈt͡ʃɪnɑ/ | girl            | f           |
+| друг      | /druh/      | friend (male)   | m           |
+| подруга   | /pɔˈdruhɑ/  | friend (female) | f           |
 
 **Notes:**
+
 - "Людина" is grammatically feminine, but refers to any person regardless of gender.
 - "Хлопець" can mean "boy" (child) or "guy" (young man), depending on context.
 - "Друг/подруга" can mean platonic friend OR romantic partner—context is key!
 
 **Usage examples:**
+
 - Це людина. (This is a person.)
 - Він хлопець, вона дівчина. (He's a guy, she's a girl.)
 - Це мій друг Іван. (This is my friend Ivan.)
@@ -200,6 +208,7 @@ Beyond nationalities and professions, here are key people words:
 **Pattern Practice: Identity Statements**
 
 Try forming these in your mind:
+
 1. I am a student. → Я студент/студентка.
 2. She is a doctor. → Вона лікарка.
 3. This is my friend. → Це мій друг / моя подруга.
@@ -211,6 +220,7 @@ Notice: No verb! Just subject + noun.
 **Pointing Out People**
 
 Walk around your room (mentally or actually) and practice:
+
 - Це стіл. (This is a table.) [from Module 03]
 - Це книга. (This is a book.)
 - Це мій друг. (This is my friend—imaginary or real!)
@@ -218,6 +228,7 @@ Walk around your room (mentally or actually) and practice:
 **Politeness Checkpoint**
 
 Who would you use "Ви" with?
+
 - ✅ Your professor
 - ✅ A stranger on the street
 - ✅ Your friend's grandmother
@@ -236,6 +247,7 @@ Who would you use "Ви" with?
 Imagine you're at a language exchange in Kyiv. Introduce yourself:
 
 **Model Answer:**
+
 > Привіт! Я [your name]. Я [американець/американка/канадець/канадка/англієць/англійка]. Я студент/студентка. А ти хто?
 
 **Real-life Task: Introduce a Friend**
@@ -243,6 +255,7 @@ Imagine you're at a language exchange in Kyiv. Introduce yourself:
 Point to a friend (real or imaginary) and introduce them:
 
 **Model Answer:**
+
 > Це мій друг [name]. Він [nationality]. Він студент.
 > OR
 > Це моя подруга [name]. Вона [nationality]. Вона студентка.
@@ -252,6 +265,7 @@ Point to a friend (real or imaginary) and introduce them:
 You're doing a homestay in Lviv. You meet your host parents for the first time. What do you say?
 
 **Model Answer:**
+
 > Добрий день! Я [your name]. Я [nationality]. (Good day! I'm [name]. I'm [nationality].)
 
 Use **Ви** for the parents unless they specifically invite you to use **ти**.
@@ -261,6 +275,7 @@ Use **Ви** for the parents unless they specifically invite you to use **ти**
 ### Ukrainian Names and Identity
 
 Ukrainians take names seriously. When introducing yourself, use your first name only among peers. In formal settings, you might hear a patronymic—a middle name from the father's name. For example:
+
 - Анна Петрівна (Anna, daughter of Petro)
 - Іван Михайлович (Ivan, son of Mykhailo)
 
@@ -280,6 +295,7 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 # Summary
 
 **What You Learned:**
+
 - ✅ Personal pronouns: я, ти, він, вона, воно, ми, ви, вони
 - ✅ Zero copula: no "am/is/are" in present tense (Я студент, not Я є студент)
 - ✅ Using "це" to point out people and things
@@ -287,6 +303,7 @@ Saying "Я українець" or "Я українка" isn't just a statement o
 - ✅ When to use "ти" (informal) vs "Ви" (formal/plural)
 
 **You Can Now:**
+
 - Introduce yourself: Я [name]. Я [nationality/profession].
 - Introduce others: Це мій друг. Він студент.
 - Ask someone's identity: Ти хто? Ви студент?
@@ -304,7 +321,6 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 >
 > **YouTube:** [Basic Ukrainian grammar: Personal pronouns](https://www.youtube.com/watch?v=WtpQU-oQ8A0) — Speak Ukrainian
 >
->
 > **Pronouns:** [Personal Pronouns in Ukrainian](https://www.ukrainianlessons.com/personal-pronouns/) — Full declension table with audio
 >
 > **Podcast:** [ULP 1-03 | How to Introduce Yourself](https://www.ukrainianlessons.com/episode3/) — Real conversations about identity
@@ -315,32 +331,47 @@ In Module 05, you'll learn demonstratives (цей, ця, це, ці) to be even 
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| я | /jɑ/ | I | pron | - | always lowercase (except sentence start) |
-| ти | /tɪ/ | you (sg informal) | pron | - | use with friends, family |
-| ми | /mɪ/ | we | pron | - | first person plural |
-| ви | /vɪ/ | you (pl/formal) | pron | - | plural OR formal singular |
-| вони | /wɔˈnɪ/ | they | pron | - | third person plural |
-| то | /tɔ/ | that | pron | - | less common than це |
-| ось | /ɔsʲ/ | here is | part | - | "Ось книга" = Here is a book |
-| людина | /lʲuˈdɪnɑ/ | person, human | noun | f | grammatically f, but any person |
-| чоловік | /t͡ʃɔlɔˈwik/ | man | noun | m | adult male |
-| жінка | /ˈʒinkɑ/ | woman | noun | f | adult female |
-| хлопець | /ˈxlɔpet͡sʲ/ | boy, guy | noun | m | young male |
-| дівчина | /diwˈt͡ʃɪnɑ/ | girl | noun | f | young female |
-| українець | /ukrɑˈjinɛt͡sʲ/ | Ukrainian (male) | noun | m | nationality |
-| українка | /ukrɑˈjinkɑ/ | Ukrainian (female) | noun | f | nationality |
-| англієць | /ɑnˈɦlijɛt͡sʲ/ | English person (male) | noun | m | nationality |
-| англійка | /ɑnˈɦlijkɑ/ | English person (female) | noun | f | nationality |
-| американець | /ɑmɛrɪˈkɑnɛt͡sʲ/ | American (male) | noun | m | nationality |
-| американка | /ɑmɛrɪˈkɑnkɑ/ | American (female) | noun | f | nationality |
-| канадець | /kɑnɑˈdɛt͡sʲ/ | Canadian (male) | noun | m | nationality |
-| канадка | /kɑˈnɑdkɑ/ | Canadian (female) | noun | f | nationality |
-| студентка | /stuˈdɛntkɑ/ | student (female) | noun | f | university student |
-| професор | /prɔˈfɛsɔr/ | professor (m/f) | noun | m | can be used for all |
-| професорка | /prɔfɛˈsɔrkɑ/ | professor (female) | noun | f | modern feminine form |
-| лікар | /ˈlikɑr/ | doctor (m/f) | noun | m | can be used for all |
-| лікарка | /ˈlikɑrkɑ/ | doctor (female) | noun | f | modern feminine form |
-| друг | /druh/ | friend (male) | noun | m | also can mean boyfriend |
-| подруга | /pɔˈdruhɑ/ | friend (female) | noun | f | also can mean girlfriend |
+| Word        | IPA             | English          | POS   | Gender | Note     |
+| ----------- | --------------- | ---------------- | ----- | ------ | -------- |
+| американець | /ɑmɛrɪˈkɑnɛt͡sʲ/ | American man     | noun  | ч      |          |
+| американка  | /ɑmɛrɪˈkɑnkɑ/   | American woman   | noun  | ж      |          |
+| англійка    | /ɑnˈhlij kɑ/    | English woman    | noun  | ж      |          |
+| англієць    | /ɑnˈhlijɛt͡sʲ/   | English man      | noun  | ч      |          |
+| анна        | /ˈɑnːɑ/         | Anna             | name  | ж      |          |
+| ваш         | /vɑʃ/           | your (formal)    | other | с      |          |
+| ви          | /vɪ/            | you (pl/formal)  | pron  | -      |          |
+| вони        | /vɔˈnɪ/         | they             | pron  | -      |          |
+| день        | /dɛnʲ/          | day              | noun  | ч      |          |
+| добрий      | /ˈdɔbrɪj/       | good             | adj   | ч      |          |
+| друг        | /druh/          | friend (m)       | noun  | ч      |          |
+| дівчина     | /ˈdivt͡ʃɪnɑ/     | girl             | noun  | ж      |          |
+| жінка       | /ˈʒinkɑ/        | woman            | noun  | ж      |          |
+| звичайно    | /zvɪˈt͡ʃɑjnɔ/    | of course        | adv   | -      |          |
+| канадець    | /kɑˈnɑdɛt͡sʲ/    | Canadian man     | noun  | ч      |          |
+| канадка     | /kɑˈnɑdkɑ/      | Canadian woman   | noun  | ж      |          |
+| людина      | /lʲuˈdɪnɑ/      | person           | noun  | ж      |          |
+| лікар       | /ˈlikɑr/        | doctor           | noun  | ч      |          |
+| лікарка     | /ˈlikɑrkɑ/      | doctor (f)       | noun  | ж      |          |
+| ліки        | /ˈlikɪ/         | medicine         | noun  | -      | pl. only |
+| ми          | /mɪ/            | we               | pron  | -      |          |
+| михайлович  | /mɪˈxɑjlɔvɪt͡ʃ/  | Mykhailovych     | name  | ч      |          |
+| могти       | /mɔhˈtɪ/        | can/to be able   | verb  | -      |          |
+| можна       | /ˈmɔʒnɑ/        | possible/allowed | adv   | -      |          |
+| нульовий    | /nulʲɔˈvɪj/     | zero (adj)       | adj   | ж      |          |
+| ольга       | /ˈɔlʲhɑ/        | Olha             | name  | ж      |          |
+| петрівна    | /pɛˈtrivnɑ/     | Petrivna         | name  | ж      |          |
+| подруга     | /ˈpɔdruhɑ/      | friend (f)       | noun  | ж      |          |
+| професор    | /prɔˈfɛsɔr/     | professor        | noun  | ч      |          |
+| професорка  | /prɔˈfɛsɔrkɑ/   | professor (f)    | noun  | ж      |          |
+| софія       | /sɔˈfijɑ/       | Sofiya           | name  | ж      |          |
+| студент     | /stuˈdɛnt/      | student          | noun  | ч      |          |
+| студентка   | /stuˈdɛntkɑ/    | student (f)      | noun  | ж      |          |
+| ти          | /tɪ/            | you (casual)     | pron  | -      |          |
+| українець   | /ʊkrɑˈjinɛt͡sʲ/  | Ukrainian man    | noun  | ч      |          |
+| українка    | /ʊkrɑˈjinkɑ/    | Ukrainian woman  | noun  | ж      |          |
+| хлопець     | /ˈxlɔpɛt͡sʲ/     | guy/boy          | noun  | ч      |          |
+| цей         | /t͡sɛj/          | this (m)         | other | ч      |          |
+| чоловік     | /t͡ʃɔlɔˈvik/     | man/husband      | noun  | ч      |          |
+| я           | /jɑ/            | I                | pron  | -      |          |
+| іван        | /iˈvɑn/         | Ivan             | name  | ч      |          |
+| ґрут        | /grunt/         | Groot            | name  | ч      |          |

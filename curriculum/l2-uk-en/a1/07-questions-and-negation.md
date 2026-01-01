@@ -1,30 +1,30 @@
 ---
-
 module: a1-07
-title: "Questions & Negation"
-subtitle: "Asking Questions and Saying No"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "full"
+title: 'Questions & Negation'
+subtitle: 'Asking Questions and Saying No'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'full'
 tags:
   - questions
   - negation
   - question-words
   - frequency-adverbs
 grammar:
-  - "Yes/no questions with чи"
-  - "Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)"
-  - "Negation with не"
-  - "Double negation with ніколи"
-  - "Frequency adverbs"
+  - 'Yes/no questions with чи'
+  - 'Question words (що, хто, де, куди, звідки, коли, чому, як, скільки)'
+  - 'Negation with не'
+  - 'Double negation with ніколи'
+  - 'Frequency adverbs'
 objectives:
   - "Ask yes/no questions using 'чи'"
-  - "Form questions with question words (що, хто, де, коли, etc.)"
+  - 'Form questions with question words (що, хто, де, коли, etc.)'
   - "Make negative statements with 'не'"
-  - "Understand frequency adverbs (завжди, часто, іноді, ніколи)"
+  - 'Understand frequency adverbs (завжди, часто, іноді, ніколи)'
 vocabulary_count: 28
+vocab_count: 25
 ---
 
 # Questions & Negation
@@ -45,21 +45,23 @@ In English, asking "Do you read?" requires changing word order or adding "do/doe
 
 The simplest way to turn any statement into a yes/no question is to add **чи** at the beginning:
 
-| Statement | Question (with чи) |
-|-----------|-------------------|
-| Ти читаєш. (Ty chytayesh) | **Чи** ти читаєш? (Chy ty chytayesh?) |
-| You read. | Do you read? |
+| Statement                     | Question (with чи)                        |
+| ----------------------------- | ----------------------------------------- |
+| Ти читаєш. (Ty chytayesh)     | **Чи** ти читаєш? (Chy ty chytayesh?)     |
+| You read.                     | Do you read?                              |
 | Вона працює. (Vona pratsyuye) | **Чи** вона працює? (Chy vona pratsyuye?) |
-| She works. | Does she work? |
-| Ми знаємо. (My znayemo) | **Чи** ми знаємо? (Chy my znayemo?) |
-| We know. | Do we know? |
+| She works.                    | Does she work?                            |
+| Ми знаємо. (My znayemo)       | **Чи** ми знаємо? (Chy my znayemo?)       |
+| We know.                      | Do we know?                               |
 
 **The pattern:** Чи + subject + verb?
 
 In casual speech, Ukrainians often skip **чи** and just use rising intonation:
+
 - Ти читаєш? ↗ (You read? = Do you read?)
 
 **Answering:**
+
 - **Так** (Tak) = Yes
 - **Ні** (Ni) = No
 
@@ -78,17 +80,17 @@ In casual speech, Ukrainians often skip **чи** and just use rising intonation:
 
 Ukrainian has question words (like English "what, who, where") that replace the unknown part of the sentence:
 
-| Ukrainian | IPA | English | Example |
-|-----------|-----|---------|---------|
-| **що** (Shcho) | /ʃt͡ʃɔ/ | what | Що ти читаєш? (What do you read?) |
-| **хто** (Khto) | /xtɔ/ | who | Хто працює? (Who works?) |
-| **де** (De) | /dɛ/ | where (location) | Де ти? (Where are you?) |
-| **куди** (Kudy) | /ˈkudɪ/ | where (to) | Куди ти йдеш? (Where are you going?) |
-| **звідки** (Zvidky) | /ˈzʲʋidkɪ/ | where from | Звідки ти? (Where are you from?) |
-| **коли** (Koly) | /kɔˈlɪ/ | when | Коли ти працюєш? (When do you work?) |
-| **чому** (Chomu) | /t͡ʃɔˈmu/ | why | Чому ти читаєш? (Why do you read?) |
-| **як** (Yak) | /jɑk/ | how | Як ти? (How are you?) |
-| **скільки** (Skilky) | /ˈskilʲkɪ/ | how much/many | Скільки це коштує? (How much is this?) |
+| Ukrainian            | IPA        | English          | Example                                |
+| -------------------- | ---------- | ---------------- | -------------------------------------- |
+| **що** (Shcho)       | /ʃt͡ʃɔ/     | what             | Що ти читаєш? (What do you read?)      |
+| **хто** (Khto)       | /xtɔ/      | who              | Хто працює? (Who works?)               |
+| **де** (De)          | /dɛ/       | where (location) | Де ти? (Where are you?)                |
+| **куди** (Kudy)      | /ˈkudɪ/    | where (to)       | Куди ти йдеш? (Where are you going?)   |
+| **звідки** (Zvidky)  | /ˈzʲʋidkɪ/ | where from       | Звідки ти? (Where are you from?)       |
+| **коли** (Koly)      | /kɔˈlɪ/    | when             | Коли ти працюєш? (When do you work?)   |
+| **чому** (Chomu)     | /t͡ʃɔˈmu/   | why              | Чому ти читаєш? (Why do you read?)     |
+| **як** (Yak)         | /jɑk/      | how              | Як ти? (How are you?)                  |
+| **скільки** (Skilky) | /ˈskilʲkɪ/ | how much/many    | Скільки це коштує? (How much is this?) |
 
 **Pattern:** Question word + verb + rest of sentence
 
@@ -111,18 +113,19 @@ Notice: Unlike English, you don't need "do/does" - the question word itself sign
 
 To make a verb negative, just put **не** (ne) before it. Simple!
 
-| Positive | Negative |
-|----------|----------|
-| я читаю. (Ya chytayu) | я **не** читаю. (Ya **ne** chytayu) |
-| I read. | I don't read. |
+| Positive                      | Negative                                    |
+| ----------------------------- | ------------------------------------------- |
+| я читаю. (Ya chytayu)         | я **не** читаю. (Ya **ne** chytayu)         |
+| I read.                       | I don't read.                               |
 | Вона працює. (Vona pratsyuye) | Вона **не** працює. (Vona **ne** pratsyuye) |
-| She works. | She doesn't work. |
-| Ми знаємо. (My znayemo) | Ми **не** знаємо. (My **ne** znayemo) |
-| We know. | We don't know. |
+| She works.                    | She doesn't work.                           |
+| Ми знаємо. (My znayemo)       | Ми **не** знаємо. (My **ne** znayemo)       |
+| We know.                      | We don't know.                              |
 
 **Key difference from English:** In Ukrainian, you don't need "don't/doesn't/didn't" - just **не + verb**!
 
 **Common negative constructions:**
+
 - я не розумію. (Ya ne rozumiyu) = I don't understand.
 - я не знаю. (Ya ne znayu) = I don't know.
 - Це не правда. (Tse ne pravda) = That's not true.
@@ -142,14 +145,14 @@ To make a verb negative, just put **не** (ne) before it. Simple!
 
 When talking about how often you do things, Ukrainian uses these adverbs:
 
-| Adverb | IPA | English | Example |
-|--------|-----|---------|---------|
-| **завжди** (zavzhdy) | /ˈzɑʋʒdɪ/ | always | я завжди читаю. (I always read.) |
-| **часто** (chasto) | /ˈt͡ʃɑstɔ/ | often | Вона часто працює. (She often works.) |
-| **іноді** (inodi) | /iˈnɔdi/ | sometimes | Ми іноді говоримо. (We sometimes talk.) |
-| **рідко** (ridko) | /ˈridkɔ/ | rarely | Він рідко пише. (He rarely writes.) |
-| **ніколи** (nikoly) | /nʲiˈkɔlɪ/ | never | я ніколи не п'ю каву. (I never drink coffee.) |
-| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually | я звичайно снідаю вдома. (I usually have breakfast at home.) |
+| Adverb                   | IPA          | English   | Example                                                      |
+| ------------------------ | ------------ | --------- | ------------------------------------------------------------ |
+| **завжди** (zavzhdy)     | /ˈzɑʋʒdɪ/    | always    | я завжди читаю. (I always read.)                             |
+| **часто** (chasto)       | /ˈt͡ʃɑstɔ/    | often     | Вона часто працює. (She often works.)                        |
+| **іноді** (inodi)        | /iˈnɔdi/     | sometimes | Ми іноді говоримо. (We sometimes talk.)                      |
+| **рідко** (ridko)        | /ˈridkɔ/     | rarely    | Він рідко пише. (He rarely writes.)                          |
+| **ніколи** (nikoly)      | /nʲiˈkɔlɪ/   | never     | я ніколи не п'ю каву. (I never drink coffee.)                |
+| **звичайно** (zvychayno) | /zvɪˈt͡ʃɑjnɔ/ | usually   | я звичайно снідаю вдома. (I usually have breakfast at home.) |
 
 **Important:** **Ніколи** (never) is already negative, but Ukrainian uses **double negation** - you still add **не**!
 
@@ -165,6 +168,7 @@ This is called **double negation** and it's mandatory in Ukrainian (unlike Engli
 ## Practice
 
 Now you know:
+
 - ✅ How to ask yes/no questions with **чи**
 - ✅ Question words (що, хто, де, куди, коли, чому, як, скільки)
 - ✅ How to say no with **не**
@@ -177,6 +181,7 @@ Let's practice!
 **Task: Create a conversation**
 
 Imagine you meet someone new at a café in Lviv. Use what you learned to:
+
 1. Ask their name (Як тебе звуть?)
 2. Ask where they're from (Звідки ти?)
 3. Ask if they read Ukrainian (Чи ти читаєш українською?)
@@ -203,6 +208,7 @@ Ukrainians are generally more direct than English speakers when asking questions
 This isn't rude - it's genuine interest! Ukrainians value honesty and directness in conversation.
 
 **Common Questions You'll Hear:**
+
 - Звідки ти? (Where are you from?)
 - Що ти робиш? (What do you do?)
 - Чому ти вивчаєш українську? (Why do you study Ukrainian?)
@@ -213,29 +219,34 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 > When Ukrainians ask "Як справи?" (How are things?), they actually want to know! Unlike the English "How are you?" (often just a greeting), Ukrainians expect a real answer. Feel free to say "Не дуже добре" (Not so great) - they'll ask why and genuinely care.
 
 ---
+
 # Summary
 
 **Questions with Чи:**
+
 - Чи + subject + verb? = Yes/no question
 - Так (yes) / Ні (no)
 
 **Question Words:**
+
 - що (what), хто (who), де (where), куди (where to), звідки (where from)
 - коли (when), чому (why), як (how), скільки (how much/many)
 
 **Negation:**
+
 - не + verb = negative
 - ніколи (never) STILL needs не: "Я ніколи не..."
 
 **Frequency:**
+
 - завжди (always), часто (often), звичайно (usually)
 - іноді (sometimes), рідко (rarely), ніколи (never)
 
 ---
+
 > [!resources] 🔗 External Resources
 >
 > **YouTube:** [Negative sentences/Double negative in Ukrainian language](https://www.youtube.com/watch?v=93NJlqXegFw) — Speak Ukrainian
->
 >
 > **Question Words:** [Питальні слова](https://www.ukrainianlessons.com/question-words/) — All question words with examples
 >
@@ -245,24 +256,30 @@ This isn't rude - it's genuine interest! Ukrainians value honesty and directness
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| куди | /ˈkudɪ/ | where (to) | adverb | - | direction |
-| звідки | /ˈzʲʋidkɪ/ | where from | adverb | - | origin |
-| коли | /kɔˈlɪ/ | when | adverb | - | time |
-| чому | /t͡ʃɔˈmu/ | why | adverb | - | reason |
-| скільки | /ˈskilʲkɪ/ | how much/many | adverb | - | quantity |
-| який | /jɑˈkɪj/ | which, what kind | pronoun | m | яка (f), яке (n) |
-| чи | /t͡ʃɪ/ | whether, if | particle | - | yes/no question |
-| не | /nɛ/ | not | particle | - | negation |
-| ніколи | /nʲiˈkɔlɪ/ | never | adverb | - | requires "не" |
-| завжди | /ˈzɑʋʒdɪ/ | always | adverb | - | frequency |
-| часто | /ˈt͡ʃɑstɔ/ | often | adverb | - | frequency |
-| іноді | /iˈnɔdi/ | sometimes | adverb | - | frequency |
-| рідко | /ˈridkɔ/ | rarely | adverb | - | frequency |
-| звичайно | /zvɪˈt͡ʃɑjnɔ/ | usually | adverb | - | frequency |
-| йти | /jˈtɪ/ | to go (on foot) | verb | - | йду, йдеш, йде |
-| звати | /ˈzvɑtɪ/ | to call, name | verb | - | звуть = they call |
-| нічого | /nʲit͡ʃɔˈhɔ/ | nothing, it's okay | pronoun | - | reassuring phrase |
-| робити | /rɔˈbɪtɪ/ | to do, make | verb | - | роблю, робиш |
-| вивчати | /vɪvˈt͡ʃɑtɪ/ | to study, learn | verb | - | вивчаю, вивчаєш |
+| Word        | IPA             | English        | POS   | Gender | Note |
+| ----------- | --------------- | -------------- | ----- | ------ | ---- |
+| америка     | /ɑˈmɛrɪkɑ/      | America        | name  | ж      |      |
+| англійський | /ɑnˈhlijʲsʲkɪj/ | English (adj)  | adj   | ч      |      |
+| вивчати     | /vɪwˈt͡ʃɑtɪ/     | to study/learn | verb  | -      |      |
+| з           | /z/             | from/with      | other | -      |      |
+| завжди      | /zɑwˈʒdɪ/       | always         | adv   | -      |      |
+| звати       | /ˈzvɑtɪ/        | to call (name) | verb  | -      |      |
+| звідки      | /ˈzvidkɪ/       | from where     | adv   | -      |      |
+| йти         | /jtɪ/           | to go          | verb  | -      |      |
+| коли        | /kɔˈlɪ/         | when           | adv   | -      |      |
+| коштувати   | /kɔˈʃtuvɑtɪ/    | to cost        | verb  | -      |      |
+| куди        | /kuˈdɪ/         | where to       | adv   | -      |      |
+| нормально   | /nɔrˈmɑlʲnɔ/    | normally/fine  | adv   | -      |      |
+| ніколи      | /niˈkɔlɪ/       | never          | adv   | -      |      |
+| ніщо        | /niˈʃt͡ʃɔ/       | nothing        | pron  | -      |      |
+| оля         | /ˈɔlʲɑ/         | Olya           | name  | ж      |      |
+| питальний   | /pɪˈtɑlʲnɪj/    | question (adj) | adj   | ч      |      |
+| пити        | /ˈpɪtɪ/         | to drink       | verb  | -      |      |
+| правда      | /ˈprɑwdɑ/       | truth          | noun  | ж      |      |
+| рідко       | /ˈridkɔ/        | rarely         | adv   | -      |      |
+| скільки     | /ˈskilʲkɪ/      | how much/many  | adv   | -      |      |
+| туалет      | /tuɑˈlɛt/       | toilet         | noun  | ч      |      |
+| хотіти      | /xɔˈtitɪ/       | to want        | verb  | -      |      |
+| часто       | /ˈt͡ʃɑstɔ/       | often          | adv   | -      |      |
+| чому        | /t͡ʃɔˈmu/        | why            | adv   | -      |      |
+| іноді       | /ˈinɔdi/        | sometimes      | adv   | -      |      |

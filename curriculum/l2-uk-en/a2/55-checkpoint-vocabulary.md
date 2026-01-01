@@ -1,12 +1,12 @@
 ---
 module: a2-55
-title: "Checkpoint - Vocabulary Expansion"
-subtitle: "Review of Modules 44-54"
-version: "2.0"
-phase: "A2.5"
+title: 'Checkpoint - Vocabulary Expansion'
+subtitle: 'Review of Modules 44-54'
+version: '2.0'
+phase: 'A2.5'
 focus: checkpoint
-pedagogy: "Review"
-duration: "60 min"
+pedagogy: 'Review'
+duration: '60 min'
 transliteration: none
 tags:
   - review
@@ -18,10 +18,11 @@ grammar:
   - reflexive verbs
   - impersonal constructions
 objectives:
-  - "Learner can use daily life vocabulary fluently"
-  - "Learner can integrate health, shopping, and work vocabulary"
-  - "Learner can recall key verbs and nouns"
+  - 'Learner can use daily life vocabulary fluently'
+  - 'Learner can integrate health, shopping, and work vocabulary'
+  - 'Learner can recall key verbs and nouns'
 vocabulary_count: 25
+vocab_count: 4
 ---
 
 # Checkpoint - A2 Final Review
@@ -29,6 +30,7 @@ vocabulary_count: 25
 **Вітаємо!** Ви закінчили A2! This checkpoint reviews all vocabulary from Modules 44-54.
 
 **Skills tested:**
+
 1. **Daily Life** - Can you talk about home, routines, and hobbies?
 2. **Work & Education** - Can you describe jobs and studies?
 3. **Health & Body** - Can you discuss health and symptoms?
@@ -55,6 +57,7 @@ vocabulary_count: 25
 | вечеряти | to have dinner |
 
 **Hobby vocabulary:**
+
 - подорожувати — to travel
 - малювати — to draw
 - грати в футбол — to play football
@@ -62,17 +65,19 @@ vocabulary_count: 25
 
 ### Practice: Complete the Routine
 
-1. Вранці я ___ о 7:00. (wake up)
-> [!solution] Перевірити
-> прокидаюся — reflexive verb for waking up
+1. Вранці я \_\_\_ о 7:00. (wake up)
 
-2. Потім я ___ і йду на роботу. (have breakfast)
-> [!solution] Перевірити
-> снідаю — breakfast verb
+   > [!solution] Перевірити
+   > прокидаюся — reflexive verb for waking up
 
-3. Ввечері я люблю ___ книги. (read)
-> [!solution] Перевірити
-> читати — reading as a hobby
+2. Потім я \_\_\_ і йду на роботу. (have breakfast)
+
+   > [!solution] Перевірити
+   > снідаю — breakfast verb
+
+3. Ввечері я люблю \_\_\_ книги. (read)
+   > [!solution] Перевірити
+   > читати — reading as a hobby
 
 ### Self-Check
 
@@ -112,6 +117,7 @@ vocabulary_count: 25
 | інженер | engineer |
 
 **Education vocabulary:**
+
 - університет — university
 - школа — school
 - студент — student
@@ -120,17 +126,19 @@ vocabulary_count: 25
 
 ### Practice: Work & Study
 
-1. Він ___ програмістом. (works as)
-> [!solution] Перевірити
-> працює — work + instrumental
+1. Він \_\_\_ програмістом. (works as)
 
-2. Вона ___ в університеті. (studies)
-> [!solution] Перевірити
-> вчиться — to study as a student
+   > [!solution] Перевірити
+   > працює — work + instrumental
 
-3. Я ___ українську мову. (learn)
-> [!solution] Перевірити
-> вивчаю — to learn a subject
+2. Вона \_\_\_ в університеті. (studies)
+
+   > [!solution] Перевірити
+   > вчиться — to study as a student
+
+3. Я \_\_\_ українську мову. (learn)
+   > [!solution] Перевірити
+   > вивчаю — to learn a subject
 
 ### Self-Check
 
@@ -141,6 +149,7 @@ vocabulary_count: 25
 > [!tip] 🎯 Pro Tip: Profession Formula
 >
 > **Працювати + Instrumental** is the key formula!
+>
 > - Працювати + **лікарем** = work as a doctor
 > - Працювати + **вчителькою** = work as a teacher
 > - Працювати + **програмістом** = work as a programmer
@@ -169,6 +178,7 @@ vocabulary_count: 25
 | нога | leg/foot |
 
 **At the doctor:**
+
 - лікар — doctor
 - аптека — pharmacy
 - ліки — medicine
@@ -177,17 +187,19 @@ vocabulary_count: 25
 
 ### Practice: At the Doctor
 
-1. У мене болить ___. (head)
-> [!solution] Перевірити
-> голова — body part in NOMINATIVE (it's the subject doing the hurting)
+1. У мене болить \_\_\_. (head)
 
-2. Яка у вас ___? (temperature)
-> [!solution] Перевірити
-> температура — asking about fever
+   > [!solution] Перевірити
+   > голова — body part in NOMINATIVE (it's the subject doing the hurting)
 
-3. Де тут ___? (pharmacy)
-> [!solution] Перевірити
-> аптека — location for medicine
+2. Яка у вас \_\_\_? (temperature)
+
+   > [!solution] Перевірити
+   > температура — asking about fever
+
+3. Де тут \_\_\_? (pharmacy)
+   > [!solution] Перевірити
+   > аптека — location for medicine
 
 ### Self-Check
 
@@ -198,13 +210,16 @@ vocabulary_count: 25
 > [!note] 📝 Health Expression Patterns
 >
 > **Pattern 1:** У мене болить + NOMINATIVE
+>
 > - У мене болить **голова** (NOT голову!)
 >
 > **Pattern 2:** Мені + ADVERB
+>
 > - Мені **погано** (I feel bad)
 > - Мені **холодно** (I'm cold)
 >
 > **Pattern 3:** Я + VERB
+>
 > - Я **застудився** (I caught a cold)
 
 ---
@@ -229,6 +244,7 @@ vocabulary_count: 25
 | знижка | discount |
 
 **Travel vocabulary:**
+
 - подорож — trip
 - квиток — ticket
 - поїзд — train
@@ -237,17 +253,19 @@ vocabulary_count: 25
 
 ### Practice: Shopping & Travel
 
-1. Скільки це ___? (costs)
-> [!solution] Перевірити
-> коштує — asking price
+1. Скільки це \_\_\_? (costs)
 
-2. Можна заплатити ___? (by card)
-> [!solution] Перевірити
-> карткою — instrumental for payment method
+   > [!solution] Перевірити
+   > коштує — asking price
 
-3. Я хочу купити ___ на поїзд. (ticket)
-> [!solution] Перевірити
-> квиток — train ticket
+2. Можна заплатити \_\_\_? (by card)
+
+   > [!solution] Перевірити
+   > карткою — instrumental for payment method
+
+3. Я хочу купити \_\_\_ на поїзд. (ticket)
+   > [!solution] Перевірити
+   > квиток — train ticket
 
 ### Self-Check
 
@@ -276,36 +294,39 @@ Read the story and answer the questions:
 > Він вже купив **квитки** на поїзд і забронював **готель**.
 
 1. Ким працює Олег?
-> [!solution] Перевірити
-> Програмістом — profession in instrumental
+
+   > [!solution] Перевірити
+   > Програмістом — profession in instrumental
 
 2. Що у нього боліло?
-> [!solution] Перевірити
-> Голова — head
+
+   > [!solution] Перевірити
+   > Голова — head
 
 3. Куди він хоче поїхати?
-> [!solution] Перевірити
-> У Карпати — to the Carpathians
+
+   > [!solution] Перевірити
+   > У Карпати — to the Carpathians
 
 4. Що він купив?
-> [!solution] Перевірити
-> Квитки — tickets
+   > [!solution] Перевірити
+   > Квитки — tickets
 
 ---
 
 # Summary
 
-| Skill | Key Pattern | Example |
-|-------|-------------|---------|
-| Daily Life | Routine verbs | прокидатися, снідати |
-| Work/Education | працювати + Instr | працює лікарем |
-| Health | У мене болить + Nom | болить голова |
-| Shopping/Travel | Transaction vocab | квиток, гроші, картка |
+| Skill           | Key Pattern         | Example               |
+| --------------- | ------------------- | --------------------- |
+| Daily Life      | Routine verbs       | прокидатися, снідати  |
+| Work/Education  | працювати + Instr   | працює лікарем        |
+| Health          | У мене болить + Nom | болить голова         |
+| Shopping/Travel | Transaction vocab   | квиток, гроші, картка |
 
 > 💡 **Успіхи!**
 >
 > Ви закінчили рівень A2! Тепер ви можете говорити про щоденне життя, роботу, здоров'я і подорожі.
-> *You finished A2 level! Now you can talk about daily life, work, health, and travel.*
+> _You finished A2 level! Now you can talk about daily life, work, health, and travel._
 
 ---
 
@@ -314,9 +335,3 @@ Read the story and answer the questions:
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| поїзд | /ˈpɔjizd/ | train | noun | m | travel |

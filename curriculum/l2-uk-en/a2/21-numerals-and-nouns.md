@@ -20,6 +20,7 @@ objectives:
   - "Learner can count objects using correct forms"
   - "Learner can use numerals in shopping contexts"
 vocabulary_count: 30
+vocab_count: 21
 ---
 
 # Summary
@@ -108,8 +109,11 @@ After 5 and higher, the noun takes **Genitive Plural** form.
 | 5 | п'ять студентів |
 | 6 | шість студентів |
 | 7 | сім студентів |
+| 8 | вісім студентів |
+| 9 | дев'ять студентів |
 | 10 | десять студентів |
 | 20 | двадцять студентів |
+| 0 | нуль студентів |
 
 ## The Special Numbers
 
@@ -222,6 +226,7 @@ Here is the complete pattern for the noun "книга" (book, f):
 - **дванадцять** вареників
 - **двадцять один** піріжок
 - **двадцять три** цукерки
+- У нас є **дев'ять** яблук. (We have nine apples.)
 
 Всі були щасливі і ситі!
 
@@ -311,21 +316,3 @@ Today you learned numeral-noun agreement:
 > **Grammar Guide:** [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — Ukrainian Lessons
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| одна | /ɔdnˈɑ/ | one | num | f | agrees with noun |
-| одне | /ɔdnˈɛ/ | one | num | n | agrees with noun |
-| дві | /dʋi/ | two | num | f | used with Zone 2 |
-| кілограм | /kilɔɦrˈɑm/ | kilogram | n | m | - |
-| рік | /rik/ | year | n | m | - |
-| груша | /ɦrˈuʃɑ/ | pear | n | f | - |
-| диня | /dˈɪnʲɑ/ | melon | n | f | - |
-| роман | /rɔmˈɑn/ | novel | n | m | - |
-| детектив | /dɛtɛktˈɪʋ/ | detective novel | n | m | - |
-| комікс | /kˈɔmiks/ | comic | n | m | - |
-| книгарня | /knɪɦˈɑrnʲɑ/ | bookstore | n | f | - |
-| одинадцять | /ɔdɪˈnɑd͡ʒɑtʲ/ | eleven | num | — | 11 |
-| дванадцять | /dʋɑˈnɑd͡ʒɑtʲ/ | twelve | num | — | 12 |

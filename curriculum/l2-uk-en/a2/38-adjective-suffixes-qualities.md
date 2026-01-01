@@ -22,6 +22,7 @@ objectives:
   - "Learner can express affection and softness using diminutive suffixes"
   - "Learner can amplify meanings using intensive suffixes for emphasis"
 vocabulary_count: 65
+vocab_count: 45
 ---
 
 # Summary
@@ -54,6 +55,10 @@ When you want to show affection, softness, or simply indicate something is small
 - Гарний → Гарн**еньк**ий
 - Веселий → Весел**еньк**ий
 - Чистий → Чист**есеньк**ий
+- Це велика **радість**. (This is a great joy.)
+- Мій **вчитель** добрий. (My teacher is kind.)
+- **Продавець** дав знижку. (The seller gave a discount.)
+- **Водій** був уважний. (The driver was attentive.)
 
 ### 2. The Intensive Power (-енн-, -уч-)
 When a simple "very" isn't enough to capture the scale of something, Ukrainian stretches the word physically. The suffix **-енн-** (often with a doubled 'н') creates a sense of enormous scale, heavy weight, or overwhelming intensity.
@@ -83,6 +88,7 @@ This suffix connects people to their homes, cities, and cultural identities. It 
 
 ### Prefix-Suffix Synergy in Adjectives
 Sometimes, an adjective requires both a prefix and a suffix to find its true meaning. For example, the adjective **не_за_бут_н_ій** (unforgettable) uses the negation prefix **не-**, the prepositional prefix **за-**, and the relational suffix **-н-**. This demonstrates the modular power of the Ukrainian word-formation system, where multiple small pieces combine to form highly specific technical or emotional terms. Every piece of the word carries a distinct logical weight and helps define the reality.
+- У нас є **можливість**. (We have an opportunity.)
 
 > [!tip] Softening the -СЬК-
 > Remember that the sequence **-ськ-** is always soft in Ukrainian (hence the soft sign **ь**). This gives the language a melodic, flowing quality, especially when describing origins or national identities. Practice saying **український** with a very soft 's' and 'k' sound to capture the authentic, warm accent of a native speaker.
@@ -114,86 +120,4 @@ Sometimes, an adjective requires both a prefix and a suffix to find its true mea
 > [!cultural] History Bite: The Colors of Identity
 > Ukrainian adjectives for colors often have cultural depths. For instance, **блакитний** (sky blue) and **жовтий** (yellow) are not just labels; they are the colors of the national flag, representing the sky and the wheat fields. When you add suffixes like **-еньк-** to these colors in folk songs (e.g., **синесенький**), you are expressing a deep, protective love for the land itself.
 
----
-
-## Need More Practice?
-
-> [!resources] External Resources
-> - 📖 [Ukrainian Adjective Suffixes Map](https://www.ukrainianlessons.com/adjectives/) — Visual guides to complex word formation.
-> - 🎙 [Podcast: Describing People and Places](https://www.ukrainianlessons.com/descriptions/) — Listen to suffixes in real action.
-> - 🎭 [Adjective Builder Tool](https://www.education-ukrainian.com/morphology) — Practice adding suffixes to noun stems.
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| маленька | /mɑˈlɛnʲkɑ/ | tiny (f) | adj | fem | dim |
-| гарненький | /hɑrˈnɛnʲkɪj/ | cute/pretty | adj | masc | dim |
-| величезний | /ʋɛlɪˈt͡ʃɛznɪj/ | huge/gigantic | adj | masc | int |
-| здоровенний | /zdɔrɔˈʋɛnnɪj/ | enormous | adj | masc | int |
-| страшенний | /strɑˈʃɛnnɪj/ | terrifying | adj | masc | int |
-| київський | /ˈkɪjiu̯sʲkɪj/ | Kyiv (adj) | adj | masc | — |
-| львівський | /ˈlʲʋiu̯sʲkɪj/ | Lviv (adj) | adj | masc | — |
-| сільський | /silʲˈsʲkɪj/ | village/rural | adj | masc | — |
-| сонячний | /ˈsɔnʲɑt͡ʃnɪj/ | sunny | adj | masc | — |
-| шкільний | /ʃkʲilʲˈnɪj/ | school (adj) | adj | masc | — |
-| залізний | /zɑˈliznɪj/ | iron/rail | adj | masc | — |
-| вечірній | /ʋɛˈt͡ʃirnʲij/ | evening (adj) | adj | masc | — |
-| морський | /mɔrˈsʲkɪj/ | sea (adj) | adj | masc | — |
-| тоненький | /tɔˈnɛnʲkɪj/ | thin/slender | adj | masc | dim |
-| біленький | /biˈlɛnʲkɪj/ | white (clean) | adj | masc | dim |
-| солодкий | /sɔˈlɔdkɪj/ | sweet | adj | masc | — |
-| чистесенький | /t͡ʃɪsˈtɛsɛnʲkɪj/ | sparkling clean | adj | masc | dim |
-| височенний | /ʋɪsɔˈt_͡ʃɛnnɪj/ | very high | adj | masc | int |
-| старезний | /stɑˈrɛznɪj/ | ancient/elderly | adj | masc | int |
-| пухкенький | /puxˈkɛnʲkɪj/ | fluffy/plump | adj | masc | dim |
-| справжній | /ˈsprɑu̯d͡ʒnʲij/ | real/true | adj | masc | — |
-| щасливенький | /ʃt_͡ʃɑsˈlɪʋɛnʲkɪj/ | happy (dim.) | adj | masc | dim |
-| мешканець | /ˈmɛʃkɑnɛt͡sʲ/ | inhabitant | noun | masc | — |
-| обстановка | /ɔbstɑˈnɔu̯kɑ/ | setting/env. | noun | fem | — |
-| барвистий | /bɑrˈʋɪstɪj/ | colorful | adj | masc | — |
-| дефіс | /dɛˈfis/ | hyphen | noun | masc | — |
-| милозвучність | /mɪlɔˈzʋut_͡ʃnistʲ/ | euphony | noun | fem | — |
-| походження | /pɔˈxɔd͡ʒɛnnʲɑ/ | origin | noun | neut | — |
-| дівчинка | /ˈdiʋt͡ʃɪnkɑ/ | girl | noun | fem | — |
-| питання | /pɪˈtɑnnʲɑ/ | question | noun | neut | — |
-| писання | /pɪˈsɑnnʲɑ/ | writing | noun | neut | — |
-| борець | /bɔˈrɛt͡sʲ/ | fighter/wrestler | noun | masc | — |
-| сонечко | /ˈsɔnɛt_͡ʃkɔ/ | sun (dim.) | noun | neut | — |
-| співець | /spiˈʋɛt͡sʲ/ | singer/bard | noun | masc | — |
-| братик | /ˈbrɑtɪk/ | brother (dim.) | noun | masc | — |
-| відповідальність | /ʋidpɔʋiˈdɑlʲnistʲ/ | responsibility | noun | fem | — |
-| квіточка | /ˈkʋitɔt_͡ʃkɑ/ | flower (dim.) | noun | fem | — |
-| гордість | /ˈhɔrdistʲ/ | pride | noun | fem | — |
-| будівник | /budiu̯ˈnɪk/ | builder | noun | masc | — |
-| помічник | /pɔmit͡ʃˈnɪk/ | helper/asst | noun | masc | — |
-| студентство | /stuˈdɛntstʋɔ/ | students (coll) | noun | neut | — |
-| товариство | /tɔʋɑˈrɪstʋɔ/ | society/assoc | noun | neut | — |
-| людство | /ˈlʲudstʋɔ/ | humanity | noun | neut | — |
-| старість | /ˈstɑristʲ/ | old age | noun | fem | — |
-| читач | /t͡ʃɪˈtɑt͡ʃ/ | reader | noun | masc | — |
-| сестричка | /sɛsˈtrɪt͡ʃkɑ/ | sister (dim.) | noun | fem | — |
-| навчання | /nɑu̯ˈt͡ʃɑnnʲɑ/ | learning/study | noun | neut | — |
-| кохання | /kɔˈxɑnnʲɑ/ | love | noun | neut | — |
-| ворожість | /ʋɔrɔˈʒistʲ/ | hostility | noun | fem | — |
-| мужність | /ˈmuʒnistʲ/ | courage | noun | fem | — |
-| щирість | /ˈʃt͡ʃɪristʲ/ | sincerity | noun | fem | — |
-| мудрість | /ˈmudристʲ/ | wisdom | noun | fem | — |
-| вірність | /ˈʋirnistʲ/ | loyalty | noun | fem | — |
-| завдання | /zɑu̯ˈdɑnnʲɑ/ | task/assignment | noun | neut | — |
-| важливість | /ʋɑʒˈlɪʋistʲ/ | importance | noun | fem | — |
-| синок | /sɪˈnɔk/ | son (dim.) | noun | masc | — |
-| домик | /ˈdɔmɪk/ | house (dim.) | noun | masc | — |
-| глядач | /ɦlʲɑˈdɑt͡ʃ/ | viewer/spectator | noun | masc | — |
-| слухач | /sluˈxɑt͡ʃ/ | listener | noun | masc | — |
-| творчість | /ˈtʋɔrt͡ʃnistʲ/ | creativity | noun | fem | — |
-| ніжність | /ˈniʒnistʲ/ | tenderness | noun | fem | — |
-| лагідність | /ˈlɑɦidnistʲ/ | gentleness | noun | fem | — |
-| котик | /ˈkɔtɪk/ | kitty (dim.) | noun | masc | — |
-| молодість | /ˈmɔlɔdistʲ/ | youth | noun | fem | — |
-| книжечка | /ˈknɪʒɛt͡ʃkɑ/ | little book (dim.) | noun | fem | — |
-| ручечка | /ˈrut͡ʃɛt͡ʃkɑ/ | little pen (dim.) | noun | fem | — |
-| суфікс | /ˈsufiks/ | suffix | noun | m | grammar term |
-| творення | /ˈtʋɔrɛnːʲɑ/ | formation | noun | n | grammar term |
+##

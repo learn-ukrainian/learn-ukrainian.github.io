@@ -1,13 +1,12 @@
 ---
-
 module: a1-29
-title: "Weather & Nature"
-subtitle: "Seasons, Weather & The Natural World"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Weather & Nature'
+subtitle: 'Seasons, Weather & The Natural World'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - weather
   - nature
@@ -19,11 +18,12 @@ grammar:
   - Nature vocabulary
   - Pet vocabulary
 objectives:
-  - "Learner can describe the weather"
-  - "Learner can ask about weather conditions"
-  - "Learner can name common plants and animals"
-  - "Learner can use impersonal expressions (cold, warm, hot)"
+  - 'Learner can describe the weather'
+  - 'Learner can ask about weather conditions'
+  - 'Learner can name common plants and animals'
+  - 'Learner can use impersonal expressions (cold, warm, hot)'
 vocabulary_count: 35
+vocab_count: 39
 ---
 
 # Weather & Nature
@@ -42,11 +42,13 @@ vocabulary_count: 35
 ---
 
 ## Grammar
+
 ## Impersonal Weather Expressions
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at these sentences:
+>
 > - **Тепло.** (It's warm.)
 > - **Холодно.** (It's cold.)
 > - **Сонячно.** (It's sunny.)
@@ -56,47 +58,49 @@ vocabulary_count: 35
 
 ### Weather Vocabulary
 
-| Expression | Meaning | Example |
-|------------|---------|---------|
-| Тепло | It's warm | Сьогодні **тепло**. |
-| Холодно | It's cold | Взимку **холодно**. |
-| Жарко | It's hot | Влітку **жарко**. |
-| Сонячно | It's sunny | Сьогодні **сонячно**. |
-| Хмарно | It's cloudy | Вчора було **хмарно**. |
-| Вітряно | It's windy | Надворі **вітряно**. |
+| Expression | Meaning     | Example                |
+| ---------- | ----------- | ---------------------- |
+| Тепло      | It's warm   | Сьогодні **тепло**.    |
+| Холодно    | It's cold   | Взимку **холодно**.    |
+| Жарко      | It's hot    | Влітку **жарко**.      |
+| Сонячно    | It's sunny  | Сьогодні **сонячно**.  |
+| Хмарно     | It's cloudy | Вчора було **хмарно**. |
+| Вітряно    | It's windy  | Надворі **вітряно**.   |
 
 ### Rain and Snow
 
 For rain and snow, Ukrainian uses "йде" (goes):
 
-| Expression | Meaning | Notes |
-|------------|---------|-------|
-| **Йде дощ.** | It's raining. | Literally: "Rain goes." |
-| **Йде сніг.** | It's snowing. | Literally: "Snow goes." |
-| **Був дощ.** | It rained. | Past tense |
-| **Буде сніг.** | It will snow. | Future tense |
+| Expression     | Meaning       | Notes                   |
+| -------------- | ------------- | ----------------------- |
+| **Йде дощ.**   | It's raining. | Literally: "Rain goes." |
+| **Йде сніг.**  | It's snowing. | Literally: "Snow goes." |
+| **Був дощ.**   | It rained.    | Past tense              |
+| **Буде сніг.** | It will snow. | Future tense            |
 
 ---
 
 ## Asking About Weather
 
-| Question | Answer |
-|----------|--------|
-| **Яка сьогодні погода?** | Сьогодні тепло. / Сонячно. |
+| Question                         | Answer                           |
+| -------------------------------- | -------------------------------- |
+| **Яка сьогодні погода?**         | Сьогодні тепло. / Сонячно.       |
 | (What's the weather like today?) | (It's warm today. / It's sunny.) |
-| **Як надворі?** | Холодно і вітряно. |
-| (How is it outside?) | (Cold and windy.) |
+| **Як надворі?**                  | Холодно і вітряно.               |
+| (How is it outside?)             | (Cold and windy.)                |
+| **Який прогноз погоди?**         | Прогноз добрий.                  |
+| (What is the weather forecast?)  | (The forecast is good.)          |
 
 ---
 
 ## Seasons
 
-| Season | When? | Weather |
-|--------|-------|---------|
-| **Весна** (spring) | березень-травень | Тепло, йде дощ |
-| **Літо** (summer) | червень-серпень | Жарко, сонячно |
+| Season             | When?             | Weather              |
+| ------------------ | ----------------- | -------------------- |
+| **Весна** (spring) | березень-травень  | Тепло, йде дощ       |
+| **Літо** (summer)  | червень-серпень   | Жарко, сонячно       |
 | **Осінь** (autumn) | вересень-листопад | Холодно, хмарно, дощ |
-| **Зима** (winter) | грудень-лютий | Холодно, йде сніг |
+| **Зима** (winter)  | грудень-лютий     | Холодно, йде сніг    |
 
 ---
 
@@ -217,44 +221,51 @@ For rain and snow, Ukrainian uses "йде" (goes):
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Weather Vocabulary](https://www.ukrainianlessons.com/weather-vocabulary/) — Яка погода?
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/weather
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| погода | /pɔˈɦɔdɑ/ | weather | n | f | |
-| температура | /tɛmpɛrɑˈturɑ/ | temperature | n | f | |
-| тепло | /ˈtɛplɔ/ | warm | adv | — | impersonal |
-| холодно | /ˈxɔlɔdnɔ/ | cold | adv | — | impersonal |
-| жарко | /ˈʒɑrkɔ/ | hot | adv | — | impersonal |
-| сонячно | /ˈsɔnʲɑt͡ʃnɔ/ | sunny | adv | — | impersonal |
-| хмарно | /ˈxmɑrnɔ/ | cloudy | adv | — | impersonal |
-| вітряно | /ˈvʲitrʲɑnɔ/ | windy | adv | — | impersonal |
-| сонце | /ˈsɔnt͡sɛ/ | sun | n | n | |
-| хмара | /ˈxmɑrɑ/ | cloud | n | f | |
-| вітер | /ˈvʲitɛr/ | wind | n | m | |
-| дощ | /dɔʃt͡ʃ/ | rain | n | m | |
-| сніг | /snʲiɦ/ | snow | n | m | |
-| йде дощ | /jdɛ dɔʃt͡ʃ/ | it's raining | expr | — | literally "rain goes" |
-| йде сніг | /jdɛ snʲiɦ/ | it's snowing | expr | — | literally "snow goes" |
-| природа | /prɪˈrɔdɑ/ | nature | n | f | |
-| дерево | /ˈdɛrɛvɔ/ | tree | n | n | |
-| квітка | /ˈkvʲitkɑ/ | flower | n | f | |
-| ліс | /lʲis/ | forest | n | m | |
-| гора | /ɦɔˈrɑ/ | mountain | n | f | |
-| озеро | /ˈɔzɛrɔ/ | lake | n | n | |
-| тварина | /tvɑˈrɪnɑ/ | animal | n | f | |
-| пес | /pɛs/ | dog (male) | n | m | |
-| собака | /sɔˈbɑkɑ/ | dog | n | f | general term |
-| кіт | /kʲit/ | cat (male) | n | m | |
-| кішка | /ˈkʲiʃkɑ/ | cat (female) | n | f | |
-| птах | /ptɑx/ | bird | n | m | |
-| весна | /vɛsˈnɑ/ | spring | n | f | season |
-| літо | /ˈlʲitɔ/ | summer | n | n | season |
-| осінь | /ˈɔsʲinʲ/ | autumn | n | f | season |
-| зима | /zɪˈmɑ/ | winter | n | f | season |
-
----
+| Word       | IPA            | English      | POS   | Gender | Note      |
+| ---------- | -------------- | ------------ | ----- | ------ | --------- |
+| бо         | /bɔ/           | because      | other | -      |           |
+| взимку     | /ˈvzɪmku/      | in winter    | adv   | -      |           |
+| влітку     | /ˈvlitku/      | in summer    | adv   | -      |           |
+| восени     | /vɔsɛˈnɪ/      | in autumn    | adv   | -      |           |
+| вітряно    | /ˈvitrʲɑnɔ/    | windy        | adv   | -      |           |
+| гора       | /ɦɔˈrɑ/        | mountain     | noun  | ж      |           |
+| дерево     | /ˈdɛrɛvɔ/      | tree         | noun  | с      |           |
+| дощ        | /dɔʃt͡ʃ/        | rain         | noun  | ч      |           |
+| жарко      | /ˈʒɑrkɔ/       | hot          | adv   | -      |           |
+| зима       | /zɪˈmɑ/        | winter       | noun  | ж      |           |
+| калина     | /kɑˈlɪnɑ/      | viburnum     | noun  | ж      |           |
+| Карпати    | /kɑrˈpɑtɪ/     | Carpathians  | name  | -      | Plural    |
+| квітка     | /ˈkvitkɑ/      | flower       | noun  | ж      |           |
+| клімат     | /ˈklimɑt/      | climate      | noun  | ч      |           |
+| кіт        | /kit/          | cat (male)   | noun  | ч      |           |
+| кішка      | /ˈkiʃkɑ/       | cat (female) | noun  | ж      |           |
+| луг        | /luɦ/          | meadow       | noun  | ч      |           |
+| ліс        | /lʲis/         | forest       | noun  | ч      |           |
+| Мурчик     | /ˈmurt͡ʃɪk/     | Murchyk      | name  | ч      | Cat name  |
+| надворі    | /nɑdˈvɔri/     | outside      | adv   | -      |           |
+| озеро      | /ˈɔzɛrɔ/       | lake         | noun  | с      |           |
+| ой         | /ɔj/           | oh           | other | -      |           |
+| осінь      | /ˈɔsʲinʲ/      | autumn       | noun  | ж      |           |
+| пес        | /pɛs/          | dog (male)   | noun  | ч      |           |
+| подорож    | /ˈpɔdɔrɔʒ/     | journey/trip | noun  | ж      |           |
+| природа    | /prɪˈrɔdɑ/     | nature       | noun  | ж      |           |
+| прогноз    | /prɔɦˈnɔz/     | forecast     | noun  | ч      |           |
+| прогулянка | /prɔˈhulʲɑnkɑ/ | walk/stroll  | noun  | ж      |           |
+| птах       | /ptɑx/         | bird         | noun  | ч      |           |
+| південь    | /ˈpivdɛnʲ/     | south        | noun  | ч      |           |
+| північ     | /ˈpivnit͡ʃ/     | north        | noun  | ж      |           |
+| Рекс       | /rɛks/         | Rex          | name  | ч      | Dog name  |
+| рослина    | /rɔsˈlɪnɑ/     | plant        | noun  | ж      |           |
+| рудий      | /ruˈdɪj/       | ginger/red   | adj   | ч      |           |
+| Світязь    | /ˈsvitʲɑzʲ/    | Svityaz      | name  | ч      | Lake name |
+| собака     | /sɔˈbɑkɑ/      | dog          | noun  | ч      |           |
+| сонячно    | /ˈsɔnʲɑt͡ʃnɔ/   | sunny        | adv   | -      |           |
+| тварина    | /tvɑˈrɪnɑ/     | animal       | noun  | ж      |           |
+| хмарно     | /ˈxmɑrnɔ/      | cloudy       | adv   | -      |           |

@@ -1,13 +1,12 @@
 ---
-
 module: a1-25
-title: "My Daily Routine"
-subtitle: "Reflexive Verbs and Daily Activities"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'My Daily Routine'
+subtitle: 'Reflexive Verbs and Daily Activities'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - reflexive-verbs
   - daily-routine
@@ -18,11 +17,12 @@ grammar:
   - Reflexive verb conjugation
   - Sequence adverbs (спочатку, потім, нарешті)
 objectives:
-  - "Learner can conjugate common reflexive verbs"
-  - "Learner can describe daily routine activities"
-  - "Learner can use sequence words to order events"
-  - "Learner can talk about habits and regular activities"
+  - 'Learner can conjugate common reflexive verbs'
+  - 'Learner can describe daily routine activities'
+  - 'Learner can use sequence words to order events'
+  - 'Learner can talk about habits and regular activities'
 vocabulary_count: 30
+vocab_count: 27
 ---
 
 # My Day — A Typical Routine
@@ -130,6 +130,7 @@ vocabulary_count: 30
 > 💡 **Reflexive Pattern**
 >
 > Many daily activities are reflexive because you do them TO YOURSELF:
+>
 > - вмивати (wash something) → вмиватися (wash yourself)
 > - одягати (dress someone) → одягатися (dress yourself)
 > - готувати (prepare something) → готуватися (prepare yourself)
@@ -168,26 +169,28 @@ In this module, you learned:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up | verb | - | reflexive |
-| вставати | /vstɑˈvɑtɪ/ | to get up | verb | - | Class I |
-| вмиватися | /vmɪˈvɑtɪsʲɑ/ | to wash (face) | verb | - | reflexive |
-| чистити зуби | /ˈt͡ʃɪstɪtɪ ˈzubɪ/ | to brush teeth | phrase | - | - |
-| голитися | /ɦɔˈlɪtɪsʲɑ/ | to shave | verb | - | reflexive |
-| одягатися | /ɔdʲɑˈɦɑtɪsʲɑ/ | to get dressed | verb | - | reflexive |
-| виходити | /vɪˈxɔdɪtɪ/ | to go out, leave | verb | - | Class II |
-| їхати | /ˈjixɑtɪ/ | to go (by transport) | verb | - | Class I |
-| приходити | /prɪˈxɔdɪtɪ/ | to arrive, come | verb | - | Class II |
-| повертатися | /pɔvɛrˈtɑtɪsʲɑ/ | to return | verb | - | reflexive |
-| дивитися телевізор | /dɪˈvɪtɪsʲɑ tɛlɛˈvizɔr/ | to watch TV | phrase | - | reflexive |
-| лягати спати | /lʲɑˈɦɑtɪ ˈspɑtɪ/ | to go to bed | phrase | - | - |
-| засинати | /zɑsɪˈnɑtɪ/ | to fall asleep | verb | - | Class I |
-| розпорядок | /rɔzpɔˈrʲɑdɔk/ | schedule, routine | noun | m | - |
-| звичка | /ˈzvɪt͡ʃkɑ/ | habit | noun | f | - |
-| зазвичай | /zɑzvɪˈt͡ʃɑj/ | usually | adv | - | - |
-| спочатку | /spɔˈt͡ʃɑtku/ | first, at first | adv | - | - |
-| після того | /ˈpislʲɑ ˈtɔɦɔ/ | after that | phrase | - | - |
-| нарешті | /nɑˈrɛʃtʲi/ | finally | adv | - | - |
-
----
+| Word        | IPA             | English          | POS  | Gender | Note |
+| ----------- | --------------- | ---------------- | ---- | ------ | ---- |
+| бігати      | /ˈbiɦɑtɪ/       | to run           | verb | -      |      |
+| ввечері     | /vˈvɛt͡ʃɛri/     | in the evening   | adv  | -      |      |
+| виходити    | /vɪˈxɔdɪtɪ/     | to go out        | verb | -      |      |
+| вмиватися   | /vmɪˈvɑtɪsʲɑ/   | to wash oneself  | verb | -      |      |
+| вставати    | /fstɑˈvɑtɪ/     | to get up        | verb | -      |      |
+| голитися    | /ɦɔˈlɪtɪsʲɑ/    | to shave         | verb | -      |      |
+| десята      | /dɛˈsʲɑtɑ/      | tenth (hour)     | adj  | ж      |      |
+| засинати    | /zɑsɪˈnɑtɪ/     | to fall asleep   | verb | -      |      |
+| зуб         | /zub/           | tooth            | noun | ч      |      |
+| лягати      | /lʲɑˈɦɑtɪ/      | to lie down      | verb | -      |      |
+| нарешті     | /nɑˈrɛʃti/      | finally          | adv  | -      |      |
+| одягатися   | /ɔdʲɑˈɦɑtɪsʲɑ/  | to dress oneself | verb | -      |      |
+| опівдні     | /ɔˈpivdni/      | at noon          | adv  | -      |      |
+| повертатися | /pɔvɛrˈtɑtɪsʲɑ/ | to return        | verb | -      |      |
+| прокидатися | /prɔkɪˈdɑtɪsʲɑ/ | to wake up       | verb | -      |      |
+| розпорядок  | /rɔzpɔˈrʲɑdɔk/  | schedule         | noun | ч      |      |
+| спочатку    | /spɔˈt͡ʃɑtku/    | at first         | adv  | -      |      |
+| сьома       | /ˈsʲɔmɑ/        | seventh (hour)   | adj  | ж      |      |
+| телевізор   | /tɛlɛˈvizɔr/    | television       | noun | ч      |      |
+| типовий     | /tɪˈpɔvɪj/      | typical          | adj  | ч      |      |
+| увечері     | /uˈvɛt͡ʃɛri/     | in the evening   | adv  | -      |      |
+| чистити     | /ˈt͡ʃɪstɪtɪ/     | to clean         | verb | -      |      |
+| шоста       | /ˈʃɔstɑ/        | sixth (hour)     | adj  | ж      |      |

@@ -22,6 +22,7 @@ objectives:
   - "Learner can predict aspect from verb form"
   - "Learner knows suppletive pairs"
 vocabulary_count: 30
+vocab_count: 37
 ---
 
 ## Warm-up
@@ -272,33 +273,3 @@ Adding different prefixes to the same root creates different perfective verbs wi
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| відпочити | /ʋidpɔˈt͡ʃɪtɪ/ | to rest | verb | — | perfective |
-| встати | /ˈʋstɑtɪ/ | to get up | verb | — | perfective |
-| одягнутися | /ɔdʲɑɦˈnutɪsʲɑ/ | to dress | verb | — | perfective |
-| сідати | /siˈdɑtɪ/ | to sit down | verb | — | imperfective |
-| сісти | /ˈsistɪ/ | to sit down | verb | — | perfective |
-| лягати | /lʲɑˈɦɑtɪ/ | to lie down | verb | — | imperfective |
-| лягти | /ˈlʲɑɦtɪ/ | to lie down | verb | — | perfective |
-| відкрити | /ʋidˈkrɪtɪ/ | to open | verb | — | perfective |
-| закрити | /zɑˈkrɪtɪ/ | to close | verb | — | perfective |
-| увімкнути | /uʋimkˈnutɪ/ | to turn on | verb | — | perfective |
-| вимкнути | /ˈʋɪmknutɪ/ | to turn off | verb | — | perfective |
-| почати | /pɔˈt͡ʃɑtɪ/ | to begin | verb | — | perfective |
-| закінчити | /zɑˈkint͡ʃɪtɪ/ | to finish | verb | — | perfective |
-| отримати | /ɔˈtrɪmɑtɪ/ | to receive | verb | — | perfective |
-| послати | /pɔˈslɑtɪ/ | to send | verb | — | perfective |
-| вибирати | /ʋɪbɪˈrɑtɪ/ | to choose | verb | — | imperfective |
-| вибрати | /ˈʋɪbrɑtɪ/ | to choose | verb | — | perfective |
-| вирішувати | /ʋɪriˈʃuʋɑtɪ/ | to decide | verb | — | imperfective |
-| вирішити | /ʋɪˈriʃɪtɪ/ | to decide | verb | — | perfective |
-| префікс | /prɛˈfiks/ | prefix | noun | m | grammar term |
-| суфікс | /ˈsufiks/ | suffix | noun | m | grammar term |
-| корінь | /ˈkɔrinʲ/ | root | noun | m | grammar term |
-
----
-

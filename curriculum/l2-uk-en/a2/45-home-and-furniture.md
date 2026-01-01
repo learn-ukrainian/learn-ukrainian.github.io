@@ -19,6 +19,7 @@ objectives:
   - "Learner can describe rooms and furniture"
   - "Learner can talk about where things are located"
 vocabulary_count: 30
+vocab_count: 47
 ---
 
 ## Warm-up
@@ -268,18 +269,3 @@ When visiting Ukrainian homes or discussing living situations, these phrases wil
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| комора | /kɔˈmɔrɑ/ | storage room | noun | f | room |
-| полиця | /pɔˈlɪt͡sʲɑ/ | shelf | noun | f | furniture |
-| комод | /kɔˈmɔd/ | dresser | noun | m | furniture |
-| килим | /kɪˈlɪm/ | carpet | noun | m | decor |
-| штори | /ˈʃtɔrɪ/ | curtains | noun | pl | decor |
-| пральна машина | /ˈprɑlʲnɑ mɑˈʃɪnɑ/ | washing machine | phrase | f | appliance |
-| посудомийка | /pɔsudɔˈmɪjkɑ/ | dishwasher | noun | f | appliance |
-| облаштовувати | /ɔblɑʃtɔˈʋuʋɑtɪ/ | to furnish | verb | - | action |
-| переїжджати | /pɛrɛˈjʒdʒɑtɪ/ | to move house | verb | - | action |
-| орендувати | /ɔrɛnduˈʋɑtɪ/ | to rent | verb | - | action |

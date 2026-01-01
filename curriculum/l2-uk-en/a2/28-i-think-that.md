@@ -20,6 +20,7 @@ objectives:
   - "Learner can agree and disagree politely"
   - "Learner understands the contrast between думати and вважати"
 vocabulary_count: 25
+vocab_count: 29
 ---
 
 # Summary
@@ -60,6 +61,7 @@ The most common way to start an opinion is with "I think". Depending on how form
 
 ### Examples:
 - **Я думаю, що** українська мова дуже милозвучна. (I think that Ukrainian is very melodic.)
+- Я **думаю** про це. (I am thinking about this.)
 - **На мою думку,** це місто найкраще у світі. (In my opinion, this city is the best in the world.)
 - **З моєї точки зору,** проект має великий потенціал. (From my point of view, the project has great potential.)
 
@@ -176,41 +178,4 @@ Two colleagues, Olena and Ihor, are discussing a future trip.
 > **Myth:** Ukrainian culture is monolithic and everyone agrees on history and politics because of the war.
 > **Reality:** Ukraine is a vibrant democracy with a huge diversity of opinions. Debating historical memory and future direction is a core part of the modern Ukrainian identity. We value the right to disagree and discuss diverse perspectives openly.
 
----
-
-> [!resources] 🔗 External Resources
-> - **YouTube:** [How to express your opinion in Ukrainian](https://www.youtube.com/results?search_query=express+opinion+ukrainian) — Various teachers
-> - **Article:** [Ukrainian Conversation Starters](https://www.ukrainianlessons.com/conversation/) — Ukrainian Lessons
-> - **Flashcards:** [Quizlet: Ukrainian Opinions](https://quizlet.com/) — Practice the vocabulary
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вважати | /ʋʋɑˈʒɑtɪ/ | to consider, believe | verb | — | formal |
-| гадати | /ɦɑˈdɑtɪ/ | to guess, think | verb | — | poetic |
-| здається | /ˈzdɑjɛt͡sʲɑ/ | it seems | verb | — | 3rd sg |
-| на мою думку | /nɑ ˈmɔju ˈdumku/ | in my opinion | phrase | — | opener |
-| на мій погляд | /nɑ mij ˈpɔɦlʲɑd/ | from my view | phrase | — | opener |
-| з моєї точки зору | /z mɔˈjɛji ˈtɔt͡ʃkɪ ˈzɔru/ | from my point of view | phrase | — | analytic |
-| згоден | /ˈzɦɔdɛn/ | agree (masc) | adj | masc | state |
-| згодна | /ˈzɦɔdnɑ/ | agree (fem) | adj | fem | state |
-| не згоден | /nɛ ˈzɦɔdɛn/ | disagree (masc) | adj | masc | state |
-| погоджуватися | /pɔˈɦɔdʒuʋɑtɪsʲɑ/ | to agree | verb | — | process |
-| не погоджуватися | /nɛ pɔˈɦɔdʒuʋɑtɪsʲɑ/ | to disagree | verb | — | process |
-| правда | /ˈprɑu̯dɑ/ | truth | noun | fem | fact |
-| неправда | /nɛˈprɑu̯dɑ/ | lie, untruth | noun | fem | fact |
-| не так | /nɛ tɑk/ | not so | phrase | — | negative |
-| безумовно | /bɛzuˈmɔu̯nɔ/ | absolutely | adv | — | strong |
-| очевидно | /ɔt͡ʃɛˈʋɪdnɔ/ | obviously | adv | — | modal |
-| навряд чи | /nɑu̯ˈrʲɑd t͡ʃɪ/ | hardly, doubtfully | part | — | doubt |
-| помилятися | /pɔmɪˈlʲɑtɪsʲɑ/ | to be mistaken | verb | — | error |
-| правий | /ˈprɑʋɪj/ | right, correct | adj | masc | state |
-| рація | /ˈrɑt͡sʲijɑ/ | rightness (have reason) | noun | fem | idiom |
-| погодитися | /pɔˈɦɔdɪtɪsʲɑ/ | to agree | verb | — | perfective |
-| суперечка | /supɛˈrɛt͡ʃkɑ/ | argument, dispute | noun | fem | social |
-| цілком | /t͡sіlˈkɔm/ | completely | adv | — | degree |
-| обговорювати | /ɔbɦɔˈʋɔrʲuʋɑtɪ/ | to discuss | verb | — | activity |
-| позиція | /pɔˈzɪt͡sʲijɑ/ | position, stance | noun | fem | formal |
-| аргумент | /ɑrɦuˈmɛnt/ | argument | noun | masc | formal |
-| власне | /ˈʋlɑsnɛ/ | actually, properly | adv | — | filler |
+##

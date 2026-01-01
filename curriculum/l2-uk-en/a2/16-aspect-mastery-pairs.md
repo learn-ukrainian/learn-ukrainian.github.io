@@ -19,6 +19,7 @@ objectives:
   - "Learner can select correct aspect based on context"
   - "Learner can transform between aspects fluently"
 vocabulary_count: 30
+vocab_count: 21
 ---
 
 ## Warm-up
@@ -162,6 +163,11 @@ When you see the imperfective, say the perfective instantly!
 робити → **зробити**
 бачити → **побачити**
 чути → **почути**
+пам'ятати → **запам'ятати**
+питати → **запитати**
+купувати → **купити**
+платити → **заплатити**
+малювати → **намалювати**
 
 ## Drill 2: Reverse Recall
 
@@ -254,74 +260,4 @@ The best way to master aspect pairs is through massive input and repeated practi
 
 Remember: Making mistakes is part of learning. Native speakers will understand you even if you use the wrong aspect. The goal is gradual improvement through practice.
 
----
-
-# Summary
-
-Today you drilled the 30 most common aspect pairs.
-
-**Key Takeaways:**
-- Perfective = completed, single events, results
-- Imperfective = ongoing, habitual, process-focused
-- Many pairs are formed with prefixes (про-, на-, з-, по-)
-- Some pairs are suppletive (different roots - memorize these!)
-- Context determines which aspect to use
-
-**Your Challenge:** Practice these pairs until they become automatic. Aim for instant recall without thinking!
-
----
-
-> 💡 **Українське прислів'я**
->
-> «Знання — сила.» (Знати — недоконаний, бо знання — це постійний процес!)
->
-> *Translation: "Knowledge is power." (Знати is imperfective — knowledge is ongoing!)*
-
-> 🇺🇦 **Пари аспекту — ваші найкращі друзі**
->
-> Запам'ятайте ці важливі пари дієслів:
-> - говорити | сказати — різні корені! (супплетивні пари)
-> - брати | взяти — також різні корені!
-> - читати | прочитати — префікс про-
-> - писати | написати — префікс на-
->
-> Практикуйте ці пари кожен день. Вони — основа для правильного вибору аспекту!
-
-## Need More Practice?
-
-> [!resources] External Resources
-> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
-> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
-> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Aspect |
-|------|-----|---------|-----|--------|--------|
-| зрозуміти | /zrɔzumˈitɪ/ | to understand (grasp) | verb | — | pf |
-| запам'ятати | /zɑpɑmjɑtˈɑtɪ/ | to memorize | verb | — | pf |
-| забути | /zɑbˈutɪ/ | to forget (once) | verb | — | pf |
-| купити | /kupˈɪtɪ/ | to buy (once) | verb | — | pf |
-| готувати | /ɦɔtuʋˈɑtɪ/ | to cook/prepare | verb | — | impf |
-| приготувати | /prɪɦɔtuʋˈɑtɪ/ | to cook (finish) | verb | — | pf |
-| мити | /mˈɪtɪ/ | to wash | verb | — | impf |
-| помити | /pɔmˈɪtɪ/ | to wash (finish) | verb | — | pf |
-| прибирати | /prɪbɪrˈɑtɪ/ | to clean | verb | — | impf |
-| прибрати | /prɪbrˈɑtɪ/ | to clean (finish) | verb | — | pf |
-| ремонтувати | /rɛmɔntuʋˈɑtɪ/ | to repair | verb | — | impf |
-| відремонтувати | /ʋidrɛmɔntuʋˈɑtɪ/ | to repair (finish) | verb | — | pf |
-| будувати | /buduʋˈɑtɪ/ | to build | verb | — | impf |
-| побудувати | /pɔbuduʋˈɑtɪ/ | to build (finish) | verb | — | pf |
-| намалювати | /nɑmɑlʲuʋˈɑtɪ/ | to draw (finish) | verb | — | pf |
-| дзвонити | /dzvɔnˈɪtɪ/ | to call (phone) | verb | — | impf |
-| подзвонити | /pɔdzvɔnˈɪtɪ/ | to call (once) | verb | — | pf |
-| запитати | /zɑpɪtˈɑtɪ/ | to ask (once) | verb | — | pf |
-| відповісти | /ʋidpɔʋˈistɪ/ | to answer (once) | verb | — | pf |
-| заплатити | /zɑplɑtˈɪtɪ/ | to pay (once) | verb | — | pf |
-| продати | /prɔdˈɑtɪ/ | to sell (once) | verb | — | pf |
-| знаходити | /znɑxˈɔdɪtɪ/ | to find | verb | — | impf |
-| знайти | /znɑjtˈɪ/ | to find (once) | verb | — | pf |
-| губити | /ɦubˈɪtɪ/ | to lose | verb | — | impf |
+##

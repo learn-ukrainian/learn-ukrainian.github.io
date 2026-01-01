@@ -23,6 +23,7 @@ objectives:
   - "Learner can distinguish iterative and process meanings of secondary imperfectives"
   - "Learner can use secondary imperfectives appropriately in context"
 vocabulary_count: 35
+vocab_count: 48
 ---
 
 # Видові нюанси I: Вторинна імперфективація
@@ -491,43 +492,3 @@ vocabulary_count: 35
 Тепер ви можете правильно описувати звички, регулярні дії та процеси українською мовою.
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| вторинна імперфективація | secondary imperfectivization | граматичний термін |
-| видова пара | aspectual pair | пара доконаний/недоконаний |
-| ітеративний | iterative | повторюваний |
-| дуративний | durative | тривалий |
-| перечитувати | to reread (habitually) | від "перечитати" |
-| дописувати | to add in writing | від "дописати" |
-| переписувати | to rewrite (regularly) | від "переписати" |
-| виправляти | to correct (process) | від "виправити" |
-| переробляти | to redo, remake | від "переробити" |
-| записувати | to record (habitually) | від "записати" |
-| підписувати | to sign (regularly) | від "підписати" |
-| описувати | to describe | від "описати" |
-| відвідувати | to visit (regularly) | від "відвідати" |
-| заробляти | to earn (process) | від "заробити" |
-| вигравати | to win (repeatedly) | від "виграти" |
-| програвати | to lose (repeatedly) | від "програти" |
-| пояснювати | to explain (regularly) | від "пояснити" |
-| змінювати | to change (process) | від "змінити" |
-| зупиняти | to stop (habitually) | від "зупинити" |
-| перевіряти | to check (regularly) | від "перевірити" |
-| вибирати | to choose (process) | від "вибрати" |
-| починати | to begin (process) | від "почати" |
-| надавати | to provide (regularly) | від "надати" |
-| передавати | to pass on, convey | від "передати" |
-| видавати | to issue, publish | від "видати" |
-| допомагати | to help (regularly) | від "допомогти" |
-| згадувати | to recall (habitually) | від "згадати" |
-| затримувати | to delay (process) | від "затримати" |
-| запізнюватися | to be late (habitually) | від "запізнитися" |
-| розрізати | to cut (habitually) | вторинний від "розрі́зати" |
-| виходжувати | to nurse back to health | від "виходити" (у знач. доглядати) |
-| вставати | to get up (habitually) | від "встати" |
-| засинати | to fall asleep (process) | від "заснути" |
-| суфікс | suffix | словотворчий елемент |
-| чергування | alternation | зміна звуків у корені |

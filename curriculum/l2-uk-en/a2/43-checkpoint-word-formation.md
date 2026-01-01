@@ -23,6 +23,7 @@ objectives:
   - "Learner can analyze word components"
   - "Learner can derive new words from roots"
 vocabulary_count: 25
+vocab_count: 33
 ---
 
 # Checkpoint - Word Formation
@@ -321,12 +322,3 @@ Analyze these words by breaking them into parts:
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| словотвір | /slɔʋɔˈtʋir/ | word formation | noun | m | grammar |
-| словниковий | /slɔʋnɪˈkɔʋɪj/ | dictionary (adj) | adj | m | relating to |
-| частина | /t͡ʃɑsˈtɪnɑ/ | part | noun | f | component |
-| віддієслівний | /ʋiddiɛˈslɔʋnɪj/ | verbal (adj) | adj | m | grammar |

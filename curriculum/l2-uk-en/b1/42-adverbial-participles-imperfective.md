@@ -21,6 +21,7 @@ objectives:
   - "Learner can use adverbial participles to express simultaneous actions"
   - "Learner understands when imperfective participles are preferred over perfective"
 vocabulary_count: 20
+vocab_count: 91
 ---
 
 # Дієприслівники недоконаного виду
@@ -341,33 +342,3 @@ vocabulary_count: 20
 > - [Дієприслівники: відео пояснення](https://www.youtube.com/results?search_query=дієприслівник+українська) — відеоуроки
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| читаючи | while reading | від «читати» |
-| пишучи | while writing | від «писати» |
-| говорячи | while speaking | від «говорити» |
-| слухаючи | while listening | від «слухати» |
-| дивлячись | while watching | від «дивитися» |
-| думаючи | while thinking | від «думати» |
-| працюючи | while working | від «працювати» |
-| йдучи | while going | від «йти» |
-| біжачи | while running | від «бігти» |
-| стоячи | while standing | від «стояти» |
-| сидячи | while sitting | від «сидіти» |
-| лежачи | while lying | від «лежати» |
-| їдучи | while eating | від «їсти» |
-| летячи | while flying | від «летіти» |
-| несучи | while carrying | від «нести» |
-| ведучи | while leading | від «вести» |
-| повертаючись | while returning | від «повертатися» |
-| одягаючись | while dressing | від «одягатися» |
-| вмиваючись | while washing | від «вмиватися» |
-| готуючись | while preparing | від «готуватися» |
-| усміхаючись | while smiling | від «усміхатися» |
-| співаючи | while singing | від «співати» |
-| гуляючи | while walking | від «гуляти» |
-| чекаючи | while waiting | від «чекати» |
-| кажучи | while saying | від «казати» |

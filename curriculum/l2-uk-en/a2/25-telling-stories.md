@@ -20,6 +20,7 @@ objectives:
   - "Learner can tell a simple story about the past"
   - "Learner can use connectors like 'suddenly' and 'finally'"
 vocabulary_count: 25
+vocab_count: 42
 ---
 
 # Summary
@@ -189,45 +190,4 @@ Read this story and notice the bold words.
 > "Я **ще** спав, коли..." (I was *still* sleeping when...)
 > "Я **вже** встав, коли..." (I had *already* gotten up when...)
 
----
-
-## Summary Table
-
-Telling a story is like building a house. You need a foundation (**Спочатку**), walls (**Потім**), windows (**Раптом**), and a roof (**Нарешті**).
-
-**Key Takeaways:**
-- **Sequence:** Use *Спочатку, Потім, Після цього, Нарешті* to order events.
-- **Drama:** Use *Раптом* or *Несподівано* for twists.
-- **Time:** Use *Раніше* (past), *Вже* (already), and *Ще* (still) to clarify timing.
-- **Start:** *Одного разу* is the classic "Once upon a time".
-
-Now you can turn a boring list of facts into an exciting narrative!
-
----
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Past Tense in the Ukrainian language...](https://www.youtube.com/watch?v=IxHx6fajRvU) — VERBA SCHOOL
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| після цього | /ˈpisʲlʲɑ ˈt͡sʲɔɦɔ/ | after this | phrase | — | sequence |
-| перед цим | /ˈpɛrɛd ˈt͡sɪm/ | before this | phrase | — | sequence |
-| врешті-решт | /ˈʋrɛʃti ˈrɛʃt/ | in the end | adv | — | sequence |
-| тоді | /tɔˈdi/ | then | adv | — | sequence |
-| одного разу | /ɔdˈnɔɦɔ ˈrɑzu/ | one day | phrase | — | story start |
-| якось | /ˈjɑkɔsʲ/ | once | adv | — | story start |
-| несподівано | /nɛspɔˈdiʋɑnɔ/ | unexpectedly | adv | — | drama |
-| відразу | /ʋidˈrɑzu/ | immediately | adv | — | speed |
-| негайно | /nɛˈɦɑjnɔ/ | immediately | adv | — | speed |
-| щойно | /ˈʃt͡ʃɔjnɔ/ | just now | adv | — | time |
-| ледве | /ˈlɛdʋɛ/ | barely, hardly | adv | — | time/degree |
-| тільки-но | /ˈtɪlʲkɪ nɔ/ | just | adv | — | time |
-| саме тоді | /ˈsɑmɛ tɔˈdi/ | just then | phrase | — | precision |
-
+##

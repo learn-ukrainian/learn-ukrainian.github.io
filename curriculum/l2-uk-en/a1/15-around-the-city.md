@@ -1,13 +1,12 @@
 ---
-
 module: a1-15
-title: "Around the City"
-subtitle: "Navigating urban spaces with confidence"
-version: "1.0"
-phase: "A1.2 - Navigation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "vocabulary-only"
+title: 'Around the City'
+subtitle: 'Navigating urban spaces with confidence'
+version: '1.0'
+phase: 'A1.2 - Navigation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'vocabulary-only'
 tags:
   - navigation
   - directions
@@ -20,11 +19,12 @@ grammar:
   - Instrumental case with transport
   - Prepositions of location (біля, навпроти, за, перед, між)
 objectives:
-  - "Navigate using directional vocabulary (прямо, наліво, направо)"
-  - "Use locative case for city locations in context"
+  - 'Navigate using directional vocabulary (прямо, наліво, направо)'
+  - 'Use locative case for city locations in context'
   - "Ask and answer 'Де...?' and 'Як дістатися до...?' questions"
-  - "Name common urban infrastructure and transport methods"
+  - 'Name common urban infrastructure and transport methods'
 vocabulary_count: 40
+vocab_count: 90
 ---
 
 # Around the City
@@ -68,6 +68,7 @@ When Ukrainians give directions, they reference key urban features:
 > 🌍 **Real World: Kyiv Metro Color System**
 >
 > Kyiv's metro has three lines, each with a distinct color:
+>
 > - **Червона лінія** (Red Line) — M1, north-south
 > - **Синя лінія** (Blue Line) — M2, east-west
 > - **Зелена лінія** (Green Line) — M3, loop
@@ -78,12 +79,12 @@ When Ukrainians give directions, they reference key urban features:
 
 Ukrainians use simple directional adverbs when guiding others:
 
-| Direction | Ukrainian | Pronunciation | Usage |
-|-----------|-----------|---------------|-------|
-| Straight | **прямо** | [ˈprʲɑmɔ] | Keep going forward |
-| Left | **наліво** | [nɑˈliʋɔ] | Turn/go to the left |
-| Right | **направо** | [nɑˈprɑʋɔ] | Turn/go to the right |
-| Back | **назад** | [nɑˈzɑd] | Return, go back |
+| Direction | Ukrainian   | Pronunciation | Usage                |
+| --------- | ----------- | ------------- | -------------------- |
+| Straight  | **прямо**   | [ˈprʲɑmɔ]     | Keep going forward   |
+| Left      | **наліво**  | [nɑˈliʋɔ]     | Turn/go to the left  |
+| Right     | **направо** | [nɑˈprɑʋɔ]    | Turn/go to the right |
+| Back      | **назад**   | [nɑˈzɑd]      | Return, go back      |
 
 **Mini-Dialogue: At the Train Station**
 
@@ -115,6 +116,7 @@ Ukrainians use simple directional adverbs when guiding others:
 > ⚡ **Pro Tip: Preposition Power**
 >
 > Notice how Ukrainians layer directions with prepositions:
+>
 > - **До** (to) — direction toward: **до станції** (to the station)
 > - **Від** (from) — direction away: **від центру** (from the center)
 > - **Через** (through/across) — **через міст** (across the bridge)
@@ -157,6 +159,7 @@ How you get there matters. Ukrainians use several transportation phrases to desc
 - **на трамваї** — by tram (on the tram)
 - **метро** — by metro (indeclinable noun, used alone: "їду метро")
 - **на таксі** — by taxi (in a taxi)
+  _Example:_ Я їду на **таксі**. (I go by taxi.)
 - **на машині** — by car (in a car)
 - **на велосипеді** — by bicycle (on a bicycle)
 
@@ -215,6 +218,7 @@ Local: You're welcome! Have a nice day!
 > 🎯 **Fun Fact: Metro Announcers**
 >
 > Kyiv metro announcements use gendered voices to help navigate:
+>
 > - **Female voice** = train heading toward the center
 > - **Male voice** = train heading away from the center
 >
@@ -253,6 +257,7 @@ Imagine you're standing at the **Central Railway Station (Центральний
 3. The opera theatre (оперний театр)
 
 **Use these phrases:**
+
 - Прямо...
 - Наліво/направо...
 - Біля/навпроти...
@@ -293,11 +298,13 @@ Write 4-5 sentences describing how you get to work or school. Use transportation
 Beyond official public transport, every Ukrainian city runs **маршрутки** (marshrutky) — minibuses that follow fixed routes but stop on demand. These Soviet-era relics are faster, more flexible, and often chaotic.
 
 **Як працюють маршрутки:**
+
 - Ти хочеш вийти? Крикни **"На зупинці!"** (At the stop!)
 - Передавай гроші водію через інших пасажирів.
 - Особистий простір не існує — готуйся до тісноти!
 
 **How marshrutky work:**
+
 - Shout **"На зупинці!"** when you want to get off.
 - Pass money forward to the driver through other passengers.
 - Squeeze into impossibly small spaces — personal space doesn't exist here.
@@ -318,6 +325,7 @@ Beyond official public transport, every Ukrainian city runs **маршрутки
 # Summary
 
 You now have the vocabulary to:
+
 - **Give and follow directions** using прямо, наліво, направо, назад
 - **Describe locations** with prepositions (біля, навпроти, за, перед)
 - **Ask key questions**: "Де...?", "Як дістатися до...?", "Це далеко?"
@@ -325,6 +333,7 @@ You now have the vocabulary to:
 - **Discuss transportation** using memorized phrases (на автобусі, пішки, метро)
 
 **Key Phrases to Remember:**
+
 - **Де метро?** — Where is the metro?
 - **Як дістатися до...?** — How to get to...?
 - **Прямо, потім наліво.** — Straight, then left.
@@ -339,7 +348,6 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 >
 > **YouTube:** [Ukrainian Vocabulary: Tourism, Travelling, Asking for Directions #ukrainian #letslearnukrainian](https://www.youtube.com/watch?v=40HW7URLQNI) — Let's Learn Ukrainian
 >
->
 > **Vocabulary:** [Around Town in Ukrainian](https://www.ukrainianlessons.com/vocabulary-town/) — City map with vocabulary
 >
 > **Directions:** [Directions in Ukrainian](https://www.ukrainianlessons.com/vocabulary-directions/) — Navigation vocabulary with audio
@@ -348,44 +356,92 @@ Next module: **Genitive Case I — Absence and Negation** (немає, without).
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вулиця | /ˈvulɪtsʲɑ/ | street | noun | f | main roads |
-| провулок | /ˈprɔvulɔk/ | lane, alley | noun | m | smaller streets |
-| площа | /ˈplɔʃt͡ʃɑ/ | square | noun | f | public space |
-| проспект | /prɔsˈpɛkt/ | avenue | noun | m | wide road |
-| бульвар | /bulʲˈvɑr/ | boulevard | noun | m | tree-lined road |
-| набережна | /ˈnɑbɛrɛʒnɑ/ | embankment | noun | f | riverside promenade |
-| міст | /mist/ | bridge | noun | m | - |
-| перехрестя | /pɛrɛˈxrɛstʲɑ/ | intersection | noun | n | crossroads |
-| світлофор | /sʲvʲitlɔˈfɔr/ | traffic light | noun | m | - |
-| зупинка | /zuˈpɪnkɑ/ | stop | noun | f | bus/tram stop |
-| станція | /ˈstɑntsʲijɑ/ | station | noun | f | metro/train |
-| вхід | /vxid/ | entrance | noun | m | - |
-| вихід | /ˈvɪxid/ | exit | noun | m | - |
-| прямо | /ˈprʲɑmɔ/ | straight | adverb | - | forward |
-| наліво | /nɑˈliʋɔ/ | to the left | adverb | - | - |
-| направо | /nɑˈprɑʋɔ/ | to the right | adverb | - | - |
-| назад | /nɑˈzɑd/ | back | adverb | - | return |
-| далеко | /dɑlɛˈkɔ/ | far | adverb | - | - |
-| близько | /ˈblɪzʲkɔ/ | close, near | adverb | - | - |
-| поруч | /ˈpɔrut͡ʃ/ | nearby | adverb | - | next to |
-| навпроти | /nɑvˈprɔtɪ/ | opposite | adverb/prep | - | across from |
-| за | /zɑ/ | behind | preposition | - | - |
-| перед | /ˈpɛrɛd/ | in front of | preposition | - | - |
-| між | /miʒ/ | between | preposition | - | - |
-| біля | /ˈbilʲɑ/ | near, by | preposition | - | - |
-| через | /ˈt͡ʃɛrɛz/ | through, across | preposition | - | - |
-| до | /dɔ/ | to (toward) | preposition | - | direction |
-| від | /vid/ | from | preposition | - | origin |
-| вздовж | /ˈvzdɔvʒ/ | along | preposition | - | - |
-| туди | /tuˈdɪ/ | there (direction) | adverb | - | motion |
-| сюди | /sʲuˈdɪ/ | here (direction) | adverb | - | motion toward speaker |
-| звідти | /ˈzʲvidtɪ/ | from there | adverb | - | origin |
-| пішки | /ˈpiʃkɪ/ | on foot | adverb | - | walking |
-| автобус | /ɑvˈtɔbus/ | bus | noun | m | на автобусі = by bus |
-| трамвай | /trɑmˈvaj/ | tram | noun | m | на трамваї = by tram |
-| машина | /mɑˈʃɪnɑ/ | car | noun | f | на машині = by car |
-| велосипед | /vɛlɔsɪˈpɛd/ | bicycle | noun | m | на велосипеді = by bicycle |
-
----
+| Word         | IPA              | English              | POS   | Gender | Note     |
+| ------------ | ---------------- | -------------------- | ----- | ------ | -------- |
+| близько      | /ˈblɪzʲkɔ/       | close/near           | adv   | -      |          |
+| будівля      | /buˈdivlʲɑ/      | building             | noun  | ж      |          |
+| велосипед    | /vɛlɔsɪˈpɛd/     | bicycle              | noun  | ч      |          |
+| весь         | /vɛsʲ/           | all/whole            | pron  | ч      |          |
+| вздовж       | /vzdɔwʒ/         | along                | other | -      |          |
+| вийти        | /ˈvɪjtɪ/         | to exit/get off      | verb  | -      |          |
+| вимога       | /vɪˈmɔɦɑ/        | demand/request       | noun  | ж      |          |
+| вокзал       | /vɔkˈzɑl/        | station (train)      | noun  | ч      |          |
+| вхід         | /xid/            | entrance             | noun  | ч      |          |
+| від          | /vid/            | from                 | other | -      |          |
+| готуватися   | /ɦɔtuˈvɑtɪsʲɑ/   | to prepare oneself   | verb  | -      |          |
+| гроші        | /ˈhrɔʃi/         | money                | noun  | -      | pl. only |
+| далеко       | /dɑˈlɛkɔ/        | far                  | adv   | -      |          |
+| два          | /dvɑ/            | two                  | num   | ч      |          |
+| двадцять     | /ˈdvɑdt͡sʲɑtʲ/    | twenty               | num   | -      |          |
+| десять       | /ˈdɛsʲɑtʲ/       | ten                  | num   | -      |          |
+| для          | /dlʲɑ/           | for                  | other | -      |          |
+| дорошенко    | /dɔrɔˈʃɛnkɔ/     | Doroshenko (name)    | name  | ч      |          |
+| досвід       | /ˈdɔsvid/        | experience           | noun  | ч      |          |
+| діалог       | /diɑˈlɔh/        | dialogue             | noun  | ч      |          |
+| діставати    | /distɑˈvɑtɪ/     | to check/reach       | verb  | -      |          |
+| дістатися    | /disˈtɑtɪsʲɑ/    | to reach/get to      | verb  | -      |          |
+| зазвичай     | /zɑzʋɪˈt͡ʃɑj/     | usually              | adv   | -      |          |
+| зручно       | /ˈzrut͡ʃnɔ/       | conveniently         | adv   | -      |          |
+| зупинятися   | /zupɪˈnʲɑtɪsʲɑ/  | to stop              | verb  | -      |          |
+| киянин       | /kɪˈjɑnɪn/       | Kyiv resident        | noun  | ч      |          |
+| книгарня     | /knɪˈhɑrnʲɑ/     | bookstore            | noun  | ж      |          |
+| копальня     | /kɔˈpɑlʲnʲɑ/     | mine                 | noun  | ж      |          |
+| крикнути     | /ˈkrɪknutɪ/      | to shout             | verb  | -      |          |
+| крім         | /krim/           | besides/except       | other | -      |          |
+| культурний   | /kulʲˈturnɪj/    | cultural             | adj   | ч      |          |
+| купити       | /kuˈpɪtɪ/        | to buy               | verb  | -      |          |
+| львівський   | /ˈlʲviwsʲkɪj/    | Lviv (adj)           | adj   | ч      |          |
+| лінія        | /ˈlinijɑ/        | line                 | noun  | ж      |          |
+| майдан       | /mɑjˈdɑn/        | square/Maidan        | noun  | ч      |          |
+| маршрут      | /mɑrˈʃrut/       | route                | noun  | ч      |          |
+| маршрутка    | /mɑrˈʃrutkɑ/     | marshrutka (minibus) | noun  | ж      |          |
+| між          | /miʒ/            | between              | other | -      |          |
+| міні         | /ˈmini/          | mini                 | other | -      |          |
+| мінівен      | /miniˈvɛn/       | minivan              | noun  | ч      |          |
+| навпроти     | /nɑwˈprɔtɪ/      | opposite             | other | -      |          |
+| назад        | /nɑˈzɑd/         | back/backwards       | adv   | -      |          |
+| наліво       | /nɑˈlivɔ/        | to the left          | adv   | -      |          |
+| направо      | /nɑˈprɑvɔ/       | to the right         | adv   | -      |          |
+| невеликий    | /nɛvɛˈlɪkɪj/     | not big/small        | adj   | ч      |          |
+| незалежність | /nɛzɑˈlɛʒnisʲtʲ/ | independence         | noun  | ж      |          |
+| обожнювати   | /ɔˈbɔʒnʲuvɑtɪ/   | to adore             | verb  | -      |          |
+| оперний      | /ˈɔpɛrnɪj/       | opera (adj)          | adj   | ч      |          |
+| офіційний    | /ɔfiˈt͡sʲijnɪj/   | official             | adj   | ч      |          |
+| п'ять        | /pjɑtʲ/          | five                 | num   | -      |          |
+| перед        | /ˈpɛrɛd/         | before/in front      | other | -      |          |
+| передавати   | /pɛrɛdɑˈvɑtɪ/    | to pass/transmit     | verb  | -      |          |
+| перехрестя   | /pɛrɛˈxrɛsʲtʲɑ/  | intersection         | noun  | с      |          |
+| по           | /pɔ/             | along/by             | other | -      |          |
+| повернути    | /pɔvɛrˈnutɪ/     | to turn              | verb  | -      |          |
+| подорожувати | /pɔdɔrɔʒuˈvɑtɪ/  | to travel            | verb  | -      |          |
+| покинутий    | /pɔˈkɪnutɪj/     | abandoned            | adj   | ч      |          |
+| популярний   | /pɔpuˈlʲɑrnɪj/   | popular              | adj   | ч      |          |
+| поруч        | /ˈpɔrut͡ʃ/        | nearby               | adv   | -      |          |
+| пошта        | /ˈpɔʃtɑ/         | post office          | noun  | ж      |          |
+| провулок     | /prɔˈvulɔk/      | lane/alley           | noun  | ч      |          |
+| проспект     | /prɔˈspɛkt/      | avenue               | noun  | ч      |          |
+| простір      | /ˈprɔstir/       | space                | noun  | ч      |          |
+| прямо        | /ˈprʲɑmɔ/        | straight             | adv   | -      |          |
+| після        | /ˈpislʲɑ/        | after                | other | -      |          |
+| пішки        | /ˈpiʃkɪ/         | on foot              | adv   | -      |          |
+| світлофор    | /svitlɔˈfɔr/     | traffic light        | noun  | ч      |          |
+| синій        | /ˈsɪnʲij/        | blue                 | adj   | ч      |          |
+| станція      | /ˈstɑnt͡sʲijɑ/    | station              | noun  | ж      |          |
+| столиця      | /stɔˈlɪt͡sʲɑ/     | capital city         | noun  | ж      |          |
+| театральний  | /tɛɑˈtrɑlʲnɪj/   | theatrical           | adj   | ч      |          |
+| трамвай      | /trɑmˈvɑj/       | tram                 | noun  | ч      |          |
+| транспорт    | /ˈtrɑnspɔrt/     | transport            | noun  | ч      |          |
+| три          | /trɪ/            | three                | num   | -      |          |
+| тіснота      | /tisnɔˈtɑ/       | tightness/crowd      | noun  | ж      |          |
+| уникати      | /unɪˈkɑtɪ/       | to avoid             | verb  | -      |          |
+| фіксований   | /fikˈsɔvɑnɪj/    | fixed                | adj   | ч      |          |
+| хвилина      | /xvɪˈlɪnɑ/       | minute               | noun  | ж      |          |
+| центральний  | /t͡sɛnˈtrɑlʲnɪj/  | central              | adj   | ч      |          |
+| через        | /ˈt͡ʃɛrɛz/        | through/across       | other | -      |          |
+| швидше       | /ˈʃvɪdʃɛ/        | faster               | adv   | -      |          |
+| щодня        | /ʃt͡ʃɔˈdnʲɑ/      | every day            | adv   | -      |          |
+| щоранку      | /ʃt͡ʃɔˈrɑnku/     | every morning        | adv   | -      |          |
+| інший        | /ˈinʃɪj/         | other                | adj   | ч      |          |
+| існувати     | /isnuˈvɑtɪ/      | to exist             | verb  | -      |          |
+| їздити       | /ˈjizdɪtɪ/       | to ride/drive        | verb  | -      |          |
+| їхати        | /ˈjixɑtɪ/        | to go (vehicle)      | verb  | -      |          |

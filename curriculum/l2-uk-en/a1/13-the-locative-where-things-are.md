@@ -1,19 +1,18 @@
 ---
-
 module: a1-13
-title: "The Locative - Where Things Are"
-subtitle: "Finding Your Way Around Ukrainian Spaces"
-version: "1.0"
-phase: "A1.2"
-pedagogy: "PPP"
+title: 'The Locative - Where Things Are'
+subtitle: 'Finding Your Way Around Ukrainian Spaces'
+version: '1.0'
+phase: 'A1.2'
+pedagogy: 'PPP'
 objectives:
   - "Learner can ask and answer 'Where is X?' using locative case"
-  - "Learner can distinguish between в/у and на prepositions"
-  - "Learner can describe locations of people and objects"
-  - "Learner can name common places in Ukrainian"
+  - 'Learner can distinguish between в/у and на prepositions'
+  - 'Learner can describe locations of people and objects'
+  - 'Learner can name common places in Ukrainian'
 vocabulary_count: 30
 duration: 60
-transliteration: "vocabulary"
+transliteration: 'vocabulary'
 tags:
   - grammar
   - locative-case
@@ -22,6 +21,7 @@ tags:
 grammar:
   - locative-case
   - prepositions-v-u-na
+vocab_count: 36
 ---
 
 # The Locative - Where Things Are
@@ -37,6 +37,7 @@ You've already learned how to say "This is X" (nominative) and "I see X" (accusa
 > 💡 **Did You Know?**
 >
 > Ukrainian has two words that both mean "in": **в** and **у**. They're the same preposition - **у** is used before consonant clusters to make pronunciation easier. Think of it like English "a" vs "an"!
+>
 > - **в кімнаті** (in the room) - easy to say
 > - **у Львові** (in Lviv) - **у** makes the consonant cluster smoother
 
@@ -51,28 +52,31 @@ The locative case (місцевий відмінок) is ALWAYS used with a prep
 
 Here's the basic pattern:
 
-| Nominative (Де це?) | Locative (Де ти?) | English |
-|---------------------|-------------------|---------|
-| Це **кімната** | Я **в кімнаті** | I'm in the room |
-| Це **банк** | Я **в банку** | I'm in the bank |
-| Це **місто** | Я **в місті** | I'm in the city |
-| Це **стіл** | Книга **на столі** | The book is on the table |
-| Це **робота** | Я **на роботі** | I'm at work |
+| Nominative (Де це?) | Locative (Де ти?)  | English                  |
+| ------------------- | ------------------ | ------------------------ |
+| Це **кімната**      | Я **в кімнаті**    | I'm in the room          |
+| Це **банк**         | Я **в банку**      | I'm in the bank          |
+| Це **місто**        | Я **в місті**      | I'm in the city          |
+| Це **стіл**         | Книга **на столі** | The book is on the table |
+| Це **робота**       | Я **на роботі**    | I'm at work              |
 
 ### Locative Endings: The Pattern
 
 The locative case adds specific endings to nouns:
 
 **Masculine nouns:**
+
 - Most add **-і**: банк → **в банку** (wait, this is **-у**!)
 - Hard stems get **-у**: банк → в банк**у**, парк → у парк**у**
 - Soft stems get **-і**: музей → у музе**ї**, Київ → у Києв**і**
 
 **Feminine nouns (-а/-я):**
+
 - -а becomes **-і**: кімната → в кімнат**і**
 - -я becomes **-і**: кухня → на кухн**і**
 
 **Neuter nouns (-о/-е):**
+
 - -о becomes **-і**: місто → в міст**і**
 - -е becomes **-і**: море → на мор**і**
 
@@ -85,11 +89,13 @@ The locative case adds specific endings to nouns:
 This is one of the trickiest parts of Ukrainian - when to use **в/у** vs **на**. Here's the logic:
 
 **Use в/у (inside):**
+
 - Enclosed buildings: **в кімнаті, у магазині, в школі**
 - Cities and countries: **у Києві, в Україні, у Львові**
 - Containers: **у сумці, в коробці**
 
 **Use на (on/at):**
+
 - Surfaces: **на столі, на підлозі, на стіні**
 - Events: **на концерті, на зустрічі**
 - Open spaces: **на вулиці, на площі, на пляжі**
@@ -132,6 +138,7 @@ Let's see locative in real sentences:
 > 🎬 **Pop Culture Moment: S.T.A.L.K.E.R.**
 >
 > In the legendary Ukrainian game S.T.A.L.K.E.R., you hear locative case constantly:
+>
 > - "Я **в Зоні**" (I'm in the Zone)
 > - "Артефакт **на складі**" (Artifact at the warehouse)
 > - "Сталкери **у барі**" (Stalkers in the bar)
@@ -144,25 +151,25 @@ Let's see locative in real sentences:
 
 **Common places with в/у:**
 
-| Place | Example |
-|-------|---------|
-| у кімнаті | Діти в кімнаті. (Children are in the room.) |
-| в школі | Урок у школі. (Lesson is at school.) |
-| у магазині | Я у магазині. (I'm in the shop.) |
-| в кафе | Зустріч у кафе. (Meeting is in a café.) |
-| у Львові | Ми у Львові. (We're in Lviv.) |
-| в Україні | Життя в Україні. (Life in Ukraine.) |
+| Place      | Example                                     |
+| ---------- | ------------------------------------------- |
+| у кімнаті  | Діти в кімнаті. (Children are in the room.) |
+| в школі    | Урок у школі. (Lesson is at school.)        |
+| у магазині | Я у магазині. (I'm in the shop.)            |
+| в кафе     | Зустріч у кафе. (Meeting is in a café.)     |
+| у Львові   | Ми у Львові. (We're in Lviv.)               |
+| в Україні  | Життя в Україні. (Life in Ukraine.)         |
 
 **Common places with на:**
 
-| Place | Example |
-|-------|---------|
-| на столі | Чашка на столі. (Cup is on the table.) |
-| на роботі | Тато на роботі. (Dad is at work.) |
-| на вулиці | Люди на вулиці. (People are on the street.) |
-| на концерті | Ми на концерті. (We're at a concert.) |
-| на пляжі | Вони на пляжі. (They're at the beach.) |
-| на балконі | Кіт на балконі. (Cat is on the balcony.) |
+| Place       | Example                                     |
+| ----------- | ------------------------------------------- |
+| на столі    | Чашка на столі. (Cup is on the table.)      |
+| на роботі   | Тато на роботі. (Dad is at work.)           |
+| на вулиці   | Люди на вулиці. (People are on the street.) |
+| на концерті | Ми на концерті. (We're at a concert.)       |
+| на пляжі    | Вони на пляжі. (They're at the beach.)      |
+| на балконі  | Кіт на балконі. (Cat is on the balcony.)    |
 
 **Mini-Dialogue 2:**
 
@@ -177,6 +184,7 @@ Let's see locative in real sentences:
 > 🌍 **Real World: Ukrainian Addresses**
 >
 > When writing addresses in Ukrainian, you use locative:
+>
 > - вулиця Хрещатик, **будинок** 24, **квартира** 5
 > - But when STATING location: "Я живу **на вулиці** Хрещатик, **у будинку** 24."
 >
@@ -283,7 +291,6 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 >
 > **YouTube:** [The Locative Case in the Ukrainian language](https://www.youtube.com/watch?v=kQof_vYOdm8) — Speak Ukrainian
 >
->
 > **Podcast:** [ULP 2-66 | Locative Case with Places](https://www.ukrainianlessons.com/episode66/) — Share memories using locative
 >
 > **Podcast:** [ULP 2-67 | Telling Time + Locative](https://www.ukrainianlessons.com/episode67/) — Locative case with ordinal numbers
@@ -292,30 +299,39 @@ Next up: You'll learn possessive pronouns (мій, твій, його...) so you
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| у | /u/ | in, inside | prep | - | before clusters |
-| в | /v/ | in, inside | prep | - | before single consonants |
-| на | /nɑ/ | on, at | prep | - | |
-| ванна | /ˈvɑnːɑ/ | bathroom | noun | f | |
-| спальня | /ˈspɑlʲnʲɑ/ | bedroom | noun | f | |
-| вітальня | /viˈtɑlʲnʲɑ/ | living room | noun | f | |
-| коридор | /kɔrɪˈdɔr/ | corridor, hallway | noun | m | |
-| балкон | /bɑlˈkɔn/ | balcony | noun | m | |
-| поверх | /ˈpɔvɛrx/ | floor (level) | noun | m | |
-| будинок | /ˈbudɪnɔk/ | building, house | noun | m | |
-| квартира | /kvɑrˈtɪrɑ/ | apartment | noun | f | |
-| офіс | /ˈɔfis/ | office | noun | m | |
-| робота | /rɔˈbɔtɑ/ | work, job | noun | f | |
-| лікарня | /liˈkɑrnʲɑ/ | hospital | noun | f | |
-| аптека | /ɑpˈtɛkɑ/ | pharmacy | noun | f | |
-| ринок | /ˈrɪnɔk/ | market | noun | m | |
-| готель | /ɦɔˈtɛlʲ/ | hotel | noun | m | |
-| пляж | /plʲɑʒ/ | beach | noun | m | |
-| музей | /muˈzɛj/ | museum | noun | m | |
-| театр | /tɛˈɑtr/ | theater | noun | m | |
-| кінотеатр | /kinɔtɛˈɑtr/ | cinema | noun | m | |
-| стадіон | /stɑdiˈɔn/ | stadium | noun | m | |
-| церква | /ˈt͡sɛrkvɑ/ | church | noun | f | |
-
----
+| Word     | IPA            | English           | POS  | Gender | Note |
+| -------- | -------------- | ----------------- | ---- | ------ | ---- |
+| аптека   | /ɑpˈtɛkɑ/      | pharmacy          | noun | ж      |      |
+| артефакт | /ɑrtɛˈfɑkt/    | artifact          | noun | ч      |      |
+| балкон   | /bɑlˈkɔn/      | balcony           | noun | ч      |      |
+| великий  | /vɛˈlɪkɪj/     | big/large         | adj  | ч      |      |
+| вибачити | /vɪˈbɑt͡ʃɪtɪ/   | to forgive/excuse | verb | -      |      |
+| волинь   | /vɔˈlɪnʲ/      | Volyn (region)    | name | ж      |      |
+| все      | /wsɛ/          | everything        | pron | с      |      |
+| готель   | /ɦɔˈtɛlʲ/      | hotel             | noun | ч      |      |
+| екран    | /ɛˈkrɑn/       | screen            | noun | ч      |      |
+| забувати | /zɑbuˈvɑtɪ/    | to forget (imp)   | verb | -      |      |
+| зал      | /zɑl/          | hall              | noun | ч      |      |
+| зараз    | /ˈzɑrɑz/       | now               | adv  | -      |      |
+| зона     | /ˈzɔnɑ/        | zone              | noun | ж      |      |
+| зупинка  | /zuˈpɪnkɑ/     | stop (bus/tram)   | noun | ж      |      |
+| зустріч  | /ˈzustrit͡ʃ/    | meeting           | noun | ж      |      |
+| кавказ   | /kɑwˈkɑz/      | Caucasus          | name | ч      |      |
+| концерт  | /kɔnˈt͡sɛrt/    | concert           | noun | ч      |      |
+| кіт      | /kit/          | cat               | noun | ч      |      |
+| музей    | /muˈzɛj/       | museum            | noun | ч      |      |
+| місце    | /ˈmisʲt͡sʲɛ/    | place/seat        | noun | с      |      |
+| місцевий | /misʲˈt͡sʲɛvɪj/ | local             | adj  | ч      |      |
+| одеса    | /ɔˈdɛsɑ/       | Odesa             | name | ж      |      |
+| офіс     | /ˈɔfis/        | office            | noun | ч      |      |
+| площа    | /ˈplɔʃt͡ʃɑ/     | square            | noun | ж      |      |
+| пляж     | /plʲɑʒ/        | beach             | noun | ч      |      |
+| поверх   | /ˈpɔvɛrx/      | floor/story       | noun | ч      |      |
+| ринок    | /ˈrɪnɔk/       | market/Rynok Sq   | noun | ч      |      |
+| склад    | /sklɑd/        | warehouse/store   | noun | ч      |      |
+| театр    | /tɛˈɑtr/       | theater           | noun | ч      |      |
+| третій   | /ˈtrɛtʲij/     | third             | num  | ч      |      |
+| україна  | /ʊkrɑˈjinɑ/    | Ukraine           | name | ж      |      |
+| урок     | /uˈrɔk/        | lesson            | noun | ч      |      |
+| хрещатик | /xrɛˈʃt͡ʃɑtɪk/  | Khreshchatyk      | name | ч      |      |
+| шевченко | /ʃɛwˈt͡ʃɛnkɔ/   | Shevchenko        | name | ч      |      |

@@ -1,13 +1,12 @@
 ---
-
 module: a1-24
-title: "Can, Must, Want - Modals"
-subtitle: "Expressing Ability, Obligation, and Desire"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Can, Must, Want - Modals'
+subtitle: 'Expressing Ability, Obligation, and Desire'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - modals
   - ability
@@ -18,11 +17,12 @@ grammar:
   - Impersonal modals (треба, потрібно, можна)
   - Modal adjectives (повинен, готовий, здатний)
 objectives:
-  - "Learner can express ability with могти and вміти"
-  - "Learner can express obligation with повинен and треба"
-  - "Learner can ask and give permission with можна"
-  - "Learner can distinguish between different modal meanings"
+  - 'Learner can express ability with могти and вміти'
+  - 'Learner can express obligation with повинен and треба'
+  - 'Learner can ask and give permission with можна'
+  - 'Learner can distinguish between different modal meanings'
 vocabulary_count: 25
+vocab_count: 53
 ---
 
 # Can, Must, Want - Modals
@@ -42,6 +42,7 @@ vocabulary_count: 25
 > [!observe] Pattern Discovery
 >
 > Look at these sentences:
+>
 > - Я **можу** говорити українською. (I can speak Ukrainian.) — general ability
 > - Я **вмію** плавати. (I know how to swim.) — learned skill
 >
@@ -50,25 +51,25 @@ vocabulary_count: 25
 
 ### могти — Can (Physical Ability)
 
-| Person | могти | Example |
-|--------|-------|---------|
-| я | можу | Я можу бігти. (I can run.) |
-| ти | можеш | Ти можеш допомогти? (Can you help?) |
-| він/вона | може | Він може прийти. (He can come.) |
-| ми | можемо | Ми можемо зробити це. (We can do this.) |
-| ви | можете | Ви можете почекати? (Can you wait?) |
-| вони | можуть | Вони можуть грати. (They can play.) |
+| Person   | могти  | Example                                 |
+| -------- | ------ | --------------------------------------- |
+| я        | можу   | Я можу бігти. (I can run.)              |
+| ти       | можеш  | Ти можеш допомогти? (Can you help?)     |
+| він/вона | може   | Він може прийти. (He can come.)         |
+| ми       | можемо | Ми можемо зробити це. (We can do this.) |
+| ви       | можете | Ви можете почекати? (Can you wait?)     |
+| вони     | можуть | Вони можуть грати. (They can play.)     |
 
 ### вміти — Know How To (Skill)
 
-| Person | вміти | Example |
-|--------|-------|---------|
-| я | вмію | Я вмію готувати. (I know how to cook.) |
-| ти | вмієш | Ти вмієш танцювати? (Do you know how to dance?) |
-| він/вона | вміє | Вона вміє малювати. (She knows how to draw.) |
-| ми | вміємо | Ми вміємо плавати. (We know how to swim.) |
-| ви | вмієте | Ви вмієте водити? (Do you know how to drive?) |
-| вони | вміють | Вони вміють грати на гітарі. (They know how to play guitar.) |
+| Person   | вміти  | Example                                                      |
+| -------- | ------ | ------------------------------------------------------------ |
+| я        | вмію   | Я вмію готувати. (I know how to cook.)                       |
+| ти       | вмієш  | Ти вмієш танцювати? (Do you know how to dance?)              |
+| він/вона | вміє   | Вона вміє малювати. (She knows how to draw.)                 |
+| ми       | вміємо | Ми вміємо плавати. (We know how to swim.)                    |
+| ви       | вмієте | Ви вмієте водити? (Do you know how to drive?)                |
+| вони     | вміють | Вони вміють грати на гітарі. (They know how to play guitar.) |
 
 ---
 
@@ -84,12 +85,12 @@ vocabulary_count: 25
 
 This is an adjective that agrees in gender:
 
-| Gender | Form | Example |
-|--------|------|---------|
-| masculine | повинен | Він **повинен** вчитися. (He must study.) |
-| feminine | повинна | Вона **повинна** працювати. (She must work.) |
-| neuter | повинне | — (rare) |
-| plural | повинні | Вони **повинні** прийти. (They must come.) |
+| Gender    | Form    | Example                                      |
+| --------- | ------- | -------------------------------------------- |
+| masculine | повинен | Він **повинен** вчитися. (He must study.)    |
+| feminine  | повинна | Вона **повинна** працювати. (She must work.) |
+| neuter    | повинне | — (rare)                                     |
+| plural    | повинні | Вони **повинні** прийти. (They must come.)   |
 
 ### треба / потрібно — Need To (Impersonal)
 
@@ -101,14 +102,14 @@ These are impersonal — the "subject" is optional:
 
 ### мусити — Must, Have To
 
-| Person | мусити | Example |
-|--------|--------|---------|
-| я | мушу | Я мушу йти. (I must go.) |
-| ти | мусиш | Ти мусиш зробити це. (You must do this.) |
+| Person   | мусити | Example                                  |
+| -------- | ------ | ---------------------------------------- |
+| я        | мушу   | Я мушу йти. (I must go.)                 |
+| ти       | мусиш  | Ти мусиш зробити це. (You must do this.) |
 | він/вона | мусить | Вона мусить залишитися. (She must stay.) |
-| ми | мусимо | Ми мусимо почекати. (We must wait.) |
-| ви | мусите | Ви мусите відповісти. (You must answer.) |
-| вони | мусять | Вони мусять знати. (They must know.) |
+| ми       | мусимо | Ми мусимо почекати. (We must wait.)      |
+| ви       | мусите | Ви мусите відповісти. (You must answer.) |
+| вони     | мусять | Вони мусять знати. (They must know.)     |
 
 ---
 
@@ -124,43 +125,43 @@ These are impersonal — the "subject" is optional:
 
 ### Formal Variants
 
-| Word | Meaning | Example |
-|------|---------|---------|
-| дозволено | permitted | Тут **дозволено** фотографувати. (Photography is permitted here.) |
-| заборонено | forbidden | Тут **заборонено** палити. (Smoking is forbidden here.) |
+| Word       | Meaning   | Example                                                           |
+| ---------- | --------- | ----------------------------------------------------------------- |
+| дозволено  | permitted | Тут **дозволено** фотографувати. (Photography is permitted here.) |
+| заборонено | forbidden | Тут **заборонено** палити. (Smoking is forbidden here.)           |
 
 ---
 
 ## Recommendations and Advice
 
-| Word | Meaning | Example |
-|------|---------|---------|
-| слід | should, ought | **Слід** відпочити. (One should rest.) |
+| Word  | Meaning          | Example                                                         |
+| ----- | ---------------- | --------------------------------------------------------------- |
+| слід  | should, ought    | **Слід** відпочити. (One should rest.)                          |
 | варто | worth, advisable | **Варто** подивитися цей фільм. (This movie is worth watching.) |
 
 ---
 
 ## Trying and Succeeding
 
-| Verb | Meaning | Example |
-|------|---------|---------|
-| намагатися | to try, attempt | Я **намагаюся** зрозуміти. (I'm trying to understand.) |
-| старатися | to try hard | Він **старається** вчитися. (He tries hard to study.) |
-| пробувати | to try, taste | **Спробуй** цю страву! (Try this dish!) |
-| вдаватися | to succeed | Це не **вдається**. (This isn't working out.) |
-| встигати | to manage (in time) | Я не **встигаю**! (I don't have time!) |
+| Verb       | Meaning             | Example                                                |
+| ---------- | ------------------- | ------------------------------------------------------ |
+| намагатися | to try, attempt     | Я **намагаюся** зрозуміти. (I'm trying to understand.) |
+| старатися  | to try hard         | Він **старається** вчитися. (He tries hard to study.)  |
+| пробувати  | to try, taste       | **Спробуй** цю страву! (Try this dish!)                |
+| вдаватися  | to succeed          | Це не **вдається**. (This isn't working out.)          |
+| встигати   | to manage (in time) | Я не **встигаю**! (I don't have time!)                 |
 
 ---
 
 ## Modal Adjectives
 
-| Adjective | Meaning | Example |
-|-----------|---------|---------|
-| здатний/здатна | capable | Він **здатний** зробити це. (He is capable of doing this.) |
-| готовий/готова | ready | Я **готовий** почати. (I'm ready to start.) |
-| згодний/згодна | willing, agree | Вона **згодна** допомогти. (She agrees to help.) |
-| впевнений/впевнена | sure | Я **впевнений**. (I'm sure.) |
-| певний/певна | certain | Він **певний** у своєму рішенні. (He's certain of his decision.) |
+| Adjective          | Meaning        | Example                                                          |
+| ------------------ | -------------- | ---------------------------------------------------------------- |
+| здатний/здатна     | capable        | Він **здатний** зробити це. (He is capable of doing this.)       |
+| готовий/готова     | ready          | Я **готовий** почати. (I'm ready to start.)                      |
+| згодний/згодна     | willing, agree | Вона **згодна** допомогти. (She agrees to help.)                 |
+| впевнений/впевнена | sure           | Я **впевнений**. (I'm sure.)                                     |
+| певний/певна       | certain        | Він **певний** у своєму рішенні. (He's certain of his decision.) |
 
 ---
 
@@ -173,6 +174,7 @@ These are impersonal — the "subject" is optional:
 > - Ти **можеш** відкрити вікно? (Can you open the window?)
 > - Вони **вміють** грати на піаніно. (They know how to play piano.)
 > - Я **не можу** прийти сьогодні. (I can't come today.)
+> - Я **вмію** читати. (I know how to read.)
 
 > [!example] Obligation
 >
@@ -287,31 +289,56 @@ These are impersonal — the "subject" is optional:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| могти | /mɔɦˈtɪ/ | can, be able to | verb | - | irregular |
-| повинен | /pɔˈvɪnɛn/ | must, should (m) | adj | m | повинна (f) |
-| мусити | /ˈmusɪtɪ/ | must, have to | verb | - | Class II |
-| треба | /ˈtrɛbɑ/ | need to, must | adv | - | impersonal |
-| потрібно | /pɔˈtribnɔ/ | need to, necessary | adv | - | impersonal |
-| необхідно | /nɛɔbˈxidnɔ/ | necessary, essential | adv | - | formal |
-| можна | /ˈmɔʒnɑ/ | may, allowed | adv | - | permission |
-| не можна | /nɛ ˈmɔʒnɑ/ | not allowed, forbidden | phrase | - | prohibition |
-| дозволено | /dɔzˈvɔlɛnɔ/ | permitted | adv | - | formal |
-| заборонено | /zɑbɔˈrɔnɛnɔ/ | forbidden | adv | - | formal |
-| слід | /slʲid/ | should, ought to | adv | - | recommendation |
-| варто | /ˈvɑrtɔ/ | worth, should | adv | - | advice |
-| здатний | /ˈzdɑtnɪj/ | capable (m) | adj | m | здатна (f) |
-| готовий | /ɦɔˈtɔvɪj/ | ready (m) | adj | m | готова (f) |
-| згодний | /ˈzɦɔdnɪj/ | agree, willing (m) | adj | m | згодна (f) |
-| впевнений | /ˈvpɛvnɛnɪj/ | sure, confident (m) | adj | m | впевнена (f) |
-| певний | /ˈpɛvnɪj/ | certain (m) | adj | m | певна (f) |
-| намагатися | /nɑmɑˈɦɑtɪsʲɑ/ | to try, attempt | verb | - | reflexive |
-| старатися | /stɑˈrɑtɪsʲɑ/ | to try hard | verb | - | reflexive |
-| пробувати | /ˈprɔbuvɑtɪ/ | to try, taste | verb | - | Class I |
-| вдаватися | /vdɑˈvɑtɪsʲɑ/ | to succeed | verb | - | reflexive |
-| встигати | /vstɪˈɦɑtɪ/ | to manage (in time) | verb | - | Class I |
-| мати змогу | /ˈmɑtɪ ˈzmɔɦu/ | to have ability | phrase | - | - |
-| бути в змозі | /ˈbutɪ v ˈzmɔzʲi/ | to be able to | phrase | - | formal |
-
----
+| Word          | IPA              | English            | POS   | Gender | Note |
+| ------------- | ---------------- | ------------------ | ----- | ------ | ---- |
+| бігти         | /ˈbiɦtɪ/         | to run             | verb  | -      |      |
+| варто         | /ˈvɑrtɔ/         | worth              | adv   | -      |      |
+| вдаватися     | /vdɑˈvɑtɪsʲɑ/    | to succeed         | verb  | -      |      |
+| вміти         | /ˈvmitɪ/         | to know how        | verb  | -      |      |
+| водити        | /vɔˈdɪtɪ/        | to drive           | verb  | -      |      |
+| впевнений     | /ˈvpɛvnɛnɪj/     | certain/sure       | adj   | ч      |      |
+| встигати      | /vstɪˈɦɑtɪ/      | to be in time      | verb  | -      |      |
+| входити       | /vxɔˈdɪtɪ/       | to enter           | verb  | -      |      |
+| відкрити      | /vidˈkrɪtɪ/      | to open            | verb  | -      |      |
+| відповісти    | /vidpɔˈvistɪ/    | to answer          | verb  | -      |      |
+| відпочити     | /vidpɔˈt͡ʃɪtɪ/    | to rest            | verb  | -      |      |
+| готовий       | /ɦɔˈtɔvɪj/       | ready              | adj   | ч      |      |
+| граматика     | /ɦrɑˈmɑtɪkɑ/     | grammar            | noun  | ж      |      |
+| гітара        | /ɦiˈtɑrɑ/        | guitar             | noun  | ж      |      |
+| дозволити     | /dɔzˈvɔlɪtɪ/     | to allow           | verb  | -      |      |
+| діалект       | /diɑˈlɛkt/       | dialect            | noun  | ч      |      |
+| заборонити    | /zɑbɔrɔˈnɪtɪ/    | to forbid          | verb  | -      |      |
+| закінчити     | /zɑˈkint͡ʃɪtɪ/    | to finish          | verb  | -      |      |
+| залишитися    | /zɑlɪˈʃɪtɪsʲɑ/   | to stay/remain     | verb  | -      |      |
+| згодний       | /ˈzɦɔdnɪj/       | agreeing           | adj   | ч      |      |
+| здатний       | /ˈzdɑtnɪj/       | capable            | adj   | ч      |      |
+| історія       | /isˈtɔrijɑ/      | history/story      | noun  | ж      |      |
+| краще         | /ˈkrɑʃt͡ʃɛ/       | better             | adv   | -      |      |
+| мусити        | /ˈmusɪtɪ/        | to have to         | verb  | -      |      |
+| міф           | /mif/            | myth               | noun  | ч      |      |
+| навчити       | /nɑwˈt͡ʃɪtɪ/      | to teach           | verb  | -      |      |
+| намагатися    | /nɑmɑˈɦɑtɪsʲɑ/   | to try             | verb  | -      |      |
+| необхідно     | /nɛɔbˈxidnɔ/     | necessary          | adv   | -      |      |
+| неправда      | /nɛˈprɑvdɑ/      | untruth            | noun  | ж      |      |
+| палити        | /pɑˈlɪtɪ/        | to smoke           | verb  | -      |      |
+| певний        | /ˈpɛvnɪj/        | certain            | adj   | ч      |      |
+| плавати       | /ˈplɑvɑtɪ/       | to swim            | verb  | -      |      |
+| повинний      | /pɔˈvɪnːɪj/      | obliged            | adj   | ч      |      |
+| подивитися    | /pɔdɪˈvɪtɪsʲɑ/   | to look            | verb  | -      |      |
+| потрібно      | /pɔˈtribnɔ/      | necessary          | adv   | -      |      |
+| почекати      | /pɔt͡ʃɛˈkɑtɪ/     | to wait            | verb  | -      |      |
+| пробувати     | /ˈprɔbuvɑtɪ/     | to try             | verb  | -      |      |
+| проект        | /prɔˈjɛkt/       | project            | noun  | ч      |      |
+| піаніно       | /piɑˈninɔ/       | piano              | noun  | с      |      |
+| пірнати       | /pirˈnɑtɪ/       | to dive            | verb  | -      |      |
+| рішення       | /ˈriʃɛnʲːɑ/      | decision           | noun  | с      |      |
+| сам           | /sɑm/            | alone/self         | other | ч      |      |
+| сказати       | /skɑˈzɑtɪ/       | to say             | verb  | -      |      |
+| слід          | /slid/           | should             | adv   | -      |      |
+| старатися     | /stɑˈrɑtɪsʲɑ/    | to try hard        | verb  | -      |      |
+| сідати        | /siˈdɑtɪ/        | to sit down        | verb  | -      |      |
+| сісти         | /ˈsistɪ/         | to sit down (perf) | verb  | -      |      |
+| увійти        | /uvijˈtɪ/        | to enter           | verb  | -      |      |
+| факт          | /fɑkt/           | fact               | noun  | ч      |      |
+| фотографувати | /fɔtɔhrɑfuˈvɑtɪ/ | to photograph      | verb  | -      |      |
+| холодний      | /xɔˈlɔdnɪj/      | cold               | adj   | ч      |      |

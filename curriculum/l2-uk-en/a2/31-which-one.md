@@ -20,6 +20,7 @@ objectives:
   - "Learner understands 'який' declension"
   - "Learner can link sentences"
 vocabulary_count: 25
+vocab_count: 13
 ---
 
 ## Warm-up
@@ -237,20 +238,3 @@ A detective interviews a witness about a robbery.
 5.  **Complexity:** Look at the clause as a mini-sentence to find the right case.
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| яка | /jɑˈkɑ/ | which/who (fem) | pron | f | form |
-| яке | /jɑˈkɛ/ | which/who (neut) | pron | n | form |
-| які | /jɑˈki/ | which/who (pl) | pron | pl | form |
-| якого | /jɑˈkɔɦɔ/ | whom/which (gen/acc) | pron | m | declension |
-| якої | /jɑˈkɔji/ | whom/which (gen) | pron | f | declension |
-| якому | /jɑˈkɔmu/ | whom/which (dat/loc) | pron | m | declension |
-| якій | /jɑˈkij/ | whom/which (dat/loc) | pron | f | declension |
-| яким | /jɑˈkɪm/ | whom/which (instr) | pron | m | declension |
-| якою | /jɑˈkɔju/ | whom/which (instr) | pron | f | declension |
-| якими | /jɑˈkɪmɪ/ | whom/which (instr pl) | pron | pl | declension |
-| котрий | /kɔtˈrɪj/ | which (out of selection) | pron | m | synonym |
-| місце | /ˈmis.t͡sɛ/ | place | noun | n | substantive |

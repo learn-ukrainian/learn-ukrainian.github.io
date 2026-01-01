@@ -1,13 +1,12 @@
 ---
-
 module: a1-22
-title: "Tomorrow - Future Tense"
-subtitle: "Talking About What Will Happen"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Tomorrow - Future Tense'
+subtitle: 'Talking About What Will Happen'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - future-tense
   - compound-future
@@ -18,16 +17,18 @@ grammar:
   - буду conjugation (буду, будеш, буде, будемо, будете, будуть)
   - Planning and intention expressions
 objectives:
-  - "Learner can form compound future using буду + infinitive"
-  - "Learner can conjugate буду for all persons"
-  - "Learner can express plans, intentions, and hopes"
-  - "Learner can use future time expressions correctly"
+  - 'Learner can form compound future using буду + infinitive'
+  - 'Learner can conjugate буду for all persons'
+  - 'Learner can express plans, intentions, and hopes'
+  - 'Learner can use future time expressions correctly'
 vocabulary_count: 25
+vocab_count: 48
 ---
 
 # Tomorrow - Future Tense
 
 > [!summary] Learning Goals
+>
 > - Express future actions using буду + infinitive
 > - Use time expressions for future events
 > - Talk about plans, intentions, and hopes
@@ -41,6 +42,7 @@ vocabulary_count: 25
 > [!observe] Pattern Discovery
 >
 > Look at these sentences:
+>
 > - Я **буду читати**. (I will read.)
 > - Вона **буде працювати**. (She will work.)
 > - Ми **будемо вивчати** українську. (We will study Ukrainian.)
@@ -52,22 +54,22 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 ### Conjugation of буду
 
 | Person | Singular | Plural |
-|--------|----------|--------|
-| 1st | буду | будемо |
-| 2nd | будеш | будете |
-| 3rd | буде | будуть |
+| ------ | -------- | ------ |
+| 1st    | буду     | будемо |
+| 2nd    | будеш    | будете |
+| 3rd    | буде     | будуть |
 
 ### Examples with Different Verbs
 
-| Subject | буду form | + Infinitive | Full Sentence |
-|---------|-----------|--------------|---------------|
-| Я | буду | читати | Я буду читати. (I will read.) |
-| Ти | будеш | працювати | Ти будеш працювати. (You will work.) |
-| Він | буде | вчитися | Він буде вчитися. (He will study.) |
-| Вона | буде | готувати | Вона буде готувати. (She will cook.) |
-| Ми | будемо | грати | Ми будемо грати. (We will play.) |
-| Ви | будете | їхати | Ви будете їхати. (You will go.) |
-| Вони | будуть | співати | Вони будуть співати. (They will sing.) |
+| Subject | буду form | + Infinitive | Full Sentence                          |
+| ------- | --------- | ------------ | -------------------------------------- |
+| Я       | буду      | читати       | Я буду читати. (I will read.)          |
+| Ти      | будеш     | працювати    | Ти будеш працювати. (You will work.)   |
+| Він     | буде      | вчитися      | Він буде вчитися. (He will study.)     |
+| Вона    | буде      | готувати     | Вона буде готувати. (She will cook.)   |
+| Ми      | будемо    | грати        | Ми будемо грати. (We will play.)       |
+| Ви      | будете    | їхати        | Ви будете їхати. (You will go.)        |
+| Вони    | будуть    | співати      | Вони будуть співати. (They will sing.) |
 
 ---
 
@@ -76,6 +78,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 > [!tip] Levels of Certainty
 >
 > Different verbs express different levels of commitment:
+>
 > - **обов'язково буду** — definitely will
 > - **планую** — I plan to
 > - **збираюся** — I'm going to
@@ -85,20 +88,24 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 ### Common Patterns
 
 **Strong intention:**
+
 - Я **обов'язково** буду там. (I will definitely be there.)
 - Я **вирішив** вчити українську. (I decided to learn Ukrainian.)
 - Я **обіцяю** допомогти. (I promise to help.)
 
 **Planning:**
+
 - Я **планую** поїхати в Київ. (I plan to go to Kyiv.)
 - Я **збираюся** купити книгу. (I'm going to buy a book.)
 - Я **маю намір** почати завтра. (I intend to start tomorrow.)
 
 **Hoping/dreaming:**
+
 - Я **сподіваюся** побачити тебе. (I hope to see you.)
 - Я **мрію** жити в Україні. (I dream of living in Ukraine.)
 
 **Trying:**
+
 - Я **спробую** зробити це. (I will try to do this.)
 - Я **постараюся** прийти вчасно. (I'll try my best to come on time.)
 
@@ -109,6 +116,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 > [!observe] Pattern Discovery
 >
 > Notice the pattern with "next":
+>
 > - наступного **тижня** (next week)
 > - наступного **місяця** (next month)
 > - наступного **року** (next year)
@@ -117,31 +125,34 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 
 ### Timeline
 
-| When? | Ukrainian | Example |
-|-------|-----------|---------|
-| Tomorrow | завтра | Завтра я буду працювати. |
-| Day after tomorrow | післязавтра | Післязавтра ми поїдемо. |
-| Soon | скоро | Скоро буде весна. |
-| Later | пізніше | Пізніше я подзвоню. |
-| Then/afterwards | потім | Потім ми будемо обідати. |
-| Eventually | згодом | Згодом він зрозуміє. |
-| Next week | наступного тижня | Наступного тижня я починаю курс. |
-| Next month | наступного місяця | Наступного місяця вона приїде. |
-| Next year | наступного року | Наступного року ми одружимося. |
+| When?              | Ukrainian         | Example                          |
+| ------------------ | ----------------- | -------------------------------- |
+| Tomorrow           | завтра            | Завтра я буду працювати.         |
+| Day after tomorrow | післязавтра       | Післязавтра ми поїдемо.          |
+| Soon               | скоро             | Скоро буде весна.                |
+| Later              | пізніше           | Пізніше я подзвоню.              |
+| Then/afterwards    | потім             | Потім ми будемо обідати.         |
+| Eventually         | згодом            | Згодом він зрозуміє.             |
+| Next week          | наступного тижня  | Наступного тижня я починаю курс. |
+| Next month         | наступного місяця | Наступного місяця вона приїде.   |
+| Next year          | наступного року   | Наступного року ми одружимося.   |
 
 ---
 
 ## Useful Adverbs
 
 **вже** (already) — something happened or will happen sooner than expected:
+
 - Я **вже** вирішив. (I have already decided.)
 - Завтра він **вже** буде тут. (Tomorrow he will already be here.)
 
 **ще** (still/yet) — something continues or hasn't happened:
+
 - Я **ще** не знаю. (I don't know yet.)
 - Вона **ще** буде працювати. (She will still be working.)
 
 **ніколи** (never) — negation of future:
+
 - Я **ніколи** не забуду. (I will never forget.)
 - Він **ніколи** не запізнюється. (He is never late.)
 
@@ -216,6 +227,7 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 > 🌍 **Making Appointments**
 >
 > When scheduling in Ukrainian:
+>
 > - "Я буду о третій" = I'll be there at three
 > - "Зателефоную пізніше" = I'll call later
 > - "Побачимось завтра!" = See you tomorrow!
@@ -241,14 +253,14 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 
 ### Швидка довідка (Quick Reference)
 
-| Особа | Дієслово "бути" | Приклад |
-|-------|-----------------|---------|
-| я | буду | Я буду читати книгу. |
-| ти | будеш | Ти будеш працювати завтра? |
-| він/вона | буде | Вона буде вивчати українську. |
-| ми | будемо | Ми будемо готувати вечерю. |
-| ви | будете | Що ви будете робити? |
-| вони | будуть | Вони будуть грати у футбол. |
+| Особа    | Дієслово "бути" | Приклад                       |
+| -------- | --------------- | ----------------------------- |
+| я        | буду            | Я буду читати книгу.          |
+| ти       | будеш           | Ти будеш працювати завтра?    |
+| він/вона | буде            | Вона буде вивчати українську. |
+| ми       | будемо          | Ми будемо готувати вечерю.    |
+| ви       | будете          | Що ви будете робити?          |
+| вони     | будуть          | Вони будуть грати у футбол.   |
 
 **Приклади (Examples):**
 
@@ -268,30 +280,52 @@ Ukrainian uses **буду** (future of "to be") + infinitive to form the compoun
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| завтра | /ˈzɑvtrɑ/ | tomorrow | adv | - | - |
-| післязавтра | /pisʲlʲɑˈzɑvtrɑ/ | day after tomorrow | adv | - | - |
-| наступного тижня | /nɑˈstupnɔɦɔ ˈtɪʒnʲɑ/ | next week | phrase | - | genitive |
-| наступного місяця | /nɑˈstupnɔɦɔ ˈmisʲɑt͡sʲɑ/ | next month | phrase | - | genitive |
-| наступного року | /nɑˈstupnɔɦɔ ˈrɔku/ | next year | phrase | - | genitive |
-| скоро | /ˈskɔrɔ/ | soon | adv | - | - |
-| пізніше | /pizˈnʲiʃe/ | later | adv | - | comparative |
-| потім | /ˈpɔtim/ | then, afterwards | adv | - | - |
-| згодом | /ˈzɦɔdɔm/ | eventually, later | adv | - | - |
-| буду | /ˈbudu/ | I will be | verb | - | future of бути |
-| збираюся | /zbɪˈrɑjusʲɑ/ | I am going to | verb | - | reflexive |
-| планую | /plɑˈnuju/ | I plan | verb | - | Class I |
-| хочу | /ˈxɔt͡ʃu/ | I want | verb | - | irregular |
-| маю намір | /ˈmɑju ˈnɑmir/ | I intend | phrase | - | - |
-| сподіваюся | /spɔdʲiˈvɑjusʲɑ/ | I hope | verb | - | reflexive |
-| обіцяю | /ɔbiˈt͡sʲɑju/ | I promise | verb | - | Class I |
-| спробую | /ˈsprɔbuju/ | I will try | verb | - | perfective |
-| постараюся | /pɔstɑˈrɑjusʲɑ/ | I will try (my best) | verb | - | perfective, reflexive |
-| мрію | /ˈmriju/ | I dream | verb | - | Class I |
-| думаю | /ˈdumɑju/ | I think | verb | - | Class I |
-| вирішив | /ˈvɪriʃɪv/ | I decided (m) | verb | - | past, perfective |
-| вже | /vʒɛ/ | already | adv | - | - |
-| обов'язково | /ɔbɔvjɑzˈkɔvɔ/ | definitely, must | adv | - | - |
-
----
+| Word           | IPA                | English               | POS  | Gender | Note |
+| -------------- | ------------------ | --------------------- | ---- | ------ | ---- |
+| більше         | /ˈbilʲʃɛ/          | more                  | adv  | -      |      |
+| весна          | /vɛsˈnɑ/           | spring                | noun | ж      |      |
+| вирішити       | /vɪˈriʃɪtɪ/        | to decide             | verb | -      |      |
+| впевненість    | /ˈvpɛvnɛnisʲtʲ/    | certainty             | noun | ж      |      |
+| вчасно         | /ˈvt͡ʃɑsnɔ/         | on time               | adv  | -      |      |
+| відвідати      | /vidˈvidɑtɪ/       | to visit              | verb | -      |      |
+| довідка        | /ˈdɔvidkɑ/         | reference/certificate | noun | ж      |      |
+| допомогти      | /dɔpɔmɔɦˈtɪ/       | to help               | verb | -      |      |
+| дієслово       | /dijɛˈslɔvɔ/       | verb                  | noun | с      |      |
+| запізнюватися  | /zɑˈpiznʲuvɑtɪsʲɑ/ | to be late            | verb | -      |      |
+| зателефонувати | /zɑtɛlɛfɔnuˈvɑtɪ/  | to call (phone)       | verb | -      |      |
+| збиратися      | /zbɪˈrɑtɪsʲɑ/      | to gather/intend      | verb | -      |      |
+| згодом         | /ˈzɦɔdɔm/          | eventually            | adv  | -      |      |
+| змогти         | /zmɔɦˈtɪ/          | to be able            | verb | -      |      |
+| зрозуміти      | /zrɔzuˈmitɪ/       | to understand         | verb | -      |      |
+| інфінітив      | /infiniˈtɪv/       | infinitive            | noun | ч      |      |
+| котрий         | /kɔtˈrɪj/          | which                 | adj  | ч      |      |
+| курс           | /kurs/             | course                | noun | ч      |      |
+| кіно           | /kiˈnɔ/            | cinema                | noun | с      |      |
+| майбутнє       | /mɑjˈbutnʲɛ/       | future                | noun | с      |      |
+| мрія           | /ˈmrijɑ/           | dream                 | noun | ж      |      |
+| мріяти         | /ˈmrijɑtɪ/         | to dream              | verb | -      |      |
+| надія          | /nɑˈdijɑ/          | hope                  | noun | ж      |      |
+| намір          | /ˈnɑmir/           | intention             | noun | ч      |      |
+| обіцяти        | /ɔbiˈt͡sʲɑtɪ/       | to promise            | verb | -      |      |
+| одружитися     | /ɔdruˈʒɪtɪsʲɑ/     | to marry              | verb | -      |      |
+| особа          | /ɔˈsɔbɑ/           | person                | noun | ж      |      |
+| планування     | /plɑnuˈvɑnʲːɑ/     | planning              | noun | с      |      |
+| планувати      | /plɑnuˈvɑtɪ/       | to plan               | verb | -      |      |
+| побачити       | /pɔˈbɑt͡ʃɪtɪ/       | to see                | verb | -      |      |
+| побачитися     | /pɔˈbɑt͡ʃɪtɪsʲɑ/    | to see each other     | verb | -      |      |
+| погода         | /pɔˈhɔdɑ/          | weather               | noun | ж      |      |
+| подзвонити     | /pɔdzvɔˈnɪtɪ/      | to call               | verb | -      |      |
+| постаратися    | /pɔstɑˈrɑtɪsʲɑ/    | to try hard           | verb | -      |      |
+| почати         | /pɔˈt͡ʃɑtɪ/         | to start              | verb | -      |      |
+| прибирати      | /prɪbɪˈrɑtɪ/       | to clean              | verb | -      |      |
+| приклад        | /ˈprɪklɑd/         | example               | noun | ч      |      |
+| прислівник     | /prɪˈslivnɪk/      | adverb                | noun | ч      |      |
+| пізніше        | /pizˈniʃɛ/         | later                 | adv  | -      |      |
+| післязавтра    | /pislʲɑˈzɑwtrɑ/    | day after tomorrow    | adv  | -      |      |
+| рівень         | /ˈrivɛnʲ/          | level                 | noun | ч      |      |
+| святкувати     | /svjɑtkuˈvɑtɪ/     | to celebrate          | verb | -      |      |
+| скоро          | /ˈskɔrɔ/           | soon                  | adv  | -      |      |
+| сподіватися    | /spɔdiˈvɑtɪsʲɑ/    | to hope               | verb | -      |      |
+| стати          | /ˈstɑtɪ/           | to become             | verb | -      |      |
+| японський      | /jɑˈpɔnsʲkɪj/      | Japanese              | adj  | ч      |      |
+| японія         | /jɑˈpɔnijɑ/        | Japan                 | name | ж      |      |

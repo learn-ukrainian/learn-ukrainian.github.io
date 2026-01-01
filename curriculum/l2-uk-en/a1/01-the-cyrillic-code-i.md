@@ -1,13 +1,12 @@
 ---
-
 module: a1-01
-title: "The Cyrillic Code I"
-subtitle: "Cracking the Ukrainian Alphabet"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "full"
+title: 'The Cyrillic Code I'
+subtitle: 'Cracking the Ukrainian Alphabet'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'full'
 tags:
   - alphabet
   - cyrillic
@@ -18,11 +17,12 @@ grammar:
   - letter recognition
   - pronunciation
 objectives:
-  - "Learner can recognize True Friends (letters that look AND sound like English)"
-  - "Learner can decode False Friends (letters that look familiar but sound different)"
-  - "Learner can read 19 new Cyrillic letters"
-  - "Learner can pronounce basic international words in Ukrainian"
+  - 'Learner can recognize True Friends (letters that look AND sound like English)'
+  - 'Learner can decode False Friends (letters that look familiar but sound different)'
+  - 'Learner can read 19 new Cyrillic letters'
+  - 'Learner can pronounce basic international words in Ukrainian'
 vocabulary_count: 35
+vocab_count: 40
 ---
 
 # The Cyrillic Code I
@@ -39,15 +39,15 @@ Think of learning Cyrillic like learning to read again. But this time, it only t
 
 These letters look and sound almost identical to their English counterparts. When you see them, read them exactly as you would in English:
 
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **А а** | /ɑ/ like "father" | м**а**м**а** | mama |
-| **Е е** | /ɛ/ like "bet" | м**е**тро | metro |
-| **І і** | /i/ like "meet" | п**і**ца | pizza |
-| **О о** | /ɔ/ like "soft" | д**о**ктор | doctor |
-| **К к** | /k/ like "kite" | бан**к** | bank |
-| **М м** | /m/ like "mom" | **м**узика | music |
-| **Т т** | /t/ like "top" | **т**урист | tourist |
+| Letter  | Sound             | Example      | English |
+| ------- | ----------------- | ------------ | ------- |
+| **А а** | /ɑ/ like "father" | м**а**м**а** | mama    |
+| **Е е** | /ɛ/ like "bet"    | м**е**тро    | metro   |
+| **І і** | /i/ like "meet"   | п**і**ца     | pizza   |
+| **О о** | /ɔ/ like "soft"   | д**о**ктор   | doctor  |
+| **К к** | /k/ like "kite"   | бан**к**     | bank    |
+| **М м** | /m/ like "mom"    | **м**узика   | music   |
+| **Т т** | /t/ like "top"    | **т**урист   | tourist |
 
 These are your **True Friends**. When you see А, О, Е, І, К, М, Т, read them just like English. The word **метро** (metro) uses only True Friends, so you can read it right now: M-E-T-R-O. Wait, what about that Р? That's where things get interesting.
 
@@ -59,14 +59,14 @@ These are your **True Friends**. When you see А, О, Е, І, К, М, Т, read t
 
 These letters LOOK like English letters but make COMPLETELY different sounds. This is where English speakers get tripped up:
 
-| Letter | Looks Like | Actually Says | Example | English |
-|--------|------------|---------------|---------|---------|
-| **В в** | B | /v/ like "van" | ка**в**а | coffee |
-| **Н н** | H | /n/ like "no" | ба**н**к | bank |
-| **Р р** | P | /r/ like "red" (rolled) | **р**адіо | radio |
-| **С с** | C | /s/ like "sun" | **с**уп | soup |
-| **У у** | Y | /u/ like "moon" | с**у**п | soup |
-| **Х х** | X | /x/ like Scottish "loch" | **х**окей | hockey |
+| Letter  | Looks Like | Actually Says            | Example   | English |
+| ------- | ---------- | ------------------------ | --------- | ------- |
+| **В в** | B          | /v/ like "van"           | ка**в**а  | coffee  |
+| **Н н** | H          | /n/ like "no"            | ба**н**к  | bank    |
+| **Р р** | P          | /r/ like "red" (rolled)  | **р**адіо | radio   |
+| **С с** | C          | /s/ like "sun"           | **с**уп   | soup    |
+| **У у** | Y          | /u/ like "moon"          | с**у**п   | soup    |
+| **Х х** | X          | /x/ like Scottish "loch" | **х**окей | hockey  |
 
 The word **банк** (bank) has the False Friend **Н** (sounds like N, not H). So it's pronounced "bank", not "bahk"!
 
@@ -81,14 +81,14 @@ Look at **радіо** (radio): the **Р** looks like a P, but it's actually an 
 
 These letters are completely new to English speakers. But don't worry. They represent sounds you can make:
 
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **Б б** | /b/ like "ball" | **б**анан | banana |
-| **Д д** | /d/ like "dog" | **д**октор | doctor |
-| **З з** | /z/ like "zoo" | ва**з**а | vase |
-| **Л л** | /l/ like "love" | **л**имон | lemon |
-| **П п** | /p/ like "pet" | **п**арк | park |
-| **Ф ф** | /f/ like "fun" | **ф**ото | photo |
+| Letter  | Sound           | Example    | English |
+| ------- | --------------- | ---------- | ------- |
+| **Б б** | /b/ like "ball" | **б**анан  | banana  |
+| **Д д** | /d/ like "dog"  | **д**октор | doctor  |
+| **З з** | /z/ like "zoo"  | ва**з**а   | vase    |
+| **Л л** | /l/ like "love" | **л**имон  | lemon   |
+| **П п** | /p/ like "pet"  | **п**арк   | park    |
+| **Ф ф** | /f/ like "fun"  | **ф**ото   | photo   |
 
 The word **футбол** (football) uses several new letters: **Ф** (f), **У** (u, False Friend!), **Т** (t, True Friend), **Б** (b), **О** (o, True Friend), **Л** (l). Put it together: f-u-t-b-o-l. Football!
 
@@ -113,15 +113,15 @@ Many words in Ukrainian are international. They're borrowed from Latin, Greek, o
 
 ### Mini-Dialogue 1: At the Metro Station
 
-— Це метро? *(Tse metro?)* — Is this the metro?
-— Так, метро. *(Tak, metro.)* — Yes, the metro.
+— Це метро? _(Tse metro?)_ — Is this the metro?
+— Так, метро. _(Tak, metro.)_ — Yes, the metro.
 
 Notice how **метро** looks almost English? That's because it IS almost English. Just written in Cyrillic!
 
 ### Mini-Dialogue 2: At a Café
 
-— Кава? *(Kava?)* — Coffee?
-— Так, кава. *(Tak, kava.)* — Yes, coffee.
+— Кава? _(Kava?)_ — Coffee?
+— Так, кава. _(Tak, kava.)_ — Yes, coffee.
 
 The word **кава** comes from the same root as English "coffee" but took a different path through Turkish and Arabic. In Ukrainian, it sounds like "kava."
 
@@ -189,40 +189,44 @@ You can now read **35 international words** in Ukrainian. The key insight: many 
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| мама | /ˈmɑmɑ/ | mom | noun | f | - |
-| тато | /ˈtɑtɔ/ | dad | noun | m | - |
-| банк | /bɑnk/ | bank | noun | m | - |
-| парк | /pɑrk/ | park | noun | m | - |
-| кафе | /kɑˈfɛ/ | café | noun | n | indecl. |
-| метро | /mɛˈtrɔ/ | metro | noun | n | indecl. |
-| таксі | /tɑkˈsi/ | taxi | noun | n | indecl. |
-| радіо | /ˈrɑdiɔ/ | radio | noun | n | indecl. |
-| піца | /ˈpitsɑ/ | pizza | noun | f | - |
-| суп | /sup/ | soup | noun | m | - |
-| салат | /sɑˈlɑt/ | salad | noun | m | - |
-| лимон | /lɪˈmɔn/ | lemon | noun | m | - |
-| банан | /bɑˈnɑn/ | banana | noun | m | - |
-| хокей | /xɔˈkɛj/ | hockey | noun | m | - |
-| футбол | /futˈbɔl/ | football | noun | m | - |
-| студент | /stuˈdɛnt/ | student | noun | m | - |
-| турист | /tuˈrɪst/ | tourist | noun | m | - |
-| музика | /ˈmuzɪkɑ/ | music | noun | f | - |
-| фото | /ˈfɔtɔ/ | photo | noun | n | indecl. |
-| відео | /ˈvidɛɔ/ | video | noun | n | indecl. |
-| бар | /bɑr/ | bar | noun | m | - |
-| ресторан | /rɛstɔˈrɑn/ | restaurant | noun | m | - |
-| доктор | /ˈdɔktɔr/ | doctor | noun | m | - |
-| актор | /ˈɑktɔr/ | actor | noun | m | - |
-| опера | /ˈɔpɛrɑ/ | opera | noun | f | - |
-| балет | /bɑˈlɛt/ | ballet | noun | m | - |
-| паспорт | /ˈpɑspɔrt/ | passport | noun | m | - |
-| віза | /ˈvizɑ/ | visa | noun | f | - |
-| карта | /ˈkɑrtɑ/ | card/map | noun | f | - |
-| комета | /kɔˈmɛtɑ/ | comet | noun | f | - |
-| ракета | /rɑˈkɛtɑ/ | rocket | noun | f | - |
-| телефон | /tɛlɛˈfɔn/ | telephone | noun | m | - |
-| інтернет | /intɛrˈnɛt/ | internet | noun | m | - |
-| какао | /kɑˈkɑɔ/ | cocoa | noun | n | indecl. |
-| кава | /ˈkɑvɑ/ | coffee | noun | f | - |
+| Word     | IPA         | English    | POS   | Gender | Note |
+| -------- | ----------- | ---------- | ----- | ------ | ---- |
+| актор    | /ɑkˈtɔr/    | actor      | noun  | ч      |      |
+| балет    | /bɑˈlɛt/    | ballet     | noun  | ч      |      |
+| банан    | /bɑˈnɑn/    | banana     | noun  | ч      |      |
+| банк     | /bɑnk/      | bank       | noun  | ч      |      |
+| бар      | /bɑr/       | bar        | name  | ч      |      |
+| бути     | /ˈbutɪ/     | to be      | verb  | -      |      |
+| ваза     | /ˈvɑzɑ/     | vase       | noun  | ж      |      |
+| відео    | /ˈvidɛɔ/    | video      | noun  | с      |      |
+| віза     | /ˈvizɑ/     | visa       | noun  | ж      |      |
+| доктор   | /ˈdɔktɔr/   | doctor     | noun  | ч      |      |
+| кава     | /ˈkɑwɑ/     | coffee     | noun  | ж      |      |
+| какао    | /kɑˈkɑɔ/    | cocoa      | noun  | с      |      |
+| карта    | /ˈkɑrtɑ/    | map, card  | noun  | ж      |      |
+| кафе     | /kɑˈfɛ/     | café       | noun  | с      |      |
+| київ     | /ˈkɪjiw/    | Kyiv       | name  | ч      |      |
+| комета   | /kɔˈmɛtɑ/   | comet      | noun  | ж      |      |
+| лимон    | /lɪˈmɔn/    | lemon      | noun  | ч      |      |
+| мама     | /ˈmɑmɑ/     | mom        | noun  | ж      |      |
+| метро    | /mɛˈtrɔ/    | metro      | noun  | с      |      |
+| музика   | /ˈmuzɪkɑ/   | music      | noun  | ж      |      |
+| опера    | /ˈɔpɛrɑ/    | opera      | noun  | ж      |      |
+| парк     | /pɑrk/      | park       | noun  | ч      |      |
+| паспорт  | /ˈpɑspɔrt/  | passport   | noun  | ч      |      |
+| піца     | /ˈpitsɑ/    | pizza      | noun  | ж      |      |
+| радіо    | /ˈrɑdʲiɔ/   | radio      | noun  | с      |      |
+| ракета   | /rɑˈkɛtɑ/   | rocket     | noun  | ж      |      |
+| ресторан | /rɛstɔˈrɑn/ | restaurant | noun  | ч      |      |
+| салат    | /sɑˈlɑt/    | salad      | noun  | ч      |      |
+| сталкер  | /ˈstɑlkɛr/  | stalker    | noun  | ч      |      |
+| суп      | /sup/       | soup       | noun  | ч      |      |
+| так      | /tɑk/       | yes        | other | -      |      |
+| таксі    | /tɑkˈsi/    | taxi       | name  | с      |      |
+| телефон  | /tɛlɛˈfɔn/  | telephone  | noun  | ч      |      |
+| турист   | /tʊˈrɪst/   | tourist    | noun  | ч      |      |
+| фото     | /ˈfɔtɔ/     | photo      | noun  | с      |      |
+| футбол   | /fʊdˈbɔl/   | football   | noun  | ч      |      |
+| хокей    | /xɔˈkɛj/    | hockey     | noun  | ч      |      |
+| це       | /t͡sɛ/       | this is    | pron  | с      |      |
+| інтернет | /intɛrˈnɛt/ | internet   | noun  | ч      |      |

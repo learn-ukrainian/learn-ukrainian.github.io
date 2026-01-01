@@ -19,6 +19,7 @@ objectives:
   - "Learner knows speaking root families"
   - "Learner can recognize word connections"
 vocabulary_count: 25
+vocab_count: 41
 ---
 
 ## Warm-up
@@ -174,6 +175,8 @@ Related to internal perception:
 | думка | thought |
 | роздуми | reflections |
 
+Я люблю **думати**. (I like to think.)
+
 > [!tip] Зв'язок Коренів
 > **бач-** (бачити) — сприйняття очима
 > **слух-** (слухати) — сприйняття вухами
@@ -276,76 +279,4 @@ These words look similar but mean different things. Бачення is vision or 
 
 ✅ Його художнє бачення цікаве. (His artistic vision is interesting.)
 
----
-
-# Summary
-
-**Корінь бач-:**
-- бачити
-- бачення
-- побачення
-- передбачення
-
-**Корінь слух-/чут-:**
-- слухати
-- слух
-- слухач
-- чути
-- почуття
-- відчуття
-
-**Корінь говор-/мов-:**
-- говорити
-- розмова
-- мова
-- мовлення
-- мовчати
-- мовчання
-
-Ці корені допомагають розуміти нові слова автоматично!
-
----
-
-> 💡 **Мова як дерево**
->
-> «Слово — не горобець, вилетить — не спіймаєш.» (Корінь слова — ключ до значення!)
->
-> *Translation: "A word is not a sparrow — once spoken, you can't take it back."*
-
-> 🇺🇦 **Родини коренів — ключ до розуміння**
->
-> Коли ви знаєте один корінь, ви знаєте десятки слів:
-> - **уч-**: вчити, учень, учитель, навчання, вивчати
-> - **люб-**: любити, любов, любий, полюбити
-> - **пис-**: писати, письмо, письменник, записати
->
-> Шукайте корені у нових словах — це найкращий спосіб розширити словник!
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [25 COMMON UKRAINIAN PHRASES EVERY LEARNER MUST KNOW...](https://www.youtube.com/watch?v=aJ2Ldu2TaKA) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| слух | /slux/ | hearing | noun | m | sense |
-| послух | /ˈpɔslux/ | obedience | noun | m | abstract |
-| почуття | /pɔˈt͡ʃutʲɑ/ | feeling | noun | n | emotion |
-| відчуття | /ʋidˈt͡ʃutʲɑ/ | sensation | noun | n | perception |
-| розмова | /rɔzˈmɔʋɑ/ | conversation | noun | f | event |
-| мовлення | /ˈmɔʋlɛnʲɑ/ | speech | noun | n | activity |
-| мовець | /mɔˈʋɛt͡sʲ/ | speaker | noun | m | person |
-| мовчати | /mɔʋˈt͡ʃɑtɪ/ | to be silent | verb | — | speech |
-| мовчання | /mɔʋˈt͡ʃɑnʲɑ/ | silence | noun | n | state |
-| мовчазний | /mɔʋˈt͡ʃɑznɪj/ | silent (person) | adj | m | quality |
-| роздуми | /rɔzˈdumɪ/ | reflections | noun | pl | abstract |
-| обдумати | /ɔbˈdumɑtɪ/ | to think over | verb | — | perfective |
-| корінь | /ˈkɔrinʲ/ | root (linguistic) | noun | m | grammar term |
-| словотворення | /slɔʋɔˈtʋɔrɛnʲːɑ/ | word formation | noun | n | grammar term |
+##

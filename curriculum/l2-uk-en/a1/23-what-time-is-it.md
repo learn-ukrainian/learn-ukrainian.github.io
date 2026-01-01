@@ -1,13 +1,12 @@
 ---
-
 module: a1-23
-title: "What Time Is It?"
-subtitle: "Telling Time, Days, and Months"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'What Time Is It?'
+subtitle: 'Telling Time, Days, and Months'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - time
   - clock
@@ -20,11 +19,12 @@ grammar:
   - Days of the week
   - Months of the year
 objectives:
-  - "Learner can ask and tell the time"
-  - "Learner can name all days of the week"
-  - "Learner can name all months of the year"
-  - "Learner can use time prepositions correctly"
+  - 'Learner can ask and tell the time'
+  - 'Learner can name all days of the week'
+  - 'Learner can name all months of the year'
+  - 'Learner can use time prepositions correctly'
 vocabulary_count: 40
+vocab_count: 62
 ---
 
 # What Time Is It?
@@ -44,6 +44,7 @@ vocabulary_count: 40
 > [!observe] Pattern Discovery
 >
 > Look at how Ukrainians tell time:
+>
 > - **Котра година?** — What time is it? (lit. "Which hour?")
 > - **Перша година.** — One o'clock. (lit. "First hour.")
 > - **Друга година.** — Two o'clock. (lit. "Second hour.")
@@ -52,20 +53,20 @@ vocabulary_count: 40
 
 ### Hours on the Clock
 
-| Time | Ukrainian | Literal Meaning |
-|------|-----------|-----------------|
-| 1:00 | Перша година | First hour |
-| 2:00 | Друга година | Second hour |
-| 3:00 | Третя година | Third hour |
-| 4:00 | Четверта година | Fourth hour |
-| 5:00 | П'ята година | Fifth hour |
-| 6:00 | Шоста година | Sixth hour |
-| 7:00 | Сьома година | Seventh hour |
-| 8:00 | Восьма година | Eighth hour |
-| 9:00 | Дев'ята година | Ninth hour |
-| 10:00 | Десята година | Tenth hour |
-| 11:00 | Одинадцята година | Eleventh hour |
-| 12:00 | Дванадцята година | Twelfth hour |
+| Time  | Ukrainian         | Literal Meaning |
+| ----- | ----------------- | --------------- |
+| 1:00  | Перша година      | First hour      |
+| 2:00  | Друга година      | Second hour     |
+| 3:00  | Третя година      | Third hour      |
+| 4:00  | Четверта година   | Fourth hour     |
+| 5:00  | П'ята година      | Fifth hour      |
+| 6:00  | Шоста година      | Sixth hour      |
+| 7:00  | Сьома година      | Seventh hour    |
+| 8:00  | Восьма година     | Eighth hour     |
+| 9:00  | Дев'ята година    | Ninth hour      |
+| 10:00 | Десята година     | Tenth hour      |
+| 11:00 | Одинадцята година | Eleventh hour   |
+| 12:00 | Дванадцята година | Twelfth hour    |
 
 ### Half and Quarter Hours
 
@@ -77,21 +78,23 @@ vocabulary_count: 40
 >
 > The hour after the current one is used!
 
-| Time | Ukrainian | Explanation |
-|------|-----------|-------------|
-| 1:15 | Чверть на другу | Quarter toward 2:00 |
-| 1:30 | Пів на другу | Half toward 2:00 |
+| Time | Ukrainian            | Explanation            |
+| ---- | -------------------- | ---------------------- |
+| 1:15 | Чверть на другу      | Quarter toward 2:00    |
+| 1:30 | Пів на другу         | Half toward 2:00       |
 | 1:45 | За п'ятнадцять друга | 15 minutes before 2:00 |
-| 2:15 | Чверть на третю | Quarter toward 3:00 |
-| 2:30 | Пів на третю | Half toward 3:00 |
+| 2:15 | Чверть на третю      | Quarter toward 3:00    |
+| 2:30 | Пів на третю         | Half toward 3:00       |
 
 ### Specific Minutes
 
 For exact minutes, use the 24-hour format in formal contexts:
+
 - **14:35** — Чотирнадцять тридцять п'ять
 - **9:20** — Дев'ять двадцять
 
 Or in conversation:
+
 - **О третій двадцять** — At 3:20
 - **О п'ятій сорок п'ять** — At 5:45
 
@@ -103,17 +106,18 @@ Or in conversation:
 >
 > The Ukrainian week starts on **Monday** (понеділок), not Sunday. This is the European standard.
 
-| Day | Ukrainian | Origin |
-|-----|-----------|--------|
-| Monday | понеділок | "after Sunday" (по + неділя) |
-| Tuesday | вівторок | "second day" |
-| Wednesday | середа | "middle" |
-| Thursday | четвер | "fourth" |
-| Friday | п'ятниця | "fifth" |
-| Saturday | субота | from Hebrew "Sabbath" |
-| Sunday | неділя | "no work" (не + діло) |
+| Day       | Ukrainian | Origin                       |
+| --------- | --------- | ---------------------------- |
+| Monday    | понеділок | "after Sunday" (по + неділя) |
+| Tuesday   | вівторок  | "second day"                 |
+| Wednesday | середа    | "middle"                     |
+| Thursday  | четвер    | "fourth"                     |
+| Friday    | п'ятниця  | "fifth"                      |
+| Saturday  | субота    | from Hebrew "Sabbath"        |
+| Sunday    | неділя    | "no work" (не + діло)        |
 
 **Useful phrases:**
+
 - **робочий день** — workday (Monday-Friday)
 - **вихідні** — weekend (Saturday-Sunday)
 - **цього тижня** — this week
@@ -127,20 +131,20 @@ Or in conversation:
 >
 > Ukrainian months have beautiful, nature-inspired names! Unlike Latin-based names in English, Ukrainian months describe what happens in nature.
 
-| Month | Ukrainian | Meaning |
-|-------|-----------|---------|
-| January | січень | "cutting" (frost cuts) |
-| February | лютий | "fierce" (fierce frost) |
-| March | березень | "birch" (birch sap flows) |
-| April | квітень | "flowers" (flowers bloom) |
-| May | травень | "grass" (grass grows) |
-| June | червень | "red" (berries ripen) |
-| July | липень | "linden" (linden blooms) |
-| August | серпень | "sickle" (harvest time) |
-| September | вересень | "heather" (heather blooms) |
-| October | жовтень | "yellow" (leaves turn) |
-| November | листопад | "leaf fall" |
-| December | грудень | "frozen lumps" (frozen ground) |
+| Month     | Ukrainian | Meaning                        |
+| --------- | --------- | ------------------------------ |
+| January   | січень    | "cutting" (frost cuts)         |
+| February  | лютий     | "fierce" (fierce frost)        |
+| March     | березень  | "birch" (birch sap flows)      |
+| April     | квітень   | "flowers" (flowers bloom)      |
+| May       | травень   | "grass" (grass grows)          |
+| June      | червень   | "red" (berries ripen)          |
+| July      | липень    | "linden" (linden blooms)       |
+| August    | серпень   | "sickle" (harvest time)        |
+| September | вересень  | "heather" (heather blooms)     |
+| October   | жовтень   | "yellow" (leaves turn)         |
+| November  | листопад  | "leaf fall"                    |
+| December  | грудень   | "frozen lumps" (frozen ground) |
 
 ---
 
@@ -156,13 +160,13 @@ Or in conversation:
 
 ### Examples with Prepositions
 
-| Preposition | Example | Meaning |
-|-------------|---------|---------|
-| о/об | Зустріч о третій. | Meeting at three. |
-| до | Працюю до шостої. | I work until six. |
-| після | Після роботи я відпочиваю. | After work I rest. |
-| з...до | Магазин працює з дев'ятої до восьмої. | The store is open from 9 to 8. |
-| протягом | Протягом тижня я працюю. | During the week I work. |
+| Preposition | Example                               | Meaning                        |
+| ----------- | ------------------------------------- | ------------------------------ |
+| о/об        | Зустріч о третій.                     | Meeting at three.              |
+| до          | Працюю до шостої.                     | I work until six.              |
+| після       | Після роботи я відпочиваю.            | After work I rest.             |
+| з...до      | Магазин працює з дев'ятої до восьмої. | The store is open from 9 to 8. |
+| протягом    | Протягом тижня я працюю.              | During the week I work.        |
 
 ---
 
@@ -297,45 +301,62 @@ Or in conversation:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| година | /ɦɔˈdɪnɑ/ | hour | noun | f | - |
-| хвилина | /xvɪˈlɪnɑ/ | minute | noun | f | - |
-| секунда | /sɛˈkundɑ/ | second | noun | f | - |
-| пів | /piv/ | half | noun | - | indeclinable |
-| чверть | /t͡ʃvɛrtʲ/ | quarter | noun | f | - |
-| рано | /ˈrɑnɔ/ | early | adv | - | - |
-| пізно | /ˈpiznɔ/ | late | adv | - | - |
-| вчасно | /ˈvt͡ʃɑsnɔ/ | on time | adv | - | - |
-| понеділок | /pɔnɛˈdilɔk/ | Monday | noun | m | - |
-| вівторок | /vivˈtɔrɔk/ | Tuesday | noun | m | - |
-| середа | /sɛrɛˈdɑ/ | Wednesday | noun | f | - |
-| четвер | /t͡ʃɛtˈvɛr/ | Thursday | noun | m | - |
-| п'ятниця | /ˈpjɑtnɪt͡sʲɑ/ | Friday | noun | f | - |
-| субота | /suˈbɔtɑ/ | Saturday | noun | f | - |
-| неділя | /nɛˈdilʲɑ/ | Sunday | noun | f | - |
-| тиждень | /ˈtɪʒdɛnʲ/ | week | noun | m | - |
-| вихідні | /vɪxidˈni/ | weekend | noun | pl | - |
-| робочий день | /rɔˈbɔt͡ʃɪj dɛnʲ/ | workday | phrase | m | - |
-| січень | /ˈsit͡ʃɛnʲ/ | January | noun | m | - |
-| лютий | /ˈlʲutɪj/ | February | noun | m | - |
-| березень | /ˈbɛrɛzɛnʲ/ | March | noun | m | - |
-| квітень | /ˈkvitɛnʲ/ | April | noun | m | - |
-| травень | /ˈtrɑvɛnʲ/ | May | noun | m | - |
-| червень | /ˈt͡ʃɛrvɛnʲ/ | June | noun | m | - |
-| липень | /ˈlɪpɛnʲ/ | July | noun | m | - |
-| серпень | /ˈsɛrpɛnʲ/ | August | noun | m | - |
-| вересень | /ˈvɛrɛsɛnʲ/ | September | noun | m | - |
-| жовтень | /ˈʒɔvtɛnʲ/ | October | noun | m | - |
-| листопад | /lɪstɔˈpɑd/ | November | noun | m | lit. "leaf fall" |
-| грудень | /ˈɦrudɛnʲ/ | December | noun | m | - |
-| сьогодні | /sʲɔˈɦɔdɲi/ | today | adv | - | - |
-| зараз | /ˈzɑrɑz/ | now | adv | - | - |
-| о котрій | /ɔ kɔtˈrij/ | at what time | phrase | - | - |
-| о | /ɔ/ | at (time) | prep | - | об before vowels |
-| об | /ɔb/ | at (before vowel) | prep | - | variant of о |
-| після | /ˈpislʲɑ/ | after | prep | - | + genitive |
-| з...до | /z...dɔ/ | from...to | phrase | - | + genitive |
-| протягом | /prɔˈtʲɑɦɔm/ | during, for | prep | - | + genitive |
-
----
+| Word          | IPA                | English           | POS   | Gender | Note |
+| ------------- | ------------------ | ----------------- | ----- | ------ | ---- |
+| березень      | /ˈbɛrɛzɛnʲ/        | March             | noun  | ч      |      |
+| вересень      | /ˈvɛrɛsɛnʲ/        | September         | noun  | ч      |      |
+| вечір         | /ˈvɛt͡ʃir/          | evening           | noun  | ч      |      |
+| вівторок      | /viwˈtɔrɔk/        | Tuesday           | noun  | ч      |      |
+| відкриватися  | /vidkrɪˈvɑtɪsʲɑ/   | to open           | verb  | -      |      |
+| восьмий       | /ˈvɔsʲmɪj/         | eighth            | adj   | ч      |      |
+| грудень       | /ˈɦrudɛnʲ/         | December          | noun  | ч      |      |
+| дванадцятий   | /dvɑˈnɑdt͡sʲɑtɪj/   | twelfth           | adj   | ч      |      |
+| десятий       | /dɛˈsʲɑtɪj/        | tenth             | adj   | ч      |      |
+| діло          | /ˈdilɔ/            | affair            | noun  | с      |      |
+| же            | /ʒɛ/               | (particle)        | other | -      |      |
+| жовтень       | /ˈʒɔwtɛnʲ/         | October           | noun  | ч      |      |
+| запізнитися   | /zɑpizˈnɪtɪsʲɑ/    | to be late (perf) | verb  | -      |      |
+| запізнюватися | /zɑˈpiznʲuvɑtɪsʲɑ/ | to be late (imp)  | verb  | -      |      |
+| зустрітися    | /zustˈritɪsʲɑ/     | to meet           | verb  | -      |      |
+| квітень       | /ˈkvitɛnʲ/         | April             | noun  | ч      |      |
+| квіти         | /ˈkvitɪ/           | flowers           | noun  | ч      |      |
+| липень        | /ˈlɪpɛnʲ/          | July              | noun  | ч      |      |
+| листопад      | /lɪstɔˈpɑd/        | November          | noun  | ч      |      |
+| лютий         | /ˈlʲutɪj/          | February          | noun  | ч      |      |
+| літо          | /ˈlitɔ/            | summer            | noun  | с      |      |
+| майже         | /ˈmɑjʒɛ/           | almost            | adv   | -      |      |
+| модальний     | /mɔˈdɑlʲnɪj/       | modal             | adj   | ч      |      |
+| назва         | /ˈnɑzvɑ/           | name              | noun  | ж      |      |
+| народження    | /nɑˈrɔdʒɛnʲːɑ/     | birth             | noun  | с      |      |
+| неділя        | /nɛˈdilʲɑ/         | Sunday            | noun  | ж      |      |
+| об            | /ɔb/               | at                | other | -      |      |
+| одинадцятий   | /ɔdɪˈnɑdt͡sʲɑtɪj/   | eleventh          | adj   | ч      |      |
+| одиниця       | /ɔdɪˈnɪt͡sʲɑ/       | unit              | noun  | ж      |      |
+| пів           | /piw/              | half              | noun  | ч      |      |
+| пізно         | /ˈpiznɔ/           | late              | adv   | -      |      |
+| пора          | /pɔˈrɑ/            | time/season       | noun  | ж      |      |
+| починатися    | /pɔt͡ʃɪˈnɑtɪsʲɑ/    | to start          | verb  | -      |      |
+| прийменник    | /prɪjˈmɛnːɪk/      | preposition       | noun  | ч      |      |
+| природний     | /prɪˈrɔdnɪj/       | natural           | adj   | ч      |      |
+| протягом      | /ˈprɔtʲɑɦɔm/       | during            | other | -      |      |
+| рано          | /ˈrɑnɔ/            | early             | adv   | -      |      |
+| робочий       | /rɔˈbɔt͡ʃɪj/        | working           | adj   | ч      |      |
+| різдво        | /rizˈdvɔ/          | Christmas         | noun  | с      |      |
+| свято         | /ˈsvjɑtɔ/          | holiday           | noun  | с      |      |
+| секунда       | /sɛˈkundɑ/         | second            | noun  | ж      |      |
+| середа        | /sɛrɛˈdɑ/          | Wednesday         | noun  | ж      |      |
+| серпень       | /ˈsɛrpɛnʲ/         | August            | noun  | ч      |      |
+| субота        | /suˈbɔtɑ/          | Saturday          | noun  | ж      |      |
+| сьомий        | /ˈsʲɔmɪj/          | seventh           | adj   | ч      |      |
+| січень        | /ˈsit͡ʃɛnʲ/         | January           | noun  | ч      |      |
+| тепло         | /ˈtɛplɔ/           | warm              | adv   | -      |      |
+| травень       | /ˈtrɑvɛnʲ/         | May               | noun  | ч      |      |
+| третій        | /ˈtrɛtij/          | third             | adj   | ч      |      |
+| тривати       | /trɪˈvɑtɪ/         | to last           | verb  | -      |      |
+| холодно       | /ˈxɔlɔdnɔ/         | cold              | adv   | -      |      |
+| цвісти        | /t͡svisˈtɪ/         | to bloom          | verb  | -      |      |
+| чверть        | /t͡ʃvɛrtʲ/          | quarter           | noun  | ж      |      |
+| червень       | /ˈt͡ʃɛrvɛnʲ/        | June              | noun  | ч      |      |
+| четвер        | /t͡ʃɛtˈvɛr/         | Thursday          | noun  | ч      |      |
+| четвертий     | /t͡ʃɛtˈvɛrtɪj/      | fourth            | adj   | ч      |      |
+| шостий        | /ˈʃɔstɪj/          | sixth             | adj   | ч      |      |

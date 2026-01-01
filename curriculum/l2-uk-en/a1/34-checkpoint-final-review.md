@@ -1,28 +1,28 @@
 ---
-
 module: a1-34
-title: "Checkpoint: Final Review"
-subtitle: "Can you do ALL the A1 skills?"
-version: "2.0"
-phase: "A1.3 - Consolidation"
+title: 'Checkpoint: Final Review'
+subtitle: 'Can you do ALL the A1 skills?'
+version: '2.0'
+phase: 'A1.3 - Consolidation'
 focus: checkpoint
-pedagogy: "Review"
-duration: "90 min"
-transliteration: "first-occurrence"
+pedagogy: 'Review'
+duration: '90 min'
+transliteration: 'first-occurrence'
 tags:
   - review
   - checkpoint
   - assessment
   - A1
 grammar:
-  - "All A1 grammar review"
+  - 'All A1 grammar review'
 objectives:
-  - "Demonstrate Cyrillic reading fluency"
-  - "Identify noun gender and use agreement correctly"
-  - "Conjugate verbs in present, past, and future tense"
-  - "Apply four cases (Nominative, Accusative, Genitive, Locative)"
-  - "Navigate daily life situations in Ukrainian"
+  - 'Demonstrate Cyrillic reading fluency'
+  - 'Identify noun gender and use agreement correctly'
+  - 'Conjugate verbs in present, past, and future tense'
+  - 'Apply four cases (Nominative, Accusative, Genitive, Locative)'
+  - 'Navigate daily life situations in Ukrainian'
 vocabulary_count: 20
+vocab_count: 19
 ---
 
 # Checkpoint: Final Review
@@ -54,6 +54,7 @@ This checkpoint tests five core abilities from the entire A1 level:
 > Сьогодні — акція: кава з молоком за 35 гривень!
 
 **Notice:**
+
 - **УВАГА** = Attention (В = V, not B)
 - **Кав'ярня** = Café (apostrophe after В before Я)
 - **щодня** = every day (Щ = shch)
@@ -73,6 +74,7 @@ Answer these questions:
 4. What will she do tomorrow?
 
 > [!solution] Перевірити (Check)
+>
 > 1. В Києві (in Kyiv)
 > 2. На метро (by metro)
 > 3. Читала книгу (read a book)
@@ -98,23 +100,25 @@ Answer these questions:
 > **Це нові друзі.** — друзі is plural → нові, ці
 
 **Gender Rules:**
+
 - **Masculine**: consonant ending (стіл, брат, день)
-- **Feminine**: -а, -я ending (книга, земля, ніч*)
+- **Feminine**: -а, -я ending (книга, земля, ніч\*)
 - **Neuter**: -о, -е ending (вікно, море, ім'я)
 
-*Note: Some -Ь nouns are feminine (ніч)
+\*Note: Some -Ь nouns are feminine (ніч)
 
 ### Practice: Choose the Correct Form
 
 What's the correct demonstrative and adjective?
 
-1. ___ ___ книга (this, interesting) → ___
-2. ___ ___ місто (this, big) → ___
-3. ___ ___ друг (this, good) → ___
-4. ___ ___ вікно (that, old) → ___
-5. ___ ___ студенти (these, new) → ___
+1. **\_ \_** книга (this, interesting) → \_\_\_
+2. **\_ \_** місто (this, big) → \_\_\_
+3. **\_ \_** друг (this, good) → \_\_\_
+4. **\_ \_** вікно (that, old) → \_\_\_
+5. **\_ \_** студенти (these, new) → \_\_\_
 
 > [!solution] Перевірити (Check)
+>
 > 1. Ця цікава книга (feminine)
 > 2. Це велике місто (neuter)
 > 3. Цей добрий друг (masculine)
@@ -136,24 +140,28 @@ What's the correct demonstrative and adjective?
 ### Model: Three Tenses
 
 **Present** (теперішній час):
+
 > Я **читаю**, ти **читаєш**, він **читає**
 > Ми **читаємо**, ви **читаєте**, вони **читають**
 
 **Past** (минулий час) — agrees in gender:
+
 > Він **читав**, вона **читала**, воно **читало**, вони **читали**
 
 **Future** (майбутній час) — two forms:
+
 > Я **буду читати** (compound) = Я **прочитаю** (simple, when available)
 
 ### Practice: Fill in the Correct Form
 
-1. Зараз я ___ (читати, present) книгу.
-2. Вчора він ___ (писати, past, m) листа.
-3. Завтра вона ___ (готувати, future) вечерю.
-4. Вчора ми ___ (бути, past) в Києві.
-5. Зараз вони ___ (говорити, present) українською.
+1. Зараз я \_\_\_ (читати, present) книгу.
+2. Вчора він \_\_\_ (писати, past, m) листа.
+3. Завтра вона \_\_\_ (готувати, future) вечерю.
+4. Вчора ми \_\_\_ (бути, past) в Києві.
+5. Зараз вони \_\_\_ (говорити, present) українською.
 
 > [!solution] Перевірити (Check)
+>
 > 1. читаю (я, present)
 > 2. писав (він, past masculine)
 > 3. буде готувати (вона, future compound)
@@ -187,13 +195,14 @@ What's the correct demonstrative and adjective?
 
 Identify the case of the underlined word:
 
-1. **Марія** живе в Києві. → _____
-2. Я бачу **Марію**. → _____
-3. У мене немає **часу**. → _____
-4. Книга на **столі**. → _____
-5. **Брат** читає книгу. → _____
+1. **Марія** живе в Києві. → **\_**
+2. Я бачу **Марію**. → **\_**
+3. У мене немає **часу**. → **\_**
+4. Книга на **столі**. → **\_**
+5. **Брат** читає книгу. → **\_**
 
 > [!solution] Перевірити (Check)
+>
 > 1. Nominative (subject)
 > 2. Accusative (direct object, animate feminine)
 > 3. Genitive (after немає)
@@ -202,13 +211,14 @@ Identify the case of the underlined word:
 
 ### Practice: Transform to the Correct Case
 
-1. Я читаю (книга) → Я читаю _____
-2. Немає (вода) → Немає _____
-3. Ми живемо в (Україна) → Ми живемо в _____
-4. Він бачить (друг) → Він бачить _____
-5. Кава без (молоко) → Кава без _____
+1. Я читаю (книга) → Я читаю **\_**
+2. Немає (вода) → Немає **\_**
+3. Ми живемо в (Україна) → Ми живемо в **\_**
+4. Він бачить (друг) → Він бачить **\_**
+5. Кава без (молоко) → Кава без **\_**
 
 > [!solution] Перевірити (Check)
+>
 > 1. книгу (accusative feminine: -а → -у)
 > 2. води (genitive feminine: -а → -и)
 > 3. Україні (locative: -і ending)
@@ -239,6 +249,7 @@ Identify the case of the underlined word:
 > — Дякую, лікарю!
 
 **Key Phrases:**
+
 - **У мене болить...** = I have ... pain / My ... hurts
 - **Що вас турбує?** = What's troubling you?
 - **Давно?** = For how long? (lit. "Long?")
@@ -251,6 +262,7 @@ Identify the case of the underlined word:
 > — О сьомій. / Об одинадцятій.
 
 **Time Pattern:**
+
 - 1 година, 2-4 години, 5+ годин
 - "О котрій?" (at what time?) → О + locative
 
@@ -258,12 +270,12 @@ Identify the case of the underlined word:
 
 At a café:
 
-— Добрий день! _____ бажаєте? (What)
-— Каву, будь ласка. _____. (Large)
-— _____ цукру? (With or without)
+— Добрий день! **\_** бажаєте? (What)
+— Каву, будь ласка. **\_**. (Large)
+— **\_** цукру? (With or without)
 — Без цукру.
-— _____ коштує? (How much)
-— Сорок п'ять _____ (hryvnias).
+— **\_** коштує? (How much)
+— Сорок п'ять **\_** (hryvnias).
 
 > [!solution] Перевірити (Check)
 > — Добрий день! **Що** бажаєте?
@@ -301,6 +313,7 @@ At a café:
 5. What time will Олег have dinner?
 
 > [!solution] Перевірити (Check)
+>
 > 1. Neuter — ends in -о, and uses **красиве** (neuter adjective)
 > 2. Locative — **на** + noun for "by" transport/location
 > 3. Past tense — the -в ending shows both past and masculine
@@ -318,6 +331,7 @@ At a café:
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Alphabet Guide](https://www.ukrainianlessons.com/ukrainian-alphabet/) — Master Cyrillic
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Complete audio course
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Essential video review
@@ -326,22 +340,24 @@ At a café:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вітаємо | /vʲiˈtɑjɛmɔ/ | congratulations | verb | — | 1st pl |
-| досягнення | /dɔsʲɑɦˈnɛnʲːɑ/ | achievement | noun | n | |
-| рівень | /ˈrʲivɛnʲ/ | level | noun | m | |
-| прогрес | /prɔˈɦrɛs/ | progress | noun | m | |
-| вміння | /ˈvmʲinʲːɑ/ | skill | noun | n | |
-| практика | /ˈprɑktɪkɑ/ | practice | noun | f | |
-| граматика | /ɦrɑˈmɑtɪkɑ/ | grammar | noun | f | |
-| речення | /rɛˈt͡ʃɛnʲːɑ/ | sentence | noun | n | |
-| читання | /t͡ʃɪˈtɑnʲːɑ/ | reading | noun | n | |
-| письмо | /pɪsʲˈmɔ/ | writing | noun | n | |
-| говоріння | /ɦɔvɔˈrʲinʲːɑ/ | speaking | noun | n | |
-| слухання | /ˈsluxɑnʲːɑ/ | listening | noun | n | |
-| оцінка | /ɔˈt͡sʲinkɑ/ | assessment | noun | f | |
-| розуміння | /rɔzuˈmʲinʲːɑ/ | understanding | noun | n | |
-| майстерність | /mɑjˈstɛrnʲistʲ/ | mastery | noun | f | |
-
----
+| Word         | IPA               | English                 | POS  | Gender | Note |
+| ------------ | ----------------- | ----------------------- | ---- | ------ | ---- |
+| акція        | /ˈɑkt͡sʲijɑ/       | special offer/promotion | noun | ж      |      |
+| будувати     | /buduˈvɑtɪ/       | to build                | verb | -      |      |
+| випити       | /ˈvɪpɪtɪ/         | to drink (perf)         | verb | -      |      |
+| вчитися      | /ˈvt͡ʃɪtɪsʲɑ/      | to study/learn          | verb | -      |      |
+| захід        | /ˈzɑxid/          | west/event              | noun | ч      |      |
+| здавати      | /zdɑˈvɑtɪ/        | to take (exam)/hand in  | verb | -      |      |
+| зустрічатися | /zustriˈt͡ʃɑtɪsʲɑ/ | to meet                 | verb | -      |      |
+| іспит        | /ˈispɪt/          | exam                    | noun | ч      |      |
+| оглянути     | /ɔɦˈlʲɑnutɪ/      | to examine              | verb | -      |      |
+| одинадцята   | /ɔdɪˈnɑdt͡sʲɑtɑ/   | eleventh                | adj  | ж      |      |
+| попереду     | /pɔˈpɛrɛdu/       | ahead                   | adv  | -      |      |
+| приготувати  | /prɪɦɔtuˈvɑtɪ/    | to cook/prepare         | verb | -      |      |
+| простий      | /prɔsˈtɪj/        | simple                  | adj  | ч      |      |
+| прочитати    | /prɔt͡ʃɪˈtɑtɪ/     | to read (perf)          | verb | -      |      |
+| речення      | /ˈrɛt͡ʃɛnʲːɑ/      | sentence                | noun | с      |      |
+| теперішній   | /tɛˈpɛriʃnʲij/    | present (time)          | adj  | ч      |      |
+| тричі        | /ˈtrɪt͡ʃi/         | three times             | adv  | -      |      |
+| турбувати    | /turbuˈvɑtɪ/      | to trouble/bother       | verb | -      |      |
+| увага        | /uˈvɑɦɑ/          | attention               | noun | ж      |      |

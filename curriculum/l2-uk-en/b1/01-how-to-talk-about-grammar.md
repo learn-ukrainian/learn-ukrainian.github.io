@@ -21,6 +21,7 @@ objectives:
   - "Learner can name all seven grammatical cases in Ukrainian"
   - "Learner can describe basic sentence elements using Ukrainian terms"
 vocabulary_count: 25
+vocab_count: 29
 ---
 
 # Як говорити про граматику
@@ -306,37 +307,5 @@ In this module, you learned the core grammar terminology in Ukrainian:
 > - 📖 [Ukrainian Grammar Overview](https://www.ukrainianlessons.com/grammar/) — Grammar guide in English
 > - 📺 [Ukrainian Cases Explained](https://www.youtube.com/watch?v=N3vXjvVDPqY) — Let's Learn Ukrainian
 > - 🎧 [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/the-podcast/) — Grammar episodes
-
----
-
-# Словник
-
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| іменник | /iˈmɛnnɪk/ | noun | ім. | граматичний термін |
-| дієслово | /dʲijɛˈslɔwɔ/ | verb | ім. | граматичний термін |
-| прикметник | /prɪˈkmɛtnɪk/ | adjective | ім. | граматичний термін |
-| прислівник | /prɪˈslʲiwnɪk/ | adverb | ім. | граматичний термін |
-| займенник | /zɑjˈmɛnnɪk/ | pronoun | ім. | граматичний термін |
-| числівник | /t͡ʃɪˈslʲiwnɪk/ | numeral | ім. | граматичний термін |
-| прийменник | /prɪjˈmɛnnɪk/ | preposition | ім. | граматичний термін |
-| сполучник | /spɔˈlut͡ʃnɪk/ | conjunction | ім. | граматичний термін |
-| частка | /ˈt͡ʃɑstkɑ/ | particle | ім. | граматичний термін |
-| вигук | /ˈwɪɦuk/ | interjection | ім. | граматичний термін |
-| частина мови | /t͡ʃɑˈstɪnɑ ˈmɔwɪ/ | part of speech | ім. | граматичний термін |
-| слово | /ˈslɔwɔ/ | word | ім. | сер. р. |
-| речення | /ˈrɛt͡ʃɛnʲːɑ/ | sentence | ім. | сер. р. |
-| називний | /nɑˈzɪwnɪj/ | nominative | прикм. | граматичний термін |
-| родовий | /rɔˈdɔwɪj/ | genitive | прикм. | граматичний термін |
-| давальний | /dɑˈwɑlʲnɪj/ | dative | прикм. | граматичний термін |
-| знахідний | /znɑˈxʲidnɪj/ | accusative | прикм. | граматичний термін |
-| орудний | /ɔˈrudnɪj/ | instrumental | прикм. | граматичний термін |
-| місцевий | /mʲisˈt͡sɛwɪj/ | locative | прикм. | граматичний термін |
-| кличний | /ˈklɪt͡ʃnɪj/ | vocative | прикм. | граматичний термін |
-| відмінок | /wʲidˈmʲinɔk/ | case | ім. | чол. р. |
-| рід | /rʲid/ | gender | ім. | чол. р. |
-| число | /t͡ʃɪˈslɔ/ | number | ім. | сер. р. |
-| особа | /ɔˈsɔbɑ/ | person | ім. | жін. р. |
-| закінчення | /zɑˈkʲint͡ʃɛnʲːɑ/ | ending | ім. | сер. р. |
 
 ---

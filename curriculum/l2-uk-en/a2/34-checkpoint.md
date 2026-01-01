@@ -24,6 +24,7 @@ objectives:
   - "Learner can express cause, purpose, and concession accurately"
   - "Learner can use health-related vocabulary in dialogue"
 vocabulary_count: 25
+vocab_count: 25
 ---
 
 # Summary
@@ -187,16 +188,3 @@ In the next block, we will explore Word Formation. You will learn how to "multip
 > - 📖 [Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/)
 > - 📖 [Relative Pronouns (який)](https://www.talkukrainian.com/relative-pronouns-ukrainian/)
 > - 🎙️ [Something Hurts Podcast](https://www.ukrainianlessons.com/something-hurts/)
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| боліти | /bɔˈlitɪ/ | to hurt | verb | — | symptom |
-| одужати | /ɔˈduʒɑtɪ/ | to recover | verb | — | perfective |
-| захворіти | /zɑxwɔˈritɪ/ | to fall ill | verb | — | perfective |
-| турбувати | /turbuˈʋɑtɪ/ | to bother | verb | — | symptom |
-| звіт | /zʋit/ | report | noun | masc | business |
-| затори | /zɑˈtɔrɪ/ | traffic jams | noun | — | pl |
-| рішення | /ˈriʃɛnʲːɑ/ | decision | noun | neut | logic |
-| надія | /nɑˈdijɑ/ | hope | noun | fem | emotion |

@@ -20,6 +20,7 @@ objectives:
   - "Learner can use prefixes to express crossing, passing, stopping by"
   - "Learner can give and follow directional instructions"
 vocabulary_count: 30
+vocab_count: 66
 ---
 
 ## Warm-up
@@ -308,29 +309,3 @@ Today you learned advanced motion prefixes:
 These prefixes combine with motion verbs to create precise navigation instructions.
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|------|
-| перейти | /pɛrɛjtˈɪ/ | to cross on foot | verb | — | пере- + йти |
-| переїхати | /pɛrɛjˈixɑtɪ/ | to cross by vehicle | verb | — | пере- + їхати |
-| пройти | /prɔjtˈɪ/ | to walk through | verb | про- + йти |
-| проїхати | /prɔjˈixɑtɪ/ | to drive through | verb | про- + їхати |
-| зайти | /zɑjtˈɪ/ | to stop by, drop in | verb | за- + йти |
-| заїхати | /zɑjˈixɑtɪ/ | to stop by (driving) | verb | за- + їхати |
-| дійти | /dijtˈɪ/ | to reach on foot | verb | до- + йти |
-| доїхати | /dɔjˈixɑtɪ/ | to reach by vehicle | verb | до- + їхати |
-| обійти | /ɔbijtˈɪ/ | to walk around | verb | об- + йти |
-| об'їхати | /ɔbjˈixɑtɪ/ | to drive around | verb | об- + їхати |
-| підійти | /pidijtˈɪ/ | to approach | verb | під- + йти |
-| під'їхати | /pidjˈixɑtɪ/ | to drive up to | verb | під- + їхати |
-| переплисти | /pɛrɛplˈɪstɪ/ | to swim across | verb | пере- + плисти |
-| пролетіти | /prɔlɛtˈitɪ/ | to fly past | verb | про- + летіти |
-| замок | /zˈɑmɔk/ | castle | noun | - |
-| квартал | /kʋɑrtˈɑl/ | city block | noun | - |
-| маршрут | /mɑrʃrˈut/ | route | noun | - |
-| гід | /ɦid/ | guide | noun | - |
-| екскурсія | /ɛkskˈursijɑ/ | tour, excursion | noun | - |
-| пам'ятник | /pɑmjˈɑtnɪk/ | monument | noun | - |
-| напрямок | /nɑprʲɑmˈɔk/ | direction | noun | - |

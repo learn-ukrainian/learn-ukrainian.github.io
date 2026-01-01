@@ -14,7 +14,7 @@ objectives:
   - Describe workplaces: офіс, школа, лікарня
   - Discuss career and salary
   - Use verbs for work activities
-vocab_count: 30
+vocab_count: 41
 ---
 
 # Work & Professions
@@ -198,19 +198,3 @@ Work is not just about money; it's about passion and contribution. Whether you a
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| фабрика | /ˈfɑbrɪkɑ/ | factory | noun | f | |
-| компанія | /komˈpɑnʲijɑ/ | company | noun | f | |
-| керувати | /keruˈwɑtɪ/ | to manage | verb | - | + instr |
-| звільнити | /zwilʲˈnɪtɪ/ | to fire | verb | - | |
-| найняти | /nɑjˈnʲɑtɪ/ | to hire | verb | - | |
-| кар'єра | /kɑrˈjɛrɑ/ | career | noun | f | |
-| зарплата | /zɑrˈplɑtɑ/ | salary | noun | f | |
-| професія | /proˈfɛsʲijɑ/ | profession | noun | f | |
-| клієнт | /klʲiˈjɛnt/ | client | noun | m | |
-| начальник | /nɑˈtʃɑlʲnɪk/ | boss | noun | m | |
-| зайнятий | /ˈzɑjnʲɑtɪj/ | busy/occupied | adj | m | |

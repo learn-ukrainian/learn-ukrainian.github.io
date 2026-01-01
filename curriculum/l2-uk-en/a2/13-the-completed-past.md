@@ -22,6 +22,7 @@ objectives:
   - "Learner can express completed actions"
   - "Learner can distinguish process from result in past"
 vocabulary_count: 20
+vocab_count: 8
 ---
 
 ## Warm-up
@@ -187,78 +188,8 @@ Before moving to the activities, make sure you can answer these questions:
 - What feminine ending do all past tense verbs use? Answer: -ла
 - Does "пішов" come from "іти" or "піти"? Answer: піти — the perfective form
 
----
+**Question:** Ти зробив це? (Did you do it?)
+**Positive:** Так, я зробив це. (Yes, I did it.)
+**Negative:** Ні, я не зробив це. (No, I didn't do it.)
 
-# Summary
-
-## What You Learned
-
-This module focused on using perfective verbs in past tense to express completed actions. This is one of the most practical applications of aspect — every time you tell a story or describe what happened, you'll use these patterns.
-
-**The Big Picture:**
-Past tense is where aspect becomes most visible. When you say "Я прочитав книгу," native speakers understand immediately that you finished the book. When you say "Я читав книгу," they understand you were engaged in reading but may not have finished. This distinction doesn't exist in English in the same way, so you're learning to think about time and action in a new way.
-
-**Key Points:**
-- Perfective and imperfective use the SAME past tense endings (-в, -ла, -ло, -ли)
-- The difference is in the verb stem, not the ending
-- Use **perfective past** for completed actions with clear results
-- Use **imperfective past** for processes, duration, or repeated actions
-- Signal words: вже, нарешті = usually perfective; довго, часто = usually imperfective
-
-**Common Mistakes to Avoid:**
-1. Don't translate directly from English — "I read a book" could be either aspect in Ukrainian
-2. Duration + perfective is usually wrong: "Я читав три години" (not *Я прочитав три години*)
-3. Remember: perfective questions ask about completion, imperfective questions ask about activities
-
-**Next Steps:**
-In the following modules, you'll learn how perfective verbs work in future tense and how to choose the right aspect in more complex situations. Practice the aspect pairs you've learned until they become automatic.
-
-> 📜 **Пам'ятайте!**
->
-> Вибір аспекту — це вибір фокусу. Доконаний вид показує результат: «Я прочитав книгу» означає, що книга закінчена. Недоконаний вид показує процес: «Я читав книгу» означає, що ви були зайняті читанням.
-
-Тепер ви можете говорити про завершені дії! ✅
-
-## Need More Practice?
-
-> [!resources] External Resources
-> - 🎥 [50 Verb Pairs](https://www.youtube.com/watch?v=iK4uNlozmFE) — Let's Learn Ukrainian
-> - 📖 [Perfective Verbs](https://www.ukrainianlessons.com/perfective-verbs/)
-> - 📝 [Aspect Differences](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| зробив | /zrɔˈbɪʋ/ | did, made | verb | m | perf. past masc. |
-| написав | /nɑpɪˈsɑʋ/ | wrote | verb | m | perf. past masc. |
-| прочитав | /prɔt͡ʃɪˈtɑʋ/ | read, finished | verb | m | perf. past masc. |
-| сказав | /skɑˈzɑʋ/ | said | verb | m | perf. past masc. |
-| побачив | /pɔˈbɑt͡ʃɪʋ/ | saw | verb | m | perf. past masc. |
-| почув | /pɔˈt͡ʃuʋ/ | heard | verb | m | perf. past masc. |
-| взяв | /ˈʋzʲɑʋ/ | took | verb | m | perf. past masc. |
-| дав | /dɑʋ/ | gave | verb | m | perf. past masc. |
-| пішов | /piˈʃɔʋ/ | went, left | verb | m | perf. past masc. |
-| прийшов | /prɪjˈʃɔʋ/ | came | verb | m | perf. past masc. |
-| приїхав | /prɪˈjixɑʋ/ | arrived | verb | m | perf. past masc. |
-| вийшов | /ˈʋɪjʃɔʋ/ | went out | verb | m | perf. past masc. |
-| увійшов | /uˈʋijʃɔʋ/ | entered | verb | m | perf. past masc. |
-| почав | /pɔˈt͡ʃɑʋ/ | began | verb | m | perf. past masc. |
-| закінчив | /zɑˈkint͡ʃɪʋ/ | finished | verb | m | perf. past masc. |
-| зрозумів | /zrɔzuˈmiʋ/ | understood | verb | m | perf. past masc. |
-| забув | /zɑˈbuʋ/ | forgot | verb | m | perf. past masc. |
-| знайшов | /znɑjˈʃɔʋ/ | found | verb | m | perf. past masc. |
-| загубив | /zɑɦuˈbɪʋ/ | lost | verb | m | perf. past masc. |
-| раптом | /ˈrɑptɔm/ | suddenly | adv | — | signals sudden action |
-| купив | /kuˈpɪʋ/ | bought | verb | m | perf. past masc. |
-| продав | /prɔˈdɑʋ/ | sold | verb | m | perf. past masc. |
-| відкрив | /ʋidˈkrɪʋ/ | opened | verb | m | perf. past masc. |
-| закрив | /zɑˈkrɪʋ/ | closed | verb | m | perf. past masc. |
-| запам'ятав | /zɑpɑˈmʲɑtɑʋ/ | remembered | verb | m | perf. past masc. |
-| вид | /ʋɪd/ | aspect | noun | m | grammar term |
-
----
-
+##

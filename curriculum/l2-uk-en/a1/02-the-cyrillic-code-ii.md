@@ -1,13 +1,12 @@
 ---
-
 module: a1-02
-title: "The Cyrillic Code II"
-subtitle: "The Final 14 Letters"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "full"
+title: 'The Cyrillic Code II'
+subtitle: 'The Final 14 Letters'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'full'
 tags:
   - alphabet
   - cyrillic
@@ -21,12 +20,13 @@ grammar:
   - pronunciation
   - italic forms
 objectives:
-  - "Learner can recognize and pronounce unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)"
-  - "Learner can identify iotated vowels (Є, Ї, Ю, Я)"
-  - "Learner can understand the soft sign (Ь)"
-  - "Learner can distinguish И (hard i) from І (soft i)"
-  - "Learner can recognize common italic letter variants"
+  - 'Learner can recognize and pronounce unique Ukrainian letters (Г, Ґ, Ж, Ш, Щ, Ч, Ц)'
+  - 'Learner can identify iotated vowels (Є, Ї, Ю, Я)'
+  - 'Learner can understand the soft sign (Ь)'
+  - 'Learner can distinguish И (hard i) from І (soft i)'
+  - 'Learner can recognize common italic letter variants'
 vocabulary_count: 35
+vocab_count: 77
 ---
 
 # The Cyrillic Code II
@@ -43,15 +43,15 @@ By the end of this module, you'll be able to read **любов** (love), **дя�
 
 These letters exist in other Slavic languages, but Ukrainian uses them in its own special way. They give Ukrainian its distinctive sound:
 
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **Г г** | /ɦ/ like "h" in "ahead" | **г**оловá (holová) | head |
-| **Ґ ґ** | /g/ like "g" in "go" | **ґ**ума (guma) | eraser |
-| **Ж ж** | /ʒ/ like "s" in "pleasure" | **ж**еле (zhele) | jelly |
-| **Ш ш** | /ʃ/ like "sh" in "shop" | **ш**окола́д (shokolád) | chocolate |
-| **Щ щ** | /ʃt͡ʃ/ like "shch" blend | бо́**рщ** (borshch) | borscht |
-| **Ч ч** | /t͡ʃ/ like "ch" in "church" | **ч**емпіо́н (chempión) | champion |
-| **Ц ц** | /t͡s/ like "ts" in "cats" | **ц**ентр (tsentr) | center |
+| Letter  | Sound                      | Example                | English   |
+| ------- | -------------------------- | ---------------------- | --------- |
+| **Г г** | /ɦ/ like "h" in "ahead"    | **г**оловá (holová)    | head      |
+| **Ґ ґ** | /g/ like "g" in "go"       | **ґ**ума (guma)        | eraser    |
+| **Ж ж** | /ʒ/ like "s" in "pleasure" | **ж**еле (zhele)       | jelly     |
+| **Ш ш** | /ʃ/ like "sh" in "shop"    | **ш**окола́д (shokolád) | chocolate |
+| **Щ щ** | /ʃt͡ʃ/ like "shch" blend    | бо́**рщ** (borshch)     | borscht   |
+| **Ч ч** | /t͡ʃ/ like "ch" in "church" | **ч**емпіо́н (chempión) | champion  |
+| **Ц ц** | /t͡s/ like "ts" in "cats"   | **ц**ентр (tsentr)     | center    |
 
 The letters **Г** and **Ґ** are perhaps the most important distinction. **Г** (hook) makes a soft breathy "h" sound. **Ґ** (hook with hat) makes a hard "g" sound like in English "go." Russian lost the **Ґ** sound centuries ago, but Ukrainian kept it!
 
@@ -67,12 +67,12 @@ The letters **Г** and **Ґ** are perhaps the most important distinction. **Г**
 
 These are vowels that carry a built-in "y" sound (called "iotation"). They're uniquely Ukrainian and give the language its melodic quality:
 
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **Є є** | /jɛ/ like "ye" in "yes" | **Є**вро́па (Yevropa) | Europe |
-| **Ї ї** | /ji/ like "yee" in "yeet" | Ки́**ї**в (Kýyiv) | Kyiv |
-| **Ю ю** | /ju/ like "you" | д**я́**к**ю** (dyákuyu) | thank you |
-| **Я я** | /jɑ/ like "ya" in "yacht" | **я**к (yak) | how |
+| Letter  | Sound                     | Example                | English   |
+| ------- | ------------------------- | ---------------------- | --------- |
+| **Є є** | /jɛ/ like "ye" in "yes"   | **Є**вро́па (Yevropa)   | Europe    |
+| **Ї ї** | /ji/ like "yee" in "yeet" | Ки́**ї**в (Kýyiv)       | Kyiv      |
+| **Ю ю** | /ju/ like "you"           | д**я́**к**ю** (dyákuyu) | thank you |
+| **Я я** | /jɑ/ like "ya" in "yacht" | **я**к (yak)           | how       |
 
 These letters are why "Kyiv" is spelled with a "y" in English. The Ukrainian name is **Київ**. That **Ї** makes a "yi" sound. So it's "Kýyiv," not "Keev."
 
@@ -87,10 +87,10 @@ These letters are why "Kyiv" is spelled with a "y" in English. The Ukrainian nam
 
 The soft sign **Ь** (myakyi znak) is perhaps the strangest letter for English speakers. It has no sound of its own. Instead, it softens the consonant before it:
 
-| Without Ь | With Ь | Difference |
-|-----------|--------|------------|
-| рис (rys) "rice" | рись (rysʲ) "lynx" | "s" vs "sʲ" (soft s) |
-| лан (lan) "field" | лань (lanʲ) "doe" | "n" vs "nʲ" (soft n) |
+| Without Ь         | With Ь             | Difference           |
+| ----------------- | ------------------ | -------------------- |
+| рис (rys) "rice"  | рись (rysʲ) "lynx" | "s" vs "sʲ" (soft s) |
+| лан (lan) "field" | лань (lanʲ) "doe"  | "n" vs "nʲ" (soft n) |
 
 The soft sign appears in the word **будь ла́ска** (please): "budʲ láska." That **Ь** softens the **Д** sound.
 
@@ -102,10 +102,10 @@ The soft sign appears in the word **будь ла́ска** (please): "budʲ lá
 
 The letter **И** is different from **І**. While **І** makes the soft "ee" sound (like in "meet"), **И** makes a harder sound, like "i" in "bit" or "sit":
 
-| Letter | Sound | Example |
-|--------|-------|---------|
-| **І і** | /i/ like "meet" | п**і**ца (píttsa) | pizza |
-| **И и** | /ɪ/ like "bit" | джи́нс**и** (dzhýnsy) | jeans |
+| Letter  | Sound           | Example              |
+| ------- | --------------- | -------------------- | ----- |
+| **І і** | /i/ like "meet" | п**і**ца (píttsa)    | pizza |
+| **И и** | /ɪ/ like "bit"  | джи́нс**и** (dzhýnsy) | jeans |
 
 The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." The city **Київ** has the soft **І**: "Kýyiv."
 
@@ -117,9 +117,9 @@ The word **джинси** (jeans) has the hard **И** at the end: "dzhýnsy." Th
 
 The letter **Й** (yi kratke, "short i") makes a quick "y" sound like in English "boy" or "yes." It never starts words on its own in native Ukrainian words, but appears in borrowed words like **йогурт** (yogurt):
 
-| Letter | Sound | Example | English |
-|--------|-------|---------|---------|
-| **Й й** | /j/ like "y" in "boy" | **й**огурт (yohurt) | yogurt |
+| Letter  | Sound                 | Example             | English |
+| ------- | --------------------- | ------------------- | ------- |
+| **Й й** | /j/ like "y" in "boy" | **й**огурт (yohurt) | yogurt  |
 
 You'll also see **Й** at the end of words and syllables, creating sounds like "ay," "oy," or "iy." In **Київ**, the final sound is actually **ЇВ** (yiv), but in words like **край** (edge, country), you hear the **Й** clearly: "kray."
 
@@ -127,18 +127,18 @@ You'll also see **Й** at the end of words and syllables, creating sounds like "
 
 When Ukrainians write in cursive or italic, some letters look COMPLETELY different from their printed forms. This is the number one reason learners get confused when they see handwritten Ukrainian:
 
-| Printed | Italic | Looks Like | Sound |
-|---------|--------|------------|-------|
-| **т** | *т* | Latin "m" | "t" (not m!) |
-| **п** | *п* | Latin "n" | "p" (not n!) |
-| **д** | *д* | Latin "g" | "d" (not g!) |
-| **и** | *и* | Latin "u" | "y/i" (not u!) |
-| **л** | *л* | hook shape | "l" |
-| **г** | *г* | round shape | "h" |
+| Printed | Italic | Looks Like  | Sound          |
+| ------- | ------ | ----------- | -------------- |
+| **т**   | _т_    | Latin "m"   | "t" (not m!)   |
+| **п**   | _п_    | Latin "n"   | "p" (not n!)   |
+| **д**   | _д_    | Latin "g"   | "d" (not g!)   |
+| **и**   | _и_    | Latin "u"   | "y/i" (not u!) |
+| **л**   | _л_    | hook shape  | "l"            |
+| **г**   | _г_    | round shape | "h"            |
 
-So the word **мама** (mama) in italic looks like *мама*, which might look like "mama" but with weird shapes. Don't panic. It's still "mama."
+So the word **мама** (mama) in italic looks like _мама_, which might look like "mama" but with weird shapes. Don't panic. It's still "mama."
 
-The word **привіт** (hello) in italic is *привіт*. That italic **т** at the end looks like an "m," but it's still a "t" sound.
+The word **привіт** (hello) in italic is _привіт_. That italic **т** at the end looks like an "m," but it's still a "t" sound.
 
 ## Practice
 
@@ -164,18 +164,18 @@ Now that you know all 33 letters, let's read some real Ukrainian phrases:
 
 ### Mini-Dialogue 1: First Meeting
 
-— Привіт! Як справи? *(Pryvit! Yak spravy?)* — Hello! How are things?
-— Добре, дякую! *(Dobre, dyakuyu!)* — Good, thank you!
-— Ласкаво просимо! *(Laskavo prosymo!)* — Welcome!
+— Привіт! Як справи? _(Pryvit! Yak spravy?)_ — Hello! How are things?
+— Добре, дякую! _(Dobre, dyakuyu!)_ — Good, thank you!
+— Ласкаво просимо! _(Laskavo prosymo!)_ — Welcome!
 
 Notice **дякую** uses the iotated **Я** (ya) and **Ю** (yu). It flows: "dya-ku-yu." This is one of the most useful words in Ukrainian!
 
 ### Mini-Dialogue 2: At a Café in Lviv
 
-— Борщ? *(Borshch?)* — Borscht?
-— Так, борщ, будь ласка. *(Tak, borshch, budʲ laska.)* — Yes, borscht, please.
-— Цукор? *(Tsukor?)* — Sugar?
-— Ні, дякую. *(Ni, dyakuyu.)* — No, thank you.
+— Борщ? _(Borshch?)_ — Borscht?
+— Так, борщ, будь ласка. _(Tak, borshch, budʲ laska.)_ — Yes, borscht, please.
+— Цукор? _(Tsukor?)_ — Sugar?
+— Ні, дякую. _(Ni, dyakuyu.)_ — No, thank you.
 
 The word **борщ** showcases the **Щ** sound perfectly. It's not "borsh," it's "borshch" — that soft "shch" blend is uniquely Ukrainian.
 
@@ -268,7 +268,7 @@ Next module, we'll start learning about noun gender and why it matters!
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) — Red Purple Ukrainian 
+> **YouTube:** [UKRAINIAN: handwritten cyrillic alphabet](https://www.youtube.com/watch?v=2tEPOopp7-I) — Red Purple Ukrainian
 >
 > **Podcast:** [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/thepodcast/) — Season 1 for beginners, with native speaker audio
 >
@@ -280,42 +280,46 @@ Next module, we'll start learning about noun gender and why it matters!
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| буква | /ˈbukwɑ/ | letter | noun | f | - |
-| слово | /ˈslovɔ/ | word | noun | n | - |
-| алфавіт | /ɑlfaˈvit/ | alphabet | noun | m | - |
-| мова | /ˈmɔwɑ/ | language | noun | f | - |
-| українська | /ukrɑˈjinʲsʲkɑ/ | Ukrainian (language) | adj | f | - |
-| англійська | /ɑnˈɦlijsʲkɑ/ | English (language) | adj | f | - |
-| так | /tɑk/ | yes | particle | - | - |
-| ні | /ni/ | no | particle | - | - |
-| добре | /ˈdɔbrɛ/ | well, good | adv | - | - |
-| дякую | /ˈdʲɑkuju/ | thank you | verb | - | - |
-| будь ласка | /budʲ ˈlɑskɑ/ | please | phrase | - | - |
-| привіт | /prɪˈwit/ | hello, hi | noun | m | informal |
-| до побачення | /dɔ pɔˈbɑt͡ʃɛnʲːɑ/ | goodbye | phrase | - | - |
-| вибачте | /ˈwɪbɑt͡ʃtɛ/ | excuse me, sorry | verb | - | formal |
-| прошу | /ˈprɔʃu/ | please (formal) | verb | - | - |
-| ласкаво просимо | /ˈlɑskɑwɔ ˈprɔsɪmɔ/ | welcome | phrase | - | - |
-| що | /ʃt͡ʃɔ/ | what | pron | - | - |
-| як | /jɑk/ | how | adv | - | - |
-| де | /dɛ/ | where | adv | - | - |
-| хто | /xtɔ/ | who | pron | - | - |
-| це | /t͡sɛ/ | this | pron | - | - |
-| борщ | /bɔrʃt͡ʃ/ | borscht | noun | m | - |
-| йогурт | /ˈjɔɦurt/ | yogurt | noun | m | - |
-| желе | /ʒɛˈlɛ/ | jelly | noun | n | - |
-| майонез | /mɑjɔˈnɛz/ | mayonnaise | noun | m | - |
-| шоколад | /ʃɔkɔˈlɑd/ | chocolate | noun | m | - |
-| чемпіон | /t͡ʃɛmpiˈɔn/ | champion | noun | m | - |
-| центр | /t͡sɛntr/ | center | noun | m | - |
-| цукор | /ˈt͡sukɔr/ | sugar | noun | m | - |
-| джинси | /ˈd͡ʒɪnsɪ/ | jeans | noun | pl | - |
-| джаз | /d͡ʒɑz/ | jazz | noun | m | - |
-| Європа | /jɛwˈrɔpɑ/ | Europe | noun | f | proper |
-| Україна | /ukrɑˈjinɑ/ | Ukraine | noun | f | proper |
-| Лондон | /ˈlɔndɔn/ | London | noun | m | proper |
-| Київ | /ˈkɪjiw/ | Kyiv | noun | m | proper |
-
----
+| Word      | IPA            | English            | POS   | Gender | Note     |
+| --------- | -------------- | ------------------ | ----- | ------ | -------- |
+| алфавіт   | /ɑlfɑˈvit/     | alphabet           | noun  | ч      |          |
+| борщ      | /bɔrʃt͡ʃ/       | borscht            | noun  | ч      |          |
+| буква     | /ˈbukvɑ/       | letter             | noun  | ж      |          |
+| відьмак   | /vidʲˈmɑk/     | witcher            | noun  | ч      |          |
+| вона      | /vɔˈnɑ/        | she                | pron  | ж      |          |
+| де        | /dɛ/           | where              | adv   | -      |          |
+| джинси    | /ˈdʒɪnsɪ/      | jeans              | noun  | -      | pl. only |
+| дніпро    | /dɲiˈprɔ/      | Dnipro             | name  | ч      |          |
+| до        | /dɔ/           | to/until           | other | -      |          |
+| добре     | /ˈdɔbrɛ/       | good/well          | adv   | -      |          |
+| дякувати  | /ˈdʲɑkʊvɑtɪ/   | to thank           | verb  | -      |          |
+| желе      | /ʒɛˈlɛ/        | jelly              | noun  | с      |          |
+| йогурт    | /ˈjɔɦʊrt/      | yogurt             | noun  | ч      |          |
+| край      | /krɑj/         | edge, land         | other | -      |          |
+| лан       | /lɑn/          | field              | noun  | ч      |          |
+| лань      | /lɑnʲ/         | doe                | noun  | ж      |          |
+| ласка     | /ˈlɑskɑ/       | favor (bud' laska) | noun  | ж      |          |
+| ласкаво   | /lɑsˈkɑvɔ/     | welcome (adv)      | adv   | -      |          |
+| львів     | /lʲviw/        | Lviv               | name  | ч      |          |
+| любов     | /lʲuˈbɔw/      | love               | noun  | ж      |          |
+| майонез   | /mɑjɔˈnɛz/     | mayonnaise         | name  | ч      |          |
+| мова      | /ˈmɔvɑ/        | language           | noun  | ж      |          |
+| ні        | /ni/           | no                 | other | -      |          |
+| одеса     | /ɔˈdɛsɑ/       | Odesa              | name  | ж      |          |
+| побачення | /pɔˈbɑt͡ʃɛnʲːɑ/ | seeing (goodbye)   | noun  | с      |          |
+| привіт    | /prɪˈvit/      | hello              | other | -      |          |
+| просити   | /prɔˈsɪtɪ/     | to ask/invite      | verb  | -      |          |
+| рис       | /rɪs/          | rice               | noun  | ч      |          |
+| рись      | /rɪsʲ/         | lynx               | noun  | ж      |          |
+| слово     | /ˈslɔvɔ/       | word               | noun  | с      |          |
+| справа    | /ˈsprɑvɑ/      | affair/matter      | noun  | ж      |          |
+| україна   | /ʊkrɑˈjinɑ/    | Ukraine            | name  | ж      |          |
+| харків    | /ˈxɑrkiw/      | Kharkiv            | name  | ч      |          |
+| хто       | /xtɔ/          | who                | pron  | ч      |          |
+| центр     | /t͡sɛntr/       | center             | noun  | ч      |          |
+| цукор     | /ˈt͡sukɔr/      | sugar              | noun  | ч      |          |
+| чемпіон   | /t͡ʃɛmpiˈɔn/    | champion           | noun  | ч      |          |
+| шоколад   | /ʃɔkɔˈlɑd/     | chocolate          | noun  | ч      |          |
+| як        | /jɑk/          | how                | other | -      |          |
+| європа    | /jɛwˈrɔpɑ/     | Europe             | name  | ж      |          |
+| ґума      | /ˈgʊmɑ/        | eraser/rubber      | noun  | ж      |          |

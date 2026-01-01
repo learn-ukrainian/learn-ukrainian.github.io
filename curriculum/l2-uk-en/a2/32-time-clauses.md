@@ -21,6 +21,7 @@ objectives:
   - "Learner can express duration (while)"
   - "Learner understands 'як тільки'"
 vocabulary_count: 25
+vocab_count: 23
 ---
 
 ## Warm-up
@@ -234,49 +235,4 @@ But **поки не** means "until" (literally "while not").
 
 It's logical: I stay in the state of "waiting" during the time that "finishing" has NOT happened yet.
 
-> [!resources] 🔗 External Resources
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
-
-# Summary
-
-1.  **Simultaneous:** Use **Поки** (While) or **В той час як**.
-2.  **Sequential:** Use **Коли** (When) or **Після того як** (After).
-3.  **Immediate:** Use **Як тільки** or **Щойно**.
-4.  **Before:** Use **Перед тим як** or **Перш ніж**.
-5.  **Frequency:** **Кожного разу, коли** (Every time when).
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| поки | /ˈpɔkɪ/ | while/until | conj | — | trigger |
-| доки | /ˈdɔkɪ/ | while/until | conj | — | synonym |
-| як тільки | /jɑk ˈtilʲkɪ/ | as soon as | phrase | — | instant |
-| перед тим як | /pɛrɛd tɪm jɑk/ | before | conj | — | complex |
-| після того як | /pisʲlʲɑ tɔɦɔ jɑk/ | after | conj | — | complex |
-| перш ніж | /pɛrʃ niʒ/ | before | conj | — | literary |
-| поки не | /pɔkɪ nɛ/ | until | phrase | — | negative |
-| тим часом як | /tɪm t͡ʃɑsɔm jɑk/ | meanwhile | conj | — | parallel |
-| кожного разу | /kɔʒnɔɦɔ rɑzu/ | every time | phrase | — | freq |
-| раз у раз | /rɑz u rɑz/ | time and again | phrase | — | idiom |
-| того дня | /tɔɦɔ dnʲɑ/ | on that day | phrase | — | specific |
-| тоді коли | /tɔdi kɔlɪ/ | then when | phrase | — | specific |
-| в той час як | /ʋ tɔj t͡ʃɑs jɑk/ | at that time | phrase | — | parallel |
-| раз | /rɑz/ | time | once | noun | m | count |
-| часом | /ˈt͡ʃɑsɔm/ | sometimes | adv | — | freq |
-| вранці | /ˈʋrɑnt͡sʲi/ | in the morning | adv | — | time |
-| вдень | /ʋdɛnʲ/ | in the afternoon | adv | — | time |
-| ввечері | /ˈʋʋɛt͡ʃɛri/ | in the evening | adv | — | time |
-| вночі | /ʋnɔˈt͡ʃi/ | at night | adv | — | time |
-| довго | /ˈdɔʋɦɔ/ | long (time) | adv | — | duration |
-| ранок | /ˈrɑnɔk/ | morning | noun | m | part of day |
-| день | /dɛnʲ/ | day | noun | m | concept |
-| вечір | /ˈʋɛt͡ʃir/ | evening | noun | m | part of day |
-| ніч | /nit͡ʃ/ | night | noun | f | part of day |
+##

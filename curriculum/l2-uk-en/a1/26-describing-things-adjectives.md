@@ -1,13 +1,12 @@
 ---
-
 module: a1-26
-title: "Describing Things - Adjectives"
-subtitle: "Adjective Agreement in Gender and Number"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Describing Things - Adjectives'
+subtitle: 'Adjective Agreement in Gender and Number'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - adjectives
   - agreement
@@ -18,11 +17,12 @@ grammar:
   - Hard stem adjectives (-ий/-а/-е/-і)
   - Soft stem adjectives (-ій/-я/-є/-і)
 objectives:
-  - "Learner can use correct adjective endings for masculine nouns"
-  - "Learner can use correct adjective endings for feminine nouns"
-  - "Learner can use correct adjective endings for neuter nouns"
-  - "Learner can form plural adjective forms"
+  - 'Learner can use correct adjective endings for masculine nouns'
+  - 'Learner can use correct adjective endings for feminine nouns'
+  - 'Learner can use correct adjective endings for neuter nouns'
+  - 'Learner can form plural adjective forms'
 vocabulary_count: 36
+vocab_count: 44
 ---
 
 # Describing Things - Adjectives
@@ -38,6 +38,7 @@ vocabulary_count: 36
 ---
 
 ## Grammar
+
 In English, adjectives don't change ("big house", "big houses"). In Ukrainian, they MUST agree with the noun's gender and number. This helps you predict what kind of noun is coming!
 
 ## Hard Stem Adjective Endings
@@ -51,21 +52,21 @@ In English, adjectives don't change ("big house", "big houses"). In Ukrainian, t
 
 Most Ukrainian adjectives use these endings:
 
-| Gender | Ending | Example | Meaning |
-|--------|--------|---------|---------|
-| Masculine | -**ий** | нов**ий** будинок | new house |
-| Feminine | -**а** | нов**а** книга | new book |
-| Neuter | -**е** | нов**е** місто | new city |
-| Plural | -**і** | нов**і** друзі | new friends |
+| Gender    | Ending  | Example           | Meaning     |
+| --------- | ------- | ----------------- | ----------- |
+| Masculine | -**ий** | нов**ий** будинок | new house   |
+| Feminine  | -**а**  | нов**а** книга    | new book    |
+| Neuter    | -**е**  | нов**е** місто    | new city    |
+| Plural    | -**і**  | нов**і** друзі    | new friends |
 
 ### More Examples
 
-| Adjective (m) | + Masculine | + Feminine | + Neuter | + Plural |
-|---------------|-------------|------------|----------|----------|
-| великий | великий будинок | велика машина | велике місто | великі будинки |
-| старий | старий дім | стара книга | старе фото | старі друзі |
-| добрий | добрий день | добра людина | добре слово | добрі люди |
-| цікавий | цікавий фільм | цікава книга | цікаве питання | цікаві ідеї |
+| Adjective (m) | + Masculine     | + Feminine    | + Neuter       | + Plural       |
+| ------------- | --------------- | ------------- | -------------- | -------------- |
+| великий       | великий будинок | велика машина | велике місто   | великі будинки |
+| старий        | старий дім      | стара книга   | старе фото     | старі друзі    |
+| добрий        | добрий день     | добра людина  | добре слово    | добрі люди     |
+| цікавий       | цікавий фільм   | цікава книга  | цікаве питання | цікаві ідеї    |
 
 ---
 
@@ -76,6 +77,7 @@ Some adjectives have "soft" stems (those ending in soft consonants). They use sl
 > [!observe] Pattern Discovery
 >
 > Compare:
+>
 > - Hard: нов**ий** / нов**а** / нов**е** / нов**і**
 > - Soft: син**ій** / син**я** / син**є** / син**і**
 >
@@ -83,12 +85,12 @@ Some adjectives have "soft" stems (those ending in soft consonants). They use sl
 
 ### Soft Stem Endings Table
 
-| Gender | Ending | Example | Meaning |
-|--------|--------|---------|---------|
-| Masculine | -**ій** | син**ій** колір | blue color |
-| Feminine | -**я** | син**я** сорочка | blue shirt |
-| Neuter | -**є** | син**є** небо | blue sky |
-| Plural | -**і** | син**і** очі | blue eyes |
+| Gender    | Ending  | Example          | Meaning    |
+| --------- | ------- | ---------------- | ---------- |
+| Masculine | -**ій** | син**ій** колір  | blue color |
+| Feminine  | -**я**  | син**я** сорочка | blue shirt |
+| Neuter    | -**є**  | син**є** небо    | blue sky   |
+| Plural    | -**і**  | син**і** очі     | blue eyes  |
 
 Most common soft-stem adjectives include colors ending in -ій and some other adjectives.
 
@@ -97,9 +99,11 @@ Most common soft-stem adjectives include colors ending in -ій and some other a
 ## Adjective Position
 
 Adjectives usually come BEFORE the noun:
+
 - **великий** будинок (big house)
 
 But can act as predicates AFTER the noun:
+
 - Будинок **великий**. (The house is big.)
 
 ---
@@ -108,14 +112,14 @@ But can act as predicates AFTER the noun:
 
 Learning adjectives in pairs helps you remember them better:
 
-| Pair | Masculine | Feminine | Neuter |
-|------|-----------|----------|--------|
-| big/small | великий/малий | велика/мала | велике/мале |
-| new/old | новий/старий | нова/стара | нове/старе |
-| good/bad | добрий/поганий | добра/погана | добре/погане |
-| fast/slow | швидкий/повільний | швидка/повільна | швидке/повільне |
-| easy/hard | легкий/важкий | легка/важка | легке/важке |
-| expensive/cheap | дорогий/дешевий | дорога/дешева | дороге/дешеве |
+| Pair            | Masculine         | Feminine        | Neuter          |
+| --------------- | ----------------- | --------------- | --------------- |
+| big/small       | великий/малий     | велика/мала     | велике/мале     |
+| new/old         | новий/старий      | нова/стара      | нове/старе      |
+| good/bad        | добрий/поганий    | добра/погана    | добре/погане    |
+| fast/slow       | швидкий/повільний | швидка/повільна | швидке/повільне |
+| easy/hard       | легкий/важкий     | легка/важка     | легке/важке     |
+| expensive/cheap | дорогий/дешевий   | дорога/дешева   | дороге/дешеве   |
 
 ---
 
@@ -241,47 +245,58 @@ Learning adjectives in pairs helps you remember them better:
 > [!resources] External Resources
 >
 > **Vocabulary:**
+>
 > - [Common Adjectives](https://www.ukrainianlessons.com/vocabulary-adjectives/) — Essential descriptive words
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
 >
 > **Grammar:**
+>
 > - [Adjective Agreement](https://www.ukrainianlessons.com/adjectives-and-adverbs/) — Gender agreement
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| малий | /mɑˈlɪj/ | small | adj | m | маленький (dim.) |
-| високий | /vɪˈsɔkɪj/ | tall, high | adj | m | - |
-| низький | /nɪzʲˈkɪj/ | short, low | adj | m | - |
-| довгий | /ˈdɔvɦɪj/ | long | adj | m | - |
-| короткий | /kɔˈrɔtkɪj/ | short | adj | m | - |
-| широкий | /ʃɪˈrɔkɪj/ | wide | adj | m | - |
-| вузький | /vuzʲˈkɪj/ | narrow | adj | m | - |
-| молодий | /mɔlɔˈdɪj/ | young | adj | m | - |
-| красивий | /krɑˈsɪvɪj/ | beautiful | adj | m | for appearance |
-| поганий | /pɔˈɦɑnɪj/ | bad | adj | m | - |
-| добрий | /ˈdɔbrɪj/ | good, kind | adj | m | - |
-| злий | /zlɪj/ | angry, evil | adj | m | - |
-| розумний | /rɔˈzumnɪj/ | smart | adj | m | - |
-| дурний | /durˈnɪj/ | stupid | adj | m | - |
-| сильний | /ˈsɪlʲnɪj/ | strong | adj | m | - |
-| слабкий | /slɑbˈkɪj/ | weak | adj | m | - |
-| швидкий | /ʃvɪdˈkɪj/ | fast | adj | m | - |
-| повільний | /pɔˈvilʲnɪj/ | slow | adj | m | - |
-| легкий | /lɛɦˈkɪj/ | light, easy | adj | m | - |
-| важкий | /vɑʒˈkɪj/ | heavy, hard | adj | m | - |
-| дорогий | /dɔrɔˈɦɪj/ | expensive, dear | adj | m | - |
-| дешевий | /dɛˈʃɛvɪj/ | cheap | adj | m | - |
-| нудний | /nudˈnɪj/ | boring | adj | m | - |
-| простий | /prɔˈstɪj/ | simple | adj | m | - |
-| складний | /sklɑdˈnɪj/ | complex | adj | m | - |
-| важливий | /vɑʒˈlɪvɪj/ | important | adj | m | - |
-| головний | /ɦɔlɔvˈnɪj/ | main | adj | m | - |
-| різний | /ˈriznɪj/ | different, various | adj | m | - |
-| однаковий | /ɔdnɑˈkɔvɪj/ | same, identical | adj | m | - |
-| особливий | /ɔsɔˈblɪvɪj/ | special | adj | m | - |
-| прикметник | /prɪkˈmɛtnɪk/ | adjective | n | m | grammar term |
-
----
+| Word        | IPA              | English         | POS  | Gender | Note |
+| ----------- | ---------------- | --------------- | ---- | ------ | ---- |
+| важкий      | /vɑʒˈkɪj/        | heavy/difficult | adj  | ч      |      |
+| важливий    | /vɑʒˈlɪvɪj/      | important       | adj  | ч      |      |
+| веселий     | /vɛˈsɛlɪj/       | cheerful/fun    | adj  | ч      |      |
+| вимір       | /ˈvɪmir/         | dimension       | noun | ч      |      |
+| високий     | /vɪˈsɔkɪj/       | tall/high       | adj  | ч      |      |
+| вузький     | /vuzʲˈkɪj/       | narrow          | adj  | ч      |      |
+| давній      | /ˈdɑvnʲij/       | ancient/old     | adj  | ч      |      |
+| далі        | /ˈdɑli/          | further         | adv  | -      |      |
+| дешевий     | /dɛˈʃɛvɪj/       | cheap           | adj  | ч      |      |
+| жіночий     | /ʒiˈnɔt͡ʃɪj/      | feminine        | adj  | ч      |      |
+| змінюватися | /zmiˈnʲuvɑtɪsʲɑ/ | to change       | verb | -      |      |
+| колір       | /ˈkɔlʲir/        | color           | noun | ч      |      |
+| корисно     | /ˈkɔrɪsnɔ/       | usefully        | adv  | -      |      |
+| короткий    | /kɔˈrɔtkɪj/      | short           | adj  | ч      |      |
+| легкий      | /lɛxˈkɪj/        | light/easy      | adj  | ч      |      |
+| мелодійний  | /mɛlɔˈdijnɪj/    | melodious       | adj  | ч      |      |
+| небо        | /ˈnɛbɔ/          | sky             | noun | с      |      |
+| нудний      | /nudˈnɪj/        | boring          | adj  | ч      |      |
+| однаковий   | /ɔdˈnɑkɔvɪj/     | identical/same  | adj  | ч      |      |
+| одяг        | /ˈɔdʲɑh/         | clothing        | noun | ч      |      |
+| означати    | /ɔznɑˈt͡ʃɑtɪ/     | to mean         | verb | -      |      |
+| опис        | /ˈɔpɪs/          | description     | noun | ч      |      |
+| описувати   | /ɔˈpɪsuvɑtɪ/     | to describe     | verb | -      |      |
+| повільний   | /pɔˈvilʲnɪj/     | slow            | adj  | ч      |      |
+| поганий     | /pɔˈhɑnɪj/       | bad             | adj  | ч      |      |
+| правило     | /ˈprɑvɪlɔ/       | rule            | noun | с      |      |
+| предмет     | /prɛdˈmɛt/       | subject/object  | noun | ч      |      |
+| прикметник  | /prɪkˈmɛtnɪk/    | adjective       | noun | ч      |      |
+| підказка    | /pidˈkɑzkɑ/      | hint/clue       | noun | ж      |      |
+| раз         | /rɑz/            | time/once       | noun | ч      |      |
+| розказати   | /rɔzkɑˈzɑtɪ/     | to tell         | verb | -      |      |
+| розмір      | /ˈrɔzmir/        | size            | noun | ч      |      |
+| розумний    | /rɔˈzumnɪj/      | smart           | adj  | ч      |      |
+| різний      | /ˈriznɪj/        | different       | adj  | ч      |      |
+| річ         | /rit͡ʃ/           | thing           | noun | ж      |      |
+| сильний     | /ˈsɪlʲnɪj/       | strong          | adj  | ч      |      |
+| сорочка     | /sɔˈrɔt͡ʃkɑ/      | shirt           | noun | ж      |      |
+| узгодження  | /uzˈɦɔdʒɛnʲːɑ/   | agreement       | noun | с      |      |
+| форма       | /ˈfɔrmɑ/         | form            | noun | ж      |      |
+| характер    | /xɑˈrɑktɛr/      | character       | noun | ч      |      |
+| широкий     | /ʃɪˈrɔkɪj/       | wide            | adj  | ч      |      |
+| іменник     | /iˈmɛnːɪk/       | noun            | ч    |        |

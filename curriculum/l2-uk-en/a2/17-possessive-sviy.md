@@ -19,6 +19,7 @@ objectives:
   - "Learner can use свій when possessor is the subject"
   - "Learner can decline свій correctly"
 vocabulary_count: 25
+vocab_count: 20
 ---
 
 ## Warm-up
@@ -225,6 +226,13 @@ When the subject controls an infinitive, свій refers to that subject:
 With impersonal constructions, свій refers to the logical subject:
 - Треба любити **свою** країну. (One must love one's country.)
 - Добре мати **своє** власне житло. (It's good to have one's own housing.)
+- Це **чужий** дім. (This is someone else's house.)
+- У нас є **спільний** інтерес. (We have a common interest.)
+- Це **власне** моя думка. (This is strictly my opinion.)
+- Я маю **власний** бізнес. (I have my own business.)
+- Вона любить **своє** життя. (She loves her life.)
+- Вони знають **свої** права. (They know their rights.)
+- Це **моя власна** ідея. (This is my own idea.)
 
 ## Case 3: Embedded Clauses
 
@@ -271,43 +279,4 @@ This mental check will help you until the pattern becomes automatic through prac
 > Where English needs extra words ("his own"), Ukrainian uses one form.
 > This efficiency is part of what makes Ukrainian beautiful to speak.
 
----
-
-# Summary
-
-Today you learned the reflexive possessive pronoun **свій**.
-
-**Key Rules:**
-- Use **свій** when the possessor IS the subject.
-- Use **його/її/їхній** when the possessor is NOT the subject.
-- Свій declines like мій/твій.
-- This distinction is mandatory in Ukrainian for 3rd person.
-
-**Contrast:**
-- Він любить **свою** маму. (his own)
-- Він любить **його** маму. (someone else's)
-
----
-
-## Need More Practice?
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian possessive pronoun СВІЙ ...](https://www.youtube.com/watch?v=u57A6YglFzk) — How to use it correctly?
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Forms |
-|------|-----|---------|-----|--------|-------|
-| життя | /ʒɪtʲˈɑ/ | life | noun | f | - |
-| гостинність | /ɦɔstˈɪnnʲistʲ/ | hospitality | noun | m | - |
-| особистий | /ɔsɔˈbɪstɪj/ | personal, own | adj | m | - |
-| ділитися | /diˈlɪtɪsʲɑ/ | to share | verb | — | impf |
+##

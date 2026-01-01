@@ -14,7 +14,7 @@ objectives:
   - Describe symptoms: болить, температура
   - Visit a doctor/pharmacy: ліки, рецепт
   - Give health advice: пийте воду, не хворійте
-vocab_count: 30
+vocab_count: 57
 ---
 
 # Health & Body
@@ -244,12 +244,3 @@ Take care and stay healthy!
 > **Grammar Guide:** [Ukrainian Health Vocabulary](https://www.ukrainianlessons.com/something-hurts/) — Common health expressions
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| клініка | /ˈklinika/ | clinic | noun | f | |
-| швидка | /ʃʋɪdˈka/ | ambulance | noun | f | |
-| тиск | /tɪsk/ | pressure | noun | m | |
-| кров | /krɔʋ/ | blood | noun | f | |

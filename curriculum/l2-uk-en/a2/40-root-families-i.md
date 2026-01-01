@@ -19,6 +19,7 @@ objectives:
   - "Learner can deduce meaning of new words (Вхід vs Вихід)"
   - "Learner uses root logic to expand vocabulary rapidly"
 vocabulary_count: 30
+vocab_count: 54
 ---
 
 ## Warm-up
@@ -58,6 +59,9 @@ Verb: **Ходити** (To walk).
 
 *Де тут вхід?* (Where is the entrance?)
 *Це підземний перехід.* (This is an underground crossing).
+*Головний **вхід**.* (Main entrance).
+*Запасний **вихід**.* (Emergency exit).
+*Я люблю **ходити**.* (I like to walk).
 
 ---
 
@@ -77,6 +81,8 @@ Verb: **Писати** (To write).
 
 *Ваш підпис, будь ласка.* (Your signature, please).
 *Я зроблю запис у журналі.* (I will make a record in the journal).
+*Це моє **письмо**.* (This is my writing).
+*Тут є **надпис**.* (Here is an inscription.)
 
 ---
 
@@ -94,6 +100,7 @@ Verb: **Читати** (To read).
 - **Дочитати**: To read to the end (Finish).
 
 *Читання — це корисна звичка.* (Reading is a useful habit).
+***Читання** — це цікаво.* (Reading is interesting).
 
 ### The Seers (-БАЧ- | -ГЛЯД-)
 Verb: **Бачити** (To see). Root often swaps with **ГЛЯД** (Look).
@@ -311,27 +318,3 @@ Logic wins!
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Root |
-|------|-----|---------|-----|--------|------|
-| хід | /xid/ | motion/move | noun | masc | хід |
-| похід | /pɔˈxid/ | hike/campaign | noun | masc | хід |
-| прихід | /prɪˈxid/ | arrival | noun | masc | хід |
-| відхід | /ʋidˈxid/ | departure | noun | masc | хід |
-| перехід | /pɛrɛˈxid/ | crossing | noun | masc | хід |
-| пішохід | /piʃɔˈxid/ | pedestrian | noun | masc | хід |
-| підпис | /pidˈpɪs/ | signature | noun | masc | пис |
-| запис | /zˈɑpɪs/ | record/note | noun | masc | пис |
-| опис | /ɔˈpɪs/ | description | noun | masc | пис |
-| напис | /nˈɑpɪs/ | inscription | noun | masc | пис |
-| надпис | /nˈɑdpɪs/ | label/inscription | noun | masc | пис |
-| дочитати | /dɔt͡ʃɪˈtɑtɪ/ | to finish reading | verb | - | чит |
-| перечитати | /pɛrɛt͡ʃɪˈtɑtɪ/ | to re-read | verb | - | чит |
-| бачення | /bˈɑt͡ʃɛnʲːɑ/ | vision | noun | neut | бач |
-| побачення | /pɔbˈɑt͡ʃɛnʲːɑ/ | date/meeting | noun | neut | бач |
-| передбачення | /pɛrɛdbˈɑt͡ʃɛnʲːɑ/ | prediction | noun | neut | бач |
-| огляд | /ɔˈɦlʲɑd/ | review | noun | masc | гляд |
-| погляд | /pˈɔɦlʲɑd/ | glance/view | noun | masc | гляд |
-| вигляд | /ʋˈɪɦlʲɑd/ | look/appearance | noun | masc | гляд |

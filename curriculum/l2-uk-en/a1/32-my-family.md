@@ -1,13 +1,12 @@
 ---
-
 module: a1-32
-title: "My Family"
-subtitle: "Родина"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'My Family'
+subtitle: 'Родина'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - family
   - relationships
@@ -17,11 +16,12 @@ grammar:
   - Possessives with family members
   - Genitive for relationships
 objectives:
-  - "Learner can name family members"
-  - "Learner can describe family relationships"
-  - "Learner can talk about their own family"
-  - "Learner can use possessives with family terms"
+  - 'Learner can name family members'
+  - 'Learner can describe family relationships'
+  - 'Learner can talk about their own family'
+  - 'Learner can use possessives with family terms'
 vocabulary_count: 35
+vocab_count: 39
 ---
 
 # My Family
@@ -40,11 +40,13 @@ vocabulary_count: 35
 ---
 
 ## Grammar
+
 ## Talking About Family
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at these patterns:
+>
 > - **У мене є** брат. (I have a brother.)
 > - **Мого** брата звати Максим. (My brother's name is Maksym.)
 > - **Це моя** сестра. (This is my sister.)
@@ -53,20 +55,20 @@ vocabulary_count: 35
 
 ### "I Have" Pattern
 
-| Structure | Example |
-|-----------|---------|
-| У мене є + Nominative | У мене є **брат**. (I have a brother.) |
-| У мене є + Nominative | У мене є **сестра**. (I have a sister.) |
+| Structure               | Example                                           |
+| ----------------------- | ------------------------------------------------- |
+| У мене є + Nominative   | У мене є **брат**. (I have a brother.)            |
+| У мене є + Nominative   | У мене є **сестра**. (I have a sister.)           |
 | У мене немає + Genitive | У мене немає **брата**. (I don't have a brother.) |
 
 ### Possessives with Family
 
-| Gender | My | Your (informal) | His/Her |
-|--------|-----|-----------------|---------|
-| Masculine | мій тато | твій тато | його/її тато |
-| Feminine | моя мама | твоя мама | його/її мама |
-| Neuter | моє ім'я | твоє ім'я | його/її ім'я |
-| Plural | мої батьки | твої батьки | його/її батьки |
+| Gender    | My         | Your (informal) | His/Her        |
+| --------- | ---------- | --------------- | -------------- |
+| Masculine | мій тато   | твій тато       | його/її тато   |
+| Feminine  | моя мама   | твоя мама       | його/її мама   |
+| Neuter    | моє ім'я   | твоє ім'я       | його/її ім'я   |
+| Plural    | мої батьки | твої батьки     | його/її батьки |
 
 ---
 
@@ -74,20 +76,22 @@ vocabulary_count: 35
 
 ### Age Order
 
-| Term | Meaning | Example |
-|------|---------|---------|
-| старший | older | Мій **старший** брат. (My older brother.) |
-| молодший | younger | Моя **молодша** сестра. (My younger sister.) |
-| середній | middle | Я **середній** у сім'ї. (I'm the middle child.) |
-| єдиний | only | Я **єдина** дитина. (I'm an only child. — f) |
+| Term     | Meaning | Example                                         |
+| -------- | ------- | ----------------------------------------------- |
+| старший  | older   | Мій **старший** брат. (My older brother.)       |
+| молодший | younger | Моя **молодша** сестра. (My younger sister.)    |
+| середній | middle  | Я **середній** у сім'ї. (I'm the middle child.) |
+| єдиний   | only    | Я **єдина** дитина. (I'm an only child. — f)    |
 
 ### Marital Status
 
-| Term | Meaning |
-|------|---------|
-| одружений/одружена | married |
-| неодружений/неодружена | unmarried |
-| наречений/наречена | engaged (fiancé/fiancée) |
+| Term                   | Meaning                  |
+| ---------------------- | ------------------------ |
+| одружений/одружена     | married                  |
+| неодружений/неодружена | unmarried                |
+| розлучений/розлучена   | divorced                 |
+| вдівець/вдова          | widower/widow            |
+| наречений/наречена     | engaged (fiancé/fiancée) |
 
 ### Vocative Case (Кличний відмінок)
 
@@ -96,6 +100,7 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at these pairs:
+>
 > - мама → **Мамо!** (Mom!)
 > - тато → **Тату!** (Dad!)
 > - бабуся → **Бабусю!** (Grandma!)
@@ -103,18 +108,19 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 >
 > The ending changes when you're calling TO someone!
 
-| Nominative | Vocative | Use |
-|------------|----------|-----|
-| мама | Мамо! | calling mom |
-| тато | Тату! | calling dad |
-| бабуся | Бабусю! | calling grandma |
-| дідусь | Дідусю! | calling grandpa |
-| брат | Брате! | calling brother |
-| сестра | Сестро! | calling sister |
-| Оксана | Оксано! | calling Oksana |
-| Іван | Іване! | calling Ivan |
+| Nominative | Vocative | Use             |
+| ---------- | -------- | --------------- |
+| мама       | Мамо!    | calling mom     |
+| тато       | Тату!    | calling dad     |
+| бабуся     | Бабусю!  | calling grandma |
+| дідусь     | Дідусю!  | calling grandpa |
+| брат       | Брате!   | calling brother |
+| сестра     | Сестро!  | calling sister  |
+| Оксана     | Оксано!  | calling Oksana  |
+| Іван       | Іване!   | calling Ivan    |
 
 **Common patterns:**
+
 - -а → -о (мама → мамо, сестра → сестро)
 - -о → -у (тато → тату)
 - -я → -ю (бабуся → бабусю)
@@ -123,6 +129,7 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 > 💡 **When to Use Vocative**
 >
 > Use vocative when:
+>
 > - Calling someone: **Мамо**, де ти? (Mom, where are you?)
 > - Getting attention: **Тату**, допоможи! (Dad, help!)
 > - In exclamations: **Боже!** (God!/Oh my God!)
@@ -155,6 +162,8 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 >
 > - Він **одружений**. (He is married.)
 > - Вона **не одружена**. (She is not married.)
+> - Мій брат **розлучений**. (My brother is divorced.)
+> - Вона **вдова**. (She is a widow.)
 > - Це мій **хлопець**. (This is my boyfriend.)
 > - Це моя **дівчина**. (This is my girlfriend.)
 > - Вони **наречені**. (They are engaged.)
@@ -240,40 +249,47 @@ When calling someone directly, Ukrainian changes the word ending. This is the **
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Family Vocabulary](https://www.ukrainianlessons.com/vocabulary-family/) — Сім'я
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/family
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| сім'я | /sʲimˈjɑ/ | family | n | f | |
-| родина | /rɔˈdɪnɑ/ | family/kin | n | f | |
-| батьки | /bɑtʲˈkɪ/ | parents | n | pl | |
-| дядько | /ˈdʲɑdʲkɔ/ | uncle | n | m | |
-| брат | /brɑt/ | brother | n | m | |
-| сестра | /sɛsˈtrɑ/ | sister | n | f | |
-| дідусь | /dʲiˈdusʲ/ | grandfather | n | m | |
-| бабуся | /bɑˈbusʲɑ/ | grandmother | n | f | |
-| онук | /ɔˈnuk/ | grandson | n | m | |
-| онучка | /ɔˈnut͡ʃkɑ/ | granddaughter | n | f | |
-| тітка | /ˈtʲitkɑ/ | aunt | n | f | |
-| двоюрідний брат | /dvɔˈjurʲidnɪj brɑt/ | cousin (m) | n | m | lit. "second-born brother" |
-| двоюрідна сестра | /dvɔˈjurʲidnɑ sɛsˈtrɑ/ | cousin (f) | n | f | lit. "second-born sister" |
-| син | /sɪn/ | son | n | m | |
-| дочка | /ˈdɔt͡ʃkɑ/ | daughter | n | f | |
-| дружина | /druˈʒɪnɑ/ | wife | n | f | |
-| наречений | /nɑˈrɛt͡ʃɛnɪj/ | fiancé | n | m | |
-| наречена | /nɑˈrɛt͡ʃɛnɑ/ | fiancée | n | f | |
-| старший | /ˈstɑrʃɪj/ | older | adj | m | |
-| молодший | /mɔˈlɔdʃɪj/ | younger | adj | m | |
-| єдиний | /jɛˈdɪnɪj/ | only | adj | m | only child |
-| одружений | /ɔˈdruʒɛnɪj/ | married (m) | adj | m | |
-| одружена | /ɔˈdruʒɛnɑ/ | married (f) | adj | f | |
-| неодружений | /nɛɔˈdruʒɛnɪj/ | unmarried (m) | adj | m | |
-| неодружена | /nɛɔˈdruʒɛnɑ/ | unmarried (f) | adj | f | |
-| дитина | /dɪˈtɪnɑ/ | child | n | f | |
-| діти | /ˈdʲitɪ/ | children | n | pl | |
-
----
+| Word        | IPA            | English          | POS  | Gender | Note           |
+| ----------- | -------------- | ---------------- | ---- | ------ | -------------- |
+| батьки      | /bɑtʲˈkɪ/      | parents          | noun | -      | Plural         |
+| батько      | /ˈbɑtʲkɔ/      | father           | noun | ч      |                |
+| Бог         | /bɔh/          | God              | noun | ч      |                |
+| брат        | /brɑt/         | brother          | noun | ч      |                |
+| вдова       | /vdɔˈvɑ/       | widow            | noun | ж      |                |
+| вдівець     | /vdiˈvɛt͡sʲ/    | widower          | noun | ч      |                |
+| Великдень   | /vɛˈlɪkdɛnʲ/   | Easter           | name | ч      |                |
+| Ганна       | /ˈɦɑnːɑ/       | Hanna            | name | ж      |                |
+| двоюрідний  | /dvɔˈjuridnɪj/ | cousin (adj)     | adj  | ч      |                |
+| двоє        | /ˈdvɔjɛ/       | two (collective) | num  | -      |                |
+| дядько      | /ˈdʲɑdʲkɔ/     | uncle            | noun | ч      |                |
+| єдиний      | /jɛˈdɪnɪj/     | only             | adj  | ч      |                |
+| Іван        | /iˈvɑn/        | Ivan             | name | ч      |                |
+| кличний     | /ˈklɪt͡ʃnɪj/    | vocative         | adj  | ч      |                |
+| мама        | /ˈmɑmɑ/        | mom              | noun | ж      |                |
+| молодший    | /mɔˈlɔdʃɪj/    | younger          | adj  | ч      |                |
+| наречена    | /nɑrɛˈt͡ʃɛnɑ/   | fiancée          | noun | ж      |                |
+| наречений   | /nɑrɛˈt͡ʃɛnɪj/  | fiancé           | noun | ч      |                |
+| неодружений | /nɛɔdˈruʒɛnɪj/ | unmarried        | adj  | ч      |                |
+| одружений   | /ɔdˈruʒɛnɪj/   | married          | adj  | ч      |                |
+| Оксана      | /ɔkˈsɑnɑ/      | Oksana           | name | ж      |                |
+| пан         | /pɑn/          | Mr/Sir           | noun | ч      |                |
+| Петро       | /pɛtˈrɔ/       | Petro            | name | ч      |                |
+| родина      | /rɔˈdɪnɑ/      | family           | noun | ж      |                |
+| родич       | /ˈrɔdɪt͡ʃ/      | relative         | noun | ч      |                |
+| розлучений  | /rɔzˈlut͡ʃɛnɪj/ | divorced         | adj  | ч      |                |
+| святий      | /svʲɑˈtɪj/     | holy/saint       | adj  | ч      |                |
+| середній    | /sɛˈrɛdnʲij/   | middle           | adj  | ч      |                |
+| сестра      | /sɛsˈtrɑ/      | sister           | noun | ж      |                |
+| сімейний    | /siˈmɛjnɪj/    | family (adj)     | adj  | ч      |                |
+| старший     | /ˈstɑrʃɪj/     | older            | adj  | ч      |                |
+| стосунок    | /stɔˈsunɔk/    | relationship     | noun | ч      | Usually plural |
+| тато        | /ˈtɑtɔ/        | dad              | noun | ч      |                |
+| традиція    | /trɑˈdɪt͡sʲijɑ/ | tradition        | noun | ж      |                |
+| тітка       | /ˈtitkɑ/       | aunt             | noun | ж      |                |

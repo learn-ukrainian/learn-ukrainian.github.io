@@ -20,6 +20,7 @@ objectives:
   - "Learner can use the dative case for personal feelings"
   - "Learner can distinguish between states and adjectives"
 vocabulary_count: 25
+vocab_count: 23
 ---
 
 # Summary
@@ -54,6 +55,8 @@ When expressing physical or environmental sensations, Ukrainian uses the Dative 
 | **Нам сумно.** | To us [is] sad. | We are sad. |
 | **Вам весело.** | To you [is] fun. | You are having fun / happy. |
 | **Їм нудно.** | To them [is] boring. | They are bored. |
+| **Мені цікаво.** | To me [is] interesting. | It is interesting to me. |
+| **Мені нудно.** | To me [is] boring. | I am bored. |
 | **Тобі страшно?** | To you [is] scary? | Are you scared? |
 | **Мені приємно.** | To me [is] pleasant. | It's my pleasure / I'm glad. |
 
@@ -152,35 +155,3 @@ Ukrainian literature and folk songs are famous for their emotional depth. The co
 > - **YouTube:** [Feelings and Emotions in Ukrainian](https://www.youtube.com/results?search_query=ukrainian+feelings+vocabulary) — Slow Ukrainian with Yevhen
 > - **Article:** [How to express emotions in Ukrainian](https://www.ukrainianlessons.com/emotions/) — Ukrainian Lessons
 > - **Audio:** [Pronunciation of Ukrainian Emotions](https://forvo.com/languages/uk/) — Forvo Database
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| страшно | /ˈstrɑʃnɔ/ | scary | adv | — | impersonal |
-| втомлений | /ˈʋtɔmlɛnɪj/ | tired | adj | masc | state |
-| голодний | /ɦɔˈlɔdnɪj/ | hungry | adj | masc | state |
-| задоволений | /zɑdɔˈʋɔlɛnɪj/ | satisfied | adj | masc | state |
-| засмучений | /zɑˈsmut͡ʃɛnɪj/ | upset | adj | masc | state |
-| здивований | /zdɪˈʋɔʋɑnɪj/ | surprised | adj | masc | state |
-| розчарований | /rɔzt͡ʃɑˈrɔʋɑnɪj/ | disappointed | adj | masc | state |
-| радий | /ˈrɑdɪj/ | glad | adj | masc | temporary |
-| вдячний | /ˈʋdʲɑt͡ʃnɪj/ | grateful | adj | masc | state |
-| спокійний | /spɔˈkіjnɪj/ | calm | adj | masc | personality |
-| сонний | /ˈsɔnnɪj/ | sleepy | adj | masc | physical |
-| почуватися | /pɔt͡ʃuˈʋɑtɪsʲɑ/ | to feel | verb | — | reflexive |
-| радіти | /rɑˈditɪ/ | to rejoice | verb | — | emotion |
-| сумувати | /sumuˈʋɑtɪ/ | to be sad | verb | — | emotion |
-| хвилюватися | /xʋɪlʲuˈʋɑtɪsʲɑ/ | to worry | verb | — | emotion |
-| турбуватися | /turbuˈʋɑtɪsʲɑ/ | to worry/care | verb | — | emotion |
-| боятися | /bɔˈjɑtɪsʲɑ/ | to fear | verb | — | emotion |
-| дивуватися | /dɪʋuˈʋɑtɪsʲɑ/ | to be surprised | verb | — | emotion |
-| журба | /ʒurˈbɑ/ | sorrow, grief | noun | fem | cultural |
-| втома | /ˈʋtɔmɑ/ | fatigue, tiredness | noun | fem | physical |
-| прикро | /ˈprɪkrɔ/ | a pity, annoying | adv | — | impersonal |
-| радісно | /ˈrɑdisnɔ/ | joyfully | adv | — | impersonal |
-| шкода | /ˈʃkɔdɑ/ | a pity, sorry | adv | — | impersonal |
-| щасливо | /ʃt͡ʃɑsˈlɪʋɔ/ | happily | adv | — | impersonal |
-| рада | /ˈrɑdɑ/ | glad (fem) | adj | fem | temporary |
-| переляканий | /pɛrɛˈlʲɑkɑnɪj/ | frightened, scared | adj | m | emotional state |
-| сумний | /ˈsumnɪj/ | sad | adj | m | emotional state |

@@ -20,6 +20,7 @@ objectives:
   - "Learner can express contrast (Although...)"
   - "Learner can link complex ideas"
 vocabulary_count: 25
+vocab_count: 34
 ---
 
 # Summary
@@ -200,39 +201,4 @@ You have unlocked the power of complex thought!
 
 Don't forget the comma!
 
----
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [3 ways to say "BECAUSE" in Ukrainian + a bonus phrase ...](https://www.youtube.com/watch?v=d0_wnb9X3-s) — Learn Ukrainian Language
->
-> **Grammar Guide:** [Ukrainian Conjunctions Guide](https://www.ukrainianlessons.com/ukrainian-conjunctions-guide/) — Ukrainian Lessons
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| тому що | /tɔˈmu ʃt͡ʃɔ/ | because | conj | — | standard |
-| бо | /bɔ/ | because | conj | — | colloquial |
-| оскільки | /ɔsˈkilʲkɪ/ | since | conj | — | logical |
-| через те що | /ˈt͡ʃɛrɛz tɛ ʃt͡ʃɔ/ | due to the fact that | phrase | — | formal |
-| завдяки тому що | /zɑʋdʲɑˈkɪ tɔˈmu ʃt͡ʃɔ/ | thanks to the fact that | phrase | — | positive |
-| хоча | /xɔˈt͡ʃɑ/ | although | conj | — | contrast |
-| незважаючи на те що | /nɛzʋɑˈʒɑjut͡ʃɪ nɑ tɛ ʃt͡ʃɔ/ | despite the fact that | phrase | — | strong contrast |
-| проте | /prɔˈtɛ/ | however | conj | — | formal contrast |
-| однак | /ɔdˈnɑk/ | however | conj | — | formal contrast |
-| але | /ɑˈlɛ/ | but | conj | — | simple contrast |
-| зате | /zɑˈtɛ/ | but (on the plus side) | conj | — | balance |
-| все-таки | /ˈʋsɛ tɑkɪ/ | still, after all | particle | — | persistence |
-| все ж таки | /ˈʋsɛ ʒ tɑkɪ/ | still, after all | particle | — | persistence |
-| попри те що | /ˈpɔprɪ tɛ ʃt͡ʃɔ/ | in spite of the fact that | phrase | — | formal |
-| хоч і | /xɔt͡ʃ i/ | even though | conj | — | emphasis |
-| хай | /xɑj/ | let, may | particle | — | wish/command |
-| нехай | /nɛˈxɑj/ | let, may | particle | — | wish/command |
-| хоч би | /xɔt͡ʃ bɪ/ | if only | particle | — | wish |
-| дарма що | /dɑrˈmɑ ʃt͡ʃɔ/ | even though | conj | — | literary |
-| якби не | /jɑkˈbɪ nɛ/ | if it weren't for | phrase | — | conditional |
-| наслідок | /ˈnɑsʲlidɔk/ | consequence | noun | m | logic |
-| сперечатися | /spɛrɛˈt͡ʃɑtɪsʲɑ/ | to argue, debate | verb | — | action |
+##

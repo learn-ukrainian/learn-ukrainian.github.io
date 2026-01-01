@@ -14,7 +14,7 @@ objectives:
   - Discuss internet activities: шукати, завантажувати
   - Talk about media: новини, блог, соціальні мережі
   - Describe digital habits
-vocab_count: 30
+vocab_count: 53
 ---
 
 # Technology & Media
@@ -185,32 +185,3 @@ Digital literacy is key in modern Ukrainian society. Use these words to stay con
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| смартфон | /smartˈfɔn/ | smartphone | noun | m | |
-| планшет | /planˈʃɛt/ | tablet | noun | m | |
-| ноутбук | /noutˈbuk/ | laptop | noun | m | |
-| гаджет | /ˈɡadʒet/ | gadget | noun | m | |
-| екран | /eˈkran/ | screen | noun | m | |
-| клавіатура | /klavijaˈtura/ | keyboard | noun | f | |
-| мишка | /ˈmɪʃka/ | mouse | noun | f | |
-| навушники | /naˈvuʃnɪkɪ/ | headphones | noun | pl | |
-| вебсайт | /vɛbˈsajt/ | website | noun | m | |
-| посилання | /posɪˈlanʲːa/ | link | noun | n | |
-| пароль | /paˈrɔlʲ/ | password | noun | m | |
-| логін | /loˈɡin/ | login | noun | m | |
-| мережа | /meˈrɛʒa/ | network | noun | f | |
-| зв'язок | /zʋjɐˈzɔk/ | connection | noun | m | |
-| новини | /noˈvɪnɪ/ | news | noun | pl | |
-| стаття | /statˈtʲa/ | article | noun | f | |
-| блог | /blɔh/ | blog | noun | m | |
-| блогер | /ˈblɔher/ | blogger | noun | m | |
-| подкаст | /podˈkast/ | podcast | noun | m | |
-| коментар | /komenˈtar/ | comment | noun | m | |
-| лайк | /lajk/ | like | noun | m | slang |
-| повідомлення | /poviˈdɔmlenʲːa/ | message | noun | n | |
-| завантажувати | /zavanˈtaʒuvatɪ/ | to download | verb | - | |
-| публікувати | /publikuˈvatɪ/ | to publish | verb | - | |

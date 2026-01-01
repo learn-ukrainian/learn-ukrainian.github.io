@@ -14,7 +14,7 @@ objectives:
   - Describe fitness: тренування, спортзал
   - Discuss watching sports: матч, вболівальник
   - Use play verbs correctly: грати в
-vocab_count: 30
+vocab_count: 50
 ---
 
 # Sports & Fitness
@@ -238,32 +238,3 @@ A healthy mind in a healthy body!
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| спорт | /spɔrt/ | sport | noun | m | |
-| баскетбол | /basketˈbɔl/ | basketball | noun | m | |
-| теніс | /ˈtɛnis/ | tennis | noun | m | |
-| бокс | /bɔks/ | boxing | noun | m | |
-| плавання | /ˈplaʋannʲa/ | swimming | noun | n | |
-| біг | /bih/ | running | noun | m | |
-| гімнастика | /himˈnastɪka/ | gymnastics | noun | f | |
-| спортзал | /spɔrtˈzal/ | gym | noun | m | |
-| басейн | /baˈsɛjn/ | pool | noun | m | |
-| команда | /koˈmanda/ | team | noun | f | |
-| гравець | /hraˈʋɛtsʲ/ | player | noun | m | |
-| вболівальник | /ʋboliˈʋalʲnɪk/ | fan | noun | m | |
-| тренер | /ˈtrɛner/ | coach | noun | m | |
-| тренуватися | /trenuˈʋatɪsʲa/ | to train | verb | - | |
-| займатися | /zajˈmatɪsʲa/ | to practice | verb | - | |
-| бігати | /ˈbihatɪ/ | to run | verb | - | |
-| плавати | /ˈplaʋatɪ/ | to swim | verb | - | |
-| вигравати | /ʋɪhraˈʋatɪ/ | to win | verb | - | |
-| програвати | /prohraˈʋatɪ/ | to lose | verb | - | |
-| змагання | /zmaˈhannʲa/ | competition | noun | n | |
-| матч | /matʃ/ | match | noun | m | |
-| м'яч | /mʲatʃ/ | ball | noun | m | |
-| гол | /hɔl/ | goal | noun | m | |
-| медаль | /meˈdalʲ/ | medal | noun | f | |

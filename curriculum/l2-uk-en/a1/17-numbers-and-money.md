@@ -1,29 +1,29 @@
 ---
-
 module: a1-17
-title: "Numbers & Money"
-subtitle: "Counting and Shopping in Ukraine"
-version: "1.0"
-phase: "A1.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "vocab-only"
+title: 'Numbers & Money'
+subtitle: 'Counting and Shopping in Ukraine'
+version: '1.0'
+phase: 'A1.2'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'vocab-only'
 objectives:
-  - "Learner can count from 0-100 in Ukrainian"
+  - 'Learner can count from 0-100 in Ukrainian'
   - "Learner can ask and answer 'How much does it cost?'"
-  - "Learner can handle basic shopping transactions"
-  - "Learner can use numbers with genitive plural forms"
+  - 'Learner can handle basic shopping transactions'
+  - 'Learner can use numbers with genitive plural forms'
 vocabulary_count: 35
 grammar:
-  - "Cardinals 0-100"
-  - "Number agreement with nouns (1=nom.sg, 2-4=nom.pl, 5+=gen.pl)"
-  - "Genitive plural with numbers"
+  - 'Cardinals 0-100'
+  - 'Number agreement with nouns (1=nom.sg, 2-4=nom.pl, 5+=gen.pl)'
+  - 'Genitive plural with numbers'
 tags:
   - numbers
   - money
   - shopping
   - genitive-plural
   - currency
+vocab_count: 61
 ---
 
 # Numbers & Money
@@ -35,35 +35,36 @@ You're at a market in Kyiv. The vendor says "Двадцять гривень." D
 > 💡 **Did You Know?**
 >
 > The Ukrainian currency is called **гривня** (hryvnia). It's one of the oldest currency names in Europe, dating back to Kyivan Rus' in the 11th century! The word originally meant "neck ring" - a silver ornament worn by wealthy citizens.
+
 ## Presentation
 
 ### Numbers 0-20
 
 Let's start with the basics. Ukrainian numbers 0-20 are unique and must be memorized:
 
-| Number | Ukrainian | IPA |
-|--------|-----------|-----|
-| 0 | нуль | /nulʲ/ |
-| 1 | один (m), одна (f), одне (n) | /ɔˈdɪn/, /ɔdˈna/, /ɔdˈnɛ/ |
-| 2 | два (m/n), дві (f) | /dʋa/, /dʋi/ |
-| 3 | три | /trɪ/ |
-| 4 | чотири | /t͡ʃɔˈtɪrɪ/ |
-| 5 | п'ять | /pjatʲ/ |
-| 6 | шість | /ʃistʲ/ |
-| 7 | сім | /sim/ |
-| 8 | вісім | /ʋiˈsim/ |
-| 9 | дев'ять | /ˈdɛvjatʲ/ |
-| 10 | десять | /ˈdɛsʲatʲ/ |
-| 11 | одинадцять | /ɔdɪˈnad͡zʲatʲ/ |
-| 12 | дванадцять | /dʋaˈnad͡zʲatʲ/ |
-| 13 | тринадцять | /trɪˈnad͡zʲatʲ/ |
-| 14 | чотирнадцять | /t͡ʃɔtɪrˈnad͡zʲatʲ/ |
-| 15 | п'ятнадцять | /pjatˈnad͡zʲatʲ/ |
-| 16 | шістнадцять | /ʃisˈnad͡zʲatʲ/ |
-| 17 | сімнадцять | /simˈnad͡zʲatʲ/ |
-| 18 | вісімнадцять | /ʋisimˈnad͡zʲatʲ/ |
-| 19 | дев'ятнадцять | /dɛvjatˈnad͡zʲatʲ/ |
-| 20 | двадцять | /ˈdʋad͡zʲatʲ/ |
+| Number | Ukrainian                    | IPA                       |
+| ------ | ---------------------------- | ------------------------- |
+| 0      | нуль                         | /nulʲ/                    |
+| 1      | один (m), одна (f), одне (n) | /ɔˈdɪn/, /ɔdˈna/, /ɔdˈnɛ/ |
+| 2      | два (m/n), дві (f)           | /dʋa/, /dʋi/              |
+| 3      | три                          | /trɪ/                     |
+| 4      | чотири                       | /t͡ʃɔˈtɪrɪ/                |
+| 5      | п'ять                        | /pjatʲ/                   |
+| 6      | шість                        | /ʃistʲ/                   |
+| 7      | сім                          | /sim/                     |
+| 8      | вісім                        | /ʋiˈsim/                  |
+| 9      | дев'ять                      | /ˈdɛvjatʲ/                |
+| 10     | десять                       | /ˈdɛsʲatʲ/                |
+| 11     | одинадцять                   | /ɔdɪˈnad͡zʲatʲ/            |
+| 12     | дванадцять                   | /dʋaˈnad͡zʲatʲ/            |
+| 13     | тринадцять                   | /trɪˈnad͡zʲatʲ/            |
+| 14     | чотирнадцять                 | /t͡ʃɔtɪrˈnad͡zʲatʲ/         |
+| 15     | п'ятнадцять                  | /pjatˈnad͡zʲatʲ/           |
+| 16     | шістнадцять                  | /ʃisˈnad͡zʲatʲ/            |
+| 17     | сімнадцять                   | /simˈnad͡zʲatʲ/            |
+| 18     | вісімнадцять                 | /ʋisimˈnad͡zʲatʲ/          |
+| 19     | дев'ятнадцять                | /dɛvjatˈnad͡zʲatʲ/         |
+| 20     | двадцять                     | /ˈdʋad͡zʲatʲ/              |
 
 **Pattern discovery:** Notice that 11-19 end in **-надцять** (think "on-ten"). This makes them easier to remember once you know 1-9!
 
@@ -71,17 +72,17 @@ Let's start with the basics. Ukrainian numbers 0-20 are unique and must be memor
 
 The tens follow a beautiful pattern:
 
-| Number | Ukrainian | Pattern |
-|--------|-----------|---------|
-| 20 | двадцять | два + дцять |
-| 30 | тридцять | три + дцять |
-| 40 | сорок | (unique) |
-| 50 | п'ятдесят | п'ять + десят |
-| 60 | шістдесят | шість + десят |
-| 70 | сімдесят | сім + десят |
-| 80 | вісімдесят | вісім + десят |
-| 90 | дев'яносто | дев'ять + носто |
-| 100 | сто | (unique) |
+| Number | Ukrainian  | Pattern         |
+| ------ | ---------- | --------------- |
+| 20     | двадцять   | два + дцять     |
+| 30     | тридцять   | три + дцять     |
+| 40     | сорок      | (unique)        |
+| 50     | п'ятдесят  | п'ять + десят   |
+| 60     | шістдесят  | шість + десят   |
+| 70     | сімдесят   | сім + десят     |
+| 80     | вісімдесят | вісім + десят   |
+| 90     | дев'яносто | дев'ять + носто |
+| 100    | сто        | (unique)        |
 
 **Examples:**
 
@@ -150,6 +151,7 @@ This is where the genitive case comes in:
 > ⚡ **Pro Tip: Currency Forms**
 >
 > Master these three forms for гривня:
+>
 > - **1, 21, 31...** → одна гривня
 > - **2-4, 22-24...** → дві гривні
 > - **5-20, 25-30...** → п'ять гривень
@@ -176,39 +178,39 @@ Now let's learn key phrases for shopping:
 ### Mini-Dialogue 1: At the Market in Lviv
 
 **Продавець:** Доброго дня! Що бажаєте?
-*Seller: Good afternoon! What would you like?*
+_Seller: Good afternoon! What would you like?_
 
 **Покупець:** Скільки коштує картопля?
-*Buyer: How much does the potato cost?*
+_Buyer: How much does the potato cost?_
 
 **Продавець:** П'ятнадцять гривень за кілограм.
-*Seller: Fifteen hryvnias per kilogram.*
+_Seller: Fifteen hryvnias per kilogram._
 
 **Покупець:** Добре. Два кілограми, будь ласка.
-*Buyer: Okay. Two kilograms, please.*
+_Buyer: Okay. Two kilograms, please._
 
 **Продавець:** Тридцять гривень, будь ласка.
-*Seller: Thirty hryvnias, please.*
+_Seller: Thirty hryvnias, please._
 
 **Покупець:** Ось гроші. Дякую!
-*Buyer: Here's the money. Thank you!*
+_Buyer: Here's the money. Thank you!_
 
 ### Mini-Dialogue 2: Coffee in Kyiv
 
 **Баріста:** Привіт! Що будете замовляти?
-*Barista: Hi! What will you order?*
+_Barista: Hi! What will you order?_
 
 **Клієнт:** Одну каву, будь ласка. Скільки коштує?
-*Client: One coffee, please. How much does it cost?*
+_Client: One coffee, please. How much does it cost?_
 
 **Баріста:** Сорок п'ять гривень.
-*Barista: Forty-five hryvnias.*
+_Barista: Forty-five hryvnias._
 
 **Клієнт:** Можна платити карткою?
-*Client: Can I pay by card?*
+_Client: Can I pay by card?_
 
 **Баріста:** Так, звичайно. Ось ваша кава!
-*Barista: Yes, of course. Here's your coffee!*
+_Barista: Yes, of course. Here's your coffee!_
 
 ### Reading Practice: Shopping List
 
@@ -224,15 +226,11 @@ Now let's learn key phrases for shopping:
 
 **Всього:** сто двадцять гривень.
 
-*Maria's shopping list:*
+_Maria's shopping list:_
 
-*1. Bread - eight hryvnias
-2. Milk - twenty hryvnias
-3. Cheese - fifty hryvnias
-4. Apples (1 kg) - thirty hryvnias
-5. Water - twelve hryvnias*
+_1. Bread - eight hryvnias 2. Milk - twenty hryvnias 3. Cheese - fifty hryvnias 4. Apples (1 kg) - thirty hryvnias 5. Water - twelve hryvnias_
 
-*Total: one hundred twenty hryvnias.*
+_Total: one hundred twenty hryvnias._
 
 > 🌍 **Real World: Shopping in Ukraine**
 >
@@ -294,7 +292,6 @@ You can now count, ask prices, and shop confidently in Ukraine!
 >
 > **YouTube:** [COUNTING UKRAINIAN CARDINAL NUMBERS - 0 - 100](https://www.youtube.com/watch?v=7XrQddM5llE) — Speak Ukrainian
 >
->
 > **Numbers:** [Numbers in Ukrainian](https://www.ukrainianlessons.com/numbers/) — Full list with audio and illustrations
 >
 > **Nouns After Numbers:** [How to Use Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/) — 1, 2-4, 5+ agreement rules
@@ -303,41 +300,60 @@ You can now count, ask prices, and shop confidently in Ukraine!
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| нуль | /nulʲ/ | zero | numeral | - | - |
-| один | /ɔˈdɪn/ | one (m) | numeral | m | одна (f), одне (n) |
-| два | /dʋa/ | two (m/n) | numeral | m/n | дві (f) |
-| три | /trɪ/ | three | numeral | - | - |
-| чотири | /t͡ʃɔˈtɪrɪ/ | four | numeral | - | - |
-| п'ять | /pjatʲ/ | five | numeral | - | - |
-| шість | /ʃistʲ/ | six | numeral | - | - |
-| сім | /sim/ | seven | numeral | - | - |
-| вісім | /ʋiˈsim/ | eight | numeral | - | - |
-| дев'ять | /ˈdɛvjatʲ/ | nine | numeral | - | - |
-| десять | /ˈdɛsʲatʲ/ | ten | numeral | - | - |
-| двадцять | /ˈdʋad͡zʲatʲ/ | twenty | numeral | - | - |
-| тридцять | /ˈtrɪd͡zʲatʲ/ | thirty | numeral | - | - |
-| сорок | /ˈsɔrɔk/ | forty | numeral | - | unique form |
-| п'ятдесят | /pjatdɛˈsʲat/ | fifty | numeral | - | - |
-| шістдесят | /ʃisdɛˈsʲat/ | sixty | numeral | - | - |
-| сімдесят | /simdɛˈsʲat/ | seventy | numeral | - | - |
-| вісімдесят | /ʋisimdɛˈsʲat/ | eighty | numeral | - | - |
-| дев'яносто | /dɛvjɑˈnɔstɔ/ | ninety | numeral | - | - |
-| сто | /stɔ/ | one hundred | numeral | - | - |
-| гривня | /ˈɦrɪvnʲɑ/ | hryvnia | noun | f | Ukrainian currency |
-| копійка | /kɔˈpijkɑ/ | kopeck | noun | f | 1/100 of hryvnia |
-| долар | /ˈdɔlɑr/ | dollar | noun | m | - |
-| євро | /ˈɛvrɔ/ | euro | noun | n | indeclinable |
-| ціна | /t͡siˈnɑ/ | price | noun | f | - |
-| коштувати | /kɔʃtuˈvɑtɪ/ | to cost | verb | - | коштує (3sg) |
-| дорого | /ˈdɔrɔɦɔ/ | expensive | adverb | - | also: expensively |
-| дешево | /ˈdɛʃɛvɔ/ | cheap | adverb | - | also: cheaply |
-| знижка | /ˈznɪʒkɑ/ | discount | noun | f | - |
-| решта | /ˈrɛʃtɑ/ | change (money) | noun | f | money returned |
-| платити | /plɑˈtɪtɪ/ | to pay | verb | - | плачу, платиш |
-| продавати | /prɔdɑˈvɑtɪ/ | to sell | verb | - | продаю, продаєш |
-| каса | /ˈkɑsɑ/ | cashier, checkout | noun | f | - |
-| рахунок | /rɑˈxunɔk/ | bill, check | noun | m | - |
-| готівка | /ɦɔˈtivkɑ/ | cash | noun | f | - |
-| картка | /ˈkɑrtkɑ/ | card | noun | f | credit/debit card |
+| Word         | IPA                | English     | POS  | Gender | Note |
+| ------------ | ------------------ | ----------- | ---- | ------ | ---- |
+| баріста      | /bɑˈristɑ/         | barista     | noun | ч      |      |
+| богдан       | /bɔɦˈdɑn/          | Bohdan      | name | ч      |      |
+| вернадський  | /vɛrnɑdˈsʲkɪj/     | Vernadsky   | name | ч      |      |
+| володимир    | /vɔlɔˈdɪmɪr/       | Volodymyr   | name | ч      |      |
+| вісім        | /ˈvisim/           | eight       | num  | -      |      |
+| вісімдесят   | /visimdɛˈsʲɑt/     | eighty      | num  | -      |      |
+| вісімнадцять | /visimˈnɑdt͡sʲɑtʲ/  | eighteen    | num  | -      |      |
+| готівка      | /ɦɔˈtivkɑ/         | cash        | noun | ж      |      |
+| грива        | /ˈɦrɪvɑ/           | mane        | noun | ж      |      |
+| григорій     | /ɦrɪˈɦɔrij/        | Hryhoriy    | name | ч      |      |
+| гривня       | /ˈɦrɪvnʲɑ/         | hryvnia     | noun | ж      |      |
+| грушевський  | /ɦruˈʃɛwsʲkɪj/     | Hrushevsky  | name | ч      |      |
+| дванадцять   | /dvɑˈnɑdt͡sʲɑtʲ/    | twelve      | num  | -      |      |
+| дешево       | /ˈdɛʃɛvɔ/          | cheaply     | adv  | -      |      |
+| долар        | /ˈdɔlɑr/           | dollar      | noun | ч      |      |
+| дорого       | /ˈdɔrɔɦɔ/          | expensively | adv  | -      |      |
+| євро         | /ˈjɛvrɔ/           | euro        | noun | с      |      |
+| замовляти    | /zɑmɔvˈlʲɑtɪ/      | to order    | verb | -      |      |
+| знижка       | /ˈznɪʒkɑ/          | discount    | noun | ж      |      |
+| зробити      | /zrɔˈbɪtɪ/         | to do/make  | verb | -      |      |
+| карбованець  | /kɑrˈbɔvɑnɛt͡sʲ/    | karbovanets | noun | ч      |      |
+| картка       | /ˈkɑrtkɑ/          | card        | noun | ж      |      |
+| кілограм     | /kilɔˈɦrɑm/        | kilogram    | noun | ч      |      |
+| клієнт       | /kliˈjɛnt/         | client      | noun | ч      |      |
+| копійка      | /kɔˈpijkɑ/         | kopeck      | noun | ж      |      |
+| леся         | /ˈlɛsʲɑ/           | Lesya       | name | ж      |      |
+| мазепа       | /mɑˈzɛpɑ/          | Mazepa      | name | ч      |      |
+| михайло      | /mɪˈxɑjlɔ/         | Mykhailo    | name | ч      |      |
+| мудрий       | /ˈmudrɪj/          | the Wise    | adj  | ч      |      |
+| номер        | /ˈnɔmɛr/           | number      | noun | ч      |      |
+| нуль         | /nulʲ/             | zero        | num  | ч      |      |
+| один         | /ɔˈdɪn/            | one         | num  | ч      |      |
+| одинадцять   | /ɔdɪˈnɑdt͡sʲɑtʲ/    | eleven      | num  | -      |      |
+| платити      | /plɑˈtɪtɪ/         | to pay      | verb | -      |      |
+| покупка      | /pɔˈkupkɑ/         | purchase    | noun | ж      |      |
+| рік          | /rik/              | year        | noun | ч      |      |
+| сковорода    | /skɔvɔrɔˈdɑ/       | Skovoroda   | name | ч      |      |
+| сорок        | /ˈsɔrɔk/           | forty       | num  | -      |      |
+| список       | /ˈspɪsɔk/          | list        | noun | ч      |      |
+| сім          | /sim/              | seven       | num  | -      |      |
+| сімдесят     | /simdɛˈsʲɑt/       | seventy     | num  | -      |      |
+| сімнадцять   | /simˈnɑdt͡sʲɑtʲ/    | seventeen   | num  | -      |      |
+| тарас        | /tɑˈrɑs/           | Taras       | name | ч      |      |
+| тридцять     | /ˈtrɪdt͡sʲɑtʲ/      | thirty      | num  | -      |      |
+| тринадцять   | /trɪˈnɑdt͡sʲɑtʲ/    | thirteen    | num  | -      |      |
+| франко       | /frɑnˈkɔ/          | Franko      | name | ч      |      |
+| хмельницький | /xmɛlʲˈnɪt͡sʲkɪj/   | Khmelnytsky | name | ч      |      |
+| ціна         | /t͡sʲiˈnɑ/          | price       | noun | ж      |      |
+| чотири       | /t͡ʃɔˈtɪrɪ/         | four        | num  | -      |      |
+| чотирнадцять | /t͡ʃɔtɪrˈnɑdt͡sʲɑtʲ/ | fourteen    | num  | -      |      |
+| шістдесят    | /ʃisdeˈsʲɑt/       | sixty       | num  | -      |      |
+| шістнадцять  | /ʃistˈnɑdt͡sʲɑtʲ/   | sixteen     | num  | -      |      |
+| шість        | /ʃisʲtʲ/           | six         | num  | -      |      |
+| яблуко       | /ˈjɑblukɔ/         | apple       | noun | с      |      |
+| ярослав      | /jɑrɔˈslɑw/        | Yaroslav    | name | ч      |      |

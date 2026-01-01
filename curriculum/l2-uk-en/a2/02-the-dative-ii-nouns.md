@@ -1,11 +1,11 @@
 ---
 module: a2-02
-title: "The Dative II — Nouns"
-subtitle: "Giving, Sending, and Showing"
-version: "1.0"
-phase: "A2.1"
-pedagogy: "PPP"
-duration: "60 min"
+title: 'The Dative II — Nouns'
+subtitle: 'Giving, Sending, and Showing'
+version: '1.0'
+phase: 'A2.1'
+pedagogy: 'PPP'
+duration: '60 min'
 transliteration: none
 tags:
   - grammar
@@ -19,11 +19,12 @@ grammar:
   - neuter dative
   - plural dative
 objectives:
-  - "Learner can form dative case endings for masculine nouns"
-  - "Learner can form dative case endings for feminine and neuter nouns"
-  - "Learner can form dative plural endings"
-  - "Learner can use dative nouns with common verbs"
+  - 'Learner can form dative case endings for masculine nouns'
+  - 'Learner can form dative case endings for feminine and neuter nouns'
+  - 'Learner can form dative plural endings'
+  - 'Learner can use dative nouns with common verbs'
 vocabulary_count: 25
+vocab_count: 75
 ---
 
 ## Introduction
@@ -31,6 +32,7 @@ vocabulary_count: 25
 Module 01 introduced the seven Dative pronouns: мені, тобі, йому, їй, нам, вам, їм. Now it's time to learn how to form Dative endings for nouns — and there are different patterns for masculine, feminine, neuter, and plural nouns.
 
 **What you'll learn in this module:**
+
 - Masculine Dative endings (-ові/-еві or -у/-ю) and when to use each
 - Feminine Dative ending (-і) with consonant changes (г→з, к→ц, х→с)
 - Neuter Dative endings (-у/-ю)
@@ -41,6 +43,7 @@ Module 01 introduced the seven Dative pronouns: мені, тобі, йому, ї
 When you say "I give the book to my friend" in Ukrainian, the word "friend" must change from **друг** to **другові**. This ending change tells listeners that the friend is the recipient. Without the correct ending, your sentence would be grammatically incorrect or confusing.
 
 **The Dative question words:**
+
 - **Кому?** — To whom? (for people and animals)
 - **Чому?** — To what? (for things and abstract concepts)
 
@@ -70,37 +73,40 @@ Now let's see how nouns work: Кому ви пишете листа? (To whom do
 The dative case in Ukrainian serves a specific function: it marks the indirect object of a sentence — the recipient or beneficiary of an action. In English, we often use "to" or "for" to show this relationship: "I gave the book **to him**" or "She bought flowers **for her mother**."
 
 Ukrainian handles this grammatically through noun endings rather than prepositions. The dative case answers two questions:
+
 - **Кому?** — To whom? (for people and animals)
 - **Чому?** — To what? (for things and abstract concepts)
 
-| Nominative | Dative | English |
-|------------|--------|---------|
-| друг | другові | другу | to the friend |
-| сестра | сестрі | to the sister |
-| місто | місту | to the city |
+| Nominative | Dative  | English       |
+| ---------- | ------- | ------------- | ------------- |
+| друг       | другові | другу         | to the friend |
+| сестра     | сестрі  | to the sister |
+| місто      | місту   | to the city   |
 
-## Masculine Noun Endings
+## Закінчення іменників чоловічого роду (Masculine Noun Endings)
 
-Masculine nouns have two possible endings: **-ові/-еві** for formal and literary contexts, or **-у/-ю** for colloquial speech.
+Іменники чоловічого роду мають два можливі закінчення: **-ові/-еві** для офіційного та літературного контекстів, або **-у/-ю** для розмовної мови.
 
-| Type | Nominative | Dative | Example Sentence |
-|------|------------|--------|------------------|
-| Hard consonant | друг | другові | другу | Я даю книгу другові. |
-| Hard consonant | брат | братові | брату | Вона телефонує брату. |
-| Soft -ь | вчитель | вчителеві | Ми показуємо роботу вчителеві. |
-| Soft -ь | хлопець | хлопцеві | Дівчина дарує квіти хлопцеві. |
-| -й | герой | героєві | Люди дякують героєві. |
+| Тип                 | Називний | Давальний | Приклад                        |
+| ------------------- | -------- | --------- | ------------------------------ | --------------------- |
+| Твердий приголосний | друг     | другові   | другу                          | Я даю книгу другові.  |
+| Твердий приголосний | брат     | братові   | брату                          | Вона телефонує брату. |
+| М'який -ь           | вчитель  | вчителеві | Ми показуємо роботу вчителеві. |
+| М'який -ь           | хлопець  | хлопцеві  | Дівчина дарує квіти хлопцеві.  |
+| -й                  | герой    | героєві   | Люди дякують героєві.          |
 
-> [!tip] Formal vs. Colloquial: Which ending to use?
-> The ending **-ові/-еві** sounds more formal and is preferred in writing and official contexts. The ending **-у/-ю** is common in everyday speech and casual conversation. Use другові when writing a formal letter to a colleague. Use другу when chatting with friends. Both forms are grammatically correct, so choose based on the register you need.
+> [!tip] Офіційно чи розмовно: яке закінчення обрати?
+> Закінчення **-ові/-еві** звучить більш офіційно і йому віддають перевагу в письмовому та офіційному контекстах. Закінчення **-у/-ю** поширене в повсякденному мовленні та неформальних розмовах. Використовуйте форму «другові», коли пишете офіційний лист колезі. Використовуйте «другу», коли спілкуєтеся з друзями. Обидві форми граматично правильні.
 >
 > **When to use -ові/-еві — the more formal option:**
+>
 > - Official documents and letters
 > - Academic writing
 > - Formal presentations
 > - Literature and published texts
 >
 > **When to use -у/-ю — the more casual option:**
+>
 > - Text messages and emails to friends
 > - Casual conversation
 > - Everyday speech
@@ -110,31 +116,32 @@ Masculine nouns have two possible endings: **-ові/-еві** for formal and li
 
 For masculine nouns, both animate (people, animals) and inanimate (things) take the same dative endings:
 
-| Animate | Dative | Inanimate | Dative |
-|---------|--------|-----------|--------|
-| кіт | котові | стіл | столу |
-| батько | батькові | телефон | телефону |
-| лікар | лікареві | комп'ютер | комп'ютеру |
+| Animate | Dative   | Inanimate | Dative     |
+| ------- | -------- | --------- | ---------- |
+| кіт     | котові   | стіл      | столу      |
+| батько  | батькові | телефон   | телефону   |
+| лікар   | лікареві | комп'ютер | комп'ютеру |
 
 Я даю їжу котові. (I give food to the cat.)
 Я не довіряю цьому телефону. (I don't trust this phone.)
 
-## Feminine Noun Endings
+## Закінчення іменників жіночого роду (Feminine Noun Endings)
 
-Feminine nouns are simpler than masculine ones — they only have one dative ending: **-і**. However, you need to watch out for consonant changes that occur before this ending. These sound changes are natural in Ukrainian and help the words flow more smoothly when spoken.
+Іменники жіночого роду простіші за чоловічі — вони мають лише одне закінчення в давальному відмінку: **-і**. Проте зверніть увагу на чергування приголосних, які відбуваються перед цим закінченням. Ці зміни природні для української мови і допомагають словами звучати мелодійніше.
 
-| Type | Nominative | Dative | Example Sentence |
-|------|------------|--------|------------------|
-| -а | сестра | сестрі | Брат допомагає сестрі. |
-| -а | мама | мамі | Я телефоную мамі щодня. |
-| -я | Марія | Марії | Ми пишемо листа Марії. |
-| -я | земля | землі | Дощ потрібен землі. |
+| Тип | Називний | Давальний | Приклад                 |
+| --- | -------- | --------- | ----------------------- |
+| -а  | сестра   | сетрі     | Брат допомагає сестрі.  |
+| -а  | мама     | мамі      | Я телефоную мамі щодня. |
+| -я  | Марія    | Марії     | Ми пишемо листа Марії.  |
+| -я  | земля    | землі     | Дощ потрібен землі.     |
 
-> [!warning] Consonant Changes — Very Important!
-> Some consonants change before **-і**. This is called palatalization — the consonant shifts to a softer variant. These changes are mandatory and predictable:
+> [!warning] Чергування приголосних — це дуже важливо!
+> Деякі приголосні змінюються перед закінченням **-і**. Ці зміни обов'язкові та передбачувані:
+>
 > - г → з: подруга → подрузі
 > - к → ц: рука → руці, донька → доньці
-> - х → с: свекруха → свекрусі (mother-in-law)
+> - х → с: свекруха → свекрусі
 >
 > **Why does this happen?** Ukrainian phonology doesn't allow certain consonant combinations. The "softening" creates smoother pronunciation. You'll see similar patterns in other Slavic languages.
 
@@ -145,26 +152,26 @@ Feminine nouns are simpler than masculine ones — they only have one dative end
 
 Neuter nouns follow a straightforward pattern. They take **-у** after hard consonants and **-ю** after soft consonants. Since most neuter nouns end in -о or -е, you simply replace that vowel with the appropriate dative ending.
 
-| Type | Nominative | Dative | Example Sentence |
-|------|------------|--------|------------------|
-| -о | місто | місту | Туристи допомагають місту. |
-| -о | вікно | вікну | Дощ шкодить вікну. |
-| -е | море | морю | Забруднення шкодить морю. |
-| -я | ім'я | імені | Це личить твоєму імені. |
+| Type | Nominative | Dative | Example Sentence           |
+| ---- | ---------- | ------ | -------------------------- |
+| -о   | місто      | місту  | Туристи допомагають місту. |
+| -о   | вікно      | вікну  | Дощ шкодить вікну.         |
+| -е   | море       | морю   | Забруднення шкодить морю.  |
+| -я   | ім'я       | імені  | Це личить твоєму імені.    |
 
 > [!info] Neuter Nouns Ending in -я
 > Neuter nouns ending in -я (like ім'я, плем'я) have irregular dative forms: ім'я → імені.
 
-## Plural Dative Endings
+## Закінчення іменників у множині (Plural Dative Endings)
 
-Good news: the plural is uniform across all genders! All nouns — masculine, feminine, and neuter — take either **-ам** or **-ям** in the plural dative. Use **-ам** after hard consonants and **-ям** after soft consonants or vowels. This makes plural dative forms much easier to learn than singular forms.
+Гарні новини: у множині закінчення однакові для всіх родів! Усі іменники — чоловічого, жіночого та середнього роду — у давальному відмінку множини мають закінчення **-ам** або **-ям**. Використовуйте **-ам** після твердих приголосних і **-ям** після м'яких приголосних або голосних.
 
-| Nominative Singular | Nominative Plural | Dative Plural |
-|---------------------|-------------------|---------------|
-| друг | друзі | друзям |
-| сестра | сестри | сестрам |
-| місто | міста | містам |
-| вчитель | вчителі | вчителям |
+| Називний однини | Називний множини | Давальний множини |
+| --------------- | ---------------- | ----------------- |
+| друг            | друзі            | друзям            |
+| сестра          | сестри           | сестрам           |
+| місто           | міста            | містам            |
+| вчитель         | вчителі          | вчителям          |
 
 Батьки допомагають дітям. (Parents help children.)
 Ми пишемо листи друзям. (We write letters to friends.)
@@ -199,14 +206,14 @@ Understanding the difference between давати and дарувати reveals s
 
 Some verbs are "dative-hungry" — they always need a dative object:
 
-| Verb | Meaning | Example |
-|------|---------|---------|
-| допомагати | to help | допомагати бабусі |
-| заважати | to disturb | заважати сусідові |
-| подобатися | to please | подобатися дівчині |
-| вірити | to believe | вірити другові |
-| телефонувати | to call | телефонувати мамі |
-| писати | to write | писати батькам |
+| Verb         | Meaning    | Example            |
+| ------------ | ---------- | ------------------ |
+| допомагати   | to help    | допомагати бабусі  |
+| заважати     | to disturb | заважати сусідові  |
+| подобатися   | to please  | подобатися дівчині |
+| вірити       | to believe | вірити другові     |
+| телефонувати | to call    | телефонувати мамі  |
+| писати       | to write   | писати батькам     |
 
 Бабуся завжди допомагає онукам. (Grandma always helps the grandchildren.)
 Музика заважає сусідам. (The music disturbs the neighbors.)
@@ -223,6 +230,7 @@ Some verbs are "dative-hungry" — they always need a dative object:
 ## Practice
 
 Now let's practice forming Dative noun endings. The key is to identify the noun's gender first, then apply the correct ending pattern. Remember:
+
 - Masculine: -ові/-еві for formal contexts OR -у/-ю for casual speech
 - Feminine: -і (with possible consonant changes)
 - Neuter: -у/-ю
@@ -232,24 +240,24 @@ Now let's practice forming Dative noun endings. The key is to identify the noun'
 
 Practice transforming these nominative nouns to their dative forms. Say each transformation out loud to build muscle memory:
 
-| Nominative | → | Dative |
-|------------|---|--------|
-| друг | → | другові |
-| мама | → | мамі |
-| батько | → | батькові |
-| сестра | → | сестрі |
-| місто | → | місту |
-| вчитель | → | вчителеві |
+| Nominative | →   | Dative    |
+| ---------- | --- | --------- |
+| друг       | →   | другові   |
+| мама       | →   | мамі      |
+| батько     | →   | батькові  |
+| сестра     | →   | сестрі    |
+| місто      | →   | місту     |
+| вчитель    | →   | вчителеві |
 
 ## Complete the Sentence
 
 Fill in the dative form:
 
-1. Я даю квіти ___. (мама) → мамі
-2. Він телефонує ___. (друг) → другові
-3. Ми пишемо ___. (батьки) → батькам
-4. Вона показує фото ___. (сестра) → сестрі
-5. Лікар допомагає ___. (пацієнт) → пацієнтові
+1. Я даю квіти \_\_\_. (мама) → мамі
+2. Він телефонує \_\_\_. (друг) → другові
+3. Ми пишемо \_\_\_. (батьки) → батькам
+4. Вона показує фото \_\_\_. (сестра) → сестрі
+5. Лікар допомагає \_\_\_. (пацієнт) → пацієнтові
 
 ## Mini-Dialogues
 
@@ -290,6 +298,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 **Reading strategy:** As you read, underline or highlight every Dative noun. Then answer the comprehension questions — notice that every answer is a Dative form!
 
 **Vocabulary preview:**
+
 - лист — letter
 - онука — granddaughter
 - пацієнт — patient
@@ -309,6 +318,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 > Цілую! Твоя онука Оля.
 
 **Questions:**
+
 1. Кому Оля пише лист? — Бабусі.
 2. Кому допомагає Петро? — Пацієнтам.
 3. Кому Оля пояснює математику? — Учням.
@@ -316,7 +326,7 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 5. Кому Оля хоче дарувати подарунок? — Бабусі.
 
 > [!tip] Notice the Dative!
-> Every answer is in the dative case because all these people are *recipients* of actions: writing, helping, explaining, calling, giving.
+> Every answer is in the dative case because all these people are _recipients_ of actions: writing, helping, explaining, calling, giving.
 
 ---
 
@@ -349,31 +359,10 @@ This letter from Canada demonstrates Dative nouns in a natural context. Before r
 ## Need More Practice?
 
 > [!resources] External Resources
+>
 > - 🎥 [Dative Case Practice](https://www.youtube.com/watch?v=Cm0Ay7NEOlw) — Let's Learn Ukrainian
 > - 📖 [Nouns in Dative Case](https://www.ukrainiancourse.com/grammar-tables/nouns-in-the-dative-case/)
 > - 📝 [Dative Case Guide](https://www.ukrainianlessons.com/intro-cases/)
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| посилати | /posɪˈlɑtɪ/ | to send | verb | — | imperfective; + Dat + Acc |
-| надсилати | /nɑdsɪˈlɑtɪ/ | to send | verb | — | formal; impf; + Dat + Acc |
-| пояснювати | /pojɑˈsnjuʋɑtɪ/ | to explain | verb | — | imperfective; + Dat + Acc |
-| розповідати | /rɔzpoʋiˈdɑtɪ/ | to tell, narrate | verb | — | imperfective; + Dat + Acc |
-| личити | /lɪˈtʃɪtɪ/ | to suit, become | verb | — | imperfective; + Dat |
-| підходити | /pidxoˈdɪtɪ/ | to suit, fit | verb | — | imperfective; + Dat |
-| пасувати | /pɑsuˈʋɑtɪ/ | to match, go well | verb | — | imperfective; + Dat |
-| вистачати | /ʋɪstɑˈtʃɑtɪ/ | to be enough | verb | — | imperfective; + Dat |
-| бракувати | /brɑˈkuʋɑtɪ/ | to lack, be short of | verb | — | imperfective; + Dat |
-| шкодити | /ʃkoˈdɪtɪ/ | to harm | verb | — | imperfective; + Dat |
-| вірити | /ˈʋirɪtɪ/ | to believe | verb | — | imperfective; + Dat |
-| довіряти | /doʋiˈrʲɑtɪ/ | to trust | verb | — | imperfective; + Dat |
-| радити | /ˈrɑdɪtɪ/ | to advise | verb | — | imperfective; + Dat + Acc |
-| дозволяти | /dozʋoˈlʲɑtɪ/ | to allow, permit | verb | — | imperfective; + Dat + Inf |
-| забороняти | /zɑboroˈnʲɑtɪ/ | to forbid | verb | — | imperfective; + Dat + Inf |
 
 ---

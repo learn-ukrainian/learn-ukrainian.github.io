@@ -1,20 +1,20 @@
 ---
-
 module: a1-06
-title: "The Living Verb I"
-subtitle: "Present Tense Class I (-ати/-яті)"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
+title: 'The Living Verb I'
+subtitle: 'Present Tense Class I (-ати/-яті)'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
 duration: 60
-transliteration: "full"
-tags: ["verbs", "conjugation", "class-i", "present-tense", "actions"]
-grammar: ["present-tense-class-i", "verb-conjugation", "personal-endings"]
+transliteration: 'full'
+tags: ['verbs', 'conjugation', 'class-i', 'present-tense', 'actions']
+grammar: ['present-tense-class-i', 'verb-conjugation', 'personal-endings']
 objectives:
-  - "Learner can conjugate Class I verbs in present tense"
-  - "Learner can form basic action statements"
-  - "Learner can describe daily activities using -ati verbs"
+  - 'Learner can conjugate Class I verbs in present tense'
+  - 'Learner can form basic action statements'
+  - 'Learner can describe daily activities using -ati verbs'
 vocabulary_count: 25
+vocab_count: 63
 ---
 
 # The Living Verb I
@@ -52,14 +52,14 @@ Class I verbs are verbs whose infinitive (dictionary form) ends in **-ати** o
 
 Let's take **читати** (chytaty — to read) as our example:
 
-| Person | Ukrainian | Conjugation | English |
-|--------|-----------|-------------|---------|
-| я | я читаю | /t͡ʃɪˈtɑju/ | I read |
-| ти | ти читаєш | /t͡ʃɪˈtɑjeʃ/ | you read (informal) |
-| він/вона | він читає | /t͡ʃɪˈtɑje/ | he/she reads |
-| ми | ми читаємо | /t͡ʃɪˈtɑjemɔ/ | we read |
-| ви | ви читаєте | /t͡ʃɪˈtɑjete/ | you read (formal/plural) |
-| вони | вони читають | /t͡ʃɪˈtɑjutʲ/ | they read |
+| Person   | Ukrainian    | Conjugation  | English                  |
+| -------- | ------------ | ------------ | ------------------------ |
+| я        | я читаю      | /t͡ʃɪˈtɑju/   | I read                   |
+| ти       | ти читаєш    | /t͡ʃɪˈtɑjeʃ/  | you read (informal)      |
+| він/вона | він читає    | /t͡ʃɪˈtɑje/   | he/she reads             |
+| ми       | ми читаємо   | /t͡ʃɪˈtɑjemɔ/ | we read                  |
+| ви       | ви читаєте   | /t͡ʃɪˈtɑjete/ | you read (formal/plural) |
+| вони     | вони читають | /t͡ʃɪˈtɑjutʲ/ | they read                |
 
 **Key insight:** The stem is **чита-**. The endings tell you **who**: -ю (I), -єш (you), -є (he/she), -ємо (we), -єте (you all), -ють (they).
 
@@ -71,14 +71,16 @@ Let's take **читати** (chytaty — to read) as our example:
 
 Here are 6 more verbs that follow the **exact same pattern** as читати:
 
-| Infinitive | Stem | я form | English |
-|------------|------|---------|---------|
-| писати | пиш- | пишу | to write |
-| працювати | працюв- | працюю | to work |
-| гуляти | гуля- | гуляю | to walk, stroll |
-| грати | гра- | граю | to play |
-| співати | співа- | співаю | to sing |
-| думати | дума- | думаю | to think |
+| Infinitive | Stem    | я form   | English         |
+| ---------- | ------- | -------- | --------------- |
+| писати     | пиш-    | пишу     | to write        |
+| працювати  | працюв- | працюю   | to work         |
+| гуляти     | гуля-   | гуляю    | to walk, stroll |
+| грати      | гра-    | граю     | to play         |
+| співати    | співа-  | співаю   | to sing         |
+| думати     | дума-   | думаю    | to think        |
+| розуміти   | розумі- | розумію  | to understand   |
+| знаходити  | знаход- | знаходжу | to find         |
 
 Notice how **писати** changes its stem slightly? Instead of **писа-**, the stem becomes **пиш-**. This happens with a few verbs due to sound changes, but the endings stay the same: пишу, пишеш, пише, пишемо, пишете, пишуть.
 
@@ -90,6 +92,8 @@ Notice how **писати** changes its stem slightly? Instead of **писа-**,
 - Ми **граємо**. (We play.) — /ˈɦrɑjemɔ/
 - Ви **співаєте**. (You sing.) — /spiˈwɑjete/
 - Вони **думають**. (They think.) — /ˈdumɑjutʲ/
+- Я **розумію** українську. (I understand Ukrainian.) — /rozuˈmiju ukrɑˈjinʲsʲku/
+- Ти **знаходиш** ключі. (You find the keys.) — /znɑˈxɔdɪʃ klʲuˈt͡ʃi/
 
 > 🎬 **Pop Culture Moment**
 >
@@ -100,18 +104,22 @@ Notice how **писати** changes its stem slightly? Instead of **писа-**,
 Here's how these verbs show up in real Ukrainian life:
 
 **Ранок (Morning):**
+
 - Я **снідаю**. (I have breakfast.) — /sniˈdɑju/
 - Ти **починаєш** роботу. (You start work.) — /pɔt͡ʃɪˈnɑjeʃ rɔˈbɔtu/
 
 **День (Day):**
+
 - Вона **працює**. (She works.) — /prɑˈt͡sʲuje/
 - Ми **обідаємо**. (We have lunch.) — /ɔbiˈdɑjemɔ/
 
 **Вечір (Evening):**
+
 - Ви **вечеряєте** вдома? (Do you have dinner at home?) — /weˈt͡ʃerʲɑjete ˈwdɔmɑ/
 - Вони **відпочивають**. (They rest.) — /widpɔˈt͡ʃɪwɑjutʲ/
 
 **Вільний час (Free Time):**
+
 - Я **читаю** книгу. (I read a book.) — /t͡ʃɪˈtɑju ˈknɪɦu/
 - Ти **граєш**. (You play.) — /ˈɦrɑjeʃ/
 - Він **малює** картину. (He paints a picture.) — /mɑˈlʲuje kɑrˈtɪnu/
@@ -197,6 +205,7 @@ The vowels (а, є, ю) flow like a melody. The consonants (т, в, л) give str
 I have breakfast. Then I work. I have lunch. I walk to the park. I read a book. I listen to music. I think.
 
 ---
+
 # Summary
 
 You've unlocked **Class I verbs** (-ати/-яти)! You can now:
@@ -211,10 +220,10 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 **Next up:** Module 07 — Questions & Negation. You learn questions and negation!
 
 ---
+
 > [!resources] 🔗 External Resources
 >
 > **YouTube:** [Ukrainian Present Tense. The First Conjugation Group.](https://www.youtube.com/watch?v=gSmbSuSs-Ps) — Speak Ukrainian
->
 >
 > **Grammar Chart:** [Verb Tenses Overview](https://www.ukrainianlessons.com/ukrainian-tenses/) — Downloadable conjugation chart
 >
@@ -224,30 +233,53 @@ You've unlocked **Class I verbs** (-ати/-яти)! You can now:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| читати | /t͡ʃɪˈtɑtɪ/ | to read | verb | - | Class I: читаю, читаєш |
-| писати | /pɪˈsɑtɪ/ | to write | verb | - | Class I: пишу, пишеш |
-| працювати | /prɑt͡sʲuˈvɑtɪ/ | to work | verb | - | Class I: працюю, працюєш |
-| грати | /ˈɦrɑtɪ/ | to play | verb | - | Class I: граю, граєш |
-| співати | /spiˈvɑtɪ/ | to sing | verb | - | Class I: співаю, співаєш |
-| думати | /ˈdumɑtɪ/ | to think | verb | - | Class I: думаю, думаєш |
-| гуляти | /ɦuˈlʲɑtɪ/ | to walk | verb | - | Class I: гуляю, гуляєш |
-| знати | /ˈznɑtɪ/ | to know | verb | - | Class I: знаю, знаєш |
-
-| слухати | /ˈsluxɑtɪ/ | to listen | verb | - | Class I: слухаю, слухаєш |
-| чекати | /t͡ʃeˈkɑtɪ/ | to wait | verb | - | Class I: чекаю, чекаєш |
-| снідати | /sniˈdɑtɪ/ | to have breakfast | verb | - | Class I: снідаю, снідаєш |
-| вечеряти | /vet͡ʃeˈrʲɑtɪ/ | to have dinner | verb | - | Class I: вечеряю, вечеряєш |
-| відповідати | /vidpɔviˈdɑtɪ/ | to answer | verb | - | Class I: відповідаю, відповідаєш |
-| відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest | verb | - | Class I: відпочиваю, відпочиваєш |
-| закінчувати | /zɑkint͡ʃuˈvɑtɪ/ | to finish | verb | - | Class I: закінчую, закінчуєш |
-| малювати | /mɑlʲuˈvɑtɪ/ | to draw | verb | - | Class I: малюю, малюєш |
-| мріяти | /mriˈjɑtɪ/ | to dream | verb | - | Class I: мрію, мрієш |
-| називати | /nɑzɪˈvɑtɪ/ | to call/name | verb | - | Class I: називаю, називаєш |
-| обідати | /ɔˈbidɑtɪ/ | to have lunch | verb | - | Class I: обідаю, обідаєш |
-| питати | /pɪˈtɑtɪ/ | to ask | verb | - | Class I: питаю, питаєш |
-| починати | /pɔt͡ʃɪˈnɑtɪ/ | to begin | verb | - | Class I: починаю, починаєш |
-| танцювати | /tɑnt͡sʲuˈvɑtɪ/ | to dance | verb | - | Class I: танцюю, танцюєш |
-| шукати | /ʃuˈkɑtɪ/ | to search | verb | - | Class I: шукаю, шукаєш |
-
+| Word        | IPA             | English                 | POS   | Gender | Note |
+| ----------- | --------------- | ----------------------- | ----- | ------ | ---- |
+| але         | /ɑˈlɛ/          | but                     | other | -      |      |
+| бережок     | /bɛrɛˈʒɔk/      | river bank (diminutive) | noun  | ч      |      |
+| в           | /v/             | in                      | other | -      |      |
+| вдома       | /ˈwdɔmɑ/        | at home                 | adv   | -      |      |
+| вечеряти    | /vɛt͡ʃɛˈrʲɑtɪ/   | to have dinner          | verb  | -      |      |
+| вечір       | /ˈvɛt͡ʃir/       | evening                 | noun  | ч      |      |
+| відпочивати | /vidpɔt͡ʃɪˈvɑtɪ/ | to rest                 | verb  | -      |      |
+| вільний     | /ˈvilʲnɪj/      | free                    | adj   | ч      |      |
+| говорити    | /ɦɔvɔˈrɪtɪ/     | to speak                | verb  | -      |      |
+| гра         | /ɦrɑ/           | game                    | noun  | ж      |      |
+| грати       | /ˈɦrɑtɪ/        | to play                 | verb  | -      |      |
+| гуляти      | /ɦuˈlʲɑtɪ/      | to walk/stroll          | verb  | -      |      |
+| думати      | /ˈdumɑtɪ/       | to think                | verb  | -      |      |
+| дія         | /ˈdijɑ/         | action                  | noun  | ж      |      |
+| життя       | /ʒɪˈtʲːɑ/       | life                    | noun  | с      |      |
+| знати       | /ˈznɑtɪ/        | to know                 | verb  | -      |      |
+| знаходити   | /znɑˈxɔdɪtɪ/    | to find                 | verb  | -      |      |
+| лист        | /lɪst/          | letter                  | noun  | ч      |      |
+| любити      | /lʲuˈbɪtɪ/      | to love                 | verb  | -      |      |
+| малювати    | /mɑlʲuˈvɑtɪ/    | to draw/paint           | verb  | -      |      |
+| момент      | /mɔˈmɛnt/       | moment                  | noun  | ч      |      |
+| навчитися   | /nɑwˈt͡ʃɪtɪsʲɑ/  | to learn                | verb  | -      |      |
+| обідати     | /ɔˈbidɑtɪ/      | to have lunch           | verb  | -      |      |
+| писати      | /pɪˈsɑtɪ/       | to write                | verb  | -      |      |
+| питання     | /pɪˈtɑnʲːɑ/     | question                | noun  | с      |      |
+| потім       | /ˈpɔtim/        | then/afterwards         | adv   | -      |      |
+| починати    | /pɔt͡ʃɪˈnɑtɪ/    | to start                | verb  | -      |      |
+| пісня       | /ˈpisnʲɑ/       | song                    | noun  | ж      |      |
+| ранок       | /ˈrɑnɔk/        | morning                 | noun  | ч      |      |
+| робити      | /rɔˈbɪtɪ/       | to do/make              | verb  | -      |      |
+| робота      | /rɔˈbɔtɑ/       | work                    | noun  | ж      |      |
+| розум       | /ˈrɔzʊm/        | mind/intellect          | noun  | ч      |      |
+| розуміти    | /rɔzuˈmitɪ/     | to understand           | verb  | -      |      |
+| рух         | /rux/           | movement                | noun  | ч      |      |
+| слухати     | /ˈsluxɑtɪ/      | to listen               | verb  | -      |      |
+| снідати     | /ˈsnidɑtɪ/      | to have breakfast       | verb  | -      |      |
+| співати     | /spiˈvɑtɪ/      | to sing                 | verb  | -      |      |
+| співак      | /spiˈvɑk/       | singer                  | noun  | ч      |      |
+| сьогодні    | /sʲɔˈɦɔdɲi/     | today                   | adv   | -      |      |
+| танцювати   | /tɑnt͡sʲuˈvɑtɪ/  | to dance                | verb  | -      |      |
+| то          | /tɔ/            | that (participle)       | other | -      |      |
+| тут         | /tut/           | here                    | adv   | -      |      |
+| у           | /u/             | in                      | other | -      |      |
+| українська  | /ʊkrɑˈjinʲsʲkɑ/ | Ukrainian (lang)        | noun  | ж      |      |
+| час         | /t͡ʃɑs/          | time                    | noun  | ч      |      |
+| чекати      | /t͡ʃɛˈkɑtɪ/      | to wait                 | verb  | -      |      |
+| чи          | /t͡ʃɪ/           | if/whether              | other | -      |      |
+| читати      | /t͡ʃɪˈtɑtɪ/      | to read                 | verb  | -      |      |

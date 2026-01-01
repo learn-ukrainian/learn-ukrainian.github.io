@@ -24,6 +24,7 @@ objectives:
   - "Learner can apply concessive connectors in formal and informal registers"
   - "Learner can choose appropriate connectors based on register and context"
 vocabulary_count: 30
+vocab_count: 47
 ---
 
 # Стилістичні сполучники
@@ -452,38 +453,3 @@ vocabulary_count: 30
 - [ ] Я правильно вживаю «завдяки» та «через»
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| проте | however, but | нейтральний, книжний |
-| втім | however, though | м'яке обмеження |
-| зате | but then, on the other hand | розмовний, компенсація |
-| однак | however, nevertheless | книжний, офіційний |
-| натомість | instead, on the other hand | альтернатива |
-| навпаки | on the contrary | протилежність |
-| причому | moreover, and what's more | уточнення |
-| до того ж | besides, in addition | додаткова інформація |
-| крім того | moreover, furthermore | книжний |
-| тим більше | all the more so | підсилення |
-| тим паче | especially, all the more | розмовний підсилювач |
-| тому | therefore, that's why | пряма причина |
-| отже | so, therefore, thus | логічний висновок |
-| відтак | consequently, thus | книжний результат |
-| таким чином | thus, in this way | офіційний підсумок |
-| внаслідок | as a result of | офіційний |
-| унаслідок | as a result of | варіант «внаслідок» |
-| хоча | although, though | нейтральний допуст |
-| хоч | although (shortened) | розмовний |
-| незважаючи | despite, notwithstanding | формальний |
-| попри | despite | емоційний наголос |
-| дарма що | despite the fact that | зневажливий |
-| якщо | if | реальна умова |
-| якби | if (unreal) | нереальна умова |
-| щоб | in order to, so that | мета |
-| аби | in order to (emphatic) | емфатична мета |
-| оскільки | since, because | книжна причина |
-| позаяк | since, because (archaic) | архаїчний |
-| через те що | because of the fact that | пряма причина |
-| завдяки тому що | thanks to the fact that | позитивна причина |

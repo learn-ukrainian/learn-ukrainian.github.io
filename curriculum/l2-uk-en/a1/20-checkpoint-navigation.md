@@ -1,14 +1,13 @@
 ---
-
 module: a1-20
-title: "Checkpoint - Navigation"
-subtitle: "Can you do the A1.2 skills?"
-version: "2.0"
-phase: "A1.2"
+title: 'Checkpoint - Navigation'
+subtitle: 'Can you do the A1.2 skills?'
+version: '2.0'
+phase: 'A1.2'
 focus: checkpoint
-pedagogy: "Review"
-duration: "60 min"
-transliteration: "vocab-only"
+pedagogy: 'Review'
+duration: '60 min'
+transliteration: 'vocab-only'
 tags:
   - checkpoint
   - review
@@ -19,17 +18,18 @@ tags:
   - navigation
   - restaurant
 grammar:
-  - "Accusative case (inanimate + animate)"
-  - "Locative case with у/в and на"
-  - "Genitive case (absence, quantities)"
-  - "Possessive pronouns (all forms)"
+  - 'Accusative case (inanimate + animate)'
+  - 'Locative case with у/в and на'
+  - 'Genitive case (absence, quantities)'
+  - 'Possessive pronouns (all forms)'
 objectives:
-  - "Demonstrate accusative case usage for direct objects"
-  - "Use locative case correctly for location expressions"
-  - "Apply genitive case for absence and quantities"
-  - "Match possessive pronouns to noun gender"
-  - "Navigate practical scenarios: directions, shopping, cafés"
+  - 'Demonstrate accusative case usage for direct objects'
+  - 'Use locative case correctly for location expressions'
+  - 'Apply genitive case for absence and quantities'
+  - 'Match possessive pronouns to noun gender'
+  - 'Navigate practical scenarios: directions, shopping, cafés'
 vocabulary_count: 20
+vocab_count: 9
 ---
 
 # Checkpoint - Navigation
@@ -61,6 +61,7 @@ This checkpoint tests five core abilities from Modules 11-19:
 > **Я бачу вікно.** (I see a window.) - вікно → вікно (n: no change)
 
 **The Pattern:**
+
 - **Feminine (-а)** → **-у**: книга → книгу, кава → каву
 - **Feminine (-я)** → **-ю**: земля → землю
 - **Masculine inanimate** → **no change**: стіл → стіл, хліб → хліб
@@ -71,13 +72,14 @@ This checkpoint tests five core abilities from Modules 11-19:
 
 What's the accusative form of each noun?
 
-1. **книга** (book) → _____
-2. **брат** (brother, animate) → _____
-3. **стіл** (table, inanimate) → _____
-4. **кава** (coffee) → _____
-5. **місто** (city) → _____
+1. **книга** (book) → **\_**
+2. **брат** (brother, animate) → **\_**
+3. **стіл** (table, inanimate) → **\_**
+4. **кава** (coffee) → **\_**
+5. **місто** (city) → **\_**
 
 > [!solution] Перевірити (Check)
+>
 > 1. книгу (feminine -а → -у)
 > 2. брата (masculine animate = genitive)
 > 3. стіл (masculine inanimate: no change)
@@ -103,10 +105,12 @@ What's the accusative form of each noun?
 > **Вона у школі.** (She's at school.) - школа → школі (ж: -а → -і)
 
 **The Prepositions:**
+
 - **у/в** (in, inside): у магазині, в кімнаті, у Києві
 - **на** (on, at): на столі, на вулиці, на роботі
 
 **When to use which:**
+
 - **у/в**: enclosed spaces (у банку, в офісі, у парку)
 - **на**: surfaces, open areas, events (на столі, на вулиці, на концерті)
 
@@ -118,13 +122,14 @@ What's the accusative form of each noun?
 
 Which preposition fits — **у/в** or **на**?
 
-1. Книга ___ столі.
-2. Ми живемо ___ Україні.
-3. Студенти ___ бібліотеці.
-4. Вона ___ роботі.
-5. Кава ___ чашці.
+1. Книга \_\_\_ столі.
+2. Ми живемо \_\_\_ Україні.
+3. Студенти \_\_\_ бібліотеці.
+4. Вона \_\_\_ роботі.
+5. Кава \_\_\_ чашці.
 
 > [!solution] Перевірити (Check)
+>
 > 1. на (surface)
 > 2. у/в (country = enclosed space)
 > 3. у/в (building)
@@ -150,12 +155,14 @@ Which preposition fits — **у/в** or **на**?
 > **Тут немає води.** (There's no water here.) - вода → води (ж: -а → -и)
 
 **The Pattern:**
+
 - **Masculine** → **-а/-у**: час → часу, брат → брата
 - **Feminine (-а)** → **-и**: книга → книги, вода → води
 - **Feminine (-я)** → **-і**: земля → землі
 - **Neuter** → **-а**: вікно → вікна, місто → міста
 
 **Key Triggers:**
+
 - **немає** + genitive: Немає молока.
 - **без** + genitive: Без цукру. (Without sugar.)
 - **Numbers 5+** + genitive plural: П'ять гривень.
@@ -164,13 +171,14 @@ Which preposition fits — **у/в** or **на**?
 
 What's the genitive form?
 
-1. **немає + час** → Немає _____
-2. **немає + кава** → Немає _____
-3. **без + молоко** → Без _____
-4. **немає + вода** → Немає _____
-5. **без + цукор** → Без _____
+1. **немає + час** → Немає **\_**
+2. **немає + кава** → Немає **\_**
+3. **без + молоко** → Без **\_**
+4. **немає + вода** → Немає **\_**
+5. **без + цукор** → Без **\_**
 
 > [!solution] Перевірити (Check)
+>
 > 1. часу (masculine -у)
 > 2. кави (feminine -а → -и)
 > 3. молока (neuter → -а)
@@ -197,19 +205,20 @@ What's the genitive form?
 
 **The Full Table:**
 
-| Pronoun | Masculine | Feminine | Neuter | Plural |
-|---------|-----------|----------|--------|--------|
-| my | мій | моя | моє | мої |
-| your (sg) | твій | твоя | твоє | твої |
-| his | його | його | його | його |
-| her | її | її | її | її |
-| our | наш | наша | наше | наші |
-| your (pl) | ваш | ваша | ваше | ваші |
-| their | їхній | їхня | їхнє | їхні |
+| Pronoun   | Masculine | Feminine | Neuter | Plural |
+| --------- | --------- | -------- | ------ | ------ |
+| my        | мій       | моя      | моє    | мої    |
+| your (sg) | твій      | твоя     | твоє   | твої   |
+| his       | його      | його     | його   | його   |
+| her       | її        | її       | її     | її     |
+| our       | наш       | наша     | наше   | наші   |
+| your (pl) | ваш       | ваша     | ваше   | ваші   |
+| their     | їхній     | їхня     | їхнє   | їхні   |
 
 > ⚠️ **Common Mistake**
 >
 > **його** and **її** NEVER change! They're frozen forms.
+>
 > - Його книга, його друг, його місто — always **його**
 > - But: їхній друг, їхня книга, їхнє місто — **їхній** DOES change!
 
@@ -217,13 +226,14 @@ What's the genitive form?
 
 What's the correct form?
 
-1. Це ___ (my) книга.
-2. Де ___ (your, sg) телефон?
-3. ___ (our) місто красиве.
-4. ___ (their) друзі в Києві.
-5. Це ___ (her) сумка.
+1. Це \_\_\_ (my) книга.
+2. Де \_\_\_ (your, sg) телефон?
+3. \_\_\_ (our) місто красиве.
+4. \_\_\_ (their) друзі в Києві.
+5. Це \_\_\_ (her) сумка.
 
 > [!solution] Перевірити (Check)
+>
 > 1. моя (книга = feminine)
 > 2. твій (телефон = masculine)
 > 3. Наше (місто = neuter)
@@ -253,6 +263,7 @@ What's the correct form?
 > — Сорок гривень.
 
 **Key Phrases:**
+
 - **Що бажаєте?** = What would you like?
 - **будь ласка** = please
 - **Ще щось?** = Anything else?
@@ -267,6 +278,7 @@ What's the correct form?
 > — Дякую!
 
 **Key Phrases:**
+
 - **Де...?** = Where is...?
 - **Ідіть прямо** = Go straight
 - **наліво / праворуч** = left / right
@@ -276,11 +288,11 @@ What's the correct form?
 
 Fill in the gaps:
 
-— Добрий день! _____ бажаєте? (What)
-— Чай, _____ _____. (please)
+— Добрий день! **\_** бажаєте? (What)
+— Чай, **\_** **\_**. (please)
 — Чорний чи зелений?
-— Чорний. _____ цукру. (without)
-— _____ коштує? (How much)
+— Чорний. **\_** цукру. (without)
+— **\_** коштує? (How much)
 — Двадцять гривень.
 
 > [!solution] Перевірити (Check)
@@ -317,6 +329,7 @@ Fill in the gaps:
 4. Find an example of **немає** structure (absence) in the text.
 
 > [!solution] Перевірити (Check)
+>
 > 1. Locative — after **у** for location (where she lives)
 > 2. Neuter possessive — **місто** is neuter, so **моє** (not мій which is masculine)
 > 3. Genitive — **без** always requires genitive
@@ -326,13 +339,13 @@ Fill in the gaps:
 
 # Summary
 
-| Skill | Key Pattern | Quick Test |
-|-------|-------------|------------|
-| **Accusative** | f: -а→-у, m animate: +а | "Я бачу книгу" or "книга"? |
-| **Locative** | у/в (inside), на (surface/at) | "Я на роботі" or "в роботі"? |
-| **Genitive** | немає + gen, без + gen | "Немає часу" or "час"? |
-| **Possessives** | мій/моя/моє match gender | "моя книга" or "мій книга"? |
-| **Navigation** | Де? Скільки? Без цукру. | Can you order at a café? |
+| Skill           | Key Pattern                   | Quick Test                   |
+| --------------- | ----------------------------- | ---------------------------- |
+| **Accusative**  | f: -а→-у, m animate: +а       | "Я бачу книгу" or "книга"?   |
+| **Locative**    | у/в (inside), на (surface/at) | "Я на роботі" or "в роботі"? |
+| **Genitive**    | немає + gen, без + gen        | "Немає часу" or "час"?       |
+| **Possessives** | мій/моя/моє match gender      | "моя книга" or "мій книга"?  |
+| **Navigation**  | Де? Скільки? Без цукру.       | Can you order at a café?     |
 
 **Ready for A1.3?** If you can do all five skills, you're ready for Modules 21-33: past and future tense, time expressions, weather, health, and holidays!
 
@@ -345,16 +358,19 @@ Fill in the gaps:
 > [!resources] External Resources
 >
 > **Cases Deep Dive:**
+>
 > - 📖 [Ukrainian Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/) — All 7 cases in one table
 > - 📖 [Introduction to Cases](https://www.ukrainianlessons.com/intro-cases/) — Quick strategies
 > - 📖 [Prepositions with Cases](https://www.ukrainianlessons.com/prepositions-cases/) — Which preposition uses which case
 >
 > **Practical Situations:**
+>
 > - 🎙️ [FMU 1-11: Ordering Coffee](https://www.ukrainianlessons.com/fmu11/) — Café vocabulary
 > - 🎙️ [FMU 1-18: Shopping](https://www.ukrainianlessons.com/fmu18/) — Market conversations
 > - 📖 [Vocabulary: Around Town](https://www.ukrainianlessons.com/vocabulary-town/) — Navigation words
 >
 > **Struggling with a skill?** Go back to:
+>
 > - Accusative → Modules 11-12
 > - Locative → Module 13
 > - Possessives → Module 14
@@ -365,23 +381,13 @@ Fill in the gaps:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| повторення | /pɔvˈtɔrɛnʲːɑ/ | repetition, review | noun | n | |
-| правило | /ˈprɑvɪlɔ/ | rule | noun | n | |
-| помилка | /pɔˈmɪlkɑ/ | mistake | noun | f | |
-| вправа | /ˈvprɑvɑ/ | exercise | noun | f | |
-| перевірка | /pɛrɛˈvirkɑ/ | check, test | noun | f | |
-| успіх | /ˈuspix/ | success | noun | m | |
-| вміти | /ˈvmitɪ/ | to be able to, to know how | verb | - | вмію, вмієш |
-| використовувати | /vɪkɔrɪˈstɔvuvɑtɪ/ | to use | verb | - | використовую, використовуєш |
-| чудово | /t͡ʃuˈdɔvɔ/ | wonderfully, excellently | adverb | - | |
-| неправильно | /nɛˈprɑvɪlʲnɔ/ | incorrectly | adverb | - | |
-| майже | /ˈmɑjʒɛ/ | almost | adverb | - | |
-| зовсім | /ˈzɔvsim/ | completely | adverb | - | |
-| ще раз | /ʃt͡ʃɛ rɑz/ | once more, again | phrase | - | |
-| молодець | /mɔlɔˈdɛt͡sʲ/ | well done (to male) | exclamation | m | |
-| молодчина | /mɔlɔdˈt͡ʃɪnɑ/ | well done (general) | exclamation | - | |
-| продовжуємо | /prɔˈdɔvʒujɛmɔ/ | we continue, let's continue | verb form | - | from продовжувати |
-
----
+| Word      | IPA           | English              | POS   | Gender | Note |
+| --------- | ------------- | -------------------- | ----- | ------ | ---- |
+| вчора     | /ˈvt͡ʃɔrɑ/     | yesterday            | adv   | -      |      |
+| ж         | /ʒɛ/          | (particle, emphasis) | other | -      |      |
+| красивий  | /krɑˈsɪvɪj/   | beautiful            | adj   | ч      |      |
+| маленький | /mɑˈlɛnʲkɪj/  | small                | adj   | ч      |      |
+| оксана    | /ɔkˈsɑnɑ/     | Oksana               | name  | ж      |      |
+| праворуч  | /prɑˈvɔrut͡ʃ/  | to the right         | adv   | -      |      |
+| тому      | /tɔˈmu/       | therefore/back       | adv   | -      |      |
+| улюблений | /uˈlʲublɛnɪj/ | favorite             | adj   | ч      |      |

@@ -21,6 +21,7 @@ objectives:
   - "Learner can select correct aspect in all contexts"
   - "Learner can self-assess readiness for Motion Verbs phase"
 vocabulary_count: 35
+vocab_count: 47
 ---
 
 # Контрольна точка: Опанування виду
@@ -341,58 +342,3 @@ vocabulary_count: 35
 > Якщо ви відповіли "так" на всі питання — ви готові до фази дієслів руху!
 
 ---
-
-
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **вид** | aspect (grammatical) | M06-08, grammatical term |
-| **доконаний вид** | perfective aspect | M06-08, completed action |
-| **недоконаний вид** | imperfective aspect | M06-08, process/repetition |
-| **процес** | process | M06-08, ongoing action |
-| **результат** | result | M06-08, completed outcome |
-| **тривати** | to last, continue | M06-08, impf |
-| **завершувати/завершити** | to complete | M06-08, impf/pf pair |
-| **закінчувати/закінчити** | to finish | M06-08, impf/pf pair |
-| **починати/почати** | to begin | M06-08, impf/pf pair |
-| **повторювати/повторити** | to repeat | M06-08, impf/pf pair |
-| **майбутній час** | future tense | M09, grammatical term |
-| **буду + інфінітив** | compound future | M09, imperfective future |
-| **синтетична форма** | synthetic form | M09, -тиму/-меш endings |
-| **планувати** | to plan | M09, impf |
-| **передбачати** | to foresee, expect | M09, impf |
-| **заперечення** | negation | M10-11, grammatical term |
-| **наказовий спосіб** | imperative mood | M10-11, grammatical term |
-| **ще не** | not yet | M10-11, requires pf |
-| **ніколи не** | never | M10-11, requires impf |
-| **запрошення** | invitation | M10-11, impf imperative |
-| **наказ** | command, order | M10-11, pf imperative |
-| **заборона** | prohibition | M10-11, не + impf |
-| **видова пара** | aspectual pair | M12, grammatical term |
-| **брати/взяти** | to take | M12, suppl. pair |
-| **класти/покласти** | to put | M12, prefix pair |
-| **говорити/сказати** | to say | M12, suppl. pair |
-| **давати/дати** | to give | M12, suppl. pair |
-| **сідати/сісти** | to sit down | M12, stem change |
-| **лягати/лягти** | to lie down | M12, stem change |
-| **знаходити/знайти** | to find | M12, suppl. pair |
-| **контекст** | context | M13-14, determines aspect choice |
-| **наратив** | narrative | M13-14, aspect switching |
-| **перемикатися** | to switch | M13-14, between aspects |
-| **маркер часу** | time marker | M13-14, indicates aspect |
-| **одноразово** | once, one time | M13-14, pf marker |
-| **регулярно** | regularly | M13-14, impf marker |
-
----
-
-> [!resources] Додаткові ресурси
->
-> **Потрібна додаткова практика?**
-> - Навичка 1 (Минулий час) → Модуль 06-08
-> - Навичка 2 (Майбутній час) → Модуль 09
-> - Навичка 3 (Заперечення) → Модуль 10
-> - Навичка 4 (Наказовий спосіб) → Модуль 11
-> - Навичка 5 (Видові пари) → Модуль 12-14
-

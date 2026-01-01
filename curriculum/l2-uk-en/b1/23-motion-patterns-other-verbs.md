@@ -21,6 +21,7 @@ objectives:
   - "Predict meanings of new verbs based on their prefixes"
   - "Use complex prefixed verbs in professional and daily contexts"
 vocabulary_count: 31
+vocab_count: 129
 ---
 
 # Префікси руху в інших дієсловах
@@ -281,39 +282,3 @@ vocabulary_count: 31
 
 
 ---
-
-# Словник
-
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|---|---|---|---|---|
-| **виробляти** | /vɪrɔbˈlʲɑtɪ/ | to produce / manufacture | дієсл. | ВИ- (output) |
-| **виконувати** | /vɪˈkɔnuwɑtɪ/ | to execute / perform | дієсл. | ВИ- (result) |
-| **вигадати** | /ˈvɪɦɑdɑtɪ/ | to invent / make up | дієсл. | ВИ- (from head) |
-| **викладати** | /vɪklɑˈdɑtɪ/ | to teach / lay out | дієсл. | ВИ- (out) |
-| **випускати** | /vɪpusˈkɑtɪ/ | to release / produce | дієсл. | ВИ- (let out) |
-| **переробити** | /pɛrɛrɔˈbɪtɪ/ | to redo / remake | дієсл. | ПЕРЕ- (again) |
-| **перекласти** | /pɛrɛˈklɑstɪ/ | to translate / move | дієсл. | ПЕРЕ- (change) |
-| **переконати** | /pɛrɛkɔˈnɑtɪ/ | to convince | дієсл. | ПЕРЕ- (change mind) |
-| **заговорити** | /zɑɦɔvɔˈrɪtɪ/ | to start speaking | дієсл. | ЗА- (start) |
-| **заплакати** | /zɑˈplɑkɑtɪ/ | to start crying | дієсл. | ЗА- (start) |
-| **засміятися** | /zɑsʲmʲiˈjɑtɪsʲɑ/ | to burst into laughter | дієсл. | ЗА- (start) |
-| **затихнути** | /zɑˈtɪxnutɪ/ | to become quiet | дієсл. | ЗА- (start state) |
-| **замовкнути** | /zɑˈmɔwknutɪ/ | to fall silent | дієсл. | ЗА- (start state) |
-| **відмовитися** | /vidˈmɔvɪtɪsʲɑ/ | to refuse / decline | дієсл. | ВІД- (back/away) |
-| **відповісти** | /vidpɔˈvisti/ | to answer | дієсл. | ВІД- (back) |
-| **відновити** | /vidnɔˈvɪtɪ/ | to restore / renew | дієсл. | ВІД- (re-new) |
-| **підтримати** | /pidˈtrɪmɑtɪ/ | to support | дієсл. | ПІД- (under) |
-| **підписати** | /pidpɪˈsɑtɪ/ | to sign | дієсл. | ПІД- (under) |
-| **підготувати** | /pidɦɔtuˈvɑtɪ/ | to prepare | дієсл. | ПІД- (base) |
-| **приготувати** | /prɪɦɔtuˈvɑtɪ/ | to cook / prepare (food) | дієсл. | ПРИ- (result) |
-| **приєднатися** | /prɪjɛdˈnɑtɪsʲɑ/ | to join | дієсл. | ПРИ- (contact) |
-| **придумати** | /prɪˈdumɑtɪ/ | to invent / think up | дієсл. | ПРИ- (result) |
-| **привітати** | /prɪviˈtɑtɪ/ | to greet / congratulate | дієсл. | ПРИ- (arrival) |
-| **пристосуватися** | /prɪstɔsuˈvɑtɪsʲɑ/ | to adapt | дієсл. | ПРИ- (fit to) |
-| **прочитати** | /prɔtʃɪˈtɑtɪ/ | to read (completely) | дієсл. | ПРО- (through) |
-| **обговорити** | /ɔbɦɔvɔˈrɪtɪ/ | to discuss | дієсл. | ОБ- (around) |
-| **розповісти** | /rɔzpɔˈvistɪ/ | to tell / narrate | дієсл. | РОЗ- (spread) |
-| **виробництво** | /vɪrɔbˈnɪtstwɔ/ | production | ім. | |
-| **підтримка** | /pidˈtrɪmkɑ/ | support | ім. | |
-| **переклад** | /pɛˈrɛklɑd/ | translation | ім. | |
-| **відмова** | /vidˈmɔvɑ/ | refusal | ім. | |

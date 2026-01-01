@@ -1,13 +1,12 @@
 ---
-
 module: a1-05
-title: "My World: Objects"
-subtitle: "Pointing to Things with Demonstratives"
-version: "1.0"
-phase: "A1.1"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "full"
+title: 'My World: Objects'
+subtitle: 'Pointing to Things with Demonstratives'
+version: '1.0'
+phase: 'A1.1'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'full'
 tags:
   - demonstratives
   - household-objects
@@ -18,11 +17,12 @@ grammar:
   - demonstratives той/та/те/ті
   - gender agreement with demonstratives
 objectives:
-  - "Learner can use цей/ця/це/ці to point to objects near them"
-  - "Learner can use той/та/те/ті to point to objects far from them"
-  - "Learner can match demonstrative gender with noun gender"
-  - "Learner can name 40 common household and everyday objects"
+  - 'Learner can use цей/ця/це/ці to point to objects near them'
+  - 'Learner can use той/та/те/ті to point to objects far from them'
+  - 'Learner can match demonstrative gender with noun gender'
+  - 'Learner can name 40 common household and everyday objects'
 vocabulary_count: 40
+vocab_count: 42
 ---
 
 # My World: Objects
@@ -45,16 +45,17 @@ By the end of this module, you'll be able to navigate your entire living space i
 
 When you point to something **close to you**, use forms of **цей** (tsey):
 
-| Gender | Singular | Example | Transliteration | English |
-|--------|----------|---------|-----------------|---------|
-| **Masculine** | цей | цей стілець | tsey stilets' | this chair |
-| **Feminine** | ця | ця чашка | tsya chashka | this cup |
-| **Neuter** | це | це вікно | tse vikno | this window |
-| **Plural (all)** | ці | ці ключі | tsi klyuchi | these keys |
+| Gender           | Singular | Example     | Transliteration | English     |
+| ---------------- | -------- | ----------- | --------------- | ----------- |
+| **Masculine**    | цей      | цей стілець | tsey stilets'   | this chair  |
+| **Feminine**     | ця       | ця чашка    | tsya chashka    | this cup    |
+| **Neuter**       | це       | це вікно    | tse vikno       | this window |
+| **Plural (all)** | ці       | ці ключі    | tsi klyuchi     | these keys  |
 
 The pattern is simple: match the demonstrative to the noun's gender. If the noun is masculine, use **цей**. If feminine, use **ця**. If neuter, use **це**. If plural (any gender), use **ці**.
 
 **Quick Examples:**
+
 - Цей телефон (Tsey telefon) — This phone (m)
 - Ця сумка (Tsya sumka) — This bag (f)
 - Це дзеркало (Tse dzerkalo) — This mirror (n)
@@ -68,12 +69,12 @@ The pattern is simple: match the demonstrative to the noun's gender. If the noun
 
 When you point to something **far from you**, use forms of **той** (toy):
 
-| Gender | Singular | Example | Transliteration | English |
-|--------|----------|---------|-----------------|---------|
-| **Masculine** | той | той стілець | toy stilets' | that chair |
-| **Feminine** | та | та чашка | ta chashka | that cup |
-| **Neuter** | те | те вікно | te vikno | that window |
-| **Plural (all)** | ті | ті ключі | ti klyuchi | those keys |
+| Gender           | Singular | Example     | Transliteration | English     |
+| ---------------- | -------- | ----------- | --------------- | ----------- |
+| **Masculine**    | той      | той стілець | toy stilets'    | that chair  |
+| **Feminine**     | та       | та чашка    | ta chashka      | that cup    |
+| **Neuter**       | те       | те вікно    | te vikno        | that window |
+| **Plural (all)** | ті       | ті ключі    | ti klyuchi      | those keys  |
 
 Notice the pattern: **той** (m), **та** (f), **те** (n), **ті** (pl). Same logic as **цей**, just for distant objects.
 
@@ -87,16 +88,19 @@ Notice the pattern: **той** (m), **та** (f), **те** (n), **ті** (pl). S
 You already learned gender in Module 03. Now you're using it in real sentences. Every time you point to something, your demonstrative must match the noun's gender.
 
 **Kitchen Objects:**
+
 - Цей ніж (tsey nizh) — this knife (m)
 - Ця ложка (tsya lozhka) — this spoon (f)
 - Це блюдо (tse blyudo) — this dish (n)
 
 **Furniture:**
+
 - Той диван (toy dyvan) — that couch (m)
 - Та шафа (ta shafa) — that wardrobe (f)
 - Те крісло (te krislo) — that armchair (n)
 
 **Room Parts:**
+
 - Ця стіна (tsya stina) — this wall (f)
 - Цей стелю... wait! Стеля is feminine! → **Ця стеля** (tsya stelya) — this ceiling (f)
 - Це вікно (tse vikno) — this window (n)
@@ -134,41 +138,44 @@ You're describing furniture to someone on the phone:
 
 > 🎬 **Pop Culture Moment: The Witcher**
 >
-> In the Ukrainian dub of *The Witcher*, when Geralt points to objects, he uses perfect demonstrative agreement. "Цей меч" (this sword, m), "Та книга" (that book, f). Even fictional monster hunters follow Ukrainian grammar!
+> In the Ukrainian dub of _The Witcher_, when Geralt points to objects, he uses perfect demonstrative agreement. "Цей меч" (this sword, m), "Та книга" (that book, f). Even fictional monster hunters follow Ukrainian grammar!
 
 ### Everyday Scenarios
 
 **At Home:**
+
 - Це моя сумка. (Tse moya sumka.) — This is my bag.
 - Той рюкзак теж мій. (Toy ryukzak tezh miy.) — That backpack is also mine.
 - Ця лампа не працює. (Tsya lampa ne pratsyuye.) — This lamp doesn't work.
 
 **Looking for Something:**
+
 - Де мій телефон? (De miy telefon?) — Where is my phone?
 - Ось! Цей телефон! (Os'! Tsey telefon!) — Here! This phone!
 
 **Asking About Objects:**
+
 - Що це? (Shcho tse?) — What is this?
 - Це холодильник. (Tse kholodyl'nyk.) — This is a refrigerator.
 
 ### Mini-Dialogue 1: Lost Keys
 
-— Де мої ключі? *(De moyi klyuchi?)* — Where are my keys?
-— Ці ключі? *(Tsi klyuchi?)* — These keys?
-— Так! Дякую! *(Tak! Dyakuyu!)* — Yes! Thank you!
+— Де мої ключі? _(De moyi klyuchi?)_ — Where are my keys?
+— Ці ключі? _(Tsi klyuchi?)_ — These keys?
+— Так! Дякую! _(Tak! Dyakuyu!)_ — Yes! Thank you!
 
 ### Mini-Dialogue 2: Choosing Furniture
 
-— Цей стілець гарний? *(Tsey stilets' harnyy?)* — Is this chair nice?
-— Так! Цей стілець гарний. *(Tak! Tsey stilets' harnyy.)* — Yes! This chair is nice.
-— а те крісло? *(A te krislo?)* — And that armchair?
-— Те крісло теж гарне. *(Te krislo tezh harne.)* — That armchair is also nice.
+— Цей стілець гарний? _(Tsey stilets' harnyy?)_ — Is this chair nice?
+— Так! Цей стілець гарний. _(Tak! Tsey stilets' harnyy.)_ — Yes! This chair is nice.
+— а те крісло? _(A te krislo?)_ — And that armchair?
+— Те крісло теж гарне. _(Te krislo tezh harne.)_ — That armchair is also nice.
 
 ### Mini-Dialogue 3: Showing Around
 
-— Це моя кімната. *(Tse moya kimnata.)* — This is my room.
-— О! Ця лампа дуже гарна! *(O! Tsya lampa duzhe harna!)* — Oh! This lamp is very nice!
-— Дякую! Той годинник теж новий. *(Dyakuyu! Toy hodynnyk tezh novyy.)* — Thank you! That clock is also new.
+— Це моя кімната. _(Tse moya kimnata.)_ — This is my room.
+— О! Ця лампа дуже гарна! _(O! Tsya lampa duzhe harna!)_ — Oh! This lamp is very nice!
+— Дякую! Той годинник теж новий. _(Dyakuyu! Toy hodynnyk tezh novyy.)_ — Thank you! That clock is also new.
 
 ## Cultural Insight
 
@@ -211,12 +218,14 @@ Common household objects include:
 Now practice pointing to objects around you. Look at your room or workspace. Point and name:
 
 **Near you:**
+
 - Цей... (this + masculine object)
 - Ця... (this + feminine object)
 - Це... (this + neuter object)
 - Ці... (these + any plural objects)
 
 **Far from you:**
+
 - Той... (that + masculine object)
 - Та... (that + feminine object)
 - Те... (that + neuter object)
@@ -231,12 +240,14 @@ Try building full sentences: "Це моя чашка. Та чашка не мо�
 In this module, you learned:
 
 **Near Demonstratives (this/these):**
+
 - **цей** (tsey) — masculine singular
 - **ця** (tsya) — feminine singular
 - **це** (tse) — neuter singular
 - **ці** (tsi) — all plurals
 
 **Far Demonstratives (that/those):**
+
 - **той** (toy) — masculine singular
 - **та** (ta) — feminine singular
 - **те** (te) — neuter singular
@@ -245,6 +256,7 @@ In this module, you learned:
 **Key Rule:** Demonstratives MUST agree with the gender of the noun they point to.
 
 **40 New Words:**
+
 - Kitchen items: чашка, ложка, виделка, ніж, тарілка, склянка, пляшка
 - Household objects: телефон, ключ, сумка, рюкзак, гаманець, комп'ютер
 - Furniture: стілець, диван, крісло, ліжко, шафа
@@ -258,8 +270,7 @@ In this module, you learned:
 
 > [!resources] 🔗 External Resources
 >
-> **YouTube:** [Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN](https://www.youtube.com/watch?v=2IlH4OxyFJ8) — Ukrainian grammar 
->
+> **YouTube:** [Demonstrative pronouns in Ukrainian - ЦЕ VS ЦЕЙ VS ТОЙ IN THE UKRAINIAN](https://www.youtube.com/watch?v=2IlH4OxyFJ8) — Ukrainian grammar
 >
 > **Grammar:** [ЦЕЙ and ТОЙ Declension](https://www.ukrainianlessons.com/pronouns-this-that/) — Full table with examples
 >
@@ -269,36 +280,47 @@ In this module, you learned:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| цей | /tsɛj/ | this (m) | dem | m | masculine singular |
-| ця | /tsʲa/ | this (f) | dem | f | feminine singular |
-| ці | /tsi/ | these | dem | pl | all plurals |
-| той | /toj/ | that (m) | dem | m | masculine singular |
-| та | /ta/ | that (f) | dem | f | feminine singular |
-| те | /tɛ/ | that (n) | dem | n | neuter singular |
-| ті | /ti/ | those | dem | pl | all plurals |
-| чашка | /ˈtʃaʃka/ | cup | noun | f | |
-| ложка | /ˈlɔʒka/ | spoon | noun | f | |
-| виделка | /ˈvɪdɛlka/ | fork | noun | f | |
-| ніж | /niʒ/ | knife | noun | m | |
-| тарілка | /taˈrilka/ | plate | noun | f | |
-| склянка | /ˈsklʲanka/ | glass | noun | f | |
-| пляшка | /ˈplʲaʃka/ | bottle | noun | f | |
-| сумка | /ˈsumka/ | bag | noun | f | |
-| рюкзак | /rʲukˈzak/ | backpack | noun | m | |
-| гаманець | /ɦamaˈnɛtsʲ/ | wallet | noun | m | |
-| комп'ютер | /kɔmˈpʲutɛr/ | computer | noun | m | |
-| ключ | /klʲutʃ/ | key | noun | m | |
-| лампа | /ˈlampa/ | lamp | noun | f | |
-| годинник | /ɦɔˈdɪnːɪk/ | clock | noun | m | |
-| дзеркало | /ˈdzɛrkalo/ | mirror | noun | n | |
-| картина | /karˈtɪna/ | painting, picture | noun | f | |
-| холодильник | /xɔlɔˈdɪlʲnɪk/ | refrigerator | noun | m | |
-| плита | /plɪˈta/ | stove | noun | f | |
-| мікрохвильовка | /mikrɔxvɪˈlʲɔvka/ | microwave | noun | f | |
-| праска | /ˈpraska/ | iron | noun | f | |
-| пилосос | /pɪlɔˈsɔs/ | vacuum cleaner | noun | m | literally "dust sucker" |
-| кухня | /ˈkuxnʲa/ | kitchen | noun | f | |
-| пульт | /pulʲt/ | remote control | noun | m | short for "пульт дистанційного керування" |
-| гарний | /ˈɦarnɪj/ | nice, beautiful | adj | m | feminine: гарна, neuter: гарне |
+| Word           | IPA               | English          | POS   | Gender | Note |
+| -------------- | ----------------- | ---------------- | ----- | ------ | ---- |
+| блюдо          | /ˈblʲudɔ/         | dish             | noun  | с      |      |
+| ванна          | /ˈvɑnːɑ/          | bathtub          | name  | ж      |      |
+| виделка        | /vɪˈdɛlkɑ/        | fork             | noun  | ж      |      |
+| вітальня       | /viˈtɑlʲnʲɑ/      | living room      | name  | ж      |      |
+| гаманець       | /ɦɑmɑˈnɛt͡sʲ/      | wallet           | noun  | ч      |      |
+| гарний         | /ˈhɑrnɪj/         | nice/beautiful   | adj   | ч      |      |
+| годинник       | /ɦɔˈdɪnːɪk/       | clock/watch      | noun  | ч      |      |
+| дзеркало       | /ˈdzɛrkɑlɔ/       | mirror           | noun  | с      |      |
+| дуже           | /ˈduʒɛ/           | very             | adv   | -      |      |
+| заходити       | /zɑˈxɔdɪtɪ/       | to enter         | verb  | -      |      |
+| картина        | /kɑrˈtɪnɑ/        | picture/painting | noun  | ж      |      |
+| квартира       | /kvɑrˈtɪrɑ/       | apartment        | noun  | ж      |      |
+| ключ           | /klʲut͡ʃ/          | key              | noun  | ч      |      |
+| кухня          | /ˈkuxnʲɑ/         | kitchen          | noun  | ж      |      |
+| лампа          | /ˈlɑmpɑ/          | lamp             | noun  | ж      |      |
+| ложка          | /ˈlɔʒkɑ/          | spoon            | noun  | ж      |      |
+| меч            | /mɛt͡ʃ/            | sword            | noun  | ч      |      |
+| мікрохвильовка | /mikrɔxvɪˈlʲɔvkɑ/ | microwave        | noun  | ж      |      |
+| наш            | /nɑʃ/             | our              | other | ж      |      |
+| не             | /nɛ/              | not              | other | -      |      |
+| ніж            | /niʒ/             | knife            | other | -      |      |
+| ось            | /ɔsʲ/             | here is          | other | -      |      |
+| пилосос        | /pɪlɔˈsɔs/        | vacuum cleaner   | noun  | ч      |      |
+| плита          | /plɪˈtɑ/          | stove            | noun  | ж      |      |
+| пляшка         | /ˈplʲɑʃkɑ/        | bottle           | noun  | ж      |      |
+| праска         | /ˈprɑskɑ/         | iron             | name  | ж      |      |
+| працювати      | /prɑt͡sʲuˈvɑtɪ/    | to work          | verb  | -      |      |
+| пульт          | /pulʲt/           | remote control   | noun  | ч      |      |
+| рюкзак         | /rʲʊkˈzɑk/        | backpack         | noun  | ч      |      |
+| склянка        | /ˈsklʲɑnkɑ/       | glass            | noun  | ж      |      |
+| спальня        | /ˈspɑlʲnʲɑ/       | bedroom          | noun  | ж      |      |
+| старий         | /stɑˈrɪj/         | old              | adj   | ч      |      |
+| сумка          | /ˈsumkɑ/          | bag              | noun  | ж      |      |
+| та             | /tɑ/              | that (f)         | other | -      |      |
+| тапочка        | /ˈtɑpɔt͡ʃkɑ/       | slipper          | noun  | ч      |      |
+| тарілка        | /tɑˈrilkɑ/        | plate            | noun  | ж      |      |
+| те             | /tɛ/              | that (n)         | other | с      |      |
+| той            | /tɔj/             | that (m)         | other | ч      |      |
+| холодильник    | /xɔlɔˈdɪlʲnɪk/    | fridge           | noun  | ч      |      |
+| хрущовка       | /xruˈʃt͡ʃɔvkɑ/     | khrushchyovka    | noun  | ч      |      |
+| чашка          | /ˈt͡ʃɑʃkɑ/         | cup              | noun  | ж      |      |
+| що             | /ʃt͡ʃɔ/            | what             | pron  | с      |      |

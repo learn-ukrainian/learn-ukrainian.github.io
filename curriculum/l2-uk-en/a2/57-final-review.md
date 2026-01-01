@@ -14,7 +14,7 @@ objectives:
   - Write a short autobiography
   - Understand complex dialogues about future plans
   - Confirm A2 proficiency
-vocab_count: 10
+vocab_count: 33
 ---
 
 # A2 Final Review (Skills)
@@ -219,16 +219,3 @@ Success! (*Успіхів!*)
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| мир | /mɪr/ | peace | noun | m | |
-| свобода | /sʋɔˈbɔda/ | freedom | noun | f | |
-| змінюватися | /zmiˈnʲuʋatɪsʲa/ | to change | verb | - | |
-| останній | /ɔˈstannij/ | last | adj | m | |
-| пара | /ˈpara/ | class | noun | f | Lecture/Class pair. |
-| група | /ˈɦrupa/ | group | noun | f | |
-| вершина | /ʋerˈʃɪna/ | peak | noun | f | |
-| вогонь | /ʋɔˈɦɔnʲ/ | fire | noun | m | |

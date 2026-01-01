@@ -22,6 +22,7 @@ objectives:
   - "Learner can make comparisons with ніж and за"
   - "Learner can express preferences"
 vocabulary_count: 25
+vocab_count: 36
 ---
 
 ## Warm-up
@@ -252,33 +253,5 @@ There are two ways to say "than" in Ukrainian:
 > - 📖 [Degrees of Comparison](https://www.talkukrainian.com/adjectives-degrees-comparison/)
 > - 📝 [Adjectives Guide](https://www.ukrainianlessons.com/vocabulary-adjectives/)
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| більший | /ˈbilʲʃɪj/ | bigger | adj | m | comparative of великий |
-| менший | /ˈmɛnʃɪj/ | smaller | adj | m | comparative of малий |
-| кращий | /ˈkrɑʃt͡ʃɪj/ | better | adj | m | comparative of добрий |
-| гірший | /ˈɦirʃɪj/ | worse | adj | m | comparative of поганий |
-| вищий | /ˈʋɪʃt͡ʃɪj/ | taller, higher | adj | m | comparative of високий |
-| нижчий | /ˈnɪʒt͡ʃɪj/ | shorter, lower | adj | m | comparative of низький |
-| довший | /ˈdɔʋʃɪj/ | longer | adj | m | comparative of довгий |
-| коротший | /ˈkɔrɔtʃɪj/ | shorter | adj | m | comparative of короткий |
-| ширший | /ˈʃɪrʃɪj/ | wider | adj | m | comparative of широкий |
-| вужчий | /ˈʋuʒt͡ʃɪj/ | narrower | adj | m | comparative of вузький |
-| дорожчий | /dɔˈrɔʒt͡ʃɪj/ | more expensive | adj | m | comparative of дорогий |
-| дешевший | /dɛˈʃɛʋʃɪj/ | cheaper | adj | m | comparative of дешевий |
-| старіший | /stɑˈriʃɪj/ | older | adj | m | comparative of старий |
-| швидший | /ˈʃʋɪdʃɪj/ | faster | adj | m | comparative of швидкий |
-| повільніший | /pɔˈʋilʲniʃɪj/ | slower | adj | m | comparative of повільний |
-| набагато | /nɑˈbɑɦɑtɔ/ | much | adv | — | intensifier |
-| значно | /ˈznɑt͡ʃnɔ/ | significantly | adv | — | intensifier |
-| розумніший | /rɔˈzumniʃɪj/ | smarter | adj | m | comparative of розумний |
-| цікавіший | /t͡siˈkɑʋiʃɪj/ | more interesting | adj | m | comparative of цікавий |
-| холодніший | /xɔˈlɔdniʃɪj/ | colder | adj | m | comparative of холодний |
-| гарячіший | /ɦɑˈrʲɑt͡ʃiʃɪj/ | hotter | adj | m | comparative of гарячий |
 
 ---

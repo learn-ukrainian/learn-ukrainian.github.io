@@ -21,6 +21,7 @@ objectives:
   - "Learner can understand doctor's instructions"
   - "Learner can buy medicine"
 vocabulary_count: 30
+vocab_count: 38
 ---
 
 ## Warm-up
@@ -50,6 +51,9 @@ Construction: **У мене** (Genitive 'In me') + **болить** (hurts) + **
 - **У мене болить живіт.** (My stomach hurts).
 - **У мене болить горло.** (My throat hurts).
 - **У мене болить спина.** (My back hurts).
+- **У мене болить рука.** (My arm hurts).
+- **У мене болить зуб.** (My tooth hurts).
+- **У мене болить вухо.** (My ear hurts).
 
 **PLURAL:** If multiple things hurt, use **болять**.
 - **У мене болять ноги.** (My legs hurt).
@@ -258,22 +262,3 @@ Don't confuse with **Боліти** (to hurt).
 5.  **Place:** Лікарня, Поліклініка, Аптека.
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| пацієнт | /pɑt͡sʲiˈjɛnt/ | patient | noun | m | person |
-| симптом | /sɪmpˈtɔm/ | symptom | noun | m | medical |
-| біль | /bilʲ/ | pain | noun | m | sensation |
-| грип | /ɦrɪp/ | flu | noun | m | illness |
-| серце | /ˈsɛrt͡sɛ/ | heart | noun | n | body part |
-| рецепт | /rɛˈt͡sɛpt/ | prescription | noun | m | document |
-| поліклініка | /pɔlʲiˈklʲinikɑ/ | polyclinic | noun | f | place |
-| хворіти | /xʋɔˈritɪ/ | to be sick | verb | — | process |
-| одужувати | /ɔˈduʒuʋɑtɪ/ | to recover | verb | — | process |
-| оглядати | /ɔɦlʲɑˈdɑtɪ/ | to examine | verb | — | doctor action |
-| лікувати | /lʲikuˈʋɑtɪ/ | to treat | verb | — | doctor action |
-| приймати | /prɪjˈmɑtɪ/ | to take (meds) | verb | — | action |
-| відчувати | /ʋid͡tʃuˈʋɑtɪ/ | to feel | verb | — | sensory |
-| турбує | /turˈbujɛ/ | bothers | verb | — | concern |

@@ -1,20 +1,20 @@
 ---
-
 module: a1-12
-title: "The Accusative II: People"
-subtitle: "Animate Nouns and the Genitive Connection"
-version: "1.0"
-phase: "A1.2"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "vocab-only"
-tags: ["accusative", "cases", "animate", "people", "grammar"]
-grammar: ["accusative-animate", "genitive-accusative-connection"]
+title: 'The Accusative II: People'
+subtitle: 'Animate Nouns and the Genitive Connection'
+version: '1.0'
+phase: 'A1.2'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'vocab-only'
+tags: ['accusative', 'cases', 'animate', 'people', 'grammar']
+grammar: ['accusative-animate', 'genitive-accusative-connection']
 objectives:
-  - "Learner can use accusative case for animate nouns (people/animals)"
-  - "Learner can distinguish between animate and inanimate accusative"
-  - "Learner can identify when accusative = genitive"
+  - 'Learner can use accusative case for animate nouns (people/animals)'
+  - 'Learner can distinguish between animate and inanimate accusative'
+  - 'Learner can identify when accusative = genitive'
 vocabulary_count: 20
+vocab_count: 45
 ---
 
 # The Accusative II: People
@@ -24,6 +24,7 @@ vocabulary_count: 20
 In Module 11, you learned the accusative case for things: я бачу **книгу**, я читаю **газету**. But what about people? Can you say "я бачу студент"? Not quite! When the direct object is a person or animal (we call these **animate nouns**), Ukrainian has a special rule.
 
 Compare these two sentences:
+
 - Я бачу **стіл**. (I see a table.) — inanimate, no change
 - Я бачу **студента**. (I see a student.) — animate, changes to -а!
 
@@ -38,17 +39,18 @@ Here's the pattern that will save you hours of confusion:
 > **For masculine animate nouns, accusative case = genitive case.**
 
 This means:
+
 - If it's **alive** (person, animal): add **-а** or **-я**
 - If it's **not alive** (object, thing): no change
 
 **Masculine Animate Nouns (People):**
 
-| Nominative (who?) | Accusative (whom?) | Example |
-|-------------------|-------------------|---------|
-| студент | студент**а** | Я бачу **студента**. |
-| друг | друг**а** | Вона знає мого **друга**. |
-| лікар | лікар**а** | Ми чекаємо **лікаря**. |
-| водій | водій**я** | Я бачу **водія**. |
+| Nominative (who?) | Accusative (whom?) | Example                   |
+| ----------------- | ------------------ | ------------------------- |
+| студент           | студент**а**       | Я бачу **студента**.      |
+| друг              | друг**а**          | Вона знає мого **друга**. |
+| лікар             | лікар**а**         | Ми чекаємо **лікаря**.    |
+| водій             | водій**я**         | Я бачу **водія**.         |
 
 > 💡 **Did You Know?**
 >
@@ -60,31 +62,31 @@ This means:
 
 Some masculine nouns already end in -а (like **тато**, **дідусь**, **суддя**). For these, the accusative is **-у**:
 
-| Nominative | Accusative | Example |
-|------------|-----------|---------|
-| тато | тат**у** | Я люблю **тата**. (I love dad.) |
-| дідусь | дідус**я** | Вона бачить **дідуся**. (She sees grandpa.) |
+| Nominative | Accusative | Example                                     |
+| ---------- | ---------- | ------------------------------------------- |
+| тато       | тат**у**   | Я люблю **тата**. (I love dad.)             |
+| дідусь     | дідус**я** | Вона бачить **дідуся**. (She sees grandpa.) |
 
 ### Feminine Animate Nouns — No Change!
 
 Here's the good news: **feminine animate nouns work exactly like feminine inanimate nouns**. They follow the regular -а → -у pattern:
 
-| Nominative | Accusative | Example |
-|------------|-----------|---------|
-| подруга | подругу | Я бачу **подругу**. |
-| студентка | студентку | Ми знаємо **студентку**. |
-| лікарка | лікарку | Він чекає **лікарку**. |
+| Nominative | Accusative | Example                  |
+| ---------- | ---------- | ------------------------ |
+| подруга    | подругу    | Я бачу **подругу**.      |
+| студентка  | студентку  | Ми знаємо **студентку**. |
+| лікарка    | лікарку    | Він чекає **лікарку**.   |
 
 So you already know how to handle feminine animate nouns from Module 11!
 
 ### Summary Table: Animate vs Inanimate
 
-| Gender | Type | Nominative | Accusative | Example |
-|--------|------|-----------|-----------|---------|
-| **Masculine** | Inanimate | стіл | стіл | Я бачу **стіл**. |
-| **Masculine** | Animate | студент | студент**а** | Я бачу **студента**. |
-| **Feminine** | Inanimate | книга | книг**у** | Я бачу **книгу**. |
-| **Feminine** | Animate | студентка | студентк**у** | Я бачу **студентку**. |
+| Gender        | Type      | Nominative | Accusative    | Example               |
+| ------------- | --------- | ---------- | ------------- | --------------------- |
+| **Masculine** | Inanimate | стіл       | стіл          | Я бачу **стіл**.      |
+| **Masculine** | Animate   | студент    | студент**а**  | Я бачу **студента**.  |
+| **Feminine**  | Inanimate | книга      | книг**у**     | Я бачу **книгу**.     |
+| **Feminine**  | Animate   | студентка  | студентк**у** | Я бачу **студентку**. |
 
 ## Practice
 
@@ -224,6 +226,7 @@ These verbs typically take **people** as objects (accusative case):
 In this module, you learned the **animate accusative** — how Ukrainian marks people and animals as direct objects.
 
 **Key Rules:**
+
 1. **Masculine animate nouns** → accusative = genitive (add **-а/-я**)
    - студент → **студента**
    - друг → **друга**
@@ -235,6 +238,7 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 **Why it matters:** This distinction helps Ukrainian clearly mark **who** is affected by an action, making sentences precise and unambiguous.
 
 **You can now:**
+
 - Say "I see the doctor" — Я бачу **лікаря**.
 - Say "She knows my friend" — Вона знає **мою подругу**.
 - Distinguish between people and things in the accusative case.
@@ -245,7 +249,6 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 >
 > **YouTube:** [Practice #Ukrainian Accusative Case with me! (with nouns, pronouns and adjectives)](https://www.youtube.com/watch?v=BYBWx6ds8Fk) — Let's Learn Ukrainian
 >
->
 > **Grammar Guide:** [Accusative Case](https://www.ukrainianlessons.com/accusativecase/) — Animate vs inanimate distinction explained
 >
 > **Pronouns:** [Personal Pronouns Declension](https://www.ukrainianlessons.com/ukrainian-personal-pronouns/) — See мене, тебе, його in accusative
@@ -254,21 +257,47 @@ In this module, you learned the **animate accusative** — how Ukrainian marks p
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| колега | /koˈlɛɦɑ/ | colleague | noun | m/f | animate |
-| сусід | /suˈsid/ | neighbor (male) | noun | m | animate |
-| сусідка | /suˈsidkɑ/ | neighbor (female) | noun | f | animate |
-| вчитель | /wtʃɪˈtɛlʲ/ | teacher (male) | noun | m | animate |
-| вчителька | /wtʃɪˈtɛlʲkɑ/ | teacher (female) | noun | f | animate |
-| офіціант | /ofit͡sɪˈɑnt/ | waiter | noun | m | animate |
-| офіціантка | /ofit͡sɪˈɑntkɑ/ | waitress | noun | f | animate |
-| продавець | /prodɑˈvɛt͡sʲ/ | salesperson (male) | noun | m | animate |
-| продавчиня | /prodɑvˈt͡ʃɪnʲɑ/ | salesperson (female) | noun | f | animate |
-| водій | /voˈdij/ | driver | noun | m | animate |
-| пасажир | /pɑsɑˈʒɪr/ | passenger | noun | m | animate |
-| гість | /histʲ/ | guest | noun | m | animate |
-| директор | /dɪˈrɛktor/ | director | noun | m | animate |
-| менеджер | /mɛˈnɛd͡ʒɛr/ | manager | noun | m | animate |
-
----
+| Word         | IPA              | English             | POS  | Gender | Note |
+| ------------ | ---------------- | ------------------- | ---- | ------ | ---- |
+| андрій       | /ɑnˈdrij/        | Andriy              | name | ч      |      |
+| бібліотека   | /biblʲiɔˈtɛkɑ/   | library             | noun | ж      |      |
+| вибачити     | /vɪˈbɑt͡ʃɪtɪ/     | to forgive/excuse   | verb | -      |      |
+| водій        | /vɔˈdij/         | driver              | noun | ч      |      |
+| возити       | /vɔˈzɪtɪ/        | to drive/transport  | verb | -      |      |
+| вулиця       | /ˈvulɪt͡sʲɑ/      | street              | noun | ж      |      |
+| вчитель      | /ˈwt͡ʃɪtɛlʲ/      | teacher (m)         | noun | ч      |      |
+| вчителька    | /ˈwt͡ʃɪtɛlʲkɑ/    | teacher (f)         | noun | ж      |      |
+| гість        | /ɦisʲtʲ/         | guest               | noun | ч      |      |
+| директор     | /dɪˈrɛktɔr/      | director            | noun | ч      |      |
+| директорка   | /dɪˈrɛktɔrkɑ/    | director (f)        | noun | ж      |      |
+| додому       | /dɔˈdɔmu/        | homewards           | adv  | -      |      |
+| дошка        | /ˈdɔʃkɑ/         | board/blackboard    | noun | ж      |      |
+| дружина      | /druˈʒɪnɑ/       | wife                | noun | ж      |      |
+| дідусь       | /diˈdusʲ/        | grandpa             | noun | ч      |      |
+| замовити     | /zɑˈmɔvɪtɪ/      | to order            | verb | -      |      |
+| його         | /jɔˈɦɔ/          | his/him             | pron | -      |      |
+| кожний       | /ˈkɔʒnɪj/        | every/each          | pron | ч      |      |
+| колега       | /kɔˈlɛɦɑ/        | colleague           | noun | ч      |      |
+| коридор      | /kɔrɪˈdɔr/       | corridor            | noun | ч      |      |
+| може         | /ˈmɔʒɛ/          | maybe               | adv  | -      |      |
+| офіціант     | /ɔfit͡sʲiˈɑnt/    | waiter              | noun | ч      |      |
+| пасажир      | /pɑsɑˈʒɪr/       | passenger           | noun | ч      |      |
+| питати       | /pɪˈtɑtɪ/        | to ask              | verb | -      |      |
+| практикувати | /prɑktɪkuˈvɑtɪ/  | to practice         | verb | -      |      |
+| привітний    | /prɪˈvitnɪj/     | friendly/welcoming  | adj  | ч      |      |
+| разом        | /ˈrɑzɔm/         | together            | adv  | -      |      |
+| спізнюватися | /spizɲuˈvɑtɪsʲɑ/ | to be late          | verb | -      |      |
+| суддя        | /sudˈdʲɑ/        | judge               | noun | ч      |      |
+| сусід        | /suˈsid/         | neighbor (m)        | noun | ч      |      |
+| сусідка      | /suˈsidkɑ/       | neighbor (f)        | noun | ж      |      |
+| сідати       | /siˈdɑtɪ/        | to sit down         | verb | -      |      |
+| тато         | /ˈtɑtɔ/          | dad                 | noun | ч      |      |
+| тепер        | /tɛˈpɛr/         | now                 | adv  | -      |      |
+| учениця      | /ut͡ʃɛˈnɪt͡sʲɑ/    | student (school, f) | noun | ж      |      |
+| учень        | /ˈut͡ʃɛnʲ/        | student (school, m) | noun | ч      |      |
+| хтось        | /xtɔsʲ/          | someone             | pron | -      |      |
+| цікаво       | /t͡sʲiˈkɑvɔ/      | interestingly       | adv  | -      |      |
+| чудовий      | /t͡ʃuˈdɔvɪj/      | wonderful           | adj  | ч      |      |
+| школа        | /ˈʃkɔlɑ/         | school              | noun | ж      |      |
+| шукати       | /ʃuˈkɑtɪ/        | to look for         | verb | -      |      |
+| ідея         | /iˈdɛjɑ/         | idea                | noun | ж      |      |

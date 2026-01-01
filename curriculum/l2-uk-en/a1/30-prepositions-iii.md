@@ -1,13 +1,12 @@
 ---
-
 module: a1-30
-title: "Prepositions III"
-subtitle: "Direction, Location & Origin"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Prepositions III'
+subtitle: 'Direction, Location & Origin'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - prepositions
   - direction
@@ -17,11 +16,12 @@ grammar:
   - Location (De?) vs Direction (Kudy?) vs Origin (Zvidky?)
   - Prepositions with cases
 objectives:
-  - "Learner can distinguish location from direction questions"
-  - "Learner can use в/на for location (Locative)"
-  - "Learner can use в/на/до for direction (Accusative/Genitive)"
-  - "Learner can use з/від for origin"
+  - 'Learner can distinguish location from direction questions'
+  - 'Learner can use в/на for location (Locative)'
+  - 'Learner can use в/на/до for direction (Accusative/Genitive)'
+  - 'Learner can use з/від for origin'
 vocabulary_count: 20
+vocab_count: 10
 ---
 
 # Prepositions III
@@ -40,17 +40,18 @@ vocabulary_count: 20
 ---
 
 ## Grammar
+
 ## The Three Key Questions
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at these question-answer pairs:
 >
-> | Question | Case Needed | Example |
-> |----------|-------------|---------|
-> | **Де?** (Where?) | Locative | Я **в парку**. |
-> | **Куди?** (Where to?) | Accusative/Genitive | Я йду **в парк** / **до парку**. |
-> | **Звідки?** (Where from?) | Genitive | Я **з парку**. |
+> | Question                  | Case Needed         | Example                          |
+> | ------------------------- | ------------------- | -------------------------------- |
+> | **Де?** (Where?)          | Locative            | Я **в парку**.                   |
+> | **Куди?** (Where to?)     | Accusative/Genitive | Я йду **в парк** / **до парку**. |
+> | **Звідки?** (Where from?) | Genitive            | Я **з парку**.                   |
 >
 > The QUESTION determines which CASE to use!
 
@@ -60,10 +61,10 @@ vocabulary_count: 20
 
 For **location** (where something IS), use **Locative case**:
 
-| Preposition | Example | Translation |
-|-------------|---------|-------------|
-| **в/у** | Я **в парку**. | I am in the park. |
-| **на** | Книга **на столі**. | The book is on the table. |
+| Preposition | Example             | Translation               |
+| ----------- | ------------------- | ------------------------- |
+| **в/у**     | Я **в парку**.      | I am in the park.         |
+| **на**      | Книга **на столі**. | The book is on the table. |
 
 ### Examples
 
@@ -77,11 +78,11 @@ For **location** (where something IS), use **Locative case**:
 
 For **direction** (where something is GOING), use **Accusative** or **Genitive**:
 
-| Preposition | Case | Example | Translation |
-|-------------|------|---------|-------------|
-| **в/у** | Acc | Я йду **в парк**. | I'm going to the park. |
-| **на** | Acc | Я йду **на роботу**. | I'm going to work. |
-| **до** | Gen | Я йду **до лікаря**. | I'm going to the doctor. |
+| Preposition | Case | Example              | Translation              |
+| ----------- | ---- | -------------------- | ------------------------ |
+| **в/у**     | Acc  | Я йду **в парк**.    | I'm going to the park.   |
+| **на**      | Acc  | Я йду **на роботу**. | I'm going to work.       |
+| **до**      | Gen  | Я йду **до лікаря**. | I'm going to the doctor. |
 
 ### Examples
 
@@ -95,10 +96,10 @@ For **direction** (where something is GOING), use **Accusative** or **Genitive**
 
 For **origin** (where something is FROM), use **Genitive** with **з** or **від**:
 
-| Preposition | Use | Example | Translation |
-|-------------|-----|---------|-------------|
-| **з** | from places | Я **з України**. | I'm from Ukraine. |
-| **від** | from people | Це подарунок **від мами**. | This is a gift from mom. |
+| Preposition | Use         | Example                    | Translation              |
+| ----------- | ----------- | -------------------------- | ------------------------ |
+| **з**       | from places | Я **з України**.           | I'm from Ukraine.        |
+| **від**     | from people | Це подарунок **від мами**. | This is a gift from mom. |
 
 ### Examples
 
@@ -110,10 +111,10 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 
 ## Location vs Direction Pairs
 
-| Location (Де?) | Direction (Куди?) |
-|----------------|-------------------|
-| Я **вдома**. (I'm at home.) | Я йду **додому**. (I'm going home.) |
-| Він **тут**. (He's here.) | Іди **сюди**! (Come here!) |
+| Location (Де?)               | Direction (Куди?)                     |
+| ---------------------------- | ------------------------------------- |
+| Я **вдома**. (I'm at home.)  | Я йду **додому**. (I'm going home.)   |
+| Він **тут**. (He's here.)    | Іди **сюди**! (Come here!)            |
 | Вона **там**. (She's there.) | Він їде **туди**. (He's going there.) |
 
 ---
@@ -238,32 +239,22 @@ For **origin** (where something is FROM), use **Genitive** with **з** or **ві
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Location vs Destination](https://www.ukrainianlessons.com/location-destination-prepositions/) — Preposition guide
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/prepositions
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| там | /tɑm/ | there | adv | — | location |
-| тут | /tut/ | here | adv | — | location |
-| куди | /kuˈdɪ/ | where to | adv | — | direction |
-| звідки | /ˈzvidkɪ/ | where from | adv | — | origin |
-| де | /dɛ/ | where | adv | — | location |
-| вдома | /ˈvdɔmɑ/ | at home | adv | — | location |
-| додому | /dɔˈdɔmu/ | to home | adv | — | direction |
-| з | /z/ | from (place) | prep | — | + Genitive |
-| від | /vid/ | from (person) | prep | — | + Genitive |
-| ліворуч | /lʲivɔˈrut͡ʃ/ | on the left | adv | — | direction |
-| праворуч | /prɑvɔˈrut͡ʃ/ | on the right | adv | — | direction |
-| прямо | /ˈprʲɑmɔ/ | straight | adv | — | direction |
-| навпроти | /nɑvˈprɔtɪ/ | opposite | prep | — | location |
-| близько | /ˈblɪzkɔ/ | near | adv | — | location |
-| далеко | /dɑˈlɛkɔ/ | far | adv | — | location |
-| сюди | /sʲuˈdɪ/ | to here | adv | — | direction |
-| туди | /tuˈdɪ/ | to there | adv | — | direction |
-
----
-
----
+| Word     | IPA          | English             | POS   | Gender | Note |
+| -------- | ------------ | ------------------- | ----- | ------ | ---- |
+| аеропорт | /ɑɛrɔˈpɔrt/  | airport             | noun  | ч      |      |
+| ліворуч  | /lʲiˈvɔrut͡ʃ/ | to the left         | adv   | -      |      |
+| напрямок | /ˈnɑprʲɑmɔk/ | direction           | noun  | ч      |      |
+| покласти | /pɔˈklɑstɪ/  | to put              | verb  | -      |      |
+| Польща   | /ˈpɔlʲʃt͡ʃɑ/  | Poland              | name  | ж      |      |
+| пройти   | /prɔjˈtɪ/    | to pass/go through  | verb  | -      |      |
+| супер    | /ˈsupɛr/     | super               | other | -      |      |
+| сюди     | /sʲuˈdɪ/     | here (directional)  | adv   | -      |      |
+| татко    | /ˈtɑtkɔ/     | dad (affectionate)  | noun  | ч      |      |
+| туди     | /tuˈdɪ/      | there (directional) | adv   | -      |      |

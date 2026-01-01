@@ -1,11 +1,11 @@
 ---
 module: a2-46
-title: "Nature & Weather"
-subtitle: "Environment and Climate Vocabulary"
-version: "2.0"
-phase: "A2.5"
-pedagogy: "PPP"
-duration: "60 min"
+title: 'Nature & Weather'
+subtitle: 'Environment and Climate Vocabulary'
+version: '2.0'
+phase: 'A2.5'
+pedagogy: 'PPP'
+duration: '60 min'
 transliteration: none
 tags:
   - vocabulary
@@ -16,17 +16,18 @@ grammar:
   - thematic vocabulary
   - weather expressions
 objectives:
-  - "Learner knows nature and weather vocabulary"
-  - "Learner can describe weather and environment"
-  - "Learner can discuss seasons and climate"
+  - 'Learner knows nature and weather vocabulary'
+  - 'Learner can describe weather and environment'
+  - 'Learner can discuss seasons and climate'
 vocabulary_count: 30
+vocab_count: 54
 ---
 
 # Nature & Weather
 
 ## Warm-up
 
-Україна має чудову природу! Ukraine has beautiful nature! From the Carpathian Mountains in the west to the Black Sea coast in the south, Ukraine offers diverse landscapes and changing seasons.
+Ukraine has beautiful nature! From the Carpathian Mountains in the west to the Black Sea coast in the south, Ukraine offers diverse landscapes and changing seasons.
 
 This module covers essential vocabulary for discussing nature, weather, seasons, and the environment. Being able to talk about the weather is one of the most common conversation topics in any language.
 
@@ -34,64 +35,61 @@ Ukrainian weather patterns vary significantly by region. Kyiv experiences cold w
 
 ---
 
-## Presentation
-
-## Landscape
+## Ландшафт
 
 Ukrainian landscapes are diverse and beautiful. Here is the essential vocabulary for describing natural features:
 
-| Ukrainian | English | Example |
-|-----------|---------|---------|
-| гора | mountain | Карпати — це гори. |
-| долина | valley | Долина зелена влітку. |
-| ліс | forest | Ми гуляємо в лісі. |
-| озеро | lake | Озеро чисте і холодне. |
-| ріка | river | Дніпро — велика ріка. |
-| море | sea | Ми їдемо на море. |
-| пляж | beach | Пляж гарний. |
-| поле | field | Поле жовте влітку. |
+| Ukrainian | English  | Example                |
+| --------- | -------- | ---------------------- |
+| гора      | mountain | Карпати — це гори.     |
+| долина    | valley   | Долина зелена влітку.  |
+| ліс       | forest   | Ми гуляємо в лісі.     |
+| озеро     | lake     | Озеро чисте і холодне. |
+| ріка      | river    | Дніпро — велика ріка.  |
+| море      | sea      | Ми їдемо на море.      |
+| пляж      | beach    | Пляж гарний.           |
+| поле      | field    | Поле жовте влітку.     |
 
-> [!tip] Locative Case with Places
-> When describing being IN or AT a place, use the locative case:
+> [!tip] Місцевий відмінок з назвами місць (Locative Case with Places)
+> Коли ми описуємо перебування В або НА місці, використовуйте місцевий відмінок:
 > **в лісі** (in the forest), **на морі** (at the sea), **в горах** (in the mountains)
-> Note: "на морі" uses НА because it refers to the surface of the sea, while "в морі" means under the water.
-> The locative case is essential for describing locations in Ukrainian. It is always used after prepositions like "в/у" (in) and "на" (on/at). This is different from English, where we simply say "in the forest" without changing the noun form.
+> Примітка: «на морі» використовується, коли йдеться про відпочинок на узбережжі, а «в морі» означає під водою.
+> Місцевий відмінок є важливим для опису місця розташування в українській мові. Він завжди використовується після прийменників «в/у» та «на».
 
 Ukraine is known for its beautiful landscapes. The Carpathian Mountains in the west offer hiking and skiing. The Dnieper River flows through Kyiv, the capital city. The Black Sea coast provides beaches and resorts for summer vacations.
 
-## Weather
+## Погода
 
 Weather vocabulary is essential for daily conversations. Ukrainian uses adverbs to describe weather conditions:
 
-| Ukrainian | English | Example |
-|-----------|---------|---------|
-| сонячно | sunny | Сьогодні сонячно і тепло. |
-| хмарно | cloudy | Надворі хмарно. |
-| дощ | rain | Іде дощ. |
-| сніг | snow | Падає сніг. |
-| вітер | wind | Сильний вітер. |
-| гроза | thunderstorm | Буде гроза ввечері. |
-| туман | fog | Вранці туман. |
+| Ukrainian | English      | Example                   |
+| --------- | ------------ | ------------------------- |
+| сонячно   | sunny        | Сьогодні сонячно і тепло. |
+| хмарно    | cloudy       | Надворі хмарно.           |
+| дощ       | rain         | Іде дощ.                  |
+| сніг      | snow         | Падає сніг.               |
+| вітер     | wind         | Сильний вітер.            |
+| гроза     | thunderstorm | Буде гроза ввечері.       |
+| туман     | fog          | Вранці туман.             |
 
-> [!cultural] Weather Expressions
-> Ukrainians often ask "Яка сьогодні погода?" (What is the weather like today?)
-> The response typically starts with "Сьогодні..." (Today it is...)
-> For example: "Сьогодні сонячно" or "Сьогодні йде дощ"
-> The verb "йти" (to go) is used with precipitation: "Іде дощ" (It's raining)
-> This is similar to the English expression "it's raining" where we also use a verb to describe precipitation.
+> [!cultural] Вислови про погоду (Weather Expressions)
+> Українці часто запитують: «Яка сьогодні погода?»
+> Відповідь зазвичай починається зі слова «Сьогодні...»
+> Наприклад: «Сьогодні сонячно» або «Сьогодні йде дощ».
+> З опадами використовується дієслово «йти»: «Іде дощ» або «Іде сніг».
 
 Weather in Ukraine varies significantly throughout the year. Summer temperatures can reach 35 degrees Celsius in the south, while winter temperatures often drop to minus 20 in the north. Spring and autumn are mild and pleasant, making them ideal times for outdoor activities and sightseeing.
 
-## Seasons
+## Пори року
 
 Each season in Ukraine has its own beauty and character:
 
-| Ukrainian | English | Characteristics |
-|-----------|---------|-----------------|
-| весна | spring | flowers bloom, warm |
-| літо | summer | hot, vacation time |
-| осінь | autumn | leaves fall, cool |
-| зима | winter | cold, snow |
+| Ukrainian | English | Characteristics     |
+| --------- | ------- | ------------------- |
+| весна     | spring  | flowers bloom, warm |
+| літо      | summer  | hot, vacation time  |
+| осінь     | autumn  | leaves fall, cool   |
+| зима      | winter  | cold, snow          |
 
 ---
 
@@ -188,6 +186,7 @@ Each season in Ukraine has its own beauty and character:
 Оксана біжить надвір. Зима чудова! Кожен сезон має свою красу.
 
 > [!cultural] Пори Року в Україні
+>
 > Україна має чотири різні пори року.
 > Влітку температура досягає 35°C, а взимку падає до -15°C.
 > Українці святкують прихід весни як час оновлення та надії.
@@ -198,16 +197,16 @@ Each season in Ukraine has its own beauty and character:
 
 ## Weather Questions and Answers
 
-| Question | Answer |
-|----------|--------|
-| Яка сьогодні погода? | Сьогодні сонячно. |
-| Іде дощ? | Так, іде дощ. | Ні, не йде. |
-| Яка температура? | Двадцять градусів. |
-| Буде дощ завтра? | Так, обіцяють дощ. |
+| Question             | Answer             |
+| -------------------- | ------------------ | ----------- |
+| Яка сьогодні погода? | Сьогодні сонячно.  |
+| Іде дощ?             | Так, іде дощ.      | Ні, не йде. |
+| Яка температура?     | Двадцять градусів. |
+| Буде дощ завтра?     | Так, обіцяють дощ. |
 
 ## Useful Phrases
 
-When discussing weather in Ukrainian, these expressions will help you communicate naturally:
+Обговорюючи погоду українською мовою, ці вислови допоможуть вам спілкуватися природно:
 
 - **Яка гарна погода!** = What nice weather! Use this exclamation on beautiful days.
 - **Надворі холодно.** = It's cold outside. Надворі literally means "outdoors".
@@ -221,7 +220,8 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 
 # Summary
 
-**Ландшафт:**
+**Landscape:**
+
 - гора
 - долина
 - ліс
@@ -231,7 +231,8 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 - поле
 - пляж
 
-**Погода:**
+**Weather:**
+
 - сонячно
 - хмарно
 - дощ
@@ -240,7 +241,8 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 - гроза
 - туман
 
-**Сезони:**
+**Seasons:**
+
 - весна
 - літо
 - осінь
@@ -254,11 +256,12 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 >
 > «В Україні чотири пори року: весна, літо, осінь, зима. Кожна прекрасна!»
 >
-> *Translation: "Ukraine has four seasons. Each is beautiful!"*
+> _Translation: "Ukraine has four seasons. Each is beautiful!"_
 
 > 🇺🇦 **Погода в Україні**
 >
 > Українські пори року дуже різноманітні:
+>
 > - **Весна**: тепло, сонячно, квітнуть дерева
 > - **Літо**: жарко, часто йде дощ
 > - **Осінь**: прохолодно, золоте листя
@@ -273,19 +276,3 @@ When discussing weather in Ukrainian, these expressions will help you communicat
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| долина | /dɔˈlɪna/ | valley | noun | f | landscape |
-| ріка | /riˈka/ | river | noun | f | water |
-| океан | /ɔkeˈan/ | ocean | noun | m | water |
-| поле | /ˈpɔle/ | field | noun | n | landscape |
-| луг | /luɦ/ | meadow | noun | m | landscape |
-| гроза | /ɦrɔˈza/ | thunderstorm | noun | f | weather |
-| туман | /tuˈman/ | fog | noun | m | weather |
-| блискавка | /blɪsˈkavka/ | lightning | noun | f | weather |
-| грім | /ɦrim/ | thunder | noun | m | weather |
-| трава | /traˈva/ | grass | noun | f | flora |
-| клімат | /ˈklimat/ | climate | noun | m | environment |

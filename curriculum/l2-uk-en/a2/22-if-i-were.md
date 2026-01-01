@@ -21,6 +21,7 @@ objectives:
   - "Learner can express wishes and hypotheticals"
   - "Learner can use якби correctly"
 vocabulary_count: 25
+vocab_count: 17
 ---
 
 # Summary
@@ -105,6 +106,7 @@ The particle **б/би** is essential for unreal conditions. It attaches to the 
 - Мені б хотілося... (I would want... — softer)
 - Було б добре... (It would be good...)
 - Це було б чудово! (That would be wonderful!)
+- Я б **обов'язково** пішов. (I would definitely go.)
 
 ### Polite Requests
 
@@ -230,67 +232,4 @@ The conditional mood is also perfect for saying sorry and soft refusals.
 6. **If I were you, I would ask.**
    → Якби я був на твоєму місці, я б запитав.
 
----
-
-## Summary Table
-
-## What You Learned
-
-This module covered conditional mood in Ukrainian.
-
-**Real conditions (possible):**
-- Якщо + future: Якщо матиму час, прочитаю.
-
-**Unreal conditions (hypothetical):**
-- Якби + past + б/би: Якби я мав час, я б прочитав.
-
-**Key particle:**
-- б/би makes verbs conditional (I would...)
-
-**Common expressions:**
-- Якби я був/була... (If I were...)
-- Я б хотів/хотіла... (I would like...)
-- Це було б... (It would be...)
-
-Тепер ви можете мріяти українською! 🌟
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Conditionals: Якби росли у роті гриби... What IF?...](https://www.youtube.com/watch?v=Co0Y44nLlPA) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| якби | /jɑkˈbɪ/ | if (unreal) | conj | — | + past tense |
-| якщо | /jɑkˈʃt͡ʃɔ/ | if (real) | conj | — | + future tense |
-| б | /b/ | would (particle) | part | — | after vowels |
-| би | /bɪ/ | would (particle) | part | — | after consonants |
-| мав би | /mɑʋ bɪ/ | would have | verb | m | conditional |
-| був би | /buʋ bɪ/ | would be | verb | m | conditional |
-| мала б | /ˈmɑlɑ b/ | would have | verb | f | conditional |
-| була б | /buˈlɑ b/ | would be | verb | f | conditional |
-| знав би | /znɑʋ bɪ/ | would know | verb | m | conditional |
-| міг би | /miɦ bɪ/ | would be able | verb | m | conditional |
-| хотів би | /xɔˈtiʋ bɪ/ | would want | verb | m | conditional |
-| сказав би | /skɑˈzɑʋ bɪ/ | would say | verb | m | conditional |
-| зробив би | /zrɔˈbɪʋ bɪ/ | would do | verb | m | conditional |
-| пішов би | /piˈʃɔʋ bɪ/ | would go | verb | m | conditional |
-| купив би | /kuˈpɪʋ bɪ/ | would buy | verb | m | conditional |
-| можливо | /mɔʒˈlɪʋɔ/ | possibly | adv | — | epistemic |
-| напевно | /nɑˈpɛʋnɔ/ | probably | adv | — | epistemic |
-| мабуть | /mɑˈbutʲ/ | probably | adv | — | epistemic |
-| мрія | /ˈmri jɑ/ | dream | n | f | - |
-| шанс | /ʃɑns/ | chance | n | m | - |
-| реальність | /rɛˈɑlʲnisʲtʲ/ | reality | n | f | - |
-| багатий | /bɑˈɦɑtɪj/ | rich | adj | m | - |
-| щасливий | /ʃt͡ʃɑsˈlɪʋɪj/ | happy | adj | m | - |
-| поїхав | /pɔˈjixɑʋ/ | went (by vehicle) | verb | m | perfective past |
-| певно | /ˈpɛʋnɔ/ | probably, surely | adv | — | epistemic |
-| умовний | /uˈmɔʋnɪj/ | conditional (mood) | adj | m | grammar term |
-
----
+##

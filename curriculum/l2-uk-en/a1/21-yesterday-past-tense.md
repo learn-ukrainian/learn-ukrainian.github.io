@@ -1,13 +1,12 @@
 ---
-
 module: a1-21
-title: "Yesterday - Past Tense"
-subtitle: "Talking About What Happened"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Yesterday - Past Tense'
+subtitle: 'Talking About What Happened'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - past-tense
   - l-participle
@@ -18,11 +17,12 @@ grammar:
   - Gender agreement in past tense (-в/-ла/-ло/-ли)
   - Time expressions for past events
 objectives:
-  - "Learner can form past tense using L-participle"
-  - "Learner can use correct gender ending (-в/-ла/-ло/-ли)"
-  - "Learner can describe past events using time expressions"
-  - "Learner can talk about what they did yesterday"
+  - 'Learner can form past tense using L-participle'
+  - 'Learner can use correct gender ending (-в/-ла/-ло/-ли)'
+  - 'Learner can describe past events using time expressions'
+  - 'Learner can talk about what they did yesterday'
 vocabulary_count: 25
+vocab_count: 49
 ---
 
 # Yesterday - Past Tense
@@ -35,7 +35,7 @@ Unlike English, where "I worked" and "she worked" look the same, Ukrainian past 
 
 > [!tip] **Чи знаєте ви? (Did You Know?)**
 >
-> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an *l* sound!
+> Минулий час (past tense) часто має букву **л**! Вона читала. Воно читало. Ми читали. Feminine, neuter, and plural forms always contain the letter **л**. Masculine forms usually end in **в** (Я читав), which historically evolved from an _l_ sound!
 
 ## Presentation
 
@@ -43,30 +43,34 @@ Unlike English, where "I worked" and "she worked" look the same, Ukrainian past 
 
 The past tense in Ukrainian is beautifully simple. You take the infinitive (like читати — to read), remove -ти, and add:
 
-| Who | Ending | Example |
-|-----|--------|---------|
-| він (he) | -**в** | читав |
-| вона (she) | -**ла** | читала |
-| воно (it) | -**ло** | читало |
-| вони / ми / ви (they/we/you) | -**ли** | читали |
+| Who                          | Ending  | Example |
+| ---------------------------- | ------- | ------- |
+| він (he)                     | -**в**  | читав   |
+| вона (she)                   | -**ла** | читала  |
+| воно (it)                    | -**ло** | читало  |
+| вони / ми / ви (they/we/you) | -**ли** | читали  |
 
 **Key insight:** The ending matches the **gender of the subject**, not the person. So "I read" is:
+
 - Я читав (if you're male)
 - Я читала (if you're female)
 
 ### Formation Step by Step
 
 **Step 1:** Take the infinitive
+
 - читати (to read)
 - працювати (to work)
 - говорити (to speak)
 
 **Step 2:** Remove -ти
+
 - чита-
 - працюва-
 - говори-
 
 **Step 3:** Add gender ending
+
 - читав / читала / читало / читали
 - працював / працювала / працювало / працювали
 - говорив / говорила / говорило / говорили
@@ -85,17 +89,17 @@ The past tense in Ukrainian is beautifully simple. You take the infinitive (like
 
 When did it happen? Use these words:
 
-| Ukrainian | English | Example |
-|-----------|---------|---------|
-| вчора | yesterday | Вчора я працював. |
-| позавчора | day before yesterday | Позавчора вона приїхала. |
-| минулого тижня | last week | Минулого тижня ми говорили. |
-| минулого місяця | last month | Минулого місяця він поїхав. |
-| минулого року | last year | Минулого року вони зустрілися. |
-| давно | long ago | Давно це було. |
-| недавно | recently | Недавно я почув новину. |
-| раніше | earlier, before | Раніше тут був ресторан. |
-| колись | once, sometime | Колись я був там. |
+| Ukrainian       | English              | Example                        |
+| --------------- | -------------------- | ------------------------------ |
+| вчора           | yesterday            | Вчора я працював.              |
+| позавчора       | day before yesterday | Позавчора вона приїхала.       |
+| минулого тижня  | last week            | Минулого тижня ми говорили.    |
+| минулого місяця | last month           | Минулого місяця він поїхав.    |
+| минулого року   | last year            | Минулого року вони зустрілися. |
+| давно           | long ago             | Давно це було.                 |
+| недавно         | recently             | Недавно я почув новину.        |
+| раніше          | earlier, before      | Раніше тут був ресторан.       |
+| колись          | once, sometime       | Колись я був там.              |
 
 > [!example] **Pop Culture Moment**
 >
@@ -105,24 +109,25 @@ When did it happen? Use these words:
 
 Here are essential verbs you'll use often:
 
-| Infinitive | він | вона | вони | Meaning |
-|------------|-----|------|------|---------|
-| бути | був | була | були | was/were |
-| робити | робив | робила | робили | was doing |
-| говорити | говорив | говорила | говорили | was speaking |
-| їсти | їв | їла | їли | was eating |
-| пити | пив | пила | пили | was drinking |
-| писати | писав | писала | писали | was writing |
-| слухати | слухав | слухала | слухали | was listening |
-| дивитися | дивився | дивилася | дивилися | was watching |
-| жити | жив | жила | жили | was living |
-| працювати | працював | працювала | працювали | was working |
-| відпочивати | відпочивав | відпочивала | відпочивали | was resting |
-| чекати | чекав | чекала | чекали | was waiting |
+| Infinitive  | він        | вона        | вони        | Meaning       |
+| ----------- | ---------- | ----------- | ----------- | ------------- |
+| бути        | був        | була        | були        | was/were      |
+| робити      | робив      | робила      | робили      | was doing     |
+| говорити    | говорив    | говорила    | говорили    | was speaking  |
+| їсти        | їв         | їла         | їли         | was eating    |
+| пити        | пив        | пила        | пили        | was drinking  |
+| писати      | писав      | писала      | писали      | was writing   |
+| слухати     | слухав     | слухала     | слухали     | was listening |
+| дивитися    | дивився    | дивилася    | дивилися    | was watching  |
+| жити        | жив        | жила        | жили        | was living    |
+| працювати   | працював   | працювала   | працювали   | was working   |
+| відпочивати | відпочивав | відпочивала | відпочивали | was resting   |
+| чекати      | чекав      | чекала      | чекали      | was waiting   |
 
 > [!warning] **Watch Out!**
 >
 > Some verbs change their stem in past tense:
+>
 > - їсти → їв/їла/їли (not "їстив")
 > - пити → пив/пила/пили (not "питив")
 >
@@ -226,6 +231,7 @@ Translation:
 > [!tip] **Language Elegance**
 >
 > Notice how Ukrainian uses був/була/було for "was" depending on the gender of the noun:
+>
 > - Тут **був** сад. (The garden is masculine.)
 > - Тут **була** школа. (The school is feminine.)
 > - Тут **було** тихо. (General statements use neuter.)
@@ -247,6 +253,7 @@ Translation:
 3. **Часові вирази (Time expressions):** вчора, позавчора, минулого тижня, давно, колись
 
 **Неправильні дієслова (Irregular verbs):**
+
 - піти → пішов/пішла
 - прийти → прийшов/прийшла
 
@@ -268,32 +275,45 @@ Translation:
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| вчора | /ˈvt͡ʃɔrɑ/ | yesterday | adverb | - | time expression |
-| позавчора | /pɔzɑˈvt͡ʃɔrɑ/ | day before yesterday | adverb | - | time expression |
-| минулого тижня | /mɪˈnulɔɦɔ ˈtɪʒnʲɑ/ | last week | phrase | - | genitive construction |
-| минулого місяця | /mɪˈnulɔɦɔ ˈmisʲɑt͡sʲɑ/ | last month | phrase | - | genitive construction |
-| минулого року | /mɪˈnulɔɦɔ ˈrɔku/ | last year | phrase | - | genitive construction |
-| давно | /dɑvˈnɔ/ | long ago | adverb | - | time expression |
-| недавно | /nɛˈdɑvnɔ/ | recently | adverb | - | time expression |
-| раніше | /rɑˈnʲiʃe/ | earlier, before | adverb | - | time expression |
-| колись | /kɔˈlɪsʲ/ | once, sometime | adverb | - | time expression |
-| був | /buv/ | was (m) | verb | m | past of бути |
-| була | /buˈlɑ/ | was (f) | verb | f | past of бути |
-| було | /buˈlɔ/ | was (n) | verb | n | past of бути |
-| були | /buˈlɪ/ | were (pl) | verb | pl | past of бути |
-| робив | /rɔˈbɪv/ | was doing (m) | verb | m | past of робити |
-| говорив | /ɦɔvɔˈrɪv/ | was speaking (m) | verb | m | past of говорити |
-| писав | /pɪˈsɑv/ | was writing (m) | verb | m | past of писати |
-| читав | /t͡ʃɪˈtɑv/ | was reading (m) | verb | m | past of читати |
-| слухав | /ˈsluxɑv/ | was listening (m) | verb | m | past of слухати |
-| дивився | /dɪˈvɪvsʲɑ/ | was watching (m) | verb | m | past of дивитися |
-| жив | /ʒɪv/ | was living (m) | verb | m | past of жити |
-| працював | /prɑt͡sʲuˈvɑv/ | was working (m) | verb | m | past of працювати |
-| їв | /jiv/ | was eating (m) | verb | m | past of їсти |
-| пив | /pɪv/ | was drinking (m) | verb | m | past of пити |
-| чекав | /t͡ʃeˈkɑv/ | was waiting (m) | verb | m | past of чекати |
-| гуляв | /ɦuˈlʲɑv/ | was walking (m) | verb | m | past of гуляти |
-
----
+| Word         | IPA             | English              | POS   | Gender | Note |
+| ------------ | --------------- | -------------------- | ----- | ------ | ---- |
+| бабусин      | /bɑˈbusɪn/      | grandmother's        | adj   | ч      |      |
+| вау          | /vɑu/           | wow                  | other | -      |      |
+| вивчити      | /ˈvɪvt͡ʃɪtɪ/     | to learn             | verb  | -      |      |
+| вираз        | /ˈvɪrɑz/        | expression           | noun  | ч      |      |
+| вихідний     | /vɪxiˈdnɪj/     | weekend/day off      | noun  | ч      |      |
+| відповідати  | /vidpɔviˈdɑtɪ/  | to answer            | verb  | -      |      |
+| давно        | /dɑwˈnɔ/        | long ago             | adv   | -      |      |
+| дієслово     | /dijɛˈslɔvɔ/    | verb                 | noun  | с      |      |
+| закінчення   | /zɑˈkint͡ʃɛnʲːɑ/ | ending               | noun  | с      |      |
+| знайти       | /znɑjˈtɪ/       | to find              | verb  | -      |      |
+| зустрітися   | /zustˈritɪsʲɑ/  | to meet              | verb  | -      |      |
+| колись       | /kɔˈlɪsʲ/       | once/sometime        | adv   | -      |      |
+| круто        | /ˈkrutɔ/        | cool                 | adv   | -      |      |
+| майбутній    | /mɑjˈbutnʲij/   | future               | adj   | ч      |      |
+| минуле       | /mɪˈnulɛ/       | past                 | noun  | с      |      |
+| минулий      | /mɪˈnulɪj/      | past                 | adj   | ч      |      |
+| молодий      | /mɔlɔˈdɪj/      | young                | adj   | ч      |      |
+| наступний    | /nɑˈstupnɪj/    | next                 | adj   | ч      |      |
+| недавно      | /nɛˈdɑwnɔ/      | recently             | adv   | -      |      |
+| неправильний | /nɛˈprɑvɪlʲnɪj/ | irregular            | adj   | ч      |      |
+| новина       | /nɔvɪˈnɑ/       | news                 | noun  | ж      |      |
+| нудно        | /ˈnudnɔ/        | boring               | adv   | -      |      |
+| онук         | /ɔˈnuk/         | grandson             | noun  | ч      |      |
+| основа       | /ɔsˈnɔvɑ/       | stem                 | noun  | ж      |      |
+| план         | /plɑn/          | plan                 | noun  | ч      |      |
+| позавчора    | /pɔzɑwˈt͡ʃɔrɑ/   | day before yesterday | adv   | -      |      |
+| понеділок    | /pɔnɛˈdilɔk/    | Monday               | noun  | ч      |      |
+| поїхати      | /pɔˈjixɑtɪ/     | to go (by vehicle)   | verb  | -      |      |
+| працювати    | /prɑt͡sʲuˈvɑtɪ/  | to work              | verb  | -      |      |
+| прийти       | /prɪjˈtɪ/       | to come              | verb  | -      |      |
+| приїхати     | /prɪˈjixɑtɪ/    | to arrive            | verb  | -      |      |
+| піти         | /piˈtɪ/         | to go (on foot)      | verb  | -      |      |
+| раніше       | /rɑˈniʃɛ/       | earlier              | adv   | -      |      |
+| рута         | /ˈrutɑ/         | rue (flower)         | noun  | ж      |      |
+| рід          | /rid/           | gender               | noun  | ч      |      |
+| сад          | /sɑd/           | garden               | noun  | ч      |      |
+| тиждень      | /ˈtɪʒdɛnʲ/      | week                 | noun  | ч      |      |
+| тихо         | /ˈtɪxɔ/         | quietly              | adv   | -      |      |
+| утворення    | /utˈvɔrɛnʲːɑ/   | formation            | noun  | с      |      |
+| часовий      | /t͡ʃɑsɔˈvɪj/     | temporal/time        | adj   | ч      |      |

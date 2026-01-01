@@ -1,20 +1,20 @@
 ---
 module: a2-50
 title: Hobbies & Leisure
-subtitle: "Free Time in Ukrainian"
-version: "1.0"
-phase: "A2"
-pedagogy: "Narrative"
+subtitle: 'Free Time in Ukrainian'
+version: '1.0'
+phase: 'A2'
+pedagogy: 'Narrative'
 duration: 60
 transliteration: none
-tags: ["vocabulary", "hobbies", "travel", "entertainment"]
-grammar: ["verb-conjugation-imperative", "accusative-activities"]
+tags: ['vocabulary', 'hobbies', 'travel', 'entertainment']
+grammar: ['verb-conjugation-imperative', 'accusative-activities']
 objectives:
   - Discuss hobbies: малювати, співати, танцювати
   - Talk about travel: подорожувати, відвідувати
   - Describe entertainment: кіно, театр, концерт
   - Plan free time
-vocab_count: 30
+vocab_count: 41
 ---
 
 # Hobbies & Leisure
@@ -23,9 +23,7 @@ vocab_count: 30
 
 Що ви робите у вільний час? Ви любите спорт чи мистецтво? Ви подорожуєте?
 
-Вільний час — це важливо для щастя. Українці люблять співати, танцювати і проводити час з друзями. Давайте поговоримо про те, як ми відпочиваємо!
-
-Free time is essential. In this module, you'll learn to talk about your hobbies, from painting to traveling. You'll learn verbs for creative activities and nouns for entertainment.
+Free time is a vital part of happiness and mental well-being. Ukrainians take their leisure seriously, often spending it with music, dance, and close friends. Let's explore how people spend their quality time! In this module, you'll learn to talk about your hobbies, from painting to traveling. You'll learn verbs for creative activities and nouns for entertainment.
 
 > [!important] **Myth Buster** "The Gloomy Slav"
 > Stereotypes say Eastern Europeans are gloomy. False! Ukraine has a vibrant culture of music, dance, and festivals. From traditional **вечорниці** (evening gatherings) to modern techno raves in Kyiv, Ukrainians know how to party and enjoy life.
@@ -34,60 +32,63 @@ Free time is essential. In this module, you'll learn to talk about your hobbies,
 
 ### Creative Hobbies
 
-What do you create?
+Developing creative skills is a popular hobby. Here are some key verbs for artistic activities:
 
-| Дієслово | Приклад |
-|----------|---------|
-| **малювати** | Вона гарно малює. |
-| **співати** | Ми любимо співати. |
-| **танцювати** | Вони танцюють гопак. |
-| **грати** | Я граю на гітарі. |
-| **фотографувати** | Він фотографує природу. |
-| **писати** | Вона пише вірші. |
-| **читати** | Я читаю багато книг. |
+| Дієслово           | Приклад                 |
+| ------------------ | ----------------------- |
+| **малювати**       | Вона гарно малює.       |
+| **співати**        | Ми любимо співати.      |
+| **танцювати**      | Вони танцюють гопак.    |
+| **грати**          | Я граю на гітарі.       |
+| **фотографувати**  | Він фотографує природу. |
+| **писати**         | Вона пише вірші.        |
+| **читати**         | Я читаю багато книг.    |
 | **колекціонувати** | Він колекціонує монети. |
 
-Note: **Грати** takes **на** + Locative for instruments (*на гітарі*) but **в** + Accusative for sports/games (*в футбол*).
+Note: **Грати** takes **на** + Locative for instruments (_на гітарі_) but **в** + Accusative for sports/games (_в футбол_).
 
 > [!note] Grammar Point: Playing
 > In Ukrainian, the verb **грати** changes prepositions based on context:
-> - **Music**: грати **на** + Instrument (Locative case). *Я граю на гітарі, на піаніно.*
-> - **Sports/Games**: грати **в** + Game (Accusative case). *Ми граємо в футбол, в шахи, в теніс.*
-> Don't mix them up! You cannot "play into a guitar" or "play on football".
+>
+> - **Music**: грати **на** + Instrument (Locative case). _Я граю на гітарі, на піаніно._
+> - **Sports/Games**: грати **в** + Game (Accusative case). _Ми граємо в футбол, в шахи, в теніс._
+>   Don't mix them up! You cannot "play into a guitar" or "play on football".
 
-### Travel (Подорожі)
+### Travel
 
-Exploring the world:
+Exploring the world is a great way to use your Ukrainian. Whether it is a weekend trip to a **дача** or a trek in the mountains, these words will help:
 
-- **подорожувати** — to travel: *Я хочу подорожувати світом.*
-- **відвідувати** — to visit (places): *Ми відвідуємо музеї.*
-- **оглядати** — to sightsee/inspect: *Туристи оглядають замок.*
-- **збирати** — to gather/collect (or pack): *Я збираю валізу.*
-- **подорож** — trip/journey: *Це була довга подорож.*
-- **намет** — tent: *Ми спимо в наметі.*
-- **квиток** — ticket: *У мене є квиток на поїзд.*
+- **подорожувати** — to travel: _Я хочу подорожувати світом._
+- **відвідувати** — to visit (places): _Ми відвідуємо музеї._
+- **оглядати** — to sightsee/inspect: _Туристи оглядають замок._
+- **збирати** — to gather/collect (or pack): _Я збираю валізу._
+- **подорож** — trip/journey: _Це була довга подорож._
+- **намет** — tent: _Ми спимо в наметі._
+- **квиток** — ticket: _У мене є квиток на поїзд._
 
 > [!cultural] **Cultural Insight** The Dacha
 > Many Ukrainians have a **дача** (summer house) or a garden outside the city. On weekends, families go there to relax, grow vegetables (esp. potatoes!), and make BBQ (**шашлик**). It's a national ritual.
 
-### Entertainment (Розваги)
+### Entertainment
 
-Where do we go?
+Where do we go for fun? Ukrainian cities have a rich cultural life with many venues for performance and art:
 
-- **кіно** — cinema: *Йдемо в кіно!*
-- **театр** — theater: *Вона любить театр.*
-- **концерт** — concert: *Гучний концерт.*
-- **виставка** — exhibition: *Цікава виставка картин.*
-- **музей** — museum: *Історичний музей.*
-- **сцена** — stage: *Актор на сцені.*
-- **глядач** — spectator/viewer: *Глядачі аплодують.*
+- **кіно** — cinema: _Йдемо в кіно!_
+- **театр** — theater: _Вона любить театр._
+- **концерт** — concert: _Гучний концерт._
+- **виставка** — exhibition: _Цікава виставка картин._
+- **музей** — museum: _Історичний музей._
+- **сцена** — stage: _Актор на сцені._
+- **глядач** — spectator/viewer: _Глядачі аплодують._
 
 ### General Terms
 
-- **вільний час** — free time: *У мене мало вільного часу.*
-- **хобі** — hobby (indeclinable!): *Це моє хобі.*
-- **захоплення** — passion/hobby: *Його захоплення — спорт.*
-- **відпочинок** — rest/leisure: *Активний відпочинок.*
+Here are some general terms for discussing your free time and leisure activities:
+
+- **вільний час** — free time: _У мене мало вільного часу._
+- **хобі** — hobby (indeclinable!): _Це моє хобі._
+- **захоплення** — passion/hobby: _Його захоплення — спорт._
+- **відпочинок** — rest/leisure: _Активний відпочинок._
 
 > [!tip] **Tip** "Visiting"
 > In Ukraine, **ходити в гості** (to go visiting) is huge. If you are invited, never come empty-handed. Bring creative sweets, cake ("to tea"), or flowers. Hospitality (**гостинність**) is sacred.
@@ -188,6 +189,7 @@ Where do we go?
 # Summary
 
 You learned to:
+
 - Discuss creative hobbies: **малювати**, **грати**, **співати**
 - Travel words: **подорожувати**, **намет**, **квиток**
 - Entertainment places: **кіно**, **театр**, **музей**
@@ -200,28 +202,3 @@ Life is not only work. Ukrainians value their rest highly. Make sure you rest we
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-
-| фотографувати | /fotoɦrafuˈvatɪ/ | to photograph | verb | - | |
-| колекціонувати | /kolektsʲionuˈvatɪ/ | to collect | verb | - | |
-
-| подорожувати | /podoroʒuˈvatɪ/ | to travel | verb | - | |
-| відвідувати | /vidˈviduvatɪ/ | to visit | verb | - | |
-| збирати | /zbɪˈratɪ/ | to gather/collect | verb | - | |
-| кіно | /kiˈnɔ/ | cinema | noun | n | indecl. |
-| концерт | /konˈtsɛrt/ | concert | noun | m | |
-| виставка | /ˈvɪstavka/ | exhibition | noun | f | |
-| намет | /naˈmɛt/ | tent | noun | m | |
-| сцена | /ˈstsɛna/ | stage | noun | f | |
-| хобі | /ˈxɔbi/ | hobby | noun | n | indecl. |
-| захоплення | /zaˈxɔplenʲːa/ | passion/hobby | noun | n | |
-| відпочинок | /vidpoˈtʃɪnok/ | rest/leisure | noun | m | |
-| вільний час | /ˈvilʲnɪj tʃas/ | free time | phrase | m | |
-| подорож | /ˈpɔdoroʒ/ | trip/journey | noun | f | |
-| дача | /ˈdatʃa/ | summer house | noun | f | |
-| шашлик | /ʃaʃˈlɪk/ | BBQ (meat) | noun | m | |
-| вечорниці | /vetʃorˈnɪtsʲi/ | evening gathering | noun | pl | |

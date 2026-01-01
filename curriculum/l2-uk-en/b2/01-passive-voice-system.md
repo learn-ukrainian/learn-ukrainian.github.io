@@ -23,6 +23,7 @@ objectives:
   - "Learner can transform active sentences into passive using the correct form"
   - "Learner can choose the register-appropriate passive in context"
 vocabulary_count: 25
+vocab_count: 57
 ---
 
 # Пасивний стан: повна система
@@ -444,33 +445,3 @@ vocabulary_count: 25
 Якщо ви поставили галочку біля всіх пунктів — вітаємо! Ви готові до наступного модуля.
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| пасивний стан | passive voice | граматичний термін |
-| активний стан | active voice | протилежний до пасивного |
-| дійсний | active; real | дійсний стан = активний стан |
-| пасивний | passive | форма, де підмет зазнає дії |
-| дієприкметник | participle | неособова форма дієслова |
-| форма | form | граматична форма |
-| конструкція | construction | синтаксична структура |
-| агент | agent | виконавець дії |
-| виконавець | performer; executor | той, хто виконує дію |
-| дія | action | те, що відбувається |
-| об'єкт | object | граматичний додаток |
-| суб'єкт | subject | граматичний підмет |
-| трансформація | transformation | перетворення |
-| еквівалент | equivalent | відповідник |
-| функція | function | роль, призначення |
-| стиль | style | функціональний стиль |
-| реєстр | register | мовний реєстр |
-| офіційний | official; formal | офіційно-діловий стиль |
-| розмовний | colloquial; spoken | розмовний стиль |
-| науковий | scientific; academic | науковий стиль |
-| художній | literary; artistic | художній стиль |
-| книжний | bookish; literary | письмова мова |
-| усний | oral; spoken | усна мова |
-| письмовий | written | письмова форма |
-| нейтральний | neutral | без стилістичного забарвлення |

@@ -1,11 +1,11 @@
 ---
 module: a2-09
-title: "All Cases Practice"
-subtitle: "Integrating All 7 Ukrainian Cases"
-version: "1.0"
-phase: "A2.1"
-pedagogy: "PPP"
-duration: "60 min"
+title: 'All Cases Practice'
+subtitle: 'Integrating All 7 Ukrainian Cases'
+version: '1.0'
+phase: 'A2.1'
+pedagogy: 'PPP'
+duration: '60 min'
 transliteration: none
 tags:
   - grammar
@@ -17,84 +17,85 @@ grammar:
   - case recognition
   - case selection
 objectives:
-  - "Learner can identify all 7 Ukrainian cases"
-  - "Learner can choose the correct case for each context"
-  - "Learner can transform nouns through different cases"
-  - "Learner can use cases in connected speech"
+  - 'Learner can identify all 7 Ukrainian cases'
+  - 'Learner can choose the correct case for each context'
+  - 'Learner can transform nouns through different cases'
+  - 'Learner can use cases in connected speech'
 vocabulary_count: 25
+vocab_count: 51
 ---
 
-## Warm-up
+## Розминка
 
-Congratulations — you've now learned all seven Ukrainian cases! This is a major milestone in your Ukrainian journey. In this module, we'll bring everything together in one comprehensive practice session.
+Congratulations — you've now learned all seven Ukrainian cases! This is a major milestone in your Ukrainian journey. У цьому модулі ми об’єднаємо все разом для комплексної практики.
 
-**Why this matters:** The seven-case system is the backbone of Ukrainian grammar. Being able to choose the right case quickly and accurately will make your Ukrainian sound natural and fluent. This review module will cement your understanding and give you the confidence to use cases correctly in real conversations.
+**Чому це важливо:** Система семи відмінків — це основа української граматики. Вміння швидко та правильно обирати відмінок допоможе вам звучати природно. Цей модуль закріпить ваші знання та додасть впевненості у спілкуванні.
 
-Unlike English, which relies heavily on word order and prepositions to show relationships between words, Ukrainian uses morphological endings — changes to the word itself — to indicate the grammatical function of each noun, pronoun, and adjective in a sentence. This means that while an English speaker must rely on position to distinguish between "The dog bites the man" and "The man bites the dog," a Ukrainian speaker can theoretically rearrange words more freely because the case endings clearly mark which noun is the subject and which is the object.
+В англійській мові важливий порядок слів. В українській мові відмінки показують роль слова в реченні. Це дозволяє змінювати порядок слів без втрати сенсу.
 
-**The Seven Ukrainian Cases — Quick Reference:**
+**Сім відмінків української мови — Короткий довідник:**
 
-| # | Case | Ukrainian | Question | Primary Function |
-|---|------|-----------|----------|------------------|
-| 1 | Nominative | Називний | хто? що? | Subject of sentence |
-| 2 | Genitive | Родовий | кого? чого? | Possession, absence, quantity |
-| 3 | Dative | Давальний | кому? чому? | Indirect object, recipient |
-| 4 | Accusative | Знахідний | кого? що? | Direct object, direction |
-| 5 | Instrumental | Орудний | ким? чим? | Means, accompaniment |
-| 6 | Locative | Місцевий | на кому? на чому? | Location (always with preposition) |
-| 7 | Vocative | Кличний | — | Direct address |
+| #   | Case         | Ukrainian | Question          | Primary Function                   |
+| --- | ------------ | --------- | ----------------- | ---------------------------------- |
+| 1   | Nominative   | Називний  | хто? що?          | Subject of sentence                |
+| 2   | Genitive     | Родовий   | кого? чого?       | Possession, absence, quantity      |
+| 3   | Dative       | Давальний | кому? чому?       | Indirect object, recipient         |
+| 4   | Accusative   | Знахідний | кого? що?         | Direct object, direction           |
+| 5   | Instrumental | Орудний   | ким? чим?         | Means, accompaniment               |
+| 6   | Locative     | Місцевий  | на кому? на чому? | Location (always with preposition) |
+| 7   | Vocative     | Кличний   | —                 | Direct address                     |
 
-**How to use this module:** Work through each section systematically. First, review the theory for each case. Then, practice identifying cases in example sentences. Finally, complete the activities to test your understanding. By the end, you should be able to quickly identify which case is needed in any given context.
+**How to use this module:** Пройдіть кожну секцію послідовно. Спочатку повторіть теорію, потім потренуйтеся визначати відмінки в реченнях. Наприкінці виконайте вправи для перевірки знань.
 
-> 💡 **Learning Strategy**
+> 💡 **Стратегія навчання**
 >
-> The key to mastering cases is to always ask yourself the right question. For example, when you see a noun after a verb, ask: "Who or what is receiving the action?" (accusative) or "To whom is something being given?" (dative). The question you ask determines the case you need.
+> Ключ до успіху — завжди ставити правильне питання до слова. Наприклад: "Хто чи що отримує дію?" (знахідний) або "Кому щось дають?" (давальний). Питання визначає відмінок.
 
-## Presentation
+## Презентація
 
 ## Understanding the Case System
 
-Before we dive into reviewing each case, let's understand why cases matter and how they work together. In Ukrainian, cases serve several crucial functions that English handles differently.
+Перш ніж повторювати кожен відмінок окремо, давайте згадаємо, навіщо вони потрібні. В українській мові відмінки виконують кілька критичних функцій:
 
-**Function 1: Marking grammatical relationships.** Cases tell you who does what to whom. The nominative case marks the doer (subject), while the accusative marks the receiver (direct object). This allows for flexible word order without losing meaning.
+**Function 1: Marking grammatical relationships.** Відмінки кажуть нам, хто що робить. Називний відмінок позначає підмет, а знахідний — додаток.
 
-**Function 2: Working with prepositions.** Many Ukrainian prepositions require specific cases. Some prepositions can take different cases depending on whether you're expressing motion (going somewhere) or location (being somewhere). This is one of the trickiest aspects for English speakers.
+**Function 2: Working with prepositions.** Many Ukrainian prepositions require specific cases. Це допомагає розрізняти рух (куди?) та місце (де?).
 
-**Function 3: Expressing subtle meanings.** Cases can convey nuances that English expresses through separate words. For example, the genitive can express absence ("There is no..."), possession ("my friend's"), or quantity ("a cup of...").
+**Function 3: Expressing subtle meanings.** Cases can convey nuances that English expresses through separate words (absence, possession, quantity).
 
-> [!tip] The Golden Rule
-> Always identify the FUNCTION of the word first, then choose the case. Ask: What role does this word play in the sentence? Is it the subject? The direct object? The recipient? The location? The answer determines the case.
+> [!tip] Головне правило
+> Спочатку визначте ФУНКЦІЮ слова в реченні, а потім обирайте відмінок. Запитайте себе: Яку роль відіграє це слово? Відповідь підкаже правильну форму.
 
-## Огляд відмінків
+## Case-by-Case Review
 
-Кожен відмінок має своє головне призначення. Ось короткий огляд:
+Each of the seven Ukrainian cases has a specific primary function. Understanding these roles is the key to building correct sentences. Let's look at each one with examples.
 
-### Називний відмінок — Nominative Case
+### Nominative Case (Називний відмінок)
 
-**Питання:** Хто? Що?
-**Функція:** Підмет речення.
+The Nominative case is the default form of a noun found in a dictionary. It answers the questions **Who? (Хто?)** or **What? (Що?)**. Its primary function is to mark the **subject** of a sentence — the person or thing performing the action.
 
-Приклади:
+Examples:
+
 - **Книга** лежить на столі. (The book is on the table.)
 - **Мама** готує обід. (Mom is cooking dinner.)
 - **Студент** читає. (The student is reading.)
 
-### Родовий відмінок — Genitive Case
+### Genitive Case (Родовий відмінок)
 
-**Питання:** Кого? Чого?
-**Функція:** Possession, absence, quantity, after certain prepositions.
+The Genitive case is one of the most versatile in Ukrainian. It answers **Whom? (Кого?)** or **Of what? (Чого?)**. Its main functions include expressing possession (like "of" in English), absence (with the word _немає_), quantity, and it is required after many specific prepositions like _до_, _від_, and _для_.
 
-Приклади:
+Examples:
+
 - Немає **книги**. (There is no book.)
 - Чашка **кави**. (A cup of coffee.)
 - Я йду з **роботи**. (I'm coming from work.)
 
-### Давальний відмінок — Dative Case
+### Dative Case (Давальний відмінок)
 
-**Питання:** Кому? Чому?
-**Функція:** Indirect object — who receives something.
+The Dative case is used for the **indirect object**—the recipient of an action. It answers **To whom? (Кому?)** or **To what? (Чому?)**. If you are giving, sending, or saying something to someone, that person is in the Dative case.
 
-Приклади:
+Examples:
+
 - Я даю книгу **другові**. (I give a book to a friend.)
 - Вона пише **мамі**. (She writes to mom.)
 - Мені холодно. (I'm cold. — lit. "To me it's cold.")
@@ -103,32 +104,32 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 >
 > Dative case is also used to express physical and emotional states: Мені добре (I feel good). Тобі цікаво? (Are you interested?) Йому сумно (He feels sad).
 
-### Знахідний відмінок — Accusative Case
+### Accusative Case (Знахідний відмінок)
 
-**Питання:** Кого? Що?
-**Функція:** Direct object, direction of motion.
+The Accusative case marks the **direct object**—the person or thing that directly receives the action of a verb. It answers **Whom? (Кого?)** or **What? (Що?)**. It is also used with several prepositions to show the direction of motion (e.g., "going to").
 
-Приклади:
+Examples:
+
 - Я читаю **книгу**. (I'm reading a book.)
 - Він бачить **маму**. (He sees mom.)
 - Вона йде у **школу**. (She's going to school.)
 
-### Орудний відмінок — Instrumental Case
+### Instrumental Case (Орудний відмінок)
 
-**Питання:** Ким? Чим?
-**Функція:** Means, accompaniment, profession.
+The Instrumental case answers **By whom? (Ким?)** or **With what? (Чим?)**. Its primary roles are to show the means or tool used to perform an action (writing _with_ a pen) and to express accompaniment (going _with_ a friend). It is also used to express professions.
 
-Приклади:
+Examples:
+
 - Писати **ручкою**. (To write with a pen.)
 - Йти з **другом**. (To go with a friend.)
 - Він був **студентом**. (He was a student.)
 
-### Місцевий відмінок — Locative Case
+### Locative Case (Місцевий відмінок)
 
-**Питання:** На кому? На чому?
-**Функція:** Location — always with prepositions.
+The Locative case expresses location and answers **On whom? (На кому?)** or **On what? (На чому?)**. This case is unique because it **always** requires a preposition (like _в/у_ or _на_) and cannot be used on its own.
 
-Приклади:
+Examples:
+
 - Книга на **столі**. (The book is on the table.)
 - Він у **школі**. (He's at school.)
 - Ми говоримо про **друга**. (We're talking about a friend.)
@@ -141,7 +142,8 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 **Функція:** Addressing people directly.
 
-Приклади:
+Examples:
+
 - **Мамо**! (Mom!)
 - **Друже**! (Friend!)
 - **Вікторе**! (Viktor!)
@@ -157,15 +159,15 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 **Базове слово:** мама
 
-| Відмінок | Приклад | Значення |
-|----------|---------|----------|
-| Називний | **Мама** готує. | Mom cooks. |
-| Родовий | Немає **мами**. | There's no mom. |
-| Давальний | Даю **мамі**. | I give to mom. |
-| Знахідний | Бачу **маму**. | I see mom. |
-| Орудний | Йду з **мамою**. | I go with mom. |
-| Місцевий | Думаю про **маму**. | I think about mom. |
-| Кличний | **Мамо**! | Mom! |
+| Відмінок  | Приклад             | Значення           |
+| --------- | ------------------- | ------------------ |
+| Називний  | **Мама** готує.     | Mom cooks.         |
+| Родовий   | Немає **мами**.     | There's no mom.    |
+| Давальний | Даю **мамі**.       | I give to mom.     |
+| Знахідний | Бачу **маму**.      | I see mom.         |
+| Орудний   | Йду з **мамою**.    | I go with mom.     |
+| Місцевий  | Думаю про **маму**. | I think about mom. |
+| Кличний   | **Мамо**!           | Mom!               |
 
 > 🔍 **Important Note**
 >
@@ -208,22 +210,22 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 
 Провідмінюйте слово "друг" через усі відмінки:
 
-| Відмінок | Форма |
-|----------|-------|
-| Називний | друг |
-| Родовий | друга |
-| Давальний | другові | другу |
-| Знахідний | друга |
-| Орудний | другом |
-| Місцевий | друзі | другові |
-| Кличний | друже |
+| Відмінок  | Форма   |
+| --------- | ------- | ------- |
+| Називний  | друг    |
+| Родовий   | друга   |
+| Давальний | другові | другу   |
+| Знахідний | друга   |
+| Орудний   | другом  |
+| Місцевий  | друзі   | другові |
+| Кличний   | друже   |
 
 ### Вправа 3: Оберіть правильну форму
 
-Мій **___** приїхав. (брат | брата | братові)
+Мій **\_\_\_** приїхав. (брат | брата | братові)
 → **брат** (називний — підмет)
 
-Я дзвоню **___**. (мама | мами | мамі)
+Я дзвоню **\_\_\_**. (мама | мами | мамі)
 → **мамі** (давальний — кому дзвоню?)
 
 ---
@@ -251,25 +253,10 @@ Before we dive into reviewing each case, let's understand why cases matter and h
 ## Need More Practice?
 
 > [!resources] External Resources
+>
 > - 🎥 [All 7 Cases](https://www.youtube.com/@LetsLearnUkrainian) — Let's Learn Ukrainian
 > - 📖 [Cases Introduction](https://www.ukrainianlessons.com/intro-cases/)
 > - 📝 [Cases Chart](https://www.ukrainianlessons.com/ukrainian-cases-chart/)
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| кого | /kɔˈɦɔ/ | whom | pron | — | Gen/Acc of хто |
-| чого | /t͡ʃɔˈɦɔ/ | of what | pron | — | Gen of що |
-| кому | /kɔˈmu/ | to whom | pron | — | Dat of хто |
-| ким | /kɪm/ | by whom | pron | — | Instr of хто |
-| чим | /t͡ʃɪm/ | with what | pron | — | Instr of що |
-| підмет | /ˈpidmɛt/ | subject | noun | m | grammar term |
-| додаток | /ˈdɔdɑtɔk/ | object | noun | m | grammar term |
-| присудок | /prɪˈsudɔk/ | predicate | noun | m | grammar term |
-| звертатися | /zʋɛrˈtɑtɪsʲɑ/ | to address | verb | — | uses vocative |
 
 ---

@@ -14,7 +14,7 @@ objectives:
   - Use services: банк, пошта, перукарня
   - Talk about money: готівка, картка, ціна
   - Ask for price: скільки коштує?
-vocab_count: 30
+vocab_count: 43
 ---
 
 # Shopping & Services
@@ -246,16 +246,3 @@ Shopping in Ukraine is easy and modern. Don't be afraid to ask the price!
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| перукарня | /peruˈkarnʲa/ | hairdresser's | noun | f | |
-| хімчистка | /ximˈtʃɪstka/ | dry cleaner's | noun | f | |
-| міряти | /ˈmirʲatɪ/ | to try on | verb | - | |
-| торговий центр | /torˈhɔʋɪj ˈtsɛntr/ | shopping mall | phrase | m | |
-| відділення | /vidˈdilennʲa/ | branch/office | noun | n | |
-| одяг | /ˈɔdʲaɦ/ | clothes | noun | m | |
-| продукти | /proˈduktɪ/ | groceries | noun | pl | |
-| сервіс | /ˈsɛrvis/ | service | noun | m | |

@@ -24,6 +24,7 @@ objectives:
   - "Learner recognizes -но/-то as the hallmark of official Ukrainian style"
   - "Learner can use -но/-то appropriately in formal contexts"
 vocabulary_count: 25
+vocab_count: 53
 ---
 
 # Безособові конструкції з -но/-то
@@ -499,33 +500,3 @@ vocabulary_count: 25
 | B2-04 | Зворотний пасив -ся | Наступна форма пасиву |
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| оголошено | announced | від "оголосити" |
-| вирішено | decided/resolved | від "вирішити" |
-| прийнято | adopted/accepted | від "прийняти" |
-| затверджено | approved/confirmed | від "затвердити" |
-| підписано | signed | від "підписати" |
-| опубліковано | published | від "опублікувати" |
-| встановлено | established/set | від "встановити" |
-| визначено | defined/determined | від "визначити" |
-| забезпечено | provided/ensured | від "забезпечити" |
-| виконано | completed/executed | від "виконати" |
-| завершено | finished/completed | від "завершити" |
-| розпочато | started/begun | від "розпочати" |
-| продовжено | continued/extended | від "продовжити" |
-| припинено | stopped/terminated | від "припинити" |
-| скасовано | cancelled/abolished | від "скасувати" |
-| змінено | changed/modified | від "змінити" |
-| доповнено | supplemented/added | від "доповнити" |
-| виправлено | corrected | від "виправити" |
-| схвалено | approved | від "схвалити" |
-| відхилено | rejected | від "відхилити" |
-| направлено | sent/directed | від "направити" |
-| передано | transferred | від "передати" |
-| отримано | received | від "отримати" |
-| зареєстровано | registered | від "зареєструвати" |
-| зафіксовано | recorded/documented | від "зафіксувати" |

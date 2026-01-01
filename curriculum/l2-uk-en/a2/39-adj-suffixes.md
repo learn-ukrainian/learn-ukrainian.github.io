@@ -20,6 +20,7 @@ objectives:
   - "Learner can express origin (Ukraine -> Ukrainian)"
   - "Learner can use scientific/academic adjectives"
 vocabulary_count: 30
+vocab_count: 69
 ---
 
 ## Warm-up
@@ -131,10 +132,14 @@ Use this for places, groups, and people.
 ## Deep Dive: Living Adjectives (The Active State)
 
 Some adjectives describe a state or feeling.
-- **Гарячий** (Hot) — from "to burn".
+- **Гарячий** (Hot) — from "to burn". e.g. Гарячий чай (Hot tea).
 - **Свіжий** (Fresh).
 - **Чужий** (Foreign/Alien).
 - **Справжній** (Real/Genuine).
+- **Чоловічий** (Male/Men's) — e.g. Чоловічий одяг (Men's clothing).
+- **Жіночий** (Female/Women's) — e.g. Жіночий журнал (Women's magazine).
+- **Холодний** (Cold) — e.g. Холодний день (Cold day).
+- **Молодий** (Young) — e.g. Молодий хлопець (Young guy).
 
 > [!note] Why -ій?
 > Soft adjectives end in **-ій** (masculine).
@@ -333,55 +338,4 @@ The best way to internalize these patterns is through active practice. Try these
 
 Remember: language learning is a marathon, not a sprint. These patterns will become second nature with consistent practice over time!
 
----
-
-# Summary
-
-1.  **-н-ий** = General quality (Музичний, Смачний).
-2.  **-ов-ий** = Material/Relational (Науковий, Кольоровий).
-3.  **-ський** = Origin/Group (Український, Міський).
-4.  **-еньк-ий** = Diminutive (Маленький, Гарненький).
-5.  **Active Adjectives** = Гарячий, Свіжий (Describe state).
-
----
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Ukrainian Grammar: ADJECTIVE CASES - Adjective declension...](https://www.youtube.com/watch?v=NjIXb7cc9UY) — Let's Learn Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| музичний | /muˈzɪt͡ʃnɪj/ | musical | adj | masc | -ний |
-| науковий | /nɑuˈkɔʋɪj/ | scientific | adj | masc | -овий |
-| український | /ukrɑˈjinʲsʲkɪj/ | Ukrainian | adj | masc | -ський |
-| російський | /rɔˈsʲij sʲkɪj/ | Russian | adj | masc | -ський |
-| англійський | /ɑnˈɦlʲijsʲkɪj/ | English | adj | masc | -ський |
-| міський | /mʲisʲˈkɪj/ | urban/city | adj | masc | -ський |
-| людський | /lʲudˈsʲkɪj/ | human | adj | masc | -ський |
-| дитячий | /dɪˈtʲɑt͡ʃɪj/ | children's | adj | masc | -чий |
-| кольоровий | /kɔlʲɔˈrɔʋɪj/ | colorful | adj | masc | -овий |
-| смаковий | /smɑkɔˈʋɪj/ | taste (adj) | adj | masc | -овий |
-| матеріальний | /mɑtɛriˈɑlʲnɪj/ | material | adj | masc | -ний |
-| духовний | /duˈxɔʋnɪj/ | spiritual | adj | masc | -ний |
-| фізичний | /fiˈzɪt͡ʃnɪj/ | physical | adj | masc | -ний |
-| хімічний | /xiˈmit͡ʃnɪj/ | chemical | adj | masc | -ний |
-| історичний | /istɔˈrɪt͡ʃnɪj/ | historical | adj | masc | -ний |
-| географічний | /ɦɛɔɦrɑˈfit͡ʃnɪj/ | geographical | adj | masc | -ний |
-| математичний | /mɑtɛmɑˈtɪt͡ʃnɪj/ | mathematical | adj | masc | -ний |
-| робочий | /rɔˈbɔt͡ʃɪj/ | working | adj | masc | -чий |
-| звичайний | /zʋɪˈt͡ʃɑjnɪj/ | ordinary | adj | masc | -ний |
-| маленький | /mɑˈlɛnʲkɪj/ | small/little | adj | masc | -еньк |
-| свіженький | /sʋiˈʒɛnʲkɪj/ | fresh (dim) | adj | masc | -еньк |
-| теплий | /tˈɛplɪj/ | warm | adj | masc | -ий |
-| стоячий | /stɔˈjɑt͡ʃɪj/ | standing | adj | masc | -чий (active participle) |
-| лежачий | /lɛˈʒɑt͡ʃɪj/ | lying | adj | masc | -чий (active participle) |
-| біжучий | /biˈʒut͡ʃɪj/ | running | adj | masc | -чий (active participle) |
-| творитися | /ˈtʋɔrɪtɪsʲɑ/ | to be formed | verb | — | grammar term |
+##

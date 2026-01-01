@@ -59,6 +59,7 @@ vocabulary_count: 25
 > - "Підійти до проблеми" = знайти метод вирішення (to approach a problem).
 > - "Вийти з ситуації" = знайти рішення (to find a way out).
 
+vocab_count: 134
 ---
 
 ## Пояснення
@@ -295,35 +296,3 @@ vocabulary_count: 25
 > - [Ukrainian Idioms and Proverbs](https://www.ukrainianlessons.com/) — Ресурс Ukrainian Lessons.
 
 ---
-
-
-
-# Словник
-
-| Слово | Вимова | Переклад | ЧМ | Примітка |
-|-------|--------|----------|-----|----------|
-| **виходить** | /wɪˈxɔdɪtʲ/ | it turns out | дієсл. | безособове |
-| **входити в звичку** | /ˈwxɔdɪtɪ w ˈzwɪtʃku/ | to become a habit | фраз. | |
-| **дійти висновку** | /dijˈtɪ ˈwɪsnɔwku/ | to reach a conclusion | фраз. | |
-| **зайти далеко** | /zɑjˈtɪ dɑˈlɛkɔ/ | to go too far | фраз. | |
-| **пройти випробування** | /prɔjˈtɪ wɪprɔbuˈwɑɲːɑ/ | to pass a test/trial | фраз. | |
-| **відійти в минуле** | /widijˈtɪ w mɪˈnulɛ/ | to become a thing of the past | фраз. | |
-| **підійти до справи** | /pidijˈtɪ dɔ ˈsprɑwɪ/ | to approach a matter | фраз. | |
-| **обійтися без** | /ɔbijˈtɪsʲɑ bɛz/ | to do without | фраз. | + Gen |
-| **перейти межу** | /pɛrɛjˈtɪ mɛˈʒu/ | to cross the line | фраз. | |
-| **вийти з себе** | /ˈwɪjtɪ z ˈsɛbɛ/ | to lose one's temper | фраз. | |
-| **прийти до ладу** | /prɪjˈtɪ dɔ ˈlɑdu/ | to get back on track/recover | фраз. | |
-| **зайти в глухий кут** | /zɑjˈtɪ w ɦluˈxɪj kut/ | to reach a dead end | фраз. | |
-| **пройти перевірку** | /prɔjˈtɪ pɛrɛˈwirku/ | to pass a check | фраз. | |
-| **вийти з моди** | /ˈwɪjtɪ z ˈmɔdɪ/ | to go out of fashion | фраз. | |
-| **увійти в історію** | /uwiˈtɪ w isˈtɔrіju/ | to go down in history | фраз. | |
-| **підійти з розумом** | /pidijˈtɪ z ˈrɔzumɔm/ | to approach wisely | фраз. | |
-| **дійти до суті** | /dijˈtɪ dɔ ˈsutʲi/ | to get to the point/essence | фраз. | |
-| **обійти увагою** | /ɔbijˈtɪ uˈwɑɦɔju/ | to overlook/ignore | фраз. | |
-| **перейти в наступ** | /pɛrɛjˈtɪ w nɑsˈtup/ | to go on the offensive | фраз. | |
-| **вийти на контакт** | /ˈwɪjtɪ nɑ kɔnˈtɑkt/ | to make contact | фраз. | |
-| **прийти в себе** | /prɪjˈtɪ w ˈsɛbɛ/ | to come to one's senses | фраз. | |
-| **зайти за край** | /zɑjˈtɪ zɑ krɑj/ | to go over the edge | фраз. | |
-| **дійти рук** | /dijˈtɪ ruk/ | to get around to | фраз. | зазвичай: "руки не доходять" |
-| **вийти з ситуації** | /ˈwɪjtɪ z sɪtuˈɑt͡siyi/ | to find a way out | фраз. | |
-| **підійти відповідально** | /pidijˈtɪ widpɔwiˈdɑlʲnɔ/ | to approach responsibly | фраз. | |

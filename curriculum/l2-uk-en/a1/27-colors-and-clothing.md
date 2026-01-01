@@ -1,13 +1,12 @@
 ---
-
 module: a1-27
-title: "Colors & Clothing"
-subtitle: "Describing What You Wear"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Colors & Clothing'
+subtitle: 'Describing What You Wear'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - colors
   - clothing
@@ -18,11 +17,12 @@ grammar:
   - Clothing vocabulary
   - Describing outfits
 objectives:
-  - "Learner can name basic colors in Ukrainian"
-  - "Learner can use color adjectives with correct gender agreement"
-  - "Learner can describe clothing items"
-  - "Learner can describe what someone is wearing"
+  - 'Learner can name basic colors in Ukrainian'
+  - 'Learner can use color adjectives with correct gender agreement'
+  - 'Learner can describe clothing items'
+  - 'Learner can describe what someone is wearing'
 vocabulary_count: 30
+vocab_count: 31
 ---
 
 # Colors & Clothing
@@ -36,11 +36,13 @@ vocabulary_count: 30
 ---
 
 ## Grammar
+
 ## Color Adjectives Must Agree
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at how "білий" (white) changes:
+>
 > - **білий** светр (white sweater - m)
 > - **біла** сорочка (white shirt - f)
 > - **біле** пальто (white coat - n)
@@ -50,14 +52,14 @@ vocabulary_count: 30
 
 ### Color Agreement Table
 
-| Color (m) | Feminine | Neuter | Plural |
-|-----------|----------|--------|--------|
-| білий | біла | біле | білі |
-| чорний | чорна | чорне | чорні |
-| червоний | червона | червоне | червоні |
-| зелений | зелена | зелене | зелені |
-| синій | синя | синє | сині |
-| жовтий | жовта | жовте | жовті |
+| Color (m) | Feminine | Neuter  | Plural  |
+| --------- | -------- | ------- | ------- |
+| білий     | біла     | біле    | білі    |
+| чорний    | чорна    | чорне   | чорні   |
+| червоний  | червона  | червоне | червоні |
+| зелений   | зелена   | зелене  | зелені  |
+| синій     | синя     | синє    | сині    |
+| жовтий    | жовта    | жовте   | жовті   |
 
 ---
 
@@ -66,18 +68,22 @@ vocabulary_count: 30
 ### Simple Patterns
 
 **Stating what you have:**
+
 - У мене **білий** светр. (I have a white sweater.)
 - У мене **чорна** куртка. (I have a black jacket.)
 - У мене **синє** пальто. (I have a blue coat.)
 
 **Asking about clothing:**
+
 - Який у тебе светр? — Білий. (What sweater do you have? — White.)
 - Яка у тебе сорочка? — Синя. (What shirt do you have? — Blue.)
 
 **Describing what someone wears:**
-- Він у **білій** сорочці... *(wait, this uses locative case!)*
+
+- Він у **білій** сорочці... _(wait, this uses locative case!)_
 
 Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sentences:
+
 - Його светр **білий**. (His sweater is white.)
 - Її сукня **червона**. (Her dress is red.)
 - На ньому білий светр. (He has a white sweater on.)
@@ -88,15 +94,16 @@ Actually, for A1, we describe clothing WITHOUT the locative case. Use simple sen
 
 Some clothing words are ALWAYS plural in Ukrainian:
 
-| Word | Meaning | Why? |
-|------|---------|------|
-| штани | pants | Two legs |
-| джинси | jeans | Two legs |
-| шорти | shorts | Two legs |
-| черевики | boots | Two feet |
+| Word     | Meaning  | Why?     |
+| -------- | -------- | -------- |
+| штани    | pants    | Two legs |
+| джинси   | jeans    | Two legs |
+| шорти    | shorts   | Two legs |
+| черевики | boots    | Two feet |
 | кросівки | sneakers | Two feet |
 
 These words take **plural adjectives**:
+
 - **чорні** штани (black pants)
 - **сині** джинси (blue jeans)
 - **білі** кросівки (white sneakers)
@@ -209,41 +216,43 @@ These words take **plural adjectives**:
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Colors Guide](https://www.ukrainianlessons.com/vocabulary-colors/) — Complete color vocabulary
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| білий | /ˈbilɪj/ | white | adj | m | color |
-| сірий | /ˈsirɪj/ | gray | adj | m | color |
-| червоний | /t͡ʃɛrˈvɔnɪj/ | red | adj | m | color |
-| помаранчевий | /pɔmɑˈrɑnt͡ʃɛvɪj/ | orange | adj | m | color |
-| жовтий | /ˈʒɔvtɪj/ | yellow | adj | m | color |
-| зелений | /zɛˈlɛnɪj/ | green | adj | m | color |
-| синій | /ˈsɪnʲij/ | blue (dark) | adj | m | soft stem |
-| блакитний | /blɑˈkɪtnɪj/ | light blue | adj | m | color |
-| фіолетовий | /fʲiɔˈlɛtɔvɪj/ | purple | adj | m | color |
-| рожевий | /rɔˈʒɛvɪj/ | pink | adj | m | color |
-| коричневий | /kɔˈrɪt͡ʃnɛvɪj/ | brown | adj | m | color |
-| світлий | /ˈsvʲitlɪj/ | light | adj | m | modifier |
-| темний | /ˈtɛmnɪj/ | dark | adj | m | modifier |
-| яскравий | /jɑsˈkrɑvɪj/ | bright | adj | m | modifier |
-| сорочка | /sɔˈrɔt͡ʃkɑ/ | shirt | n | f | clothing |
-| футболка | /futˈbɔlkɑ/ | t-shirt | n | f | clothing |
-| светр | /svɛtr/ | sweater | n | m | clothing |
-| куртка | /ˈkurtkɑ/ | jacket | n | f | clothing |
-| пальто | /pɑlʲˈtɔ/ | coat | n | n | indeclinable |
-| штани | /ʃtɑˈnɪ/ | pants | n | pl | always plural |
-| шорти | /ˈʃɔrtɪ/ | shorts | n | pl | always plural |
-| спідниця | /spidˈnɪt͡sʲɑ/ | skirt | n | f | clothing |
-| сукня | /ˈsuknʲɑ/ | dress | n | f | clothing |
-| взуття | /vzutʲˈtʲɑ/ | footwear | n | n | collective |
-| черевики | /t͡ʃɛrɛˈvɪkɪ/ | boots | n | pl | always plural |
-| кросівки | /krɔˈsivkɪ/ | sneakers | n | pl | always plural |
-| капелюх | /kɑpɛˈlʲux/ | hat | n | m | clothing |
-| шарф | /ʃɑrf/ | scarf | n | m | clothing |
-
----
+| Word       | IPA            | English           | POS  | Gender | Note            |
+| ---------- | -------------- | ----------------- | ---- | ------ | --------------- |
+| білий      | /ˈbilɪj/       | white             | adj  | ч      |                 |
+| блакитний  | /blɑˈkɪtnɪj/   | light blue        | adj  | ч      |                 |
+| взуття     | /vzuˈtʲːɑ/     | footwear          | noun | с      |                 |
+| вишиванка  | /vɪʃɪˈvɑnkɑ/   | embroidered shirt | noun | ж      |                 |
+| жовтий     | /ˈʒɔwtɪj/      | yellow            | adj  | ч      |                 |
+| забутий    | /zɑˈbutɪj/     | forgotten         | adj  | ч      |                 |
+| класно     | /ˈklɑsnɔ/      | cool/great        | adv  | -      |                 |
+| коричневий | /kɔˈrɪt͡ʃnɛvɪj/ | brown             | adj  | ч      |                 |
+| красиво    | /krɑˈsɪvɔ/     | beautifully       | adv  | -      |                 |
+| кросівки   | /krɔˈsivkɪ/    | sneakers (pl)     | noun | -      | Plural only     |
+| куртка     | /ˈkurtkɑ/      | jacket            | noun | ж      |                 |
+| навколо    | /nɑwˈkɔlɔ/     | around            | adv  | -      |                 |
+| описати    | /ɔpɪˈsɑtɪ/     | to describe       | verb | -      |                 |
+| пальто     | /pɑlʲˈtɔ/      | coat              | noun | с      |                 |
+| подобатися | /pɔˈdɔbɑtɪsʲɑ/ | to like           | verb | -      |                 |
+| поєднання  | /pɔjɛdˈnɑnʲːɑ/ | combination       | noun | с      |                 |
+| предок     | /ˈprɛdɔk/      | ancestor          | noun | ч      |                 |
+| светр      | /svɛtr/        | sweater           | noun | ч      |                 |
+| світлий    | /ˈsvitlɪj/     | light/bright      | adj  | ч      |                 |
+| світло-    | /ˈsvitlɔ/      | light-            | adj  | -      | Compound prefix |
+| сіро-      | /ˈsirɔ/        | gray-             | adj  | -      | Compound prefix |
+| сніг       | /snih/         | snow              | noun | ч      |                 |
+| сукня      | /ˈsuknʲɑ/      | dress             | noun | ж      |                 |
+| темний     | /ˈtɛmnɪj/      | dark              | adj  | ч      |                 |
+| тіні       | /ˈtinʲi/       | shadows           | noun | ж      | Plural          |
+| трава      | /trɑˈvɑ/       | grass             | noun | ж      |                 |
+| футболка   | /futˈbɔlkɑ/    | t-shirt           | noun | ж      |                 |
+| черевики   | /t͡ʃɛrɛˈvɪkɪ/   | boots/shoes (pl)  | noun | -      | Plural only     |
+| шорти      | /ˈʃɔrtɪ/       | shorts (pl)       | noun | -      | Plural only     |
+| штани      | /ʃtɑˈnɪ/       | pants (pl)        | noun | -      | Plural only     |
+| яскравий   | /jɑsˈkrɑvɪj/   | bright            | adj  | ч      |                 |

@@ -20,6 +20,7 @@ objectives:
   - "Learner can describe meals and cooking processes"
   - "Learner can follow simple recipes in Ukrainian"
 vocabulary_count: 35
+vocab_count: 77
 ---
 
 ## Warm-up
@@ -270,27 +271,3 @@ When eating with Ukrainian friends or family, these phrases will help you partic
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| каструля | /kɑsˈtrulʲɑ/ | pot | noun | f | kitchen |
-| сковорода | /skɔʋɔˈrɔdɑ/ | frying pan | noun | f | kitchen |
-| духовка | /duˈxɔʋkɑ/ | oven | noun | f | appliance |
-| чайник | /ˈt͡ʃɑjnɪk/ | kettle | noun | m | kitchen |
-| варити | /ˈʋɑrɪtɪ/ | to boil | verb | - | cooking |
-| смажити | /ˈsmɑʒɪtɪ/ | to fry | verb | - | cooking |
-| пекти | /ˈpɛktɪ/ | to bake | verb | - | cooking |
-| тушкувати | /tuʃkuˈʋɑtɪ/ | to stew | verb | - | cooking |
-| нарізати | /nɑˈrizɑtɪ/ | to chop | verb | - | cooking |
-| запікати | /zɑpiˈkɑtɪ/ | to roast | verb | - | cooking |
-| перекус | /pɛrɛˈkus/ | snack | noun | m | meal |
-| солоний | /sɔˈlɔnɪj/ | salty | adj | m | taste |
-| кислий | /ˈkɪslɪj/ | sour | adj | m | taste |
-| гіркий | /ˈɦirkɪj/ | bitter | adj | m | taste |
-| гострий | /ˈɦɔstrɪj/ | spicy | adj | m | taste |
-| інгредієнт | /inɦrɛdiˈjɛnt/ | ingredient | noun | m | cooking |
-| порція | /ˈpɔrt͡sijɑ/ | portion | noun | f | serving |
-| скатертина | /skɑˈtɛrtɪnɑ/ | tablecloth | noun | f | tableware |
-| серветка | /sɛrˈʋɛtkɑ/ | napkin | noun | f | tableware |

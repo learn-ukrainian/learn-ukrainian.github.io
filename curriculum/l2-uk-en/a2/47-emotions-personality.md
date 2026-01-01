@@ -1,75 +1,76 @@
 ---
 module: a2-47
-title: "Emotions & Personality"
-subtitle: "Describing feelings and character traits"
-version: "1.0"
-phase: "A2"
-pedagogy: "PPP"
+title: 'Emotions & Personality'
+subtitle: 'Describing feelings and character traits'
+version: '1.0'
+phase: 'A2'
+pedagogy: 'PPP'
 duration: 60
 transliteration: none
-tags: ["vocabulary", "emotions", "personality", "adjectives"]
-grammar: ["adjective-agreement", "instrumental-with-бути"]
+tags: ['vocabulary', 'emotions', 'personality', 'adjectives']
+grammar: ['adjective-agreement', 'instrumental-with-бути']
 objectives:
-  - "Learner can describe basic emotions in Ukrainian"
-  - "Learner can describe personality traits using appropriate adjectives"
-  - "Learner can express emotional states using бути + instrumental"
+  - 'Learner can describe basic emotions in Ukrainian'
+  - 'Learner can describe personality traits using appropriate adjectives'
+  - 'Learner can express emotional states using бути + instrumental'
 vocabulary_count: 30
+vocab_count: 64
 ---
 
 # Emotions & Personality
 
-## Warm-up
+## Розминка (Warm-up)
 
 Як ви себе почуваєте сьогодні? Ви щасливі? Сумні? Втомлені?
 
 Кожен день ми відчуваємо різні емоції. Вранці ми можемо бути щасливими, а ввечері — втомленими. Іноді ми радіємо, а іноді — сумуємо. Це нормально! Емоції роблять нас людьми.
 
-Emotions shape our daily lives. In this module, you'll learn to describe how you feel and talk about personality traits in Ukrainian. You will learn to express joy, sadness, fear, and many other emotions. You will also learn to describe people's personalities.
+Емоції визначають наше повсякденне життя. У цьому модулі ви навчитеся описувати свої почуття та обговорювати риси характеру українською мовою. Ви навчитеся виражати радість, сум, страх та багато інших емоцій. Спробуйте також описати характери людей.
 
 > [!myth-buster] "Українська — бідна мова"
 > Російська пропаганда стверджує, що українська — "сільська мова" без витонченості. Насправді українська має неймовірно багатий емоційний словник. Слова **сум**, **туга** і **журба** не мають прямих російських відповідників!
 
 ## Presentation
 
-### Basic Emotions
+## Основні емоції (Basic Emotions)
 
-Ukrainian has beautiful words for expressing how we feel:
+Українська мова має чудові слова для вираження наших почуттів:
 
-| Емоція | Приклад |
-|---------|---------|
-| **радість** | Яка радість бачити тебе! |
-| **сум** | У мене сум у серці. |
-| **гнів** | Він не міг стримати гнів. |
-| **страх** | Страх паралізував її. |
-| **здивування** | Яке здивування! |
-| **щастя** | Щастя в дрібницях. |
+| Емоція         | Приклад                   |
+| -------------- | ------------------------- |
+| **радість**    | Яка радість бачити тебе!  |
+| **сум**        | У мене сум у серці.       |
+| **гнів**       | Він не міг стримати гнів. |
+| **страх**      | Страх паралізував її.     |
+| **здивування** | Яке здивування!           |
+| **щастя**      | Щастя в дрібницях.        |
 
 **Радість** means joy — that warm feeling when you see a good friend. **Сум** is sadness, often a gentle melancholy. **Гнів** is anger — a burning fire inside. **Страх** is fear — what you feel in the dark. **Здивування** is surprise — when something unexpected happens. **Щастя** is happiness — the deep contentment of a peaceful life.
 
-### Expressing Emotions with Verbs
+## Вираження емоцій дієсловами (Expressing Emotions with Verbs)
 
-To describe experiencing emotions, use these verbs:
+Щоб описати переживання емоцій, використовуйте ці дієслова:
 
-- **радіти** — to rejoice: *Діти раділи подарункам.*
-- **сумувати** — to be sad: *Вона сумує за домом.*
-- **хвилюватися** — to worry: *Мама хвилюється за сина.*
-- **боятися** — to be afraid: *Він боїться темряви.*
-- **дивуватися** — to be surprised: *Ми дивувалися його таланту.*
+- **радіти** — to rejoice: _Діти раділи подарункам._
+- **сумувати** — to be sad: _Вона сумує за домом._
+- **хвилюватися** — to worry: _Мама хвилюється за сина._
+- **боятися** — to be afraid: _Він боїться темряви._
+- **дивуватися** — to be surprised: _Ми дивувалися його таланту._
 
 > [!history-bite] The Emotional Warrior
 > Ukrainian Cossacks were famous for expressing emotions openly. Their songs (**думи**) celebrated joy in victory and openly mourned fallen comrades. This emotional honesty is a core Ukrainian cultural value — very different from the "stoic Russian" stereotype imposed during Soviet times.
 
-### Emotional States
+## Емоційні стани (Emotional States)
 
-To describe temporary states, use **бути** + adjective in instrumental:
+Щоб описувати тимчасові стани, використовуйте **бути** + прикметник в орудному відмінку:
 
-| Стан | Приклад |
-|-------|---------|
-| **задоволений** | Я задоволений результатом. |
-| **розчарований** | Він розчарований оцінкою. |
-| **стурбований** | Вона стурбована новинами. |
-| **схвильований** | Діти схвильовані поїздкою. |
-| **здивований** | Я здивований твоїм рішенням. |
+| Стан             | Приклад                      |
+| ---------------- | ---------------------------- |
+| **задоволений**  | Я задоволений результатом.   |
+| **розчарований** | Він розчарований оцінкою.    |
+| **стурбований**  | Вона стурбована новинами.    |
+| **схвильований** | Діти схвильовані поїздкою.   |
+| **здивований**   | Я здивований твоїм рішенням. |
 
 These adjectives describe temporary emotional states. **Задоволений** means satisfied — you feel this after a good meal. **Розчарований** means disappointed — when expectations are not met. **Стурбований** means worried — concern about something. **Схвильований** means excited or agitated. **Здивований** means surprised — caught off guard.
 
@@ -84,49 +85,49 @@ These adjectives describe temporary emotional states. **Задоволений**
 — От і добре! Все буде гаразд.
 
 > [!tip] Expressing "I feel"
-> Use **Я почуваюся** + adverb: *Я почуваюся добре* (I feel well). Don't confuse with **Я відчуваю** which means "I sense/perceive."
+> Use **Я почуваюся** + adverb: _Я почуваюся добре_ (I feel well). Don't confuse with **Я відчуваю** which means "I sense/perceive."
 
 ## Practice
 
-### Personality Traits
+## Риси характеру (Personality Traits)
 
-Personality adjectives describe permanent characteristics. These describe who you are, not how you feel in a moment.
+Прикметники характеру описують постійні характеристики. Вони описують те, ким ви є, а не те, як ви почуваєтеся в даний момент.
 
 **Позитивні риси:**
 
-| Риса | Приклад |
-|------|----------|
-| **добрий** | Вона дуже добра людина. |
-| **чесний** | Він завжди чесний. |
-| **сміливий** | Сміливі люди змінюють світ. |
+| Риса          | Приклад                         |
+| ------------- | ------------------------------- |
+| **добрий**    | Вона дуже добра людина.         |
+| **чесний**    | Він завжди чесний.              |
+| **сміливий**  | Сміливі люди змінюють світ.     |
 | **терплячий** | Вчитель повинен бути терплячим. |
-| **розумний** | Розумні діти швидко вчаться. |
-| **веселий** | Веселі люди живуть довше. |
+| **розумний**  | Розумні діти швидко вчаться.    |
+| **веселий**   | Веселі люди живуть довше.       |
 
 **Добрий** describes someone who is kind and good-hearted. **Чесний** is an honest person who always tells the truth. **Сміливий** is brave — someone who faces danger without fear. **Терплячий** is patient, able to wait calmly. **Розумний** means smart or intelligent. **Веселий** describes someone cheerful and happy.
 
 **Негативні риси:**
 
-| Риса | Приклад |
-|------|----------|
-| **злий** | Він злий на всіх. |
-| **лінивий** | Лінивий студент не вчиться. |
-| **боягузливий** | Боягузливі не перемагають. |
+| Риса            | Приклад                          |
+| --------------- | -------------------------------- |
+| **злий**        | Він злий на всіх.                |
+| **лінивий**     | Лінивий студент не вчиться.      |
+| **боягузливий** | Боягузливі не перемагають.       |
 | **нетерплячий** | Нетерплячі люди роблять помилки. |
-| **недобрий** | Недобрі слова ранять. |
+| **недобрий**    | Недобрі слова ранять.            |
 
 **Злий** describes someone mean or angry. **Лінивий** is lazy — they avoid work. **Боягузливий** is the opposite of сміливий — someone who lacks courage. **Нетерплячий** cannot wait patiently. Notice how **не-** creates the opposite: добрий → недобрий, терплячий → нетерплячий.
 
 > [!cultural] Ukrainian Personality Ideals
 > Ukrainian folklore celebrates courage and honesty above all. The word **козак** became synonymous with bravery throughout history. Even today, Ukrainians value **щирість** — being genuine and open-hearted. These values shaped Ukrainian identity through centuries of struggle for independence.
 
-### Describing Personality
+## Опис особистості (Describing Personality)
 
-Use **бути** + instrumental for characteristics:
+Використовуйте **бути** + орудний відмінок для постійних характеристик:
 
-- *Вона є доброю людиною.* — She is a kind person.
-- *Він був сміливим воїном.* — He was a brave warrior.
-- *Ми хочемо бути чесними.* — We want to be honest.
+- _Вона є доброю людиною._ — She is a kind person.
+- _Він був сміливим воїном._ — He was a brave warrior.
+- _Ми хочемо бути чесними._ — We want to be honest.
 
 ### Dialogue: Describing a Friend
 
@@ -139,17 +140,17 @@ Use **бути** + instrumental for characteristics:
 — Звучить як чудова подруга!
 — Так, мені пощастило!
 
-### Opposite Emotions
+## Протилежні емоції (Opposite Emotions)
 
-Learning opposites helps expand vocabulary. Every emotion has its opposite. Understanding these pairs helps you express the full range of human feelings. Here are the most important contrasts:
+Вивчення протилежностей допомагає розширити словниковий запас. Кожна емоція має свою протилежність. Розуміння цих пар допоможе вам виразити весь спектр людських почуттів. Ось найважливіші контрасти:
 
-| Позитив | Негатив |
-|----------|----------|
-| радість | сум |
-| спокій | хвилювання |
+| Позитив     | Негатив      |
+| ----------- |------|
+| радість     | сум          |
+| спокій      | хвилювання   |
 | задоволення | розчарування |
-| сміливість | страх |
-| любов | ненависть |
+| сміливість  | страх        |
+| любов       | ненависть    |
 
 Notice how **радість** and **сум** are fundamental opposites — the light and shadow of human experience. **Спокій** is inner peace, while **хвилювання** is its restless opposite. **Любов** and **ненависть** represent the strongest extremes of human connection.
 
@@ -194,6 +195,7 @@ Notice how **радість** and **сум** are fundamental opposites — the l
 # Summary
 
 You learned to:
+
 - Name basic emotions: радість, сум, гнів, страх
 - Use emotion verbs: радіти, сумувати, хвилюватися
 - Describe emotional states: задоволений, розчарований
@@ -209,22 +211,3 @@ Remember that emotions in Ukrainian culture are often expressed openly. Use thes
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| сум | /sum/ | sadness | noun | m | |
-| гнів | /ɦnʲiw/ | anger | noun | m | |
-| страх | /strɑx/ | fear | noun | m | |
-| здивування | /zdɪwuˈwɑnʲːɑ/ | surprise | noun | n | |
-| стурбований | /sturˈbowɑnɪj/ | worried | adj | m | |
-| схвильований | /sxwɪlʲˈjowɑnɪj/ | excited | adj | m | |
-| чесний | /ˈtʃɛsnɪj/ | honest | adj | m | |
-| сміливий | /smʲiˈlɪwɪj/ | brave | adj | m | |
-| терплячий | /terˈplʲɑtʃɪj/ | patient | adj | m | |
-| лінивий | /lʲiˈnɪwɪj/ | lazy | adj | m | |
-| боягузливий | /bojɑɦuzˈlɪwɪj/ | cowardly | adj | m | |
-| нетерплячий | /neterˈplʲɑtʃɪj/ | impatient | adj | m | |
-| характер | /xɑˈrɑkter/ | character | noun | m | |
-| настрій | /nɑˈstrʲij/ | mood | noun | m | |

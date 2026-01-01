@@ -20,6 +20,7 @@ objectives:
   - "Learner can express completion, beginning, or redo actions"
   - "Learner can identify root verbs in complex forms"
 vocabulary_count: 30
+vocab_count: 74
 ---
 
 ## Warm-up
@@ -272,34 +273,3 @@ The prefix **За-** is the trickiest one. It has three opposite meanings!
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| переписати | /pɛrɛpɪˈsɑtɪ/ | to rewrite | verb | — | pf |
-| дописати | /dɔpɪˈsɑtɪ/ | to finish writing | verb | — | pf |
-| підписати | /pidpɪˈsɑtɪ/ | to sign | verb | — | pf |
-| записати | /zɑpɪˈsɑtɪ/ | to record/write down | verb | — | pf |
-| описати | /ɔpɪˈsɑtɪ/ | to describe | verb | — | pf |
-| виписати | /ʋɪpɪˈsɑtɪ/ | to check out/extract | verb | — | pf |
-| переробити | /pɛrɛrɔˈbɪtɪ/ | to redo | verb | — | pf |
-| доробити | /dɔrɔˈbɪtɪ/ | to finish doing | verb | — | pf |
-| відчинити | /ʋidt͡ʃɪˈnɪtɪ/ | to open (door/window) | verb | — | pf |
-| зачинити | /zɑt͡ʃɪˈnɪtɪ/ | to close (door/window) | verb | — | pf |
-| роздати | /rɔzˈdɑtɪ/ | to distribute | verb | — | pf |
-| роздавати | /rɔzdɑˈʋɑtɪ/ | to distribute (process) | verb | — | impf |
-| подати | /pɔˈdɑtɪ/ | to serve/give | verb | — | pf |
-| віддати | /ʋidˈdɑtɪ/ | to give back | verb | — | pf |
-| передати | /pɛrɛˈdɑtɪ/ | to pass/transmit | verb | — | pf |
-| здати | /zdɑˈtɪ/ | to turn in/rent out | verb | — | pf |
-| видати | /ˈʋɪdɑtɪ/ | to issue/publish | verb | — | pf |
-| надати | /nɑˈdɑtɪ/ | to provide | verb | — | pf |
-| приєднати | /prɪjɛdˈnɑtɪ/ | to attach/join | verb | — | pf |
-| роз'єднати | /rɔzjedˈnɑtɪ/ | to disconnect | verb | — | pf |
-| з'єднати | /zjedˈnɑtɪ/ | to connect | verb | — | pf |
-| від'єднати | /ʋidjedˈnɑtɪ/ | to detach | verb | — | pf |
-| під'єднати | /pidjedˈnɑtɪ/ | to connect up | verb | — | pf |
-| перенести | /pɛrɛnɛsˈtɪ/ | to move/reschedule | verb | — | pf |
-| донести | /dɔnɛsˈtɪ/ | to carry to finish | verb | — | pf |
-| почекати | /pɔt͡ʃɛˈkɑtɪ/ | to wait a bit | verb | — | pf |

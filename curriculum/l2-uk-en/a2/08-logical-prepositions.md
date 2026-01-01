@@ -19,6 +19,7 @@ objectives:
   - "Learner can distinguish для vs на, через vs тому що"
   - "Learner can use prepositions for time expressions"
 vocabulary_count: 30
+vocab_count: 25
 ---
 
 ## Warm-up
@@ -348,12 +349,3 @@ Key distinctions:
 ---
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Case |
-|------|-----|---------|-----|--------|------|
-| хвороба | /xʋɔrˈɔbɑ/ | illness | noun | - | - |
-| відпустка | /ʋidpˈustkɑ/ | vacation | noun | - | - |
-| мета | /mˈɛtɑ/ | goal | noun | - | - |
-| відсутність | /ʋidsˈutnʲistʲ/ | absence | noun | - | - |

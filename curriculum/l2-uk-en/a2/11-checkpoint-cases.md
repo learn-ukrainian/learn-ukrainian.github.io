@@ -25,6 +25,7 @@ objectives:
   - "Learner can combine prepositions with correct cases"
   - "Learner can apply cases in service contexts"
 vocabulary_count: 27
+vocab_count: 18
 ---
 
 # Checkpoint - Cases
@@ -307,13 +308,3 @@ Read this dialogue and identify the case of each bolded word:
 ---
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| прийменник | /prɪjˈmɛnnɪk/ | preposition | noun | m | grammar term |
-| закінчення | /zɑˈkint͡ʃɛnːɑ/ | ending | noun | n | grammar term |
-| послуга | /pɔsˈluɦɑ/ | service | noun | f | Acc: послугу |
-| оплата | /ɔpˈlɑtɑ/ | payment | noun | f | Acc: оплату |
-| кличний | /ˈklɪtʃnɪj/ | Vocative (case) | adj | m | grammar term |

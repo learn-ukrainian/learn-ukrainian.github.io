@@ -23,6 +23,7 @@ objectives:
   - "Learner can use conditional mood"
   - "Learner can apply skills in shopping contexts"
 vocabulary_count: 25
+vocab_count: 6
 ---
 
 # Summary
@@ -307,16 +308,3 @@ Read this story and identify the grammar points:
 > **YouTube:** [A little test on Ukrainian language_ A2 level...](https://www.youtube.com/watch?v=0zgsiO7-TRQ) — Ukrainian grammar
 >
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| порівняння | /pɔriʋˈnʲɑnʲɑ/ | comparison | n | n | grammar term |
-| найвищий ступінь | /nɑjˈʋɪʃt͡ʃɪj ˈstupinʲ/ | superlative degree | phrase | — | grammar term |
-| вищий ступінь | /ˈʋɪʃt͡ʃɪj ˈstupinʲ/ | comparative degree | phrase | — | grammar term |
-| умовний спосіб | /uˈmɔʋnɪj ˈspɔsib/ | conditional mood | phrase | — | grammar term |
-| приклад | /ˈprɪklɑd/ | example | n | m | grammar |
-| виняток | /ˈʋɪnʲɑtɔk/ | exception | n | m | grammar |
-| минулий | /mɪˈnulɪj/ | past | adj | m | grammar |
-| теперішній | /tɛˈpɛriʃnʲij/ | present | adj | m | grammar |

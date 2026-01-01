@@ -20,6 +20,7 @@ objectives:
   - "Learner understands tense handling in reported speech"
   - "Learner can use verbs like 'say', 'tell', 'ask'"
 vocabulary_count: 25
+vocab_count: 35
 ---
 
 # Summary
@@ -80,6 +81,10 @@ You need more than just "said".
   - *Він говорив про політику.* (He spoke about politics.)
 - **Розповідати** (To tell a story/narrate): used for "tell me about..."
   - *Вона розповіла, що сталося.* (She told [narrated] what happened.)
+- **Питати** (To ask):
+  - *Я питаю, де ти.* (I ask where you are.)
+- **Відповідати** (To answer):
+  - *Він відповідає, що зайнятий.* (He answers that he is busy.)
 
 ### Information
 - **Повідомити** (To inform/notify): Formal.
@@ -227,48 +232,4 @@ Read the chain of messages. See how information changes.
 > *Він запитав, **що** я роблю.* (He asked **what** I am doing.)
 > *Він сказав, **що** я працюю.* (He said **that** I am working.)
 
----
-
-## Summary Table
-
-Reporting speech in Ukrainian is both simple and powerful.
-
-**Key Takeaways:**
-1.  **Golden Rule:** Don't change the tense!
-    - *Він сказав, що він **вдома**.* (He said he **is** home - at that moment).
-2.  **Verbs:** Use specific verbs like *скаржитися* (complain), *обіцяти* (promise), or *пояснювати* (explain) to add color.
-3.  **Questions:** Use **чи** for Yes/No questions.
-4.  **Connector:** Use **що** for statements.
-
-Now you can spread the news (or the gossip)!
-
----
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [Learning Ukrainian with Odarka. Lesson 59. Direct and Indirect Speech...](https://www.youtube.com/watch?v=0SYRLbzFjtU) — Learning Ukrainian with Odarka
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| казати | /kɑˈzɑtɪ/ | to say, tell | verb | — | imperfective |
-| повідомити | /pɔʋiˈdɔmɪtɪ/ | to inform, notify | verb | — | formal |
-| пояснити | /pɔjɑsˈnɪtɪ/ | to explain | verb | — | logic |
-| стверджувати | /stʋɛrˈdʒuʋɑtɪ/ | to assert, claim | verb | — | argument |
-| заперечувати | /zɑpɛˈrɛt͡ʃuʋɑtɪ/ | to deny | verb | — | argument |
-| попередити | /pɔpɛˈrɛdɪtɪ/ | to warn | verb | — | danger |
-| нагадати | /nɑɦɑˈdɑtɪ/ | to remind | verb | — | memory |
-| переконувати | /pɛrɛˈkɔnuʋɑtɪ/ | to convince | verb | — | argument |
-| скаржитися | /ˈskɑrʒɪtɪsʲɑ/ | to complain | verb | — | emotion |
-| хвалити | /xʋɑˈlɪtɪ/ | to praise | verb | — | emotion |
-| критикувати | /krɪtɪkuˈʋɑtɪ/ | to criticize | verb | — | emotion |
-| коментувати | /kɔmɛntuˈʋɑtɪ/ | to comment | verb | — | general |
-| кричати | /krɪˈt͡ʃɑtɪ/ | to shout | verb | — | emotion |
-| вимагати | /ʋɪmɑˈɦɑtɪ/ | to demand | verb | — | strong request |
-| шепотіти | /ʃɛpɔˈtitɪ/ | to whisper | verb | — | quiet |
-| брехати | /brɛˈxɑtɪ/ | to lie | verb | — | negative |
+##

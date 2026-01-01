@@ -1,13 +1,12 @@
 ---
-
 module: a1-31
-title: "Body & Health"
+title: 'Body & Health'
 subtitle: "At the Doctor's"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - body
   - health
@@ -17,11 +16,12 @@ grammar:
   - Pain expressions (Болить + body part)
   - Health vocabulary
 objectives:
-  - "Learner can name body parts"
-  - "Learner can describe symptoms (what hurts)"
+  - 'Learner can name body parts'
+  - 'Learner can describe symptoms (what hurts)'
   - "Learner can communicate at the doctor's office"
-  - "Learner can ask for medicine at a pharmacy"
+  - 'Learner can ask for medicine at a pharmacy'
 vocabulary_count: 30
+vocab_count: 35
 ---
 
 # Body & Health
@@ -40,11 +40,13 @@ vocabulary_count: 30
 ---
 
 ## Grammar
+
 ## Expressing Pain: Болить...
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Look at these sentences:
+>
 > - У мене **болить голова**. (My head hurts.)
 > - У мене **болить живіт**. (My stomach hurts.)
 > - У мене **болить горло**. (My throat hurts.)
@@ -54,45 +56,45 @@ vocabulary_count: 30
 
 ### Pain Formula
 
-| Structure | Example | Translation |
-|-----------|---------|-------------|
+| Structure                | Example                   | Translation    |
+| ------------------------ | ------------------------- | -------------- |
 | У мене болить + singular | У мене болить **голова**. | My head hurts. |
-| У мене болять + plural | У мене болять **зуби**. | My teeth hurt. |
+| У мене болять + plural   | У мене болять **зуби**.   | My teeth hurt. |
 
 ### Body Part + Болить/Болять
 
 | Singular (болить) | Plural (болять) |
-|-------------------|-----------------|
-| голова болить | зуби болять |
-| живіт болить | очі болять |
-| горло болить | вуха болять |
-| спина болить | ноги болять |
+| ----------------- | --------------- |
+| голова болить     | зуби болять     |
+| живіт болить      | очі болять      |
+| горло болить      | вуха болять     |
+| спина болить      | ноги болять     |
 
 ---
 
 ## Common Health Expressions
 
-| Ukrainian | English |
-|-----------|---------|
-| Що болить? | What hurts? |
-| Як ви себе почуваєте? | How do you feel? |
-| Я хворий/хвора. | I'm sick. (m/f) |
-| Я здоровий/здорова. | I'm healthy. (m/f) |
-| У мене температура. | I have a fever. |
-| У мене кашель. | I have a cough. |
-| У мене нежить. | I have a runny nose. |
-| У мене застуда. | I have a cold. |
+| Ukrainian             | English              |
+| --------------------- | -------------------- |
+| Що болить?            | What hurts?          |
+| Як ви себе почуваєте? | How do you feel?     |
+| Я хворий/хвора.       | I'm sick. (m/f)      |
+| Я здоровий/здорова.   | I'm healthy. (m/f)   |
+| У мене температура.   | I have a fever.      |
+| У мене кашель.        | I have a cough.      |
+| У мене нежить.        | I have a runny nose. |
+| У мене застуда.       | I have a cold.       |
 
 ---
 
 ## At the Pharmacy
 
-| Ukrainian | English |
-|-----------|---------|
-| Дайте, будь ласка, ліки. | Give me medicine, please. |
+| Ukrainian                            | English                     |
+| ------------------------------------ | --------------------------- |
+| Дайте, будь ласка, ліки.             | Give me medicine, please.   |
 | У вас є таблетки від головного болю? | Do you have headache pills? |
-| Скільки це коштує? | How much does it cost? |
-| Ось ваші ліки. | Here is your medicine. |
+| Скільки це коштує?                   | How much does it cost?      |
+| Ось ваші ліки.                       | Here is your medicine.      |
 
 ---
 
@@ -125,7 +127,10 @@ vocabulary_count: 30
 > - У мене **кашель**. (I have a cough.)
 > - У мене **нежить**. (I have a runny nose.)
 > - У мене **застуда**. (I have a cold.)
-> - Я почуваюся **погано**. (I feel bad.)
+> - Я **почуваюся** погано. (I feel bad.)
+> - У мене висока **температура**. (I have a high temperature/fever.)
+> - Треба **викликати** лікаря. (Need to call a doctor.)
+> - Це **лікарня**. (This is a hospital.)
 
 ---
 
@@ -214,37 +219,43 @@ In this module, you learned:
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Body Parts Vocabulary](https://www.ukrainianlessons.com/vocabulary-body/) — Complete body vocabulary
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/health
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| голова | /ɦɔlɔˈvɑ/ | head | n | f | |
-| рука | /ruˈkɑ/ | hand/arm | n | f | |
-| нога | /nɔˈɦɑ/ | leg/foot | n | f | |
-| живіт | /ʒɪˈvʲit/ | stomach | n | m | |
-| спина | /spɪˈnɑ/ | back | n | f | |
-| горло | /ˈɦɔrlɔ/ | throat | n | n | |
-| око | /ˈɔkɔ/ | eye | n | n | pl: очі |
-| вухо | /ˈvuxɔ/ | ear | n | n | pl: вуха |
-| ніс | /nʲis/ | nose | n | m | |
-| рот | /rɔt/ | mouth | n | m | |
-| зуб | /zub/ | tooth | n | m | pl: зуби |
-| тіло | /ˈtʲilɔ/ | body | n | n | |
-| здоров'я | /zdɔˈrɔvjɑ/ | health | n | n | |
-| ліки | /ˈlʲikɪ/ | medicine | n | pl | always plural |
-| таблетка | /tɑbˈlɛtkɑ/ | pill/tablet | n | f | |
-| болить | /bɔˈlɪtʲ/ | hurts | v | — | 3rd person |
-| хворий | /xvɔˈrɪj/ | sick (m) | adj | m | |
-| хвора | /ˈxvɔrɑ/ | sick (f) | adj | f | |
-| здоровий | /zdɔˈrɔvɪj/ | healthy (m) | adj | m | |
-| здорова | /zdɔˈrɔvɑ/ | healthy (f) | adj | f | |
-| швидка допомога | /ʃvɪdˈkɑ dɔpɔˈmɔɦɑ/ | ambulance | n | f | "fast help" |
-| кашель | /ˈkɑʃɛlʲ/ | cough | n | m | |
-| нежить | /ˈnɛʒɪtʲ/ | runny nose | n | m | |
-| застуда | /zɑsˈtudɑ/ | cold (illness) | n | f | |
-
----
+| Word        | IPA             | English             | POS   | Gender | Note |
+| ----------- | --------------- | ------------------- | ----- | ------ | ---- |
+| алло        | /ɑˈlɔ/          | hello (phone)       | other | -      |      |
+| біль        | /bilʲ/          | pain                | noun  | ч      |      |
+| боліти      | /bɔˈlitɪ/       | to hurt             | verb  | -      |      |
+| викликати   | /vɪˈklɪkɑtɪ/    | to call (doctor)    | verb  | -      |      |
+| вухо        | /ˈvuxɔ/         | ear                 | noun  | с      |      |
+| головний    | /ɦɔlɔvˈnɪj/     | main/head           | adj   | ч      |      |
+| горло       | /ˈɦɔrlɔ/        | throat              | noun  | с      |      |
+| живіт       | /ʒɪˈvit/        | stomach             | noun  | ч      |      |
+| застуда     | /zɑsˈtudɑ/      | cold (illness)      | noun  | ж      |      |
+| кашель      | /ˈkɑʃɛlʲ/       | cough               | noun  | ч      |      |
+| лікарня     | /liˈkɑrnʲɑ/     | hospital            | noun  | ж      |      |
+| мед         | /mɛd/           | honey               | noun  | ч      |      |
+| медицина    | /mɛdɪˈt͡sɪnɑ/    | medicine            | noun  | ж      |      |
+| народний    | /nɑˈrɔdnɪj/     | folk/national       | adj   | ч      |      |
+| нежить      | /ˈnɛʒɪtʲ/       | runny nose          | noun  | ч      |      |
+| нога        | /nɔˈɦɑ/         | leg                 | noun  | ж      |      |
+| потрібний   | /pɔˈtribnɪj/    | needed/necessary    | adj   | ч      |      |
+| почуватися  | /pɔt͡ʃuˈvɑtɪsʲɑ/ | to feel             | verb  | -      |      |
+| результат   | /rɛzulʲˈtɑt/    | result              | noun  | ч      |      |
+| рецепт      | /rɛˈt͡sɛpt/      | prescription/recipe | noun  | ч      |      |
+| рука        | /ruˈkɑ/         | hand/arm            | noun  | ж      |      |
+| себе        | /ˈsɛbɛ/         | self                | pron  | -      |      |
+| серце       | /ˈsɛrt͡sɛ/       | heart               | noun  | с      |      |
+| симптом     | /sɪmpˈtɔm/      | symptom             | noun  | ч      |      |
+| сироп       | /sɪˈrɔp/        | syrup               | noun  | ч      |      |
+| спина       | /spɪˈnɑ/        | back                | noun  | ж      |      |
+| статися     | /ˈstɑtɪsʲɑ/     | to happen           | verb  | -      |      |
+| таблетка    | /tɑbˈlɛtkɑ/     | pill/tablet         | noun  | ж      |      |
+| температура | /tɛmpɛrɑˈturɑ/  | temperature/fever   | noun  | ж      |      |
+| тіло        | /ˈtilɔ/         | body                | noun  | с      |      |
+| хворий      | /ˈxvɔrɪj/       | sick                | adj   | ч      |      |

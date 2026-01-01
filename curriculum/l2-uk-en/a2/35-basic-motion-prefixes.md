@@ -22,6 +22,7 @@ objectives:
   - "Learner can use correct destination prepositions for motion"
   - "Learner can express the completion of a movement"
 vocabulary_count: 25
+vocab_count: 22
 ---
 
 # Summary
@@ -132,25 +133,3 @@ A common challenge for learners is choosing between **В** and **На**. This di
 > - 🎭 [Visual Motion Verbs](https://www.education-ukrainian.com/motion-verbs) — Diagrams of prefixes to help with spatial memory.
 
 ---
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| ввійти | /uʋiˈjtɪ/ | to enter (foot) | verb | — | pf |
-| вийти | /ˈʋɪjtɪ/ | to exit (foot) | verb | — | pf |
-| в'їхати | /ˈʋjixɑtɪ/ | to enter (vehicle) | verb | — | pf |
-| виїхати | /ˈʋɪjixɑtɪ/ | to exit (vehicle) | verb | — | pf |
-| увійти | /uʋiˈjtɪ/ | to enter (formal) | verb | — | pf |
-| гараж | /ɡɑˈrɑʒ/ | garage | noun | masc | — |
-| ескалатор | /ɛskɑˈlɑtɔr/ | escalator | noun | masc | — |
-| ліфт | /lift/ | elevator | noun | masc | — |
-| вагон | /ʋɑˈɦɔn/ | train car | noun | masc | — |
-| натовп | /ˈnɑtɔu̯p/ | crowd | noun | masc | — |
-| кабінет | /kɑbiˈnɛt/ | office/study | noun | masc | — |
-| вмитися | /ˈʋmɪtɪsʲɑ/ | to wash oneself | verb | — | pf |
-| зібратися | /ziˈbrɑtɪsʲɑ/ | to get ready | verb | — | pf |
-| глибокий | /ɦlɪˈbɔkɪj/ | deep | adj | — | — |
-| порожній | /pɔ/ | empty | adj | — | — |
-| повний | /pɔunɪj/ | full | adj | — | — |
-| межа | /mɛˈʒɑ/ | border/boundary | noun | fem | — |

@@ -1,11 +1,11 @@
 ---
 module: a2-06
-title: "Being and Becoming"
-subtitle: "Professions and States with Instrumental"
-version: "1.0"
-phase: "A2.1"
-pedagogy: "PPP"
-duration: "60 min"
+title: 'Being and Becoming'
+subtitle: 'Professions and States with Instrumental'
+version: '1.0'
+phase: 'A2.1'
+pedagogy: 'PPP'
+duration: '60 min'
 transliteration: none
 tags:
   - grammar
@@ -19,11 +19,12 @@ grammar:
   - instrumental with стати
   - instrumental with працювати
 objectives:
-  - "Learner can use instrumental to express profession with бути"
-  - "Learner can use instrumental to describe becoming something with стати"
-  - "Learner can use instrumental to express working as with працювати"
-  - "Learner can distinguish present (no copula) from past/future (бути + Instr)"
-vocabulary_count: 25
+  - 'Learner can use instrumental to express profession with бути'
+  - 'Learner can use instrumental to describe becoming something with стати'
+  - 'Learner can use instrumental to express working as with працювати'
+  - 'Learner can distinguish present (no copula) from past/future (бути + Instr)'
+vocabulary_count: 27
+vocab_count: 37
 ---
 
 ## Warm-up
@@ -36,60 +37,53 @@ When you want to say "He is a doctor," "She became a teacher," or "I work as a p
 
 ## Presentation
 
-## Бути + Instrumental: Being Something
+## Бути + Орудний відмінок (Being Something)
 
-In Ukrainian, the present tense of "to be" is usually zero — we don't use a verb: Він лікар. (He is a doctor.) But in the **past** and **future** tenses, we use **бути** + **Instrumental**:
+В українській мові в теперішньому часі дієслово «бути» зазвичай пропускається: Він лікар. (He is a doctor.) Але в **минулому** та **майбутньому** часі ми використовуємо **бути** + **Орудний відмінок**:
 
-| Tense | Pattern | Example |
-|-------|---------|---------|
-| Present | Він лікар. | He is a doctor. (no verb, nominative) |
-| Past | Він **був лікарем**. | He was a doctor. (бути + instrumental) |
-| Future | Він **буде лікарем**. | He will be a doctor. (бути + instrumental) |
+| Час        | Модель                | Приклад                                  |
+| ---------- | --------------------- | ---------------------------------------- |
+| Теперішній | Він лікар.            | He is a doctor. (без дієслова, називний) |
+| Минулий    | Він **був лікарем**.  | He was a doctor. (бути + орудний)        |
+| Майбутній  | Він **буде лікарем**. | He will be a doctor. (бути + орудний)    |
 
-### Past Tense: був/була/було/були + Instrumental
+### Минулий час: був/була/було/були + Орудний відмінок
 
-When talking about what someone WAS in the past, you use the past tense of "бути" followed by the instrumental case. The past tense agrees in gender with the subject: **він був** (masculine), **вона була** (feminine), **воно було** (neuter), **вони були** (plural).
+Ви хочете сказати, ким хтось БУВ у минулому? Використовуйте минулий час дієслова «бути» з орудним відмінком. Форма дієслова залежить від роду підмета: **він був**, **вона була**, **воно було**, **вони були**.
 
 Він був студентом. (He was a student.)
 Вона була вчителькою. (She was a teacher.)
 Ми були друзями. (We were friends.)
 
-Notice how the profession changes to instrumental: студент → студентом, вчителька → вчителькою.
+### Майбутній час: буде/будуть + Орудний відмінок
 
-### Future Tense: буде/будуть + Instrumental
-
-For the future tense, use **буде** for singular subjects or **будуть** for plural subjects, followed by the instrumental case. This is how you express what someone WILL BE:
+У майбутньому часі використовуйте **буде** (однина) або **будуть** (множина) з орудним відмінком:
 
 Він буде лікарем. (He will be a doctor.)
 Вона буде журналісткою. (She will be a journalist.)
 Вони будуть інженерами. (They will be engineers.)
 
-The pattern is consistent: бути in past or future + noun in instrumental case.
+> 💡 **Чи знаєте ви?**
+> Нульова зв'язка (відсутність дієслова «бути» у теперішньому часі) — це особливість української мови. В англійській мові завжди потрібно казати "He is a doctor", але українською ми просто кажемо "Він лікар".
 
-> 💡 **Did You Know?**
->
-> The present tense "zero copula" (no verb "to be") is a distinctive feature of Ukrainian and many Slavic languages. Russians use "это" for "this is," but Ukrainians simply say "Це." When Ukrainians speak English, they sometimes forget "is" because their brain doesn't expect a copula in present tense!
+## Стати + Орудний відмінок (Becoming Something)
 
-## Стати + Instrumental: Becoming Something
-
-The verb **стати** (to become) is one of the most important verbs in Ukrainian for talking about changes in profession or state. Unlike бути, which uses instrumental only in past and future, стати ALWAYS takes the instrumental case, in all tenses:
+Дієслово **стати** (to become) завжди потребує орудного відмінка у всіх часах:
 
 Вона стала вчителькою. (She became a teacher.)
 Він став лікарем. (He became a doctor.)
 Ми стали друзями. (We became friends.)
 
-This verb is perfective (completed action), so it's typically used in past and future. The imperfective counterpart is ставати (to be becoming).
-
 ### Conjugation of стати (perfective, past + future)
 
-| Past | Future |
-|------|--------|
-| я став | стала | я стану |
-| ти став | стала | ти станеш |
-| він став | він стане |
-| вона стала | вона стане |
-| ми стали | ми станемо |
-| ви стали | ви станете |
+| Past       | Future       |
+| ---------- | ------------ | --------- |
+| я став     | стала        | я стану   |
+| ти став    | стала        | ти станеш |
+| він став   | він стане    |
+| вона стала | вона стане   |
+| ми стали   | ми станемо   |
+| ви стали   | ви станете   |
 | вони стали | вони стануть |
 
 Вона хоче стати лікаркою. (She wants to become a doctor.)
@@ -100,17 +94,15 @@ This verb is perfective (completed action), so it's typically used in past and f
 >
 > Many famous Ukrainians changed professions dramatically: Тарас Шевченко **був кріпаком** (was a serf), але **став великим поетом** (became a great poet). Леся Українка хотіла стати музикою, але стала геніальною письменницею. Their stories of becoming are told in the instrumental case!
 
-## Працювати + Instrumental: Working As
+## Працювати + Орудний відмінок (Working As)
 
-The verb **працювати** (to work) is used with the instrumental case to express what profession someone works as. This is different from English, where we use "as" + profession. In Ukrainian, no preposition is needed — just put the profession in instrumental:
+Дієслово **працювати** (to work) використовується з орудним відмінком без прийменників, щоб сказати, ким хтось працює. Питальне слово — **Ким?**
 
 Я працюю програмістом. (I work as a programmer.)
 Вона працює журналісткою. (She works as a journalist.)
 Він працює водієм. (He works as a driver.)
-
-The question word for "as what" is **ким?** — the instrumental form of **хто** (who).
-
-Note that you can also use **ким?** (as whom?) — this is the instrumental of **хто**:
+Вона працює актором. (She works as an actor.)
+Він був студентом. (He was a student.)
 
 — Ким ти працюєш? (What do you work as?)
 — Я працюю вчителем. (I work as a teacher.)
@@ -119,13 +111,13 @@ Note that you can also use **ким?** (as whom?) — this is the instrumental o
 
 Here are the most common verbs that take the instrumental case when followed by a profession or role. Learning these patterns will help you talk about careers fluently:
 
-| Verb | Meaning | Example |
-|------|---------|---------|
-| бути (past/future) | to be | Він був студентом. |
-| стати | to become | Вона стала лікаркою. |
-| працювати | to work as | Я працюю інженером. |
-| служити | to serve as | Він служить солдатом. |
-| залишатися | to remain | Вона залишається директоркою. |
+| Verb               | Meaning     | Example                       |
+| ------------------ | ----------- | ----------------------------- |
+| бути (past/future) | to be       | Він був студентом.            |
+| стати              | to become   | Вона стала лікаркою.          |
+| працювати          | to work as  | Я працюю інженером.           |
+| служити            | to serve as | Він служить солдатом.         |
+| залишатися         | to remain   | Вона залишається директоркою. |
 
 Note that all these verbs follow the same pattern: verb + profession in instrumental case.
 
@@ -148,21 +140,22 @@ One of the distinctive features of Ukrainian is that it has separate feminine fo
 This is not a modern invention — Ukrainian has always had productive suffixes like -ка, -иця, and -иня that form feminine nouns from masculine ones. Using the correct gender form is considered grammatically proper and respectful.
 
 The main suffixes for feminine professions are:
+
 - **-ка**: лікар → лікарка, інженер → інженерка
 - **-иця**: письменник → письменниця
 
 Here is a table of common professions with their masculine and feminine forms:
 
-| Masculine | Feminine | English |
-|-----------|----------|---------|
-| лікар | лікарка | doctor |
-| вчитель | вчителька | teacher |
-| журналіст | журналістка | journalist |
-| інженер | інженерка | engineer |
+| Masculine  | Feminine     | English    |
+| ---------- | ------------ | ---------- |
+| лікар      | лікарка      | doctor     |
+| вчитель    | вчителька    | teacher    |
+| журналіст  | журналістка  | journalist |
+| інженер    | інженерка    | engineer   |
 | програміст | програмістка | programmer |
-| юрист | юристка | lawyer |
-| актор | акторка | actor |
-| письменник | письменниця | writer |
+| юрист      | юристка      | lawyer     |
+| актор      | акторка      | actor      |
+| письменник | письменниця  | writer     |
 
 When talking about a woman's profession, use the feminine form in both nominative and instrumental:
 
@@ -177,12 +170,12 @@ Maria стала письменницею. (Maria became a writer.)
 
 Ukraine has produced many outstanding professionals who changed the world. Here are some famous Ukrainians and their professions, demonstrating the instrumental case in action:
 
-| Name | Profession and Achievement |
-|------|------------|
-| Сергій Корольов | He **was an engineer** (був інженером) who created the Soviet space program. |
-| Леся Українка | She **became a writer** (стала письменницею) and poet. |
-| Соломія Крушельницька | She **was an opera singer** (була співачкою) of world renown. |
-| Ігор Сікорський | He **worked as an engineer** (працював інженером) and invented the helicopter. |
+| Name                  | Profession and Achievement                                                     |
+| --------------------- | ------------------------------------------------------------------------------ |
+| Сергій Корольов       | He **was an engineer** (був інженером) who created the Soviet space program.   |
+| Леся Українка         | She **became a writer** (стала письменницею) and poet.                         |
+| Соломія Крушельницька | She **was an opera singer** (була співачкою) of world renown.                  |
+| Ігор Сікорський       | He **worked as an engineer** (працював інженером) and invented the helicopter. |
 
 Notice how each profession appears in the instrumental case after the verbs був, стала, була, and працював.
 
@@ -208,25 +201,25 @@ Remember: Present tense = no verb, Nominative. Past/Future = бути, Instrumen
 
 Study this table carefully to see the pattern across all three tenses:
 
-| Present (Nominative) | Past (Instrumental) | Future (Instrumental) |
-|---------|------|--------|
-| Він лікар. | Він **був лікарем**. | Він **буде лікарем**. |
-| Вона студентка. | Вона **була студенткою**. | Вона **буде студенткою**. |
-| Ми друзі. | Ми **були друзями**. | Ми **будемо друзями**. |
+| Present (Nominative) | Past (Instrumental)       | Future (Instrumental)     |
+| -------------------- | ------------------------- | ------------------------- |
+| Він лікар.           | Він **був лікарем**.      | Він **буде лікарем**.     |
+| Вона студентка.      | Вона **була студенткою**. | Вона **буде студенткою**. |
+| Ми друзі.            | Ми **були друзями**.      | Ми **будемо друзями**.    |
 
 ## Form the Instrumental of Professions
 
 Here is a reference table showing how common professions change from nominative to instrumental case. Notice that masculine nouns typically add -ом or -ем, while feminine nouns add -ою:
 
 | Nominative | Instrumental | Gender |
-|------------|--------------|--------|
-| лікар | лікарем | masc |
-| вчитель | вчителем | masc |
-| інженер | інженером | masc |
-| програміст | програмістом | masc |
-| журналіст | журналістом | masc |
-| вчителька | вчителькою | fem |
-| лікарка | лікаркою | fem |
+| ---------- | ------------ | ------ |
+| лікар      | лікарем      | masc   |
+| вчитель    | вчителем     | masc   |
+| інженер    | інженером    | masc   |
+| програміст | програмістом | masc   |
+| журналіст  | журналістом  | masc   |
+| вчителька  | вчителькою   | fem    |
+| лікарка    | лікаркою     | fem    |
 
 ## Mini-Dialogues
 
@@ -271,67 +264,4 @@ This reading passage demonstrates all three verbs (бути, стати, пра�
 4. Ким була сестра? — Вона була журналісткою.
 5. Ким хоче стати оповідач? — Він хоче стати вчителем.
 
----
-
-# Summary
-
-In this module, you learned how to talk about professions using three key verbs that take the instrumental case: бути (to be), стати (to become), and працювати (to work as). Here's a recap of the key patterns you mastered:
-
-**Key Pattern 1: Бути + Instrumental** for past and future tenses
-
-In present tense, Ukrainian doesn't use a verb for "to be" with professions. But in past and future, you use бути followed by the instrumental case:
-- Він **був студентом**. (He was a student.)
-- Вона **буде лікаркою**. (She will be a doctor.)
-- Present tense: no бути, use nominative (Він студент.)
-
-**Key Pattern 2: Стати + Instrumental** for becoming
-
-The verb стати always takes instrumental, regardless of tense:
-- Вона **стала вчителькою**. (She became a teacher.)
-- Він **хоче стати програмістом**. (He wants to become a programmer.)
-
-**Key Pattern 3: Працювати + Instrumental** for working as
-
-No preposition is needed — just verb + profession in instrumental:
-- Я **працюю інженером**. (I work as an engineer.)
-- Ким ти працюєш? (What do you work as?)
-
-**Gender Forms**: Remember that Ukrainian has separate masculine and feminine forms for most professions: лікар/лікарка, вчитель/вчителька, програміст/програмістка. Use the correct form based on the person's gender.
-
-Now you can talk about your profession with confidence! 👨‍⚕️👩‍🏫💻
-
-## Need More Practice?
-
-> [!resources] External Resources
-> - 🎥 [Instrumental Case](https://www.youtube.com/watch?v=lmPHpt2DGos) — Speak Ukrainian
-> - 📖 [Professions Vocabulary](https://www.ukrainianlessons.com/vocabulary/)
-> - 📝 [Instrumental with Professions](https://www.ukrainianlanguage.org.uk/read/unit07/)
-> - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| бути | /ˈbutɪ/ | to be | verb | — | uses instrumental in past/future |
-| стати | /ˈstɑtɪ/ | to become | verb | — | perfective, always + instrumental |
-| ставати | /stɑˈʋɑtɪ/ | to become | verb | — | imperfective of стати |
-| залишатися | /zɑlɪˈʃɑtɪsʲɑ/ | to remain | verb | — | + instr. for state |
-| виявитися | /ʋɪjɑˈʋɪtɪsʲɑ/ | to turn out to be | verb | — | + instr. |
-| вважатися | /wɑˈʒɑtɪsʲɑ/ | to be considered | verb | — | + instr. |
-| називатися | /nɑzɪˈʋɑtɪsʲɑ/ | to be called | verb | — | + instr. |
-| інженер | /inʒɛˈnɛr/ | engineer | noun | m | instr: інженером |
-| програміст | /prɔɦrɑˈmist/ | programmer (m) | noun | m | instr: програмістом |
-| журналіст | /ʒurnɑˈlist/ | journalist (m) | noun | m | instr: журналістом |
-| юрист | /juˈrɪst/ | lawyer | noun | m | instr: юристом |
-| економіст | /ɛkɔˈnɔmist/ | economist | noun | m | instr: економістом |
-| художник | /xuˈdɔʒnɪk/ | artist | noun | m | instr: художником |
-| музикант | /muzɪˈkɑnt/ | musician | noun | m | instr: музикантом |
-| письменник | /pɪsʲˈmɛnːɪk/ | writer (m) | noun | m | instr: письменником |
-| секретар | /sɛkrɛˈtɑr/ | secretary (m) | noun | m | instr: секретарем |
-
----
-
-> [!tip] Remember the Key Verbs
-> Three verbs that take instrumental for professions: **бути** (to be, past/future), **стати** (to become), **працювати** (to work as). Master these and you can talk about any career!
+##

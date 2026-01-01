@@ -25,6 +25,7 @@ objectives:
   - "Learner can interpret не можна + infinitive based on aspect"
   - "Learner can choose appropriate aspect in imperative for different situations"
 vocabulary_count: 35
+vocab_count: 38
 ---
 
 # Відтінки виду II: наказовий спосіб та інфінітив
@@ -502,43 +503,3 @@ Wi-Fi: гості2024. **Підключайтеся** без обмежень!
 Якщо ви поставили галочку біля всіх пунктів — вітаємо! Ви опанували аспектні відтінки в командах та інфінітиві.
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| проходьте | please come in | polite invitation (imperfective) |
-| сідайте | please sit down | polite invitation (imperfective) |
-| беріть | please take | polite invitation (imperfective) |
-| скажіть | tell (polite) | formal request (perfective) |
-| зачекайте | please wait | polite request (perfective) |
-| не чіпайте | don't touch | prohibition (imperfective) |
-| не забувайте | don't forget | general rule (imperfective) |
-| не хвилюйтеся | don't worry | prohibition (imperfective) |
-| не спізніться | don't be late | warning (perfective) |
-| не впадіть | don't fall | warning about danger (perfective) |
-| не розбийте | don't break | warning (perfective) |
-| не запізніться | don't miss/be late | warning (perfective) |
-| заборонено | forbidden; prohibited | modal adverb |
-| дозволено | allowed; permitted | modal adverb |
-| варто | it's worth; should | modal adverb |
-| треба | it's necessary; must | modal adverb |
-| необхідно | it's essential; necessary | formal modal adverb |
-| доречно | it's appropriate | formal modal adverb |
-| неможливо | impossible | modal adverb |
-| не можна | one cannot; forbidden | modal construction |
-| наказовий спосіб | imperative mood | grammatical term |
-| інфінітив | infinitive | grammatical term |
-| недоконаний вид | imperfective aspect | НДВ - aspectual category |
-| доконаний вид | perfective aspect | ДВ - aspectual category |
-| заборона | prohibition; ban | noun form |
-| дозвіл | permission | noun form |
-| ввічливість | politeness | key concept |
-| терміновість | urgency | key concept |
-| попередження | warning | key concept |
-| запрошення | invitation | noun form |
-| гостинність | hospitality | Ukrainian cultural value |
-| процес | process | aspectual concept |
-| результат | result | aspectual concept |
-| правило | rule | used with general prohibitions |
-| виконавець | executor; performer | who performs the action |

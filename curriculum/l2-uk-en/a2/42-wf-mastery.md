@@ -20,6 +20,7 @@ objectives:
   - "Learner can synthesize knowledge of prefixes, suffixes, and roots"
   - "Learner completes the Word Formation phase"
 vocabulary_count: 48
+vocab_count: 62
 ---
 
 ## Warm-up
@@ -98,9 +99,11 @@ Verb: **Народитися** (To be born).
 | **Народ** | People/Nation | On-kin (The born ones) |
 | **Передмістя** | Suburb | Before-town (related logic) |
 | **Земний** | Earthly | Earth-adj (often with nature) |
+| **Родина** | Family | Kin-group |
 
 *Україна — мій рідний край.* (Ukraine is my native land).
 *Ми любимо відпочивати на природі.* (We love to relax in nature).
+*Це моя **родина**.* (This is my family).
 
 ---
 
@@ -335,89 +338,4 @@ Combine **Roots** with **Prefixes** and **Suffixes**.
 > Even a simple **дякую** (thank you) changes the tone.
 > Be polite, be heard!
 
----
-
-# Summary
-
-Congratulations! You have completed the **Word Formation** phase.
-This is a huge milestone.
-You are no longer just memorizing words. You are **building** them.
-
-Key Takeaways:
-1.  **Roots are the Core:**
-    - `ХІД`, `ПИС`, `МОВ`
-    - `ЧУ`, `БАЧ`, `РІД`
-    - `СВІТ`, `ЗЕМ`, `МІСТ`
-2.  **Prefixes are Directors:** 
-    - `В-`
-    - `Ви-`
-    - `Пере-`
-    - `За-`
-3.  **Suffixes are Identities:**
-    - `-ач`
-    - `-ння`
-    - `-ість`
-
-Now you are ready for the next phase: **Vocabulary Expansion**.
-We will apply these tools to real life: Food, Health, Home, and Work.
-Get ready to speak!
-
-> [!cultural] Рідна Мова
-> The concept of **Рідна Мова** (Native Language) comes from the root **РІД** (Kin).
-> It connects your language to your ancestors.
-> It is why language is so sacred in Ukrainian culture.
-
----
-
-> 💡 **Словотвір — мистецтво**
->
-> «Українська мова — як конструктор: префікси, корені, суфікси. Будуйте слова самостійно!»
->
-> *Translation: "Ukrainian is like a construction set: prefixes, roots, suffixes."*
-
-> 🇺🇦 **Творіть нові слова!**
->
-> Основні префікси та їх значення:
-> - **пере-**: переписати (писати знову), перечитати (читати знову)
-> - **роз-**: розповісти (розказати детально), розібрати (розділити на частини)
-> - **при-**: прийти (наблизитися), прибігти (прибігти до місця)
->
-> Суфікси також важливі: -ець (читач → читачець), -ість (добрий → доброта)
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [100 Ukrainian cognates ...](https://www.youtube.com/watch?v=CMpe0h8AcJs) — Ukrainian vocabulary for beginners
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| промова | /prɔmˈɔʋɑ/ | speech | noun | f | мов |
-| замовлення | /zɑmˈɔʋlɛnʲːɑ/ | order | noun | n | мов |
-| слухняний | /sluxnʲˈɑnɪj/ | obedient | adj | m | слух |
-| задум | /zˈɑdum/ | plan/concept | noun | m | дум |
-| обдумати | /ɔbdˈumɑtɪ/ | to think over | verb | - | дум |
-| придумати | /prɪdˈumɑtɪ/ | to invent | verb | - | дум |
-| переклад | /pɛrˈɛklɑd/ | translation | noun | m | клад |
-| перемога | /pɛrɛmˈɔɦɑ/ | victory | noun | f | мог |
-| вступ | /wstup/ | introduction | noun | m | ступ |
-| виступ | /ʋˈɪstup/ | performance | noun | m | ступ |
-| відповідь | /ʋˈidpɔʋidʲ/ | answer | noun | f | від |
-| розум | /rˈɔzum/ | mind/reason | noun | m | ум |
-| рід | /rid/ | lineage/genus | noun | m | рід |
-| народ | /nɑˈrɔd/ | people/nation | noun | m | рід |
-| земний | /zɛmˈnɪj/ | earthly | adj | m | zem |
-| передмістя | /pɛrɛdˈmistʲɑ/ | suburb | noun | n | міст |
-| світло | /ˈsʋitlɔ/ | light | noun | n | світ |
-| світити | /sʋiˈtɪtɪ/ | to shine | verb | - | світ |
-| освіта | /ɔsˈʋitɑ/ | education | noun | f | світ |
-| всесвіт | /ˈʋsɛsʋit/ | universe | noun | m | світ |
-| земля | /zɛmˈlʲɑ/ | earth/land | noun | f | зем |
-| земляк | /zɛmˈlʲɑk/ | countryman | noun | m | зем |
-| підземний | /pidˈzɛmnɪj/ | underground | adj | m | зем |
-| іноземець | /inɔˈzɛmɛt͡sʲ/ | foreigner | noun | m | зем |
-| містянин | /misˈtʲɑnɪn/ | city dweller | noun | m | міст |
+##

@@ -24,6 +24,7 @@ objectives:
   - "Learner can use inversion for stylistic impact"
   - "Learner can identify emphasized elements in written and spoken Ukrainian"
 vocabulary_count: 25
+vocab_count: 75
 ---
 
 # Емфаза та інверсія
@@ -434,33 +435,3 @@ vocabulary_count: 25
 - [ ] Я враховую регістр при виборі порядку слів
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| порядок слів | word order | нейтральний vs емфатичний |
-| інверсія | inversion | зміна звичайного порядку |
-| емфаза | emphasis | виділення, підкреслення |
-| наголос | stress, accent | логічний, фразовий |
-| акцент | accent, emphasis | смисловий акцент |
-| тема | theme (given info) | відома інформація |
-| рема | rheme (new info) | нова інформація |
-| відоме | known, given | інформація контексту |
-| нове | new | інформаційний фокус |
-| виділення | highlighting | підкреслення елемента |
-| підкреслення | underlining, emphasis | акцентування |
-| контраст | contrast | протиставлення |
-| протиставлення | opposition, contrast | a vs b |
-| логічний | logical | логічний наголос |
-| стилістичний | stylistic | стилістичний ефект |
-| нейтральний | neutral | звичайний порядок |
-| маркований | marked | незвичний, виділений |
-| експресивний | expressive | емоційно насичений |
-| емоційний | emotional | з виразом емоцій |
-| риторичний | rhetorical | для переконання |
-| фронтування | fronting | винесення на початок |
-| постпозиція | postposition | розміщення після |
-| актуальне членування | communicative structure | поділ на тему/рему |
-| комунікативний | communicative | пов'язаний зі спілкуванням |
-| драматичний | dramatic | для створення ефекту |

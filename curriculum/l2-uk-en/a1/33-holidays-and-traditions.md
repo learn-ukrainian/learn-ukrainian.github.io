@@ -1,13 +1,12 @@
 ---
-
 module: a1-33
-title: "Holidays & Traditions"
-subtitle: "Свята і традиції"
-version: "1.0"
-phase: "A1.3 - Consolidation"
-pedagogy: "PPP"
-duration: "60 min"
-transliteration: "first-occurrence"
+title: 'Holidays & Traditions'
+subtitle: 'Свята і традиції'
+version: '1.0'
+phase: 'A1.3 - Consolidation'
+pedagogy: 'PPP'
+duration: '60 min'
+transliteration: 'first-occurrence'
 tags:
   - holidays
   - traditions
@@ -18,11 +17,12 @@ grammar:
   - Date expressions (Genitive)
   - Wish expressions
 objectives:
-  - "Learner can name major Ukrainian holidays"
-  - "Learner can give holiday greetings"
-  - "Learner can talk about birthday celebrations"
-  - "Learner can express wishes"
+  - 'Learner can name major Ukrainian holidays'
+  - 'Learner can give holiday greetings'
+  - 'Learner can talk about birthday celebrations'
+  - 'Learner can express wishes'
 vocabulary_count: 30
+vocab_count: 27
 ---
 
 # Holidays & Traditions
@@ -41,11 +41,13 @@ vocabulary_count: 30
 ---
 
 ## Grammar
+
 ## Holiday Greetings
 
 > [!observe] Спостереження (Pattern Discovery)
 >
 > Learn these greetings as fixed phrases:
+>
 > - **З Новим роком!** (Happy New Year!)
 > - **З Різдвом!** (Merry Christmas!)
 > - **З Великоднем!** (Happy Easter!)
@@ -55,25 +57,25 @@ vocabulary_count: 30
 
 ### Common Holiday Greetings
 
-| Holiday | Greeting | Translation |
-|---------|----------|-------------|
-| Новий рік | З Новим роком! | Happy New Year! |
-| Різдво | З Різдвом! | Merry Christmas! |
-| Великдень | З Великоднем! | Happy Easter! |
-| День народження | З Днем народження! | Happy Birthday! |
-| Весілля | З весіллям! | Congratulations on your wedding! |
-| 8 березня | З восьмим березня! | Happy Women's Day! |
+| Holiday         | Greeting           | Translation                      |
+| --------------- | ------------------ | -------------------------------- |
+| Новий рік       | З Новим роком!     | Happy New Year!                  |
+| Різдво          | З Різдвом!         | Merry Christmas!                 |
+| Великдень       | З Великоднем!      | Happy Easter!                    |
+| День народження | З Днем народження! | Happy Birthday!                  |
+| Весілля         | З весіллям!        | Congratulations on your wedding! |
+| 8 березня       | З восьмим березня! | Happy Women's Day!               |
 
 ---
 
 ## Making Wishes
 
-| Ukrainian | English |
-|-----------|---------|
-| Бажаю **щастя**! | I wish you happiness! |
-| Бажаю **здоров'я**! | I wish you health! |
-| Бажаю **успіху**! | I wish you success! |
-| Бажаю **любові**! | I wish you love! |
+| Ukrainian           | English               |
+| ------------------- | --------------------- |
+| Бажаю **щастя**!    | I wish you happiness! |
+| Бажаю **здоров'я**! | I wish you health!    |
+| Бажаю **успіху**!   | I wish you success!   |
+| Бажаю **любові**!   | I wish you love!      |
 
 **Pattern:** Бажаю + Genitive (what you wish)
 
@@ -81,10 +83,10 @@ vocabulary_count: 30
 
 ## When Is Your Birthday?
 
-| Question | Answer |
-|----------|--------|
+| Question                       | Answer                                     |
+| ------------------------------ | ------------------------------------------ |
 | **Коли** твій день народження? | Мій день народження **двадцятого травня**. |
-| (When is your birthday?) | (My birthday is on May 20th.) |
+| (When is your birthday?)       | (My birthday is on May 20th.)              |
 
 **Note:** Dates use **Genitive case**: двадцятого травня (of the 20th of May)
 
@@ -201,39 +203,40 @@ vocabulary_count: 30
 > [!resources] External Resources
 >
 > **Media:**
+>
 > - [Greetings for Every Occasion](https://www.ukrainianlessons.com/greetings/) — Holiday phrases
 > - [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/) — Audio lessons/holidays
 > - [Speak Ukrainian YouTube](https://www.youtube.com/@SpeakUkrainian) — Video lessons
 
 # Vocabulary
 
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| свято | /ˈsvjɑtɔ/ | holiday | n | n | |
-| традиція | /trɑˈdɪt͡sʲijɑ/ | tradition | n | f | |
-| Новий рік | /nɔˈvɪj rʲik/ | New Year | n | m | |
-| Різдво | /rʲizˈdvɔ/ | Christmas | n | n | December 25 |
-| Великдень | /vɛˈlɪkdɛnʲ/ | Easter | n | m | |
-| день народження | /dɛnʲ nɑˈrɔdʒɛnʲːɑ/ | birthday | n | m | |
-| весілля | /vɛˈsʲilʲːɑ/ | wedding | n | n | |
-| бажати | /bɑˈʒɑtɪ/ | to wish | v | — | |
-| щастя | /ˈʃt͡ʃɑstʲɑ/ | happiness | n | n | |
-| успіху | /usˈpʲixu/ | success (Gen) | n | m | "бажаю успіху" |
-| любові | /lʲuˈbɔvʲi/ | love (Gen) | n | f | "бажаю любові" |
-| святкувати | /svjɑtˈkuvɑtɪ/ | to celebrate | v | — | |
-| дарувати | /dɑruˈvɑtɪ/ | to give (as gift) | v | — | |
-| отримувати | /ɔˈtrɪmuvɑtɪ/ | to receive | v | — | |
-| гості | /ˈɦɔstʲi/ | guests | n | pl | |
-| торт | /tɔrt/ | cake | n | m | |
-| свічка | /ˈsvʲit͡ʃkɑ/ | candle | n | f | |
-| квіти | /ˈkvʲitɪ/ | flowers | n | pl | |
-| листівка | /lɪsˈtʲivkɑ/ | card (greeting) | n | f | |
-| запрошення | /zɑprɔˈʃɛnʲːɑ/ | invitation | n | n | |
-| вечірка | /vɛˈt͡ʃʲirkɑ/ | party | n | f | |
-| танці | /ˈtɑnt͡sʲi/ | dancing | n | pl | |
-| радість | /ˈrɑdʲistʲ/ | joy | n | f | |
-| веселий | /vɛˈsɛlɪj/ | cheerful | adj | m | |
-| святковий | /svjɑtˈkɔvɪj/ | festive | adj | m | |
-| вітання | /vʲiˈtɑnʲːɑ/ | greeting | n | n | |
-
----
+| Word        | IPA              | English                  | POS   | Gender | Note                    |
+| ----------- | ---------------- | ------------------------ | ----- | ------ | ----------------------- |
+| березень    | /ˈbɛrɛzɛnʲ/      | March                    | noun  | ч      |                         |
+| Великдень   | /vɛˈlɪkdɛnʲ/     | Easter                   | name  | ч      |                         |
+| весілля     | /vɛˈsilʲːɑ/      | wedding                  | noun  | с      |                         |
+| вечірка     | /vɛˈt͡ʃirkɑ/      | party                    | noun  | ж      |                         |
+| дарувати    | /dɑruˈvɑtɪ/      | to give (gift)           | verb  | -      |                         |
+| двадцятий   | /dvɑdˈt͡sʲɑtɪj/   | twentieth                | adj   | ч      |                         |
+| день        | /dɛnʲ/           | day                      | noun  | ч      |                         |
+| здійснитися | /zdijsˈnɪtɪsʲɑ/  | to come true             | verb  | -      |                         |
+| кутя        | /kuˈtʲɑ/         | kutia (dish)             | noun  | ж      |                         |
+| многая      | /ˈmnɔɦɑjɑ/       | many (archaic)           | adj   | ж      | In 'Многая літа'        |
+| нехай       | /nɛˈxɑj/         | let/may                  | other | -      |                         |
+| отримати    | /ɔtˈrɪmɑtɪ/      | to receive               | verb  | -      |                         |
+| паска       | /ˈpɑskɑ/         | Easter bread             | noun  | ж      |                         |
+| писанка     | /ˈpi.sɑn.kɑ/     | pysanka (egg)            | noun  | ж      |                         |
+| побажання   | /pɔbɑˈʒɑnʲːɑ/    | wish                     | noun  | с      |                         |
+| привітання  | /prɪviˈtɑnʲːɑ/   | greeting                 | noun  | с      |                         |
+| радість     | /ˈrɑdisʲtʲ/      | joy                      | noun  | ж      |                         |
+| святий      | /svʲɑˈtɪj/       | holy                     | adj   | ч      |                         |
+| свято       | /ˈsvjɑtɔ/        | holiday                  | noun  | с      |                         |
+| Святвечір   | /sʲvjɑtˈvɛt͡ʃir/  | Christmas Eve            | noun  | ч      |                         |
+| святкування | /svjɑtkuˈvɑnʲːɑ/ | celebration              | noun  | с      |                         |
+| успіх       | /ˈuspix/         | success                  | noun  | ч      |                         |
+| хай         | /xɑj/            | let/may                  | other | -      |                         |
+| Христовий   | /xrɪsˈtɔvɪj/     | Christ's                 | adj   | ч      |                         |
+| щасливий    | /ʃt͡ʃɑsˈlɪvɪj/    | happy                    | adj   | ч      |                         |
+| щастити     | /ʃt͡ʃɑsˈtɪtɪ/     | to contain luck/be lucky | verb  | -      | Impersonal: Хай щастить |
+| щастя       | /ˈʃt͡ʃɑsʲtʲɑ/     | happiness                | noun  | с      |                         |
+| щирий       | /ˈʃt͡ʃɪrɪj/       | sincere                  | adj   | ч      |                         |

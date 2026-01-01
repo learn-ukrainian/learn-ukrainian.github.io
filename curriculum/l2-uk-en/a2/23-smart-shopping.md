@@ -22,6 +22,7 @@ objectives:
   - "Learner can express requirements"
   - "Learner can make purchase decisions"
 vocabulary_count: 25
+vocab_count: 18
 ---
 
 # Summary
@@ -210,6 +211,10 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 - Занадто дорого. Чи можна дешевше?
 - Добре, двадцять п'ять.
 - Беру два кілограми!
+- Яка **ціна**? (What is the price?)
+- Це **дорогий** продукт. (This is an expensive product.)
+- Я хочу **шукати** **дешевий** товар. (I want to search for a cheap item.)
+- Де **знижка**? (Where is the discount?)
 
 **Dialogue: Buying Shoes**
 - **Клієнт:** Добрий день! Я шукаю зручні туфлі.
@@ -225,58 +230,4 @@ The Ukrainian **базар** (market) is more than a store; it's a community hub
 > [!tip] Sizes
 > Ukraine uses European shoe sizes (36, 37, 38...). Clothing sizes are also different from US/UK (S/M/L are common, but numbers like 44, 46, 48 are standard).
 
----
-
-## Summary Table
-
-## What You Learned
-
-This module covered practical shopping vocabulary and comparison.
-
-**Comparing Products:**
-- Цей кращий | дешевший | більший
-- Який найкращий | найдешевший?
-
-**Asking for Help:**
-- Що ви порекомендуєте?
-- Є щось краще | дешевше?
-
-**Negotiation:**
-- Чи можна дешевше?
-- Чи є знижка?
-
-**Decisions:**
-- Я візьму цей | Беру!
-- Дякую, я подумаю.
-
-Тепер ви готові до покупок! Ви можете впевнено йти на ринок або в магазин. Порівнюйте ціни, спілкуйтеся з продавцями та знаходьте найкращі товари. Вдалих покупок! 🛒
-
-> [!resources] 🔗 External Resources
->
-> **YouTube:** [UKRAINIAN DIALOGUES for beginners. Episode #3 At the coffee shop...](https://www.youtube.com/watch?v=YLBABZIOoo0) — Speak Ukrainian
->
-> **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
->
-> **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| порівнювати | /pɔriʋˈnʲuʋɑtɪ/ | to compare | v | — | imperfective |
-| рекомендувати | /rɛkɔmɛnduˈʋɑtɪ/ | to recommend | v | — | imperfective |
-| пропонувати | /prɔpɔnuˈʋɑtɪ/ | to offer | v | — | imperfective |
-| акція | /ˈɑkt͡sijɑ/ | sale, promotion | n | f | shopping term |
-| розпродаж | /rɔzˈprɔdɑʒ/ | clearance sale | n | m | shopping term |
-| якість | /ˈjɑkistʲ/ | quality | n | f | shopping term |
-| вартість | /ˈʋɑrtistʲ/ | cost, value | n | f | shopping term |
-| вигідний | /ˈʋɪɦidnɪj/ | profitable, good deal | adj | m | shopping term |
-| доступний | /dɔˈstupnɪj/ | affordable | adj | m | shopping term |
-| покупка | /pɔˈkupkɑ/ | purchase | n | f | shopping term |
-| туфлі | /ˈtuflʲi/ | shoes | n | pl | clothing |
-| шкіра | /ˈʃkirɑ/ | leather | n | f | material |
-| економ | /ɛkɔˈnɔm/ | economy, budget | adj | m | shopping term |
-| невигідний | /nɛˈʋɪɦidnɪj/ | unprofitable, bad deal | adj | m | shopping term |
-| преміум | /prɛˈmium/ | premium | adj | m | shopping term |
-
----
+##

@@ -21,6 +21,7 @@ objectives:
   - "Learner knows basic aspect pairs"
   - "Learner can choose aspect based on meaning"
 vocabulary_count: 25
+vocab_count: 14
 ---
 
 ## Warm-up
@@ -227,27 +228,5 @@ Verbal aspect is about HOW you conceptualize an action, not WHEN it happened. Th
 > - 📖 [Verb Aspect Guide](https://www.ukrainianlessons.com/verb-aspect-in-ukrainian-differences/)
 > - 📝 [Aspect Overview](https://www.ukrainianlessons.com/perfective-verbs/)
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| прочитати | /prɔt͡ʃɪˈtɑtɪ/ | to read/finish | verb | — | perfective |
-| написати | /nɑpɪˈsɑtɪ/ | to write/finish | verb | — | perfective |
-| зробити | /zrɔˈbɪtɪ/ | to do/finish | verb | — | perfective |
-| сказати | /skɑˈzɑtɪ/ | to say/tell | verb | — | perfective |
-| побачити | /pɔˈbɑt͡ʃɪtɪ/ | to see/catch sight | verb | — | perfective |
-| взяти | /ˈʋzʲɑtɪ/ | to take | verb | — | perfective |
-| дати | /ˈdɑtɪ/ | to give | verb | — | perfective |
-| з'їсти | /ˈzjistɪ/ | to eat up | verb | — | perfective |
-| випити | /ˈʋɪpɪtɪ/ | to drink up | verb | — | perfective |
-| вивчити | /ˈʋɪʋt͡ʃɪtɪ/ | to learn/master | verb | — | perfective |
-| аспект | /ɑˈspɛkt/ | aspect | noun | m | grammar term |
-| вид | /ʋid/ | aspect, type | noun | m | недоконаний/доконаний вид |
-| недоконаний | /nɛdɔˈkɔnɑnɪj/ | imperfective | adj | m | grammar term |
-| доконаний | /dɔˈkɔnɑnɪj/ | perfective | adj | m | grammar term |
-| результат | /rɛzulʲˈtɑt/ | result | noun | m | key concept |
 
 ---

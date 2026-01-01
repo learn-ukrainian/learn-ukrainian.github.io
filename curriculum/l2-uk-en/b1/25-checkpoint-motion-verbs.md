@@ -20,6 +20,7 @@ objectives:
   - "Learner can apply figurative motion expressions"
   - "Learner can integrate motion verbs in complex narratives"
 vocabulary_count: 38
+vocab_count: 62
 ---
 
 # Контрольна точка: Дієслова руху
@@ -546,45 +547,3 @@ vocabulary_count: 38
 
 
 ---
-
-# Словник
-
-| Слово | Переклад | Примітки |
-|-------|----------|----------|
-| **іти** | to go (on foot, one direction) | однонапрямлене, M16 |
-| **ходити** | to go (on foot, regularly) | різнонапрямлене, M16 |
-| **їхати** | to go (by transport, one direction) | однонапрямлене, M16 |
-| **їздити** | to go (by transport, regularly) | різнонапрямлене, M16 |
-| **бігти** | to run (one direction) | однонапрямлене, M16 |
-| **бігати** | to run (regularly) | різнонапрямлене, M16 |
-| **летіти** | to fly (one direction) | однонапрямлене, M16 |
-| **літати** | to fly (regularly) | різнонапрямлене, M16 |
-| **пливти** | to swim (one direction) | однонапрямлене, M16 |
-| **плавати** | to swim (regularly) | різнонапрямлене, M16 |
-| **прийти** | to arrive (on foot) | при- = прибуття, M17 |
-| **приїхати** | to arrive (by transport) | при- = прибуття, M17 |
-| **вийти** | to exit, go out | ви- = вихід, M17 |
-| **увійти** | to enter | в-/у- = вхід, M17 |
-| **виїхати** | to leave (by transport) | ви- = вихід, M17 |
-| **перейти** | to cross | пере- = перетин, M18 |
-| **переїхати** | to cross (by transport) | пере- = перетин, M18 |
-| **обійти** | to go around | об- = навколо, M18 |
-| **пройти** | to pass through | про- = крізь, M18 |
-| **піти** | to leave, set off | по- = початок, M19 |
-| **поїхати** | to leave, set off (transport) | по- = початок, M19 |
-| **зайти** | to stop by | за- = візит, M19 |
-| **повернутися** | to return | повер- = назад, M19 |
-| **підійти** | to approach | під- = наближення, M20 |
-| **під'їхати** | to drive up to | під- = наближення, M20 |
-| **відійти** | to step away | від- = віддалення, M20 |
-| **від'їхати** | to drive away | від- = віддалення, M20 |
-| **час іде** | time passes | переносне, M21 |
-| **ідея прийшла** | an idea came | переносне, M21 |
-| **йти в ногу** | to keep pace | переносне, M21 |
-| **справи йдуть** | things are going | переносне, M21 |
-| **нести** | to carry (one direction) | однонапрямлене, M23 |
-| **носити** | to carry (regularly) | різнонапрямлене, M23 |
-| **вести** | to lead (one direction) | однонапрямлене, M23 |
-| **водити** | to lead (regularly) | різнонапрямлене, M23 |
-| **везти** | to transport (one direction) | однонапрямлене, M23 |
-| **возити** | to transport (regularly) | різнонапрямлене, M23 |

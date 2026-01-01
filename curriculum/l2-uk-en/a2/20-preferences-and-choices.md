@@ -22,6 +22,7 @@ objectives:
   - "Learner can make and explain choices"
   - "Learner can discuss likes and dislikes"
 vocabulary_count: 25
+vocab_count: 22
 ---
 
 ## Warm-up
@@ -112,6 +113,14 @@ You can compare actions using comparatives + infinitives:
 - Краще **читати**, ніж **дивитися** телевізор.
 - Легше **говорити**, ніж **робити**.
 - Цікавіше **подорожувати**, ніж **сидіти** вдома.
+- Це **корисніше** для здоров'я. (This is more useful for health.)
+- Це **шкідливіше**. (This is more harmful.)
+- Це **ефективніше**. (This is more effective.)
+- Це **нудніше**. (This is more boring.)
+- Я **волію** чай. (I prefer tea.)
+- Тут **комфортніше**. (It is more comfortable here.)
+- Цей чай **гарячіший**. (This tea is hotter.)
+- Це **практичніше**. (This is more practical.)
 
 > [!tip] Common Wisdom
 > "Легше сказати, ніж зробити" (It's easier said than done) is a popular Ukrainian saying!
@@ -237,36 +246,5 @@ This module covered expressing preferences and making choices.
 > - 📖 [Nouns After Numbers](https://www.ukrainianlessons.com/nouns-after-numbers/)
 > - 📝 [Numbers Guide](https://www.ukrainianlessons.com/numbers/)
 > - 🎙️ [Ukrainian Lessons Podcast](https://www.ukrainianlessons.com/podcast/)
-
----
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| віддавати | /ʋiddɑˈʋɑtɪ/ | to give (away) | verb | — | віддавати перевагу |
-| перевага | /pɛrɛˈʋɑɦɑ/ | preference, advantage | noun | f | Dative: перевазі |
-| волити | /ʋɔˈlɪtɪ/ | to prefer | verb | — | formal |
-| краще | /ˈkrɑʃt͡ʃɛ/ | better | adv | — | comparative adverb |
-| гірше | /ˈɦirʃɛ/ | worse | adv | — | comparative adverb |
-| легше | /ˈlɛɦʃɛ/ | easier | adv | — | comparative adverb |
-| важче | /ˈʋɑʒt͡ʃɛ/ | harder | adv | — | comparative adverb |
-| цікавіше | /t͡siˈkɑʋiʃɛ/ | more interesting | adv | — | comparative adverb |
-| нудніше | /nudˈniʃɛ/ | more boring | adv | — | comparative adverb |
-| корисніше | /kɔˈrɪsniʃɛ/ | more useful | adv | — | comparative adverb |
-| зручніше | /zrut͡ʃˈniʃɛ/ | more convenient | adv | — | comparative adverb |
-| дорожче | /dɔˈrɔʒt͡ʃɛ/ | more expensive | adv | — | comparative adverb |
-| дешевше | /dɛˈʃɛʋʃɛ/ | cheaper | adv | — | comparative adverb |
-| швидше | /ˈʃʋɪdʃɛ/ | faster | adv | — | comparative adverb |
-| повільніше | /pɔˈʋilʲniʃɛ/ | slower | adv | — | comparative adverb |
-| ефективніше | /ɛfɛkˈtɪʋniʃɛ/ | more effective | adv | — | comparative adverb |
-| практичніше | /prɑkˈtɪt͡ʃniʃɛ/ | more practical | adv | — | comparative adverb |
-| комфортніше | /kɔmfɔrtˈniʃɛ/ | more comfortable | adv | — | comparative adverb |
-| шкідливіше | /ʃkidˈlɪʋiʃɛ/ | more harmful | adv | — | comparative adverb |
-| варіант | /ʋɑriˈɑnt/ | option, variant | n | m | - |
-| смак | /smɑk/ | taste | n | m | на смак (to taste) |
-| думка | /ˈdumkɑ/ | thought, opinion | n | f | на мою думку (in my opinion) |
-| вищий | /ˈʋɪʃtʃɪj/ | higher, comparative | adj | m | degree of comparison |
-| найвищий | /nɑjˈʋɪʃtʃɪj/ | highest, superlative | adj | m | degree of comparison |
 
 ---

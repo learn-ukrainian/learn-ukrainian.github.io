@@ -14,7 +14,7 @@ objectives:
   - Discuss university life: лекція, іспит, студент
   - Differentiate study verbs: вчитися, вивчати
   - Describe learning materials: підручник, зошит
-vocab_count: 30
+vocab_count: 28
 ---
 
 # Education & Learning
@@ -212,29 +212,3 @@ Keep learning! Education is the key to the future. Good luck on your path to flu
 > **Grammar Guide:** [Ukrainian Grammar](https://www.ukrainianlessons.com/ukrainian-tenses/) — Grammar overview
 >
 > **Interactive:** [Talk Ukrainian](https://talkukrainian.com/) — Practice exercises
-
-# Vocabulary
-
-| Word | IPA | English | POS | Gender | Note |
-|------|-----|---------|-----|--------|------|
-| клас | /klas/ | class/grade | noun | m | |
-| урок | /uˈrɔk/ | lesson | noun | m | |
-| учень | /ˈutʃenʲ/ | pupil | noun | m | |
-| факультет | /fakulʲˈtɛt/ | faculty | noun | m | |
-| лекція | /ˈlɛktsʲija/ | lecture | noun | f | |
-
-| семінар | /semiˈnar/ | seminar | noun | m | |
-| іспит | /ˈispɪt/ | exam | noun | m | |
-| залік | /ˈzalik/ | credit/test | noun | m | |
-| диплом | /dɪˈplɔm/ | diploma | noun | m | |
-| підручник | /pidˈrutʃnɪk/ | textbook | noun | m | |
-| дошка | /ˈdɔʃka/ | board | noun | f | |
-| предмет | /predˈmɛt/ | subject | noun | m | |
-
-| навчатися | /naʋˈtʃatɪsʲa/ | to learn/study | verb | - | |
-| складати | /sklaˈdatɪ/ | to take (exam) | verb | - | |
-| конспект | /konˈspɛkt/ | notes | noun | m | |
-| бібліотека | /biblioˈtɛka/ | library | noun | f | |
-| парта | /ˈparta/ | school desk | noun | f | |
-| сесія | /ˈsɛsʲija/ | exam period | noun | f | |
-
