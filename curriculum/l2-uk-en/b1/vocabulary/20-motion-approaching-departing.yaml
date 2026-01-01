@@ -99,17 +99,17 @@ items:
   translation: gave a lift
   pos: noun
   gender: m
-- lemma: підйти
-  ipa: /piˈdjtɪ/
-  translation: to approach (typo)
+- lemma: підійти
+  ipa: /pidiˈjtɪ/
+  translation: to approach
   pos: verb
 - lemma: піднести
   ipa: /pidnɛsˈtɪ/
   translation: to lift
   pos: verb
-- lemma: підїхати
+- lemma: під'їхати
   ipa: /pidˈjixatɪ/
-  translation: to drive up (typo)
+  translation: to drive up
   pos: verb
   gender: m
 - lemma: рецепція

@@ -138,6 +138,36 @@ Validate ALL Ukrainian text against these sources:
 - Report persistent issues
 - Ask user for guidance
 
+### Step 5b: Vocabulary Sync Check (B2+)
+
+**For B2+ modules (no embedded vocabulary tables):**
+
+If content was modified, check vocabulary alignment:
+
+1. **Identify new vocabulary** in updated content:
+   - Look for Ukrainian words used in examples, dialogues, explanations
+   - Compare against existing vocabulary YAML
+
+2. **If new vocabulary found:**
+   ```yaml
+   # Add to existing {level}/vocabulary/{slug}.yaml
+   - lemma: нове_слово
+     ipa: ''          # Empty for enrichment
+     translation: ''
+     pos: noun
+     gender: m
+   ```
+
+3. **Run enrichment** for new entries:
+   ```bash
+   .venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml
+   ```
+
+4. **Validate:**
+   ```bash
+   .venv/bin/python scripts/global_vocab_audit.py --level {level}
+   ```
+
 ### Step 6: PASS - Run Full Pipeline
 
 When audit passes, run the full validation pipeline:

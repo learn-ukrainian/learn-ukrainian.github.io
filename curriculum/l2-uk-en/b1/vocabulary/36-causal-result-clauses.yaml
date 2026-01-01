@@ -46,9 +46,9 @@ items:
   translation: unresolved
   pos: adj
   gender: f
-- lemma: переглянити
-  ipa: /pɛrɛˈhlʲanɪtɪ/
-  translation: to review (typo)
+- lemma: переглянути
+  ipa: /pɛrɛˈhlʲanutɪ/
+  translation: to review
   pos: verb
 - lemma: переноситися
   ipa: /pɛrɛˈnɔsɪtɪsʲa/

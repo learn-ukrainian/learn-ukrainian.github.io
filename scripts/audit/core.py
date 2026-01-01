@@ -700,10 +700,10 @@ def audit_module(file_path: str) -> bool:
     core_cleaned = clean_for_stats(core_no_tables)
     total_words = len(core_cleaned.split())
 
-    # Engagement pattern
+    # Engagement pattern - includes B2+ history/cultural callouts
     engagement_pattern = re.compile(
         r'(>\s*[💡⚡🎬🎭🔗🌍🎁🗣️🏠🧭🚌🚇🎟️📱🕵️🌤️🌦️🎱🔮🇺🇦🕰️❓🛠️💂🥪🍺🛍️🏫🏥💊👵🔬🎨🔄📅🍃❄️🚂⏳📚🍲🥣🥗🥙🥚🥛🧩⚠️🛑🎯🎮])|'
-        r'(>\s*\[!(note|tip|warning|caution|important|cultural)\])'
+        r'(>\s*\[!(note|tip|warning|caution|important|cultural|history-bite|myth-buster|quote|context|analysis|source|legacy|reflection)\])'
     )
     engagement_count = len(engagement_pattern.findall(content))
 

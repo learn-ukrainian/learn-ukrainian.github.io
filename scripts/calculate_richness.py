@@ -460,38 +460,54 @@ def extract_level(file_path: Union[str, Path, None]) -> str:
 
 
 def extract_module_type(content: str, file_path: Union[str, Path, None] = None) -> str:
-    """Extract module type from frontmatter pedagogy field."""
-    # Try to parse frontmatter
+    """Extract module type from frontmatter or YAML sidecar."""
+    fm = None
+
+    # Try to parse embedded frontmatter first
     if content.startswith('---'):
         parts = content.split('---', 2)
         if len(parts) >= 3:
             try:
                 fm = yaml.safe_load(parts[1])
-                if fm:
-                    # Check focus field FIRST (highest priority)
-                    focus = str(fm.get('focus', '')).lower().strip()
-                    if focus in MODULE_TYPE_MAP:
-                        return MODULE_TYPE_MAP[focus]
-
-                    # Then check pedagogy field
-                    pedagogy = str(fm.get('pedagogy', '')).lower().strip()
-                    if pedagogy in MODULE_TYPE_MAP:
-                        return MODULE_TYPE_MAP[pedagogy]
-
-                    # Check phase field for hints
-                    phase = str(fm.get('phase', '')).lower()
-                    if 'history' in phase:
-                        return 'history'
-                    elif 'biography' in phase or 'biographies' in phase:
-                        return 'biography'
-                    elif 'style' in phase or 'stylistic' in phase:
-                        return 'style'
-                    elif 'academic' in phase or 'sociolinguistic' in phase:
-                        return 'academic'
-                    elif 'checkpoint' in phase:
-                        return 'checkpoint'
             except yaml.YAMLError:
                 pass
+
+    # If no embedded frontmatter, try YAML sidecar
+    if not fm and file_path:
+        path = Path(file_path) if isinstance(file_path, str) else file_path
+        slug = path.stem
+        sidecar_path = path.parent / 'meta' / f'{slug}.yaml'
+        if sidecar_path.exists():
+            try:
+                with open(sidecar_path, 'r', encoding='utf-8') as f:
+                    fm = yaml.safe_load(f)
+            except (yaml.YAMLError, IOError):
+                pass
+
+    # Process frontmatter (from either source)
+    if fm:
+        # Check focus field FIRST (highest priority)
+        focus = str(fm.get('focus', '')).lower().strip()
+        if focus in MODULE_TYPE_MAP:
+            return MODULE_TYPE_MAP[focus]
+
+        # Then check pedagogy field
+        pedagogy = str(fm.get('pedagogy', '')).lower().strip()
+        if pedagogy in MODULE_TYPE_MAP:
+            return MODULE_TYPE_MAP[pedagogy]
+
+        # Check phase field for hints
+        phase = str(fm.get('phase', '')).lower()
+        if 'history' in phase:
+            return 'history'
+        elif 'biography' in phase or 'biographies' in phase:
+            return 'biography'
+        elif 'style' in phase or 'stylistic' in phase:
+            return 'style'
+        elif 'academic' in phase or 'sociolinguistic' in phase:
+            return 'academic'
+        elif 'checkpoint' in phase:
+            return 'checkpoint'
 
     # Fallback: infer from path
     path_str = str(file_path).lower()
@@ -534,12 +550,29 @@ def get_prose_content(content: str) -> str:
 
 
 def count_engagement_boxes(content: str) -> int:
-    """Count engagement boxes (💡🎬🌍🎯🎮 and callouts)."""
+    """Count engagement boxes (💡🎬🌍🎯🎮 and callouts).
+
+    Includes B2+ history/cultural callout types.
+    """
     patterns = [
+        # Standard callouts
         r'>\s*\[!tip\]',
         r'>\s*\[!note\]',
         r'>\s*\[!observe\]',
         r'>\s*\[!warning\]',
+        r'>\s*\[!caution\]',
+        r'>\s*\[!important\]',
+        r'>\s*\[!cultural\]',
+        # B2+ history/cultural callouts
+        r'>\s*\[!history-bite\]',
+        r'>\s*\[!myth-buster\]',
+        r'>\s*\[!quote\]',
+        r'>\s*\[!context\]',
+        r'>\s*\[!analysis\]',
+        r'>\s*\[!source\]',
+        r'>\s*\[!legacy\]',
+        r'>\s*\[!reflection\]',
+        # Emoji patterns
         r'💡\s*\*\*',
         r'🎬\s*\*\*',
         r'🌍\s*\*\*',

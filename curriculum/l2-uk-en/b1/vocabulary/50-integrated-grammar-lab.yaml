@@ -46,9 +46,9 @@ items:
   translation: civil servant
   pos: noun
   gender: m
-- lemma: дроб
-  ipa: /drɔb/
-  translation: fraction (typo)
+- lemma: дріб
+  ipa: /drib/
+  translation: fraction
   pos: noun
   gender: f
 - lemma: діточок
@@ -69,11 +69,6 @@ items:
   translation: depersonalization
   pos: noun
   gender: f
-- lemma: кищві
-  ipa: /ˈkɪʃt͡ʃvʲi/
-  translation: ??? (typo)
-  pos: propn
-  gender: m
 - lemma: командній
   ipa: /kɔˈmandnʲij/
   translation: command (loc.)
@@ -84,11 +79,6 @@ items:
   translation: adjustment
   pos: noun
   gender: n
-- lemma: меро
-  ipa: /ˈmɛrɔ/
-  translation: ??? (typo)
-  pos: propn
-  gender: m
 - lemma: нагородити
   ipa: /nahɔrɔˈdɪtɪ/
   translation: to reward
@@ -135,9 +125,9 @@ items:
   ipa: /pɔsɪˈdʲitɪ/
   translation: to sit
   pos: verb
-- lemma: провкта
-  ipa: /prɔˈvkta/
-  translation: project (typo)
+- lemma: проєкт
+  ipa: /prɔˈjɛkt/
+  translation: project
   pos: propn
   gender: m
 - lemma: проектний
@@ -155,9 +145,9 @@ items:
   translation: seriousness
   pos: noun
   gender: f
-- lemma: сніданати
-  ipa: /snʲiˈdanatɪ/
-  translation: to have breakfast (typo)
+- lemma: снідати
+  ipa: /ˈsnʲidatɪ/
+  translation: to have breakfast
   pos: verb
 - lemma: стажер
   ipa: /staˈʒɛr/
@@ -174,11 +164,6 @@ items:
   translation: neighborly
   pos: noun
   gender: m
-- lemma: сяодовні
-  ipa: /sʲaɔˈdɔu̯nʲi/
-  translation: ??? (typo)
-  pos: noun
-  gender: n
 - lemma: сіренький
   ipa: /sʲiˈrɛnʲkɪj/
   translation: grey (dim.)
@@ -203,8 +188,8 @@ items:
   ipa: /izɔˈlʲɔvanɔ/
   translation: isolatedly
   pos: adv
-- lemma: інструментарія
-  ipa: /instrumɛnˈtarʲija/
-  translation: toolkit (typo)
+- lemma: інструментарій
+  ipa: /instrumɛnˈtarʲij/
+  translation: toolkit
   pos: noun
   gender: m

@@ -21,9 +21,9 @@ items:
   translation: deaf/dead (end)
   pos: adj
   gender: m
-- lemma: довітися
-  ipa: /dɔˈvʲitɪsʲa/
-  translation: to find out (typo)
+- lemma: довідатися
+  ipa: /dɔˈvidadɪsʲa/
+  translation: to find out
   pos: verb
 - lemma: ембодімент
   ipa: /ɛmˈbɔdʲimɛnt/
@@ -72,9 +72,9 @@ items:
   ipa: /nablɪˈʒatɪsʲa/
   translation: to approach
   pos: verb
-- lemma: напрол
-  ipa: /naˈprɔl/
-  translation: ahead (typo)
+- lemma: напролом
+  ipa: /naprɔˈlɔm/
+  translation: straight through
   pos: noun
   gender: m
 - lemma: непритомність

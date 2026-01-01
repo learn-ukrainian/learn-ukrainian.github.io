@@ -11,14 +11,14 @@ items:
   ipa: /baˈʒajut͡ʃɪj/
   translation: willing
   pos: adj
-- lemma: бувший
-  ipa: /ˈbuu̯ʃɪj/
-  translation: former (Surzhyk)
+- lemma: колишній
+  ipa: /kɔˈlɪʃnʲij/
+  translation: former
   pos: adj
   gender: m
-- lemma: біднійший
-  ipa: /bidˈnʲijʃɪj/
-  translation: poorer (typo)
+- lemma: бідніший
+  ipa: /bidˈnʲiʃɪj/
+  translation: poorer
   pos: adj
   gender: f
 - lemma: вкривати
@@ -29,15 +29,6 @@ items:
   ipa: /uplɪˈvajut͡ʃɪj/
   translation: influencing
   pos: adj
-- lemma: відбуваючийся
-  ipa: /vidbuˈvajut͡ʃɪjsʲa/
-  translation: happening (Surzhyk)
-  pos: adj
-- lemma: відбуваючіся
-  ipa: /vidbuˈvajut͡ʃisʲa/
-  translation: happening (typo)
-  pos: noun
-  gender: n
 - lemma: відвідуючий
   ipa: /vidˈvidujut͡ʃɪj/
   translation: visiting
@@ -103,11 +94,6 @@ items:
   translation: benefit (trunc)
   pos: noun
   gender: f
-- lemma: маючий
-  ipa: /ˈmajut͡ʃɪj/
-  translation: having (Surzhyk)
-  pos: adj
-  gender: f
 - lemma: обіцяючий
   ipa: /ɔbiˈt͡sʲajut͡ʃɪj/
   translation: promising
@@ -140,11 +126,6 @@ items:
   translation: yellowed
   pos: adj
   gender: m
-- lemma: пожовкний
-  ipa: /pɔˈʒɔu̯knɪj/
-  translation: yellowed (typo)
-  pos: adj
-  gender: f
 - lemma: посивілий
   ipa: /pɔsɪˈvʲilɪj/
   translation: gray-haired
@@ -164,9 +145,9 @@ items:
   translation: newcomer
   pos: adj
   gender: m
-- lemma: причастність
-  ipa: /prɪˈt͡ʃastnʲisʲtʲ/
-  translation: involvement (typo)
+- lemma: причетність
+  ipa: /prɪˈt͡ʃɛtnʲisʲtʲ/
+  translation: involvement
   pos: noun
   gender: f
 - lemma: приємніший
@@ -174,9 +155,9 @@ items:
   translation: more pleasant
   pos: adj
   gender: m
-- lemma: проживаючь
-  ipa: /prɔʒɪˈvajut͡ʃʲ/
-  translation: residing (typo)
+- lemma: проживаючи
+  ipa: /prɔʒɪˈvajut͡ʃɪ/
+  translation: residing
   pos: noun
   gender: m
 - lemma: пуризм
@@ -194,9 +175,9 @@ items:
   translation: regulations
   pos: noun
   gender: m
-- lemma: слідуючий
-  ipa: /ˈslʲidujut͡ʃɪj/
-  translation: next (Surzhyk)
+- lemma: наступний
+  ipa: /naˈstupnɪj/
+  translation: next
   pos: adj
 - lemma: спотворений
   ipa: /spɔˈtvɔrɛnɪj/
@@ -206,10 +187,5 @@ items:
 - lemma: співаючий
   ipa: /spiˈvajut͡ʃɪj/
   translation: singing
-  pos: adj
-  gender: m
-- lemma: співпадаючий
-  ipa: /spiu̯paˈdajut͡ʃɪj/
-  translation: coinciding (Surzhyk)
   pos: adj
   gender: m

@@ -16,13 +16,13 @@ items:
   translation: Berkut (loc.)
   pos: propn
   gender: m
-- lemma: бы
-  ipa: /bɨ/
-  translation: would (Rus.)
+- lemma: би
+  ipa: /bɪ/
+  translation: would
   pos: other
-- lemma: гравка
-  ipa: /ˈhrau̯ka/
-  translation: player (typo)
+- lemma: гравець
+  ipa: /hraˈvɛt͡sʲ/
+  translation: player
   pos: noun
   gender: m
 - lemma: жалкувати
@@ -109,9 +109,9 @@ items:
   translation: be sick (imp.)
   pos: adj
   gender: f
-- lemma: щастивіший
-  ipa: /ʃt͡ʃastɪˈviʃɪj/
-  translation: happier (typo)
+- lemma: щасливіший
+  ipa: /ʃt͡ʃaslɪˈvʲiʃɪj/
+  translation: happier
   pos: adj
   gender: f
 - lemma: ґеральт

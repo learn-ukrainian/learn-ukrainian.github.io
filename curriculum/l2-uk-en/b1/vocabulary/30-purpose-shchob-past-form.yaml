@@ -70,27 +70,27 @@ items:
   translation: Olya (voc.)
   pos: propn
   gender: f
-- lemma: паралеле
-  ipa: /paraˈlɛlɛ/
-  translation: parallel (typo?)
+- lemma: паралель
+  ipa: /paraˈlɛlʲ/
+  translation: parallel
   pos: noun
   gender: f
 - lemma: побажати
   ipa: /pɔbaˈʒatɪ/
   translation: to wish
   pos: verb
-- lemma: попрости
-  ipa: /pɔprɔˈstɪ/
-  translation: to ask (typo)
+- lemma: попросити
+  ipa: /pɔprɔˈsɪtɪ/
+  translation: to ask
   pos: verb
 - lemma: пропилососити
   ipa: /prɔpɪlɔˈsɔsɪtɪ/
   translation: to vacuum
   pos: verb
   gender: m
-- lemma: прошедшее
-  ipa: /prɔˈʃɛdʃɛje/
-  translation: past (Rus.)
+- lemma: минуле
+  ipa: /mɪˈnulɛ/
+  translation: past
   pos: other
 - lemma: розкуповувати
   ipa: /rɔzkuˈpɔvuvatɪ/
@@ -115,9 +115,9 @@ items:
   translation: m. (masc.)
   pos: noun
   gender: m
-- lemma: чтобы
-  ipa: /ˈt͡ʃtɔbɨ/
-  translation: in order to (Rus.)
+- lemma: щоб
+  ipa: /ʃt͡ʃɔb/
+  translation: in order to
   pos: other
 - lemma: чудовисько
   ipa: /t͡ʃuˈdɔvɪsʲkɔ/

@@ -11,9 +11,9 @@ items:
   translation: location
   pos: noun
   gender: n
-- lemma: который
-  ipa: /kaˈtorɨj/
-  translation: which (Rus.)
+- lemma: який
+  ipa: /jaˈkɪj/
+  translation: which
   pos: other
 - lemma: кіото
   ipa: /kiˈɔtɔ/

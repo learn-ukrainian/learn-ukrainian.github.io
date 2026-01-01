@@ -171,6 +171,56 @@ Box types:
 - [ ] Specific Ukrainian locations used
 - [ ] Grammar elegance noted
 
+## Vocabulary YAML Workflow (B2+)
+
+**For B2+ modules without embedded vocabulary tables:**
+
+After writing content, create the vocabulary YAML file:
+
+### Step 1: Create Vocabulary YAML
+
+Create `{level}/vocabulary/{slug}.yaml`:
+
+```yaml
+module: 111-module-slug
+level: B2
+version: '2.0'
+items:
+  - lemma: слово
+    ipa: ''          # Empty - will be enriched
+    translation: ''  # Empty - will be enriched
+    pos: noun
+    gender: m
+
+  - lemma: говорити
+    ipa: ''
+    translation: ''
+    pos: verb
+```
+
+**Required fields:**
+- `lemma` - Base form (infinitive for verbs, nominative singular for nouns)
+- `pos` - Part of speech (noun, verb, adj, adv, etc.)
+- `gender` - Required for nouns (m, f, n, pl)
+
+**Leave empty for enrichment:**
+- `ipa` - Filled by enrichment script
+- `translation` - Filled by enrichment script
+
+### Step 2: Run Enrichment
+
+```bash
+.venv/bin/python scripts/enrich_yaml_vocab.py curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml
+```
+
+### Step 3: Validate
+
+```bash
+.venv/bin/python scripts/global_vocab_audit.py --level {level}
+```
+
+---
+
 ## DO NOT
 
 - Write the Activities section (Stage 3)

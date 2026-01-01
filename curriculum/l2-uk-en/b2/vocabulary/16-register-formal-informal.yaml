@@ -2,353 +2,353 @@ module: 16-register-formal-informal
 level: B2
 version: '2.0'
 items:
-  - lemma: близький
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: близькість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вдячний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: вельмишановний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: взаємний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: годитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: гоп
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: господин
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: госпожа
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: декан
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: дзвінок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: директоре
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: добродій
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: добродійка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: домовити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: дружність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: етикет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: ефір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: завчасно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: звертань
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ковальчук
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: комбінація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: курсовий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ласкавий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: лексичний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: маша
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: нагода
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: надішлати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: неповага
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: норм
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: ознайтися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: окрім
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: олександре
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: ольго
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: перебувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: передбачатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: переписка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: перескочити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: перестрахуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: петрович
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: петрівно
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: плюс
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: повага
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: подяка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: посередництво
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: поспілкуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прийнятно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: присвійний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: присутність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: приєднатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: проконсультуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: прізвище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: підвезти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підліток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: саша
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: f
-  - lemma: святковий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: середовище
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: сигналізувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: синонім
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: соціолінгвістичний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: спланувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: співрозмовник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: створюватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: стриманий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: танець
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: телеведучий
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: телеглядач
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: титул
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: формально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: французький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: фуршет
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: шановний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: іванович
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: інтимній
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: інфий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: ініціювати
-    ipa: ''
-    translation: ''
-    pos: verb
+- lemma: близький
+  ipa: /ˈblɪzʲkɪj/
+  translation: close, near
+  pos: adj
+- lemma: близькість
+  ipa: /ˈblɪzʲkʲistʲ/
+  translation: closeness
+  pos: noun
+  gender: f
+- lemma: вдячний
+  ipa: /wˈdʲɑt͡ʃnɪj/
+  translation: grateful
+  pos: adj
+- lemma: вельмишановний
+  ipa: /wɛlʲmɪˈʃɑnownɪj/
+  translation: highly esteemed
+  pos: adj
+  gender: m
+- lemma: взаємний
+  ipa: /wzɐˈjɛmnɪj/
+  translation: mutual
+  pos: adj
+  gender: f
+- lemma: годитися
+  ipa: /ɦoˈdɪtɪsʲɑ/
+  translation: to be appropriate
+  pos: verb
+- lemma: гоп
+  ipa: /ɦop/
+  translation: hop (interj.)
+  pos: other
+- lemma: господин
+  ipa: /ɦospoˈdɪn/
+  translation: mister (formal)
+  pos: other
+- lemma: госпожа
+  ipa: /ɦospoˈʒɑ/
+  translation: madam (formal)
+  pos: noun
+  gender: m
+- lemma: декан
+  ipa: /dɛˈkɑn/
+  translation: dean
+  pos: noun
+  gender: m
+- lemma: дзвінок
+  ipa: /ˈdzwʲinok/
+  translation: call, ring
+  pos: noun
+  gender: m
+- lemma: директоре
+  ipa: /dɪˈrɛktorɛ/
+  translation: director (voc.)
+  pos: noun
+  gender: m
+- lemma: добродій
+  ipa: /dobroˈdʲij/
+  translation: gentleman, sir
+  pos: noun
+  gender: m
+- lemma: добродійка
+  ipa: /dobroˈdʲijkɑ/
+  translation: lady, madam
+  pos: noun
+  gender: f
+- lemma: домовити
+  ipa: /domoˈwɪtɪ/
+  translation: to arrange
+  pos: verb
+- lemma: дружність
+  ipa: /ˈdruʒnʲistʲ/
+  translation: friendliness
+  pos: noun
+  gender: f
+- lemma: етикет
+  ipa: /ɛtɪˈkɛt/
+  translation: etiquette
+  pos: noun
+  gender: m
+- lemma: ефір
+  ipa: /ɛˈfʲir/
+  translation: broadcast, air
+  pos: noun
+  gender: m
+- lemma: завчасно
+  ipa: /zɐwˈt͡ʃɑsno/
+  translation: in advance
+  pos: adv
+- lemma: звертань
+  ipa: /ˈzwɛrtɑnʲ/
+  translation: forms of address (gen.pl.)
+  pos: noun
+  gender: n
+- lemma: ковальчук
+  ipa: /kowɐlʲˈt͡ʃuk/
+  translation: Kovalchuk (name)
+  pos: propn
+  gender: m
+- lemma: комбінація
+  ipa: /kombʲiˈnɑt͡sʲijɑ/
+  translation: combination
+  pos: noun
+  gender: f
+- lemma: курсовий
+  ipa: /kurˈsowɪj/
+  translation: course (adj.)
+  pos: adj
+  gender: f
+- lemma: ласкавий
+  ipa: /lɑsˈkɑwɪj/
+  translation: kind, gracious
+  pos: adj
+- lemma: лексичний
+  ipa: /lɛkˈsɪt͡ʃnɪj/
+  translation: lexical
+  pos: adj
+- lemma: маша
+  ipa: /ˈmɑʃɑ/
+  translation: Masha (name)
+  pos: propn
+  gender: f
+- lemma: нагода
+  ipa: /nɐˈɦodɑ/
+  translation: occasion, opportunity
+  pos: noun
+  gender: f
+- lemma: надішлати
+  ipa: /nɐˈdʲiʃlɑtɪ/
+  translation: to send
+  pos: verb
+- lemma: неповага
+  ipa: /nɛpoˈwɑɦɑ/
+  translation: disrespect
+  pos: noun
+  gender: f
+- lemma: норм
+  ipa: /norm/
+  translation: okay, normal (slang)
+  pos: other
+- lemma: ознайтися
+  ipa: /oznɐjˈtɪsʲɑ/
+  translation: to get acquainted
+  pos: verb
+- lemma: окрім
+  ipa: /oˈkrʲim/
+  translation: except, besides
+  pos: other
+- lemma: олександре
+  ipa: /olɛkˈsɑndrɛ/
+  translation: Oleksandr (voc.)
+  pos: propn
+  gender: m
+- lemma: ольго
+  ipa: /ˈolʲɦo/
+  translation: Olha (voc.)
+  pos: propn
+  gender: m
+- lemma: перебувати
+  ipa: /pɛrɛbuˈwɑtɪ/
+  translation: to stay, to be
+  pos: verb
+- lemma: передбачатися
+  ipa: /pɛrɛdbɑˈt͡ʃɑtɪsʲɑ/
+  translation: to be anticipated
+  pos: verb
+- lemma: переписка
+  ipa: /pɛrɛˈpɪskɑ/
+  translation: correspondence
+  pos: noun
+  gender: f
+- lemma: перескочити
+  ipa: /pɛrɛskoˈt͡ʃɪtɪ/
+  translation: to jump over
+  pos: verb
+- lemma: перестрахуватися
+  ipa: /pɛrɛstrɐxuˈwɑtɪsʲɑ/
+  translation: to play it safe
+  pos: verb
+- lemma: петрович
+  ipa: /pɛtˈrowɪt͡ʃ/
+  translation: Petrovych (patronymic)
+  pos: propn
+  gender: m
+- lemma: петрівно
+  ipa: /pɛtˈrʲiwno/
+  translation: Petrivna (voc.)
+  pos: propn
+  gender: m
+- lemma: плюс
+  ipa: /plʲus/
+  translation: plus
+  pos: other
+- lemma: повага
+  ipa: /poˈwɑɦɑ/
+  translation: respect
+  pos: noun
+  gender: f
+- lemma: подяка
+  ipa: /poˈdʲɑkɑ/
+  translation: gratitude, thanks
+  pos: noun
+  gender: f
+- lemma: посередництво
+  ipa: /posɛˈrɛdnɪt͡stwo/
+  translation: mediation
+  pos: noun
+  gender: n
+- lemma: поспілкуватися
+  ipa: /pospʲilkuˈwɑtɪsʲɑ/
+  translation: to chat
+  pos: verb
+- lemma: прийнятно
+  ipa: /prɪjˈnʲɑtno/
+  translation: acceptably
+  pos: adv
+- lemma: присвійний
+  ipa: /prɪˈswʲijnɪj/
+  translation: possessive
+  pos: adj
+  gender: m
+- lemma: присутність
+  ipa: /prɪˈsutnʲistʲ/
+  translation: presence
+  pos: noun
+  gender: f
+- lemma: приєднатися
+  ipa: /prɪjɛdˈnɑtɪsʲɑ/
+  translation: to join
+  pos: verb
+- lemma: проконсультуватися
+  ipa: /prokonsulʲtuˈwɑtɪsʲɑ/
+  translation: to consult
+  pos: verb
+- lemma: прізвище
+  ipa: /ˈprʲizwɪʃt͡ʃɛ/
+  translation: surname
+  pos: noun
+  gender: n
+- lemma: підвезти
+  ipa: /pʲidˈwɛztɪ/
+  translation: to give a ride
+  pos: verb
+- lemma: підліток
+  ipa: /pʲidˈlʲitok/
+  translation: teenager
+  pos: noun
+  gender: m
+- lemma: саша
+  ipa: /ˈsɑʃɑ/
+  translation: Sasha (name)
+  pos: propn
+  gender: f
+- lemma: святковий
+  ipa: /swʲɑtˈkowɪj/
+  translation: festive
+  pos: adj
+  gender: m
+- lemma: середовище
+  ipa: /sɛrɛˈdowɪʃt͡ʃɛ/
+  translation: environment
+  pos: noun
+  gender: n
+- lemma: сигналізувати
+  ipa: /sɪɦnɐlʲiˈzuwɑtɪ/
+  translation: to signal
+  pos: verb
+- lemma: синонім
+  ipa: /sɪˈnonʲim/
+  translation: synonym
+  pos: noun
+  gender: m
+- lemma: соціолінгвістичний
+  ipa: /sot͡sʲiolʲinɦwʲisˈtɪt͡ʃnɪj/
+  translation: sociolinguistic
+  pos: adj
+- lemma: спланувати
+  ipa: /splɐnuˈwɑtɪ/
+  translation: to plan
+  pos: verb
+- lemma: співрозмовник
+  ipa: /spʲiwrozmowˈnɪk/
+  translation: interlocutor
+  pos: noun
+  gender: m
+- lemma: створюватися
+  ipa: /stworʲuˈwɑtɪsʲɑ/
+  translation: to be created
+  pos: verb
+- lemma: стриманий
+  ipa: /strɪˈmɑnɪj/
+  translation: restrained
+  pos: adj
+- lemma: танець
+  ipa: /ˈtɑnɛt͡sʲ/
+  translation: dance
+  pos: noun
+  gender: m
+- lemma: телеведучий
+  ipa: /tɛlɛwɛˈdut͡ʃɪj/
+  translation: TV host
+  pos: noun
+  gender: m
+- lemma: телеглядач
+  ipa: /tɛlɛɦlʲɐˈdɑt͡ʃ/
+  translation: TV viewer
+  pos: noun
+  gender: m
+- lemma: титул
+  ipa: /ˈtɪtul/
+  translation: title
+  pos: noun
+  gender: m
+- lemma: формально
+  ipa: /forˈmɑlʲno/
+  translation: formally
+  pos: adv
+- lemma: французький
+  ipa: /frɐnˈt͡suzkɪj/
+  translation: French
+  pos: adj
+  gender: f
+- lemma: фуршет
+  ipa: /furˈʃɛt/
+  translation: buffet reception
+  pos: noun
+  gender: m
+- lemma: шановний
+  ipa: /ʃɐˈnownɪj/
+  translation: dear, respected
+  pos: adj
+  gender: m
+- lemma: іванович
+  ipa: /ʲiwɐˈnowɪt͡ʃ/
+  translation: Ivanovych (patronymic)
+  pos: propn
+  gender: m
+- lemma: інтимній
+  ipa: /ʲinˈtɪmnʲij/
+  translation: intimate
+  pos: adj
+  gender: f
+- lemma: інфий
+  ipa: /ˈʲinfɪj/
+  translation: informal (var.)
+  pos: adj
+  gender: f
+- lemma: ініціювати
+  ipa: /ʲinʲit͡sʲiˈjuwɑtɪ/
+  translation: to initiate
+  pos: verb

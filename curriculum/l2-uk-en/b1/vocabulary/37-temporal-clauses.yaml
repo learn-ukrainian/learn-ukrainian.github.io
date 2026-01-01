@@ -11,9 +11,9 @@ items:
   translation: to recognize
   pos: verb
   gender: m
-- lemma: едва
-  ipa: /jɛdˈva/
-  translation: barely (Rus.)
+- lemma: ледве
+  ipa: /ˈlɛdvɛ/
+  translation: barely
   pos: other
 - lemma: замовкнути
   ipa: /zaˈmɔu̯knutɪ/
@@ -29,11 +29,6 @@ items:
   translation: impatience
   pos: noun
   gender: f
-- lemma: ойно
-  ipa: /ˈɔjnɔ/
-  translation: just now (typo)
-  pos: noun
-  gender: n
 - lemma: остигати
   ipa: /ɔstɪˈhatɪ/
   translation: to cool down
@@ -62,9 +57,9 @@ items:
   translation: darker
   pos: adj
   gender: n
-- lemma: только
-  ipa: /ˈtolʲkə/
-  translation: only (Rus.)
+- lemma: тільки
+  ipa: /ˈtʲilʲkɪ/
+  translation: only
   pos: other
 - lemma: хронологічний
   ipa: /xrɔnɔlɔˈhʲit͡ʃnɪj/

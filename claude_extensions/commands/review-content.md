@@ -674,12 +674,52 @@ Reviewing A1...
 - Pedagogical approach
 - **Activities** (structural integrity, answer validity, linguistic accuracy)
 - **External resources** (relevance, accessibility)
+- **Vocabulary coverage** (B2+: content vocabulary exists in YAML)
 
 ❌ **Not Checked:**
 
-- Vocabulary YAML (separate audit)
+- Vocabulary YAML enrichment quality (separate audit)
 - Metadata YAML (separate audit)
 - Self-assessment sections
+
+---
+
+## Vocabulary Coverage Check (B2+)
+
+**For B2+ modules (no embedded vocabulary tables):**
+
+### Step: Verify Vocabulary Alignment
+
+1. **Check YAML exists:**
+   ```bash
+   ls curriculum/l2-uk-en/{level}/vocabulary/{slug}.yaml
+   ```
+
+2. **Identify content vocabulary:**
+   - Extract key Ukrainian terms from module content
+   - Focus on: new terminology, example sentences, dialogues
+
+3. **Compare against YAML:**
+   - All content vocabulary should exist in YAML
+   - Flag missing terms as action items
+
+4. **Action Items for Missing Vocabulary:**
+   ```yaml
+   # Add to {level}/vocabulary/{slug}.yaml
+   - lemma: missing_word
+     ipa: ''
+     translation: ''
+     pos: noun
+     gender: m
+   ```
+
+5. **After adding, run:**
+   ```bash
+   .venv/bin/python scripts/enrich_yaml_vocab.py path/to/file.yaml
+   .venv/bin/python scripts/global_vocab_audit.py --level {level}
+   ```
+
+**Note:** This is a SAFE FIX - vocabulary can be added without affecting module content.
 
 ## Important Notes
 

@@ -26,14 +26,14 @@ items:
   translation: Boryspil
   pos: propn
   gender: m
-- lemma: біббліотека
+- lemma: бібліотека
   ipa: /biblʲiɔˈtɛka/
-  translation: library (typo)
+  translation: library
   pos: noun
   gender: f
-- lemma: варійка
-  ipa: /vaˈrʲijka/
-  translation: emergency lights (typo)
+- lemma: аварійка
+  ipa: /avaˈrʲijka/
+  translation: emergency lights
   pos: noun
   gender: f
 - lemma: водіння
@@ -51,9 +51,9 @@ items:
   translation: dirt road
   pos: noun
   gender: f
-- lemma: давшати
-  ipa: /dau̯ˈʃatɪ/
-  translation: to lengthen (typo)
+- lemma: довшати
+  ipa: /ˈdɔu̯ʃatɪ/
+  translation: to lengthen
   pos: verb
 - lemma: дальній
   ipa: /ˈdalʲnʲij/
@@ -89,9 +89,9 @@ items:
   translation: lifehack
   pos: propn
   gender: m
-- lemma: лізити
-  ipa: /ˈlʲizɪtɪ/
-  translation: to climb (typo)
+- lemma: лізти
+  ipa: /lʲiztɪ/
+  translation: to climb
   pos: verb
 - lemma: матриця
   ipa: /ˈmatrɪt͡sʲa/
@@ -159,9 +159,9 @@ items:
   translation: peer
   pos: noun
   gender: m
-- lemma: розклати
-  ipa: /rɔzˈklatɪ/
-  translation: to lay out (typo)
+- lemma: розкласти
+  ipa: /rɔzˈklastɪ/
+  translation: to lay out
   pos: verb
 - lemma: сеньйор
   ipa: /sɛnʲˈjɔr/

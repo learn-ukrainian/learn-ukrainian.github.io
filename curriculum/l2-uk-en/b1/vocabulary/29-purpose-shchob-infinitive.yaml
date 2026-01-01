@@ -10,9 +10,9 @@ items:
   ipa: /dɔˈpizna/
   translation: until late
   pos: adv
-- lemma: допізний
-  ipa: /dɔˈpiznɪj/
-  translation: late (typo?)
+- lemma: пізній
+  ipa: /ˈpiznʲij/
+  translation: late
   pos: adj
   gender: f
 - lemma: задля
@@ -50,9 +50,9 @@ items:
   ipa: /prɔhuˈlʲatɪsʲa/
   translation: to take a walk
   pos: verb
-- lemma: риториця
-  ipa: /rɪtɔˈrɪt͡sʲa/
-  translation: rhetoric (typo?)
+- lemma: риторика
+  ipa: /rɪˈtɔrɪka/
+  translation: rhetoric
   pos: noun
   gender: f
 - lemma: розбагатіти

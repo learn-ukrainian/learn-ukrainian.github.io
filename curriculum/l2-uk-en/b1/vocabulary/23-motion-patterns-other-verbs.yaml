@@ -86,9 +86,9 @@ items:
   translation: most dynamic
   pos: adj
   gender: m
-- lemma: нишко
-  ipa: /ˈnɪʃkɔ/
-  translation: stealthily (typo)
+- lemma: нишком
+  ipa: /ˈnɪʃkɔm/
+  translation: stealthily
   pos: noun
   gender: m
 - lemma: перестаратися
@@ -185,26 +185,16 @@ items:
   translation: stack
   pos: noun
   gender: m
-- lemma: суперсити
-  ipa: /supɛrˈsɪtɪ/
-  translation: ??? (typo)
-  pos: verb
-  gender: f
 - lemma: тестовий
   ipa: /ˈtɛstɔvɪj/
   translation: test (adj)
   pos: adj
   gender: n
-- lemma: тишк
-  ipa: /tɪʃk/
-  translation: quietly (typo)
+- lemma: тишком
+  ipa: /ˈtɪʃkɔm/
+  translation: quietly
   pos: noun
   gender: m
-- lemma: уваський
-  ipa: /uˈvasʲkɪj/
-  translation: ??? (typo)
-  pos: adj
-  gender: n
 - lemma: інхоатив
   ipa: /inxɔaˈtɪu̯/
   translation: inchoative

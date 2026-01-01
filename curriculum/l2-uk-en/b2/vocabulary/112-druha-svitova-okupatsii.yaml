@@ -1,0 +1,137 @@
+module: 112-druha-svitova-okupatsii
+level: B2
+version: '2.0'
+items:
+- lemma: друга світова
+  ipa: /ˈdruɦa svʲiˈtɔva/
+  translation: World War II
+  pos: phrase
+- lemma: окупація
+  ipa: /okʊˈpat͡sʲija/
+  translation: occupation
+  pos: noun
+  gender: f
+- lemma: режим
+  ipa: /rɛˈʒɪm/
+  translation: regime
+  pos: noun
+  gender: m
+- lemma: пакт
+  ipa: /pakt/
+  translation: pact
+  pos: noun
+  gender: m
+- lemma: Молотов
+  ipa: /ˈmɔlɔtɔu̯/
+  translation: Molotov
+  pos: propn
+  gender: m
+- lemma: Ріббентроп
+  ipa: /ˈrʲibːɛntrɔp/
+  translation: Ribbentrop
+  pos: propn
+  gender: m
+- lemma: нацист
+  ipa: /naˈt͡sɪst/
+  translation: Nazi
+  pos: noun
+  gender: m
+- lemma: остарбайтер
+  ipa: /ɔstarˈbajter/
+  translation: Ostarbeiter (forced laborer from the East)
+  pos: noun
+  gender: m
+- lemma: примусова праця
+  ipa: /prɪmuˈsɔva ˈprat͡sʲa/
+  translation: forced labor
+  pos: phrase
+- lemma: полон
+  ipa: /pɔˈɫɔn/
+  translation: captivity
+  pos: noun
+  gender: m
+- lemma: Бабин Яр
+  ipa: /ˈbabɪn jar/
+  translation: Babyn Yar
+  pos: propn
+  gender: m
+- lemma: Голокост
+  ipa: /ɦɔɫɔˈkɔst/
+  translation: Holocaust
+  pos: noun
+  gender: m
+- lemma: геноцид
+  ipa: /ɦɛnɔˈt͡sɪd/
+  translation: genocide
+  pos: noun
+  gender: m
+- lemma: терор
+  ipa: /tɛˈrɔr/
+  translation: terror
+  pos: noun
+  gender: m
+- lemma: визволення
+  ipa: /vɪzˈvɔɫɛnʲːa/
+  translation: liberation
+  pos: noun
+  gender: n
+- lemma: спротив
+  ipa: /ˈsprɔtɪu̯/
+  translation: resistance
+  pos: noun
+  gender: m
+- lemma: підпілля
+  ipa: /pidˈpilʲːa/
+  translation: underground (movement)
+  pos: noun
+  gender: n
+- lemma: фронт
+  ipa: /frɔnt/
+  translation: front (military)
+  pos: noun
+  gender: m
+- lemma: загарбник
+  ipa: /zaˈɦarbnɪk/
+  translation: invader
+  pos: noun
+  gender: m
+- lemma: розстріл
+  ipa: /rɔzˈstril/
+  translation: execution (by shooting)
+  pos: noun
+  gender: m
+- lemma: трагедія
+  ipa: /traˈɦɛdʲija/
+  translation: tragedy
+  pos: noun
+  gender: f
+- lemma: жертва
+  ipa: /ˈʒɛrtva/
+  translation: victim
+  pos: noun
+  gender: f
+- lemma: злочин
+  ipa: /ˈzɫɔt͡ʃɪn/
+  translation: crime
+  pos: noun
+  gender: m
+- lemma: меморіал
+  ipa: /mɛmɔrʲiˈal/
+  translation: memorial
+  pos: noun
+  gender: m
+- lemma: пам'ять
+  ipa: /ˈpamjatʲ/
+  translation: memory
+  pos: noun
+  gender: f
+- lemma: суверенітет
+  ipa: /suvɛrɛnʲiˈtɛt/
+  translation: sovereignty
+  pos: noun
+  gender: m
+- lemma: деколонізація
+  ipa: /dɛkɔɫɔnʲiˈzat͡sʲija/
+  translation: decolonization
+  pos: noun
+  gender: f

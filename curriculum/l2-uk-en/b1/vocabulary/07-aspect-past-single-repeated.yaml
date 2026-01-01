@@ -21,9 +21,9 @@ items:
   ipa: /ɔdnɔˈraz/
   translation: once
   pos: adj
-- lemma: поверталати
-  ipa: /pɔvɛrˈtaɫatɪ/
-  translation: to return (typo)
+- lemma: повертати
+  ipa: /pɔvɛrˈtatɪ/
+  translation: to return
   pos: verb
   gender: f
 - lemma: повторюваність

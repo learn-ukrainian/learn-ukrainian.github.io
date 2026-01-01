@@ -2,37 +2,33 @@ module: 16-motion-verbs-full-system
 level: B1
 version: '2.0'
 items:
-- lemma: бігити
-  ipa: /biˈhɪtɪ/
-  translation: to run (typo)
+- lemma: бігати
+  ipa: /ˈbihatɪ/
+  translation: to run
   pos: verb
-- lemma: веста
-  ipa: /ˈvɛsta/
-  translation: to lead (typo)
+- lemma: вести
+  ipa: /vɛsˈtɪ/
+  translation: to lead
   pos: propn
   gender: m
 - lemma: високогірний
   ipa: /vɪsɔkɔˈhʲirnɪj/
   translation: high-mountain
   pos: adj
-- lemma: водопа
-  ipa: /vɔdɔˈpa/
-  translation: waterfall (typo)
+- lemma: водоспад
+  ipa: /vɔdɔˈspad/
+  translation: waterfall
   pos: noun
   gender: m
 - lemma: воліти
   ipa: /vɔˈlʲitɪ/
   translation: to prefer
   pos: verb
-- lemma: ганята
-  ipa: /haˈnʲata/
-  translation: to chase (typo)
-  pos: noun
-  gender: m
 - lemma: ганяти
   ipa: /haˈnʲatɪ/
   translation: to chase
-  pos: verb
+  pos: noun
+  gender: m
 - lemma: гнати
   ipa: /hnatɪ/
   translation: to drive/chase
@@ -56,10 +52,6 @@ items:
   translation: oak (gen.)
   pos: noun
   gender: m
-- lemma: женувати
-  ipa: /ʒɛnuˈvatɪ/
-  translation: ??? (typo)
-  pos: verb
 - lemma: заєць
   ipa: /ˈzajɛt͡sʲ/
   translation: hare
@@ -84,11 +76,6 @@ items:
   ipa: /kɔmˈfɔrtnɔ/
   translation: comfortably
   pos: adv
-- lemma: кор
-  ipa: /kɔr/
-  translation: ??? (typo)
-  pos: noun
-  gender: m
 - lemma: котити
   ipa: /kɔˈtɪtɪ/
   translation: to roll
@@ -102,18 +89,14 @@ items:
   translation: cat's
   pos: adj
   gender: f
-- lemma: лазит
-  ipa: /ˈlazɪt/
-  translation: crawls (typo)
-  pos: noun
-  gender: m
 - lemma: лазити
   ipa: /ˈlazɪtɪ/
   translation: to crawl
-  pos: verb
-- lemma: лязти
-  ipa: /ˈlʲaztɪ/
-  translation: to climb (typo)
+  pos: noun
+  gender: m
+- lemma: лізти
+  ipa: /ˈlʲiztɪ/
+  translation: to climb
   pos: verb
   gender: m
 - lemma: м'яч
@@ -141,9 +124,9 @@ items:
   translation: burden
   pos: noun
   gender: f
-- lemma: ніш
-  ipa: /nʲiʃ/
-  translation: knife (typo?)
+- lemma: ніж
+  ipa: /nʲiʒ/
+  translation: knife
   pos: noun
   gender: f
 - lemma: односпрямований
@@ -164,9 +147,9 @@ items:
   ipa: /pɪlʲnuˈvatɪ/
   translation: to watch over
   pos: verb
-- lemma: пливати
-  ipa: /plɪˈvatɪ/
-  translation: to swim (typo)
+- lemma: плавати
+  ipa: /ˈplavatɪ/
+  translation: to swim
   pos: verb
 - lemma: повзти
   ipa: /pɔu̯zˈtɪ/

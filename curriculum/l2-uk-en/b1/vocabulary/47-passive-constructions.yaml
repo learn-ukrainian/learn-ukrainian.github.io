@@ -68,13 +68,13 @@ items:
   ipa: /ɔˈt͡ʃɪʃt͡ʃuvatɪsʲa/
   translation: to be purified
   pos: verb
-- lemma: пекати
-  ipa: /pɛˈkatɪ/
-  translation: to bake (typo)
+- lemma: пекти
+  ipa: /pɛkˈtɪ/
+  translation: to bake
   pos: verb
-- lemma: пекертися
-  ipa: /pɛkɛrˈtɪsʲa/
-  translation: to be baked (typo)
+- lemma: пектися
+  ipa: /pɛkˈtɪsʲa/
+  translation: to be baked
   pos: verb
 - lemma: прокладатися
   ipa: /prɔklaˈdatɪsʲa/
@@ -90,9 +90,9 @@ items:
   translation: Roshen
   pos: propn
   gender: m
-- lemma: рішити
-  ipa: /rʲiˈʃɪtɪ/
-  translation: to decide (Surzhyk)
+- lemma: вирішити
+  ipa: /vɪˈrʲiʃɪtɪ/
+  translation: to decide
   pos: verb
 - lemma: сенкевич
   ipa: /sɛnˈkɛvɪt͡ʃ/

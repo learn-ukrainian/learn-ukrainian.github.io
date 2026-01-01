@@ -29,22 +29,22 @@ items:
   translation: gamer (adj)
   pos: adj
   gender: m
-- lemma: заучати
-  ipa: /zauˈt͡ʃatɪ/
-  translation: to memorize (typo)
+- lemma: завчати
+  ipa: /zau̯ˈt͡ʃatɪ/
+  translation: to memorize
   pos: verb
-- lemma: зписати
-  ipa: /zpɪˈsatɪ/
-  translation: to copy (typo)
+- lemma: списати
+  ipa: /spɪˈsatɪ/
+  translation: to copy/cheat
   pos: verb
   gender: m
 - lemma: контекстуальний
   ipa: /kɔntɛkstuˈalʲnɪj/
   translation: contextual
   pos: adj
-- lemma: кінчувати
-  ipa: /kʲinˈt͡ʃuvatɪ/
-  translation: to finish (typo)
+- lemma: закінчувати
+  ipa: /zaˈkʲint͡ʃuvatɪ/
+  translation: to finish
   pos: verb
 - lemma: найчастотніший
   ipa: /najt͡ʃasˈtɔtnʲiʃɪj/
@@ -62,10 +62,6 @@ items:
   ipa: /ridˈkʲisnʲiʃɪj/
   translation: rarer
   pos: adj
-- lemma: сла
-  ipa: /sla/
-  translation: ???
-  pos: other
 - lemma: суплетивний
   ipa: /suplɛˈtɪvnɪj/
   translation: suppletive

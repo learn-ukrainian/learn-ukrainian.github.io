@@ -1,0 +1,25 @@
+module: b2-112
+title: "Друга світова: окупації"
+subtitle: "WWII: Occupations"
+version: "2.0"
+phase: "B2.3c Trauma & Resistance"
+focus: "history"
+pedagogy: "CBI"
+duration: 120
+transliteration: none
+tags:
+  - history
+  - wwii
+  - decolonization
+  - trauma
+grammar:
+  - "Historical narrative register"
+  - "Complex passive constructions in historical texts"
+  - "Participles in official documents"
+objectives:
+  - "Learner understands the dual occupation of Ukraine during WWII (Nazi and Soviet)"
+  - "Learner can analyze primary sources from the 1939-1945 period"
+  - "Learner recognizes the impact of the 'Bloodlands' concept on Ukrainian history"
+  - "Learner can discuss Babyn Yar and the Holocaust in Ukraine using appropriate terminology"
+vocabulary_count: 25
+slug: 112-druha-svitova-okupatsii

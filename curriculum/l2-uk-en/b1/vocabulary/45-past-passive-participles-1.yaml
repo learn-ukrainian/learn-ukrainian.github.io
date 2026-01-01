@@ -26,11 +26,6 @@ items:
   translation: washed
   pos: adj
   gender: m
-- lemma: вимо
-  ipa: /ˈvɪmɔ/
-  translation: ??? (trunc)
-  pos: noun
-  gender: m
 - lemma: виписаний
   ipa: /ˈvɪpɪsanɪj/
   translation: discharged
@@ -170,18 +165,14 @@ items:
   translation: robbed
   pos: adj
   gender: m
-- lemma: одити
-  ipa: /ˈɔdɪtɪ/
-  translation: to walk (typo)
+- lemma: ходити
+  ipa: /xɔˈdɪtɪ/
+  translation: to walk
   pos: verb
-- lemma: одитий
-  ipa: /ɔˈdɪtɪj/
-  translation: dressed (typo)
+- lemma: одягнений
+  ipa: /ɔˈdʲahnɛnɪj/
+  translation: dressed
   pos: other
-- lemma: оти
-  ipa: /ˈɔtɪ/
-  translation: suffix?
-  pos: verb
 - lemma: отрим
   ipa: /ˈɔtrɪm/
   translation: receive (root)
@@ -200,11 +191,6 @@ items:
   translation: paid
   pos: adj
   gender: m
-- lemma: поба
-  ipa: /pɔˈba/
-  translation: ??? (trunc)
-  pos: noun
-  gender: m
 - lemma: побитий
   ipa: /pɔˈbɪtɪj/
   translation: beaten
@@ -215,9 +201,9 @@ items:
   translation: sent
   pos: adj
   gender: m
-- lemma: прадавний
-  ipa: /praˈdau̯nɪj/
-  translation: ancient (typo)
+- lemma: прадавній
+  ipa: /praˈdau̯nʲij/
+  translation: ancient
   pos: adj
 - lemma: прода
   ipa: /prɔˈda/
@@ -241,11 +227,6 @@ items:
 - lemma: рентген
   ipa: /rɛntˈhɛn/
   translation: X-ray
-  pos: noun
-  gender: m
-- lemma: розба
-  ipa: /rɔzˈba/
-  translation: ??? (trunc)
   pos: noun
   gender: m
 - lemma: споганений

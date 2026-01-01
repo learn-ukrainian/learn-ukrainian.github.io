@@ -49,9 +49,9 @@ items:
   translation: direct
   pos: noun
   gender: n
-- lemma: підходящий
-  ipa: /pidxɔˈdʲaʃt͡ʃɪj/
-  translation: suitable (Surzhyk)
+- lemma: відповідний
+  ipa: /vidpɔˈvidnɪj/
+  translation: suitable
   pos: adj
   gender: n
 - lemma: умовляти

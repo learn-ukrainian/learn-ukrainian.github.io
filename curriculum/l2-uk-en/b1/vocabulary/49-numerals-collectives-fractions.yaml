@@ -11,9 +11,9 @@ items:
   ipa: /vɪˈxɔvuvatɪsʲa/
   translation: to be raised
   pos: verb
-- lemma: втора
-  ipa: /vtaˈra/
-  translation: second (Rus.)
+- lemma: друга
+  ipa: /ˈdruha/
+  translation: second
   pos: noun
   gender: m
 - lemma: десятеро
@@ -94,9 +94,9 @@ items:
   translation: piglets (gen.)
   pos: noun
   gender: m
-- lemma: півтор
-  ipa: /piu̯ˈtɔr/
-  translation: one and a half (typo)
+- lemma: півтора
+  ipa: /piu̯tɔˈra/
+  translation: one and a half
   pos: propn
   gender: m
 - lemma: півтори
@@ -156,9 +156,9 @@ items:
   translation: boot (gen.)
   pos: noun
   gender: m
-- lemma: штані
-  ipa: /ˈʃtanʲi/
-  translation: pants (loc.?)
+- lemma: штани
+  ipa: /ʃtaˈnɪ/
+  translation: pants
   pos: noun
   gender: pl
 - lemma: явка

@@ -25,9 +25,9 @@ items:
   translation: going out
   pos: noun
   gender: n
-- lemma: водійва
-  ipa: /vɔdijˈva/
-  translation: driving? (typo)
+- lemma: водіння
+  ipa: /vɔˈdʲinʲːa/
+  translation: driving
   pos: noun
   gender: m
 - lemma: гроз
@@ -39,11 +39,6 @@ items:
   ipa: /dɔu̯ˈkɔla/
   translation: around
   pos: adv
-- lemma: дуза
-  ipa: /ˈduza/
-  translation: nozzle? (typo)
-  pos: noun
-  gender: f
 - lemma: контейнер
   ipa: /kɔnˈtɛjnɛr/
   translation: container
@@ -170,9 +165,9 @@ items:
   ipa: /ˈpiʃɪj/
   translation: pedestrian (adj)
   pos: adj
-- lemma: світлофір
-  ipa: /svitlɔˈfir/
-  translation: traffic light (typo)
+- lemma: світлофор
+  ipa: /svitlɔˈfɔr/
+  translation: traffic light
   pos: noun
   gender: m
 - lemma: софіївський

@@ -75,35 +75,35 @@ items:
   translation: Pecherska
   pos: propn
   gender: f
-- lemma: побаток
-  ipa: /pɔˈbatɔk/
-  translation: beginning (typo)
+- lemma: початок
+  ipa: /pɔˈt͡ʃatɔk/
+  translation: beginning
   pos: noun
   gender: m
 - lemma: повезти
   ipa: /pɔvɛzˈtɪ/
   translation: to take/get lucky
   pos: verb
-- lemma: поехати
-  ipa: /pɔˈjɛxatɪ/
-  translation: to go (typo)
+- lemma: поїхати
+  ipa: /pɔˈjixatɪ/
+  translation: to go (by vehicle)
   pos: verb
 - lemma: пуск
   ipa: /pusk/
   translation: launch
   pos: noun
   gender: m
-- lemma: развестися
-  ipa: /razvɛsˈtɪsʲa/
-  translation: to divorce (typo)
+- lemma: розлучитися
+  ipa: /rɔzluˈt͡ʃɪtɪsʲa/
+  translation: to divorce
   pos: verb
 - lemma: роз'їхатися
   ipa: /rɔzˈjixatɪsʲa/
   translation: to disperse
   pos: verb
-- lemma: розвезати
-  ipa: /rɔzvɛˈzatɪ/
-  translation: to untie (typo?)
+- lemma: розв'язати
+  ipa: /rɔzvjuˈzatɪ/
+  translation: to untie/solve
   pos: verb
 - lemma: розвезти
   ipa: /rɔzvɛzˈtɪ/

@@ -58,10 +58,6 @@ items:
   translation: pour (imp.)
   pos: adj
   gender: m
-- lemma: нарігти
-  ipa: /naˈrʲiɦtɪ/
-  translation: ??? (typo)
-  pos: verb
 - lemma: оволодіти
   ipa: /ɔvɔlɔˈdʲitɪ/
   translation: to master
@@ -126,10 +122,6 @@ items:
   ipa: /trɪˈvajut͡ʃɪj/
   translation: ongoing
   pos: adj
-- lemma: ущяти
-  ipa: /uʃˈt͡ʃʲatɪ/
-  translation: ??? (typo)
-  pos: verb
 - lemma: цибулина
   ipa: /t͡sɪbuˈlɪna/
   translation: onion bulb

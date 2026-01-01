@@ -2,9 +2,9 @@ module: 09-aspect-future
 level: B1
 version: '2.0'
 items:
-- lemma: бігатий
-  ipa: /biˈɦatɪj/
-  translation: running (typo)
+- lemma: бігати
+  ipa: /ˈbihatɪ/
+  translation: to run
   pos: adj
   gender: f
 - lemma: ворожити
@@ -36,13 +36,13 @@ items:
   translation: exam (gen.)
   pos: noun
   gender: m
-- lemma: завтрашний
-  ipa: /zau̯ˈtraʃnɪj/
-  translation: tomorrow's (typo)
+- lemma: завтрашній
+  ipa: /zau̯ˈtraʃnʲij/
+  translation: tomorrow's
   pos: adj
-- lemma: зберати
-  ipa: /zbɛˈratɪ/
-  translation: to collect (typo)
+- lemma: збирати
+  ipa: /zbɪˈratɪ/
+  translation: to collect
   pos: verb
 - lemma: зіпсута
   ipa: /zʲipˈsuta/
@@ -113,10 +113,6 @@ items:
   ipa: /ˈtɪmu/
   translation: will (suffix 1sg)
   pos: other
-- lemma: тити
-  ipa: /ˈtɪtɪ/
-  translation: to ... (suffix?)
-  pos: verb
 - lemma: утворитися
   ipa: /utvɔˈrɪtɪsʲa/
   translation: to be formed
@@ -132,7 +128,7 @@ items:
   translation: Spanish
   pos: noun
   gender: f
-- lemma: їдити
-  ipa: /jiˈdɪtɪ/
-  translation: to go (typo)
+- lemma: їздити
+  ipa: /ˈjizdɪtɪ/
+  translation: to ride/go
   pos: verb

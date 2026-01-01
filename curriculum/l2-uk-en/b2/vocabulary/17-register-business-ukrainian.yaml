@@ -2,520 +2,520 @@ module: 17-register-business-ukrainian
 level: B2
 version: '2.0'
 items:
-  - lemma: автоматизація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: агрохолдинг
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: альтернативний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: асоціація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: аудит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: бондаренко
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: вартість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: ввічливе
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: ведення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: взаємно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: взаємовигідний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: взаємоповаг
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: вибачення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: висловлення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: витрата
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: виявлений
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: вступній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: відкритість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: відносини
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: відтермінування
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: відхилятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: візиток
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: гарантія
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: голосувати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: городоцький
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: гігант
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: детальніше
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: добратися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: довір
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: довіра
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: доданий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: домовленість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: доповісти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: допускатися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: досягнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: діяльність
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: завершальний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: закупівля
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: занепокоєння
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: запропонований
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: запізнення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: зацікавлений
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: зацікавленість
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: згід
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: змога
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: знижок
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: канал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: капітал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: компроміс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: контакт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: концентруватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: коректно
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: листуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: логістичний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: максимально
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: мельник
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: миронівський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: мхп
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: надісти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: надішнути
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: найуспішніший
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: наперед
-    ipa: ''
-    translation: ''
-    pos: adv
-  - lemma: напівформальний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: неприпустимий
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: облік
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: обмінятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: оперативний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: n
-  - lemma: операційний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: орієнтовний
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: оформлення
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: партнерство
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: парус
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: пат
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: персонал
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: печерськ
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: плідний
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: подола
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: поділ
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: поділятися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: постачальник
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: постачання
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: правління
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: прайс
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: представитися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: промінвест
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: професіоналізм
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: пузатий
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: f
-  - lemma: підвищити
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підписти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: підтвердження
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: підтвердіти
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: реквізит
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: розпочинати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: розробка
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: складський
-    ipa: ''
-    translation: ''
-    pos: adj
-    gender: m
-  - lemma: сленг
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: смарт
-    ipa: ''
-    translation: ''
-    pos: propn
-    gender: m
-  - lemma: сорі
-    ipa: ''
-    translation: ''
-    pos: other
-  - lemma: спеціалізуватися
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: співпрацювати
-    ipa: ''
-    translation: ''
-    pos: verb
-  - lemma: суть
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: тел
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: технолодж
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: тов
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: n
-  - lemma: успішній
-    ipa: ''
-    translation: ''
-    pos: adj
-  - lemma: фактура
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фіналізація
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: фірма
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: f
-  - lemma: хаба
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
-  - lemma: хлібопродукт
-    ipa: ''
-    translation: ''
-    pos: noun
-    gender: m
+- lemma: автоматизація
+  ipa: /ɐwtomɐtɪˈzɑt͡sʲijɑ/
+  translation: automation
+  pos: noun
+  gender: f
+- lemma: агрохолдинг
+  ipa: /ɐɦroˈxoldɪnɦ/
+  translation: agricultural holding
+  pos: noun
+  gender: m
+- lemma: альтернативний
+  ipa: /ɑlʲtɛrnɐˈtɪwnɪj/
+  translation: alternative
+  pos: adj
+  gender: m
+- lemma: асоціація
+  ipa: /ɐsot͡sʲiˈɑt͡sʲijɑ/
+  translation: association
+  pos: noun
+  gender: f
+- lemma: аудит
+  ipa: /ɐˈudɪt/
+  translation: audit
+  pos: noun
+  gender: m
+- lemma: бондаренко
+  ipa: /bondɐˈrɛnko/
+  translation: Bondarenko (name)
+  pos: propn
+  gender: m
+- lemma: вартість
+  ipa: /ˈwɑrtʲistʲ/
+  translation: cost, value
+  pos: noun
+  gender: f
+- lemma: ввічливе
+  ipa: /ˈwwʲit͡ʃlɪwɛ/
+  translation: polite (n.)
+  pos: noun
+  gender: n
+- lemma: ведення
+  ipa: /wɛˈdɛnʲːɑ/
+  translation: conducting, keeping
+  pos: noun
+  gender: n
+- lemma: взаємно
+  ipa: /wzɐˈjɛmno/
+  translation: mutually
+  pos: adv
+- lemma: взаємовигідний
+  ipa: /wzɐjɛmoˈwɪɦʲidnɪj/
+  translation: mutually beneficial
+  pos: adj
+  gender: f
+- lemma: взаємоповаг
+  ipa: /wzɐjɛmopoˈwɑɦ/
+  translation: mutual respect (gen.)
+  pos: noun
+  gender: f
+- lemma: вибачення
+  ipa: /wɪˈbɑt͡ʃɛnʲːɑ/
+  translation: apology
+  pos: noun
+  gender: n
+- lemma: висловлення
+  ipa: /wɪsˈlowlɛnʲːɑ/
+  translation: expression
+  pos: noun
+  gender: n
+- lemma: витрата
+  ipa: /wɪˈtrɑtɑ/
+  translation: expense
+  pos: noun
+  gender: f
+- lemma: виявлений
+  ipa: /wɪˈjɑwlɛnɪj/
+  translation: identified, detected
+  pos: adj
+  gender: m
+- lemma: вступній
+  ipa: /ˈwstupnʲij/
+  translation: introductory
+  pos: adj
+- lemma: відкритість
+  ipa: /wʲidˈkrɪtʲistʲ/
+  translation: openness
+  pos: noun
+  gender: f
+- lemma: відносини
+  ipa: /wʲidˈnosɪnɪ/
+  translation: relations
+  pos: noun
+  gender: f
+- lemma: відтермінування
+  ipa: /wʲidtɛrmʲiˈnuwɑnʲːɑ/
+  translation: postponement
+  pos: noun
+  gender: n
+- lemma: відхилятися
+  ipa: /wʲidxɪˈlʲɑtɪsʲɑ/
+  translation: to deviate
+  pos: verb
+- lemma: візиток
+  ipa: /wʲiˈzɪtok/
+  translation: business card (gen.pl.)
+  pos: noun
+  gender: m
+- lemma: гарантія
+  ipa: /ɦɐˈrɑntʲijɑ/
+  translation: guarantee
+  pos: noun
+  gender: f
+- lemma: голосувати
+  ipa: /ɦolosuˈwɑtɪ/
+  translation: to vote
+  pos: verb
+- lemma: городоцький
+  ipa: /ɦoroˈdot͡sʲkɪj/
+  translation: Horodotskyi (adj.)
+  pos: adj
+  gender: f
+- lemma: гігант
+  ipa: /ɦʲiˈɦɑnt/
+  translation: giant
+  pos: noun
+  gender: m
+- lemma: детальніше
+  ipa: /dɛˈtɑlʲnʲiʃɛ/
+  translation: in more detail
+  pos: adv
+- lemma: добратися
+  ipa: /doˈbrɑtɪsʲɑ/
+  translation: to get to
+  pos: verb
+- lemma: довір
+  ipa: /doˈwʲir/
+  translation: trust (gen.)
+  pos: noun
+  gender: f
+- lemma: довіра
+  ipa: /doˈwʲirɑ/
+  translation: trust
+  pos: noun
+  gender: f
+- lemma: доданий
+  ipa: /ˈdodɑnɪj/
+  translation: added, attached
+  pos: adj
+  gender: m
+- lemma: домовленість
+  ipa: /domowˈlɛnʲistʲ/
+  translation: agreement
+  pos: noun
+  gender: f
+- lemma: доповісти
+  ipa: /dopoˈwʲistɪ/
+  translation: to report
+  pos: verb
+- lemma: допускатися
+  ipa: /dopusˈkɑtɪsʲɑ/
+  translation: to be allowed
+  pos: verb
+- lemma: досягнення
+  ipa: /dosʲɑɦˈnɛnʲːɑ/
+  translation: achievement
+  pos: noun
+  gender: n
+- lemma: діяльність
+  ipa: /dʲiˈjɑlʲnʲistʲ/
+  translation: activity
+  pos: noun
+  gender: f
+- lemma: завершальний
+  ipa: /zɐwɛrˈʃɑlʲnɪj/
+  translation: final, closing
+  pos: adj
+- lemma: закупівля
+  ipa: /zɐˈkupʲiwlʲɑ/
+  translation: procurement
+  pos: noun
+  gender: f
+- lemma: занепокоєння
+  ipa: /zɐnɛpoˈkojɛnʲːɑ/
+  translation: concern
+  pos: noun
+  gender: n
+- lemma: запропонований
+  ipa: /zɐpropoˈnowɑnɪj/
+  translation: proposed
+  pos: adj
+- lemma: запізнення
+  ipa: /zɐˈpʲiznɛnʲːɑ/
+  translation: delay, being late
+  pos: noun
+  gender: n
+- lemma: зацікавлений
+  ipa: /zɐt͡sʲikɐwˈlɛnɪj/
+  translation: interested
+  pos: adj
+- lemma: зацікавленість
+  ipa: /zɐt͡sʲikɐwˈlɛnʲistʲ/
+  translation: interest
+  pos: noun
+  gender: f
+- lemma: згід
+  ipa: /zɦʲid/
+  translation: agreement (dial.)
+  pos: noun
+  gender: f
+- lemma: змога
+  ipa: /ˈzmoɦɑ/
+  translation: ability, opportunity
+  pos: noun
+  gender: f
+- lemma: знижок
+  ipa: /ˈznɪʒok/
+  translation: discounts (gen.pl.)
+  pos: noun
+  gender: f
+- lemma: канал
+  ipa: /kɐˈnɑl/
+  translation: channel
+  pos: noun
+  gender: m
+- lemma: капітал
+  ipa: /kɐpʲiˈtɑl/
+  translation: capital
+  pos: noun
+  gender: m
+- lemma: компроміс
+  ipa: /komˈpromʲis/
+  translation: compromise
+  pos: noun
+  gender: m
+- lemma: контакт
+  ipa: /konˈtɑkt/
+  translation: contact
+  pos: noun
+  gender: m
+- lemma: концентруватися
+  ipa: /kont͡sɛntruˈwɑtɪsʲɑ/
+  translation: to concentrate
+  pos: verb
+- lemma: коректно
+  ipa: /koˈrɛktno/
+  translation: correctly
+  pos: adv
+- lemma: листуватися
+  ipa: /lɪstuˈwɑtɪsʲɑ/
+  translation: to correspond
+  pos: verb
+- lemma: логістичний
+  ipa: /loɦʲisˈtɪt͡ʃnɪj/
+  translation: logistical
+  pos: adj
+  gender: f
+- lemma: максимально
+  ipa: /mɐksɪˈmɑlʲno/
+  translation: maximally
+  pos: adv
+- lemma: мельник
+  ipa: /ˈmɛlʲnɪk/
+  translation: Melnyk (name)
+  pos: propn
+  gender: m
+- lemma: миронівський
+  ipa: /mɪroˈnʲiwsʲkɪj/
+  translation: Myronivskyi (adj.)
+  pos: adj
+  gender: m
+- lemma: мхп
+  ipa: /ɛm xɑ pɛ/
+  translation: MHP (company)
+  pos: noun
+  gender: m
+- lemma: надісти
+  ipa: /nɐˈdʲistɪ/
+  translation: to send (var.)
+  pos: verb
+- lemma: надішнути
+  ipa: /nɐˈdʲiʃnutɪ/
+  translation: to send (var.)
+  pos: verb
+- lemma: найуспішніший
+  ipa: /nɑjusˈpʲiʃnʲiʃɪj/
+  translation: most successful
+  pos: adj
+- lemma: наперед
+  ipa: /nɐˈpɛrɛd/
+  translation: in advance
+  pos: adv
+- lemma: напівформальний
+  ipa: /nɐpʲiwforˈmɑlʲnɪj/
+  translation: semi-formal
+  pos: adj
+  gender: m
+- lemma: неприпустимий
+  ipa: /nɛprɪpusˈtɪmɪj/
+  translation: unacceptable
+  pos: adj
+- lemma: облік
+  ipa: /obˈlʲik/
+  translation: accounting
+  pos: noun
+  gender: m
+- lemma: обмінятися
+  ipa: /obmʲiˈnʲɑtɪsʲɑ/
+  translation: to exchange
+  pos: verb
+- lemma: оперативний
+  ipa: /opɛrɐˈtɪwnɪj/
+  translation: prompt, operational
+  pos: adj
+  gender: n
+- lemma: операційний
+  ipa: /opɛrɐˈt͡sʲijnɪj/
+  translation: operational
+  pos: adj
+- lemma: орієнтовний
+  ipa: /orʲijɛnˈtownɪj/
+  translation: approximate
+  pos: adj
+- lemma: оформлення
+  ipa: /oˈformlɛnʲːɑ/
+  translation: registration, design
+  pos: noun
+  gender: n
+- lemma: партнерство
+  ipa: /pɐrtˈnɛrstwo/
+  translation: partnership
+  pos: noun
+  gender: n
+- lemma: парус
+  ipa: /ˈpɑrus/
+  translation: Parus (company)
+  pos: propn
+  gender: m
+- lemma: пат
+  ipa: /pɑt/
+  translation: PAT (public company)
+  pos: noun
+  gender: n
+- lemma: персонал
+  ipa: /pɛrsoˈnɑl/
+  translation: personnel, staff
+  pos: noun
+  gender: m
+- lemma: печерськ
+  ipa: /pɛˈt͡ʃɛrsʲk/
+  translation: Pechersk (district)
+  pos: propn
+  gender: m
+- lemma: плідний
+  ipa: /ˈplʲidnɪj/
+  translation: fruitful
+  pos: adj
+  gender: f
+- lemma: подола
+  ipa: /poˈdolɑ/
+  translation: Podil (gen.)
+  pos: propn
+  gender: m
+- lemma: поділ
+  ipa: /poˈdʲil/
+  translation: division, Podil
+  pos: noun
+  gender: m
+- lemma: поділятися
+  ipa: /podʲiˈlʲɑtɪsʲɑ/
+  translation: to share
+  pos: verb
+- lemma: постачальник
+  ipa: /postɐˈt͡ʃɑlʲnɪk/
+  translation: supplier
+  pos: noun
+  gender: m
+- lemma: постачання
+  ipa: /postɐˈt͡ʃɑnʲːɑ/
+  translation: supply
+  pos: noun
+  gender: n
+- lemma: правління
+  ipa: /prɐwˈlʲinʲːɑ/
+  translation: board, management
+  pos: noun
+  gender: n
+- lemma: прайс
+  ipa: /prɑjs/
+  translation: price list
+  pos: noun
+  gender: m
+- lemma: представитися
+  ipa: /prɛdstɐˈwɪtɪsʲɑ/
+  translation: to introduce oneself
+  pos: verb
+- lemma: промінвест
+  ipa: /promʲinˈwɛst/
+  translation: Prominvest (company)
+  pos: propn
+  gender: m
+- lemma: професіоналізм
+  ipa: /profɛsʲionɐˈlʲizm/
+  translation: professionalism
+  pos: noun
+  gender: m
+- lemma: пузатий
+  ipa: /puˈzɑtɪj/
+  translation: pot-bellied
+  pos: adj
+  gender: f
+- lemma: підвищити
+  ipa: /pʲidˈwɪʃt͡ʃɪtɪ/
+  translation: to raise, to increase
+  pos: verb
+- lemma: підписти
+  ipa: /pʲidˈpɪstɪ/
+  translation: to sign (var.)
+  pos: verb
+- lemma: підтвердження
+  ipa: /pʲidˈtwɛrdʒɛnʲːɑ/
+  translation: confirmation
+  pos: noun
+  gender: n
+- lemma: підтвердіти
+  ipa: /pʲidtwɛrˈdʲitɪ/
+  translation: to confirm (var.)
+  pos: verb
+- lemma: реквізит
+  ipa: /rɛkˈwʲizɪt/
+  translation: requisites, details
+  pos: noun
+  gender: m
+- lemma: розпочинати
+  ipa: /rospoˈt͡ʃɪnɑtɪ/
+  translation: to begin
+  pos: verb
+- lemma: розробка
+  ipa: /rozˈrobkɑ/
+  translation: development
+  pos: noun
+  gender: f
+- lemma: складський
+  ipa: /sklɐdˈsʲkɪj/
+  translation: warehouse (adj.)
+  pos: adj
+  gender: m
+- lemma: сленг
+  ipa: /slɛnɦ/
+  translation: slang
+  pos: noun
+  gender: m
+- lemma: смарт
+  ipa: /smɑrt/
+  translation: Smart (company)
+  pos: propn
+  gender: m
+- lemma: сорі
+  ipa: /ˈsorʲi/
+  translation: sorry (colloq.)
+  pos: other
+- lemma: спеціалізуватися
+  ipa: /spɛt͡sʲiɐlʲiˈzuwɑtɪsʲɑ/
+  translation: to specialize
+  pos: verb
+- lemma: співпрацювати
+  ipa: /spʲiwprɐˈt͡sʲuwɑtɪ/
+  translation: to cooperate
+  pos: verb
+- lemma: суть
+  ipa: /sutʲ/
+  translation: essence, point
+  pos: noun
+  gender: f
+- lemma: тел
+  ipa: /tɛl/
+  translation: tel. (phone)
+  pos: noun
+  gender: m
+- lemma: технолодж
+  ipa: /tɛxnoˈlodʒ/
+  translation: technology (abbr.)
+  pos: noun
+  gender: f
+- lemma: тов
+  ipa: /tow/
+  translation: LLC (company type)
+  pos: noun
+  gender: n
+- lemma: успішній
+  ipa: /usˈpʲiʃnʲij/
+  translation: successful
+  pos: adj
+- lemma: фактура
+  ipa: /fɐkˈturɑ/
+  translation: invoice, texture
+  pos: noun
+  gender: f
+- lemma: фіналізація
+  ipa: /fʲinɐlʲiˈzɑt͡sʲijɑ/
+  translation: finalization
+  pos: noun
+  gender: f
+- lemma: фірма
+  ipa: /ˈfʲirmɑ/
+  translation: firm, company
+  pos: noun
+  gender: f
+- lemma: хаба
+  ipa: /ˈxɑbɑ/
+  translation: hub
+  pos: noun
+  gender: m
+- lemma: хлібопродукт
+  ipa: /xlʲiboˈprodukt/
+  translation: bread products
+  pos: noun
+  gender: m

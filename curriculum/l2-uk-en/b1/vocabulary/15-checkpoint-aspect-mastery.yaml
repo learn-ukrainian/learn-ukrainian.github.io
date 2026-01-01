@@ -6,9 +6,9 @@ items:
   ipa: /vpʲiznaˈvatɪ/
   translation: to recognize
   pos: verb
-- lemma: дивити
-  ipa: /dɪˈvɪtɪ/
-  translation: to look (typo)
+- lemma: дивитися
+  ipa: /dɪˈvɪtɪsʲa/
+  translation: to look
   pos: verb
 - lemma: доконаність
   ipa: /dɔˈkɔnanʲisʲtʲ/
@@ -35,18 +35,18 @@ items:
   translation: palianytsia
   pos: noun
   gender: f
-- lemma: похогти
-  ipa: /pɔxɔhˈtɪ/
-  translation: help (typo)
+- lemma: допомогти
+  ipa: /dɔpɔmɔhˈtɪ/
+  translation: to help
   pos: verb
 - lemma: раф
   ipa: /raf/
   translation: raf (coffee)
   pos: noun
   gender: m
-- lemma: сдача
+- lemma: здача
   ipa: /ˈzdat͡ʃa/
-  translation: change (money) (Surzhyk)
+  translation: change (money)
   pos: noun
   gender: f
 - lemma: супплетивний
@@ -54,11 +54,11 @@ items:
   translation: suppletive
   pos: adj
   gender: f
-- lemma: тимати
-  ipa: /tɪˈmatɪ/
-  translation: hold (typo)
+- lemma: тримати
+  ipa: /trɪˈmatɪ/
+  translation: to hold
   pos: verb
-- lemma: чіпити
-  ipa: /t͡ʃiˈpɪtɪ/
-  translation: to hook (typo?)
+- lemma: чіпляти
+  ipa: /t͡ʃiˈplʲatɪ/
+  translation: to hook/cling
   pos: verb

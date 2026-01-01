@@ -2,9 +2,9 @@ module: 17-motion-coming-going
 level: B1
 version: '2.0'
 items:
-- lemma: борисполь
-  ipa: /bɔˈrɪspɔlʲ/
-  translation: Boryspil (typo)
+- lemma: Бориспіль
+  ipa: /bɔˈrɪspilʲ/
+  translation: Boryspil
   pos: propn
   gender: m
 - lemma: брістоль
@@ -28,15 +28,11 @@ items:
   ipa: /ˈvɪplɪu̯tɪ/
   translation: to swim out
   pos: verb
-- lemma: виплист
-  ipa: /ˈvɪplɪst/
-  translation: swim out (typo)
-  pos: noun
-  gender: m
 - lemma: виплисти
   ipa: /ˈvɪplɪstɪ/
   translation: to swim out
-  pos: verb
+  pos: noun
+  gender: m
 - lemma: виразніший
   ipa: /vɪˈraznʲiʃɪj/
   translation: more expressive
@@ -51,9 +47,9 @@ items:
   ipa: /vlɛˈtʲitɪ/
   translation: to fly in
   pos: verb
-- lemma: всередина
-  ipa: /fsɛˈrɛdɪna/
-  translation: inside (typo)
+- lemma: всередину
+  ipa: /u̯sɛˈrɛdɪnu/
+  translation: inside (direction)
   pos: noun
   gender: f
 - lemma: втрачатися
@@ -107,11 +103,6 @@ items:
   translation: passport (adj)
   pos: adj
   gender: m
-- lemma: перево
-  ipa: /pɛrɛˈvɔ/
-  translation: transfer? (trunc)
-  pos: noun
-  gender: f
 - lemma: прибігти
   ipa: /prɪˈbihtɪ/
   translation: to run to

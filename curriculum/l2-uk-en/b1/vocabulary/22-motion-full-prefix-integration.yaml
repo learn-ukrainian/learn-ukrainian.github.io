@@ -63,11 +63,6 @@ items:
   translation: Lego
   pos: propn
   gender: m
-- lemma: лнестія
-  ipa: /lnɛsˈtʲija/
-  translation: ??? (typo)
-  pos: noun
-  gender: m
 - lemma: макдональдза
   ipa: /makˈdɔnalʲdza/
   translation: McDonald's (gen.)
@@ -108,15 +103,10 @@ items:
   ipa: /rɔzˈsɛrdɪtɪsʲa/
   translation: to get angry
   pos: verb
-- lemma: різнонапавлений
-  ipa: /rʲiznɔnapau̯ˈlɛnɪj/
-  translation: multidirectional (typo)
+- lemma: різнонаправлений
+  ipa: /rʲiznɔnaˈprau̯lɛnɪj/
+  translation: multidirectional
   pos: adj
-- lemma: стартя
-  ipa: /ˈstartʲa/
-  translation: ??? (typo)
-  pos: noun
-  gender: m
 - lemma: трускавець
   ipa: /truskaˈvɛt͡sʲ/
   translation: Truskavets
@@ -130,8 +120,8 @@ items:
   ipa: /fʲihuˈralʲnɪj/
   translation: figurative
   pos: adj
-- lemma: ізсередина
-  ipa: /izsɛˈrɛdɪna/
-  translation: from inside (typo)
+- lemma: ізсередини
+  ipa: /izsɛˈrɛdɪnɪ/
+  translation: from inside
   pos: noun
   gender: m

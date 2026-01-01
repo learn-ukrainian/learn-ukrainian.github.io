@@ -1,16 +1,16 @@
 # Agent Coordination Hub
 
-**Last Updated:** 2026-01-01 (19:30 UTC)
+**Last Updated:** 2026-01-01 (21:00 UTC)
 **Coordinator:** Claude 1 (this session)
 
 ## Active Agents
 
 | Code | Agent | Subscription | Current Task | Issue | Status |
 |------|-------|--------------|--------------|-------|--------|
-| **A** | Gemini 1 | User's | A2 enrichment | #340 | ✅ Complete (57/57) |
-| **M** | Gemini 2 | User's | B1 enrichment | #350 | 🔄 In progress (30/86) |
+| **A** | Gemini 1 | User's | B2 M111 creation | #349 | 🔄 Testing new workflow |
+| **M** | Gemini 2 | User's | B2 M112 creation | #349 | 🔄 Testing new workflow |
 | **K** | Gemini 3 | User's | (waiting) | - | ⏳ Context limit reset |
-| **C1-b** | Claude 1 (other session) | User's | B2 enrichment | #349 | 🔄 Extraction done |
+| **C1-b** | Claude 1 (other session) | User's | B2 enrichment | #349 | 🔄 M01-M10 done |
 | **C2** | Claude 2 | Different sub | (standing by) | - | ⏳ Available |
 
 ## This Session (C1-a: Coordinator)
@@ -34,8 +34,34 @@
 |-------|---------|------------|------------|-------------|
 | A1 | 34 | ✅ Done | ✅ Done | Complete |
 | A2 | 57 | ✅ Done | ✅ Done | Complete |
-| B1 | 86 | ✅ Done | ⏳ 30/86 (35%) | Agent M |
-| B2 | 110 | ✅ Done | ❌ 0/110 | C1-b |
+| B1 | 86 | ✅ Done | ✅ Done | ✅ Complete (quality verified) |
+| B2 | 110 | ✅ Done | 🔄 10/110 | C1-b |
+
+## C1-b B2 Enrichment Progress
+
+```
+☒ Run B2 vocabulary extraction script
+☒ Verify extraction (110 YAML files)
+☒ Enrich M01-M03 (passive voice)
+☒ Enrich M04-M10 (passive voice remainder)
+☐ Enrich vocabulary M11-M30 (syntax, registers)
+☐ Enrich vocabulary M31-M70 (idioms, synonyms)
+☐ Run global vocab audit validation
+☐ Test pipeline on B2
+```
+
+**Note:** M71-M110 (history modules) not yet in enrichment queue.
+
+## B2 Module Status
+
+| Range | Count | Content | Vocabulary YAML | Enrichment |
+|-------|-------|---------|-----------------|------------|
+| M01-M10 | 10 | ✅ | ✅ | ✅ Done |
+| M11-M70 | 60 | ✅ | ✅ | ❌ Pending |
+| M71-M110 | 40 | ✅ | ✅ | ❌ Pending |
+| M111-M145 | 35 | ❌ Need to build | ❌ | ❌ |
+
+**User updated M107-M110** with more content - may need vocab review.
 
 ## Issue Tracking
 
@@ -46,9 +72,9 @@
 ## When Agent K (Gemini 3) Comes Online
 
 Potential assignments:
-1. Help with remaining A2 enrichment if Agent A runs out of context
-2. Start C1 planning/scaffolding
-3. Review/validate completed migrations
+1. B2 enrichment M71-M110 (history modules)
+2. Review M107-M110 vocabulary after content updates
+3. Start C1 planning/scaffolding
 
 ## Communication Protocol
 

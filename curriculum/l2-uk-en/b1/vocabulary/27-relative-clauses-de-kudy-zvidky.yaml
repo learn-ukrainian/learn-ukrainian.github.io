@@ -10,18 +10,18 @@ items:
   ipa: /zviduˈsʲilʲ/
   translation: from everywhere
   pos: adv
-- lemma: летити
-  ipa: /lɛˈtɪtɪ/
-  translation: to fly (typo)
+- lemma: летіти
+  ipa: /lɛˈtʲitɪ/
+  translation: to fly
   pos: verb
 - lemma: місцезнаходження
   ipa: /mʲist͡sɛznaˈxɔdʒɛnʲːa/
   translation: location
   pos: noun
   gender: n
-- lemma: небути
-  ipa: /nɛbuˈtɪ/
-  translation: not to be (typo)
+- lemma: не бути
+  ipa: /nɛ ˈbutɪ/
+  translation: not to be
   pos: verb
 - lemma: поставка
   ipa: /pɔˈstau̯ka/

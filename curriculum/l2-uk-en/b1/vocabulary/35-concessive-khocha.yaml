@@ -35,9 +35,9 @@ items:
   ipa: /prɔxɔˈlɔdnɪj/
   translation: cool
   pos: adj
-- lemma: піднімти
-  ipa: /pidˈnʲimtɪ/
-  translation: to raise (typo)
+- lemma: підняти
+  ipa: /pidˈnʲatɪ/
+  translation: to raise
   pos: verb
 - lemma: підсилювальний
   ipa: /pidsɪˈlʲuvalʲnɪj/
@@ -61,9 +61,9 @@ items:
   ipa: /fiˈnansɔvɔ/
   translation: financially
   pos: adv
-- lemma: хотяти
-  ipa: /xɔˈtʲatɪ/
-  translation: to want (typo)
+- lemma: хотіти
+  ipa: /xɔˈtʲitɪ/
+  translation: to want
   pos: verb
 - lemma: часом
   ipa: /ˈt͡ʃasɔm/

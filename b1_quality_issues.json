@@ -1,0 +1,1171 @@
+[
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/02-language-about-verbs.yaml",
+    "enrichments": {
+      "скоросити": {
+        "ipa": "/skɔrɔˈsɪtɪ/",
+        "en": "to shorten (typo?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/03-reading-grammar-rules.yaml",
+    "enrichments": {
+      "вибррати": {
+        "ipa": "/vɪbˈratɪ/",
+        "en": "to choose (typo)"
+      },
+      "лвжома": {
+        "ipa": "/lvʒɔma/",
+        "en": "???"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/07-aspect-past-single-repeated.yaml",
+    "enrichments": {
+      "поверталати": {
+        "ipa": "/pɔvɛrˈtaɫatɪ/",
+        "en": "to return (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/08-aspect-past-result-process.yaml",
+    "enrichments": {
+      "відрігти": {
+        "ipa": "/vidˈriɦtɪ/",
+        "en": "to cut off (dialect?)"
+      },
+      "закінти": {
+        "ipa": "/zaˈkʲintɪ/",
+        "en": "to finish (typo)"
+      },
+      "майстрин": {
+        "ipa": "/majˈstrɪn/",
+        "en": "master (gen. pl.?)"
+      },
+      "скрина": {
+        "ipa": "/skrɪna/",
+        "en": "chest (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/09-aspect-future.yaml",
+    "enrichments": {
+      "бігатий": {
+        "ipa": "/biˈɦatɪj/",
+        "en": "running (typo)"
+      },
+      "завтрашний": {
+        "ipa": "/zau̯ˈtraʃnɪj/",
+        "en": "tomorrow's (typo)"
+      },
+      "зберати": {
+        "ipa": "/zbɛˈratɪ/",
+        "en": "to collect (typo)"
+      },
+      "тити": {
+        "ipa": "/ˈtɪtɪ/",
+        "en": "to ... (suffix?)"
+      },
+      "їдити": {
+        "ipa": "/jiˈdɪtɪ/",
+        "en": "to go (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/10-aspect-negation.yaml",
+    "enrichments": {
+      "адрега": {
+        "ipa": "/aˈdrɛɦa/",
+        "en": "address (typo)"
+      },
+      "плануюмій": {
+        "ipa": "/planujuˈmʲij/",
+        "en": "I plan my (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/11-aspect-in-imperatives.yaml",
+    "enrichments": {
+      "дамати": {
+        "ipa": "/daˈmatɪ/",
+        "en": "to give (typo)"
+      },
+      "укятися": {
+        "ipa": "/ukˈjatɪsʲa/",
+        "en": "??? (typo)"
+      },
+      "учис": {
+        "ipa": "/uˈt͡ʃɪs/",
+        "en": "learn (typo?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/12-aspect-pairs-essential-40.yaml",
+    "enrichments": {
+      "заучати": {
+        "ipa": "/zauˈt͡ʃatɪ/",
+        "en": "to memorize (typo)"
+      },
+      "зписати": {
+        "ipa": "/zpɪˈsatɪ/",
+        "en": "to copy (typo)"
+      },
+      "кінчувати": {
+        "ipa": "/kʲinˈt͡ʃuvatɪ/",
+        "en": "to finish (typo)"
+      },
+      "сла": {
+        "ipa": "/sla/",
+        "en": "???"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/13-work-week-aspect-in-action.yaml",
+    "enrichments": {
+      "витідний": {
+        "ipa": "/vɪtʲidˈnɪj/",
+        "en": "weekend (typo)"
+      },
+      "відпрати": {
+        "ipa": "/vidˈpratɪ/",
+        "en": "to wash off/send (typo?)"
+      },
+      "передити": {
+        "ipa": "/pɛrɛˈdɪtɪ/",
+        "en": "to pass (typo?)"
+      },
+      "пояснути": {
+        "ipa": "/pɔjasˈnutɪ/",
+        "en": "to explain (typo)"
+      },
+      "четверг": {
+        "ipa": "/t͡ʃɛtˈvɛrɦ/",
+        "en": "Thursday (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/14-aspect-integration-practice.yaml",
+    "enrichments": {
+      "нарігти": {
+        "ipa": "/naˈrʲiɦtɪ/",
+        "en": "??? (typo)"
+      },
+      "ущяти": {
+        "ipa": "/uʃˈt͡ʃʲatɪ/",
+        "en": "??? (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/15-checkpoint-aspect-mastery.yaml",
+    "enrichments": {
+      "дивити": {
+        "ipa": "/dɪˈvɪtɪ/",
+        "en": "to look (typo)"
+      },
+      "похогти": {
+        "ipa": "/pɔxɔhˈtɪ/",
+        "en": "help (typo)"
+      },
+      "сдача": {
+        "ipa": "/ˈzdat͡ʃa/",
+        "en": "change (money) (Surzhyk)"
+      },
+      "тимати": {
+        "ipa": "/tɪˈmatɪ/",
+        "en": "hold (typo)"
+      },
+      "чіпити": {
+        "ipa": "/t͡ʃiˈpɪtɪ/",
+        "en": "to hook (typo?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/16-motion-verbs-full-system.yaml",
+    "enrichments": {
+      "бігити": {
+        "ipa": "/biˈhɪtɪ/",
+        "en": "to run (typo)"
+      },
+      "веста": {
+        "ipa": "/ˈvɛsta/",
+        "en": "to lead (typo)"
+      },
+      "водопа": {
+        "ipa": "/vɔdɔˈpa/",
+        "en": "waterfall (typo)"
+      },
+      "ганята": {
+        "ipa": "/haˈnʲata/",
+        "en": "to chase (typo)"
+      },
+      "женувати": {
+        "ipa": "/ʒɛnuˈvatɪ/",
+        "en": "??? (typo)"
+      },
+      "кор": {
+        "ipa": "/kɔr/",
+        "en": "??? (typo)"
+      },
+      "лазит": {
+        "ipa": "/ˈlazɪt/",
+        "en": "crawls (typo)"
+      },
+      "лязти": {
+        "ipa": "/ˈlʲaztɪ/",
+        "en": "to climb (typo)"
+      },
+      "ніш": {
+        "ipa": "/nʲiʃ/",
+        "en": "knife (typo?)"
+      },
+      "пливати": {
+        "ipa": "/plɪˈvatɪ/",
+        "en": "to swim (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/17-motion-coming-going.yaml",
+    "enrichments": {
+      "борисполь": {
+        "ipa": "/bɔˈrɪspɔlʲ/",
+        "en": "Boryspil (typo)"
+      },
+      "виплист": {
+        "ipa": "/ˈvɪplɪst/",
+        "en": "swim out (typo)"
+      },
+      "всередина": {
+        "ipa": "/fsɛˈrɛdɪna/",
+        "en": "inside (typo)"
+      },
+      "перево": {
+        "ipa": "/pɛrɛˈvɔ/",
+        "en": "transfer? (trunc)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/18-motion-passing-crossing.yaml",
+    "enrichments": {
+      "водійва": {
+        "ipa": "/vɔdijˈva/",
+        "en": "driving? (typo)"
+      },
+      "дуза": {
+        "ipa": "/ˈduza/",
+        "en": "nozzle? (typo)"
+      },
+      "світлофір": {
+        "ipa": "/svitlɔˈfir/",
+        "en": "traffic light (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/19-motion-starting-returning.yaml",
+    "enrichments": {
+      "побаток": {
+        "ipa": "/pɔˈbatɔk/",
+        "en": "beginning (typo)"
+      },
+      "поехати": {
+        "ipa": "/pɔˈjɛxatɪ/",
+        "en": "to go (typo)"
+      },
+      "развестися": {
+        "ipa": "/razvɛsˈtɪsʲa/",
+        "en": "to divorce (typo)"
+      },
+      "розвезати": {
+        "ipa": "/rɔzvɛˈzatɪ/",
+        "en": "to untie (typo?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/20-motion-approaching-departing.yaml",
+    "enrichments": {
+      "підйти": {
+        "ipa": "/piˈdjtɪ/",
+        "en": "to approach (typo)"
+      },
+      "підїхати": {
+        "ipa": "/pidˈjixatɪ/",
+        "en": "to drive up (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/21-motion-figurative-uses.yaml",
+    "enrichments": {
+      "довітися": {
+        "ipa": "/dɔˈvʲitɪsʲa/",
+        "en": "to find out (typo)"
+      },
+      "напрол": {
+        "ipa": "/naˈprɔl/",
+        "en": "ahead (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/22-motion-full-prefix-integration.yaml",
+    "enrichments": {
+      "лнестія": {
+        "ipa": "/lnɛsˈtʲija/",
+        "en": "??? (typo)"
+      },
+      "різнонапавлений": {
+        "ipa": "/rʲiznɔnapau̯ˈlɛnɪj/",
+        "en": "multidirectional (typo)"
+      },
+      "стартя": {
+        "ipa": "/ˈstartʲa/",
+        "en": "??? (typo)"
+      },
+      "ізсередина": {
+        "ipa": "/izsɛˈrɛdɪna/",
+        "en": "from inside (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/23-motion-patterns-other-verbs.yaml",
+    "enrichments": {
+      "нишко": {
+        "ipa": "/ˈnɪʃkɔ/",
+        "en": "stealthily (typo)"
+      },
+      "суперсити": {
+        "ipa": "/supɛrˈsɪtɪ/",
+        "en": "??? (typo)"
+      },
+      "тишк": {
+        "ipa": "/tɪʃk/",
+        "en": "quietly (typo)"
+      },
+      "уваський": {
+        "ipa": "/uˈvasʲkɪj/",
+        "en": "??? (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/24-motion-practice-integration.yaml",
+    "enrichments": {
+      "біббліотека": {
+        "ipa": "/biblʲiɔˈtɛka/",
+        "en": "library (typo)"
+      },
+      "варійка": {
+        "ipa": "/vaˈrʲijka/",
+        "en": "emergency lights (typo)"
+      },
+      "давшати": {
+        "ipa": "/dau̯ˈʃatɪ/",
+        "en": "to lengthen (typo)"
+      },
+      "лізити": {
+        "ipa": "/ˈlʲizɪtɪ/",
+        "en": "to climb (typo)"
+      },
+      "розклати": {
+        "ipa": "/rɔzˈklatɪ/",
+        "en": "to lay out (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/25-checkpoint-motion-verbs.yaml",
+    "enrichments": {
+      "пересіти": {
+        "ipa": "/pɛrɛˈsʲitɪ/",
+        "en": "to change seats (typo)"
+      },
+      "повер": {
+        "ipa": "/pɔˈvɛr/",
+        "en": "??? (truncated)"
+      },
+      "поверти": {
+        "ipa": "/pɔˈvɛrtɪ/",
+        "en": "??? (typo)"
+      },
+      "полоннна": {
+        "ipa": "/pɔlɔnˈnna/",
+        "en": "mountain valley (typo)"
+      },
+      "підлет": {
+        "ipa": "/pidˈlɛt/",
+        "en": "approach (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/27-relative-clauses-de-kudy-zvidky.yaml",
+    "enrichments": {
+      "летити": {
+        "ipa": "/lɛˈtɪtɪ/",
+        "en": "to fly (typo)"
+      },
+      "небути": {
+        "ipa": "/nɛbuˈtɪ/",
+        "en": "not to be (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/29-purpose-shchob-infinitive.yaml",
+    "enrichments": {
+      "допізний": {
+        "ipa": "/dɔˈpiznɪj/",
+        "en": "late (typo?)"
+      },
+      "риториця": {
+        "ipa": "/rɪtɔˈrɪt͡sʲa/",
+        "en": "rhetoric (typo?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/30-purpose-shchob-past-form.yaml",
+    "enrichments": {
+      "паралеле": {
+        "ipa": "/paraˈlɛlɛ/",
+        "en": "parallel (typo?)"
+      },
+      "попрости": {
+        "ipa": "/pɔprɔˈstɪ/",
+        "en": "to ask (typo)"
+      },
+      "прошедшее": {
+        "ipa": "/prɔˈʃɛdʃɛje/",
+        "en": "past (Rus.)"
+      },
+      "чтобы": {
+        "ipa": "/ˈt͡ʃtɔbɨ/",
+        "en": "in order to (Rus.)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/31-conditionals-real-yakshcho.yaml",
+    "enrichments": {
+      "кипити": {
+        "ipa": "/kɪˈpɪtɪ/",
+        "en": "to boil (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/32-conditionals-unreal-yakby.yaml",
+    "enrichments": {
+      "бы": {
+        "ipa": "/bɨ/",
+        "en": "would (Rus.)"
+      },
+      "гравка": {
+        "ipa": "/ˈhrau̯ka/",
+        "en": "player (typo)"
+      },
+      "щастивіший": {
+        "ipa": "/ʃt͡ʃastɪˈviʃɪj/",
+        "en": "happier (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/33-conditionals-mixed-complex.yaml",
+    "enrichments": {
+      "пократи": {
+        "ipa": "/pɔˈkratɪ/",
+        "en": "to cover (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/34-checkpoint-complex-sentences-1.yaml",
+    "enrichments": {
+      "который": {
+        "ipa": "/kaˈtorɨj/",
+        "en": "which (Rus.)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/35-concessive-khocha.yaml",
+    "enrichments": {
+      "піднімти": {
+        "ipa": "/pidˈnʲimtɪ/",
+        "en": "to raise (typo)"
+      },
+      "хотяти": {
+        "ipa": "/xɔˈtʲatɪ/",
+        "en": "to want (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/36-causal-result-clauses.yaml",
+    "enrichments": {
+      "переглянити": {
+        "ipa": "/pɛrɛˈhlʲanɪtɪ/",
+        "en": "to review (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/37-temporal-clauses.yaml",
+    "enrichments": {
+      "едва": {
+        "ipa": "/jɛdˈva/",
+        "en": "barely (Rus.)"
+      },
+      "ойно": {
+        "ipa": "/ˈɔjnɔ/",
+        "en": "just now (typo)"
+      },
+      "только": {
+        "ipa": "/ˈtolʲkə/",
+        "en": "only (Rus.)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/39-reported-statements.yaml",
+    "enrichments": {
+      "зос": {
+        "ipa": "/zɔs/",
+        "en": "??? (abbr)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/40-reported-questions-commands.yaml",
+    "enrichments": {
+      "підходящий": {
+        "ipa": "/pidxɔˈdʲaʃt͡ʃɪj/",
+        "en": "suitable (Surzhyk)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/42-adverbial-participles-imperfective.yaml",
+    "enrichments": {
+      "борка": {
+        "ipa": "/ˈbɔrka/",
+        "en": "??? (typo)"
+      },
+      "біжач": {
+        "ipa": "/ˈbiʒat͡ʃ/",
+        "en": "running (typo)"
+      },
+      "прошача": {
+        "ipa": "/prɔˈʃat͡ʃa/",
+        "en": "asking (typo)"
+      },
+      "радіватися": {
+        "ipa": "/radiˈvatɪsʲa/",
+        "en": "to rejoice (typo)"
+      },
+      "спача": {
+        "ipa": "/ˈspat͡ʃa/",
+        "en": "sleeping (typo)"
+      },
+      "юти": {
+        "ipa": "/ˈjutɪ/",
+        "en": "suffix?"
+      },
+      "їздіти": {
+        "ipa": "/jizˈdʲitɪ/",
+        "en": "to ride (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/43-adverbial-participles-perfective.yaml",
+    "enrichments": {
+      "прити": {
+        "ipa": "/ˈprɪtɪ/",
+        "en": "to come (typo)"
+      },
+      "прочити": {
+        "ipa": "/prɔt͡ʃɪˈtɪ/",
+        "en": "to read (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/44-active-participles-phrases.yaml",
+    "enrichments": {
+      "бувший": {
+        "ipa": "/ˈbuu̯ʃɪj/",
+        "en": "former (Surzhyk)"
+      },
+      "біднійший": {
+        "ipa": "/bidˈnʲijʃɪj/",
+        "en": "poorer (typo)"
+      },
+      "відбуваючийся": {
+        "ipa": "/vidbuˈvajut͡ʃɪjsʲa/",
+        "en": "happening (Surzhyk)"
+      },
+      "відбуваючіся": {
+        "ipa": "/vidbuˈvajut͡ʃisʲa/",
+        "en": "happening (typo)"
+      },
+      "маючий": {
+        "ipa": "/ˈmajut͡ʃɪj/",
+        "en": "having (Surzhyk)"
+      },
+      "пожовкний": {
+        "ipa": "/pɔˈʒɔu̯knɪj/",
+        "en": "yellowed (typo)"
+      },
+      "причастність": {
+        "ipa": "/prɪˈt͡ʃastnʲisʲtʲ/",
+        "en": "involvement (typo)"
+      },
+      "проживаючь": {
+        "ipa": "/prɔʒɪˈvajut͡ʃʲ/",
+        "en": "residing (typo)"
+      },
+      "слідуючий": {
+        "ipa": "/ˈslʲidujut͡ʃɪj/",
+        "en": "next (Surzhyk)"
+      },
+      "співпадаючий": {
+        "ipa": "/spiu̯paˈdajut͡ʃɪj/",
+        "en": "coinciding (Surzhyk)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/45-past-passive-participles-1.yaml",
+    "enrichments": {
+      "вимо": {
+        "ipa": "/ˈvɪmɔ/",
+        "en": "??? (trunc)"
+      },
+      "одити": {
+        "ipa": "/ˈɔdɪtɪ/",
+        "en": "to walk (typo)"
+      },
+      "одитий": {
+        "ipa": "/ɔˈdɪtɪj/",
+        "en": "dressed (typo)"
+      },
+      "оти": {
+        "ipa": "/ˈɔtɪ/",
+        "en": "suffix?"
+      },
+      "поба": {
+        "ipa": "/pɔˈba/",
+        "en": "??? (trunc)"
+      },
+      "прадавний": {
+        "ipa": "/praˈdau̯nɪj/",
+        "en": "ancient (typo)"
+      },
+      "розба": {
+        "ipa": "/rɔzˈba/",
+        "en": "??? (trunc)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/46-past-passive-participles-2.yaml",
+    "enrichments": {
+      "зачинути": {
+        "ipa": "/zat͡ʃɪˈnutɪ/",
+        "en": "to close (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/47-passive-constructions.yaml",
+    "enrichments": {
+      "пекати": {
+        "ipa": "/pɛˈkatɪ/",
+        "en": "to bake (typo)"
+      },
+      "пекертися": {
+        "ipa": "/pɛkɛrˈtɪsʲa/",
+        "en": "to be baked (typo)"
+      },
+      "рішити": {
+        "ipa": "/rʲiˈʃɪtɪ/",
+        "en": "to decide (Surzhyk)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/48-diminutives-master-class.yaml",
+    "enrichments": {
+      "водка": {
+        "ipa": "/ˈvɔdka/",
+        "en": "vodka (Rus.)"
+      },
+      "матонький": {
+        "ipa": "/maˈtɔnʲkɪj/",
+        "en": "mother (typo)"
+      },
+      "плакал": {
+        "ipa": "/ˈplakal/",
+        "en": "cried (Rus.)"
+      },
+      "погадити": {
+        "ipa": "/pɔˈhadɪtɪ/",
+        "en": "??? (typo)"
+      },
+      "сирк": {
+        "ipa": "/sɪrk/",
+        "en": "cheese (dim.?)"
+      },
+      "ятко": {
+        "ipa": "/ˈjatkɔ/",
+        "en": "suffix?"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/49-numerals-collectives-fractions.yaml",
+    "enrichments": {
+      "втора": {
+        "ipa": "/vtaˈra/",
+        "en": "second (Rus.)"
+      },
+      "півтор": {
+        "ipa": "/piu̯ˈtɔr/",
+        "en": "one and a half (typo)"
+      },
+      "штані": {
+        "ipa": "/ˈʃtanʲi/",
+        "en": "pants (loc.?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/50-integrated-grammar-lab.yaml",
+    "enrichments": {
+      "дроб": {
+        "ipa": "/drɔb/",
+        "en": "fraction (typo)"
+      },
+      "кищві": {
+        "ipa": "/ˈkɪʃt͡ʃvʲi/",
+        "en": "??? (typo)"
+      },
+      "меро": {
+        "ipa": "/ˈmɛrɔ/",
+        "en": "??? (typo)"
+      },
+      "провкта": {
+        "ipa": "/prɔˈvkta/",
+        "en": "project (typo)"
+      },
+      "сніданати": {
+        "ipa": "/snʲiˈdanatɪ/",
+        "en": "to have breakfast (typo)"
+      },
+      "сяодовні": {
+        "ipa": "/sʲaɔˈdɔu̯nʲi/",
+        "en": "??? (typo)"
+      },
+      "інструментарія": {
+        "ipa": "/instrumɛnˈtarʲija/",
+        "en": "toolkit (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/51-checkpoint-advanced-grammar.yaml",
+    "enrichments": {
+      "ревати": {
+        "ipa": "/rɛˈvatɪ/",
+        "en": "to roar (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/52-abstract-concepts-ideas.yaml",
+    "enrichments": {
+      "ші": {
+        "ipa": "/ʃi/",
+        "en": "??? (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/53-abstract-concepts-processes.yaml",
+    "enrichments": {
+      "застрязати": {
+        "ipa": "/zastrʲaˈzatɪ/",
+        "en": "to get stuck (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/55-agreement-disagreement.yaml",
+    "enrichments": {
+      "шій": {
+        "ipa": "/ʃij/",
+        "en": "suffix?"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/57-discourse-markers-advanced.yaml",
+    "enrichments": {
+      "зупинути": {
+        "ipa": "/zupɪˈnutɪ/",
+        "en": "to stop (typo)"
+      },
+      "самперед": {
+        "ipa": "/samˈpɛrɛd/",
+        "en": "first of all (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/58-describing-changes.yaml",
+    "enrichments": {
+      "піднімитися": {
+        "ipa": "/pidnʲiˈmɪtɪsʲa/",
+        "en": "to rise (typo)"
+      },
+      "сентенець": {
+        "ipa": "/sɛnˈtɛnɛt͡sʲ/",
+        "en": "??? (typo)"
+      },
+      "хвірий": {
+        "ipa": "/ˈxvʲirɪj/",
+        "en": "sick (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/60-society-politics.yaml",
+    "enrichments": {
+      "верховенствовий": {
+        "ipa": "/vɛrxɔˈvɛnstvɔvɪj/",
+        "en": "supremacy (adj?)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/62-environment-ecology.yaml",
+    "enrichments": {
+      "відмотися": {
+        "ipa": "/vidˈmɔtɪsʲa/",
+        "en": "to refuse (typo)"
+      },
+      "чорнізем": {
+        "ipa": "/t͡ʃɔrniˈzɛm/",
+        "en": "chernozem (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/63-health-wellness.yaml",
+    "enrichments": {
+      "таба": {
+        "ipa": "/taˈba/",
+        "en": "Tabata? (trunc)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/64-emotions-deep-dive.yaml",
+    "enrichments": {
+      "соройти": {
+        "ipa": "/sɔˈrɔjtɪ/",
+        "en": "??? (typo)"
+      },
+      "торга": {
+        "ipa": "/ˈtɔrha/",
+        "en": "bargaining?"
+      },
+      "турина": {
+        "ipa": "/tuˈrɪna/",
+        "en": "??? (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/65-relationships.yaml",
+    "enrichments": {
+      "дідус": {
+        "ipa": "/diˈdus/",
+        "en": "grandpa (typo)"
+      },
+      "наречене": {
+        "ipa": "/narɛˈt͡ʃɛnɛ/",
+        "en": "fiancé (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/66-business-basics.yaml",
+    "enrichments": {
+      "здравствувати": {
+        "ipa": "/ˈzdraustvuvatɪ/",
+        "en": "to prosper (Rus.)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/67-travel-geography.yaml",
+    "enrichments": {
+      "вилеот": {
+        "ipa": "/vɪˈlɛɔt/",
+        "en": "departure (typo)"
+      },
+      "хостель": {
+        "ipa": "/ˈxɔstɛlʲ/",
+        "en": "hostel (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/69-synonymy-speaking-verbs.yaml",
+    "enrichments": {
+      "аспекть": {
+        "ipa": "/asˈpɛktʲ/",
+        "en": "aspect (typo)"
+      },
+      "очевидка": {
+        "ipa": "/ɔt͡ʃɛˈvɪdka/",
+        "en": "eyewitness (typo)"
+      },
+      "підкрести": {
+        "ipa": "/pidˈkrɛstɪ/",
+        "en": "to emphasize (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/72-regions-west.yaml",
+    "enrichments": {
+      "засновати": {
+        "ipa": "/zasnuˈvatɪ/",
+        "en": "to found (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/74-regions-south.yaml",
+    "enrichments": {
+      "миколаєв": {
+        "ipa": "/mɪkɔˈlajɛu̯/",
+        "en": "Mykolaiv (Rus.)"
+      },
+      "флоть": {
+        "ipa": "/flɔtʲ/",
+        "en": "fleet (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/75-regions-center.yaml",
+    "enrichments": {
+      "борещь": {
+        "ipa": "/bɔˈrɛʃt͡ʃ/",
+        "en": "??? (typo)"
+      },
+      "гідроелектронції": {
+        "ipa": "/hidrɔɛlɛkˈtrɔnt͡sʲiji/",
+        "en": "HPP (typo)"
+      },
+      "керамика": {
+        "ipa": "/kɛˈramɪka/",
+        "en": "ceramics (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/77-ukrainian-cinema-and-tv.yaml",
+    "enrichments": {
+      "кінофестивалий": {
+        "ipa": "/kʲinɔfɛstɪˈvalɪj/",
+        "en": "film festival (typo)"
+      },
+      "страсть": {
+        "ipa": "/strastʲ/",
+        "en": "passion (Rus.)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/78-technology-and-startups.yaml",
+    "enrichments": {
+      "віддатити": {
+        "ipa": "/vidːaˈtɪtɪ/",
+        "en": "??? (typo)"
+      },
+      "фінтя": {
+        "ipa": "/fʲinˈtʲa/",
+        "en": "fintech (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/79-sports-in-ukraine.yaml",
+    "enrichments": {
+      "голь": {
+        "ipa": "/hɔlʲ/",
+        "en": "goal (typo?)"
+      },
+      "сідень": {
+        "ipa": "/ˈsʲidɛnʲ/",
+        "en": "Sydney (typo)"
+      },
+      "трофій": {
+        "ipa": "/trɔˈfʲij/",
+        "en": "trophy (typo)"
+      },
+      "фристайль": {
+        "ipa": "/frɪˈstajlʲ/",
+        "en": "freestyle (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/80-ukrainian-cuisine.yaml",
+    "enrichments": {
+      "баранин": {
+        "ipa": "/baˈranɪn/",
+        "en": "mutton (adj?)"
+      },
+      "восок": {
+        "ipa": "/ˈvɔsɔk/",
+        "en": "wax (typo)"
+      },
+      "лосос": {
+        "ipa": "/lɔˈsɔs/",
+        "en": "salmon (typo)"
+      },
+      "навати": {
+        "ipa": "/naˈvatɪ/",
+        "en": "??? (typo)"
+      },
+      "овіч": {
+        "ipa": "/ˈɔvit͡ʃ/",
+        "en": "??? (trunc)"
+      },
+      "ріл": {
+        "ipa": "/rʲil/",
+        "en": "??? (typo)"
+      },
+      "рість": {
+        "ipa": "/rʲistʲ/",
+        "en": "??? (typo)"
+      },
+      "ситній": {
+        "ipa": "/ˈsɪtnʲij/",
+        "en": "hearty (typo)"
+      },
+      "трапезь": {
+        "ipa": "/traˈpɛzʲ/",
+        "en": "meal (typo)"
+      },
+      "штруділь": {
+        "ipa": "/ˈʃtrudilʲ/",
+        "en": "strudel (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/81-ukrainski-sviata-ta-festyvali.yaml",
+    "enrichments": {
+      "обіллити": {
+        "ipa": "/ɔbilːˈɪtɪ/",
+        "en": "to pour over (typo)"
+      },
+      "писанець": {
+        "ipa": "/pɪˈsanɛt͡sʲ/",
+        "en": "writer? (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/82-novyny-yak-chytaty.yaml",
+    "enrichments": {
+      "брюссел": {
+        "ipa": "/ˈbrʲusɛl/",
+        "en": "Brussels (typo)"
+      },
+      "пресконфенція": {
+        "ipa": "/prɛskɔnfɛnˈt͡sʲija/",
+        "en": "press conference (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/83-interviu-ta-podkasty.yaml",
+    "enrichments": {
+      "медіасцень": {
+        "ipa": "/mɛdiasˈt͡sɛnʲ/",
+        "en": "media scene (typo)"
+      },
+      "подкасть": {
+        "ipa": "/pɔdˈkastʲ/",
+        "en": "podcast (typo)"
+      },
+      "точ": {
+        "ipa": "/tɔt͡ʃ/",
+        "en": "??? (trunc)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/84-b1-grammar-integration.yaml",
+    "enrichments": {
+      "леч": {
+        "ipa": "/lɛt͡ʃ/",
+        "en": "fly (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/85-b1-vocabulary-integration.yaml",
+    "enrichments": {
+      "взаємозе'зязка": {
+        "ipa": "/vzaˈjɛmɔzɛzjazka/",
+        "en": "interconnection (typo)"
+      },
+      "доменя": {
+        "ipa": "/dɔˈmɛnʲa/",
+        "en": "domain (typo)"
+      },
+      "трий": {
+        "ipa": "/trɪj/",
+        "en": "three (typo)"
+      }
+    }
+  },
+  {
+    "file": "curriculum/l2-uk-en/b1/vocabulary/86-b1-capstone.yaml",
+    "enrichments": {
+      "співстати": {
+        "ipa": "/spiu̯ˈstatɪ/",
+        "en": "compare (typo)"
+      },
+      "тартич": {
+        "ipa": "/tarˈtɪt͡ʃ/",
+        "en": "??? (typo)"
+      }
+    }
+  }
+]

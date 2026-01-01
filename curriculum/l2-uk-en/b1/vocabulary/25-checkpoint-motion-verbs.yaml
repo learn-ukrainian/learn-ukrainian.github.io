@@ -79,26 +79,17 @@ items:
   ipa: /pɛrɛmiˈʃt͡ʃatɪ/
   translation: to move
   pos: verb
-- lemma: пересіти
-  ipa: /pɛrɛˈsʲitɪ/
-  translation: to change seats (typo)
+- lemma: пересісти
+  ipa: /pɛrɛˈsʲistɪ/
+  translation: to change seats
   pos: verb
 - lemma: плинути
   ipa: /ˈplɪnutɪ/
   translation: to flow
   pos: verb
-- lemma: повер
-  ipa: /pɔˈvɛr/
-  translation: ??? (truncated)
-  pos: noun
-  gender: m
-- lemma: поверти
-  ipa: /pɔˈvɛrtɪ/
-  translation: ??? (typo)
-  pos: verb
-- lemma: полоннна
-  ipa: /pɔlɔnˈnna/
-  translation: mountain valley (typo)
+- lemma: полонина
+  ipa: /pɔlɔˈnɪna/
+  translation: mountain valley
   pos: noun
   gender: f
 - lemma: поплисти
@@ -115,9 +106,9 @@ items:
   translation: to run up to
   pos: verb
   gender: m
-- lemma: підлет
-  ipa: /pidˈlɛt/
-  translation: approach (typo)
+- lemma: підліт
+  ipa: /pidˈlʲit/
+  translation: approach (flight)
   pos: noun
   gender: m
 - lemma: підніс

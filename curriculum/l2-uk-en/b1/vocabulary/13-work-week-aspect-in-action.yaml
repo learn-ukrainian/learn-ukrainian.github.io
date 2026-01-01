@@ -22,18 +22,18 @@ items:
   translation: build (tech)
   pos: noun
   gender: m
-- lemma: витідний
-  ipa: /vɪtʲidˈnɪj/
-  translation: weekend (typo)
+- lemma: вихідний
+  ipa: /vɪxidˈnɪj/
+  translation: weekend
   pos: adj
 - lemma: вівторка
   ipa: /viu̯ˈtɔrka/
   translation: Tuesday (gen.)
   pos: noun
   gender: m
-- lemma: відпрати
-  ipa: /vidˈpratɪ/
-  translation: to wash off/send (typo?)
+- lemma: відправити
+  ipa: /vidˈpravɪtɪ/
+  translation: to send
   pos: verb
 - lemma: гуляй
   ipa: /ɦuˈlʲaj/
@@ -79,17 +79,17 @@ items:
   translation: Friday (adj)
   pos: adj
   gender: m
-- lemma: передити
-  ipa: /pɛrɛˈdɪtɪ/
-  translation: to pass (typo?)
+- lemma: передати
+  ipa: /pɛrɛˈdatɪ/
+  translation: to pass/transmit
   pos: verb
 - lemma: понеділковий
   ipa: /pɔnɛdilˈkɔvɪj/
   translation: Monday (adj)
   pos: adj
-- lemma: пояснути
-  ipa: /pɔjasˈnutɪ/
-  translation: to explain (typo)
+- lemma: пояснити
+  ipa: /pɔjasˈnɪtɪ/
+  translation: to explain
   pos: verb
 - lemma: стендап
   ipa: /stɛnˈdap/
@@ -106,8 +106,8 @@ items:
   translation: to farm (slang)
   pos: verb
   gender: m
-- lemma: четверг
-  ipa: /t͡ʃɛtˈvɛrɦ/
-  translation: Thursday (typo)
+- lemma: четвер
+  ipa: /t͡ʃɛtˈvɛr/
+  translation: Thursday
   pos: noun
   gender: m

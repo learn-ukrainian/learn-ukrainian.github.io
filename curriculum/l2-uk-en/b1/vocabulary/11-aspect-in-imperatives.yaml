@@ -7,9 +7,9 @@ items:
   translation: bureaucracy
   pos: noun
   gender: f
-- lemma: дамати
-  ipa: /daˈmatɪ/
-  translation: to give (typo)
+- lemma: давати
+  ipa: /daˈvatɪ/
+  translation: to give
   pos: verb
 - lemma: загорнути
   ipa: /zahɔrˈnutɪ/
@@ -87,13 +87,9 @@ items:
   translation: consistency
   pos: noun
   gender: f
-- lemma: укятися
-  ipa: /ukˈjatɪsʲa/
-  translation: ??? (typo)
-  pos: verb
-- lemma: учис
-  ipa: /uˈt͡ʃɪs/
-  translation: learn (typo?)
+- lemma: вчитися
+  ipa: /ˈvut͡ʃɪtɪsʲa/
+  translation: to learn
   pos: noun
   gender: f
 - lemma: фокус

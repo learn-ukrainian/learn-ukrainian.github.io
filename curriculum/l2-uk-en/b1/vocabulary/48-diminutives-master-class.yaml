@@ -50,9 +50,9 @@ items:
   translation: water (dim.)
   pos: noun
   gender: f
-- lemma: водка
-  ipa: /ˈvɔdka/
-  translation: vodka (Rus.)
+- lemma: горілка
+  ipa: /ɦɔˈrʲilka/
+  translation: vodka
   pos: noun
   gender: f
 - lemma: гарнесенький
@@ -218,9 +218,9 @@ items:
   translation: butter (dim.)
   pos: noun
   gender: f
-- lemma: матонький
-  ipa: /maˈtɔnʲkɪj/
-  translation: mother (typo)
+- lemma: матінка
+  ipa: /ˈmatʲinka/
+  translation: mother (dim.)
   pos: adj
   gender: f
 - lemma: машинка
@@ -305,15 +305,11 @@ items:
   ipa: /pɛstˈlɪvɔ/
   translation: affectionately
   pos: adv
-- lemma: плакал
-  ipa: /ˈplakal/
-  translation: cried (Rus.)
+- lemma: плакав
+  ipa: /ˈplakau̯/
+  translation: cried
   pos: propn
   gender: f
-- lemma: погадити
-  ipa: /pɔˈhadɪtɪ/
-  translation: ??? (typo)
-  pos: verb
 - lemma: позначити
   ipa: /pɔzˈnat͡ʃɪtɪ/
   translation: to mark
@@ -405,9 +401,9 @@ items:
   translation: son (dim. gen.)
   pos: noun
   gender: f
-- lemma: сирк
-  ipa: /sɪrk/
-  translation: cheese (dim.?)
+- lemma: сирок
+  ipa: /sɪˈrɔk/
+  translation: curd snack/cheese
   pos: noun
   gender: f
 - lemma: словацький
@@ -551,10 +547,6 @@ items:
   translation: apples (dim.)
   pos: noun
   gender: n
-- lemma: ятко
-  ipa: /ˈjatkɔ/
-  translation: suffix?
-  pos: other
 - lemma: яєчня
   ipa: /jaˈjɛt͡ʃnʲa/
   translation: scrambled eggs

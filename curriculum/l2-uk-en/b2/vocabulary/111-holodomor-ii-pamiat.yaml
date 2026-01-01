@@ -1,0 +1,84 @@
+module: 111-holodomor-ii-pamiat
+level: B2
+version: '2.0'
+items:
+  - lemma: голод
+    ipa: ''
+    translation: famine/hunger
+    pos: noun
+    gender: m
+  - lemma: смерть
+    ipa: ''
+    translation: death
+    pos: noun
+    gender: f
+  - lemma: виживання
+    ipa: ''
+    translation: survival
+    pos: noun
+    gender: n
+  - lemma: їжа
+    ipa: ''
+    translation: food
+    pos: noun
+    gender: f
+  - lemma: сурогат
+    ipa: ''
+    translation: surrogate (food substitute)
+    pos: noun
+    gender: m
+  - lemma: канібалізм
+    ipa: ''
+    translation: cannibalism
+    pos: noun
+    gender: m
+  - lemma: жах
+    ipa: ''
+    translation: horror/terror
+    pos: noun
+    gender: m
+  - lemma: тиша
+    ipa: ''
+    translation: silence
+    pos: noun
+    gender: f
+  - lemma: приховування
+    ipa: ''
+    translation: concealment
+    pos: noun
+    gender: n
+  - lemma: брехня
+    ipa: ''
+    translation: lie/falsehood
+    pos: noun
+    gender: f
+  - lemma: журналіст
+    ipa: ''
+    translation: journalist
+    pos: noun
+    gender: m
+  - lemma: правда
+    ipa: ''
+    translation: truth
+    pos: noun
+    gender: f
+  - lemma: визнання
+    ipa: ''
+    translation: recognition/acknowledgement
+    pos: noun
+    gender: n
+  - lemma: заперечення
+    ipa: ''
+    translation: denial
+    pos: noun
+    gender: n
+  - lemma: геноцид
+    ipa: ''
+    translation: genocide
+    pos: noun
+    gender: m
+  - lemma: пам'ять
+    ipa: ''
+    translation: memory
+    pos: noun
+    gender: f

@@ -7,9 +7,9 @@ items:
   translation: to throw out
   pos: verb
   gender: f
-- lemma: відрігти
-  ipa: /vidˈriɦtɪ/
-  translation: to cut off (dialect?)
+- lemma: відрізати
+  ipa: /vidˈrʲizatɪ/
+  translation: to cut off
   pos: verb
   gender: m
 - lemma: екзаменатор
@@ -22,13 +22,13 @@ items:
   translation: tasks (gen. pl.)
   pos: noun
   gender: f
-- lemma: закінти
-  ipa: /zaˈkʲintɪ/
-  translation: to finish (typo)
+- lemma: закінчити
+  ipa: /zaˈkʲint͡ʃɪtɪ/
+  translation: to finish
   pos: verb
-- lemma: майстрин
-  ipa: /majˈstrɪn/
-  translation: master (gen. pl.?)
+- lemma: майстер
+  ipa: /ˈmajstɛr/
+  translation: master
   pos: noun
   gender: f
 - lemma: марта
@@ -88,9 +88,9 @@ items:
   translation: mown
   pos: adj
   gender: f
-- lemma: скрина
-  ipa: /skrɪna/
-  translation: chest (typo)
+- lemma: скриня
+  ipa: /ˈskrɪnʲa/
+  translation: chest
   pos: noun
   gender: f
 - lemma: сміло

@@ -50,18 +50,18 @@ items:
   ipa: /prɪjʃ/
   translation: come (root)
   pos: other
-- lemma: прити
-  ipa: /ˈprɪtɪ/
-  translation: to come (typo)
+- lemma: прийти
+  ipa: /prɪjˈtɪ/
+  translation: to come
   pos: verb
 - lemma: приїха
   ipa: /prɪˈjixa/
   translation: arrive (root)
   pos: noun
   gender: m
-- lemma: прочити
-  ipa: /prɔt͡ʃɪˈtɪ/
-  translation: to read (typo)
+- lemma: прочитати
+  ipa: /prɔt͡ʃɪˈtatɪ/
+  translation: to read
   pos: verb
 - lemma: реєстраційний
   ipa: /rɛjɛstraˈt͡sʲijnɪj/

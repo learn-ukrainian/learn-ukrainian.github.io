@@ -101,9 +101,9 @@ items:
   translation: advanced
   pos: adj
   gender: f
-- lemma: ревати
-  ipa: /rɛˈvatɪ/
-  translation: to roar (typo)
+- lemma: ревти
+  ipa: /rɛu̯ˈtɪ/
+  translation: to roar
   pos: verb
 - lemma: реготати
   ipa: /rɛhɔˈtatɪ/

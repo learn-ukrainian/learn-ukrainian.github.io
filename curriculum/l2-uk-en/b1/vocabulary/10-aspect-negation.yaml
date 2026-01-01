@@ -6,9 +6,9 @@ items:
   ipa: /nɛ/
   translation: not
   pos: other
-- lemma: адрега
-  ipa: /aˈdrɛɦa/
-  translation: address (typo)
+- lemma: адреса
+  ipa: /aˈdrɛsa/
+  translation: address
   pos: noun
   gender: m
 - lemma: вигуляти
@@ -62,9 +62,9 @@ items:
   ipa: /pɛrɛdzvɔˈnɪ/
   translation: call back
   pos: verb
-- lemma: плануюмій
-  ipa: /planujuˈmʲij/
-  translation: I plan my (typo)
+- lemma: планувати
+  ipa: /planuˈvatɪ/
+  translation: to plan
   pos: noun
   gender: m
 - lemma: припинений

@@ -27,20 +27,15 @@ items:
   ipa: /vʒɛ/
   translation: already
   pos: other
-- lemma: вибррати
-  ipa: /vɪbˈratɪ/
-  translation: to choose (typo)
+- lemma: вибрати
+  ipa: /ˈvɪbratɪ/
+  translation: to choose
   pos: verb
 - lemma: да'
   ipa: /da/
   translation: 'yes'
   pos: noun
   gender: f
-- lemma: лвжома
-  ipa: /lvʒɔma/
-  translation: ???
-  pos: noun
-  gender: m
 - lemma: написа
   ipa: /naˈpɪsa/
   translation: wrote (incomplete)
