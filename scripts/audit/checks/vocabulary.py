@@ -503,8 +503,8 @@ def check_vocab_matches_plan(
         
         if final_missing and len(final_missing) > 0:
             sample = list(final_missing)[:5]
-            # Make it non-blocking for A1/A2 and checkpoints
-            is_blocking = level.upper() not in ['A1', 'A2', 'A1-CHECKPOINT', 'A2-CHECKPOINT']
+            # VOCAB_PLAN_MISSING is now BLOCKING for all levels - core vocab from plan must be present
+            is_blocking = True
             
             violations.append({
                 'type': 'VOCAB_PLAN_MISSING',
@@ -637,7 +637,7 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
                 'issue': f"Level {level_upper} should use '# Vocabulary' header, but '# Словник' found.",
                 'fix': "Change '# Словник' to '# Vocabulary'."
             })
-    elif level_upper == 'B1':
+    elif level_upper in ('B1', 'B2', 'C1', 'C2'):
         # Should be '# Словник'
         if re.search(r'^#{1,2}\s+Vocabulary', content, re.MULTILINE | re.IGNORECASE):
             violations.append({
@@ -672,34 +672,34 @@ def check_vocab_table_format(content: str, level: str) -> list[dict]:
                         'issue': f"A1/A2 vocabulary requires 6 columns, found {num_cols}: {header_row}",
                         'fix': "Format: | Word | IPA | English | POS | Gender | Note |"
                     })
-            elif level_upper == 'B1':
-                # B1 accepts both 3-column (no IPA) and 5-column formats
-                # 3-column preferred for modules 21+ to avoid transliteration errors
-                if num_cols not in (3, 5):
+            elif level_upper in ('B1', 'B2', 'C1', 'C2'):
+                # B1+ accepts 3-column (minimal), 5-column (legacy), or 6-column (new standard) formats
+                # 6-column is the new standard as of issue #341
+                if num_cols not in (3, 5, 6):
                     violations.append({
                         'type': 'VOCAB_FORMAT',
-                        'issue': f"B1 vocabulary requires 3 or 5 columns, found {num_cols}: {header_row}",
-                        'fix': "Format: | Слово | Переклад | Примітки | (3-col) or | Слово | Вимова | Переклад | ЧМ | Примітка | (5-col)",
+                        'issue': f"{level_upper} vocabulary requires 3, 5, or 6 columns, found {num_cols}: {header_row}",
+                        'fix': "Format: | Слово | Вимова | Переклад | ЧМ | Рід | Примітка | (6-col, preferred)",
                         'blocking': False
                     })
                 elif num_cols == 5:
-                    # Check column names for 5-column B1 format
-                    expected_b1 = ['слово', 'вимова', 'переклад', 'чм', 'примітка']
-                    actual_b1 = [p.lower() for p in parts]
+                    # Check column names for 5-column format
+                    expected = ['слово', 'вимова', 'переклад', 'чм', 'примітка']
+                    actual = [p.lower() for p in parts]
 
                     # Accept "Слово / Вираз" or similar for first column
                     # Accept "Примітки" for last column
-                    if 'слово' not in actual_b1[0] and 'термін' not in actual_b1[0]:
+                    if 'слово' not in actual[0] and 'термін' not in actual[0]:
                          violations.append({
                             'type': 'VOCAB_FORMAT',
-                            'issue': f"B1 vocabulary headers mismatch. Expected 'Слово' in first column, found '{parts[0]}'",
+                            'issue': f"{level_upper} vocabulary headers mismatch. Expected 'Слово' in first column, found '{parts[0]}'",
                             'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |",
                             'blocking': False
                         })
-                    if 'приміт' not in actual_b1[4]:
+                    if 'приміт' not in actual[4]:
                          violations.append({
                             'type': 'VOCAB_FORMAT',
-                            'issue': f"B1 vocabulary headers mismatch. Expected 'Примітка' in fifth column, found '{parts[4]}'",
+                            'issue': f"{level_upper} vocabulary headers mismatch. Expected 'Примітка' in fifth column, found '{parts[4]}'",
                             'fix': "Standardize headers to: | Слово | Вимова | Переклад | ЧМ | Примітка |",
                             'blocking': False
                         })

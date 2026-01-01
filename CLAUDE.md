@@ -341,8 +341,8 @@ learn-ukrainian/
 │   ├── a2/               # A2 modules (57 complete)
 │   ├── b1/               # B1 modules (86 complete)
 │   ├── b2/               # B2 modules (106/145, 73%)
-│   ├── c1/               # C1 modules (0/182 planned)
-│   ├── c2/               # C2 modules (0/80 planned)
+│   ├── c1/               # C1 modules (0/196 planned)
+│   ├── c2/               # C2 modules (0/100 planned)
 │   ├── vocabulary.db     # Master vocabulary database (SQLite)
 │   └── module-mapping.json  # Old→new path mapping reference
 ├── scripts/              # Generator code
@@ -371,8 +371,8 @@ Level and module number are derived from the file path, not frontmatter.
 | A2 | `a2/` | 57 | ~1,050 | Elementary - All 7 cases, aspect basics, comparison |
 | B1 | `b1/` | 86 | ~1,500 | Intermediate - Aspect mastery, motion verbs, complex sentences |
 | B2 | `b2/` | 145 | ~2,640 | Upper-Intermediate - Passive voice, registers, Ukrainian history |
-| C1 | `c1/` | 182 | ~3,840 | Advanced - Biographies, stylistics, folk culture, literature |
-| C2 | `c2/` | 80 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
+| C1 | `c1/` | 196 | ~4,700 | Advanced - Biographies, stylistics, folk culture, literature |
+| C2 | `c2/` | 100 | ~2,500 | Mastery - Stylistic perfection, professional specialization |
 
 **Vocabulary Progression:**
 - A1: ~750 cumulative
@@ -434,12 +434,17 @@ npm run claude:deploy
 
 ## Vocabulary Section Formats
 
-| Level | Header | Columns |
+| Level | Header | Columns (6-column standard) |
 |-------|--------|---------|
 | A1, A2 | `# Vocabulary` | Word \| IPA \| English \| POS \| Gender \| Note |
-| B1+ | `# Словник` | Слово \| Переклад \| Примітки |
+| B1, B2, C1, C2 | `# Словник` | Слово \| Вимова \| Переклад \| ЧМ \| Рід \| Примітка |
 
-**Note:** B1 originally used 5-column format (with Вимова/IPA), but the audit script flags this as "transliteration" for modules >= 21. Use 3-column format for all B1+ modules.
+**New 6-column standard (Issue #341):**
+- All levels now use 6-column vocabulary format
+- A1/A2: English headers with transliteration
+- B1+: Ukrainian headers (immersed content)
+- Legacy 3-column and 5-column formats still accepted for B1+ but not recommended
+- After vocabulary DB enrichment, all tables will be regenerated with complete 6-column data
 
 ## Activity Format Requirements (CRITICAL)
 
@@ -527,8 +532,8 @@ Is this a real error or pedagogically acceptable? Respond in JSON.
 | A2 | 57/57 | ✅ Complete | ✅ All pass | ✅ Ready for production |
 | B1 | 86/86 | ✅ Complete | ✅ All pass | ✅ Ready for production |
 | B2 | 106/145 | 🚧 In Progress (73%) | ⏳ Partial | Continue M107-145 |
-| C1 | 0/182 | 📋 Planned | ❌ Not started | Waiting for B2 |
-| C2 | 0/80 | 📋 Planned | ❌ Not started | Waiting for C1 |
+| C1 | 0/196 | 📋 Planned | ❌ Not started | Waiting for B2 |
+| C2 | 0/100 | 📋 Planned | ❌ Not started | Waiting for C1 |
 
 **Current B2 Focus:**
 - **Completed:** M01-106 (Grammar, Vocabulary, Early History)
