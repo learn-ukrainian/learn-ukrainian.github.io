@@ -1,31 +1,3 @@
----
-module: a1-18
-title: 'Food & Shopping'
-subtitle: 'Practical vocabulary for market and store'
-version: '1.0'
-phase: 'A1.2'
-pedagogy: 'PPP'
-duration: '60 min'
-transliteration: 'vocab-only'
-tags:
-  - food
-  - shopping
-  - vocabulary
-  - accusative
-  - genitive
-grammar:
-  - 'Accusative case for direct objects (review)'
-  - 'Genitive case for quantities (review)'
-  - 'Price questions with Скільки коштує'
-objectives:
-  - 'Learner can order food items using accusative case'
-  - 'Learner can request quantities using genitive case'
-  - 'Learner can ask prices and make purchases'
-  - 'Learner can distinguish between food and non-food items'
-vocabulary_count: 46
-vocab_count: 55
----
-
 # Food & Shopping
 
 ## Warm-up
@@ -78,63 +50,103 @@ Notice: After "скільки коштує" (how much is/does it cost?), the nou
 >
 > Популярні українські супермаркети: **Сільпо** (Silpo), **АТБ** (ATB), **Новус** (Novus), **Фора** (Fora). (Popular Ukrainian supermarkets: Silpo, ATB, Novus, Fora.) Кожен має свою атмосферу! (Each has its own atmosphere!) ATB is budget-friendly, Silpo is mid-range with good quality, and Novus is more upscale. Де ви любите робити покупки? (Where do you like to shop?)
 
-##
+---
 
-# Vocabulary
+## Dialogues
 
-| Word         | IPA               | English          | POS  | Gender | Note |
-| ------------ | ----------------- | ---------------- | ---- | ------ | ---- |
-| атб          | /ɑ tɛ bɛ/         | ATB (store)      | name | ч      |      |
-| атмосфера    | /ɑtmɔˈsfɛrɑ/      | atmosphere       | noun | ж      |      |
-| багато       | /bɑˈɦɑtɔ/         | many/much        | adv  | -      |      |
-| вага         | /vɑˈɦɑ/           | weight/scale     | noun | ж      |      |
-| взяти        | /ˈvzʲɑtɪ/         | to take          | verb | -      |      |
-| голубець     | /ɦɔluˈbɛt͡sʲ/      | cabbage roll     | noun | ч      |      |
-| гігієна      | /hihiˈjɛnɑ/       | hygiene          | noun | ж      |      |
-| дерун        | /dɛˈrun/          | potato pancake   | noun | ч      |      |
-| десерт       | /dɛˈsɛrt/         | dessert          | noun | ч      |      |
-| дорогий      | /dɔrɔˈɦɪj/        | expensive        | adj  | ч      |      |
-| знак         | /znɑk/            | sign             | noun | ч      |      |
-| зошит        | /ˈzɔʃɪt/          | notebook         | noun | ч      |      |
-| зубний       | /zubˈnɪj/         | dental           | adj  | ч      |      |
-| капуста      | /kɑˈpustɑ/        | cabbage          | noun | ж      |      |
-| картопляний  | /kɑrtɔˈplʲɑnɪj/   | potato (adj)     | adj  | ч      |      |
-| каса         | /ˈkɑsɑ/           | cashier/checkout | noun | ж      |      |
-| касир        | /kɑˈsɪr/          | cashier (person) | noun | ч      |      |
-| компот       | /kɔmˈpɔt/         | compote          | noun | ч      |      |
-| купувати     | /kupuˈvɑtɪ/       | to buy           | verb | -      |      |
-| кількість    | /ˈkilʲkisʲtʲ/     | quantity         | noun | ж      |      |
-| національний | /nɑt͡sʲiɔˈnɑlʲnɪj/ | national         | adj  | ч      |      |
-| новус        | /ˈnɔvus/          | Novus            | name | ч      |      |
-| окремо       | /ɔˈkrɛmɔ/         | separately       | adv  | -      |      |
-| олег         | /ɔˈlɛɦ/           | Oleh             | name | ч      |      |
-| пакет        | /pɑˈkɛt/          | bag              | noun | ч      |      |
-| пампушка     | /pɑmˈpuʃkɑ/       | pampushka        | noun | ж      |      |
-| папір        | /pɑˈpir/          | paper            | noun | ч      |      |
-| паста        | /ˈpɑstɑ/          | paste/pasta      | noun | ж      |      |
-| патерн       | /pɑˈtɛrn/         | pattern          | noun | ч      |      |
-| пачка        | /ˈpɑt͡ʃkɑ/         | pack             | noun | ж      |      |
-| перший       | /ˈpɛrʃɪj/         | first            | adj  | ч      |      |
-| покупка      | /pɔˈkupkɑ/        | purchase         | noun | ж      |      |
-| помилка      | /pɔˈmɪlkɑ/        | mistake          | noun | ж      |      |
-| порада       | /pɔˈrɑdɑ/         | advice           | noun | ж      |      |
-| принести     | /prɪnɛˈstɪ/       | to bring         | verb | -      |      |
-| рахунок      | /rɑˈxunɔk/        | bill/check       | noun | ч      |      |
-| реальний     | /rɛˈɑlʲnɪj/       | real             | adj  | ч      |      |
-| сало         | /ˈsɑlɔ/           | salo             | noun | с      |      |
-| свіжий       | /ˈsviʒɪj/         | fresh            | adj  | ч      |      |
-| світ         | /svit/            | world            | noun | ч      |      |
-| секція       | /ˈsɛkt͡sʲijɑ/      | section          | noun | ж      |      |
-| сирний       | /ˈsɪrnɪj/         | cheese (adj)     | adj  | ч      |      |
-| сирник       | /ˈsɪrnɪk/         | syrnyk           | noun | ч      |      |
-| сільпо       | /silʲˈpɔ/         | Silpo            | name | с      |      |
-| супермаркет  | /supɛrˈmɑrkɛt/    | supermarket      | noun | ч      |      |
-| тільки       | /ˈtilʲkɪ/         | only             | adv  | -      |      |
-| традиційний  | /trɑdɪˈt͡sʲijnɪj/  | traditional      | adj  | ч      |      |
-| фора         | /ˈfɔrɑ/           | Fora             | name | ж      |      |
-| холодець     | /xɔlɔˈdɛt͡sʲ/      | kholodets        | noun | ч      |      |
-| хороший      | /xɔˈrɔʃɪj/        | good             | adj  | ч      |      |
-| червоний     | /t͡ʃɛrˈvɔnɪj/      | red              | adj  | ч      |      |
-| шампунь      | /ʃɑmˈpunʲ/        | shampoo          | noun | ч      |      |
-| швидкий      | /ʃvɪdˈkɪj/        | fast             | adj  | ч      |      |
-| їдальня      | /jiˈdɑlʲnʲɑ/      | canteen          | noun | ж      |      |
+> [!conversation] У супермаркеті (At the Supermarket)
+>
+> — Доброго дня! Скільки коштує сир?
+> — Сир коштує сорок гривень за кілограм.
+> — Добре. Дайте півкілограма, будь ласка.
+> — Щось ще?
+> — Так. Я хочу хліб.
+> — Білий чи чорний?
+> — Білий, будь ласка.
+> — Ось ваш хліб. Двадцять гривень.
+> — Дякую!
+>
+> — Good day! How much is the cheese?
+> — Cheese costs forty hryvnias per kilogram.
+> — Good. Give me half a kilogram, please.
+> — Anything else?
+> — Yes. I want bread.
+> — White or black?
+> — White, please.
+> — Here's your bread. Twenty hryvnias.
+> — Thank you!
+
+> [!conversation] На ринку (At the Market)
+>
+> — Доброго ранку! Які красиві помідори!
+> — Доброго ранку! Свіжі, з городу!
+> — Скільки коштує кілограм?
+> — Тридцять гривень.
+> — Я хочу два кілограми. Яка ціна?
+> — П'ятдесят гривень. Для вас — знижка!
+> — Чудово! Беру два.
+> — Ще щось? Маємо свіжі огірки.
+> — Ні, дякую. Тільки помідори.
+>
+> — Good morning! What beautiful tomatoes!
+> — Good morning! Fresh, from the garden!
+> — How much is a kilogram?
+> — Thirty hryvnias.
+> — I want two kilograms. What's the price?
+> — Fifty hryvnias. A discount for you!
+> — Wonderful! I'll take two.
+> — Anything else? We have fresh cucumbers.
+> — No, thank you. Just tomatoes.
+
+---
+
+## Practice
+
+### Using Accusative and Genitive
+
+Complete these shopping phrases with the correct case:
+
+Я хочу _____ (кава). → Я хочу **каву**. (Accusative for "what I want")
+
+Дайте склянку _____ (вода). → Дайте склянку **води**. (Genitive for "of what")
+
+Я хочу _____ (хліб). → Я хочу **хліб**. (Accusative for masculine nouns - "I want bread")
+
+Кілограм _____ (яблуко). → Кілограм **яблук**. (Genitive plural for quantity)
+
+> 🎯 **Remember the Pattern!**
+>
+> **Accusative** for direct objects: Я купую **каву**, **хліб**, **молоко**.
+> **Genitive** for quantities: пляшку **води**, кілограм **сиру**, пачку **цукру**.
+
+### Ordering at a Store
+
+Practice these common shopping phrases:
+
+**Asking prices:**
+- Скільки коштує ___? (How much does ___ cost?)
+- Скільки це коштує? (How much does this cost?)
+- Яка ціна? (What's the price?)
+
+**Making requests:**
+- Дайте, будь ласка... (Give me, please...)
+- Я хочу... (I want...)
+- Можна...? (May I have...?)
+
+**Quantities:**
+- Один кілограм (one kilogram)
+- Півкілограма (half a kilogram)
+- Пляшку (a bottle)
+- Пачку (a pack)
+
+> [!resources] External Resources
+>
+> **YouTube:** [Shopping in Ukraine](https://www.youtube.com/watch?v=2tEPOopp7-I) — Real Ukrainian shopping situations
+>
+> **Podcast:** [Ukrainian Lessons - At the Market](https://www.ukrainianlessons.com/thepodcast/) — Shopping vocabulary practice
+
+---
+
+# Summary
+
+In this module, you practiced using the accusative and genitive cases together for shopping. You learned how to ask prices with "Скільки коштує?" and request quantities with genitive ("склянку води", "кілограм яблук"). You also learned vocabulary for Ukrainian supermarkets like Сільпо, АТБ, Новус, and Фора. Now you can navigate Ukrainian stores with confidence!
